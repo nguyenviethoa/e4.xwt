@@ -202,7 +202,7 @@ public class NewUIComponentWizardPage extends org.eclipse.jdt.ui.wizards.NewClas
 	@Override
 	public boolean isPageComplete() {
 		if (modelTableViewer != null && modelTableViewer.getSelection().isEmpty()) {
-			setErrorMessage("Veuillez selectionner le type mdoèlde de vue.");
+			setErrorMessage("Veuillez selectionner le type mdoelde de vue.");
 			return false;
 		}
 		return super.isPageComplete();
