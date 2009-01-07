@@ -1,0 +1,27 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt"
+	x:Class="org.eclipse.e4.xwt.tests.layout.FormLayout_Test"
+	text="FormLayout - Test">
+	<Shell.layout>
+		<FormLayout/>
+	</Shell.layout>
+	<Group text="layout">
+		<Group.layout>
+		    <FormLayout/>
+		</Group.layout>
+		<Group.layoutData>
+			<GridData horizontalAlignment="FILL" verticalAlignment="FILL">
+			</GridData>
+		</Group.layoutData>
+		<Button x:Name="Button1" text="button1">
+			<Button.layout>
+			    <FormData top="10, 10" left="0, 10" bottom="30, 0" right="40, 0"/>
+			</Button.layout>
+		</Button>
+		<Button text="button2">
+			<Button.layout>
+			    <FormData top="{Binding ElementName="Button1"}, 10" left="0, 0" bottom="40, 0" right="40, 0"/>
+			</Button.layout>
+		</Button>
+	</Group>
+</Shell>

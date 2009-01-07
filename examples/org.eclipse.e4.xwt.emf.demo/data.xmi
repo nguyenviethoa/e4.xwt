@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<model:Company xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:model="http://www.eclipse.org/e4/xaml_demo" name="MyCompany">
+  <employees firstname="Thomas" lastname="Guiu" position="Software engineer" email="thomas.guiu@soyatec.com" phone="01 23 45 67 89" birthday="1976-11-16T21:22:46.398+0100">
+    <address city="Paris" street="57 rue cantagrel" zipcode="75013" state="none" country="France"/>
+  </employees>
+  <employees firstname="Yves" lastname="Yang" position="none" email="yves.yang@soyatec.com" phone="101 23 45 67 89" birthday="1963-04-06T21:22:46.398+0100">
+    <address city="Massy" street="1 allee des monegasques" zipcode="93100" state="none" country="France"/>
+  </employees>
+</model:Company>

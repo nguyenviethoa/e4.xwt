@@ -1,0 +1,28 @@
+<Composite xmlns="http://www.eclipse.org/xwt/presentation"
+    xmlns:x="http://www.eclipse.org/xwt"
+    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.listviewer.collection"
+    DataContext="{StaticResource myCompany}">
+	<Composite.layout>
+		<GridLayout numColumns="2"/>
+	</Composite.layout>
+	<x:Composite.Resources>
+		<j:Company x:Key="myCompany">
+			<j:Company.employees>
+				<j:Employee Name="Thomas"/>
+				<j:Employee Name="Jin"/>
+			</j:Company.employees>
+		</j:Company>
+	</x:Composite.Resources>
+	<ListViewer input="{Binding Path=employees}">
+		<ListViewer.contentProvider>
+			<j:ContentProvider/>
+		</ListViewer.contentProvider>
+		<ListViewer.labelProvider>
+			<j:LabelProvider/>
+		</ListViewer.labelProvider>
+		<ListViewer.control.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</ListViewer.control.layoutData>
+	</ListViewer>
+</Composite>

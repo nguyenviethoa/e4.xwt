@@ -1,0 +1,17 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt"
+	text="Control Size Test (GridData)">
+	<Shell.layout>
+		<GridLayout numColumns="1"/>
+	</Shell.layout>
+	<Label x:style="BORDER" text="Label(100, 40)" Alignment="CENTER">
+		<Label.layoutData>
+			<GridData widthHint="100" heightHint="40" horizontalAlignment="CENTER" verticalAlignment="CENTER"/>
+		</Label.layoutData>
+	</Label>
+	<Button text="Button(120, 120)">
+		<Button.layoutData>
+			<GridData widthHint="120" heightHint="120"/>
+		</Button.layoutData>
+	</Button>
+</Shell>

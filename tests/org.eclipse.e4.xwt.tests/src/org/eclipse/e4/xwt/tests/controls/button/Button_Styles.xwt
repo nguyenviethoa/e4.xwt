@@ -1,0 +1,14 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt"
+	text="Button Styles Test">
+	<Shell.layout>
+		<GridLayout numColumns="7"/>
+	</Shell.layout>
+	<Button x:style="PUSH" text="SWT.PUSH" />
+	<Button x:style="CHECK" text="SWT.CHECK" />
+	<Button x:style="RADIO" text="SWT.RADIO" />
+	<Button x:style="TOGGLE" text="SWT.TOGGLE" />
+	<Button x:style="ARROW" text="SWT.ARROW" />
+	<Button x:style="FLAT" text="SWT.FLAT" />
+	<Button x:style="BORDER" text="SWT.BORDER" />
+</Shell>

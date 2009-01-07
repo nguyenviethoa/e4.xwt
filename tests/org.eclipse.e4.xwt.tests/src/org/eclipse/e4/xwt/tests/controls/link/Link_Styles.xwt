@@ -1,0 +1,19 @@
+<Composite xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt">
+	<CoolBar x:style="SWT.NONE">
+		<CoolItem x:style="SWT.NONE"></CoolItem>
+		<CoolItem x:style="SWT.NONE"></CoolItem>
+		<CoolItem x:style="SWT.NONE"></CoolItem>
+	</CoolBar>
+	<CoolBar x:style="SWT.NONE">
+		<CoolItem x:style="SWT.NONE"></CoolItem>
+		<CoolItem x:style="SWT.NONE"></CoolItem>
+		<CoolItem x:style="SWT.NONE"></CoolItem>
+	</CoolBar>
+		<CoolBar x:style="SWT.NONE">
+		<CoolItem x:style="SWT.NONE"></CoolItem>
+		<CoolItem x:style="SWT.NONE"></CoolItem>
+		<CoolItem x:style="SWT.NONE"></CoolItem>
+	</CoolBar>
+	
+</Composite>

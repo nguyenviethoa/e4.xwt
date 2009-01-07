@@ -1,0 +1,17 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+    xmlns:x="http://www.eclipse.org/xwt"
+    text="CoolBar Styles Test">
+	<Shell.layout>
+		<GridLayout numColumns="1"/>
+	</Shell.layout>
+	<CoolBar x:style="HORIZONTAL">
+		<CoolItem x:style="DROP_DOWN">
+			<CoolItem.control>
+				<ToolBar>
+					<ToolItem text="Bar1"/>
+					<ToolItem text="Bar2"/>
+				</ToolBar>
+			</CoolItem.control>
+		</CoolItem>
+	</CoolBar>
+</Shell>

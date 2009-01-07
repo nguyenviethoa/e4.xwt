@@ -1,0 +1,4 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+    xmlns:x="http://www.eclipse.org/xwt"
+    x:styles="TOOL" text="Shell Test">
+</Shell>

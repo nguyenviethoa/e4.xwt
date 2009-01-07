@@ -1,0 +1,128 @@
+<TabFolder xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt" xmlns:j="clr-namespace:java.lang"
+	xmlns:nebula="clr-namespace:org.eclipse.nebula.widgets.datechooser"
+	x:Class="demo.details.ChangeHandler" x:name="details">
+	<TabItem text="Name">
+		<TabItem.control>
+			<Composite>
+				<Composite.layout>
+					<GridLayout numColumns="2" />
+				</Composite.layout>
+				<Label text="First name:" />
+				<Text text="{Binding path=firstname}" x:style="BORDER"
+					ModifyEvent="modify">
+					<Text.layoutData>
+						<GridData horizontalAlignment="FILL"
+							grabExcessHorizontalSpace="true" />
+					</Text.layoutData>
+				</Text>
+				<Label text="Last name:" />
+				<Text text="{Binding path=lastname}" x:style="BORDER"
+					ModifyEvent="modify">
+					<Text.layoutData>
+						<GridData horizontalAlignment="FILL"
+							grabExcessHorizontalSpace="true" />
+					</Text.layoutData>
+				</Text>
+				<Label text="Birthday:" />
+				<nebula:DateChooserCombo value="{Binding path=birthday}"
+					x:style="BORDER" ModifyEvent="modify">
+					<nebula:DateChooserCombo.layoutData>
+						<GridData horizontalAlignment="FILL"
+							grabExcessHorizontalSpace="true" />
+					</nebula:DateChooserCombo.layoutData>
+				</nebula:DateChooserCombo>
+				<Label text="Position:" />
+				<Text text="{Binding path=position}" x:style="BORDER"
+					ModifyEvent="modify">
+					<Text.layoutData>
+						<GridData horizontalAlignment="FILL"
+							grabExcessHorizontalSpace="true" />
+					</Text.layoutData>
+				</Text>
+			</Composite>
+		</TabItem.control>
+	</TabItem>
+	<TabItem text="Address">
+		<TabItem.control>
+			<Composite DataContext="{Binding Path=address}">
+				<Composite.layout>
+					<GridLayout numColumns="2" />
+				</Composite.layout>
+				<Label text="Street:" />
+				<Text text="{Binding path=street}" x:style="BORDER"
+					ModifyEvent="modify">
+					<Text.layoutData>
+						<GridData horizontalAlignment="FILL"
+							grabExcessHorizontalSpace="true" />
+					</Text.layoutData>
+				</Text>
+				<Label text="Zipcode:" />
+				<Text text="{Binding path=zipcode}" x:style="BORDER"
+					ModifyEvent="modify">
+					<Text.layoutData>
+						<GridData grabExcessHorizontalSpace="true" />
+					</Text.layoutData>
+				</Text>
+				<Label text="City:" />
+				<Text text="{Binding path=city}" x:style="BORDER" ModifyEvent="modify">
+					<Text.layoutData>
+						<GridData horizontalAlignment="FILL"
+							grabExcessHorizontalSpace="true" />
+					</Text.layoutData>
+				</Text>
+				<Label text="Country:" />
+				<Combo x:style="DROP_DOWN|READ_ONLY" text="{Binding path=country}">
+					<Combo.items>
+						<x:Array Type="j:String">
+							<j:String>France</j:String>
+							<j:String>Spain</j:String>
+							<j:String>Germany</j:String>
+							<j:String>Neitherland</j:String>
+							<j:String>United States</j:String>
+							<j:String>Italy</j:String>
+							<j:String>England</j:String>
+						</x:Array>
+					</Combo.items>
+					<Combo.layoutData>
+						<GridData horizontalAlignment="FILL"
+							grabExcessHorizontalSpace="true" />
+					</Combo.layoutData>
+				</Combo>
+				<Composite.layoutData>
+					<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+						grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"
+						horizontalSpan="2" />
+				</Composite.layoutData>
+			</Composite>
+		</TabItem.control>
+	</TabItem>
+	<TabItem text="Others">
+		<TabItem.control>
+			<Composite>
+				<Composite.layoutData>
+					<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+						grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"
+						horizontalSpan="2" />
+				</Composite.layoutData>
+				<Composite.layout>
+					<GridLayout numColumns="2" />
+				</Composite.layout>
+				<Label text="E-Mail:" />
+				<Text text="{Binding Path=email}" x:style="BORDER" ModifyEvent="modify">
+					<Text.layoutData>
+						<GridData grabExcessHorizontalSpace="true"
+							horizontalAlignment="FILL" />
+					</Text.layoutData>
+				</Text>
+				<Label text="Phone:" />
+				<Text text="{Binding Path=phone}" x:style="BORDER" ModifyEvent="modify">
+					<Text.layoutData>
+						<GridData grabExcessHorizontalSpace="true"
+							horizontalAlignment="FILL" />
+					</Text.layoutData>
+				</Text>
+			</Composite>
+		</TabItem.control>
+	</TabItem>
+</TabFolder>

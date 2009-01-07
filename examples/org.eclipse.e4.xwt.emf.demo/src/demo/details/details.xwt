@@ -1,0 +1,106 @@
+<Composite xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt" x:name="details">
+	<Composite.layout>
+		<GridLayout numColumns="2" />
+	</Composite.layout>
+	<Group text="Name">
+		<Group.layout>
+			<GridLayout numColumns="2" />
+		</Group.layout>
+		<Label text="First name:" />
+		<Label text="{Binding path=firstname}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Label text="Last name:" />
+		<Label text="{Binding path=lastname}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Label text="Birthday:" />
+		<Label text="{Binding path=birthday}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Label text="Position:" />
+		<Label text="{Binding path=position}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Group.layoutData>
+			<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+				grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"
+				horizontalSpan="2" />
+		</Group.layoutData>
+	</Group>
+	<group text="Address:" DataContext="{Binding Path=address}">
+		<Group.layout>
+			<GridLayout numColumns="2" />
+		</Group.layout>
+		<Label text="Street:" />
+		<Label text="{Binding path=street}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Label text="Zipcode:" />
+		<Label text="{Binding path=zipcode}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Label text="City:" />
+		<Label text="{Binding path=city}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Label text="Country:" />
+		<Label text="{Binding path=country}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Group.layoutData>
+			<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+				grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"
+				horizontalSpan="2" />
+		</Group.layoutData>
+	</group>
+	<Group text="Others">
+		<Group.layout>
+			<GridLayout numColumns="2" />
+		</Group.layout>
+		<Label text="E-Mail:" />
+		<Label text="{Binding path=email}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Label text="Phone:" />
+		<Label text="{Binding path=phone}">
+			<Label.layoutData>
+				<GridData horizontalAlignment="FILL"
+					grabExcessHorizontalSpace="true" />
+			</Label.layoutData>
+		</Label>
+		<Group.layoutData>
+			<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+				grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"
+				horizontalSpan="2" />
+		</Group.layoutData>
+	</Group>
+</Composite>

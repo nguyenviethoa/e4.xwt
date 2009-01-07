@@ -1,0 +1,50 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+    xmlns:x="http://www.eclipse.org/xwt"
+    xmlns:j="clr-namespace:java.lang"
+    text="Combo Styles Test">
+	<Shell.layout>
+		<GridLayout numColumns="2"/>
+	</Shell.layout>
+	<Label text="DROP_DOWN: "/>
+	<Combo x:style="DROP_DOWN">
+		<Combo.items>
+			<x:Array Type="j:String">
+            	  <j:String>"Line number foreground"</j:String>
+	              <j:String>"Matching bracketshighlight"</j:String>
+    	          <j:String>"Current line highlight"</j:String>
+        	      <j:String>"Print margin"</j:String>
+            	  <j:String>"Find scope"</j:String>
+   	    	      <j:String>"Linked position"</j:String>
+    	          <j:String>"Link"</j:String>
+   		     </x:Array> 
+		</Combo.items>
+	</Combo>
+	<Label text="DROP_DOWN|READ_ONLY: "/>
+	<Combo x:style="DROP_DOWN|READ_ONLY">
+		<Combo.items>
+			<x:Array Type="j:String">
+            	  <j:String>"Line number foreground"</j:String>
+	              <j:String>"Matching bracketshighlight"</j:String>
+    	          <j:String>"Current line highlight"</j:String>
+        	      <j:String>"Print margin"</j:String>
+            	  <j:String>"Find scope"</j:String>
+   	    	      <j:String>"Linked position"</j:String>
+    	          <j:String>"Link"</j:String>
+   		     </x:Array> 
+		</Combo.items>
+	</Combo>
+	<Label text="SIMPLE: "/>
+	<Combo x:style="SIMPLE">
+		<Combo.items>
+			<x:Array Type="j:String">
+            	  <j:String>"Line number foreground"</j:String>
+	              <j:String>"Matching bracketshighlight"</j:String>
+    	          <j:String>"Current line highlight"</j:String>
+        	      <j:String>"Print margin"</j:String>
+            	  <j:String>"Find scope"</j:String>
+   	    	      <j:String>"Linked position"</j:String>
+    	          <j:String>"Link"</j:String>
+   		     </x:Array> 
+		</Combo.items>
+	</Combo>
+</Shell>
