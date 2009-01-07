@@ -17,6 +17,10 @@
       %license
    </license>
 
+   <requires>
+      <import feature="org.eclipse.e4.xwt.feature" version="1.0.0"/>
+   </requires>
+
    <plugin
          id="org.eclipse.e4.xwt.tests"
          download-size="0"
