@@ -6,18 +6,18 @@
 	</Shell.layout>
 	<Shell.menuBar>
 		<Menu x:style="BAR">
-			<MenuItem text="File" x:style="CASCADE">
+			<MenuItem text="&amp;File" x:style="CASCADE">
 				<MenuItem.menu>
 					<Menu x:style="DROP_DOWN" x:Class="demo.MenuHandler">
-						<MenuItem text="New" x:style="PUSH" image="new.gif"
+						<MenuItem text="&amp;New" x:style="PUSH" accelerator="SWT.CTRL | N" image="new.gif"
 							selectionEvent="newContact" />
 						<MenuItem x:style="SEPARATOR" />
-						<MenuItem text="Open..." x:style="PUSH" image="open.gif"
+						<MenuItem text="&amp;Open..." x:style="PUSH" accelerator="SWT.CTRL | O" image="open.gif"
 							selectionEvent="open" />
-						<MenuItem text="Save..." x:style="PUSH" image="saveas.gif"
+						<MenuItem text="&amp;Save..." x:style="PUSH" accelerator="SWT.CTRL | S" image="saveas.gif"
 							selectionEvent="save" />
 						<MenuItem x:style="SEPARATOR" />
-						<MenuItem text="Exit" x:style="PUSH" selectionEvent="exit" />
+						<MenuItem text="&amp;Exit" x:style="PUSH" accelerator="SWT.CTRL | E" selectionEvent="exit" />
 					</Menu>
 				</MenuItem.menu>
 			</MenuItem>
