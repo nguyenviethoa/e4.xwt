@@ -64,7 +64,7 @@
 					</Menu>
 				</ListViewer.control.menu>
 			</ListViewer>
-			<button x:Name="writable" x:Style="CHECK" text="Writable"
+			<Button x:Name="writable" x:Style="CHECK" text="Writable"
 				SelectionEvent="updateWritable" />
 			<Composite.layoutData>
 				<GridData horizontalAlignment="FILL" verticalAlignment="FILL"

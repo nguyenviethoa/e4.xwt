@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ILoadingContext;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.utils.ClassLoaderUtil;
 import org.eclipse.e4.xwt.utils.LoggerManager;
@@ -63,15 +64,21 @@ public class MetaclassManager {
 		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
 	}
 
-	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
+	public IMetaclass getMetaclass(ILoadingContext context, String name,
+			String namespace) {
 		IMetaclass metaclass = nameRegister.get(name);
 		if (metaclass != null) {
 			return metaclass;
 		}
-		if (namespace == null || !namespace.startsWith(IConstants.XWT_CLR_NAMESPACE_PROTO)) {
-			LoggerManager.log(new IllegalArgumentException("Wrong namespace: " + namespace + " for " + name));
+		if (!namespace.startsWith(IConstants.XWT_CLR_NAMESPACE_PROTO)) {
+			String message = "Le type is not found \"" + name
+					+ "\" in the namespace: " + namespace;
+			LoggerManager.log(new IllegalArgumentException(message));
+			throw new XWTException(message);
 		}
-		String packageName = namespace.substring(IConstants.XWT_CLR_NAMESPACE_PROTO.length());
+
+		String packageName = namespace
+				.substring(IConstants.XWT_CLR_NAMESPACE_PROTO.length());
 		int index = packageName.indexOf('=');
 		if (index != -1) {
 			packageName = packageName.substring(0, index);
@@ -80,10 +87,13 @@ public class MetaclassManager {
 		// try {
 		Class type = ClassLoaderUtil.loadClass(context, className);
 		if (type == null) {
-			LoggerManager.log(new IllegalStateException("Cannot load " + className));
+			LoggerManager.log(new IllegalStateException("Cannot load "
+					+ className));
+			throw new XWTException("Cannot load " + className);
 		}
 		metaclass = register(type);
-		// There is no need to mapping a CLR class, since the ClassLoader will be changed.
+		// There is no need to mapping a CLR class, since the ClassLoader will
+		// be changed.
 		nameRegister.remove(type.getSimpleName());
 		return metaclass;
 	}
