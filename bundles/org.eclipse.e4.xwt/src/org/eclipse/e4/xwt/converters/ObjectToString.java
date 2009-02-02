@@ -14,7 +14,7 @@ package org.eclipse.e4.xwt.converters;
 import org.eclipse.core.databinding.conversion.IConverter;
 
 /**
- * Safely SWT context values, it used to avoid a NullException when set text values to SWT Widgets.
+ * Safely SWT context values, it used to avoid a NullPointerException when set text values to SWT Widgets.
  * 
  * @author jliu
  */

@@ -9,12 +9,14 @@
  *     Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.converters;
+
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.swt.graphics.Color;
 
-
 /**
+ * String to Color converter
+ * 
  * @author jliu
  */
 public class StringToColor implements IConverter {

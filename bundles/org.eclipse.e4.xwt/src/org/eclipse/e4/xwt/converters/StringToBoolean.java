@@ -12,6 +12,11 @@ package org.eclipse.e4.xwt.converters;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 
+/**
+ * String to Boolean converter
+ * 
+ * @author yyang
+ */
 public class StringToBoolean implements IConverter {
 	public static StringToInteger instance = new StringToInteger();
 

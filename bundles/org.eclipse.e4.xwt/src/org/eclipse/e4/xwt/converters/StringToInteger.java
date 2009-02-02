@@ -15,9 +15,14 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.maps.XWTMaps;
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.swt.layout.GridData;
 
+/**
+ * String to Integer converter
+ * 
+ * @author yyang
+ */
 public class StringToInteger implements IConverter {
 	private static final String GRIDDATA_PREFIX = "GRIDDATA.";
 	private static final String STYLES_SEP = "|";

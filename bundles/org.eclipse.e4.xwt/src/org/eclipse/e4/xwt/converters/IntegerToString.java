@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.converters;
 
+/**
+ * Integer to String converter
+ * 
+ * @author yyang
+ */
 public class IntegerToString extends ObjectToString {
 	public static IntegerToString instance = new IntegerToString();
 

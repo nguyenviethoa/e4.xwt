@@ -12,6 +12,11 @@ package org.eclipse.e4.xwt.converters;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 
+/**
+ * Object to Object converter: null converter
+ * 
+ * @author yyang
+ */
 public class ObjectToObject implements IConverter {
 	public static ObjectToObject instance = new ObjectToObject();
 

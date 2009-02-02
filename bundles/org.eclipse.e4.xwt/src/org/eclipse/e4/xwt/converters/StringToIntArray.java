@@ -17,6 +17,8 @@ import java.util.StringTokenizer;
 import org.eclipse.core.databinding.conversion.IConverter;
 
 /**
+ * String to int[] converter
+ * 
  * @author jliu
  */
 public class StringToIntArray implements IConverter {

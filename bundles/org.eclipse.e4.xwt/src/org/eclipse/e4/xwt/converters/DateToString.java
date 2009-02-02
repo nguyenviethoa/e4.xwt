@@ -13,6 +13,11 @@ package org.eclipse.e4.xwt.converters;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Date to String converter
+ * 
+ * @author yyang
+ */
 public class DateToString extends ObjectToString {
 	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat();
 	public static DateToString instance = new DateToString();

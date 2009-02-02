@@ -13,6 +13,11 @@ package org.eclipse.e4.xwt.converters;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass;
 
+/**
+ * Binding to Object covnerter
+ * 
+ * @author yyang
+ */
 public class BindingToObject implements IConverter {
 	public static BindingToObject instance = new BindingToObject();
 

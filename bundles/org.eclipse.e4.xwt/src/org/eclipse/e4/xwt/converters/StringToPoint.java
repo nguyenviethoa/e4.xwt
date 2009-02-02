@@ -13,6 +13,11 @@ package org.eclipse.e4.xwt.converters;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.swt.graphics.Point;
 
+/**
+ * String to Point converter
+ * 
+ * @author yyang
+ */
 public class StringToPoint implements IConverter {
 
 	public Object convert(Object fromObject) {

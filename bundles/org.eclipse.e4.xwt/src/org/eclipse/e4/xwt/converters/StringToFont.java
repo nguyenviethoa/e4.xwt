@@ -14,6 +14,11 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.swt.graphics.Font;
 
+/**
+ * String to Font converter
+ * 
+ * @author yyang
+ */
 public class StringToFont implements IConverter {
 
 	public Object convert(Object fromObject) {
