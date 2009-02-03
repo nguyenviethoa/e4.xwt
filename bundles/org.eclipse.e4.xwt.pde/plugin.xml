@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="metaclasses" name="XWT metaclasses" schema="schema/metaclasses.exsd"/>
-   <extension-point id="converters" name="XWT converters" schema="schema/converters.exsd"/>
-   <extension-point id="metaclassFactories" name="Metaclass Factory" schema="schema/metaclassFactories.exsd"/>
-   <extension-point id="logger" name="logger" schema="schema/logger.exsd"/>
+   <extension-point id="metaclasses" name="%extension-point.name.0" schema="schema/metaclasses.exsd"/>
+   <extension-point id="converters" name="%extension-point.name.1" schema="schema/converters.exsd"/>
+   <extension-point id="metaclassFactories" name="%extension-point.name.2" schema="schema/metaclassFactories.exsd"/>
+   <extension-point id="logger" name="%extension-point.name.3" schema="schema/logger.exsd"/>
 
 </plugin>

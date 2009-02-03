@@ -4,8 +4,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.pde.PDEPlugin;
 import org.eclipse.e4.xwt.pde.LoadingContext;
+import org.eclipse.e4.xwt.pde.PDEPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -18,8 +18,9 @@ import org.eclipse.ui.part.ViewPart;
  * <p>
  * The view uses a label provider to define how model objects should be presented in the view. Each view can present the same model objects using different labels and icons, if needed. Alternatively, a single label provider can be shared between views in order to ensure that objects of the same type are presented in the same way everywhere.
  * <p>
+ * 
+ * @author yyang
  */
-
 public abstract class XWTViewPart extends ViewPart {
 	protected Composite container;
 	protected Object dataContext;
@@ -56,12 +57,6 @@ public abstract class XWTViewPart extends ViewPart {
 		}
 
 		try {
-			// deviceAdapter = new DeviceAdapter(container) {
-			// @Override
-			// public Object getDataContext() {
-			// return XAMLView.this.getDataContext();
-			// }
-			// };
 			XWT.load(container, file, getDataContext());
 			container.layout(true, true);
 		} catch (Exception e) {

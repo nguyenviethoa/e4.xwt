@@ -15,6 +15,10 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
+/**
+ * 
+ * @author yyang
+ */
 public abstract class XWTEditorPart extends EditorPart {
 	protected Composite container;
 	protected Object dataContext;
@@ -42,13 +46,6 @@ public abstract class XWTEditorPart extends EditorPart {
 		}
 
 		try {
-			// deviceAdapter = new DeviceAdapter(container) {
-			// @Override
-			// public Object getDataContext() {
-			// return XAMLEditorPart.this.getDataContext();
-			// }
-			// };
-
 			XWT.load(file);
 			container.layout(true, true);
 		} catch (Exception e) {
@@ -64,12 +61,6 @@ public abstract class XWTEditorPart extends EditorPart {
 		}
 
 		try {
-			// deviceAdapter = new DeviceAdapter(container) {
-			// @Override
-			// public Object getDataContext() {
-			// return XAMLEditorPart.this.getDataContext();
-			// }
-			// };
 			XWT.load(container, inputStream, base, getDataContext());
 			container.layout(true, true);
 		} catch (Exception e) {
