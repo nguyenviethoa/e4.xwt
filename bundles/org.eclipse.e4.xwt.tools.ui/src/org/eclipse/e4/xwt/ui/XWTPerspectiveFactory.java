@@ -30,7 +30,7 @@ public class XWTPerspectiveFactory implements IPerspectiveFactory {
 	}
 
 	private void addViews() {
-
+		factory.setFixed(false);
 		String editorArea = factory.getEditorArea();
 		// Left
 		IFolderLayout left = factory.createFolder("left", IPageLayout.LEFT, (float) 0.25, editorArea); //$NON-NLS-1$
