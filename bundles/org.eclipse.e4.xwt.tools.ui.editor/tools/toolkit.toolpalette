@@ -99,6 +99,5 @@
     <entries content="{Binding Path=$(cursor)}" name="Binding" context="xml_attribute_value" scope=""/>
     <entries content="{Binding Source={StaticResource $(cursor)}, Path=Property}" name="Static Resource" context="xml_attribute_value" scope=""/>
     <entries content="{Binding Source={DynamicResource $(cursor)}, Path=Property}" name="Dynamic Resource" context="xml_attribute_value" scope=""/>
-    <entries content="&lt;ObjectDataProvider x:Key=&quot;$(cursor)&quot;&#xD;&#xA;&#x9;&#x9;&#x9;ObjectType=&quot;{x:Type local:Tasks}&quot; />" name="Object Data Provider"/>
   </entries>
 </toolpalette:ToolPalette>

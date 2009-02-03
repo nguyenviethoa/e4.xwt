@@ -15,8 +15,10 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
+
 public class ListViewer {
 	public static void main(String[] args) {
+		
 		URL url = ListViewer.class.getResource(ListViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

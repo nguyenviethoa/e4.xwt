@@ -21,7 +21,8 @@ import java.util.List;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.maps.XWTMaps;
+import org.eclipse.e4.xwt.XWTMaps;
+import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -130,7 +131,7 @@ public class XWTContentAssistProcessor extends AbstractContentAssistProcessor im
 		}
 		return stylesProposals;
 	}
-	
+
 	static SelectionCompletionProposal[] getAcceleratorsProposals() {
 		if (acceleratorsProposals == null) {
 			Collection<String> names = XWTMaps.getAcceleratorKeys();
@@ -216,6 +217,10 @@ public class XWTContentAssistProcessor extends AbstractContentAssistProcessor im
 				}
 
 				eventName = Character.toUpperCase(eventName.charAt(0)) + eventName.substring(1) + "Event";
+				if (event.getName() != null && event.getName().equals(Metaclass.LOADED)) {
+					eventName = Metaclass.LOADED;
+				}
+
 				if (!existing.contains(eventName)) {
 					String replacementString = eventName + "=\"perform" + eventName + "\" ";
 					Image image = ImageManager.get(ImageManager.IMG_EVENT);
@@ -313,8 +318,8 @@ public class XWTContentAssistProcessor extends AbstractContentAssistProcessor im
 						prefixedQuote = prefixed + "\"";
 						fullValue = false;
 					}
-						
-					//filter accelerators of menu element. 
+
+					// filter accelerators of menu element.
 					if (attributeName.equalsIgnoreCase("accelerator")) {
 						SelectionCompletionProposal[] proposals = getAcceleratorsProposals();
 						for (int j = 0; j < proposals.length; j++) {
@@ -343,8 +348,8 @@ public class XWTContentAssistProcessor extends AbstractContentAssistProcessor im
 						}
 						return;
 					}
-					
-					// styles TODO: filter styles of each element. 
+
+					// styles TODO: filter styles of each element.
 					if (attributeName.equalsIgnoreCase("x:style")) {
 						SelectionCompletionProposal[] proposals = getStylesProposals();
 						for (int j = 0; j < proposals.length; j++) {

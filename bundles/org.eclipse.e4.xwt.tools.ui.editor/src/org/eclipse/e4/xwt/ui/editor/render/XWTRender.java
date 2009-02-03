@@ -104,9 +104,9 @@ public class XWTRender implements VEXRenderer {
 				shell.setLocation(rectangle.x + rectangle.width + 200, rectangle.y + rectangle.height + 200);
 				shell.open();
 
-				Class<?> hostClr = XWT.getCLR(rootElement);
+				Object hostClr = XWT.getCLR(rootElement);
 				if (hostClr != null) {
-					hostClassName = hostClr.getName();
+					hostClassName = hostClr.getClass().getName();
 				}
 
 				final List<Browser> browsers = new ArrayList<Browser>();

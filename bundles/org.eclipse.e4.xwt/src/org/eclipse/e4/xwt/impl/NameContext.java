@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.impl;
 
 import java.util.HashMap;
 

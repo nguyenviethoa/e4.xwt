@@ -23,9 +23,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.eclipse.e4.xwt.Core;
 import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.ILogger;
+import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.impl.Core;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -56,14 +56,11 @@ public class ElementManager {
 
 	private static Random RANDOM = new Random();
 
-	private ILogger logger;
-
 	public String generateID(String typeName) {
 		return typeName + RANDOM.nextInt(Integer.MAX_VALUE);
 	}
 
-	public ElementManager(ILogger logger) {
-		this.logger = logger;
+	public ElementManager() {
 		this.documentRoot = new DocumentRoot();
 		this.elements = new HashMap<String, Element>();
 		this.encoding = System.getProperty("file.encoding");
@@ -84,9 +81,9 @@ public class ElementManager {
 				Exception cause = exception.getException();
 				try {
 					if (cause != null) {
-						ElementManager.this.logger.error(cause);
+						XWT.getLogger().error(cause);
 					} else {
-						ElementManager.this.logger.error(exception);
+						XWT.getLogger().error(exception);
 					}
 				} catch (Exception e) {
 					if (cause != null) {
@@ -106,9 +103,9 @@ public class ElementManager {
 				Exception cause = exception.getException();
 				try {
 					if (cause != null) {
-						ElementManager.this.logger.error(cause);
+						XWT.getLogger().error(cause);
 					} else {
-						ElementManager.this.logger.error(exception);
+						XWT.getLogger().error(exception);
 					}
 				} catch (Exception e) {
 					if (cause != null) {
@@ -130,9 +127,9 @@ public class ElementManager {
 				Exception cause = exception.getException();
 				try {
 					if (cause != null) {
-						ElementManager.this.logger.error(cause);
+						XWT.getLogger().error(cause);
 					} else {
-						ElementManager.this.logger.error(exception);
+						XWT.getLogger().error(exception);
 					}
 				} catch (Exception e) {
 					if (cause != null) {
@@ -324,9 +321,9 @@ public class ElementManager {
 			Exception cause = saxe.getException();
 			try {
 				if (cause != null) {
-					ElementManager.this.logger.error(cause);
+					XWT.getLogger().error(cause);
 				} else {
-					ElementManager.this.logger.error(saxe);
+					XWT.getLogger().error(saxe);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -334,14 +331,14 @@ public class ElementManager {
 			throw saxe;
 		} catch (ParserConfigurationException pce) {
 			try {
-				ElementManager.this.logger.error(pce);
+				XWT.getLogger().error(pce);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			throw pce;
 		} catch (IOException ioe) {
 			try {
-				ElementManager.this.logger.error(ioe);
+				XWT.getLogger().error(ioe);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

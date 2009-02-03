@@ -8,16 +8,24 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.e4.xwt.ILoadData;
+import org.eclipse.e4.xwt.ILoadingContext;
+import org.eclipse.e4.xwt.ILogger;
+import org.eclipse.e4.xwt.IMetaclassFactory;
+import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.javabean.metadata.MetaclassManager;
+import org.eclipse.e4.xwt.javabean.metadata.MetaclassService;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.xml.DocumentObject;
 import org.eclipse.e4.xwt.xml.DocumentRoot;
@@ -28,74 +36,6 @@ import org.eclipse.swt.widgets.Control;
 public class Core {
 	static public boolean TRACE_BENCH = false;
 
-	static class MetaclassService {
-		protected Map<String, MetaclassManager> map = new HashMap<String, MetaclassManager>();
-
-		public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
-			MetaclassManager manager = map.get(namespace);
-			if (manager == null) {
-				manager = new MetaclassManager(map.get(IConstants.XWT_NAMESPACE));
-				map.put(namespace, manager);
-			}
-			return manager.getMetaclass(context, name, namespace);
-		}
-
-		public IMetaclass getMetaclass(Class<?> type) {
-			MetaclassManager manager = map.get(IConstants.XWT_NAMESPACE);
-			if (manager == null) {
-				return null;
-			}
-			IMetaclass metaclass = manager.getMetaclass(type);
-			if (metaclass == null) {
-				String packageName = "";
-				Package packageObject = type.getPackage();
-				if (packageObject != null) {
-					packageName = packageObject.getName();
-				}
-				String key = IConstants.XWT_CLR_NAMESPACE_PROTO + ":" + packageName;
-				manager = map.get(key);
-				if (manager == null) {
-					manager = new MetaclassManager(manager);
-					map.put(key, manager);
-				}
-				metaclass = manager.getMetaclass(type);
-				if (metaclass == null) {
-					manager.register(type);
-					metaclass = manager.getMetaclass(type);
-				}
-			}
-			return metaclass;
-		}
-
-		public IMetaclass register(Class<?> metaclass, String namespace) {
-			MetaclassManager manager = map.get(namespace);
-			if (manager == null) {
-				throw new IllegalStateException();
-			}
-			return manager.register(metaclass);
-		}
-
-		public void register(IMetaclass metaclass, String namespace) {
-			MetaclassManager manager = map.get(namespace);
-			if (manager == null) {
-				throw new IllegalStateException();
-			}
-			manager.register(metaclass);
-		}
-
-		public Collection<IMetaclass> getAllMetaclasses(String namespace) {
-			MetaclassManager manager = map.get(namespace);
-			if (manager == null) {
-				throw new IllegalStateException();
-			}
-			return manager.getAllMetaclasses();
-		}
-
-		public void register(String namespace, MetaclassManager manager) {
-			map.put(namespace, manager);
-		}
-	}
-
 	private HashMap<Class<?>, Object> registrations;
 
 	private HashMap<DocumentObject, IVisualElementLoader> elementsLoaders = new HashMap<DocumentObject, IVisualElementLoader>();
@@ -104,7 +44,9 @@ public class Core {
 
 	IElementLoaderFactory loaderFactory;
 
-	protected ILogger log = new ILogger() {
+	static public ILogger nullLog = new ILogger() {
+		private Map<Tracking, String> messageMap = new HashMap<Tracking, String>();
+
 		public void error(Throwable e) {
 		}
 
@@ -115,6 +57,30 @@ public class Core {
 		}
 
 		public void warning(String message) {
+		}
+
+		public void printInfo(String message, Tracking tracking, Set trackType) {
+			String printMessage = "";
+
+			if (trackType != null && trackType.size() > 0) {
+				if (trackType.contains(tracking)) {
+					printMessage = (String) messageMap.get(tracking);
+				}
+			}
+			System.out.println(printMessage);
+		}
+
+		public void addMessage(String message, Tracking tracking) {
+			if (messageMap.containsKey(tracking)) {
+				messageMap.remove(tracking);
+			}
+			messageMap.put(tracking, message);
+		}
+
+		public void removeMessage(Tracking tracking) {
+			if (messageMap.containsKey(tracking)) {
+				messageMap.remove(tracking);
+			}
 		}
 	};
 
@@ -140,6 +106,10 @@ public class Core {
 
 	public void registerMetaclass(IMetaclass metaclass, String namespace) {
 		getMetaclassService().register(metaclass, namespace);
+	}
+
+	public void registerMetaclassFactory(IMetaclassFactory metaclassFactory) {
+		getMetaclassService().registerFactory(metaclassFactory);
 	}
 
 	public IMetaclass registerMetaclass(Class<?> metaclass, String namespace) {
@@ -197,7 +167,7 @@ public class Core {
 	public Control load(ILoadingContext loadingContext, InputStream stream, URL input, ILoadData loadData) throws Exception {
 		// Detect from url or file path.
 		long start = System.currentTimeMillis();
-		ElementManager manager = new ElementManager(log);
+		ElementManager manager = new ElementManager();
 		if (input != null) {
 			Element element = (stream == null ? manager.load(input) : manager.load(stream, input));
 			IRenderingContext context = new ExtensionContext(loadingContext, manager, manager.getRootElement().getNamespace());
@@ -207,6 +177,13 @@ public class Core {
 			}
 			if (visual instanceof Control) {
 				return (Control) visual;
+			}
+			Class<?> jfaceWindow = Class.forName("org.eclipse.jface.window.Window");
+			if (jfaceWindow != null && jfaceWindow.isInstance(visual)) {
+				Method createMethod = jfaceWindow.getDeclaredMethod("create");
+				createMethod.invoke(visual);
+				Method method = jfaceWindow.getDeclaredMethod("getShell");
+				return (Control) method.invoke(visual);
 			}
 		}
 		return null;
@@ -247,7 +224,8 @@ public class Core {
 		}
 
 		// public Object getService(Class<?> type) {
-		// ServiceReference serviceReference = context.getServiceReference(type.getName());
+		// ServiceReference serviceReference =
+		// context.getServiceReference(type.getName());
 		// return context.getService(serviceReference);
 		// }
 

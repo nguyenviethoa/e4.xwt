@@ -25,6 +25,11 @@ public class Person {
 	}
 
 	private String name = "toto";
+	private Address address;
+
+	public Person() {
+		address = new Address();
+	}
 
 	public void setName(String value) {
 		String oldValue = this.name;
@@ -35,4 +40,15 @@ public class Person {
 	public String getName() {
 		return name;
 	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		Address oldValue = this.address;
+		this.address = address;
+		changeSupport.firePropertyChange("address", oldValue, address);
+	}
+
 }

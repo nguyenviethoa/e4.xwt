@@ -37,6 +37,8 @@ public class Metaclass implements IMetaclass {
 	protected final Map<String, IProperty> propertyCache = new HashMap<String, IProperty>();
 	protected Map<String, IEvent> routedEventCache = new HashMap<String, IEvent>();
 
+	public static final String LOADED = "Loaded";
+
 	private Class<?> type;
 	private String name;
 	private IMetaclass superClass;
@@ -65,24 +67,38 @@ public class Metaclass implements IMetaclass {
 				BeanEvent event = new BeanEvent(eventSetDescriptor.getName(), eventSetDescriptor);
 				routedEventCache.put(normalize(eventSetDescriptor.getName() + "Event"), event);
 			}
-
+			if (isWidgetType(type)) {
+				routedEventCache.put(normalize(LOADED), new LoadedEvent(LOADED));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public IProperty addProperty(IProperty p) {
-		return propertyCache.put(normalize(p.getName()), p);
-	}
-
-	public IProperty addArrayProperty(IProperty p) {
-		if (p.getType() != null && p.getType().isArray()) {
-			String arrayProp = normalize(p.getName() + "array");
-			if (!propertyCache.containsKey(arrayProp)) {
-				return propertyCache.put(arrayProp, p);
+	private boolean isWidgetType(Class<?> type) {
+		Class<?> superClass = type.getSuperclass();
+		if (superClass != null) {
+			if (superClass.getName().equalsIgnoreCase(Widget.class.getName())) {
+				return true;
+			} else {
+				return isWidgetType(superClass);
 			}
 		}
-		return p;
+		return false;
+	}
+
+	public IProperty addProperty(IProperty property) {
+		return propertyCache.put(normalize(property.getName()), property);
+	}
+
+	public IProperty addArrayProperty(IProperty property) {
+		if (property.getType() != null && property.getType().isArray()) {
+			String arrayProp = normalize(property.getName() + "array");
+			if (!propertyCache.containsKey(arrayProp)) {
+				return propertyCache.put(arrayProp, property);
+			}
+		}
+		return property;
 	}
 
 	public IProperty getArrayProperty(IProperty property) {

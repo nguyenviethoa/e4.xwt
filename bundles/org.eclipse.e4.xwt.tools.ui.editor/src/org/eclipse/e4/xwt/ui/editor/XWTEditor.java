@@ -17,12 +17,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.ui.ExceptionHandle;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
 import org.eclipse.e4.xwt.ui.editor.render.XWTRender;
 import org.eclipse.e4.xwt.ui.editor.treeviewer.XWTTableTreeViewer;
 import org.eclipse.e4.xwt.ui.utils.DisplayUtil;
 import org.eclipse.e4.xwt.ui.utils.ImageManager;
 import org.eclipse.e4.xwt.ui.utils.ProjectContext;
+import org.eclipse.e4.xwt.ui.views.XWTView;
 import org.eclipse.e4.xwt.vex.VEXCodeSynchronizer;
 import org.eclipse.e4.xwt.vex.VEXContext;
 import org.eclipse.e4.xwt.vex.VEXEditor;
@@ -72,6 +74,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.progress.ProgressManager;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -249,6 +252,7 @@ public class XWTEditor extends VEXEditor {
 	}
 
 	protected boolean handleInputChanged(IDocument newInput) {
+		String value = newInput.get();
 		if (newInput == null) {
 			return false;
 		}
@@ -259,7 +263,24 @@ public class XWTEditor extends VEXEditor {
 				setJavaEditor(className);
 			}
 		}
+		refreshXWTView(value);
 		return handling;
+	}
+
+	private void refreshXWTView(String value) {
+		IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
+
+		if (file != null) {
+			XWTUIPlugin.checkStartup();
+			try {
+				XWTView view = (XWTView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(XWTView.ID);
+				if (view != null) {
+					view.setContent(value, file);
+				}
+			} catch (Exception e) {
+				ExceptionHandle.handle(e, "");
+			}
+		}
 	}
 
 	@Override
@@ -512,4 +533,12 @@ public class XWTEditor extends VEXEditor {
 			}
 		}
 	};
+
+	@Override
+	public void setFocus() {
+		// TODO Auto-generated method stub
+		super.setFocus();
+		refreshXWTView(super.getTextEditor().getTextViewer().getDocument().get());
+
+	}
 }

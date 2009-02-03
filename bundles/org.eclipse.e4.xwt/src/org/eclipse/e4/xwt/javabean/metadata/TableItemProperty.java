@@ -51,12 +51,14 @@ public class TableItemProperty extends AbstractProperty {
 		}
 	}
 
-	private final Class<?> propertyType;
-	private final Class<?> type;
+	private Class<?> propertyType;
 
-	public TableItemProperty(Class<?> type, Class<?> propertyType, String name) {
+	public TableItemProperty() {
+		this(Collection.class, "cells");
+	}
+
+	public TableItemProperty(Class<?> propertyType, String name) {
 		super(name);
-		this.type = type;
 		this.propertyType = propertyType;
 	}
 
@@ -85,6 +87,10 @@ public class TableItemProperty extends AbstractProperty {
 
 	public Class<?> getType() {
 		return propertyType;
+	}
+
+	public void setType(Class<?> type) {
+		this.propertyType = type;
 	}
 
 }

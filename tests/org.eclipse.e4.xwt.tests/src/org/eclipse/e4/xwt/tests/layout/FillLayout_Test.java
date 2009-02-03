@@ -14,6 +14,7 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
@@ -26,6 +27,7 @@ import org.eclipse.swt.widgets.Widget;
 
 public class FillLayout_Test {
 	public static void main(String[] args) {
+		
 		URL url = FillLayout_Test.class.getResource(FillLayout_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean;
 
-import org.eclipse.e4.xwt.IElementLoaderFactory;
-import org.eclipse.e4.xwt.IRenderingContext;
-import org.eclipse.e4.xwt.IVisualElementLoader;
+import org.eclipse.e4.xwt.impl.IElementLoaderFactory;
+import org.eclipse.e4.xwt.impl.IRenderingContext;
+import org.eclipse.e4.xwt.impl.IVisualElementLoader;
 
 public class ResourceLoaderFactory implements IElementLoaderFactory {
 	public ResourceLoaderFactory() {

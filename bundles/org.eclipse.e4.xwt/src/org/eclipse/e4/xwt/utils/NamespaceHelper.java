@@ -16,8 +16,8 @@ import org.eclipse.e4.xwt.ILoadingContext;
 public class NamespaceHelper {
 	static public Class<?> loadCLRClass(ILoadingContext loadingContext, String name, String namespace) throws ClassNotFoundException {
 		// xmlns:custom="clr-namespace:SDKSample;assembly=SDKSampleLibrary"
-		if (namespace.startsWith(IConstants.XWT_CLR_NAMESPACE_PROTO)) {
-			String contentSegment = namespace.substring(IConstants.XWT_CLR_NAMESPACE_PROTO.length());
+		if (namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
+			String contentSegment = namespace.substring(IConstants.XAML_CLR_NAMESPACE_PROTO.length());
 			String packageName = contentSegment;
 			String assembly = null;
 			int index = contentSegment.indexOf(";");

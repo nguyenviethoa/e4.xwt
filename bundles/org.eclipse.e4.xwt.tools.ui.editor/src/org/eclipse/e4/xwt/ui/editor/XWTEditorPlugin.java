@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.ui.editor;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.xwt.pde.PDEPlugin;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -51,6 +52,8 @@ public class XWTEditorPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+
+		PDEPlugin.getDefault();
 	}
 
 	/*

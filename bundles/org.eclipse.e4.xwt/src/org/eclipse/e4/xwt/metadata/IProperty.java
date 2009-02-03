@@ -12,8 +12,15 @@ package org.eclipse.e4.xwt.metadata;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * UI property
+ * 
+ * @author yyang
+ */
 public interface IProperty extends IBehavior {
 	public Class<?> getType();
+
+	public void setType(Class<?> type);
 
 	/**
 	 * Can generate event

@@ -15,11 +15,13 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
+
 /**
  * @author jliu
  */
 public class Table_binding_Test {
 	public static void main(String[] args) {
+		
 		URL url = Table_binding_Test.class.getResource(Table_binding_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

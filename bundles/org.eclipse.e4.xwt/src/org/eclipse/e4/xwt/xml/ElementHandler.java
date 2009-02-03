@@ -668,7 +668,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		if (uri == null || uri.length() == 0) {
 			uri = defaultNamespace;
 		}
-		if (uri.startsWith(IConstants.XWT_CLR_NAMESPACE_PROTO)) {
+		if (uri.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
 			return uri;
 		}
 		return uri.toLowerCase();

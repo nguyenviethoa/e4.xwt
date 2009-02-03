@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 
 public class DynamicProperty extends AbstractProperty {
 
-	private final Class<?> propertyType;
+	private Class<?> propertyType;
 	private final Method setter;
 	private final Method getter;
 
@@ -41,6 +41,10 @@ public class DynamicProperty extends AbstractProperty {
 
 	public Class<?> getType() {
 		return propertyType;
+	}
+
+	public void setType(Class<?> type) {
+		this.propertyType = type;
 	}
 
 	private static Method createSetter0(Class<?> type, Class<?> propertyType, String name) {

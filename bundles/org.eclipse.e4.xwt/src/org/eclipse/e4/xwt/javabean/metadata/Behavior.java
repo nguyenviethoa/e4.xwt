@@ -27,4 +27,8 @@ public abstract class Behavior implements IBehavior {
 	public final String getName() {
 		return name;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

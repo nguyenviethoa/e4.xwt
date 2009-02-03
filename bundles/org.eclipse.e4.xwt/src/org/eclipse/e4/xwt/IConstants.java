@@ -17,9 +17,15 @@ import java.util.ResourceBundle;
 
 import org.eclipse.e4.xwt.xml.DocumentObject;
 
+/**
+ * Shared constants
+ * 
+ * @author yyang
+ */
 public interface IConstants {
 	public final String XAML_X_KEY = "Key";
 	public final String XAML_X_TYPE = "Type";
+	public final String XAML_X_TARGET_TYPE = "TargetType";
 	public final String XAML_X_TYPE_NAME = "TypeName";
 	public final String XAML_CLR_ASSEMBLY = "assembly=";
 
@@ -30,6 +36,9 @@ public interface IConstants {
 	public final String XAML_X_NAME = "Name";
 	public final String XAML_X_NULL = "Null";
 	public final String XAML_X_SHARED = "Shared";
+	public final String XAML_DATACONTEXT = "DataContext";
+	public final String XAML_COMMAND = "Command";
+	public final String XAML_CLR_NAMESPACE_PROTO = "clr-namespace:";
 
 	public final String XAML_STATICRESOURCES = "StaticResource";
 	public final String XAML_DYNAMICRESOURCES = "DynamicResource";
@@ -39,27 +48,9 @@ public interface IConstants {
 
 	public static final String XWT_NAMESPACE = "http://www.eclipse.org/xwt/presentation";
 	public static final String XWT_X_NAMESPACE = "http://www.eclipse.org/xwt";
-	public static final String XWT_CLR_NAMESPACE_PROTO = "clr-namespace:";
 
 	public static final String XWT_EXTENSION = "xwt";
 	public static final String XWT_EXTENSION_SUFFIX = "." + XWT_EXTENSION;
-
-	public static final String USE_DEBUG_MODE = "osgi.console";
-
-	public static final String SYSTEM_DIRECTORY = "osgi.syspath";
-
-	public static final String BUNDLE_NAMESPACE = "Bundle-Namespace";
-
-	public static final String BUNDLE_COMPATIBLE_NAMESPACE = "Bundle-CompatibleNamespaces";
-
-	public static final String REQUIRED_BUNDLE = "Require-Bundle";
-
-	String XWT_CONTROLLER_KEY = "__XWT.Controller";
-	String XWT_RESOURCES_KEY = "__XWT.Resources";
-	String XWT_DATACONTEXT_KEY = "__XWT.Datacontext";
-	String XWT_PARENT_KEY = "__Parent";
-	String XWT_NAMECONTEXT_KEY = "__XWT.Namecontext";
-	String XWT_CLR_KEY = "__XWT.clr";
 
 	public static final Enumeration<URL> EMPTY_ENUMERATION = new Enumeration<URL>() {
 

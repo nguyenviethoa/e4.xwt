@@ -14,6 +14,7 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Widget;
 
 public class GridLayout_Test {
 	public static void main(String[] args) {
+		
 		URL url = GridLayout_Test.class.getResource(GridLayout_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

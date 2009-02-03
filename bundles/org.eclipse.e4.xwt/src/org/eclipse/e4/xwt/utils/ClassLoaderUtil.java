@@ -88,6 +88,12 @@ public class ClassLoaderUtil {
 	}
 
 	static public Object loadStaticMember(ILoadingContext loadingContext, Element element) {
+		String name = element.getName();
+		String namespace = element.getNamespace();
+		Object value = doLoadMember(loadingContext, name, namespace);
+		if (value != null) {
+			return value;
+		}
 		String content = element.getContent();
 		if (content == null) {
 			DocumentObject member = element.getAttribute(IConstants.XWT_NAMESPACE, IConstants.XAML_X_STATIC_MEMBER);
@@ -98,15 +104,14 @@ public class ClassLoaderUtil {
 				content = member.getContent();
 				if (content == null) {
 					for (DocumentObject documentObject : member.getChildren()) {
-						String namespace = documentObject.getNamespace();
-						String name = documentObject.getName();
-						return doLoadMember(loadingContext, name, namespace);
+						String ns = documentObject.getNamespace();
+						String n = documentObject.getName();
+						return doLoadMember(loadingContext, n, ns);
 					}
 				}
 			}
 		} else {
-			String namespace = element.getNamespace();
-			if (IConstants.XAML_X_STATIC.equals(element.getName()) && IConstants.XWT_X_NAMESPACE.equals(namespace)) {
+			if (IConstants.XAML_X_STATIC.equals(name) && IConstants.XWT_X_NAMESPACE.equals(namespace)) {
 				namespace = IConstants.XWT_NAMESPACE;
 				return doLoadMember(loadingContext, content, namespace);
 			}

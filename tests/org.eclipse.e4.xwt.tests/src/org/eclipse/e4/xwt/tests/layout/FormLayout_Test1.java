@@ -14,6 +14,7 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -24,6 +25,7 @@ import org.eclipse.swt.widgets.Widget;
 
 public class FormLayout_Test1 {
 	public static void main(String[] args) {
+		
 		URL url = FormLayout_Test1.class.getResource(FormLayout_Test1.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

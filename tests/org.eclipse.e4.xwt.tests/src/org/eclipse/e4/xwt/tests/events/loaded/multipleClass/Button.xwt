@@ -1,0 +1,14 @@
+<Composite xmlns="http://www.eclipse.org/xwt/presentation" xmlns:x="http://www.eclipse.org/xwt"
+	x:Class="org.eclipse.e4.xwt.tests.events.loaded.multipleClass.TestHander">
+	<Composite.layout>
+		<GridLayout numColumns="2" />
+	</Composite.layout>
+	<Button x:style="SWT.PUSH" text="aaaaa" Loaded="performLoadedaa"></Button>
+	<Composite x:style="SWT.NONE" x:Class="org.eclipse.e4.xwt.tests.events.loaded.multipleClass.LoadHandler">
+		<Composite.layout>
+			<FillLayout />
+		</Composite.layout>
+		<Button text="Hello, world" Loaded="performLoaded" />
+		<Button x:style="SWT.PUSH" text="buttonText" Loaded="performLoadedbb"></Button>
+	</Composite>
+</Composite>

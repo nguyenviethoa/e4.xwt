@@ -14,7 +14,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -31,12 +33,16 @@ import org.eclipse.e4.xwt.converters.StringToIntArray;
 import org.eclipse.e4.xwt.converters.StringToInteger;
 import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
+import org.eclipse.e4.xwt.impl.Core;
+import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.impl.LoadData;
 import org.eclipse.e4.xwt.impl.LoadingContext;
+import org.eclipse.e4.xwt.impl.NameContext;
+import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.javabean.ResourceLoaderFactory;
 import org.eclipse.e4.xwt.javabean.ValueConvertorRegister;
 import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass;
-import org.eclipse.e4.xwt.javabean.metadata.DataContext;
+import org.eclipse.e4.xwt.javabean.metadata.DataProperty;
 import org.eclipse.e4.xwt.javabean.metadata.DynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.ExpandItemHeightAction;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
@@ -56,36 +62,86 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * @author jliu
+ * XWT is the main class of the XWT framework. It provides most of the services in API.
+ * 
+ * @author jliu and yyang
  */
 public class XWT {
-	public static final String ID = "org.soyatec.xaswt.core";
-
 	static Core core = new Core(new ResourceLoaderFactory());
 
 	private static boolean initialized = false;
 
 	private static ILoadingContext loadingContext;
 
+	private static Set<Tracking> trackingSet = new HashSet<Tracking>();
+	private static Map<String, ICommand> commands = new HashMap<String, ICommand>();
+	private static ILogger logger;
+
+	/**
+	 * Get the system logger.
+	 * 
+	 * @return
+	 */
+	public static ILogger getLogger() {
+		if (logger == null) {
+			return Core.nullLog;
+		}
+		return logger;
+	}
+
+	/**
+	 * Change the system logger
+	 * 
+	 * @param logger
+	 */
+	public static void setLogger(ILogger logger) {
+		XWT.logger = logger;
+	}
+
+	/**
+	 * Check if the framework is initialized.
+	 * 
+	 * @return
+	 */
 	public static boolean IsInitialized() {
 		return initialized;
 	}
 
+	/**
+	 * This namespace service returns the associated or declared namespace for a given class.
+	 * 
+	 * @param javaclass
+	 * @return
+	 */
 	public static String getNamespace(Class<?> javaclass) {
 		if (getMetaclass(javaclass) != null) {
 			return IConstants.XWT_NAMESPACE;
 		}
 		Package javaPackage = javaclass.getPackage();
 		if (javaPackage == null) {
-			return IConstants.XWT_CLR_NAMESPACE_PROTO;
+			return IConstants.XAML_CLR_NAMESPACE_PROTO;
 		}
-		return IConstants.XWT_CLR_NAMESPACE_PROTO + javaclass.getPackage().getName();
+		return IConstants.XAML_CLR_NAMESPACE_PROTO + javaclass.getPackage().getName();
 	}
 
+	/**
+	 * A NameContext is a manager of UI element's name in a scope. A name in a NameContext must be unique.
+	 * 
+	 * @param widget
+	 * @return
+	 */
 	public static NameContext findNameContext(Widget widget) {
 		return UserDataHelper.findNameContext(widget);
 	}
 
+	/**
+	 * Find a named UI element.
+	 * 
+	 * @param context
+	 *            the start point of research.
+	 * @param name
+	 * @return
+	 */
 	public static Object findElementByName(Widget context, String name) {
 		NameContext nameContext = UserDataHelper.findNameContext(context);
 		if (nameContext != null) {
@@ -94,18 +150,62 @@ public class XWT {
 		return null;
 	}
 
-	public static Class<?> getCLR(Widget widget) {
+	/**
+	 * Get the DataContext of given element
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static Object getDataContext(Widget element) {
+		return UserDataHelper.getDataContext(element);
+	}
+
+	/**
+	 * Change the DataContext of given element
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static void setDataContext(Widget widget, Object dataContext) {
+		UserDataHelper.setDataContext(widget, dataContext);
+	}
+
+	/**
+	 * Get the CLR (Common Language Runtime) object. If no CLR object is found in this element, the research will be propagated in it parent.
+	 * 
+	 * @param widget
+	 * @return
+	 */
+	public static Object getCLR(Widget widget) {
 		return UserDataHelper.getCLR(widget);
 	}
 
+	/**
+	 * Find the root shell
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public static Shell findShell(Widget context) {
 		return UserDataHelper.findShell(context);
 	}
 
+	/**
+	 * Find the closet parent of type Composite
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public static Composite findCompositeParent(Widget context) {
 		return UserDataHelper.findCompositeParent(context);
 	}
 
+	/**
+	 * Get the Metaclass of the given object
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public static IMetaclass getMetaclass(Object object) {
 		return core.getMetaclass(object);
 	}
@@ -128,21 +228,59 @@ public class XWT {
 	}
 
 	/**
-	 * load the file content. The corresponding UI element is not yet created
+	 * Load the file content. All widget will be created but they are showed. This method return the root element.
+	 * 
 	 */
 	static public synchronized Control load(URL file) throws Exception {
 		return load(file, (ResourceDictionary) null);
 	}
 
+	/**
+	 * Load the file content with a DataContext. All widget will be created but they are showed. This method returns the root element. The DataContext will be associated to the root element.
+	 */
+	static public synchronized Control load(URL file, int styles, Object dataContext) throws Exception {
+		return load(null, file, styles, dataContext, null);
+	}
+
+	/**
+	 * Load the file content with a DataContext and a ResourceDictionary. All widget will be created but they are showed. This method returns the root element. The DataContext will be associated to the root element.
+	 */
+	static public synchronized Control load(URL file, int styles, Object dataContext, ResourceDictionary dictionary) throws Exception {
+		return load(null, file, styles, dataContext, dictionary);
+	}
+
+	/**
+	 * Load the file content with a DataContext. All widget will be created but they are showed. This method returns the root element. The DataContext will be associated to the root element.
+	 */
 	static public synchronized Control load(URL file, Object dataContext) throws Exception {
 		return load(null, file, dataContext);
 	}
 
+	/**
+	 * Load the file content under a Composite. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 */
+	static public synchronized Control load(Composite parent, URL file) throws Exception {
+		return load(parent, file, -1, null);
+	}
+
+	/**
+	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 */
 	static public synchronized Control load(Composite parent, URL file, Object dataContext) throws Exception {
 		return load(parent, file, -1, dataContext);
 	}
 
+	/**
+	 * Load the file content under a Composite with a style and a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 */
 	static public synchronized Control load(Composite parent, URL file, int styles, Object dataContext) throws Exception {
+		return load(parent, file, -1, dataContext, null);
+	}
+
+	/**
+	 * Load the file content under a Composite with a style, a DataContext and a ResourceDictionary. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 */
+	static public synchronized Control load(Composite parent, URL file, int styles, Object dataContext, ResourceDictionary dictionary) throws Exception {
 		ILoadData loadData = ILoadData.DefaultLoadData;
 		if (dataContext != null || parent != null) {
 			loadData = new LoadData();
@@ -152,16 +290,9 @@ public class XWT {
 		return load(file, loadData);
 	}
 
-	static public synchronized Control load(URL file, ResourceDictionary dico, Object dataContext) throws Exception {
-		ILoadData loadData = ILoadData.DefaultLoadData;
-		if (dico != null || dataContext != null) {
-			loadData = new LoadData();
-			loadData.setResourceDictionary(dico);
-			loadData.setDataContext(dataContext);
-		}
-		return load(file, loadData);
-	}
-
+	/**
+	 * Open and show the file content in a new Shell.
+	 */
 	static public synchronized void open(final URL url) throws Exception {
 		open(url, null);
 	}
@@ -174,21 +305,47 @@ public class XWT {
 	}
 
 	/**
-	 * load the file content. The corresponding UI element is not yet created
+	 * load the content from a stream with a given DataContext. The root elements will be hold by Composite parent
 	 */
-	static public synchronized void open(URL url, Object dataContext) throws Exception {
-		open(url, null, dataContext);
+	static public synchronized Control load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception {
+		return load(parent, stream, file, -1, dataContext);
+	}
+
+	/**
+	 * load the content from a stream with a style and a DataContext. The root elements will be hold by Composite parent
+	 */
+	static public synchronized Control load(Composite parent, InputStream stream, URL file, int styles, Object dataContext) throws Exception {
+		return load(parent, stream, file, -1, dataContext, null);
+	}
+
+	/**
+	 * load the content from a stream with a style, a DataContext and a ResourceDictionary. The root elements will be hold by Composite parent
+	 */
+	static public synchronized Control load(Composite parent, InputStream stream, URL file, int styles, Object dataContext, ResourceDictionary dictionary) throws Exception {
+		LoadData loadData = new LoadData();
+		loadData.setParent(parent);
+		loadData.setDataContext(dataContext);
+		loadData.setStyles(styles);
+		loadData.setResourceDictionary(dictionary);
+		return load(stream, file, loadData);
 	}
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public synchronized void open(final URL url, final ResourceDictionary dico, final Object dataContext) throws Exception {
+	static public synchronized void open(URL url, Object dataContext) throws Exception {
+		open(url, dataContext, null);
+	}
+
+	/**
+	 * load the file content. The corresponding UI element is not yet created
+	 */
+	static public synchronized void open(final URL url, final Object dataContext, final ResourceDictionary dictionary) throws Exception {
 
 		Realm.runWithDefault(SWTObservables.getRealm(Display.getDefault()), new Runnable() {
 			public void run() {
 				try {
-					Control control = load(url, dico, dataContext);
+					Control control = load(url, -1, dataContext, dictionary);
 					Shell shell = control.getShell();
 					shell.addDisposeListener(new DisposeListener() {
 						public void widgetDisposed(DisposeEvent e) {
@@ -207,11 +364,25 @@ public class XWT {
 		});
 	}
 
+	/**
+	 * Data conversion service from String to a given type
+	 * 
+	 * @param type
+	 * @param string
+	 * @return
+	 */
 	static public Object convertFrom(IMetaclass type, String string) {
 		Class<?> targetType = type.getType();
 		return convertFrom(targetType, string);
 	}
 
+	/**
+	 * Data conversion service from String to a given type
+	 * 
+	 * @param targetType
+	 * @param string
+	 * @return
+	 */
 	static public Object convertFrom(Class<?> targetType, String string) {
 		if (targetType == String.class) {
 			return string;
@@ -223,29 +394,6 @@ public class XWT {
 		throw new XWTException("Converter is missing of type: " + targetType.getName());
 	}
 
-	static public synchronized Widget load(String file) throws Exception {
-		return load(new URL(file), (ResourceDictionary) null);
-	}
-
-	static public synchronized Widget load(Composite parent, String file) throws Exception {
-		return load(parent, new URL(file), -1);
-	}
-
-	static public synchronized Widget load(Composite parent, String file, int styles) throws Exception {
-		return load(parent, new URL(file), styles);
-	}
-
-	static public synchronized Widget load(Composite parent, URL file) throws Exception {
-		return load(parent, file, -1);
-	}
-
-	static public synchronized Widget load(Composite parent, URL file, int styles) throws Exception {
-		LoadData loadData = new LoadData();
-		loadData.setParent(parent);
-		loadData.setStyles(styles);
-		return load(file, loadData);
-	}
-
 	static private synchronized Control load(URL url, ILoadData loadData) throws Exception {
 		checkInitialize();
 		Composite object = loadData.getParent();
@@ -254,6 +402,15 @@ public class XWT {
 		return visualObject;
 	}
 
+	/**
+	 * Generic load method
+	 * 
+	 * @param stream
+	 * @param url
+	 * @param loadData
+	 * @return
+	 * @throws Exception
+	 */
 	static public synchronized Control load(InputStream stream, URL url, ILoadData loadData) throws Exception {
 		checkInitialize();
 		Composite object = loadData.getParent();
@@ -262,19 +419,36 @@ public class XWT {
 		return visualObject;
 	}
 
+	/**
+	 * Metaclass services to return all registered Metaclasses.
+	 * 
+	 * @param stream
+	 * @param url
+	 * @param loadData
+	 * @return
+	 * @throws Exception
+	 */
 	static public IMetaclass[] getAllMetaclasses() {
 		checkInitialize();
 		Collection<?> metaclasses = core.getAllMetaclasses(IConstants.XWT_NAMESPACE);
 		return metaclasses.toArray(new IMetaclass[metaclasses.size()]);
 	}
 
+	/**
+	 * Get the corresponding Metaclass
+	 * 
+	 * @param tagName
+	 * @param ns
+	 *            The namespace
+	 * @return
+	 */
 	static public IMetaclass getMetaclass(String tagName, String ns) {
 		checkInitialize();
 		return (IMetaclass) core.getMetaclass(getLoadingContext(), tagName, ns);
 	}
 
 	/**
-	 * Register UI elementIRenderActivator
+	 * Register UI type
 	 * 
 	 * @param javaclass
 	 */
@@ -284,18 +458,23 @@ public class XWT {
 	}
 
 	/**
-	 * Register UI element
+	 * Register Metaclass factory
+	 * 
+	 * @param javaclass
+	 */
+	static public void registerMetaclassFactory(IMetaclassFactory metaclassFactory) {
+		checkInitialize();
+		core.registerMetaclassFactory(metaclassFactory);
+	}
+
+	/**
+	 * Register UI type
 	 * 
 	 * @param javaclass
 	 */
 	static public IMetaclass register(Class<?> javaclass, String namespace) {
 		checkInitialize();
 		return core.registerMetaclass(javaclass, namespace);
-	}
-
-	static public void registerValueConverter(IConverter converter, Class<?> type) {
-		checkInitialize();
-		getConverterService().register(type, converter);
 	}
 
 	static public ConverterService getConverterService() {
@@ -335,6 +514,12 @@ public class XWT {
 		return type;
 	}
 
+	/**
+	 * Find a Data converter
+	 * 
+	 * @param converter
+	 * @param type
+	 */
 	static public IConverter findConvertor(Class<?> source, Class<?> target) {
 		checkInitialize();
 		source = normalizedType(source);
@@ -346,7 +531,14 @@ public class XWT {
 		return convertorRegister.findConverter(source, target);
 	}
 
+	/**
+	 * Register a Data converter
+	 * 
+	 * @param converter
+	 * @param type
+	 */
 	static public void registerConvertor(IConverter converter) {
+		checkInitialize();
 		Class<?> source = (Class<?>) converter.getFromType();
 		Class<?> target = (Class<?>) converter.getToType();
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
@@ -360,105 +552,108 @@ public class XWT {
 		initialized = true;
 
 		core.registerService(ValueConvertorRegister.class, new ValueConvertorRegister());
-
-		registerConvertor(new ObjectToString());
-		registerConvertor(new IntegerToString());
-		registerConvertor(new DateToString());
-		registerConvertor(new StringToInteger());
-		registerConvertor(new StringToBoolean());
-		registerConvertor(new StringToIntArray());
-		registerConvertor(new BindingToObject());
-		registerConvertor(new StringToColor());
-		registerConvertor(new StringToFont());
-		registerConvertor(new StringToImage());
-		registerConvertor(new StringToPoint());
-		registerConvertor(new StringToRectangle());
-
-		core.registerMetaclassManager(IConstants.XWT_NAMESPACE, new MetaclassManager(null));
-
+		core.registerMetaclassManager(IConstants.XWT_NAMESPACE, new MetaclassManager(null, null));
 		core.registerMetaclass(new BindingMetaclass(), IConstants.XWT_NAMESPACE);
 
+		XWT.registerConvertor(new ObjectToString());
+		XWT.registerConvertor(new IntegerToString());
+		XWT.registerConvertor(new DateToString());
+		XWT.registerConvertor(new StringToInteger());
+		XWT.registerConvertor(new StringToBoolean());
+		XWT.registerConvertor(new StringToIntArray());
+		XWT.registerConvertor(new BindingToObject());
+		XWT.registerConvertor(new StringToColor());
+		XWT.registerConvertor(new StringToFont());
+		XWT.registerConvertor(new StringToImage());
+		XWT.registerConvertor(new StringToPoint());
+		XWT.registerConvertor(new StringToRectangle());
+
 		Class<?> type = org.eclipse.swt.browser.Browser.class;
-		Metaclass browserMetaclass = (Metaclass) registerMetaclass(type);
-		// Can't load url setter from BeanInfo.
+		Metaclass browserMetaclass = (Metaclass) XWT.registerMetaclass(type); // Can't load url setter from BeanInfo.
 		browserMetaclass.addProperty(new DynamicProperty(type, String.class, "url"));
-		registerMetaclass(org.eclipse.swt.widgets.Button.class);
-		registerMetaclass(org.eclipse.swt.widgets.Canvas.class);
-		registerMetaclass(org.eclipse.swt.widgets.Caret.class);
-		registerMetaclass(org.eclipse.swt.widgets.Combo.class);
-		registerMetaclass(org.eclipse.swt.widgets.Composite.class);
-		registerMetaclass(org.eclipse.swt.widgets.CoolBar.class);
-		registerMetaclass(org.eclipse.swt.widgets.CoolItem.class);
-		registerMetaclass(org.eclipse.swt.widgets.DateTime.class);
-		registerMetaclass(org.eclipse.swt.widgets.Decorations.class);
-		registerMetaclass(org.eclipse.swt.widgets.ExpandBar.class);
-		IMetaclass expandItemMetaclass = registerMetaclass(org.eclipse.swt.widgets.ExpandItem.class);
+		Metaclass buttonMetaclass = (Metaclass) XWT.registerMetaclass(org.eclipse.swt.widgets.Button.class);
+		buttonMetaclass.addProperty(new DataProperty(ICommand.class, IConstants.XAML_COMMAND, IUserDataConstants.XWT_COMMAND_KEY));
+
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Canvas.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Caret.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Combo.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Composite.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.CoolBar.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.CoolItem.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.DateTime.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Decorations.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.ExpandBar.class);
+		IMetaclass expandItemMetaclass = XWT.registerMetaclass(org.eclipse.swt.widgets.ExpandItem.class);
 		expandItemMetaclass.findProperty("control").addSetPostAction(new ExpandItemHeightAction());
 
-		registerMetaclass(org.eclipse.swt.widgets.Group.class);
-		registerMetaclass(org.eclipse.swt.widgets.IME.class);
-		registerMetaclass(org.eclipse.swt.widgets.Label.class);
-		registerMetaclass(org.eclipse.swt.widgets.Link.class);
-		registerMetaclass(org.eclipse.swt.widgets.Listener.class);
-		registerMetaclass(org.eclipse.swt.widgets.List.class);
-		registerMetaclass(org.eclipse.swt.widgets.Menu.class);
-		registerMetaclass(org.eclipse.swt.widgets.MenuItem.class);
-		registerMetaclass(org.eclipse.swt.widgets.MessageBox.class);
-		registerMetaclass(org.eclipse.swt.widgets.ProgressBar.class);
-		registerMetaclass(org.eclipse.swt.widgets.Sash.class);
-		registerMetaclass(org.eclipse.swt.widgets.Scale.class);
-		registerMetaclass(org.eclipse.swt.widgets.ScrollBar.class);
-		registerMetaclass(org.eclipse.swt.widgets.Shell.class);
-		registerMetaclass(org.eclipse.swt.widgets.Slider.class);
-		registerMetaclass(org.eclipse.swt.widgets.Spinner.class);
-		registerMetaclass(org.eclipse.swt.widgets.TabFolder.class);
-		registerMetaclass(org.eclipse.swt.widgets.TabItem.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Group.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.IME.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Label.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Link.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Listener.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.List.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Menu.class);
+		Metaclass menuItemMetaclass = (Metaclass) XWT.registerMetaclass(org.eclipse.swt.widgets.MenuItem.class);
+		menuItemMetaclass.addProperty(new DataProperty(ICommand.class, IConstants.XAML_COMMAND, IUserDataConstants.XWT_COMMAND_KEY));
 
-		registerMetaclass(org.eclipse.swt.widgets.Table.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.MessageBox.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.ProgressBar.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Sash.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Scale.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.ScrollBar.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Shell.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Slider.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Spinner.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.TabFolder.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.TabItem.class);
+
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Table.class);
 		type = org.eclipse.swt.widgets.TableItem.class;
-		Metaclass metaclass = (Metaclass) registerMetaclass(type);
+		Metaclass metaclass = (Metaclass) XWT.registerMetaclass(type);
 		metaclass.addArrayProperty(new DynamicProperty(type, String[].class, "text"));
-		metaclass.addProperty(new TableItemProperty(type, Collection.class, "cells"));
+		metaclass.addProperty(new TableItemProperty());
 
-		registerMetaclass(TableItemProperty.Cell.class);
+		XWT.registerMetaclass(TableItemProperty.Cell.class);
 
-		registerMetaclass(org.eclipse.swt.widgets.TableColumn.class);
-		registerMetaclass(org.eclipse.swt.widgets.Text.class);
-		registerMetaclass(org.eclipse.swt.widgets.ToolBar.class);
-		registerMetaclass(org.eclipse.swt.widgets.ToolItem.class);
-		registerMetaclass(org.eclipse.swt.widgets.ToolTip.class);
-		registerMetaclass(org.eclipse.swt.widgets.Tracker.class);
-		registerMetaclass(org.eclipse.swt.widgets.Tray.class);
-		registerMetaclass(org.eclipse.swt.widgets.Tree.class);
-		registerMetaclass(org.eclipse.swt.widgets.TreeColumn.class);
-		// registerMetaclass(org.eclipse.swt.widgets.TreeItem.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.TableColumn.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Text.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.ToolBar.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.ToolItem.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.ToolTip.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Tracker.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Tray.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.Tree.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.TreeColumn.class);
+		XWT.registerMetaclass(org.eclipse.swt.widgets.TreeItem.class);
 		type = org.eclipse.swt.widgets.TreeItem.class;
-		metaclass = (Metaclass) registerMetaclass(type);
+		metaclass = (Metaclass) XWT.registerMetaclass(type);
 		metaclass.addArrayProperty(new DynamicProperty(type, String[].class, "text"));
 
-		// registerMetaclass(org.eclipse.swt.layout.FillData.class);
-		registerMetaclass(org.eclipse.swt.layout.FillLayout.class);
-		registerMetaclass(org.eclipse.swt.layout.FormAttachment.class);
-		registerMetaclass(org.eclipse.swt.layout.FormData.class);
-		registerMetaclass(org.eclipse.swt.layout.FormLayout.class);
-		registerMetaclass(org.eclipse.swt.layout.GridData.class);
-		registerMetaclass(org.eclipse.swt.layout.GridLayout.class);
-		registerMetaclass(org.eclipse.swt.layout.RowData.class);
-		registerMetaclass(org.eclipse.swt.layout.RowLayout.class);
-		registerMetaclass(org.eclipse.swt.custom.StackLayout.class);
+		// XWT.registerMetaclass(org.eclipse.swt.layout.FillData.class);
+		XWT.registerMetaclass(org.eclipse.swt.layout.FillLayout.class);
+		XWT.registerMetaclass(org.eclipse.swt.layout.FormAttachment.class);
+		XWT.registerMetaclass(org.eclipse.swt.layout.FormData.class);
+		XWT.registerMetaclass(org.eclipse.swt.layout.FormLayout.class);
+		XWT.registerMetaclass(org.eclipse.swt.layout.GridData.class);
+		XWT.registerMetaclass(org.eclipse.swt.layout.GridLayout.class);
+		XWT.registerMetaclass(org.eclipse.swt.layout.RowData.class);
+		XWT.registerMetaclass(org.eclipse.swt.layout.RowLayout.class);
+		XWT.registerMetaclass(org.eclipse.swt.custom.StackLayout.class);
 
-		registerMetaclass(org.eclipse.swt.custom.CLabel.class);
-		registerMetaclass(org.eclipse.swt.custom.CCombo.class);
-		registerMetaclass(org.eclipse.swt.custom.CTabFolder.class);
-		registerMetaclass(org.eclipse.swt.custom.CTabItem.class);
-		registerMetaclass(org.eclipse.swt.custom.SashForm.class);
-		registerMetaclass(org.eclipse.swt.custom.StyledText.class);
+		XWT.registerMetaclass(org.eclipse.swt.custom.CLabel.class);
+		XWT.registerMetaclass(org.eclipse.swt.custom.CCombo.class);
+		XWT.registerMetaclass(org.eclipse.swt.custom.CTabFolder.class);
+		XWT.registerMetaclass(org.eclipse.swt.custom.CTabItem.class);
+		XWT.registerMetaclass(org.eclipse.swt.custom.SashForm.class);
+		XWT.registerMetaclass(org.eclipse.swt.custom.StyledText.class);
+
 		type = org.eclipse.swt.widgets.Widget.class;
-		metaclass = (Metaclass) registerMetaclass(type);
-		metaclass.addProperty(new DataContext("DataContext"));
-		for (Class cls : JFacesHelper.getSupportedElements()) {
-			registerMetaclass(cls);
+		metaclass = (Metaclass) XWT.registerMetaclass(type);
+		metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT, IUserDataConstants.XWT_DATACONTEXT_KEY));
+		for (Class<?> cls : JFacesHelper.getSupportedElements()) {
+			XWT.registerMetaclass(cls);
 		}
+
 	}
 
 	public static ILoadingContext findLoadingContext(Object container) {
@@ -482,5 +677,84 @@ public class XWT {
 	public static void setLoadingContext(ILoadingContext loadingContext) {
 		checkInitialize();
 		XWT.loadingContext = loadingContext;
+	}
+
+	/**
+	 * Add a tracking option
+	 * 
+	 * @param tracking
+	 */
+	static public void addTracking(Tracking tracking) {
+		if (!trackingSet.contains(tracking)) {
+			trackingSet.add(tracking);
+		}
+	}
+
+	/**
+	 * Test if the tracking on argument is enabled.
+	 * 
+	 * @param tracking
+	 * @return
+	 */
+	static public boolean isTracking(Tracking tracking) {
+		return trackingSet.contains(tracking);
+	}
+
+	/**
+	 * Get all tracking options
+	 * 
+	 * @return
+	 */
+	static public Set<Tracking> getTrackings() {
+		return trackingSet;
+	}
+
+	/**
+	 * Remove a tracking option.
+	 * 
+	 * @param tracking
+	 */
+	static public void removeTracking(Tracking tracking) {
+		if (trackingSet.contains(tracking)) {
+			trackingSet.remove(tracking);
+		}
+	}
+
+	/**
+	 * Register a command to a name
+	 * 
+	 * @param name
+	 * @param command
+	 */
+	static public void registerCommand(String name, ICommand command) {
+		commands.put(name, command);
+	}
+
+	/**
+	 * Find a command by name
+	 * 
+	 * @param name
+	 * @return
+	 */
+	static public ICommand getCommand(String name) {
+		return commands.get(name);
+	}
+
+	/**
+	 * Return all registered commands
+	 * 
+	 * @return
+	 */
+	static public Map<String, ICommand> getCommands() {
+		return commands;
+	}
+
+	/**
+	 * Unregister a command
+	 * 
+	 * @param name
+	 */
+	static public void unregisterCommand(String name) {
+		commands.remove(name);
 	}
 }

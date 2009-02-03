@@ -10,6 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
+import java.util.Set;
+
+/**
+ * Looger interface
+ * 
+ * @author yyang
+ */
 public interface ILogger {
 	void error(Throwable e);
 
@@ -18,4 +25,12 @@ public interface ILogger {
 	void warning(String message);
 
 	void message(String message);
+
+	// print messages into console view
+	void printInfo(String message, Tracking tracking, Set<Tracking> trackType);
+
+	// add messages
+	void addMessage(String message, Tracking tracking);
+
+	void removeMessage(Tracking tracking);
 }

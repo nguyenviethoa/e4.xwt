@@ -10,5 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.metadata;
 
+/**
+ * UI event
+ * 
+ * @author yyang
+ */
 public interface IEvent extends IBehavior {
 }

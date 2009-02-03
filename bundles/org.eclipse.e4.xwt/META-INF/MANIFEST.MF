@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
-Bundle-SymbolicName: org.eclipse.e4.xwt
+Bundle-SymbolicName: org.eclipse.e4.xwt;singleton:=true
 Bundle-Version: 0.9.0.qualifier
 Require-Bundle: 
  org.eclipse.jface.databinding;bundle-version="1.2.0",
@@ -11,7 +11,9 @@ Require-Bundle:
  org.eclipse.jface;bundle-version="3.4.0"
 Export-Package: org.eclipse.e4.xwt,
  org.eclipse.e4.xwt.converters,
- org.eclipse.e4.xwt.maps,
+ org.eclipse.e4.xwt.input,
+ org.eclipse.e4.xwt.javabean,
+ org.eclipse.e4.xwt.javabean.metadata,
  org.eclipse.e4.xwt.metadata,
  org.eclipse.e4.xwt.utils,
  org.eclipse.e4.xwt.xml

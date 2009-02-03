@@ -8,8 +8,22 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.tests.events.loaded;
 
-public interface IBinding {
-	Object getValue();
+import java.net.URL;
+
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
+
+
+public class Button {
+	public static void main(String[] args) {
+		
+		URL url = Button.class.getResource(Button.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

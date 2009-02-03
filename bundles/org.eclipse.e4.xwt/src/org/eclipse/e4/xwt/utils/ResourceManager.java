@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.maps.XWTMaps;
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -141,8 +141,7 @@ public class ResourceManager {
 		}
 
 		static Color getColor(int red, int green, int blue) {
-			if (red > 255 || green > 255 || blue > 255 || red < 0 || green < 0
-					|| blue < 0) {
+			if (red > 255 || green > 255 || blue > 255 || red < 0 || green < 0 || blue < 0) {
 				return null;
 			}
 			return new Color(Display.getDefault(), red, green, blue);
@@ -182,12 +181,8 @@ public class ResourceManager {
 				int style = SWT.NORMAL;
 				while (stk.hasMoreTokens()) {
 					String token = stk.nextToken().trim();
-					if (token.equalsIgnoreCase("normal")
-							|| token.equalsIgnoreCase("blod")
-							|| token.equalsIgnoreCase("italic")
-							|| token.contains("|")) {
-						IConverter convertor = XWT.findConvertor(String.class,
-								Integer.class);
+					if (token.equalsIgnoreCase("normal") || token.equalsIgnoreCase("blod") || token.equalsIgnoreCase("italic") || token.contains("|")) {
+						IConverter convertor = XWT.findConvertor(String.class, Integer.class);
 						if (convertor != null) {
 							style = (Integer) convertor.convert(token);
 						}

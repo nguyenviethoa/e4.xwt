@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.metadata;
 
+/**
+ * UI metaclass
+ * 
+ * @author yyang
+ */
 public interface IMetaclass {
 	public String getName();
 
@@ -38,4 +43,14 @@ public interface IMetaclass {
 	public boolean isAssignableFrom(IMetaclass metaclass);
 
 	public Class<?> getType();
+
+	/**
+	 * TODO
+	 * 
+	 * @param property
+	 * @return
+	 */
+	public IProperty addArrayProperty(IProperty property);
+
+	public IProperty addProperty(IProperty property);
 }

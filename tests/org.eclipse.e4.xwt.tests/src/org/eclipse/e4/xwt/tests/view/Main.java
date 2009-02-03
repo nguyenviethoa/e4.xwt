@@ -12,12 +12,14 @@ package org.eclipse.e4.xwt.tests.view;
 
 import org.eclipse.e4.xwt.XWT;
 
+
 public class Main {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
 		Company company = new Company();
 		Person person = new Person();
 		person.setFirstName("Luc");

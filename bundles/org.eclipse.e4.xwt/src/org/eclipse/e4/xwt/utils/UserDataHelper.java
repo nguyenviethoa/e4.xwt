@@ -10,8 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.utils;
 
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.NameContext;
+import org.eclipse.e4.xwt.impl.IBinding;
+import org.eclipse.e4.xwt.impl.IUserDataConstants;
+import org.eclipse.e4.xwt.impl.NameContext;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.Caret;
@@ -35,9 +36,9 @@ import org.eclipse.swt.widgets.Widget;
 public class UserDataHelper {
 
 	public static void bindNameContext(Widget widget, NameContext nameContext) {
-		if (widget.getData(IConstants.XWT_NAMECONTEXT_KEY) != null)
+		if (widget.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY) != null)
 			throw new IllegalStateException("Name context is already set");
-		widget.setData(IConstants.XWT_NAMECONTEXT_KEY, nameContext);
+		widget.setData(IUserDataConstants.XWT_NAMECONTEXT_KEY, nameContext);
 	}
 
 	public static Shell findShell(Widget widget) {
@@ -57,7 +58,7 @@ public class UserDataHelper {
 	}
 
 	public static NameContext findNameContext(Widget widget) {
-		Object data = widget.getData(IConstants.XWT_NAMECONTEXT_KEY);
+		Object data = widget.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
 		if (data != null) {
 			return (NameContext) data;
 		}
@@ -68,14 +69,14 @@ public class UserDataHelper {
 		return null;
 	}
 
-	public static void setCLR(Widget widget, Class<?> type) {
-		widget.setData(IConstants.XWT_CLR_KEY, type);
+	public static void setCLR(Widget widget, Object type) {
+		widget.setData(IUserDataConstants.XWT_CLR_KEY, type);
 	}
 
-	public static Class<?> getCLR(Widget widget) {
-		Object data = widget.getData(IConstants.XWT_CLR_KEY);
+	public static Object getCLR(Widget widget) {
+		Object data = widget.getData(IUserDataConstants.XWT_CLR_KEY);
 		if (data != null) {
-			return (Class<?>) data;
+			return data;
 		}
 		Widget parent = getParent(widget);
 		if (parent != null) {
@@ -141,4 +142,19 @@ public class UserDataHelper {
 		return null;
 	}
 
+	public static Object getDataContext(Widget widget) {
+		Object data = widget.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
+		Widget parent = widget;
+		while (data == null && (parent = (Widget) parent.getData(IUserDataConstants.XWT_PARENT_KEY)) != null) {
+			data = ((Widget) parent).getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
+		}
+		if (data instanceof IBinding) {
+			return ((IBinding) data).getValue();
+		}
+		return data;
+	}
+
+	public static void setDataContext(Widget widget, Object dataContext) {
+		widget.setData(IUserDataConstants.XWT_DATACONTEXT_KEY, dataContext);
+	}
 }

@@ -1,0 +1,30 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt"
+	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding"
+	x:Class="org.eclipse.e4.xwt.tests.databinding.DataBindingPath"
+	Size="400, 300"
+	x:Name="Root"
+	DataContext="{StaticResource myData}">
+	<Shell.layout>
+		<GridLayout numColumns="3"/>
+	</Shell.layout>
+	
+	<x:Shell.Resources>
+		<y:Company x:Key="myData"/>
+	</x:Shell.Resources>
+	
+	<Label text="Name"/>
+	<Text x:style="BORDER" text="{Binding Path=manager.address.city}">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Text.layoutData>
+	</Text>
+	<Label text="{Binding Path=manager.name}">
+		<Label.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Label.layoutData>
+	</Label>
+	<Button Text="New Manager" SelectionEvent="onNew"/>
+</Shell>

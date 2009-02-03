@@ -21,6 +21,7 @@ import org.eclipse.e4.xwt.XWT;
 public class BeanProperty extends AbstractProperty {
 	protected PropertyDescriptor descriptor;
 	private Field field;
+	private Class<?> type;
 
 	public BeanProperty(PropertyDescriptor descriptor) {
 		super(descriptor.getName());
@@ -69,9 +70,18 @@ public class BeanProperty extends AbstractProperty {
 	}
 
 	public Class<?> getType() {
-		if (descriptor == null) {
-			return field.getType();
+		if (type != null) {
+			return type;
 		}
-		return descriptor.getPropertyType();
+		if (descriptor == null) {
+			type = field.getType();
+		} else {
+			type = descriptor.getPropertyType();
+		}
+		return type;
+	}
+
+	public void setType(Class<?> type) {
+		this.type = type;
 	}
 }

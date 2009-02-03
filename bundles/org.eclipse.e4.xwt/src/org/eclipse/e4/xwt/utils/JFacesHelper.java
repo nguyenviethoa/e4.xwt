@@ -9,12 +9,12 @@
  *     Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.utils;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Control;
-
 
 public class JFacesHelper {
 
@@ -53,7 +53,7 @@ public class JFacesHelper {
 			collector.add(Class.forName("org.eclipse.jface.viewers.TableTreeViewer"));
 			collector.add(Class.forName("org.eclipse.jface.viewers.CheckboxTableViewer"));
 			collector.add(Class.forName("org.eclipse.jface.viewers.CheckboxTreeViewer"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.CheckboxTreeViewer"));
+			collector.add(Class.forName("org.eclipse.jface.dialogs.TitleAreaDialog"));
 
 		} catch (ClassNotFoundException e) {
 			System.out.println("No JFaces support");

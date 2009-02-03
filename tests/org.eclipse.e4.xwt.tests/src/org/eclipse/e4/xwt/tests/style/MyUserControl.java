@@ -8,8 +8,13 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.tests.style;
 
-public interface IElementLoaderFactory {
-	IVisualElementLoader createElementLoader(IRenderingContext context);
+import org.eclipse.swt.widgets.Composite;
+
+public class MyUserControl extends Composite {
+
+	public MyUserControl(Composite parent, int style) {
+		super(parent, style);
+	}
 }

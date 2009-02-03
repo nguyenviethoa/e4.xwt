@@ -41,4 +41,8 @@ public class TypedEvent implements IEvent {
 		return eventType;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 }

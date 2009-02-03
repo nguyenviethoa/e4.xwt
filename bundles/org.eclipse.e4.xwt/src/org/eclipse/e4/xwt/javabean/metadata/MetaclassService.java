@@ -1,0 +1,94 @@
+package org.eclipse.e4.xwt.javabean.metadata;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.ILoadingContext;
+import org.eclipse.e4.xwt.IMetaclassFactory;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
+
+public class MetaclassService {
+	protected Map<String, MetaclassManager> map = new HashMap<String, MetaclassManager>();
+	protected ArrayList<IMetaclassFactory> factories = new ArrayList<IMetaclassFactory>();
+
+	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
+		MetaclassManager manager = map.get(namespace);
+		if (manager == null) {
+			manager = new MetaclassManager(this, map.get(IConstants.XWT_NAMESPACE));
+			map.put(namespace, manager);
+		}
+		return manager.getMetaclass(context, name, namespace);
+	}
+
+	public IMetaclass getMetaclass(Class<?> type) {
+		MetaclassManager manager = map.get(IConstants.XWT_NAMESPACE);
+		if (manager == null) {
+			return null;
+		}
+		IMetaclass metaclass = manager.getMetaclass(type);
+		if (metaclass == null) {
+			String packageName = "";
+			Package packageObject = type.getPackage();
+			if (packageObject != null) {
+				packageName = packageObject.getName();
+			}
+			String key = IConstants.XAML_CLR_NAMESPACE_PROTO + ":" + packageName;
+			manager = map.get(key);
+			if (manager == null) {
+				manager = new MetaclassManager(this, manager);
+				map.put(key, manager);
+			}
+			metaclass = manager.getMetaclass(type);
+			if (metaclass == null) {
+				manager.register(type);
+				metaclass = manager.getMetaclass(type);
+			}
+		}
+		return metaclass;
+	}
+
+	public IMetaclass register(Class<?> metaclass, String namespace) {
+		MetaclassManager manager = map.get(namespace);
+		if (manager == null) {
+			throw new IllegalStateException();
+		}
+		return manager.register(metaclass);
+	}
+
+	public void register(IMetaclass metaclass, String namespace) {
+		MetaclassManager manager = map.get(namespace);
+		if (manager == null) {
+			throw new IllegalStateException();
+		}
+		manager.register(metaclass);
+	}
+
+	public Collection<IMetaclass> getAllMetaclasses(String namespace) {
+		MetaclassManager manager = map.get(namespace);
+		if (manager == null) {
+			throw new IllegalStateException();
+		}
+		return manager.getAllMetaclasses();
+	}
+
+	public void register(String namespace, MetaclassManager manager) {
+		map.put(namespace, manager);
+	}
+
+	public void registerFactory(IMetaclassFactory metaclassFactory) {
+		factories.add(metaclassFactory);
+	}
+
+	public IMetaclassFactory findFactory(Class<?> javaClass) {
+		for (int i = factories.size() - 1; i >= 0; i--) {
+			IMetaclassFactory factory = factories.get(i);
+			if (factory.isFactoryOf(javaClass)) {
+				return factory;
+			}
+		}
+		return null;
+	}
+}

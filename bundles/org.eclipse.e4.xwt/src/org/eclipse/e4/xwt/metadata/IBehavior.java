@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.metadata;
 
+/**
+ * Common behavior of Property and event
+ * 
+ * @author yyang
+ */
 public interface IBehavior {
 
 	/**
@@ -18,4 +23,6 @@ public interface IBehavior {
 	 * @return Returns the name.
 	 */
 	public String getName();
+
+	public void setName(String name);
 }

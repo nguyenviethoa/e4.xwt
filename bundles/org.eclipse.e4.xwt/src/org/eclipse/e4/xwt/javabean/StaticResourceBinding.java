@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean;
 
-import org.eclipse.e4.xwt.IBinding;
-import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.impl.IBinding;
+import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.swt.widgets.Widget;
 
 public class StaticResourceBinding implements IBinding {
@@ -26,10 +26,10 @@ public class StaticResourceBinding implements IBinding {
 	}
 
 	private ResourceDictionary getResourceDictionary(Widget widget) {
-		ResourceDictionary data = (ResourceDictionary) widget.getData(IConstants.XWT_RESOURCES_KEY);
+		ResourceDictionary data = (ResourceDictionary) widget.getData(IUserDataConstants.XWT_RESOURCES_KEY);
 		Widget parent = widget;
-		while (data == null && (parent = (Widget) parent.getData(IConstants.XWT_PARENT_KEY)) != null)
-			data = (ResourceDictionary) ((Widget) parent).getData(IConstants.XWT_RESOURCES_KEY);
+		while (data == null && (parent = (Widget) parent.getData(IUserDataConstants.XWT_PARENT_KEY)) != null)
+			data = (ResourceDictionary) ((Widget) parent).getData(IUserDataConstants.XWT_RESOURCES_KEY);
 		return data;
 	}
 

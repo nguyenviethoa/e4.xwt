@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.Collections;
 
 import org.eclipse.e4.xwt.ResourceDictionary;
+import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
@@ -37,11 +38,10 @@ public class Main {
 	 * @throws FileNotFoundException
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-
 		URL url = Main.class.getResource("main.xwt");
 		try {
 			EPackage.Registry.INSTANCE.put(Demo_modelPackage.eNS_URI, Demo_modelPackage.eINSTANCE);
-			XWT.open(url, null, loadModel(DATA_FILE));
+			XWT.open(url, loadModel(DATA_FILE));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
