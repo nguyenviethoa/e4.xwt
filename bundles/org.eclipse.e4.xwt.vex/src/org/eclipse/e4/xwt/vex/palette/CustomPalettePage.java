@@ -25,11 +25,11 @@ import org.eclipse.ui.IActionBars;
  * 
  */
 public class CustomPalettePage extends PaletteViewerPage {
-	
+
 	private HideToolPartPaletteAction hideToolPartPaletteAction;
 	private HideDynamicPartPaletteAction hideDynamicPartPaletteAction;
 	private HideCustomizePartPaletteAction hideCustomizePartPaletteAction;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -43,7 +43,7 @@ public class CustomPalettePage extends PaletteViewerPage {
 	/**
 	 * @return the PaletteViewer created and displayed by this page
 	 */
-	public PaletteViewer getPaletteViewer() {		
+	public PaletteViewer getPaletteViewer() {
 		return viewer;
 	}
 
@@ -53,11 +53,10 @@ public class CustomPalettePage extends PaletteViewerPage {
 		hideToolPartPaletteAction = new HideToolPartPaletteAction();
 		hideDynamicPartPaletteAction = new HideDynamicPartPaletteAction();
 		hideCustomizePartPaletteAction = new HideCustomizePartPaletteAction();
-		
+
 		fillMenuBar(actionBars.getMenuManager());
 		fillToolBar(actionBars.getToolBarManager());
 	}
-
 
 	private void fillMenuBar(IMenuManager manager) {
 		manager.add(hideToolPartPaletteAction);

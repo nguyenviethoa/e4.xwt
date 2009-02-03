@@ -30,17 +30,17 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.ToolPaletteImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.ToolPaletteImpl#getEntries <em>Entries</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.ToolPaletteImpl#getName <em>Name</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.ToolPaletteImpl#getEntries <em>Entries</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ToolPaletteImpl extends EObjectImpl implements ToolPalette {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -48,8 +48,8 @@ public class ToolPaletteImpl extends EObjectImpl implements ToolPalette {
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -57,8 +57,8 @@ public class ToolPaletteImpl extends EObjectImpl implements ToolPalette {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getEntries() <em>Entries</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getEntries() <em>Entries</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getEntries()
 	 * @generated
 	 * @ordered
@@ -67,6 +67,7 @@ public class ToolPaletteImpl extends EObjectImpl implements ToolPalette {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ToolPaletteImpl() {
@@ -75,6 +76,7 @@ public class ToolPaletteImpl extends EObjectImpl implements ToolPalette {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -84,6 +86,7 @@ public class ToolPaletteImpl extends EObjectImpl implements ToolPalette {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -92,6 +95,7 @@ public class ToolPaletteImpl extends EObjectImpl implements ToolPalette {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setName(String newName) {
@@ -103,6 +107,7 @@ public class ToolPaletteImpl extends EObjectImpl implements ToolPalette {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<Entry> getEntries() {
@@ -114,90 +119,97 @@ public class ToolPaletteImpl extends EObjectImpl implements ToolPalette {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
-				return ((InternalEList<?>)getEntries()).basicRemove(otherEnd, msgs);
+		case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
+			return ((InternalEList<?>) getEntries()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ToolPalettePackage.TOOL_PALETTE__NAME:
-				return getName();
-			case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
-				return getEntries();
+		case ToolPalettePackage.TOOL_PALETTE__NAME:
+			return getName();
+		case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
+			return getEntries();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ToolPalettePackage.TOOL_PALETTE__NAME:
-				setName((String)newValue);
-				return;
-			case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
-				getEntries().clear();
-				getEntries().addAll((Collection<? extends Entry>)newValue);
-				return;
+		case ToolPalettePackage.TOOL_PALETTE__NAME:
+			setName((String) newValue);
+			return;
+		case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
+			getEntries().clear();
+			getEntries().addAll((Collection<? extends Entry>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ToolPalettePackage.TOOL_PALETTE__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
-				getEntries().clear();
-				return;
+		case ToolPalettePackage.TOOL_PALETTE__NAME:
+			setName(NAME_EDEFAULT);
+			return;
+		case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
+			getEntries().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ToolPalettePackage.TOOL_PALETTE__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
-				return entries != null && !entries.isEmpty();
+		case ToolPalettePackage.TOOL_PALETTE__NAME:
+			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+		case ToolPalettePackage.TOOL_PALETTE__ENTRIES:
+			return entries != null && !entries.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: ");

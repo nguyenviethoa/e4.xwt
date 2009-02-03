@@ -10,16 +10,14 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * @author BOB
- *
+ * 
  */
 public class ImageHelper {
 
 	/**
-	 * Create ImageDescriptor of given path. Load images from extension
-	 * registry.
+	 * Create ImageDescriptor of given path. Load images from extension registry.
 	 */
-	public static ImageDescriptor getImageDescriptor(
-			PaletteResourceManager tResourceManager, String iconPath) {
+	public static ImageDescriptor getImageDescriptor(PaletteResourceManager tResourceManager, String iconPath) {
 		if (tResourceManager == null || iconPath == null) {
 			return null;
 		}
@@ -34,13 +32,17 @@ public class ImageHelper {
 			if (file.exists()) {
 				// try customize component first
 				url = file.toURL();
-				return ImageDescriptor.createFromURL(url);
 			} else {
 				// if don't work, try system component then
 				url = new URL(newIconPath);
-				return ImageDescriptor.createFromURL(url);
-
 			}
+			ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL(url);
+			if (imageDescriptor.getImageData() != null) {
+				return imageDescriptor;
+			} else {
+				return null;
+			}
+
 		} catch (MalformedURLException e) {
 			// if both don't work, return null
 			return null;

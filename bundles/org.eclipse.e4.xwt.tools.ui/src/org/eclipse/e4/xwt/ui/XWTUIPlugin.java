@@ -22,7 +22,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -107,6 +109,17 @@ public class XWTUIPlugin extends AbstractUIPlugin {
 			image = getImageRegistry().get(path);
 		}
 		return image;
+	}
+
+	public static void checkStartup() {
+		Bundle bundle = getDefault().getBundle();
+		if (bundle.getState() != Bundle.ACTIVE) {
+			try {
+				bundle.start();
+			} catch (BundleException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void openExamlPerspective() {

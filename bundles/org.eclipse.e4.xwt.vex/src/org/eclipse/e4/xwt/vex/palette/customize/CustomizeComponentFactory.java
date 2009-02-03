@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.e4.xwt.vex.palette.customize;
 
 import java.io.IOException;
@@ -36,9 +46,6 @@ public class CustomizeComponentFactory {
 
 	private List<VEXEditor> allVEXEditorList = new ArrayList<VEXEditor>(); // to support multiple vex editor
 
-	// private PaletteViewer paletteViewer;
-	// PaletteResourceManager tResourceManager;
-
 	// prefix and postfix strings
 	private final static String PREFIX_COMPONENT = "CUSTOMIZE_COMPONENT_"; //$NON-NLS-1$
 	private final static String POSTFIX_NAME = "_name"; //$NON-NLS-1$
@@ -75,11 +82,6 @@ public class CustomizeComponentFactory {
 
 	// constructor
 	private CustomizeComponentFactory() {
-		// Object editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		// if (editor instanceof VEXEditor) {
-		// this.paletteViewer = ((CustomPalettePage) ((VEXEditor) editor).getVEXEditorPalettePage()).getPaletteViewer();
-		// }
-		//
 		customizeComponentList.addAll(loadCustomizeComponents());
 	}
 
@@ -221,9 +223,6 @@ public class CustomizeComponentFactory {
 					subEntry.setToolTip(customizeComponent.getTooptip());
 					subEntry.setContent(customizeComponent.getContent());
 
-					// add sub entry
-					// customizeEntryRoot.getEntries().add(subEntry);
-
 					CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(subEntry.getName(), subEntry.getToolTip(), subEntry, new SimpleFactory(resource.getClass()), ImageHelper.getImageDescriptor(tResourceManager, subEntry.getIcon()), ImageHelper.getImageDescriptor(tResourceManager, subEntry.getLargeIcon()));
 
 					customizePaletteGroup.add(component);
@@ -232,75 +231,6 @@ public class CustomizeComponentFactory {
 			root.add(customizePaletteGroup);
 
 		}
-
-		// Object editor = paletteViewer.getProperty(EditorMessages.CustomizeComponentFactory_VIEWER_EDITOR);
-		// if (editor instanceof VEXEditor) {
-		// tResourceManager = ((VEXEditor) editor).getPaletteResourceManager();
-		// }
-		// if (tResourceManager == null) {
-		// return;
-		// }
-		//
-		// Resource resource = tResourceManager.getCustomizeResource();
-		// CustomizePaletteViewer customizePaletteViewer = null;
-		// Object objectPaletteViewer = paletteViewer.getProperty("Customize_PaletteViewer");
-		// if (objectPaletteViewer instanceof CustomizePaletteViewer) {
-		// customizePaletteViewer = (CustomizePaletteViewer) objectPaletteViewer;
-		// }
-		// if (customizePaletteViewer == null) {
-		// return;
-		// }
-		// PaletteRoot root = customizePaletteViewer.getPaletteRoot();
-		// List paletteChildren = root.getChildren();
-		// PaletteGroup customizePaletteGroup = null;
-		// for (Object object : paletteChildren) {
-		// if (((PaletteGroup) object).getLabel().equals(EditorMessages.CustomizeComponentFactory_Customize)) {
-		// customizePaletteGroup = (PaletteGroup) object;
-		// break;
-		// }
-		// }
-		// if (customizePaletteGroup == null) {
-		// customizePaletteGroup = new PaletteGroup(EditorMessages.CustomizeComponentFactory_Customize);
-		// }
-		// List children = customizePaletteGroup.getChildren();
-		// int count = children.size();
-		// for (int i = 0; i < count; i++) {
-		// customizePaletteGroup.remove((PaletteEntry) children.get(0));
-		// }
-		// root.remove(customizePaletteGroup);
-		//
-		// /*
-		// * // 2. get customize component model root Resource resource = tResourceManager.getCustomizeResource(); ToolPalette toolPalette = (ToolPalette) resource.getContents().get(0); EList<Entry> entries = toolPalette.getEntries(); Entry customizeEntryRoot = null; for (Entry entry : entries) { if (entry.getName().equals( EditorMessages.CustomizeComponentFactory_Customize)) { customizeEntryRoot = entry; break; } } // remove current customize model and create one if (customizeEntryRoot != null) { entries.remove(customizeEntryRoot); } customizeEntryRoot = ToolPaletteFactory.eINSTANCE.createEntry(); customizeEntryRoot .setName(EditorMessages.CustomizeComponentFactory_Customize); customizeEntryRoot .setToolTip(EditorMessages.CustomizeComponentFactory_CustomizeCategory);
-		// * entries.add(customizeEntryRoot);
-		// *
-		// * // 3. get the customize component gef palette drawer PaletteRoot root = paletteViewer.getPaletteRoot(); List<?> paletteChildren = root.getChildren(); PaletteDrawer paletteDrawer = null;
-		// *
-		// * int i = 0; for (Object object : paletteChildren) { if (((PaletteDrawer) object).getLabel().equals( EditorMessages.CustomizeComponentFactory_Customize)) { paletteDrawer = (ToolPaletteDrawer) object; break; } i++; }
-		// *
-		// * // 4. remove existing customize component drawer and create a new one if (paletteDrawer != null) { root.remove(paletteDrawer); } paletteDrawer = new ToolPaletteDrawer( EditorMessages.CustomizeComponentFactory_Customize);
-		// */
-		//
-		// // 5. add customize components to emf model and gef palette drawer
-		// if (customizeComponentList.size() > 0) {
-		// // add customize components
-		// for (CustomizeComponent customizeComponent : customizeComponentList) {
-		// Entry subEntry = ToolPaletteFactory.eINSTANCE.createEntry();
-		// subEntry.setName(customizeComponent.getName());
-		// subEntry.setScope(customizeComponent.getScope());
-		// subEntry.setIcon(customizeComponent.getIcon());
-		// subEntry.setLargeIcon(customizeComponent.getLargeIcon());
-		// subEntry.setToolTip(customizeComponent.getTooptip());
-		// subEntry.setContent(customizeComponent.getContent());
-		//
-		// // add sub entry
-		// // customizeEntryRoot.getEntries().add(subEntry);
-		//
-		// CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(subEntry.getName(), subEntry.getToolTip(), subEntry, new SimpleFactory(resource.getClass()), ImageHelper.getImageDescriptor(tResourceManager, subEntry.getIcon()), ImageHelper.getImageDescriptor(tResourceManager, subEntry.getLargeIcon()));
-		//
-		// customizePaletteGroup.add(component);
-		// }
-		// }
-		// root.add(customizePaletteGroup);
 	}
 
 	/**

@@ -143,8 +143,8 @@ public class NewUIComponentWizardPage extends org.eclipse.jdt.ui.wizards.NewClas
 		if (hostClassName != null) {
 			printStream.println("\t xmlns:x=\"" + IConstants.XWT_X_NAMESPACE + "\"");
 			String packageName = type.getPackageFragment().getElementName();
-			if (packageName != null && packageName.length() > 0) {
-				printStream.println("\t xmlns:j=\"" + IConstants.XWT_CLR_NAMESPACE_PROTO + packageName + "\"");
+			if (packageName != null/* && packageName.length() > 0*/) {
+				printStream.println("\t xmlns:j=\"" + IConstants.XAML_CLR_NAMESPACE_PROTO + packageName + "\"");
 			}
 			printStream.println("\t x:Class=\"" + hostClassName + "\">");
 		} else {
@@ -202,7 +202,7 @@ public class NewUIComponentWizardPage extends org.eclipse.jdt.ui.wizards.NewClas
 	@Override
 	public boolean isPageComplete() {
 		if (modelTableViewer != null && modelTableViewer.getSelection().isEmpty()) {
-			setErrorMessage("Veuillez selectionner le type mdoelde de vue.");
+			setErrorMessage("Please select a model type.");
 			return false;
 		}
 		return super.isPageComplete();

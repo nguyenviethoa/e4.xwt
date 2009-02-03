@@ -58,10 +58,8 @@ public class PaletteViewManager {
 		return paletteRoot;
 	}
 
-	public PaletteRoot getPaletteRootByResourceManager(
-			PaletteResourceManager resourceManager) {
-		paletteRoot = PaletteRootFactory
-				.createPaletteByResourceManager(resourceManager);
+	public PaletteRoot getPaletteRootByResourceManager(PaletteResourceManager resourceManager) {
+		paletteRoot = PaletteRootFactory.createPaletteByResourceManager(resourceManager);
 		return paletteRoot;
 	}
 

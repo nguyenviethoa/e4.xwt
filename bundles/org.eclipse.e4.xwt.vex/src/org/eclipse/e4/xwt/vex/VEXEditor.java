@@ -57,9 +57,6 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.dnd.DropTarget;
-import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
@@ -717,5 +714,117 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 
 	public VEXContext getContext() {
 		return context;
+	}
+
+	/**
+	 * Using for add an entry to VEX editor
+	 * 
+	 * @author BOB
+	 * @param entry
+	 */
+	public void defaultCreation(Entry entry) {
+		System.out.println(entry.getId());
+		System.out.println(entry.getName());
+		System.out.println(entry.getScope());
+		System.out.println(entry.getIcon());
+		System.out.println(entry.getLargeIcon());
+		System.out.println(entry.getToolTip());
+		System.out.println(entry.getContent());
+
+		StyledText control = fTextEditor.getTextViewer().getTextWidget();
+		Caret caret = control.getCaret();
+		if (caret != null) {
+			Point location = caret.getLocation();
+			IDOMNode node = getDOMNode(location);
+			Point addEntryPosition = getAddEntryPosition(location, node);
+			if (addEntryPosition != null) {
+				insertEntry(addEntryPosition, node);
+				updateStatusBarMessage("node " + entry.getName() + " has been insert");
+			} else {
+				updateStatusBarMessage("node " + entry.getName() + " can not be insert");
+			}
+		}
+
+	}
+
+	/**
+	 * get the insert position from the given start location, using for add an node to VEX editor
+	 * 
+	 * @author BOB
+	 * @param startLocation
+	 * @param addNode
+	 * @return insert Point, or null
+	 */
+	private Point getAddEntryPosition(Point startLocation, IDOMNode addNode) {
+
+		/*-----------------------reference code---------------------------*/
+
+		// IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
+		// if (selection == null) {
+		// return;
+		// }
+		// Object element = selection.getFirstElement();
+		// if (element instanceof Entry) {
+		// Entry entry = (Entry) element;
+		//
+		// // update layout and layoutData.
+		// updateLayoutEntry(entry, event.x, event.y);
+		// updateLayoutDataEntry(entry, event.x, event.y);
+		//
+		// IDocument document = getTextEditor().getTextViewer().getDocument();
+		//
+		// Template template = new Template(entry.getName(), "", entry.getContext().getName(), entry.getContent(), true);
+		//
+		// ContextTypeRegistry registry = XMLUIPlugin.getDefault().getTemplateContextRegistry();
+		// if (registry != null) {
+		// TemplateContextType type = registry.getContextType(template.getContextTypeId());
+		//
+		// int length = 0;
+		//
+		// DocumentTemplateContext templateContext = new DocumentTemplateContext(type, document, new Position(dropCaretOffset, length));
+		// if (templateContext.canEvaluate(template)) {
+		// try {
+		// TemplateBuffer templateBuffer = templateContext.evaluate(template);
+		// String templateString = templateBuffer.getString();
+		// document.replace(dropCaretOffset, length, templateString);
+		//
+		// StyledText styledText = getTextWidget();
+		// int position = getCursorOffset(templateBuffer) + dropCaretOffset;
+		// styledText.setCaretOffset(position);
+		// styledText.setFocus();
+		// } catch (Exception e) {
+		// throw new RuntimeException(e);
+		// }
+		// }
+		// }
+		// } else {
+		// super.dropAccept(event);
+		// }
+		/*-----------------------reference code---------------------------*/
+
+		return null;
+	}
+
+	/**
+	 * insert node at special location
+	 * 
+	 * @author BOB
+	 * @param insertLocation
+	 * @param addNode
+	 */
+	private void insertEntry(Point insertLocation, IDOMNode addNode) {
+
+		return;
+	}
+
+	/**
+	 * update eclipse workbench status bar message
+	 * 
+	 * @author BOB
+	 * @param message
+	 */
+	private void updateStatusBarMessage(String message) {
+
+		return;
 	}
 }

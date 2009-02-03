@@ -1,12 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.e4.xwt.vex.palette.customize;
 
 import org.eclipse.e4.xwt.vex.palette.customize.actions.AddCustomizePaletteAction;
 import org.eclipse.e4.xwt.vex.palette.customize.actions.DeleteCustomizeComponentAction;
 import org.eclipse.e4.xwt.vex.palette.customize.actions.ModifyCustomizeComponentAction;
 import org.eclipse.e4.xwt.vex.palette.part.CustomizePaletteViewer;
-import org.eclipse.e4.xwt.vex.palette.part.DynamicPaletteViewer;
-import org.eclipse.e4.xwt.vex.palette.part.ToolDrawerEditPart;
-import org.eclipse.e4.xwt.vex.palette.part.ToolPaletteDrawer;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.internal.ui.palette.editparts.ToolEntryEditPart;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;

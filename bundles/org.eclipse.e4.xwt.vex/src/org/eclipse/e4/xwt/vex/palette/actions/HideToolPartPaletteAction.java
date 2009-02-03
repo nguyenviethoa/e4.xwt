@@ -13,8 +13,6 @@ package org.eclipse.e4.xwt.vex.palette.actions;
 import org.eclipse.e4.xwt.vex.Activator;
 import org.eclipse.e4.xwt.vex.VEXEditor;
 import org.eclipse.e4.xwt.vex.palette.CustomPalettePage;
-import org.eclipse.e4.xwt.vex.palette.part.CustomizePaletteViewer;
-import org.eclipse.e4.xwt.vex.palette.part.DynamicPaletteViewer;
 import org.eclipse.e4.xwt.vex.swt.CustomSashForm;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.jface.action.Action;
@@ -23,16 +21,15 @@ import org.eclipse.ui.PlatformUI;
 public class HideToolPartPaletteAction extends Action {
 
 	private PaletteViewer paletteViewer;
-	private CustomSashForm customSashForm;
-	
-	
+	private CustomSashForm toolSashForm;
+	private CustomSashForm sashFormMain;
+
 	public HideToolPartPaletteAction() {
 		super();
 		// TODO Auto-generated constructor stub
 		setText("Hide/Show Standard Tools");
 		setImageDescriptor(Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/full/obj16/hide3.gif"));
 	}
-
 
 	@Override
 	public void run() {
@@ -41,21 +38,26 @@ public class HideToolPartPaletteAction extends Action {
 		if (editor instanceof VEXEditor) {
 			paletteViewer = ((CustomPalettePage) ((VEXEditor) editor).getVEXEditorPalettePage()).getPaletteViewer();
 		}
-		
-		Object sashFormMain = paletteViewer.getProperty("SashFormMain");
-		if (sashFormMain instanceof CustomSashForm) {
-			customSashForm = (CustomSashForm) sashFormMain;
+
+		Object toolForm = paletteViewer.getProperty("ToolSashForm");
+		if (toolForm instanceof CustomSashForm) {
+			toolSashForm = (CustomSashForm) toolForm;
 		}
-		if(isChecked()){
+
+		Object mainForm = paletteViewer.getProperty("SashFormMain");
+		if (mainForm instanceof CustomSashForm) {
+			sashFormMain = (CustomSashForm) mainForm;
+		}
+
+		if (isChecked()) {
 			setChecked(false);
-			paletteViewer.getControl().setVisible(true);
-			customSashForm.setWeights(new int[] {2, 1});
-		}else {
+			toolSashForm.setVisible(true);
+			sashFormMain.setWeights(new int[] { 2, 1 });
+		} else {
 			setChecked(true);
-			paletteViewer.getControl().setVisible(false);
-			customSashForm.setWeights(new int[] {0, 1});
+			toolSashForm.setVisible(false);
+			sashFormMain.setWeights(new int[] { 0, 1 });
 		}
 	}
 
-	
 }

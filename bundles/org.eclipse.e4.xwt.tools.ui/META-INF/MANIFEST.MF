@@ -13,9 +13,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.pde.core,
  org.eclipse.pde.ui,
  org.eclipse.ui.ide;bundle-version="3.4.0",
- org.eclipse.jdt.ui;bundle-version="3.4.0"
+ org.eclipse.jdt.ui;bundle-version="3.4.0",
+ org.eclipse.ui.console;bundle-version="3.3.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.e4.xwt.ui,
- org.eclipse.e4.xwt.ui.utils
+ org.eclipse.e4.xwt.ui.utils,
+ org.eclipse.e4.xwt.ui.views
 Bundle-Localization: plugin

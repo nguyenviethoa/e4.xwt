@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.e4.xwt.vex.palette.customize.dialogs;
 
 import org.eclipse.core.resources.IFile;
@@ -95,6 +105,7 @@ public class CustomizePaletteDialog extends TitleAreaDialog {
 		textName = new Text(compositeNew, SWT.SINGLE | SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		textName.setLayoutData(data);
+		textName.setToolTipText(EditorMessages.CustomizePaletteDialog_Name_ToolTip);
 
 		// scope
 		Label labelScope = new Label(compositeNew, SWT.LEFT);
@@ -103,6 +114,7 @@ public class CustomizePaletteDialog extends TitleAreaDialog {
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		textScope.setLayoutData(data);
+		textScope.setToolTipText(EditorMessages.CustomizePaletteDialog_Scope_ToolTip);
 
 		// icon
 		Label labelIcon = new Label(compositeNew, SWT.LEFT);
@@ -112,6 +124,7 @@ public class CustomizePaletteDialog extends TitleAreaDialog {
 		data.horizontalSpan = 3;
 		data.minimumWidth = 280;
 		textIcon.setLayoutData(data);
+		textIcon.setToolTipText(EditorMessages.CustomizePaletteDialog_Icon_ToolTip);
 		Button buttonBrowseIcon = new Button(compositeNew, SWT.PUSH);
 		buttonBrowseIcon.setText(EditorMessages.CustomizePaletteDialog_BrowseIcon);
 		buttonBrowseIcon.addSelectionListener(new SelectionListener() {
@@ -143,6 +156,7 @@ public class CustomizePaletteDialog extends TitleAreaDialog {
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 3;
 		textLargeIcon.setLayoutData(data);
+		textLargeIcon.setToolTipText(EditorMessages.CustomizePaletteDialog_LargeIcon_ToolTip);
 		Button buttonBrowseLargeIcon = new Button(compositeNew, SWT.PUSH);
 		buttonBrowseLargeIcon.setText(EditorMessages.CustomizePaletteDialog_BrowseLargeIcon);
 		buttonBrowseLargeIcon.addSelectionListener(new SelectionListener() {
@@ -157,7 +171,9 @@ public class CustomizePaletteDialog extends TitleAreaDialog {
 				selectionDialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
 				if (selectionDialog.open() == Window.OK) {
 					IFile file = (IFile) selectionDialog.getFirstResult();
-					textLargeIcon.setText(file.getFullPath().toOSString());
+					String workspacePath = file.getWorkspace().getRoot().getLocation().toOSString();
+					String filePath = file.getFullPath().toOSString();
+					textLargeIcon.setText(workspacePath + filePath);
 				}
 			}
 		});
@@ -171,6 +187,7 @@ public class CustomizePaletteDialog extends TitleAreaDialog {
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 4;
 		textToolTip.setLayoutData(data);
+		textToolTip.setToolTipText(EditorMessages.CustomizePaletteDialog_ToolTip_ToolTip);
 
 		// Content
 		Label labelContent = new Label(compositeNew, SWT.LEFT);
@@ -182,6 +199,7 @@ public class CustomizePaletteDialog extends TitleAreaDialog {
 		data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 5;
 		textContent.setLayoutData(data);
+		textContent.setToolTipText(EditorMessages.CustomizePaletteDialog_Content_ToolTip);
 
 		if (invokeType == InvokeType.DragAdd) {
 			textContent.setText(templateDnDText);

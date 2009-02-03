@@ -38,6 +38,14 @@ public class EditorMessages extends NLS {
 	public static String CustomizePaletteDialog_SelectionDialog_Title;
 	public static String CustomizePaletteDialog_Title;
 	public static String CustomizePaletteDialog_ToolTip;
+
+	public static String CustomizePaletteDialog_Name_ToolTip;
+	public static String CustomizePaletteDialog_Scope_ToolTip;
+	public static String CustomizePaletteDialog_ToolTip_ToolTip;
+	public static String CustomizePaletteDialog_Content_ToolTip;
+	public static String CustomizePaletteDialog_Icon_ToolTip;
+	public static String CustomizePaletteDialog_LargeIcon_ToolTip;
+
 	public static String EventHandleDialogTitle;
 	public static String EventHandleDialog_Operation;
 	public static String EventHandleDialog_New_Handler;

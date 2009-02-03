@@ -6,10 +6,22 @@
 		<objectContribution
 			id="org.eclipse.e4.xwt.objectContributionOpen" nameFilter="*.xwt"
 			objectClass="org.eclipse.core.resources.IFile">
+     <menu
+           id="org.eclipse.e4.xwt.ui.open"
+           label="%menu.label.0"
+           path="group.open">
+     </menu>
+     <action
+           class="org.eclipse.e4.xwt.ui.actions.XWTViewOpenAction"
+           icon="icons/full/obj16/xaml_wiz.png"
+           id="org.eclipse.e4.xwt.ui.actions.XWTViewOpenAction"
+           label="%action.label.1"
+           menubarPath="org.eclipse.e4.xwt.ui.open/group1">
+     </action>
 			<action label="%action.label.0"
-				icon="icons/full/obj16/eFace16.png"
+				icon="icons/full/obj16/xaml_wiz.png"
 				class="org.eclipse.e4.xwt.ui.actions.XWTOpen"
-				menubarPath="group.open" enablesFor="*"
+				menubarPath="org.eclipse.e4.xwt.ui.open/group1" enablesFor="*"
 				id="org.eclipse.e4.xwt.ui.actions.XWTOpen">
 			</action>
 		</objectContribution> 
@@ -69,5 +81,22 @@
           class="org.eclipse.e4.xwt.ui.jdt.ClasspathContainerInitializer"
           id="org.eclipse.e4.xwtl.tools.ui.CONTAINER">
     </classpathContainerInitializer>
+ </extension>
+ <extension
+       point="org.eclipse.ui.views">
+    <view
+          category="org.eclipse.e4.xwt.ui.category.xwt"
+          class="org.eclipse.e4.xwt.ui.views.XWTView"
+          icon="icons/full/obj16/xaml_wiz.png"
+          id="org.eclipse.e4.xwt.ui.views.XWTView"
+          name="%view.name.0"
+          restorable="true">
+    </view>
+ </extension>
+ <extension
+       point="org.eclipse.e4.xwt.pde.logger">
+    <logger
+          class="org.eclipse.e4.xwt.ui.utils.Log">
+    </logger>
  </extension>
 </plugin>

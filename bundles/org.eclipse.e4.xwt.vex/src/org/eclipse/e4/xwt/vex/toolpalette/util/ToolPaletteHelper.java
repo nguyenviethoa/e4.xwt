@@ -16,7 +16,7 @@ public class ToolPaletteHelper {
 
 	public static String getSimpleName(Entry entry) {
 		String name = entry.getName();
-		if (name == null){
+		if (name == null) {
 			return null;
 		}
 		int index = name.lastIndexOf('.');

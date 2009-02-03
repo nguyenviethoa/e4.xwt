@@ -30,24 +30,24 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getToolTip <em>Tool Tip</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getLargeIcon <em>Large Icon</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getContent <em>Content</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getEntries <em>Entries</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getId <em>Id</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getIcon <em>Icon</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getContext <em>Context</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getScope <em>Scope</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getToolTip <em>Tool Tip</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getLargeIcon <em>Large Icon</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getContent <em>Content</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getName <em>Name</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getEntries <em>Entries</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getId <em>Id</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getIcon <em>Icon</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getContext <em>Context</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.vex.toolpalette.impl.EntryImpl#getScope <em>Scope</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class EntryImpl extends EObjectImpl implements Entry {
 	/**
-	 * The default value of the '{@link #getToolTip() <em>Tool Tip</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getToolTip() <em>Tool Tip</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getToolTip()
 	 * @generated
 	 * @ordered
@@ -55,8 +55,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected static final String TOOL_TIP_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getToolTip() <em>Tool Tip</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getToolTip() <em>Tool Tip</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getToolTip()
 	 * @generated
 	 * @ordered
@@ -64,8 +64,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected String toolTip = TOOL_TIP_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getLargeIcon() <em>Large Icon</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getLargeIcon() <em>Large Icon</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLargeIcon()
 	 * @generated
 	 * @ordered
@@ -73,8 +73,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected static final String LARGE_ICON_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLargeIcon() <em>Large Icon</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLargeIcon() <em>Large Icon</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLargeIcon()
 	 * @generated
 	 * @ordered
@@ -82,8 +82,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected String largeIcon = LARGE_ICON_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getContent()
 	 * @generated
 	 * @ordered
@@ -91,8 +91,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected static final String CONTENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getContent()
 	 * @generated
 	 * @ordered
@@ -100,8 +100,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected String content = CONTENT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -109,8 +109,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -118,8 +118,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getEntries() <em>Entries</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getEntries() <em>Entries</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getEntries()
 	 * @generated
 	 * @ordered
@@ -127,8 +127,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected EList<Entry> entries;
 
 	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -136,8 +136,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected static final String ID_EDEFAULT = "\"\"";
 
 	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -145,8 +145,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getIcon() <em>Icon</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getIcon() <em>Icon</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getIcon()
 	 * @generated
 	 * @ordered
@@ -154,8 +154,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected static final String ICON_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getIcon() <em>Icon</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getIcon() <em>Icon</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getIcon()
 	 * @generated
 	 * @ordered
@@ -163,8 +163,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected String icon = ICON_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getContext() <em>Context</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getContext() <em>Context</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getContext()
 	 * @generated
 	 * @ordered
@@ -172,8 +172,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected static final ContextType CONTEXT_EDEFAULT = ContextType.XML_TAG;
 
 	/**
-	 * The cached value of the '{@link #getContext() <em>Context</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getContext() <em>Context</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getContext()
 	 * @generated
 	 * @ordered
@@ -181,8 +181,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected ContextType context = CONTEXT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getScope() <em>Scope</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getScope() <em>Scope</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getScope()
 	 * @generated
 	 * @ordered
@@ -190,8 +190,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected static final String SCOPE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getScope() <em>Scope</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getScope() <em>Scope</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getScope()
 	 * @generated
 	 * @ordered
@@ -200,6 +200,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected EntryImpl() {
@@ -208,6 +209,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -217,6 +219,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getToolTip() {
@@ -225,6 +228,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setToolTip(String newToolTip) {
@@ -248,6 +252,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLargeIcon(String newLargeIcon) {
@@ -259,6 +264,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getContent() {
@@ -267,6 +273,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setContent(String newContent) {
@@ -278,6 +285,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -286,6 +294,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setName(String newName) {
@@ -297,6 +306,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<Entry> getEntries() {
@@ -308,6 +318,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getId() {
@@ -316,6 +327,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setId(String newId) {
@@ -327,6 +339,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getIcon() {
@@ -335,6 +348,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setIcon(String newIcon) {
@@ -346,6 +360,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ContextType getContext() {
@@ -354,6 +369,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setContext(ContextType newContext) {
@@ -365,6 +381,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getScope() {
@@ -373,6 +390,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setScope(String newScope) {
@@ -384,160 +402,167 @@ public class EntryImpl extends EObjectImpl implements Entry {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ToolPalettePackage.ENTRY__ENTRIES:
-				return ((InternalEList<?>)getEntries()).basicRemove(otherEnd, msgs);
+		case ToolPalettePackage.ENTRY__ENTRIES:
+			return ((InternalEList<?>) getEntries()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ToolPalettePackage.ENTRY__TOOL_TIP:
-				return getToolTip();
-			case ToolPalettePackage.ENTRY__LARGE_ICON:
-				return getLargeIcon();
-			case ToolPalettePackage.ENTRY__CONTENT:
-				return getContent();
-			case ToolPalettePackage.ENTRY__NAME:
-				return getName();
-			case ToolPalettePackage.ENTRY__ENTRIES:
-				return getEntries();
-			case ToolPalettePackage.ENTRY__ID:
-				return getId();
-			case ToolPalettePackage.ENTRY__ICON:
-				return getIcon();
-			case ToolPalettePackage.ENTRY__CONTEXT:
-				return getContext();
-			case ToolPalettePackage.ENTRY__SCOPE:
-				return getScope();
+		case ToolPalettePackage.ENTRY__TOOL_TIP:
+			return getToolTip();
+		case ToolPalettePackage.ENTRY__LARGE_ICON:
+			return getLargeIcon();
+		case ToolPalettePackage.ENTRY__CONTENT:
+			return getContent();
+		case ToolPalettePackage.ENTRY__NAME:
+			return getName();
+		case ToolPalettePackage.ENTRY__ENTRIES:
+			return getEntries();
+		case ToolPalettePackage.ENTRY__ID:
+			return getId();
+		case ToolPalettePackage.ENTRY__ICON:
+			return getIcon();
+		case ToolPalettePackage.ENTRY__CONTEXT:
+			return getContext();
+		case ToolPalettePackage.ENTRY__SCOPE:
+			return getScope();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ToolPalettePackage.ENTRY__TOOL_TIP:
-				setToolTip((String)newValue);
-				return;
-			case ToolPalettePackage.ENTRY__LARGE_ICON:
-				setLargeIcon((String)newValue);
-				return;
-			case ToolPalettePackage.ENTRY__CONTENT:
-				setContent((String)newValue);
-				return;
-			case ToolPalettePackage.ENTRY__NAME:
-				setName((String)newValue);
-				return;
-			case ToolPalettePackage.ENTRY__ENTRIES:
-				getEntries().clear();
-				getEntries().addAll((Collection<? extends Entry>)newValue);
-				return;
-			case ToolPalettePackage.ENTRY__ID:
-				setId((String)newValue);
-				return;
-			case ToolPalettePackage.ENTRY__ICON:
-				setIcon((String)newValue);
-				return;
-			case ToolPalettePackage.ENTRY__CONTEXT:
-				setContext((ContextType)newValue);
-				return;
-			case ToolPalettePackage.ENTRY__SCOPE:
-				setScope((String)newValue);
-				return;
+		case ToolPalettePackage.ENTRY__TOOL_TIP:
+			setToolTip((String) newValue);
+			return;
+		case ToolPalettePackage.ENTRY__LARGE_ICON:
+			setLargeIcon((String) newValue);
+			return;
+		case ToolPalettePackage.ENTRY__CONTENT:
+			setContent((String) newValue);
+			return;
+		case ToolPalettePackage.ENTRY__NAME:
+			setName((String) newValue);
+			return;
+		case ToolPalettePackage.ENTRY__ENTRIES:
+			getEntries().clear();
+			getEntries().addAll((Collection<? extends Entry>) newValue);
+			return;
+		case ToolPalettePackage.ENTRY__ID:
+			setId((String) newValue);
+			return;
+		case ToolPalettePackage.ENTRY__ICON:
+			setIcon((String) newValue);
+			return;
+		case ToolPalettePackage.ENTRY__CONTEXT:
+			setContext((ContextType) newValue);
+			return;
+		case ToolPalettePackage.ENTRY__SCOPE:
+			setScope((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ToolPalettePackage.ENTRY__TOOL_TIP:
-				setToolTip(TOOL_TIP_EDEFAULT);
-				return;
-			case ToolPalettePackage.ENTRY__LARGE_ICON:
-				setLargeIcon(LARGE_ICON_EDEFAULT);
-				return;
-			case ToolPalettePackage.ENTRY__CONTENT:
-				setContent(CONTENT_EDEFAULT);
-				return;
-			case ToolPalettePackage.ENTRY__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case ToolPalettePackage.ENTRY__ENTRIES:
-				getEntries().clear();
-				return;
-			case ToolPalettePackage.ENTRY__ID:
-				setId(ID_EDEFAULT);
-				return;
-			case ToolPalettePackage.ENTRY__ICON:
-				setIcon(ICON_EDEFAULT);
-				return;
-			case ToolPalettePackage.ENTRY__CONTEXT:
-				setContext(CONTEXT_EDEFAULT);
-				return;
-			case ToolPalettePackage.ENTRY__SCOPE:
-				setScope(SCOPE_EDEFAULT);
-				return;
+		case ToolPalettePackage.ENTRY__TOOL_TIP:
+			setToolTip(TOOL_TIP_EDEFAULT);
+			return;
+		case ToolPalettePackage.ENTRY__LARGE_ICON:
+			setLargeIcon(LARGE_ICON_EDEFAULT);
+			return;
+		case ToolPalettePackage.ENTRY__CONTENT:
+			setContent(CONTENT_EDEFAULT);
+			return;
+		case ToolPalettePackage.ENTRY__NAME:
+			setName(NAME_EDEFAULT);
+			return;
+		case ToolPalettePackage.ENTRY__ENTRIES:
+			getEntries().clear();
+			return;
+		case ToolPalettePackage.ENTRY__ID:
+			setId(ID_EDEFAULT);
+			return;
+		case ToolPalettePackage.ENTRY__ICON:
+			setIcon(ICON_EDEFAULT);
+			return;
+		case ToolPalettePackage.ENTRY__CONTEXT:
+			setContext(CONTEXT_EDEFAULT);
+			return;
+		case ToolPalettePackage.ENTRY__SCOPE:
+			setScope(SCOPE_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ToolPalettePackage.ENTRY__TOOL_TIP:
-				return TOOL_TIP_EDEFAULT == null ? toolTip != null : !TOOL_TIP_EDEFAULT.equals(toolTip);
-			case ToolPalettePackage.ENTRY__LARGE_ICON:
-				return LARGE_ICON_EDEFAULT == null ? largeIcon != null : !LARGE_ICON_EDEFAULT.equals(largeIcon);
-			case ToolPalettePackage.ENTRY__CONTENT:
-				return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
-			case ToolPalettePackage.ENTRY__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ToolPalettePackage.ENTRY__ENTRIES:
-				return entries != null && !entries.isEmpty();
-			case ToolPalettePackage.ENTRY__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-			case ToolPalettePackage.ENTRY__ICON:
-				return ICON_EDEFAULT == null ? icon != null : !ICON_EDEFAULT.equals(icon);
-			case ToolPalettePackage.ENTRY__CONTEXT:
-				return context != CONTEXT_EDEFAULT;
-			case ToolPalettePackage.ENTRY__SCOPE:
-				return SCOPE_EDEFAULT == null ? scope != null : !SCOPE_EDEFAULT.equals(scope);
+		case ToolPalettePackage.ENTRY__TOOL_TIP:
+			return TOOL_TIP_EDEFAULT == null ? toolTip != null : !TOOL_TIP_EDEFAULT.equals(toolTip);
+		case ToolPalettePackage.ENTRY__LARGE_ICON:
+			return LARGE_ICON_EDEFAULT == null ? largeIcon != null : !LARGE_ICON_EDEFAULT.equals(largeIcon);
+		case ToolPalettePackage.ENTRY__CONTENT:
+			return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
+		case ToolPalettePackage.ENTRY__NAME:
+			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+		case ToolPalettePackage.ENTRY__ENTRIES:
+			return entries != null && !entries.isEmpty();
+		case ToolPalettePackage.ENTRY__ID:
+			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+		case ToolPalettePackage.ENTRY__ICON:
+			return ICON_EDEFAULT == null ? icon != null : !ICON_EDEFAULT.equals(icon);
+		case ToolPalettePackage.ENTRY__CONTEXT:
+			return context != CONTEXT_EDEFAULT;
+		case ToolPalettePackage.ENTRY__SCOPE:
+			return SCOPE_EDEFAULT == null ? scope != null : !SCOPE_EDEFAULT.equals(scope);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (toolTip: ");

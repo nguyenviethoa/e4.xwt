@@ -37,20 +37,16 @@ public class Win32ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 
 	static {
 		try {
-			OleFrameClass = GC.class.getClassLoader().loadClass(
-					"org.eclipse.swt.ole.win32.OleFrame");
-			Class<?> OSClass = GC.class.getClassLoader().loadClass(
-					"org.eclipse.swt.internal.win32.OS");
-			sendMessage = OSClass.getMethod("SendMessage", int.class,
-					int.class, int.class, int.class);
+			OleFrameClass = GC.class.getClassLoader().loadClass("org.eclipse.swt.ole.win32.OleFrame");
+			Class<?> OSClass = GC.class.getClassLoader().loadClass("org.eclipse.swt.internal.win32.OS");
+			sendMessage = OSClass.getMethod("SendMessage", int.class, int.class, int.class, int.class);
 			getParent = OSClass.getMethod("GetParent", int.class);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	protected Image getImage(Control control, int maxWidth, int maxHeight,
-			boolean includeChildren) {
+
+	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
 		Image myImage = getImage(control, maxWidth, maxHeight);
 		// We need to be able to handle right-to-left coordinates too. In that
 		// case the bounds rectangle will be reversed from what we
@@ -62,9 +58,7 @@ public class Win32ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 			// Get the images of all of the children
 			if (includeChildren && control instanceof Composite) {
 				Display display = control.getDisplay();
-				Rectangle parentBounds = control.getParent() == null ? control
-						.getBounds() : display.map(control.getParent(), null,
-						control.getBounds());
+				Rectangle parentBounds = control.getParent() == null ? control.getBounds() : display.map(control.getParent(), null, control.getBounds());
 				// Need to clip the bounds to the size of the image so we get
 				// just what we need.
 				Rectangle imgBounds = myImage.getBounds();
@@ -86,13 +80,10 @@ public class Win32ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 						// the visible one is being shown on the active page
 						if (!child.isVisible())
 							continue;
-						Rectangle childBounds = display.map(control, null,
-								child.getBounds());
+						Rectangle childBounds = display.map(control, null, child.getBounds());
 						if (!parentBounds.intersects(childBounds))
 							continue; // Child is completely outside parent.
-						Image childImage = getImage(child, parentRight
-								- childBounds.x, parentBottom - childBounds.y,
-								true);
+						Image childImage = getImage(child, parentRight - childBounds.x, parentBottom - childBounds.y, true);
 						if (childImage != null) {
 							try {
 								// Paint the child image on top of our one
@@ -100,9 +91,7 @@ public class Win32ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 								// both in display coors, the difference between
 								// the two is the offset of the child from the
 								// parent.
-								myImageGC.drawImage(childImage, childBounds.x
-										- parentBounds.x, childBounds.y
-										- parentBounds.y);
+								myImageGC.drawImage(childImage, childBounds.x - parentBounds.x, childBounds.y - parentBounds.y);
 							} finally {
 								childImage.dispose();
 							}
@@ -117,15 +106,12 @@ public class Win32ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 	}
 
 	/**
-	 * Return the image of the argument. This includes the client and non-client
-	 * area, but does not include any child controls. To get child control use
-	 * {@link Win32ImageCapture#getImage(Control, int, int, boolean)}.
+	 * Return the image of the argument. This includes the client and non-client area, but does not include any child controls. To get child control use {@link Win32ImageCapture#getImage(Control, int, int, boolean)}.
 	 * 
 	 * @param aControl
 	 * @param maxWidth
 	 * @param maxHeight
-	 * @return image or <code>null</code> if not valid for some reason. (Like
-	 *         not yet sized).
+	 * @return image or <code>null</code> if not valid for some reason. (Like not yet sized).
 	 * 
 	 * @since 1.1.0
 	 */
@@ -135,8 +121,7 @@ public class Win32ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 		if (rect.width <= 0 || rect.height <= 0)
 			return null;
 
-		Image image = new Image(aControl.getDisplay(), Math.min(rect.width,
-				maxWidth), Math.min(rect.height, maxHeight));
+		Image image = new Image(aControl.getDisplay(), Math.min(rect.width, maxWidth), Math.min(rect.height, maxHeight));
 		int WM_PRINT = 0x0317;
 		// int WM_PRINTCLIENT = 0x0318;
 		// int PRF_CHECKVISIBLE = 0x00000001;
@@ -150,10 +135,7 @@ public class Win32ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 		// doesn't work correctly and needs to be
 		// dealt with separately, however Table's TableColumn widgets are
 		// children so must be handled differently
-		boolean specialClass = aControl instanceof Table
-				|| aControl instanceof Browser
-				|| OleFrameClass.isInstance(aControl)
-				|| aControl instanceof CCombo;
+		boolean specialClass = aControl instanceof Table || aControl instanceof Browser || OleFrameClass.isInstance(aControl) || aControl instanceof CCombo;
 		try {
 			specialClass |= aControl instanceof Spinner;
 		} catch (NoClassDefFoundError e) {
