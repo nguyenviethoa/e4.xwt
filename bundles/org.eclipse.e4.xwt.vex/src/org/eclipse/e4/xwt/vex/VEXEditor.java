@@ -568,7 +568,11 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 	 */
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		updateCodeManager();
+		try {
+			updateCodeManager();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		fTextEditor.doSave(monitor);
 	}
 
