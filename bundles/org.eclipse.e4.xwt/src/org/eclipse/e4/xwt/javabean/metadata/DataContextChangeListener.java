@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.IBeanObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.internal.databinding.beans.JavaBeanObservableValue;
 
 public class DataContextChangeListener implements PropertyChangeListener {
 	IObservableValue observeWidget;
@@ -56,8 +56,8 @@ public class DataContextChangeListener implements PropertyChangeListener {
 		}
 		Object observed = null;
 		PropertyDescriptor pd = null;
-		if (observableValue instanceof JavaBeanObservableValue) {
-			JavaBeanObservableValue javaObservor = (JavaBeanObservableValue) observableValue;
+		if (observableValue instanceof IBeanObservable) {
+			IBeanObservable javaObservor = (IBeanObservable) observableValue;
 			observed = javaObservor.getObserved();
 			pd = javaObservor.getPropertyDescriptor();
 		}
