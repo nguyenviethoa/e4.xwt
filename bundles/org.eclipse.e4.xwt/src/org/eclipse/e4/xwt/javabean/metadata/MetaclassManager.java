@@ -22,6 +22,9 @@ import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.utils.ClassLoaderUtil;
 import org.eclipse.e4.xwt.utils.LoggerManager;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class MetaclassManager {
 	protected Map<String, IMetaclass> nameRegister = new HashMap<String, IMetaclass>();
 	protected Collection<Class<?>> classRegister = new HashSet<Class<?>>();

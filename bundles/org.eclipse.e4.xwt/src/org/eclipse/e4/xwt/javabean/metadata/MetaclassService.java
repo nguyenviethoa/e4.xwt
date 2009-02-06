@@ -10,6 +10,9 @@ import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.IMetaclassFactory;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class MetaclassService {
 	protected Map<String, MetaclassManager> map = new HashMap<String, MetaclassManager>();
 	protected ArrayList<IMetaclassFactory> factories = new ArrayList<IMetaclassFactory>();

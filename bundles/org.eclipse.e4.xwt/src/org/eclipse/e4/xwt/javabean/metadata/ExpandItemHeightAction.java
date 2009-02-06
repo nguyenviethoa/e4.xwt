@@ -16,6 +16,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ExpandItem;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class ExpandItemHeightAction implements ISetPostAction {
 
 	public void action(Object target, IProperty property, Object value) {

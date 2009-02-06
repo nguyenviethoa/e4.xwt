@@ -16,6 +16,9 @@ import java.util.Collection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableItem;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class TableItemProperty extends AbstractProperty {
 
 	public static class Cell {

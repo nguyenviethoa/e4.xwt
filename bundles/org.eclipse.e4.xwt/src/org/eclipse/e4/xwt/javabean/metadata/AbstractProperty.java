@@ -17,6 +17,9 @@ import java.util.Collections;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.metadata.ISetPostAction;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public abstract class AbstractProperty extends Behavior implements IProperty {
 	protected Collection<ISetPostAction> setPostActions = Collections.EMPTY_LIST;
 

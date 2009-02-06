@@ -12,6 +12,9 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.swt.widgets.Widget;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class DataProperty extends DynamicProperty {
 	protected String key;
 

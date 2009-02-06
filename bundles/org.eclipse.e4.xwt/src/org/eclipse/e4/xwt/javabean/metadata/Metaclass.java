@@ -30,6 +30,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class Metaclass implements IMetaclass {
 	public static IProperty[] EMPTY_PROPERTIES = new IProperty[0];
 	public static IEvent[] EMPTY_ROUTED_EVENTS = new IEvent[0];
@@ -197,7 +200,7 @@ public class Metaclass implements IMetaclass {
 	 */
 	public IProperty findProperty(String name) {
 		IProperty property = propertyCache.get(normalize(name));
-		if(property == null && superClass != null){
+		if (property == null && superClass != null) {
 			property = superClass.findProperty(name);
 		}
 		if (property == null) {

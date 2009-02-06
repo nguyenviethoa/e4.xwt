@@ -37,6 +37,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class BindingMetaclass extends Metaclass {
 
 	private static final Map<Object, BindingContext> bindingContext = new HashMap<Object, BindingContext>();

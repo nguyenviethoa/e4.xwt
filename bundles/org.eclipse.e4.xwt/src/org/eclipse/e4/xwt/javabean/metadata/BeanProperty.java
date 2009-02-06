@@ -18,6 +18,9 @@ import java.lang.reflect.Method;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class BeanProperty extends AbstractProperty {
 	protected PropertyDescriptor descriptor;
 	private Field field;

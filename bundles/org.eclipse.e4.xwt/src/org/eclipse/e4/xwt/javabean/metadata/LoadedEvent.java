@@ -12,6 +12,9 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.metadata.IEvent;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class LoadedEvent implements IEvent {
 
 	private String name;

@@ -14,6 +14,9 @@ import java.beans.EventSetDescriptor;
 
 import org.eclipse.e4.xwt.metadata.IEvent;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class BeanEvent extends Behavior implements IEvent {
 	protected EventSetDescriptor eventSetDescriptor;
 

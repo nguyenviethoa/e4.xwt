@@ -13,6 +13,9 @@ package org.eclipse.e4.xwt.javabean.metadata;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class DynamicProperty extends AbstractProperty {
 
 	private Class<?> propertyType;

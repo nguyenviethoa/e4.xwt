@@ -12,6 +12,9 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.metadata.IBehavior;
 
+/**
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public abstract class Behavior implements IBehavior {
 	private String name;
 

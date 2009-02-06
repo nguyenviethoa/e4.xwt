@@ -13,7 +13,7 @@ package org.eclipse.e4.xwt.javabean.metadata;
 import org.eclipse.e4.xwt.metadata.IEvent;
 
 /**
- * @author jliu
+ * @author jliu (jin.liu@soyatec.com)
  */
 public class TypedEvent implements IEvent {
 

@@ -12,8 +12,7 @@
 package org.eclipse.e4.xwt.javabean.metadata;
 
 /**
- * @author chun.wang
- *
+ * @author chun.wang (chun.wang@soyatec.com)
  */
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
