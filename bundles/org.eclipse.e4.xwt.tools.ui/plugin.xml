@@ -11,13 +11,13 @@
 		           label="%menu.label.1"
 		           path="group.open">
 		     </menu>
-		     <!-- action
+		     <action
 		           class="org.eclipse.e4.xwt.ui.actions.XWTViewOpenAction"
 		           icon="icons/full/obj16/xaml_wiz.png"
 		           id="org.eclipse.e4.xwt.ui.actions.XWTViewOpenAction"
 		           label="%action.label.2"
 		           menubarPath="org.eclipse.e4.xwt.ui.open/group1">
-		     </action -->
+		     </action>
 			<action label="%action.label.0"
 				icon="icons/full/obj16/xaml_wiz.png"
 				class="org.eclipse.e4.xwt.ui.actions.XWTOpen"

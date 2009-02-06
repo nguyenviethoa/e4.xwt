@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.views;
 
-import java.io.ByteArrayInputStream;
-import java.net.URL;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.ui.ExceptionHandle;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -51,7 +49,7 @@ public class XWTView extends ViewPart {
 		try {
 			setContentWithException(code, file, new ProjectContentProvider(file));
 		} catch (Exception e) {
-			e.printStackTrace();
+			ExceptionHandle.handle(e, "Open view fails");
 		}
 	}
 
@@ -64,9 +62,7 @@ public class XWTView extends ViewPart {
 		if (loadingContext != null) {
 			XWT.setLoadingContext(loadingContext);
 		}
-		if (code != null) {
-			XWT.load(container, new ByteArrayInputStream(code.getBytes()), new URL(file.getLocation().toString()), null);
-		}
+		XWT.load(container, file.getLocation().toFile().toURL());
 		container.layout(true, true);
 	}
 
