@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.views;
 
+import java.io.ByteArrayInputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.XWT;
@@ -62,7 +64,11 @@ public class XWTView extends ViewPart {
 		if (loadingContext != null) {
 			XWT.setLoadingContext(loadingContext);
 		}
-		XWT.load(container, file.getLocation().toFile().toURL());
+		if (code != null) {
+			XWT.load(container, new ByteArrayInputStream(code.getBytes()), file.getLocation().toFile().toURL(), null);
+		} else {
+			XWT.load(container, file.getLocation().toFile().toURL());
+		}
 		container.layout(true, true);
 	}
 

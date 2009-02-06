@@ -533,4 +533,10 @@ public class XWTEditor extends VEXEditor {
 			}
 		}
 	};
+
+	@Override
+	public void setFocus() {
+		super.setFocus();
+		refreshXWTView(super.getTextEditor().getTextViewer().getDocument().get());
+	}
 }

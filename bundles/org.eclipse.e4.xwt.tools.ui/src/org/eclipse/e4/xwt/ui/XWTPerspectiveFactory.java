@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui;
 
+import org.eclipse.e4.xwt.ui.views.XWTView;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -45,6 +46,7 @@ public class XWTPerspectiveFactory implements IPerspectiveFactory {
 		IFolderLayout bottom = factory.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea); //$NON-NLS-1$
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView(IPageLayout.ID_PROP_SHEET);
+		bottom.addView(XWTView.ID);
 	}
 
 	private void addActionSets() {
