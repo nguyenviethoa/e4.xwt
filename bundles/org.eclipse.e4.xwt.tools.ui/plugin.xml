@@ -6,18 +6,18 @@
 		<objectContribution
 			id="org.eclipse.e4.xwt.objectContributionOpen" nameFilter="*.xwt"
 			objectClass="org.eclipse.core.resources.IFile">
-     <menu
-           id="org.eclipse.e4.xwt.ui.open"
-           label="%menu.label.0"
-           path="group.open">
-     </menu>
-     <action
-           class="org.eclipse.e4.xwt.ui.actions.XWTViewOpenAction"
-           icon="icons/full/obj16/xaml_wiz.png"
-           id="org.eclipse.e4.xwt.ui.actions.XWTViewOpenAction"
-           label="%action.label.1"
-           menubarPath="org.eclipse.e4.xwt.ui.open/group1">
-     </action>
+		     <menu
+		           id="org.eclipse.e4.xwt.ui.open"
+		           label="%menu.label.1"
+		           path="group.open">
+		     </menu>
+		     <!-- action
+		           class="org.eclipse.e4.xwt.ui.actions.XWTViewOpenAction"
+		           icon="icons/full/obj16/xaml_wiz.png"
+		           id="org.eclipse.e4.xwt.ui.actions.XWTViewOpenAction"
+		           label="%action.label.2"
+		           menubarPath="org.eclipse.e4.xwt.ui.open/group1">
+		     </action -->
 			<action label="%action.label.0"
 				icon="icons/full/obj16/xaml_wiz.png"
 				class="org.eclipse.e4.xwt.ui.actions.XWTOpen"
@@ -92,6 +92,10 @@
           name="%view.name.0"
           restorable="true">
     </view>
+    <category
+          id="org.eclipse.e4.xwt.ui.category.xwt"
+          name="%category.name.1">
+    </category>
  </extension>
  <extension
        point="org.eclipse.e4.xwt.pde.logger">
