@@ -184,6 +184,8 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (metaclass.getType() != Shell.class) {
 				shell.setLayout(new FillLayout());
 				return doCreate(swtObject, element, constraintType, styles, dico, dataContext);
+			} else if (dataContext != null) {
+				setDataContext(metaclass, swtObject, dico, dataContext);
 			}
 		} else {
 			//
@@ -216,34 +218,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					return null;
 				}
 				// set first data context and resource dictionary
-				{
-					Widget widget = null;
-					IMetaclass widgetMetaclass = metaclass;
-					if (JFacesHelper.isViewer(swtObject)) {
-						widget = JFacesHelper.getControl(swtObject);
-						widgetMetaclass = XWT.getMetaclass(widget.getClass());
-					} else if (swtObject instanceof Widget) {
-						widget = (Widget) swtObject;
-					}
-					if (widget != null) {
-						if (dico != null) {
-							widget.setData(IUserDataConstants.XWT_RESOURCES_KEY, dico);
-						}
-						if (dataContext != null) {
-							if (widget instanceof IDataContextControl) {
-								IDataContextControl contextControl = (IDataContextControl) widget;
-								contextControl.setDataContext(dataContext);
-							} else {
-								IProperty property = widgetMetaclass.findProperty(IConstants.XAML_DATACONTEXT);
-								if (property != null) {
-									property.setValue(widget, dataContext);
-								} else {
-									throw new XWTException("DataContext is missing in " + widgetMetaclass.getType().getName());
-								}
-							}
-						}
-					}
-				}
+				setDataContext(metaclass, swtObject, dico, dataContext);
 
 				if (swtObject instanceof Binding) {
 					String error = "";
@@ -380,6 +355,35 @@ public class ResourceLoader implements IVisualElementLoader {
 			widget = null;
 		}
 		return swtObject;
+	}
+
+	private void setDataContext(IMetaclass metaclass, Object swtObject, ResourceDictionary dico, Object dataContext) throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+		Widget widget = null;
+		IMetaclass widgetMetaclass = metaclass;
+		if (JFacesHelper.isViewer(swtObject)) {
+			widget = JFacesHelper.getControl(swtObject);
+			widgetMetaclass = XWT.getMetaclass(widget.getClass());
+		} else if (swtObject instanceof Widget) {
+			widget = (Widget) swtObject;
+		}
+		if (widget != null) {
+			if (dico != null) {
+				widget.setData(IUserDataConstants.XWT_RESOURCES_KEY, dico);
+			}
+			if (dataContext != null) {
+				if (widget instanceof IDataContextControl) {
+					IDataContextControl contextControl = (IDataContextControl) widget;
+					contextControl.setDataContext(dataContext);
+				} else {
+					IProperty property = widgetMetaclass.findProperty(IConstants.XAML_DATACONTEXT);
+					if (property != null) {
+						property.setValue(widget, dataContext);
+					} else {
+						throw new XWTException("DataContext is missing in " + widgetMetaclass.getType().getName());
+					}
+				}
+			}
+		}
 	}
 
 	private int getColumnIndex(Element columnElement) {
