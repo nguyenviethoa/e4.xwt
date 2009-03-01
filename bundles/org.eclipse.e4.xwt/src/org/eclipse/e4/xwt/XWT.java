@@ -22,11 +22,12 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.e4.xwt.converters.BindingToObject;
 import org.eclipse.e4.xwt.converters.DateToString;
-import org.eclipse.e4.xwt.converters.IntegerToString;
 import org.eclipse.e4.xwt.converters.ObjectToObject;
 import org.eclipse.e4.xwt.converters.ObjectToString;
 import org.eclipse.e4.xwt.converters.StringToBoolean;
 import org.eclipse.e4.xwt.converters.StringToColor;
+import org.eclipse.e4.xwt.converters.StringToDouble;
+import org.eclipse.e4.xwt.converters.StringToFloat;
 import org.eclipse.e4.xwt.converters.StringToFont;
 import org.eclipse.e4.xwt.converters.StringToImage;
 import org.eclipse.e4.xwt.converters.StringToIntArray;
@@ -575,11 +576,12 @@ public class XWT {
 		core.registerMetaclass(new TableEditorMetaclass(core.getMetaclass(ControlEditor.class)), IConstants.XWT_NAMESPACE);
 
 		XWT.registerConvertor(new ObjectToString());
-		XWT.registerConvertor(new IntegerToString());
 		XWT.registerConvertor(new DateToString());
 		XWT.registerConvertor(new StringToInteger());
 		XWT.registerConvertor(new StringToBoolean());
 		XWT.registerConvertor(new StringToIntArray());
+		XWT.registerConvertor(new StringToFloat());
+		XWT.registerConvertor(new StringToDouble());
 		XWT.registerConvertor(new BindingToObject());
 		XWT.registerConvertor(new StringToColor());
 		XWT.registerConvertor(new StringToFont());

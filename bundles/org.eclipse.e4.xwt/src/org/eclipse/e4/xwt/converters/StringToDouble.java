@@ -10,19 +10,29 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.converters;
 
+import org.eclipse.core.databinding.conversion.IConverter;
+
 /**
- * Integer to String converter
+ * String to Integer converter
  * 
  * @author yyang
  */
-public class IntegerToString extends ObjectToString {
-	public static IntegerToString instance = new IntegerToString();
+public class StringToDouble implements IConverter {
+	public static StringToDouble instance = new StringToDouble();
+
+	public Object convert(Object fromObject) {
+		String str = (String) fromObject;
+		if (str == null || str.trim().length() == 0) {
+			return 0D;
+		}
+		return Double.parseDouble(str.trim());
+	}
 
 	public Object getFromType() {
-		return Integer.class;
+		return String.class;
 	}
 
 	public Object getToType() {
-		return String.class;
+		return Double.class;
 	}
 }
