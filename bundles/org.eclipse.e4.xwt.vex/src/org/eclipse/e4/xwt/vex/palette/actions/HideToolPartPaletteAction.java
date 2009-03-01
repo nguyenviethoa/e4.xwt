@@ -25,9 +25,9 @@ public class HideToolPartPaletteAction extends Action {
 	private CustomSashForm sashFormMain;
 
 	public HideToolPartPaletteAction() {
-		super();
+		super("Hide/Show Standard Tools", AS_CHECK_BOX);
 		// TODO Auto-generated constructor stub
-		setText("Hide/Show Standard Tools");
+		setToolTipText("Hide Standard Tools");
 		setImageDescriptor(Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/full/obj16/hide3.gif"));
 	}
 
@@ -50,13 +50,13 @@ public class HideToolPartPaletteAction extends Action {
 		}
 
 		if (isChecked()) {
-			setChecked(false);
-			toolSashForm.setVisible(true);
-			sashFormMain.setWeights(new int[] { 2, 1 });
-		} else {
-			setChecked(true);
 			toolSashForm.setVisible(false);
 			sashFormMain.setWeights(new int[] { 0, 1 });
+			setToolTipText("Show Standard Tools");
+		} else {
+			toolSashForm.setVisible(true);
+			sashFormMain.setWeights(new int[] { 2, 1 });
+			setToolTipText("Hide Standard Tools");
 		}
 	}
 

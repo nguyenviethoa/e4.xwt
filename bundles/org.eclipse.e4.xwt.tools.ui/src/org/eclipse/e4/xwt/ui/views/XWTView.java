@@ -10,13 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.views;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.ui.ExceptionHandle;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
+import org.eclipse.e4.xwt.ui.utils.ProjectContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -29,6 +30,7 @@ public class XWTView extends ViewPart {
 	public static final String ID = "org.eclipse.e4.xwt.ui.views.XWTView";
 
 	protected Composite container;
+	private ProjectContext projectContext;
 
 	/**
 	 * The constructor.
@@ -48,14 +50,18 @@ public class XWTView extends ViewPart {
 	}
 
 	public void setContent(String code, IFile file) {
+		setContent(code, new ProjectContentProvider(file));
+	}
+
+	public void setContent(String code, IContentProvider contentProvider) {
 		try {
-			setContentWithException(code, file, new ProjectContentProvider(file));
+			setContentWithException(code, contentProvider);
 		} catch (Exception e) {
-			ExceptionHandle.handle(e, "Open view fails");
+			throw new RuntimeException(e);
 		}
 	}
 
-	public void setContentWithException(String code, IFile file, IContentProvider contentProvider) throws Exception {
+	public void setContentWithException(String code, IContentProvider contentProvider) throws Exception {
 		XWTUIPlugin.checkStartup();
 		for (Control child : container.getChildren()) {
 			child.dispose();
@@ -65,15 +71,24 @@ public class XWTView extends ViewPart {
 			XWT.setLoadingContext(loadingContext);
 		}
 		if (code != null) {
-			XWT.load(container, new ByteArrayInputStream(code.getBytes()), file.getLocation().toFile().toURL(), null);
+			File file = new File("c:/text.xwt");
+			try {
+				FileWriter fileWriter = new FileWriter(file);
+				fileWriter.write(code);
+				fileWriter.close();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+
+			XWT.load(container, file.toURI().toURL());
 		} else {
-			XWT.load(container, file.getLocation().toFile().toURL());
+			XWT.load(container, contentProvider.getContentURL());
 		}
 		container.layout(true, true);
 	}
 
 	public void setContentWithException(String code, IFile file) throws Exception {
-		setContentWithException(code, file, new ProjectContentProvider(file));
+		setContentWithException(code, new ProjectContentProvider(file));
 	}
 
 	/**

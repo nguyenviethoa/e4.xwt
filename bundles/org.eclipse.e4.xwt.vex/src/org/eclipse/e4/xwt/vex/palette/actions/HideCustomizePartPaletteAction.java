@@ -31,9 +31,8 @@ public class HideCustomizePartPaletteAction extends Action {
 	private Composite customizeComposite;
 
 	public HideCustomizePartPaletteAction() {
-		super();
-		// TODO Auto-generated constructor stub
-		setText("Hide/Show Customized Tools");
+		super("Hide/Show Customize Tools.", AS_CHECK_BOX);
+		setToolTipText("Hide Customize Tools.");
 		setImageDescriptor(Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/full/obj16/hide1.gif"));
 	}
 
@@ -71,14 +70,6 @@ public class HideCustomizePartPaletteAction extends Action {
 		}
 
 		if (isChecked()) {
-			setChecked(false);
-			customizeComposite.setVisible(true);
-			customizePaletteViewer.setVisible(true);
-			dynamicAndCustomizeSashForm.setVisible(true);
-			dynamicAndCustomizeSashForm.setWeights((new int[] { 1, 1 }));
-			sashFormMain.setWeights(new int[] { 2, 1 });
-		} else {
-			setChecked(true);
 			customizePaletteViewer.setVisible(false);
 			customizeComposite.setVisible(false);
 			dynamicAndCustomizeSashForm.setWeights((new int[] { 1, 0 }));
@@ -86,6 +77,14 @@ public class HideCustomizePartPaletteAction extends Action {
 				dynamicAndCustomizeSashForm.setVisible(false);
 				sashFormMain.setWeights(new int[] { 1, 0 });
 			}
+			setToolTipText("Show Customize Tools.");
+		} else {
+			customizeComposite.setVisible(true);
+			customizePaletteViewer.setVisible(true);
+			dynamicAndCustomizeSashForm.setVisible(true);
+			dynamicAndCustomizeSashForm.setWeights((new int[] { 1, 1 }));
+			sashFormMain.setWeights(new int[] { 2, 1 });
+			setToolTipText("Hide Customize Tools.");
 		}
 	}
 

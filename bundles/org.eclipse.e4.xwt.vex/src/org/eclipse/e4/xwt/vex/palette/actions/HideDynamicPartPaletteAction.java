@@ -31,9 +31,9 @@ public class HideDynamicPartPaletteAction extends Action {
 	private Composite dynamicComposite;
 
 	public HideDynamicPartPaletteAction() {
-		super();
+		super("Hide/Show Contextual Tools", AS_CHECK_BOX);
 		// TODO Auto-generated constructor stub
-		setText("Hide/Show Contextual Tools");
+		setToolTipText("Hide Contextual Tools");
 		setImageDescriptor(Activator.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/full/obj16/hide2.gif"));
 	}
 
@@ -71,14 +71,6 @@ public class HideDynamicPartPaletteAction extends Action {
 		}
 
 		if (isChecked()) {
-			setChecked(false);
-			dynamicPaletteViewer.setVisible(true);
-			dynamicComposite.setVisible(true);
-			dynamicAndCustomizeSashForm.setVisible(true);
-			dynamicAndCustomizeSashForm.setWeights((new int[] { 1, 1 }));
-			sashFormMain.setWeights(new int[] { 2, 1 });
-		} else {
-			setChecked(true);
 			dynamicPaletteViewer.setVisible(false);
 			dynamicComposite.setVisible(false);
 			dynamicAndCustomizeSashForm.setWeights((new int[] { 0, 1 }));
@@ -86,6 +78,14 @@ public class HideDynamicPartPaletteAction extends Action {
 				dynamicAndCustomizeSashForm.setVisible(false);
 				sashFormMain.setWeights(new int[] { 1, 0 });
 			}
+			setToolTipText("Show Contextual Tools");
+		} else {
+			dynamicPaletteViewer.setVisible(true);
+			dynamicComposite.setVisible(true);
+			dynamicAndCustomizeSashForm.setVisible(true);
+			dynamicAndCustomizeSashForm.setWeights((new int[] { 1, 1 }));
+			sashFormMain.setWeights(new int[] { 2, 1 });
+			setToolTipText("Hide Contextual Tools");
 		}
 	}
 }
