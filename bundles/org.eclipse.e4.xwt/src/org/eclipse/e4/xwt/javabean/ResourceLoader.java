@@ -155,6 +155,9 @@ public class ResourceLoader implements IVisualElementLoader {
 		String bindingMessage = "";
 		String name = element.getName();
 		String namespace = element.getNamespace();
+		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace) && IConstants.XAML_X_NULL.equalsIgnoreCase(name)) {
+			return null;
+		}
 		IMetaclass metaclass = XWT.getMetaclass(name, namespace);
 		if (constraintType != null && !(IBinding.class.isAssignableFrom(metaclass.getType())) && (!constraintType.isAssignableFrom(metaclass.getType()))) {
 			if (!constraintType.isArray() || !constraintType.getComponentType().isAssignableFrom(metaclass.getType()))
@@ -719,6 +722,9 @@ public class ResourceLoader implements IVisualElementLoader {
 	protected Object createInstance(Object swtObject, Element element) {
 		String name = element.getName();
 		String namespace = element.getNamespace();
+		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace) && IConstants.XAML_X_NULL.equalsIgnoreCase(name)) {
+			return null;
+		}
 		try {
 			Class<?> type = NamespaceHelper.loadCLRClass(context.getLoadingContext(), name, namespace);
 			IMetaclass metaclass = XWT.getMetaclass(name, namespace);
