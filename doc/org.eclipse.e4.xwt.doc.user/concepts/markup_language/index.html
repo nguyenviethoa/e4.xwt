@@ -8,32 +8,31 @@
 </head>
 
 <body>
-<h1>Markup-language</h1>
+<h1>Markup language</h1>
 <p>Markup languages are designed for the processing, definition and
-presentation of text. Extensible Application Markup Language (XAML) is a
-markup language for declarative application programming.</p>
+presentation of text. XWT provides an Extensible UI Markup Language for declarative Eclipse application programming.</p>
 
 <ul>
 	<li><a href="#language_01">A Declarative language with Flow
 	Control Support</a></li>
-	<li><a href="#language_02">XAML Object Elements</a></li>
+	<li><a href="#language_02">XWT Object Elements</a></li>
 	<li><a href="#language_03">Setting Properties</a></li>
-	<li><a href="#language_04">XAML Root Elements and XML
+	<li><a href="#language_04">XWT  Root Elements and XML
 	Namespaces</a></li>
-	<li><a href="#language_05">Events and XAML Code-behind</a></li>
+	<li><a href="#language_05">Events and XWT Code-behind</a></li>
 </ul>
 
 
 <h3><a name="language_01"></a>A Declarative language with Flow
 Control Support</h3>
-<p>XAML simplifies creating a UI for Java programming. You can
-create visible UI elements in the declarative XAML markup, and then
+<p>XWT  simplifies creating a UI for Java programming. You can
+create visible UI elements in the XWT declarative markup, and then
 separate the UI definition from the run-time logic by using code-behind
-files. The ability to mix code with markup in XAML is important because
+files. The ability to mix code with markup in XWT is important because
 XML by itself is declarative, and does not really suggest a model for
 flow control.</p>
 
-<p>The following XAML example shows how markup is necessary to
+<p>The following XWT example shows how markup is necessary to
 create a button as part of a UI.</p>
 
 <pre>
@@ -46,8 +45,8 @@ create a button as part of a UI.</p>
 	class="XMLAttrValue">"Hello"</span> <span class="XMLElementTag">/&gt;</span>
 </pre>
 
-<h3><a name="language_02"></a>XAML Object Elements</h3>
-<p>XAML has a set of rules that map object elements into classes or
+<h3><a name="language_02"></a> XWT Object Elements</h3>
+<p>XWT  has a set of rules that map object elements into classes or
 structures, attributes into properties or events, and XML namespaces to
 Java packages.</p>
 
@@ -57,14 +56,14 @@ Java packages.</p>
 	class="XMLElementTag">GridLayout</span> and <span class="XMLElementTag">Button</span>
 each map to the name of a class that is defined by XWT and is part of
 the XWT assemblies. When you specify an object element tag, you create
-an instruction for XAML processing to create a new instance of the named
-class when your XAML page is loaded. Each instance is created by calling
+an instruction for XWT processing to create a new instance of the named
+class when your XWT page is loaded. Each instance is created by calling
 the default constructor of the underlying class or structure and storing
-the result. To be usable as an object element in XAML, the class or
+the result. To be usable as an object element in XWT, the class or
 structure must expose a public default (parameterless) constructor.</p>
 
 <h3><a name="language_03"></a>Setting Properties</h3>
-<p>Properties in XAML are set by setting properties on an object
+<p>Properties in XWT are set by setting properties on an object
 element, using a variety of possible syntaxes. Which syntaxes can be
 used for a given property will vary, based on the characteristics of the
 property that you are setting.</p>
@@ -77,7 +76,7 @@ other than a completely default instance of any given object.</p>
 
 <p><b>Attribute Syntax</b></p>
 
-<p>In XAML, properties can often be expressed as attributes.
+<p>In XWT, properties can often be expressed as attributes.
 Attribute syntax is the most streamlined property setting syntax and
 will be the most intuitive syntax to use for developers that have used
 markup languages in the past. For example, the following markup creates
@@ -117,11 +116,11 @@ properties of the Button.</p>
 <span class="XMLElementTag">&lt;/Button&gt;</span>
 </pre>
 
-<h3><a name="language_04"></a>XAML Root Elements and XML Namespaces</h3>
-<p>A XAML file must have only one root element, in order to be both
-a well-formed XML file and a valid XAML file. Typically you should
+<h3><a name="language_04"></a>XWT Root Elements and XML Namespaces</h3>
+<p>A XWT file must have only one root element, in order to be both
+a well-formed XML file and a valid XWT file. Typically you should
 choose an element that is part of the application model. The following
-example shows the root element of a typical XAML file with the root
+example shows the root element of a typical XWT file with the root
 element Composite.</p>
 
 
@@ -136,52 +135,53 @@ element Composite.</p>
 </pre>
 
 <p>The root element also contains the attributes <b>xmlns</b> and <b>xmlns:x</b>.
-These attributes indicate to a XAML processor which XML namespaces
+These attributes indicate to a XWT processor which XML namespaces
 contain the element definitions for elements that the markup will
 reference. The <b>xmlns</b> attribute specifically indicates the default
 XML namespace. Within the default XML namespace, object elements in the
 markup can be specified without a prefix. The default XML namespace is
 mapped to the namespace
-http://schemas.microsoft.com/winfx/2006/xaml/presentation. The <b>xmlns:x</b>
-attribute indicates an additional XML namespace, which maps the XAML
-language namespace http://schemas.microsoft.com/winfx/2006/xaml.
-Required language components defined by the XAML specification are
+&quot;http://www.eclipse.org/xwt/presentation&quot;. The <b>xmlns:x</b>
+attribute indicates an additional XML namespace, which maps the XWT
+language namespace &quot;http://www.eclipse.org/xwt&quot;.
+Required language components defined by the XWT specification are
 prefixed by <b>x:</b> when referenced in the markup of a file with this
 mapping.</p>
 
 
 <p><b>The x:Prefix</b></p>
 <p>In the previous root element example, the prefix <b>x:</b> was
-used to map the XAML XML namepace
-http://schemas.microsoft.com/winfx/2006/xaml. This <b>x:</b> prefix will
-be used to map the XAML XML namepace in the templates for projects. The
-<b>x:</b> prefix/XAML XML namepace contain several programming
-constructs that you will use quite frequently in your XAML. The
-following is a listing of the most common x: prefix/XAML namespace
+used to map the XWT XML namepace
+&quot;http://www.eclipse.org/xwt&quot;. This <b>x:</b> prefix will
+be used to map the XWT XML namepace in the templates for projects. The
+<b>x:</b>prefix XML namepace contain several programming
+constructs that you will use quite frequently in your XWT. The
+following is a listing of the most common x:prefix namespace
 programming constructs you will use:</p>
 
 <ul>
 	<li>x:Key: Sets a unique key for each resource in a DataContext.</li>
 	<li>x:Class: Specifies the CLR namespace and class name for the
-	class that provides code-behind for a XAML page. You must have such a
+	class that provides code-behind for a XWT page. You must have such a
 	class to support code-behind, and it is for this reason that you almost
 	always see x: mapped, even if there are no resources.</li>
 	<li>x:Name: Specifies a object name for the instance.</li>
+	<li>x:Null: <strong>null</strong> in Java.</li>
 	<li>x:Static: Enables a value reference that gets a static value
-	that is not otherwise a XAML-compatible property.</li>
+	that is not otherwise a XWT-compatible property.</li>
 	<li>x:Type: Constructs a Type reference based on a type name.</li>
 	<li>x:Array: Provides general support for arrays of objects in
-	XAML.</li>
+	XWT.</li>
 	<li>x:Style: Specifies the type of a instance.</li>
 </ul>
 
-<h3><a name="language_05"></a>Events and XAML Code-behind</h3>
+<h3><a name="language_05"></a>Events and XWT Code-behind</h3>
 <p>Most XWT applications consist of both markup and code-behind.
-Within a project, the XAML is written as .xwt file and a synchronized
-java class is used to write a code-behind file. When a XAML file is
-loaded, the location of the XAML code-behind file for each XAML page
+Within a project, the XWT is written as .xwt file and a synchronized
+java class is used to write a code-behind file. When a XWT file is
+loaded, the location of the XWT code-behind file for each XWT page
 is identified by specifying a namespace and class as the x:Class
-attribute of the root element of the XAML page.</p>
+attribute of the root element of the XWT page.</p>
 
 <p>In the examples so far, you have seen several buttons, but none
 of these buttons had any logical behavior associated with them yet. The
@@ -192,7 +192,7 @@ raised at run time. The event name and the name of the handler to use
 are specified in the markup, whereas the code that implements your
 handler is defined in the code-behind.</p>
 
-<p>XAML:</p>
+<p>XWT:</p>
 <pre>
 <span class="XMLElementTag">&lt;Shell</span> <span class="XMLAttrTag">xmlns</span>=<span
 	class="XMLAttrValue">"http://www.eclipse.org/xwt/presentation"</span>
