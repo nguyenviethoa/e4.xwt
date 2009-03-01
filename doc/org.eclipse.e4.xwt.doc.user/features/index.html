@@ -1,0 +1,349 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<link href="../book.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+.style1 {
+	color: #FF0000;
+	font-style: italic;
+	font-weight: bold;
+}
+-->
+</style>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Features</title>
+</head>
+
+<body>
+<h1>Features</h1>
+<p>The following is the new features of XWT.</p>
+<table border="0" width="80%" cellpadding="10" cellspacing="0">
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr id="itemname1">
+		<td width="30%" valign="top" align="left">
+		<h3>Support of all SWT widgets</h3>
+		</td>
+		<td width="70%" valign="top">
+		<p>The XWT supports all standard layouts such as FillLayout,
+		FormLayout, GridLayout, RowLayout, StackLayout.</p>
+		<p>It also handles all SWT events and two additional events
+		"Initialized" and "loaded". "Initialized" is the event occurs when the
+		UI is initialized and "Loaded" is the event occurs when the window or
+		page is load.</p>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr id="itemname2">
+		<td width="30%" valign="top" align="left">
+		<h3>Dynamic event handling</h3>
+		</td>
+		<td width="70%" valign="top">
+		<p>The association between the UI View and class control is setup
+		during UI loading without any registration beforehand.</p>
+		<p>In the following example, the event &quot;SelectionEvent&quot; is
+		handled by the method &quot;selection&quot; of ButtonHandler.</p>
+		<p><img src="images/mac-feature_01.png" /></p>
+
+		<p>Here is the class implements the event handler.</p>
+		<p><img src="images/mac-feature_03.png" /></p>
+
+		<p>When click the button, the content be changed to "OK".</p>
+		<p><img src="images/mac-feature_07.png" /></p>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr id="itemname3">
+		<td width="30%" valign="top" align="left">
+		<h3>Support of JFaces viewers</h3>
+		</td>
+		<td width="70%" valign="top">
+		<p>It supports JFace ListViewer and TableViewer. The following
+		Viewer binds to a Company object. The data can be stored in an Array
+		or in a collection.</p>
+		<p>This is ListViewer.</p>
+		<p><img src="images/mac-feature_06.png" /></p>
+
+		<p>Below is a TableViewer example with the definition of two table
+		columns.</p>
+		<p><img src="images/mac-feature_02.png" /></p>
+		</td>
+
+
+	</tr>
+
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr id="itemname4">
+		<td width="30%" valign="top" align="left">
+		<h3>Easy support of custom widgets</h3>
+		</td>
+		<td width="70%" valign="top">
+		<p>Capable to integrate directly user-defined Widget in Java into
+		XWT.</p>
+		<p>The customized UI &quot;UserControl&quot; contains a Button
+		with a selection event.</p>
+
+		<p><img src="images/mac-feature_20.png" /></p>
+
+		<p>Now integrate the above example into a new XWT component
+		directly. See the screenshot below.</p>
+		<p><img src="images/mac-feature_10.png" /></p>
+
+		<p>Here is the result.</p>
+		<p><img src="images/mac-feature_07.png" /></p>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr id="itemname5">
+		<td width="30%" valign="top" align="left">
+		<h3>Style</h3>
+		</td>
+		<td width="70%" valign="top">
+		<p>All the controls in XWT has an additional property
+		&quot;style&quot;, which can select a style object where you can
+		define a common appearance such as fonts, colors and images.</p>
+		<p>In the following example, we defined the background of Label
+		with red color.</p>
+		<p><img src="images/mac-feature_11.png" /></p>
+		<p>It is possible to define a style for a specific type. It is
+		applied to all UI elements of this type under the UI tree structure.</p>
+
+		<p>MyUserControl component is a Label with text "Hello, world". We
+		embed it into MyUserControl_default_x_Customized component with a style.
+		The result likes below.</p>
+
+		<p><img src="images/mac-feature_13.png" /></p>
+		</td>
+	</tr>
+
+
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr id="itemname6">
+		<td colspan="2" valign="top" align="left">
+		<h3>&nbsp;</h3>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%" valign="top" align="left"><b>Based on JFace
+		Data binding</b></td>
+		<td width="70%" valign="top">
+		<p>It supports data binding that based on JFace. See the example
+		below. It binds to a Company object.</p>
+		
+		<p><img src="images/mac-feature_29.png" /></p>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%" valign="top" align="left"><b>Data Binding and
+		Data context in tree node</b></td>
+		<td width="70%" valign="top">
+		<p>In XWT, each node in the UI tree structure has a data context.
+		If a node has not a data context specification, it inherits the data
+		context of his parent. The data binding expression in a property
+		relies on the data context of Node.</p>
+		<p>&nbsp;</p>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%" valign="top" align="left"><b>Extended to
+		support "path expression" of data binding</b></td>
+		<td width="70%" valign="top">
+		<p>The presentation of data through references can be expressed in
+		path expression.</p>
+		<p>The following example will show the city of the manager of a
+		company, which is the data context of Window. The path is specified as
+		&quot;manager.address.city&quot;.</p>
+		<p><img src="images/mac-feature_22.png" /></p>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%" valign="top" align="left"><b>Debug logging</b></td>
+		<td width="70%" valign="top">
+		<p>Data Binding requires always a consistent configuration between data model, binding expression and UI structure. In a real application, it becomes quickly complex and the trouble shooting can be a headache work without a specific tool. This option displays UI element tree structure with the associated data context and its resolution with data binding expression. It can identify and indicate quickly the location and nature of errors.</p>
+		<p>Take the example above, add an event button. Run the project.</p>
+		<p><img src="images/mac-feature_25.png" /></p>
+		<p>Click the button. The log is displayed in the Console.</p>
+		<p><img src="images/mac-feature_26.png" /></p>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr id="itemname7">
+		<td width="30%" valign="top" align="left">
+		<h3>"Command" support for MenuItem and Button</h3>
+		</td>
+		<td width="70%" valign="top">
+		<p>A command is an action associated to an event selection. It is
+		defined on Button and MenuItem, for example the action
+		&quot;Open&quot;, &quot;Close&quot; to Open or close a window. Unlike
+		event, all commands must be declared beforehand to the framework:</p>
+		<p>XWT.registerCommand(&quot;&lt;command's name&gt;&quot;,
+		aCommand)</p>
+		<p>&nbsp;</p>
+		</td>
+	</tr>
+
+
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr id="itemname8">
+		<td width="30%" valign="top" align="left">
+		<h3>Reusable UI Component</h3>
+		</td>
+		<td width="70%" valign="top">
+		<p>Reusable UI Component is a UI component that can be used directly without modification and adaptation.</p>
+		</td>
+	</tr>
+
+
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr id="itemname9">
+		<td width="30%" valign="top" align="left">
+		<h3>Key binding</h3>
+		</td>
+		<td width="70%" valign="top">
+		<p>The Key Binding specifies keyboard shortcuts for an action. In
+		XWT, it corresponds to the accelerator property of SWT.</p>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	
+	<!-- 
+	<tr id="itemname10">
+		<td width="30%" valign="top" align="left">
+		<h3>High extensibility</h3>
+		</td>
+		<td width="70%" valign="top"></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%" valign="top" align="left"><b>Metaclass</b></td>
+		<td width="70%" valign="top"></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%" valign="top" align="left"><b>MetaclassFactory</b></td>
+		<td width="70%" valign="top"></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%" valign="top" align="left"><b>Logger</b></td>
+		<td width="70%" valign="top"></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%" valign="top" align="left"><b>Data Converter</b></td>
+		<td width="70%" valign="top"></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	<tr>
+		<td width="30%" valign="top" align="left"><b>Command</b></td>
+		<td width="70%" valign="top"></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+	</tr>
+	 -->
+	
+	<tr id="itemname11">
+		<td width="30%" valign="top" align="left">
+		<h3>i18n</h3>
+		</td>
+		<td width="70%" valign="top">
+		<p>XWT supports i18n of the simple case in current release.</p>
+		<p>See the example below, the content of the button is specified
+		by the &quot;title&quot; value of messages.properties file.</p>
+		<p><img src="images/mac-feature_23.png" /></p>
+		</td>
+	</tr>
+
+</table>
+</body>
+<p><img src="../cpy.png" /></p>
+</html>

@@ -7,7 +7,7 @@
       </topic>
       <topic href="concepts/component/index.html" label="UI Component">
       </topic>
-      <topic href="concepts/binding/index.html" label="Binding">
+      <topic href="concepts/control_binding/index.html" label="Control Binding">
       </topic>
       <topic href="concepts/databinding/index.html" label="Data Binding">
       </topic>
@@ -18,6 +18,8 @@
       <topic href="concepts/style/index.html" label="Style">
       </topic>
       <topic href="concepts/internationalization/index.html" label="Internationalization">
+      </topic>
+      <topic href="concepts/element_naming_and_finding/index.html" label="Element naming and finding">
       </topic>
    </topic>
    <topic label="Tools">

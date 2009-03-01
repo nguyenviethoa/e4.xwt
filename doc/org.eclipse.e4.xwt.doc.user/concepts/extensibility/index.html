@@ -4,10 +4,40 @@
 <link href="../../book.css" rel="stylesheet" type="text/css" />
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Hello World</title>
+<title>Extensibility</title>
 </head>
 
 <body>
+<h1>Extensibility</h1>
+<p>The following topic relate to extensibility in XWT. There are two
+types of extensibility: Support of new kind of user-defined UI element
+and Support register IMetaclass factory via API or EP.</p>
+
+<ul>
+	<li><b>User-defined UI element</b>: The user-defined UI element can
+	be used directly in XWT when the customer respects the SWT standard
+	signature with two arguments: Composite/Widget parent and Style.</li>
+	<li><b>IMetaclass factory</b>: The IMetaclass factory is used to
+	create some special IMetaclass, which takes care of the UI creation.</li>
+</ul>
+
+
+
+<p>Please see the example below to show you the User-defined UI
+element. The customized UI &quot;UserControl&quot; contains a Button
+with a selection event.</p>
+
+<p><img src="images/mac-feature_20.png" /></p>
+
+<p>Now integrate the above example into a new XWT component
+directly. See the screenshot below.</p>
+<p><img src="images/mac-feature_10.png" /></p>
+
+
+
+
+
+
 
 </body>
 <p><img src="../../cpy.png" /></p>

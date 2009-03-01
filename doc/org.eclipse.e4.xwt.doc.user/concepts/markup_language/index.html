@@ -4,10 +4,244 @@
 <link href="../../book.css" rel="stylesheet" type="text/css" />
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Hello World</title>
+<title>Markup-language</title>
 </head>
 
 <body>
+<h1>Markup-language</h1>
+<p>Markup languages are designed for the processing, definition and
+presentation of text. Extensible Application Markup Language (XAML) is a
+markup language for declarative application programming.</p>
+
+<ul>
+	<li><a href="#language_01">A Declarative language with Flow
+	Control Support</a></li>
+	<li><a href="#language_02">XAML Object Elements</a></li>
+	<li><a href="#language_03">Setting Properties</a></li>
+	<li><a href="#language_04">XAML Root Elements and XML
+	Namespaces</a></li>
+	<li><a href="#language_05">Events and XAML Code-behind</a></li>
+</ul>
+
+
+<h3><a name="language_01"></a>A Declarative language with Flow
+Control Support</h3>
+<p>XAML simplifies creating a UI for Java programming. You can
+create visible UI elements in the declarative XAML markup, and then
+separate the UI definition from the run-time logic by using code-behind
+files. The ability to mix code with markup in XAML is important because
+XML by itself is declarative, and does not really suggest a model for
+flow control.</p>
+
+<p>The following XAML example shows how markup is necessary to
+create a button as part of a UI.</p>
+
+<pre>
+<span class="XMLElementTag">&lt;Shell.layout&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;GridLayout</span> <span
+	class="XMLAttrTag">numColumns</span>=<span class="XMLAttrValue">"1"</span> <span
+	class="XMLElementTag">/&gt;</span>
+<span class="XMLElementTag">&lt;/Shell.layout&gt;</span>
+<span class="XMLElementTag">&lt;Button</span> <span class="XMLAttrTag">text</span>=<span
+	class="XMLAttrValue">"Hello"</span> <span class="XMLElementTag">/&gt;</span>
+</pre>
+
+<h3><a name="language_02"></a>XAML Object Elements</h3>
+<p>XAML has a set of rules that map object elements into classes or
+structures, attributes into properties or events, and XML namespaces to
+Java packages.</p>
+
+<p>The preceding example specified two object elements: <span
+	class="XMLElementTag">&lt;GridLayout /&gt;</span> and <span
+	class="XMLElementTag">&lt;Button /&gt;</span>. The string <span
+	class="XMLElementTag">GridLayout</span> and <span class="XMLElementTag">Button</span>
+each map to the name of a class that is defined by XWT and is part of
+the XWT assemblies. When you specify an object element tag, you create
+an instruction for XAML processing to create a new instance of the named
+class when your XAML page is loaded. Each instance is created by calling
+the default constructor of the underlying class or structure and storing
+the result. To be usable as an object element in XAML, the class or
+structure must expose a public default (parameterless) constructor.</p>
+
+<h3><a name="language_03"></a>Setting Properties</h3>
+<p>Properties in XAML are set by setting properties on an object
+element, using a variety of possible syntaxes. Which syntaxes can be
+used for a given property will vary, based on the characteristics of the
+property that you are setting.</p>
+
+<p>By setting values of properties, you add features or
+characteristics to object element. The initial state of the underlying
+object instance for an object element is based on the default
+constructor behavior. Typically, your application will use something
+other than a completely default instance of any given object.</p>
+
+<p><b>Attribute Syntax</b></p>
+
+<p>In XAML, properties can often be expressed as attributes.
+Attribute syntax is the most streamlined property setting syntax and
+will be the most intuitive syntax to use for developers that have used
+markup languages in the past. For example, the following markup creates
+a button that with push style, as well as display text specified as <span
+	class="XMLAttrTag">test</span>.</p>
+
+<pre>
+<span class="XMLElementTag">&lt;Button</span> <span class="XMLAttrTag">x:style</span>=<span
+	class="XMLAttrValue">"PUSH"</span> <span class="XMLAttrTag">text</span>=<span
+	class="XMLAttrValue">"Hello, world!"</span> <span class="XMLElementTag">/&gt;</span>
+</pre>
+
+
+<p><b>Property Element Syntax</b></p>
+<p>For some properties of an object element, attribute syntax is not
+possible, because the object or information necessary to provide the
+property value cannot be adequately expressed as a simple string. For
+these cases, a different syntax known as property element syntax can be
+used. Property element syntax sets the referenced property of the
+containing element with the content of the tag. Generally, the content
+is an object of the type that the property takes as its value. The
+syntax for property element itself is &lt;TypeName.Property&gt;. After
+specifying content, you must close the property element with a closing
+tag just like any other element (with syntax &lt;/TypeName.Property&gt;). For properties where
+both attribute and property element syntax are supported, the two
+syntaxes generally have the same result, although subtleties such as
+whitespace handling can vary slightly between syntaxes. The following
+example by using property element syntax for <span class="XMLAttrTag">text</span>
+properties of the Button.</p>
+
+
+<pre>
+<span class="XMLElementTag">&lt;Button&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;Button.text&gt;</span> 
+&nbsp;&nbsp;&nbsp;&nbsp;This is a Button
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/Button.text&gt;</span>
+<span class="XMLElementTag">&lt;/Button&gt;</span>
+</pre>
+
+<h3><a name="language_04"></a>XAML Root Elements and XML Namespaces</h3>
+<p>A XAML file must have only one root element, in order to be both
+a well-formed XML file and a valid XAML file. Typically you should
+choose an element that is part of the application model. The following
+example shows the root element of a typical XAML file with the root
+element Composite.</p>
+
+
+<pre>
+<span class="XMLElementTag">&lt;Composite</span> <span
+	class="XMLAttrTag">xmlns</span>=<span class="XMLAttrValue">"http://www.eclipse.org/xwt/presentation"</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLAttrTag">xmlns:x</span>=<span
+	class="XMLAttrValue">"http://www.eclipse.org/xwt"</span><span
+	class="XMLElementTag">&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;...
+<span class="XMLElementTag">&lt;/Composite&gt;</span>
+</pre>
+
+<p>The root element also contains the attributes <b>xmlns</b> and <b>xmlns:x</b>.
+These attributes indicate to a XAML processor which XML namespaces
+contain the element definitions for elements that the markup will
+reference. The <b>xmlns</b> attribute specifically indicates the default
+XML namespace. Within the default XML namespace, object elements in the
+markup can be specified without a prefix. The default XML namespace is
+mapped to the namespace
+http://schemas.microsoft.com/winfx/2006/xaml/presentation. The <b>xmlns:x</b>
+attribute indicates an additional XML namespace, which maps the XAML
+language namespace http://schemas.microsoft.com/winfx/2006/xaml.
+Required language components defined by the XAML specification are
+prefixed by <b>x:</b> when referenced in the markup of a file with this
+mapping.</p>
+
+
+<p><b>The x:Prefix</b></p>
+<p>In the previous root element example, the prefix <b>x:</b> was
+used to map the XAML XML namepace
+http://schemas.microsoft.com/winfx/2006/xaml. This <b>x:</b> prefix will
+be used to map the XAML XML namepace in the templates for projects. The
+<b>x:</b> prefix/XAML XML namepace contain several programming
+constructs that you will use quite frequently in your XAML. The
+following is a listing of the most common x: prefix/XAML namespace
+programming constructs you will use:</p>
+
+<ul>
+	<li>x:Key: Sets a unique key for each resource in a DataContext.</li>
+	<li>x:Class: Specifies the CLR namespace and class name for the
+	class that provides code-behind for a XAML page. You must have such a
+	class to support code-behind, and it is for this reason that you almost
+	always see x: mapped, even if there are no resources.</li>
+	<li>x:Name: Specifies a object name for the instance.</li>
+	<li>x:Static: Enables a value reference that gets a static value
+	that is not otherwise a XAML-compatible property.</li>
+	<li>x:Type: Constructs a Type reference based on a type name.</li>
+	<li>x:Array: Provides general support for arrays of objects in
+	XAML.</li>
+	<li>x:Style: Specifies the type of a instance.</li>
+</ul>
+
+<h3><a name="language_05"></a>Events and XAML Code-behind</h3>
+<p>Most XWT applications consist of both markup and code-behind.
+Within a project, the XAML is written as .xwt file and a synchronized
+java class is used to write a code-behind file. When a XAML file is
+loaded, the location of the XAML code-behind file for each XAML page
+is identified by specifying a namespace and class as the x:Class
+attribute of the root element of the XAML page.</p>
+
+<p>In the examples so far, you have seen several buttons, but none
+of these buttons had any logical behavior associated with them yet. The
+primary application-level mechanism for adding a behavior for an object
+element is to use an existing event of the element class, and to write a
+specific handler for that event that is invoked when that event is
+raised at run time. The event name and the name of the handler to use
+are specified in the markup, whereas the code that implements your
+handler is defined in the code-behind.</p>
+
+<p>XAML:</p>
+<pre>
+<span class="XMLElementTag">&lt;Shell</span> <span class="XMLAttrTag">xmlns</span>=<span
+	class="XMLAttrValue">"http://www.eclipse.org/xwt/presentation"</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLAttrTag">xmlns:x</span>=<span
+	class="XMLAttrValue">"http://www.eclipse.org/xwt"</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLAttrTag">x:Class</span>=<span
+	class="XMLAttrValue">"org.eclipse.e4.xwt.tests.events.ButtonHandler"</span><span
+	class="XMLElementTag">&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;Shell.layout&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;GridLayout</span> <span class="XMLAttrTag">numColumns</span>=<span
+	class="XMLAttrValue">"2"</span><span class="XMLElementTag">/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/Shell.layout&gt;</span>	
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;Button</span> <span
+	class="XMLAttrTag">text</span>=<span class="XMLAttrValue">"Hello, world"</span> <span
+	class="XMLAttrTag">SelectionEvent</span>=<span class="XMLAttrValue">"selection"</span><span
+	class="XMLElementTag">/&gt;</span>
+<span class="XMLElementTag">&lt;/Shell&gt;</span>
+</pre>
+
+<p>Java:</p>
+<pre>
+<span class="JavaKeyword">protected void</span> selection(Event event) {
+&nbsp;&nbsp;&nbsp;&nbsp;Button button = (Button) event.<span
+	class="JavaMember">widget</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;button.setText(<span class="JavaString">"OK"</span>);
+}
+</pre>
+
+<p><b>Event Attribute Syntax</b></p>
+
+<p>When you specify behavior through events in markup, you typically
+use attribute syntax to attach handlers. The object element where the
+event attribute is specified becomes the instance that listens for the
+event and calls the handler. The name of the specific event you want to
+handle is the attribute name. The attribute value is the method name of
+the handler you will define. You must then provide the handler
+implementation in code-behind, with the handler being based on the
+delegate for that event.</p>
+
+
+
+
+
+
+
+
+
+
 
 </body>
 <p><img src="../../cpy.png" /></p>
