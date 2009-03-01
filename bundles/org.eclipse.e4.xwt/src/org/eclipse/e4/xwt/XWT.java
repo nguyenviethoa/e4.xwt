@@ -37,34 +37,52 @@ import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.impl.LoadData;
 import org.eclipse.e4.xwt.impl.LoadingContext;
-import org.eclipse.e4.xwt.impl.NameContext;
+import org.eclipse.e4.xwt.impl.NameScope;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.javabean.ResourceLoaderFactory;
 import org.eclipse.e4.xwt.javabean.ValueConvertorRegister;
 import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass;
-import org.eclipse.e4.xwt.javabean.metadata.DataProperty;
-import org.eclipse.e4.xwt.javabean.metadata.DynamicProperty;
+import org.eclipse.e4.xwt.javabean.metadata.ComboBoxCellEditorMetaclass;
 import org.eclipse.e4.xwt.javabean.metadata.ExpandItemHeightAction;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.javabean.metadata.MetaclassManager;
-import org.eclipse.e4.xwt.javabean.metadata.TableItemProperty;
+import org.eclipse.e4.xwt.javabean.metadata.TableEditorMetaclass;
+import org.eclipse.e4.xwt.javabean.metadata.TableViewerColumnMetaClass;
+import org.eclipse.e4.xwt.javabean.metadata.properties.DataProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicBeanProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableColumnEditorProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableEditorDynamicProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemEditorProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnTextProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnWidthProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnsProperty;
+import org.eclipse.e4.xwt.jface.ComboBoxCellEditor;
+import org.eclipse.e4.xwt.jface.DefaultCellModifier;
+import org.eclipse.e4.xwt.jface.DefaultLabelProvider;
+import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
-import org.eclipse.e4.xwt.utils.JFacesHelper;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.e4.xwt.utils.UserDataHelper;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.swt.custom.ControlEditor;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 
 /**
  * XWT is the main class of the XWT framework. It provides most of the services in API.
  * 
- * @author jliu and yyang
+ * @author yyang
  */
 public class XWT {
 	static Core core = new Core(new ResourceLoaderFactory());
@@ -130,7 +148,7 @@ public class XWT {
 	 * @param widget
 	 * @return
 	 */
-	public static NameContext findNameContext(Widget widget) {
+	public static NameScope findNameContext(Widget widget) {
 		return UserDataHelper.findNameContext(widget);
 	}
 
@@ -143,7 +161,7 @@ public class XWT {
 	 * @return
 	 */
 	public static Object findElementByName(Widget context, String name) {
-		NameContext nameContext = UserDataHelper.findNameContext(context);
+		NameScope nameContext = UserDataHelper.findNameContext(context);
 		if (nameContext != null) {
 			return nameContext.getObject(name);
 		}
@@ -452,7 +470,7 @@ public class XWT {
 	 * 
 	 * @param javaclass
 	 */
-	static public IMetaclass registerMetaclass(Class type) {
+	static public IMetaclass registerMetaclass(Class<?> type) {
 		checkInitialize();
 		return register(type, IConstants.XWT_NAMESPACE);
 	}
@@ -524,7 +542,7 @@ public class XWT {
 		checkInitialize();
 		source = normalizedType(source);
 		target = normalizedType(target);
-		if (source == target) {
+		if (source == target || (source != Object.class && source.isAssignableFrom(target))) {
 			return ObjectToObject.instance;
 		}
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
@@ -554,6 +572,7 @@ public class XWT {
 		core.registerService(ValueConvertorRegister.class, new ValueConvertorRegister());
 		core.registerMetaclassManager(IConstants.XWT_NAMESPACE, new MetaclassManager(null, null));
 		core.registerMetaclass(new BindingMetaclass(), IConstants.XWT_NAMESPACE);
+		core.registerMetaclass(new TableEditorMetaclass(core.getMetaclass(ControlEditor.class)), IConstants.XWT_NAMESPACE);
 
 		XWT.registerConvertor(new ObjectToString());
 		XWT.registerConvertor(new IntegerToString());
@@ -569,8 +588,8 @@ public class XWT {
 		XWT.registerConvertor(new StringToRectangle());
 
 		Class<?> type = org.eclipse.swt.browser.Browser.class;
-		Metaclass browserMetaclass = (Metaclass) XWT.registerMetaclass(type); // Can't load url setter from BeanInfo.
-		browserMetaclass.addProperty(new DynamicProperty(type, String.class, "url"));
+		Metaclass browserMetaclass = (Metaclass) XWT.registerMetaclass(type);
+		browserMetaclass.addProperty(new DynamicProperty(type, String.class, PropertiesConstants.PROPERTY_URL));
 		Metaclass buttonMetaclass = (Metaclass) XWT.registerMetaclass(org.eclipse.swt.widgets.Button.class);
 		buttonMetaclass.addProperty(new DataProperty(ICommand.class, IConstants.XAML_COMMAND, IUserDataConstants.XWT_COMMAND_KEY));
 
@@ -610,12 +629,21 @@ public class XWT {
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Table.class);
 		type = org.eclipse.swt.widgets.TableItem.class;
 		Metaclass metaclass = (Metaclass) XWT.registerMetaclass(type);
-		metaclass.addArrayProperty(new DynamicProperty(type, String[].class, "text"));
 		metaclass.addProperty(new TableItemProperty());
+		metaclass.addProperty(new TableItemEditorProperty());
+		metaclass.addProperty(new DynamicBeanProperty(TableItem.class, String[].class, PropertiesConstants.PROPERTY_TEXTS, PropertiesConstants.PROPERTY_TEXT));
 
 		XWT.registerMetaclass(TableItemProperty.Cell.class);
+		XWT.registerMetaclass(ControlEditor.class);
+		XWT.registerMetaclass(TableEditor.class);
 
-		XWT.registerMetaclass(org.eclipse.swt.widgets.TableColumn.class);
+		IMetaclass TableEditorMetaclass = XWT.getMetaclass(TableEditor.class);
+		TableEditorMetaclass.addProperty(new TableEditorDynamicProperty());
+
+		type = org.eclipse.swt.widgets.TableColumn.class;
+		metaclass = (Metaclass) XWT.registerMetaclass(type);
+		metaclass.addProperty(new TableColumnEditorProperty());
+
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Text.class);
 		XWT.registerMetaclass(org.eclipse.swt.widgets.ToolBar.class);
 		XWT.registerMetaclass(org.eclipse.swt.widgets.ToolItem.class);
@@ -627,7 +655,7 @@ public class XWT {
 		XWT.registerMetaclass(org.eclipse.swt.widgets.TreeItem.class);
 		type = org.eclipse.swt.widgets.TreeItem.class;
 		metaclass = (Metaclass) XWT.registerMetaclass(type);
-		metaclass.addArrayProperty(new DynamicProperty(type, String[].class, "text"));
+		metaclass.addProperty(new DynamicBeanProperty(TreeItem.class, String[].class, PropertiesConstants.PROPERTY_TEXTS, PropertiesConstants.PROPERTY_TEXT));
 
 		// XWT.registerMetaclass(org.eclipse.swt.layout.FillData.class);
 		XWT.registerMetaclass(org.eclipse.swt.layout.FillLayout.class);
@@ -653,7 +681,24 @@ public class XWT {
 		for (Class<?> cls : JFacesHelper.getSupportedElements()) {
 			XWT.registerMetaclass(cls);
 		}
+		core.registerMetaclass(new ComboBoxCellEditorMetaclass(core.getMetaclass(ComboBoxCellEditor.class.getSuperclass())), IConstants.XWT_NAMESPACE);
 
+		type = org.eclipse.jface.viewers.TableViewer.class;
+		metaclass = (Metaclass) core.getMetaclass(type);
+		if (metaclass != null) {
+			metaclass.addProperty(new DynamicBeanProperty(type, String[].class, PropertiesConstants.PROPERTY_COLUMN_PROPERTIES, PropertiesConstants.PROPERTY_COLUMN_PROPERTIES));
+			metaclass.addProperty(new TableViewerColumnsProperty());
+		}
+
+		type = org.eclipse.jface.viewers.TableViewerColumn.class;
+		core.registerMetaclass(new TableViewerColumnMetaClass(core.getMetaclass(type.getSuperclass())), IConstants.XWT_NAMESPACE);
+
+		metaclass = (Metaclass) core.getMetaclass(type);
+		metaclass.addProperty(new TableViewerColumnWidthProperty());
+		metaclass.addProperty(new TableViewerColumnTextProperty());
+
+		XWT.registerMetaclass(DefaultCellModifier.class);
+		XWT.registerMetaclass(DefaultLabelProvider.class);
 	}
 
 	public static ILoadingContext findLoadingContext(Object container) {

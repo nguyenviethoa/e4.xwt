@@ -32,14 +32,14 @@ public class ValueConvertorRegister {
 			if (source.isEnum()) {
 				convertors = register.get(Enum.class);
 			} else {
-				Class[] interfacees = source.getInterfaces();
-				for (Class class1 : interfacees) {
+				Class<?>[] interfacees = source.getInterfaces();
+				for (Class<?> class1 : interfacees) {
 					IConverter converter = findConverter(class1, target);
 					if (converter != null) {
 						return converter;
 					}
 				}
-				Class superclass = source.getSuperclass();
+				Class<?> superclass = source.getSuperclass();
 				if (superclass != null) {
 					IConverter converter = findConverter(superclass, target);
 					if (converter != null) {
@@ -61,6 +61,9 @@ public class ValueConvertorRegister {
 		}
 		if (converter == null) {
 			Class<?> superclass = current.getSuperclass();
+			if (superclass == null && current != Object.class) {
+				superclass = Object.class;
+			}
 			if (superclass != null) {
 				converter = findConverter(convertors, superclass);
 			}

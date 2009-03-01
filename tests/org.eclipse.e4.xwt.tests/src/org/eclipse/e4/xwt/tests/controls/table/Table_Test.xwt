@@ -10,20 +10,20 @@
 		<TableColumn width="150" text="Age"/>
 
 		<TableItem>
-			<TableItem.text>
+			<!--Use Array Element-->
+			<TableItem.texts>
 				<x:Array Type="j:String">
 					<j:String>Line-Name1</j:String>
 					<j:String>Line-Age1</j:String>
 				</x:Array>
-			</TableItem.text>	
+			</TableItem.texts>	
 		</TableItem>
 		<TableItem>
-			<TableItem.text>
-				<x:Array Type="j:String">
-					<j:String>Line-Name2</j:String>
-					<j:String>Line-Age2</j:String>
-				</x:Array>
-			</TableItem.text>	
+			<!--Use texts Lists directly-->
+			<TableItem.texts>
+				<j:String>Line-Name2</j:String>
+				<j:String>Line-Age2</j:String>
+			</TableItem.texts>	
 		</TableItem>
 	</Table>
 </Shell>

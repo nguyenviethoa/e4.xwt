@@ -11,6 +11,11 @@
 package org.eclipse.e4.xwt;
 
 public class XWTException extends RuntimeException {
+	/**
+	 * Copyright (c) 2006, 2008 Soyatec
+	 */
+	private static final long serialVersionUID = 7568262060419780948L;
+
 	public XWTException(String message, Throwable cause) {
 		super(message, cause);
 	}

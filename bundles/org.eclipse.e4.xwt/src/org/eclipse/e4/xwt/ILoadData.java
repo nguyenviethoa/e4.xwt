@@ -15,10 +15,6 @@ import org.eclipse.swt.widgets.Composite;
 public interface ILoadData {
 
 	ILoadData DefaultLoadData = new ILoadData() {
-		public String getNamespace() {
-			return IConstants.XWT_NAMESPACE;
-		}
-
 		public Composite getParent() {
 			return null;
 		}
@@ -43,7 +39,6 @@ public interface ILoadData {
 		}
 
 		public Object getDataContext() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 

@@ -21,10 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.FieldProperty;
+import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
-import org.eclipse.e4.xwt.utils.JFacesHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -62,7 +65,7 @@ public class Metaclass implements IMetaclass {
 			}
 			for (Field f : type.getDeclaredFields()) {
 				if (!propertyCache.containsKey(normalize(f.getName())) && !Modifier.isFinal(f.getModifiers())) {
-					addProperty(new BeanProperty(f));
+					addProperty(new FieldProperty(f));
 				}
 			}
 
@@ -94,28 +97,6 @@ public class Metaclass implements IMetaclass {
 		return propertyCache.put(normalize(property.getName()), property);
 	}
 
-	public IProperty addArrayProperty(IProperty property) {
-		if (property.getType() != null && property.getType().isArray()) {
-			String arrayProp = normalize(property.getName() + "array");
-			if (!propertyCache.containsKey(arrayProp)) {
-				return propertyCache.put(arrayProp, property);
-			}
-		}
-		return property;
-	}
-
-	public IProperty getArrayProperty(IProperty property) {
-		Class<?> t = property.getClass();
-		IProperty arrayProp = null;
-		if (t == null || !t.isArray()) {
-			String arrayPropName = normalize(property.getName() + "array");
-			arrayProp = propertyCache.get(arrayPropName);
-		}
-		if (arrayProp == null) {
-			arrayProp = property;
-		}
-		return arrayProp;
-	}
 
 	private void buildTypedEvents() {
 		if (buildTypedEvents) {
@@ -159,7 +140,8 @@ public class Metaclass implements IMetaclass {
 			addTypedEvent("Resize", SWT.Resize);
 			addTypedEvent("Selection", SWT.Selection); // sash
 			addTypedEvent("SetData", SWT.SetData);
-			// addTypedEvent ("Settings", SWT.Settings); // note: this event only goes to Display
+			// addTypedEvent ("Settings", SWT.Settings); // note: this event
+			// only goes to Display
 			addTypedEvent("Show", SWT.Show);
 			addTypedEvent("Traverse", SWT.Traverse);
 			addTypedEvent("Verify", SWT.Verify);
@@ -327,7 +309,7 @@ public class Metaclass implements IMetaclass {
 	 */
 	public Object newInstance(Object[] parameters) {
 		try {
-			if (parameters.length == 0 || !(parameters[0] instanceof Widget)) {
+			if (parameters.length == 0 || (!(parameters[0] instanceof Widget || JFacesHelper.isViewer(parameters[0])))) {
 				return getType().newInstance();
 			}
 		} catch (Exception e1) {
@@ -336,17 +318,16 @@ public class Metaclass implements IMetaclass {
 		try {
 
 			Object swtObject = null;
-			Widget parent = null;
+			Object parent = parameters[0];
 			Widget directParent = null;
-			if (parameters[0] instanceof Widget) {
-				directParent = parent = (Widget) parameters[0];
-			} else if (JFacesHelper.isViewer(parameters[0])) {
-				directParent = parent = JFacesHelper.getControl(parameters[0]);
-
+			if (parent instanceof Widget) {
+				directParent = (Widget) parent;
+			} else if (JFacesHelper.isViewer(parent)) {
+				directParent = JFacesHelper.getControl(parent);
 			} else
 				throw new IllegalStateException();
-			if (Control.class.isAssignableFrom(getType()) && !(parent instanceof Composite)) {
-				directParent = XWT.findCompositeParent(parent);
+			if (Control.class.isAssignableFrom(getType()) && !(directParent instanceof Composite)) {
+				directParent = XWT.findCompositeParent(directParent);
 			}
 
 			Object styleValue = null;
@@ -355,6 +336,7 @@ public class Metaclass implements IMetaclass {
 			}
 
 			Constructor defaultConstructor = null;
+
 			for (Constructor constructor : getType().getConstructors()) {
 				Class<?>[] parameterTypes = constructor.getParameterTypes();
 				if (parameterTypes.length > 2 || parameterTypes.length == 0) {
@@ -364,16 +346,41 @@ public class Metaclass implements IMetaclass {
 					continue;
 				}
 
-				if (parameterTypes[0].isAssignableFrom(directParent.getClass())) {
+				if (parameterTypes[0].isAssignableFrom(parent.getClass())) {
 					if (parameterTypes.length == 1) {
-						swtObject = constructor.newInstance(new Object[] { directParent });
+						swtObject = constructor.newInstance(new Object[] { parent });
 						break;
 					} else if (parameterTypes[1].isAssignableFrom(int.class)) {
 						if (styleValue == null)
-							swtObject = constructor.newInstance(new Object[] { directParent, 0 });
+							swtObject = constructor.newInstance(new Object[] { parent, 0 });
 						else
-							swtObject = constructor.newInstance(new Object[] { directParent, styleValue });
+							swtObject = constructor.newInstance(new Object[] { parent, styleValue });
 						break;
+					}
+				}
+			}
+
+			if (swtObject == null) {
+				for (Constructor constructor : getType().getConstructors()) {
+					Class<?>[] parameterTypes = constructor.getParameterTypes();
+					if (parameterTypes.length > 2 || parameterTypes.length == 0) {
+						if (parameterTypes.length == 0) {
+							defaultConstructor = constructor;
+						}
+						continue;
+					}
+
+					if (parameterTypes[0].isAssignableFrom(directParent.getClass())) {
+						if (parameterTypes.length == 1) {
+							swtObject = constructor.newInstance(new Object[] { directParent });
+							break;
+						} else if (parameterTypes[1].isAssignableFrom(int.class)) {
+							if (styleValue == null)
+								swtObject = constructor.newInstance(new Object[] { directParent, 0 });
+							else
+								swtObject = constructor.newInstance(new Object[] { directParent, styleValue });
+							break;
+						}
 					}
 				}
 			}

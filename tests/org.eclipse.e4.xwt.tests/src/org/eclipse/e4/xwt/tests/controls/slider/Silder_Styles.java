@@ -15,11 +15,13 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
+
 /**
  * @author jliu
  */
 public class Silder_Styles {
 	public static void main(String[] args) {
+		
 		URL url = Silder_Styles.class.getResource(Silder_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

@@ -25,7 +25,7 @@ import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.input.ICommand;
-import org.eclipse.e4.xwt.javabean.metadata.DynamicProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.metadata.ISetPostAction;
@@ -78,7 +78,8 @@ public class ExtensionService {
 				}
 			}
 
-			IConfigurationElement[] metaclassConfigurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(METACLASS_REGISTER_ID);
+			IConfigurationElement[] metaclassConfigurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(
+					METACLASS_REGISTER_ID);
 			for (IConfigurationElement configurationElement : metaclassConfigurationElements) {
 				if (METACLASS.equals(configurationElement.getName())) {
 					String componentName = configurationElement.getAttribute(TYPE);
@@ -111,11 +112,13 @@ public class ExtensionService {
 											}
 										}
 										if (property != null) {
-											if ((className == null) && (typeName != null) && ARRAY.equals(propertyAmount)) {
-												newMetaclass.addArrayProperty(property);
-											} else {
-												newMetaclass.addProperty(property);
-											}
+											// if ((className == null) &&
+											// (typeName != null) &&
+											// ARRAY.equals(propertyAmount)) {
+											// newMetaclass.addArrayProperty(property);
+											// } else {
+											newMetaclass.addProperty(property);
+											// }
 										}
 									}
 

@@ -25,10 +25,12 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
-import org.eclipse.e4.xwt.utils.JFacesHelper;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
+import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.utils.LoggerManager;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
@@ -87,6 +89,9 @@ public class BindingMetaclass extends Metaclass {
 			} else if (elementName != null) {
 				return XWT.findElementByName(control, elementName);
 			}
+			if (control == null) {
+				return null;
+			}
 			Object data = control.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
 			if (data == null || data == this) {
 				Widget parent = (Widget) control.getData(IUserDataConstants.XWT_PARENT_KEY);
@@ -94,6 +99,9 @@ public class BindingMetaclass extends Metaclass {
 					return XWT.getDataContext(parent);
 				}
 				return null;
+			}
+			if (data != null) {
+				return data;
 			}
 
 			return XWT.getDataContext(control);
@@ -104,9 +112,9 @@ public class BindingMetaclass extends Metaclass {
 			if (dataContext == null) {
 				return null;
 			}
-			java.util.List<Object> dataContexts = new ArrayList<Object>();
-			dataContexts.add(dataContext);
 			if (path != null) {
+				java.util.List<Object> dataContexts = new ArrayList<Object>();
+				dataContexts.add(dataContext);
 				String[] paths = path.trim().split("\\.");
 				IObservableValue observeData = null;
 				String propertyName = null;
@@ -207,6 +215,9 @@ public class BindingMetaclass extends Metaclass {
 			newInstance.setControl(((TableItemProperty.Cell) parameters[0]).getParent());
 		else if (parameters[0] instanceof Item)
 			newInstance.setControl((Item) parameters[0]);
+		else if (parameters[0] instanceof ViewerColumn) {
+			newInstance.setControl(((ViewerColumn) parameters[0]).getViewer().getControl());
+		}
 		return newInstance;
 	}
 
@@ -291,20 +302,22 @@ public class BindingMetaclass extends Metaclass {
 					}
 					applyNewValue(oldValue, newValue);
 				}
-
 			};
 
 			Class<?> dataContextClass = dataContext.getClass();
 			Field[] fields = dataContextClass.getDeclaredFields();
 			try {
 				Method addListenerMethod = dataContextClass.getDeclaredMethod("addPropertyChangeListener", new Class[] { String.class, PropertyChangeListener.class });
-				for (Field field : fields) {
-					if (!PropertyChangeSupport.class.equals(field.getType())) {
-						addListenerMethod.invoke(dataContext, new Object[] { field.getName(), p });
+				try {
+					for (Field field : fields) {
+						if (!PropertyChangeSupport.class.equals(field.getType())) {
+							addListenerMethod.invoke(dataContext, new Object[] { field.getName(), p });
+						}
 					}
+				} catch (Exception e) {
+					LoggerManager.log(e);
 				}
 			} catch (Exception e) {
-				LoggerManager.log(e);
 			}
 		}
 	}

@@ -13,4 +13,8 @@ package org.eclipse.e4.xwt;
 import java.util.HashMap;
 
 public class ResourceDictionary extends HashMap<String, Object> {
+	/**
+	 * Copyright (c) 2006, 2008 Soyatec
+	 */
+	private static final long serialVersionUID = 6913227814340840893L;
 }

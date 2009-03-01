@@ -44,13 +44,5 @@ public interface IMetaclass {
 
 	public Class<?> getType();
 
-	/**
-	 * TODO
-	 * 
-	 * @param property
-	 * @return
-	 */
-	public IProperty addArrayProperty(IProperty property);
-
 	public IProperty addProperty(IProperty property);
 }

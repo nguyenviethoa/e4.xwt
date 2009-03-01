@@ -1,31 +1,27 @@
 <Shell xmlns="http://www.eclipse.org/xwt/presentation"
     xmlns:x="http://www.eclipse.org/xwt"
-    xmlns:j="clr-namespace:java.lang"
+    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.controls.table.binding"
     text="Table Test"
     DataContext="{StaticResource myCompany}">
 	<Shell.layout>
 		<GridLayout numColumns="1"/>
 	</Shell.layout>
-	<x:Composite.Resources>
+	<x:Shell.Resources>
 		<j:Company x:Key="myCompany">
 			<j:Company.employees>
-				<x:Array Type="j:Employee">
-					<j:Employee Name="Thomas"/>
-					<j:Employee Name="Jin"/>
-				</x:Array>
+				<j:Employee Name="Thomas"/>
+				<j:Employee Name="Jin"/>
 			</j:Company.employees>
 		</j:Company>
-	</x:Composite.Resources>
+	</x:Shell.Resources>
 	
 	<Table x:style="BORDER|SINGLE|FULL_SELECTION" HeaderVisible="true" LinesVisible="true">
 		<TableColumn width="150" text="Name"/>
 		<TableColumn width="150" text="Age"/>
 		<TableItem>
    			<TableItem.cells>
-   				<x:Array Type="Cell">
-    				<Cell text="Thomas" />
-    				<Cell text="31" image="demo.gif"/>
-    			</x:Array>
+				<Cell text="Thomas" />
+				<Cell text="31" image="demo.gif"/>
    			</TableItem.cells>
   		</TableItem>
 	</Table>

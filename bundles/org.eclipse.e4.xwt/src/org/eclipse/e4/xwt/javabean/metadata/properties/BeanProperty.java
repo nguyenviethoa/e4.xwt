@@ -8,39 +8,27 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean.metadata;
+package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
 
-/**
- * @author yyang (yves.yang@soyatec.com)
- */
 public class BeanProperty extends AbstractProperty {
 	protected PropertyDescriptor descriptor;
-	private Field field;
-	private Class<?> type;
 
 	public BeanProperty(PropertyDescriptor descriptor) {
-		super(descriptor.getName());
+		super(descriptor.getName(), descriptor.getPropertyType());
 		if (descriptor == null)
 			throw new NullPointerException();
 		this.descriptor = descriptor;
 	}
 
-	public BeanProperty(Field field) {
-		super(field.getName());
-		if (field == null)
-			throw new NullPointerException();
-		this.field = field;
-	}
-
-	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
+	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException,
+			SecurityException, NoSuchFieldException {
 		if (descriptor != null && descriptor.getWriteMethod() != null) {
 			Method writeMethod = descriptor.getWriteMethod();
 			// Bug of invoke boolean value.
@@ -54,37 +42,15 @@ public class BeanProperty extends AbstractProperty {
 				writeMethod.invoke(target, value);
 				fireSetPostAction(target, this, value);
 			}
-		} else if (field != null) {
-			if (field.getType() != value.getClass())
-				value = XWT.findConvertor(value.getClass(), field.getType()).convert(value);
-			field.set(target, value);
-			fireSetPostAction(target, this, value);
 		}
 	}
 
-	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
+	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException,
+			NoSuchFieldException {
 		if (descriptor != null && descriptor.getReadMethod() != null) {
 			Method writeMethod = descriptor.getReadMethod();
 			return writeMethod.invoke(target);
-		} else if (field != null) {
-			return field.get(target);
 		}
 		return null;
-	}
-
-	public Class<?> getType() {
-		if (type != null) {
-			return type;
-		}
-		if (descriptor == null) {
-			type = field.getType();
-		} else {
-			type = descriptor.getPropertyType();
-		}
-		return type;
-	}
-
-	public void setType(Class<?> type) {
-		this.type = type;
 	}
 }

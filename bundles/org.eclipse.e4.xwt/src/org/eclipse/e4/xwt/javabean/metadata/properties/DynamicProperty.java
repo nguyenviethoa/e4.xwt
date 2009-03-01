@@ -8,17 +8,13 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean.metadata;
+package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-/**
- * @author yyang (yves.yang@soyatec.com)
- */
 public class DynamicProperty extends AbstractProperty {
 
-	private Class<?> propertyType;
 	private final Method setter;
 	private final Method getter;
 
@@ -27,30 +23,23 @@ public class DynamicProperty extends AbstractProperty {
 	}
 
 	public DynamicProperty(Class<?> propertyType, Method setter, Method getter, String name) {
-		super(name);
-		this.propertyType = propertyType;
+		super(name, propertyType);
 		this.setter = setter;
 		this.getter = getter;
 	}
 
-	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
+	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException,
+			SecurityException, NoSuchFieldException {
 		setter.invoke(target, value);
 		fireSetPostAction(target, this, value);
 	}
 
-	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
+	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException,
+			NoSuchFieldException {
 		return getter.invoke(target, null);
 	}
 
-	public Class<?> getType() {
-		return propertyType;
-	}
-
-	public void setType(Class<?> type) {
-		this.propertyType = type;
-	}
-
-	private static Method createSetter0(Class<?> type, Class<?> propertyType, String name) {
+	protected static Method createSetter0(Class<?> type, Class<?> propertyType, String name) {
 		try {
 			return createSetter(type, propertyType, name);
 		} catch (Exception e) {
@@ -62,7 +51,7 @@ public class DynamicProperty extends AbstractProperty {
 		return type.getMethod("set" + Character.toUpperCase(name.charAt(0)) + name.substring(1), propertyType);
 	}
 
-	private static Method createGetter0(Class<?> type, String name) {
+	protected static Method createGetter0(Class<?> type, String name) {
 		try {
 			return createGetter(type, name);
 		} catch (Exception e) {

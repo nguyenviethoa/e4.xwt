@@ -8,23 +8,19 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean.metadata;
+package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import org.eclipse.swt.widgets.Widget;
 
-/**
- * @author yyang (yves.yang@soyatec.com)
- */
-public class DataProperty extends DynamicProperty {
+public class DataProperty extends AbstractProperty {
 	protected String key;
 
 	public DataProperty(String name, String key) {
-		super(Object.class, null, null, name);
-		this.key = key;
+		this(Object.class, name, key);
 	}
 
 	public DataProperty(Class<?> propertyType, String name, String key) {
-		super(propertyType, null, null, name);
+		super(name, propertyType);
 		this.key = key;
 	}
 

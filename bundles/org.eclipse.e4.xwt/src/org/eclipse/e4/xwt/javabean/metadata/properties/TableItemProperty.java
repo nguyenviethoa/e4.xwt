@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean.metadata;
+package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -16,9 +16,6 @@ import java.util.Collection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableItem;
 
-/**
- * @author yyang (yves.yang@soyatec.com)
- */
 public class TableItemProperty extends AbstractProperty {
 
 	public static class Cell {
@@ -54,15 +51,8 @@ public class TableItemProperty extends AbstractProperty {
 		}
 	}
 
-	private Class<?> propertyType;
-
 	public TableItemProperty() {
-		this(Collection.class, "cells");
-	}
-
-	public TableItemProperty(Class<?> propertyType, String name) {
-		super(name);
-		this.propertyType = propertyType;
+		super(PropertiesConstants.PROPERTY_CELLS, Collection.class);
 	}
 
 	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
@@ -87,13 +77,4 @@ public class TableItemProperty extends AbstractProperty {
 	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		return null;
 	}
-
-	public Class<?> getType() {
-		return propertyType;
-	}
-
-	public void setType(Class<?> type) {
-		this.propertyType = type;
-	}
-
 }

@@ -8,23 +8,23 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean.metadata;
+package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.eclipse.e4.xwt.javabean.metadata.Behavior;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.metadata.ISetPostAction;
 
-/**
- * @author yyang (yves.yang@soyatec.com)
- */
 public abstract class AbstractProperty extends Behavior implements IProperty {
 	protected Collection<ISetPostAction> setPostActions = Collections.EMPTY_LIST;
+	private Class<?> type;
 
-	public AbstractProperty(String name) {
+	public AbstractProperty(String name, Class<?> type) {
 		super(name);
+		this.type = type;
 	}
 
 	public void addSetPostAction(ISetPostAction setPostAction) {
@@ -44,5 +44,23 @@ public abstract class AbstractProperty extends Behavior implements IProperty {
 		for (ISetPostAction setPostAction : setPostActions) {
 			setPostAction.action(target, property, value);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.metadata.IProperty#setType(java.lang.Class)
+	 */
+	public void setType(Class<?> type) {
+		this.type = type;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.metadata.IProperty#getType()
+	 */
+	public Class<?> getType() {
+		return type;
 	}
 }

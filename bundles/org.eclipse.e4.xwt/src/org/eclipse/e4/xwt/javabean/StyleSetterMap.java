@@ -14,6 +14,10 @@ import java.util.HashMap;
 
 public class StyleSetterMap extends HashMap<String, String> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String key;
 
 	public StyleSetterMap(String key) {

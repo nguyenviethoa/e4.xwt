@@ -12,7 +12,7 @@ package org.eclipse.e4.xwt.utils;
 
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
-import org.eclipse.e4.xwt.impl.NameContext;
+import org.eclipse.e4.xwt.impl.NameScope;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.Caret;
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Widget;
 
 public class UserDataHelper {
 
-	public static void bindNameContext(Widget widget, NameContext nameContext) {
+	public static void bindNameContext(Widget widget, NameScope nameContext) {
 		if (widget.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY) != null)
 			throw new IllegalStateException("Name context is already set");
 		widget.setData(IUserDataConstants.XWT_NAMECONTEXT_KEY, nameContext);
@@ -57,10 +57,18 @@ public class UserDataHelper {
 		return (Composite) control;
 	}
 
-	public static NameContext findNameContext(Widget widget) {
+	public static Object findParent(Widget widget, Class<?> type) {
+		Control control = getParent(widget);
+		while (control != null && !(type.isInstance(control))) {
+			control = getParent(control);
+		}
+		return control;
+	}
+
+	public static NameScope findNameContext(Widget widget) {
 		Object data = widget.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
 		if (data != null) {
-			return (NameContext) data;
+			return (NameScope) data;
 		}
 		Widget parent = getParent(widget);
 		if (parent != null) {

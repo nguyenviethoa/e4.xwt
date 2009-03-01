@@ -12,10 +12,10 @@ package org.eclipse.e4.xwt.impl;
 
 import java.util.HashMap;
 
-public class NameContext extends HashMap<String, Object> {
-	private final NameContext parent;
+public class NameScope extends HashMap<String, Object> {
+	private final NameScope parent;
 
-	public NameContext(NameContext parent) {
+	public NameScope(NameScope parent) {
 		super();
 		this.parent = parent;
 	}
