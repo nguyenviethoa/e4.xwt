@@ -436,19 +436,17 @@ public class ResourceLoader implements IVisualElementLoader {
 	protected Object getDataContext(Element element, Widget swtObject) {
 		// x:DataContext
 		try {
-			{
-				Attribute dataContextAttribute = element.getAttribute(IConstants.XWT_NAMESPACE, "DataContext");
-				if (dataContextAttribute != null) {
-					Widget composite = (Widget) swtObject;
-					DocumentObject documentObject = dataContextAttribute.getChildren()[0];
-					if (IConstants.XAML_STATICRESOURCES.equals(documentObject.getName()) || IConstants.XAML_DYNAMICRESOURCES.equals(documentObject.getName())) {
-						String key = documentObject.getContent();
-						return new StaticResourceBinding(composite, key);
-					} else if (IConstants.XAML_BINDING.equals(documentObject.getName())) {
-						return doCreate(swtObject, (Element) documentObject, null, -1);
-					} else {
-						LoggerManager.log(new UnsupportedOperationException(documentObject.getName()));
-					}
+			Attribute dataContextAttribute = element.getAttribute(IConstants.XWT_NAMESPACE, "DataContext");
+			if (dataContextAttribute != null) {
+				Widget composite = (Widget) swtObject;
+				DocumentObject documentObject = dataContextAttribute.getChildren()[0];
+				if (IConstants.XAML_STATICRESOURCES.equals(documentObject.getName()) || IConstants.XAML_DYNAMICRESOURCES.equals(documentObject.getName())) {
+					String key = documentObject.getContent();
+					return new StaticResourceBinding(composite, key);
+				} else if (IConstants.XAML_BINDING.equals(documentObject.getName())) {
+					return doCreate(swtObject, (Element) documentObject, null, -1);
+				} else {
+					LoggerManager.log(new UnsupportedOperationException(documentObject.getName()));
 				}
 			}
 		} catch (Exception e) {
