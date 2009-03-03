@@ -21,14 +21,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IIndexedElement;
@@ -47,7 +43,6 @@ import org.eclipse.e4.xwt.impl.IVisualElementLoader;
 import org.eclipse.e4.xwt.impl.NameScope;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
-import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass.Binding;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
@@ -106,11 +101,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	protected Object scopedObject;
 	protected NameScope nameScoped;
 
-	private String bindingError = "";
-	private Set<String> errorElements = new HashSet<String>();
-
-	private List<Element> widgetList;
-	private Map<Element, String> bindingMap;
+	private DataBindingTrack dataBindingTrack;
 
 	/**
 	 * @param context
@@ -127,12 +118,15 @@ public class ResourceLoader implements IVisualElementLoader {
 	public Object createCLRElement(Element element, ILoadData loadData) {
 		try {
 			Composite parent = loadData.getParent();
-			widgetList = new ArrayList<Element>();
-			bindingMap = new HashMap<Element, String>();
+			XWT.addTracking(Tracking.DATABINDING);
+			XWT.addTracking(Tracking.NAME);
+			if (!XWT.getTrackings().isEmpty()) {
+				dataBindingTrack = new DataBindingTrack();
+			}
 			Object control = doCreate(parent, element, null, loadData.getStyles(), loadData.getResourceDictionary(), loadData.getDataContext());
 			// get databinding messages and print into console view
-			if (XWT.isTracking(Tracking.DATABINDING)) {
-				String dataBindingMessage = getDataBindMessage();
+			if (dataBindingTrack != null) {
+				String dataBindingMessage = dataBindingTrack.getDataBindMessage();// getDataBindMessage();
 				org.eclipse.e4.xwt.ILogger log = XWT.getLogger();
 				log.addMessage(dataBindingMessage, Tracking.DATABINDING);
 				log.printInfo(dataBindingMessage, Tracking.DATABINDING, XWT.getTrackings());
@@ -152,7 +146,6 @@ public class ResourceLoader implements IVisualElementLoader {
 	}
 
 	public Object doCreate(Object parent, Element element, Class<?> constraintType, int styles, ResourceDictionary dico, Object dataContext) throws Exception {
-		String bindingMessage = "";
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace) && IConstants.XAML_X_NULL.equalsIgnoreCase(name)) {
@@ -170,19 +163,15 @@ public class ResourceLoader implements IVisualElementLoader {
 		Integer styleValue = getStyleValue(element, styles);
 
 		if (parent == null || metaclass.getType() == Shell.class) {
+			if (dataBindingTrack != null) {
+				dataBindingTrack.addWidgetElement(element);
+			}
 			Shell shell = null;
 			if (styles == -1) {
 				styleValue = SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX | SWT.RESIZE;
 			}
 			shell = new Shell(display, styleValue);
 			swtObject = shell;
-			Attribute dataContextAttribute = element.getAttribute("DataContext");
-			if (dataContextAttribute != null) {
-				DocumentObject documentObject = dataContextAttribute.getChildren()[0];
-				if (IConstants.XAML_STATICRESOURCES.equals(documentObject.getName()) || IConstants.XAML_DYNAMICRESOURCES.equals(documentObject.getName())) {
-					widgetList.add(element);
-				}
-			}
 
 			if (metaclass.getType() != Shell.class) {
 				shell.setLayout(new FillLayout());
@@ -223,79 +212,9 @@ public class ResourceLoader implements IVisualElementLoader {
 				// set first data context and resource dictionary
 				setDataContext(metaclass, swtObject, dico, dataContext);
 
-				if (swtObject instanceof Binding) {
-					String error = "";
-					Binding newInstance = (Binding) swtObject;
-					String path = null;
-					Attribute attr = element.getAttribute("Path");
-					if (null == attr)
-						attr = element.getAttribute("path");
-					if (null != attr)
-						path = attr.getContent();
-					Object dataContext2 = null;
-					try {
-						dataContext2 = newInstance.getValue();
-						if (path != null && path.length() > 0) {
-							String[] paths = path.trim().split("\\.");
-							if (paths.length > 1) {
-								String path1 = "";
-								for (int i = 0; i < paths.length - 1; i++) {
-									path1 = paths[i];
-									if (dataContext2 != null) {
-										dataContext2 = getObserveData(dataContext2, path1);
-									}
-								}
-								BeansObservables.observeValue(dataContext2, paths[paths.length - 1]);
-							} else if (paths.length == 1) {
-								BeansObservables.observeValue(dataContext2, path);
-							}
-						} else {
-
-						}
-					} catch (Exception ex) {
-						errorElements.add(element.getParent().getParent().getId());
-						bindingError = "-> error";
-						error = "-> error";
-					}
-					if (dataContext2 != null) {
-						bindingMessage = " (DataContext=" + dataContext2.getClass().getSimpleName() + ", Path=" + path + ")" + error + "\n";
-						bindingMap.put((Element) element.getParent().getParent(), bindingMessage);
-					}
-				} else if (swtObject instanceof Widget) {
-					Attribute textAttribute = element.getAttribute("Text");
-					Attribute dataContextAttribute = element.getAttribute("DataContext");
-					if (textAttribute != null) {
-						DocumentObject[] objs = textAttribute.getChildren();
-						if (objs.length > 0) {
-							for (DocumentObject obj : objs) {
-								if (obj.getName().equals("Binding")) {
-									widgetList.add(element);
-									break;
-								}
-							}
-						}
-					} else if (dataContextAttribute != null) {
-						DocumentObject documentObject = dataContextAttribute.getChildren()[0];
-						if (IConstants.XAML_STATICRESOURCES.equals(documentObject.getName()) || IConstants.XAML_DYNAMICRESOURCES.equals(documentObject.getName())) {
-							widgetList.add(element);
-						}
-					}
-					if (dataContext != null) {
-						widgetList.add(element);
-						bindingMessage = " (DataContext=" + dataContext.getClass().getSimpleName() + ")\n";
-						bindingMap.put(element, bindingMessage);
-					}
-				} else if (JFacesHelper.isViewer(swtObject)) {
-					if (dataContext != null) {
-						bindingMessage = " (DataContext=" + dataContext.getClass().getSimpleName() + ")\n";
-						bindingMap.put(element, bindingMessage);
-					}
-				} else if (element.attributeNames(IConstants.XWT_X_NAMESPACE).length > 0) {
-					// ??
-					if (element.getParent() != null && element.getParent().getParent() != null) {
-						bindingMessage = " (DataContext=" + name + ")\n";
-						bindingMap.put((Element) element.getParent().getParent(), bindingMessage);
-					}
+				// get databindingMessages
+				if (dataBindingTrack != null) {
+					dataBindingTrack.tracking(swtObject, element, dataContext);
 				}
 			}
 
@@ -436,17 +355,19 @@ public class ResourceLoader implements IVisualElementLoader {
 	protected Object getDataContext(Element element, Widget swtObject) {
 		// x:DataContext
 		try {
-			Attribute dataContextAttribute = element.getAttribute(IConstants.XWT_NAMESPACE, "DataContext");
-			if (dataContextAttribute != null) {
-				Widget composite = (Widget) swtObject;
-				DocumentObject documentObject = dataContextAttribute.getChildren()[0];
-				if (IConstants.XAML_STATICRESOURCES.equals(documentObject.getName()) || IConstants.XAML_DYNAMICRESOURCES.equals(documentObject.getName())) {
-					String key = documentObject.getContent();
-					return new StaticResourceBinding(composite, key);
-				} else if (IConstants.XAML_BINDING.equals(documentObject.getName())) {
-					return doCreate(swtObject, (Element) documentObject, null, -1);
-				} else {
-					LoggerManager.log(new UnsupportedOperationException(documentObject.getName()));
+			{
+				Attribute dataContextAttribute = element.getAttribute(IConstants.XWT_NAMESPACE, "DataContext");
+				if (dataContextAttribute != null) {
+					Widget composite = (Widget) swtObject;
+					DocumentObject documentObject = dataContextAttribute.getChildren()[0];
+					if (IConstants.XAML_STATICRESOURCES.equals(documentObject.getName()) || IConstants.XAML_DYNAMICRESOURCES.equals(documentObject.getName())) {
+						String key = documentObject.getContent();
+						return new StaticResourceBinding(composite, key);
+					} else if (IConstants.XAML_BINDING.equals(documentObject.getName())) {
+						return doCreate(swtObject, (Element) documentObject, null, -1);
+					} else {
+						LoggerManager.log(new UnsupportedOperationException(documentObject.getName()));
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -1259,71 +1180,4 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private String getCurrentWidgetPosition(Element element) {
-
-		if (element.getParent() != null) {
-			return " " + getCurrentWidgetPosition((Element) element.getParent());
-		}
-		return "";
-	}
-
-	private int validateParentElementError(Element bindingElement) {
-		int isError = 0;
-		if (!bindingError.equals("")) {
-			Object parentObj = bindingElement.getParent();
-			while (parentObj != null) {
-				bindingElement = (Element) parentObj;
-				if (errorElements.contains(bindingElement.getId())) {
-					isError = 1;
-					break;
-				}
-				parentObj = bindingElement.getParent();
-			}
-		}
-		return isError;
-	}
-
-	private Object getObserveData(Object dataContext, String path) {
-		try {
-			Class<?> dataContextClass = dataContext.getClass();
-			String getMethiodName = "get" + path.substring(0, 1).toUpperCase() + path.substring(1);
-			Method getMethod = dataContextClass.getDeclaredMethod(getMethiodName, new Class[] {});
-			if (getMethod != null) {
-				return getMethod.invoke(dataContext, new Object[] {});
-			}
-		} catch (SecurityException e) {
-			LoggerManager.log(e);
-		} catch (NoSuchMethodException e) {
-			LoggerManager.log(e);
-		} catch (IllegalArgumentException e) {
-			LoggerManager.log(e);
-		} catch (IllegalAccessException e) {
-			LoggerManager.log(e);
-		} catch (InvocationTargetException e) {
-			LoggerManager.log(e);
-		}
-		return null;
-	}
-
-	private String getDataBindMessage() {
-		StringBuffer message = new StringBuffer("");
-		Iterator<Element> widgetIt = widgetList.iterator();
-		Set<Element> keys = bindingMap.keySet();
-		while (widgetIt.hasNext()) {
-			Element element = widgetIt.next();
-			int parentHasError = validateParentElementError(element);
-			if (parentHasError == 0) {
-				String content = getCurrentWidgetPosition(element);
-				if (!message.toString().equals("")) {
-					content += "+";
-				}
-				content = content + element.getName();
-				message.append(content);
-				if (keys.contains(element)) {
-					message.append(bindingMap.get(element));
-				}
-			}
-		}
-		return message.toString();
-	}
 }
