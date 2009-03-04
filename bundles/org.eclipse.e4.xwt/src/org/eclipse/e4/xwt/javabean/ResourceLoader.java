@@ -85,7 +85,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * @author jliu
+ * @author jliu (jin.liu@soyatec.com)
  */
 public class ResourceLoader implements IVisualElementLoader {
 	private static final HashMap<String, Collection<Class<?>>> DELAYED_ATTRIBUTES = new HashMap<String, Collection<Class<?>>>();
@@ -118,8 +118,6 @@ public class ResourceLoader implements IVisualElementLoader {
 	public Object createCLRElement(Element element, ILoadData loadData) {
 		try {
 			Composite parent = loadData.getParent();
-			XWT.addTracking(Tracking.DATABINDING);
-			XWT.addTracking(Tracking.NAME);
 			if (!XWT.getTrackings().isEmpty()) {
 				dataBindingTrack = new DataBindingTrack();
 			}
@@ -199,7 +197,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					throw new XWTException("Cannot add user control: Parent is not a composite");
 			} else {
 				Object[] parameters = null;
-				if (type == TableViewerColumn.class) {
+				if (TableViewerColumn.class.isAssignableFrom(type)) {
 					int columnIndex = getColumnIndex(element);
 					parameters = (styleValue != null ? new Object[] { parent, styleValue, columnIndex } : new Object[] { parent, SWT.NONE, columnIndex });
 				} else {
@@ -314,7 +312,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		IMetaclass metaclass = XWT.getMetaclass(name, namespace);
 		int index = -1;
 		Class<?> type = metaclass.getType();
-		if (type == TableViewerColumn.class) {
+		if (TableViewerColumn.class.isAssignableFrom(type)) {
 			DocumentObject parent = columnElement.getParent();
 			List<DocumentObject> children = DocumentObjectSorter.sortWithAttr(parent.getChildren(), "Index");
 			index = children.indexOf(columnElement);
@@ -772,7 +770,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		Attribute attribute = namespace == null ? element.getAttribute(attrName) : element.getAttribute(namespace, attrName);
 		IProperty property = metaclass.findProperty(propertyName);
 		setStyleProperty(target, element, metaclass);
-		if (propertyName.trim().equals(IConstants.XAML_DATACONTEXT)) {
+		if (propertyName.equals(IConstants.XAML_DATACONTEXT)) {
 			property = null;
 		}
 		if (propertyName.trim().equalsIgnoreCase("Resources")) {
@@ -849,14 +847,13 @@ public class ResourceLoader implements IVisualElementLoader {
 				contentValue = getImagePath(attribute, contentValue);
 			}
 			Object value = null;
-			List<Object> values = null;
 			DocumentObject[] children = attribute.getChildren();
 			if (contentValue == null) {
 				Class<?> type = property.getType();
 				if (Collection.class.isAssignableFrom(type)) {
 					value = getCollectionProperty(type, target, attribute, attrName);
 				} else {
-					if (type == TableViewerColumn.class && attrName.equalsIgnoreCase("columns")) {
+					if (TableViewerColumn.class.isAssignableFrom(type) && attrName.equalsIgnoreCase("columns")) {
 						children = DocumentObjectSorter.sortWithAttr(children, "Index").toArray(new DocumentObject[children.length]);
 					}
 
@@ -875,9 +872,9 @@ public class ResourceLoader implements IVisualElementLoader {
 						} else if (property.getType().isArray()) {
 							value = getArrayProperty(property.getType(), target, attribute, name);
 							break;
-						} else if ("TableColumn".equalsIgnoreCase(element.getName()) && "TableEditor".equalsIgnoreCase(child.getName())) {
+						} else if (isAssignableFrom(element, TableColumn.class) && isAssignableFrom(child, TableEditor.class)) {
 							value = child;
-						} else if (property.getType() == TableViewerColumn.class && attribute.getContent() != null) {
+						} else if (TableViewerColumn.class.isAssignableFrom(property.getType()) && attribute.getContent() != null) {
 							value = attribute.getContent();
 						} else {
 							value = doCreate(target, (Element) child, type, -1);
@@ -898,8 +895,6 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 				}
 				property.setValue(target, value);
-			} else if (values != null) {
-				property.setValue(target, values.toArray());
 			} else {
 				if (value == null) {
 					value = property.getValue(target);
@@ -919,7 +914,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 			}
 
-			if (attribute.attributeNames().length > 0) {
+			if (attribute.attributeNames(IConstants.XWT_NAMESPACE).length > 0) {
 				IMetaclass propertyMetaclass = XWT.getMetaclass(property.getType());
 				if (value == null) {
 					value = property.getValue(target);
@@ -939,6 +934,27 @@ public class ResourceLoader implements IVisualElementLoader {
 		} catch (Exception e) {
 			LoggerManager.log(e);
 		}
+	}
+
+	protected Class<?> getJavaType(DocumentObject element) {
+		String name = element.getName();
+		String namespace = element.getNamespace();
+		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace) && IConstants.XAML_X_NULL.equalsIgnoreCase(name)) {
+			return null;
+		}
+		IMetaclass metaclass = XWT.getMetaclass(name, namespace);
+		if (metaclass == null) {
+			return null;
+		}
+		return metaclass.getType();
+	}
+
+	protected boolean isAssignableFrom(DocumentObject element, Class<?> type) {
+		Class<?> targetType = getJavaType(element);
+		if (targetType == null) {
+			return false;
+		}
+		return targetType.isAssignableFrom(type);
 	}
 
 	private void setStyleProperty(Object target, DocumentObject element, IMetaclass metaclass) {

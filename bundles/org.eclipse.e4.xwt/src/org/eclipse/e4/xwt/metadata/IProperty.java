@@ -34,4 +34,6 @@ public interface IProperty extends IBehavior {
 	public void addSetPostAction(ISetPostAction setPostAction);
 
 	public void removeSetPostAction(ISetPostAction setPostAction);
+
+	public boolean isDefault();
 }

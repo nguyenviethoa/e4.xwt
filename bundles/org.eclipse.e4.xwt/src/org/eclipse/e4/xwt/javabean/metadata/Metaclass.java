@@ -60,8 +60,14 @@ public class Metaclass implements IMetaclass {
 			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
 			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 			for (PropertyDescriptor p : propertyDescriptors) {
-				if (p.getPropertyType() != null)
-					addProperty(new BeanProperty(p));
+				if (p.getPropertyType() != null) {
+					IProperty property = (superClass != null ? superClass.findProperty(p.getName()) : null);
+					if (property != null && !property.isDefault()) {
+						addProperty(property);
+					} else {
+						addProperty(new BeanProperty(p));
+					}
+				}
 			}
 			for (Field f : type.getDeclaredFields()) {
 				if (!propertyCache.containsKey(normalize(f.getName())) && !Modifier.isFinal(f.getModifiers())) {
@@ -94,9 +100,9 @@ public class Metaclass implements IMetaclass {
 	}
 
 	public IProperty addProperty(IProperty property) {
-		return propertyCache.put(normalize(property.getName()), property);
+		String name = normalize(property.getName());
+		return propertyCache.put(name, property);
 	}
-
 
 	private void buildTypedEvents() {
 		if (buildTypedEvents) {

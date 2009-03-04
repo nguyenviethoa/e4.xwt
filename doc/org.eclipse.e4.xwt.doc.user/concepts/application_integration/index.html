@@ -9,18 +9,28 @@
 
 <body>
 <h1>Application Integration</h1>
-<p>Although XWT is bundled in e4, it is in fact designed, developed and tested in classic eclipse environment. It can be used in applications on top of  SWT/Jface with or without eclipse platform. So the integration with standard SWT application is really straight forward.</p>
+<p>Although XWT is bundled in e4, it is in fact designed, developed
+and tested in classic eclipse environment. It can be used in
+applications on top of SWT/Jface with or without eclipse platform. So
+the integration with standard SWT application is really straight
+forward.</p>
 
 <h2>Stand-alone Java application</h2>
-The module "org.eclipse.e4.xwt" is the core engine of XWT. It depends only on SWT/JFace and JFace data binding. It can be used directly in any stand-alone Java application.
+The module "org.eclipse.e4.xwt" is the core engine of XWT. It depends
+only on SWT/JFace and JFace data binding. It can be used directly in any
+stand-alone Java application.
 
 <h2>Eclipse integration</h2>
-The plugin "org.eclipse.e4.xwt.pde" takes over this bridge role between XWT and eclipse environment. It implements mainly all extensions points to extend XWT at the current stage, more inetegration facilities will be provided in next releases. 
+The plugin "org.eclipse.e4.xwt.pde" takes over this bridge role between
+XWT and eclipse environment. It implements mainly all extensions points
+to extend XWT at the current stage, more integration facilities will be
+provided in next releases.
 
 <h2>Resource loading and UI creation</h2>
-<p>This paragraph explains the integration concept of XWT in an existing SWT application: how an
-existing classic SWT applications use XWT. XWT provides some APIs to load a UI
-component as children of an existing Composite via the class XWT.</p>
+<p>This paragraph explains the integration concept of XWT in an
+existing SWT application: how an existing classic SWT applications use
+XWT. XWT provides some APIs to load a UI component as children of an
+existing Composite via the class XWT.</p>
 <p>The customized UI &quot;UserControl&quot; contains a Button with
 a selection event.</p>
 

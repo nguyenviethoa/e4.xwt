@@ -52,4 +52,8 @@ public class FieldProperty extends AbstractProperty {
 		fireSetPostAction(target, this, value);
 	}
 
+	@Override
+	public boolean isDefault() {
+		return true;
+	}
 }

@@ -290,6 +290,19 @@ public class XWT {
 	}
 
 	/**
+	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 */
+	static public synchronized Control load(Composite parent, Class<?> viewType, Object dataContext) throws Exception {
+		ILoadingContext context = getLoadingContext();
+		try {
+			setLoadingContext(new LoadingContext(viewType.getClassLoader()));
+			return load(parent, viewType.getResource(viewType.getSimpleName() + ".xwt"), -1, dataContext);
+		} finally {
+			setLoadingContext(context);
+		}
+	}
+
+	/**
 	 * Load the file content under a Composite with a style and a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
 	static public synchronized Control load(Composite parent, URL file, int styles, Object dataContext) throws Exception {
@@ -578,10 +591,10 @@ public class XWT {
 		XWT.registerConvertor(new ObjectToString());
 		XWT.registerConvertor(new DateToString());
 		XWT.registerConvertor(new StringToInteger());
-		XWT.registerConvertor(new StringToBoolean());
-		XWT.registerConvertor(new StringToIntArray());
 		XWT.registerConvertor(new StringToFloat());
 		XWT.registerConvertor(new StringToDouble());
+		XWT.registerConvertor(new StringToBoolean());
+		XWT.registerConvertor(new StringToIntArray());
 		XWT.registerConvertor(new BindingToObject());
 		XWT.registerConvertor(new StringToColor());
 		XWT.registerConvertor(new StringToFont());

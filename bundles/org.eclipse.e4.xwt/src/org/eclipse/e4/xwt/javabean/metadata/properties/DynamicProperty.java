@@ -13,6 +13,11 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * This class is used to extend the Java Bean model
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class DynamicProperty extends AbstractProperty {
 
 	private final Method setter;
@@ -28,14 +33,12 @@ public class DynamicProperty extends AbstractProperty {
 		this.getter = getter;
 	}
 
-	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException,
-			SecurityException, NoSuchFieldException {
+	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		setter.invoke(target, value);
 		fireSetPostAction(target, this, value);
 	}
 
-	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException,
-			NoSuchFieldException {
+	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		return getter.invoke(target, null);
 	}
 

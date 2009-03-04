@@ -16,8 +16,20 @@ import org.eclipse.e4.xwt.ILoadingContext;
 public class LoadingContext implements ILoadingContext {
 	public static final LoadingContext defaultLoadingContext = new LoadingContext();
 
+	protected ClassLoader classLoader;
+
+	public LoadingContext() {
+	}
+
+	public LoadingContext(ClassLoader classLoader) {
+		this.classLoader = classLoader;
+	}
+
 	public ClassLoader getClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
+		if (classLoader == null) {
+			return Thread.currentThread().getContextClassLoader();
+		}
+		return classLoader;
 	}
 
 	public String getNamespace() {

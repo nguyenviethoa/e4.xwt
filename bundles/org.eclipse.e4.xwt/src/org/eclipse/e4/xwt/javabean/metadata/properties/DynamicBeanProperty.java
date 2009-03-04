@@ -14,8 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * 
- * This is a new type of dynamic properties, some properties, such as texts for
- * TableItem and TreeItem, we used the setText(String[]) and String = getText();
+ * This is a new type of dynamic properties, some properties, such as texts for TableItem and TreeItem, we used the setText(String[]) and String = getText();
  * 
  * @author jliu
  * 
@@ -29,14 +28,10 @@ public class DynamicBeanProperty extends DynamicProperty {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty#getValue
-	 * (java.lang.Object)
+	 * @see org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty#getValue (java.lang.Object)
 	 */
 	@Override
-	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException,
-			NoSuchFieldException {
+	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		throw new UnsupportedOperationException();
 	}
-
 }

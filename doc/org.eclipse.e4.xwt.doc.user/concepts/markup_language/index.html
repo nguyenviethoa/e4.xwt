@@ -10,14 +10,15 @@
 <body>
 <h1>Markup language</h1>
 <p>Markup languages are designed for the processing, definition and
-presentation of text. XWT provides an Extensible UI Markup Language for declarative Eclipse application programming.</p>
+presentation of text. XWT provides an Extensible UI Markup Language for
+declarative Eclipse application programming.</p>
 
 <ul>
 	<li><a href="#language_01">A Declarative language with Flow
 	Control Support</a></li>
 	<li><a href="#language_02">XWT Object Elements</a></li>
 	<li><a href="#language_03">Setting Properties</a></li>
-	<li><a href="#language_04">XWT  Root Elements and XML
+	<li><a href="#language_04">XWT Root Elements and XML
 	Namespaces</a></li>
 	<li><a href="#language_05">Events and XWT Code-behind</a></li>
 </ul>
@@ -25,15 +26,15 @@ presentation of text. XWT provides an Extensible UI Markup Language for declarat
 
 <h3><a name="language_01"></a>A Declarative language with Flow
 Control Support</h3>
-<p>XWT  simplifies creating a UI for Java programming. You can
-create visible UI elements in the XWT declarative markup, and then
-separate the UI definition from the run-time logic by using code-behind
-files. The ability to mix code with markup in XWT is important because
-XML by itself is declarative, and does not really suggest a model for
-flow control.</p>
+<p>XWT simplifies creating a UI for Java programming. You can create
+visible UI elements in the XWT declarative markup, and then separate the
+UI definition from the run-time logic by using code-behind files. The
+ability to mix code with markup in XWT is important because XML by
+itself is declarative, and does not really suggest a model for flow
+control.</p>
 
-<p>The following XWT example shows how markup is necessary to
-create a button as part of a UI.</p>
+<p>The following XWT example shows how markup is necessary to create
+a button as part of a UI.</p>
 
 <pre>
 <span class="XMLElementTag">&lt;Shell.layout&gt;</span>
@@ -46,7 +47,7 @@ create a button as part of a UI.</p>
 </pre>
 
 <h3><a name="language_02"></a> XWT Object Elements</h3>
-<p>XWT  has a set of rules that map object elements into classes or
+<p>XWT has a set of rules that map object elements into classes or
 structures, attributes into properties or events, and XML namespaces to
 Java packages.</p>
 
@@ -100,12 +101,13 @@ containing element with the content of the tag. Generally, the content
 is an object of the type that the property takes as its value. The
 syntax for property element itself is &lt;TypeName.Property&gt;. After
 specifying content, you must close the property element with a closing
-tag just like any other element (with syntax &lt;/TypeName.Property&gt;). For properties where
-both attribute and property element syntax are supported, the two
-syntaxes generally have the same result, although subtleties such as
-whitespace handling can vary slightly between syntaxes. The following
-example by using property element syntax for <span class="XMLAttrTag">text</span>
-properties of the Button.</p>
+tag just like any other element (with syntax
+&lt;/TypeName.Property&gt;). For properties where both attribute and
+property element syntax are supported, the two syntaxes generally have
+the same result, although subtleties such as whitespace handling can
+vary slightly between syntaxes. The following example is using property
+element syntax for <span class="XMLAttrTag">text</span> properties of
+the Button.</p>
 
 
 <pre>
@@ -117,11 +119,11 @@ properties of the Button.</p>
 </pre>
 
 <h3><a name="language_04"></a>XWT Root Elements and XML Namespaces</h3>
-<p>A XWT file must have only one root element, in order to be both
-a well-formed XML file and a valid XWT file. Typically you should
-choose an element that is part of the application model. The following
-example shows the root element of a typical XWT file with the root
-element Composite.</p>
+<p>A XWT file must have only one root element, in order to be both a
+well-formed XML file and a valid XWT file. Typically you should choose
+an element that is part of the application model. The following example
+shows the root element of a typical XWT file with the root element
+Composite.</p>
 
 
 <pre>
@@ -143,21 +145,19 @@ markup can be specified without a prefix. The default XML namespace is
 mapped to the namespace
 &quot;http://www.eclipse.org/xwt/presentation&quot;. The <b>xmlns:x</b>
 attribute indicates an additional XML namespace, which maps the XWT
-language namespace &quot;http://www.eclipse.org/xwt&quot;.
-Required language components defined by the XWT specification are
-prefixed by <b>x:</b> when referenced in the markup of a file with this
-mapping.</p>
+language namespace &quot;http://www.eclipse.org/xwt&quot;. Required
+language components defined by the XWT specification are prefixed by <b>x:</b>
+when referenced in the markup of a file with this mapping.</p>
 
 
 <p><b>The x:Prefix</b></p>
 <p>In the previous root element example, the prefix <b>x:</b> was
-used to map the XWT XML namepace
-&quot;http://www.eclipse.org/xwt&quot;. This <b>x:</b> prefix will
-be used to map the XWT XML namepace in the templates for projects. The
-<b>x:</b>prefix XML namepace contain several programming
-constructs that you will use quite frequently in your XWT. The
-following is a listing of the most common x:prefix namespace
-programming constructs you will use:</p>
+used to map the XWT XML namespace
+&quot;http://www.eclipse.org/xwt&quot;. This <b>x:</b> prefix will be
+used to map the XWT XML namespace in the templates for projects. The <b>x:</b>prefix
+XML namespace contain several programming constructs that you will use
+quite frequently in your XWT. The following is a listing of the most
+common x:prefix namespace programming constructs you will use:</p>
 
 <ul>
 	<li>x:Key: Sets a unique key for each resource in a DataContext.</li>
@@ -179,9 +179,9 @@ programming constructs you will use:</p>
 <p>Most XWT applications consist of both markup and code-behind.
 Within a project, the XWT is written as .xwt file and a synchronized
 java class is used to write a code-behind file. When a XWT file is
-loaded, the location of the XWT code-behind file for each XWT page
-is identified by specifying a namespace and class as the x:Class
-attribute of the root element of the XWT page.</p>
+loaded, the location of the XWT code-behind file for each XWT page is
+identified by specifying a namespace and class as the x:Class attribute
+of the root element of the XWT page.</p>
 
 <p>In the examples so far, you have seen several buttons, but none
 of these buttons had any logical behavior associated with them yet. The

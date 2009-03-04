@@ -27,8 +27,7 @@ public class BeanProperty extends AbstractProperty {
 		this.descriptor = descriptor;
 	}
 
-	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException,
-			SecurityException, NoSuchFieldException {
+	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		if (descriptor != null && descriptor.getWriteMethod() != null) {
 			Method writeMethod = descriptor.getWriteMethod();
 			// Bug of invoke boolean value.
@@ -45,12 +44,16 @@ public class BeanProperty extends AbstractProperty {
 		}
 	}
 
-	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException,
-			NoSuchFieldException {
+	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		if (descriptor != null && descriptor.getReadMethod() != null) {
 			Method writeMethod = descriptor.getReadMethod();
 			return writeMethod.invoke(target);
 		}
 		return null;
+	}
+
+	@Override
+	public boolean isDefault() {
+		return true;
 	}
 }
