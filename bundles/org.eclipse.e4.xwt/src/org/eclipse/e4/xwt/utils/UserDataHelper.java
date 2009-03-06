@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.utils;
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.impl.NameScope;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.Caret;
@@ -73,6 +74,17 @@ public class UserDataHelper {
 		Widget parent = getParent(widget);
 		if (parent != null) {
 			return findNameContext(parent);
+		}
+		return null;
+	}
+
+	public static String getElementName(Object object) {
+		if (object instanceof Widget) {
+			Widget widget = (Widget) object;
+			return (String) widget.getData(IUserDataConstants.XWT_NAME_KEY);
+		} else if (object instanceof Viewer) {
+			Viewer viewer = (Viewer) object;
+			return (String) viewer.getControl().getData(IUserDataConstants.XWT_NAME_KEY);
 		}
 		return null;
 	}

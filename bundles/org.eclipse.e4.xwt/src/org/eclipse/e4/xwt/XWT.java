@@ -176,6 +176,16 @@ public class XWT {
 	}
 
 	/**
+	 * Get the name of the element, which is defined by <code>Name</code> or <code>x:Name</code>. Return <code>null</code>
+	 * 
+	 * @param object
+	 * @return
+	 */
+	public static String getElementName(Object object) {
+		return UserDataHelper.getElementName(object);
+	}
+
+	/**
 	 * A NameContext is a manager of UI element's name in a scope. A name in a NameContext must be unique.
 	 * 
 	 * @param widget

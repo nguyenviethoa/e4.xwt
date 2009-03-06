@@ -1,15 +1,25 @@
 package org.eclipse.e4.xwt.tests.style.java;
 
 import org.eclipse.e4.xwt.IStyle;
+import org.eclipse.e4.xwt.XWT;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 
 public class GreenStyle implements IStyle {
 
 	public void applyStyle(Object target) {
+		String name = XWT.getElementName(target);
+		Control control = null;
 		if (target instanceof Control) {
-			Control control = (Control) target;
+			control = (Control) target;
+		} else if (target instanceof Viewer) {
+			Viewer viewer = (Viewer) target;
+			control = (Control) viewer.getControl();
+		}
+		if (control != null) {
 			control.setBackground(control.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+			control.setData("__MySignature", name);
 		}
 	}
 }
