@@ -215,6 +215,7 @@ public class Metaclass implements IMetaclass {
 	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#getEvents()
 	 */
 	public IEvent[] getEvents() {
+		buildTypedEvents();
 		return routedEventCache.values().toArray(new IEvent[] {});
 	}
 
@@ -289,6 +290,9 @@ public class Metaclass implements IMetaclass {
 	public boolean isSubclassOf(IMetaclass metaclass) {
 		if (metaclass == null) {
 			return false;
+		}
+		if (this == metaclass) {
+			return true;
 		}
 		if (superClass == metaclass) {
 			return true;

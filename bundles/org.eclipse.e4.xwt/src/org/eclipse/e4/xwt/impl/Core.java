@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.e4.xwt.ILoadData;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
@@ -34,6 +33,8 @@ import org.eclipse.e4.xwt.xml.ElementManager;
 import org.eclipse.swt.widgets.Control;
 
 public class Core {
+	static public final String DEFAULT_STYLES_KEY = "XWT.DefaultStyles";
+
 	static public boolean TRACE_BENCH = false;
 
 	private HashMap<Class<?>, Object> registrations;
@@ -128,13 +129,13 @@ public class Core {
 		registrations.put(serviceType, service);
 	}
 
-	protected Object createCLRElement(IRenderingContext context, Element element, ILoadData loadData) {
+	protected Object createCLRElement(IRenderingContext context, Element element, Map<String, Object> options) {
 		IVisualElementLoader loader = findElementLoader(element);
 		if (loader != null) {
-			return loader.createCLRElement(element, loadData);
+			return loader.createCLRElement(element, options);
 		}
 		loader = createElementLoader(context, element);
-		Object visualObject = loader.createCLRElement(element, loadData);
+		Object visualObject = loader.createCLRElement(element, options);
 		removeElementLoader(element);
 		return visualObject;
 	}
@@ -160,18 +161,18 @@ public class Core {
 		elementsLoaders.remove(element);
 	}
 
-	public Control load(ILoadingContext loadingContext, URL input, ILoadData loadData) throws Exception {
-		return load(loadingContext, null, input, loadData);
+	public Control load(ILoadingContext loadingContext, URL input, Map<String, Object> options) throws Exception {
+		return load(loadingContext, null, input, options);
 	}
 
-	public Control load(ILoadingContext loadingContext, InputStream stream, URL input, ILoadData loadData) throws Exception {
+	public Control load(ILoadingContext loadingContext, InputStream stream, URL input, Map<String, Object> options) throws Exception {
 		// Detect from url or file path.
 		long start = System.currentTimeMillis();
 		ElementManager manager = new ElementManager();
 		if (input != null) {
 			Element element = (stream == null ? manager.load(input) : manager.load(stream, input));
 			IRenderingContext context = new ExtensionContext(loadingContext, manager, manager.getRootElement().getNamespace());
-			Object visual = createCLRElement(context, element, loadData);
+			Object visual = createCLRElement(context, element, options);
 			if (TRACE_BENCH) {
 				System.out.println("Loaded: " + (System.currentTimeMillis() - start) + "  " + input.toString());
 			}

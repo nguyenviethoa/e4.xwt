@@ -56,7 +56,7 @@ public class ElementManager {
 
 	private static Random RANDOM = new Random();
 
-	public String generateID(String typeName) {
+	public static String generateID(String typeName) {
 		return typeName + RANDOM.nextInt(Integer.MAX_VALUE);
 	}
 

@@ -16,8 +16,7 @@ public abstract class RCPApplication implements IApplication {
 		initialize();
 		try {
 			URL input = getInputURL();
-			LoadData loadData = new LoadData();
-			XWT.open(input, loadData);
+			XWT.open(input);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

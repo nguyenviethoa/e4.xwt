@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.impl;
 
-import org.eclipse.e4.xwt.ILoadData;
+import java.util.Map;
+
 import org.eclipse.e4.xwt.xml.Element;
 
 public interface IVisualElementLoader {
-	public Object createCLRElement(Element element, ILoadData loadData);
+	public Object createCLRElement(Element element, Map<String, Object> options);
 }

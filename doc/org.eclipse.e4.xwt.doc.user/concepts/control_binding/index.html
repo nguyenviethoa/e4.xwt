@@ -13,32 +13,34 @@
 to present and interact with UI element.</p>
 
 <ul>
-	<li>What is Control Binding?</li>
-	<li>Basic Control Binding Concepts</li>
-	<li>Creating a Control Binding</li>
+	<li><a href="#control_binding_01">What is Control Binding?</a></li>
+	<li><a href="#control_binding_02">Basic Control Binding
+	Concepts</a></li>
+	<li><a href="#control_binding_03">Creating a Control Binding</a></li>
 </ul>
 
-<h3>What is Control Binding?</h3>
-<p>Control Binding is the mechanism to establish a connection between two
-UI controls. Control Binding is different from Data
-Binding, Control Binding doesn't deal with the associated data. For example, if UI element 'A' is bound correctly to UI element 'B', then, when
-the UI 'B' element change its property value, UI A element changes
-automatically</p>
+<h3><a name="control_binding_01"></a>What is Control Binding?</h3>
+<p>Control Binding is the mechanism to establish a connection
+between two UI controls. Control Binding is different from Data Binding,
+Control Binding doesn't deal with the associated data. For example, if
+UI element 'A' is bound correctly to UI element 'B', then, when the UI
+'B' element change its property value, UI 'A' element changes
+automatically.</p>
 
-<h3>Basic Control Binding Concepts</h3>
+<h3><a name="control_binding_02"></a>Basic Control Binding Concepts</h3>
 <p>Control Binding like data binding, has four elements: a binding
 target object, a target property, a binding source and an ElementName
 path. For example, if you want to bind the width of button A to the
 button B, your target object is the button A, the target property is the
-'Width' property, the value to use is the width of button B and the source
-object is the Button B.</p>
+'Width' property, the value to use is the width of button B and the
+source object is the Button B.</p>
 
-<h3>Creating a Control Binding</h3>
+
+
+<h3><a name="control_binding_03"></a>Creating a Control Binding</h3>
 <p>In XWT, you establish a binding using the Binding object. This
 section discusses how to set up a binding.</p>
-
 <pre>
-
 <span class="XMLElementTag">&lt;Shell</span> <span class="XMLAttrTag">xmlns</span>=<span
 	class="XMLAttrValue">"http://www.eclipse.org/xwt/presentation"</span>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLAttrTag">xmlns:x</span>=<span
@@ -104,7 +106,6 @@ section discusses how to set up a binding.</p>
 	class="XMLElementTag">&lt;/Button&gt;</span>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/Group&gt;</span>
 <span class="XMLElementTag">&lt;/Shell&gt;</span>
-
 </pre>
 
 <p>Notice that in the above example, in which the binding source

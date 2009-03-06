@@ -18,6 +18,10 @@ declarative Eclipse application programming.</p>
 	Control Support</a></li>
 	<li><a href="#language_02">XWT Object Elements</a></li>
 	<li><a href="#language_03">Setting Properties</a></li>
+	<li><a href="#language_06">Reference Values and Markup
+	Extensions</li>
+	<li><a href="#language_07">Case and Whitespace in XAML</a></li>
+
 	<li><a href="#language_04">XWT Root Elements and XML
 	Namespaces</a></li>
 	<li><a href="#language_05">Events and XWT Code-behind</a></li>
@@ -117,6 +121,89 @@ the Button.</p>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/Button.text&gt;</span>
 <span class="XMLElementTag">&lt;/Button&gt;</span>
 </pre>
+
+<h3><a name="language_06"></a>Reference Values and Markup
+Extensions</h3>
+<p>Markup extensions are a XWT concept. In attribute syntax, curly
+brace ({ and }) indicate a markup extension usage. This usage directs
+the XWT processing to escape from the general treatment of attribute
+values are either a literal string or directly string-convertible value.</p>
+
+<p>When properties take a reference type value, these properties
+will often require either property element syntax (which always creates
+a new instance) or an obejct reference through a markup extension. A
+markup extension usage can potentially return an existing instance, and
+thus can be more versatile or might incur less object overhead.</p>
+
+<p>When a markup extension is used to provide an attribute value,
+the attribute value should instead be provided by the logic within the
+backing class for the relevant markup extension. The most common markup
+extensions used in XWT application programming are <b>Binding</b>, used
+for data binding expressions and the resource reference <b>StaticResource</b>
+and <b>DynamicResource</b>. By using markup extension, you can use
+attribute syntax to provide refernece values for properties even if that
+the property does not support an attribute syntax for direct object
+instantiation, or enable specific behavior that defers the general
+behavior of the requirement that XAML properties must be filled by
+values of the property's type.</p>
+
+<p>For instance, the following example sets the value of text
+property using attribute syntax. The text binds a Person class.</p>
+
+
+<pre>
+<span class="XMLElementTag">&lt;Shell</span> 
+&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLAttrTag">DataContext</span>=<span
+	class="XMLAttrValue">"{StaticResource myData}"</span><span
+	class="XMLElementTag">&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;x:Shell.Resources&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;y:Person</span> <span class="XMLAttrTag">x:Key</span>=<span
+	class="XMLAttrValue">"myData"</span><span class="XMLElementTag">/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/x:Shell.Resources&gt;</span>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;Text</span> <span
+	class="XMLAttrTag">x:style</span>=<span class="XMLAttrValue">"BORDER"</span> <span
+	class="XMLAttrTag">text</span>=<span class="XMLAttrValue">"{Binding Path=name}"</span><span
+	class="XMLElementTag">&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;Text.layoutData&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;GridData</span> <span class="XMLAttrTag">horizontalAlignment</span>=<span
+	class="XMLAttrValue">"FILL"</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLAttrTag">grabExcessHorizontalSpace</span>=<span
+	class="XMLAttrValue">"true"</span><span class="XMLElementTag">/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;/Text.layoutData&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/Text&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;...
+<span class="XMLElementTag">&lt;/Shell&gt;</span>
+</pre>
+
+
+<h3><a name="language_07"></a>Case and Whitespace in XAML</h3>
+<p>XWT is case sensitive. Object elements, property elements, and
+attribute names must all be specified by using the proper casing when
+compared by name to the underlying type in the assembly, or to a member
+of a type. The values for attributes are not always case sensitive. Case
+sensitivity for values will depend on the type converter behavior
+associated with the property that takes the value, or the property value
+type. For instance, properties that take the Boolean type can take
+either true or True as equivalent values, but only because the default
+string type conversion for Boolean already permits these as equivalents.
+</p>
+
+<p>XWT processors and serializers will ignore or drop all
+nonsignificant whitespace, and will normalize any significant
+whitespace. This behavior is generally only of consequence when you
+specify strings within XWT content properties. In simplest terms, XWT
+converts space, linefeed and tab characters into spaces and then
+preserves one space if found at either end of a contiguous string.</p>
+
+
 
 <h3><a name="language_04"></a>XWT Root Elements and XML Namespaces</h3>
 <p>A XWT file must have only one root element, in order to be both a

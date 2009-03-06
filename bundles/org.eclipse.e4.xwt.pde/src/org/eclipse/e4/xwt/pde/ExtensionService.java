@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
+import org.eclipse.e4.xwt.IStyle;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
@@ -36,6 +37,7 @@ public class ExtensionService {
 	public static final String LOGGER_REGISTER_ID = PDEPlugin.PLUGIN_ID + "." + "logger";
 	public static final String COMMANDS_REGISTER_ID = PDEPlugin.PLUGIN_ID + "." + "commands";
 	public static final String METACLASS_FACTORY_ID = PDEPlugin.PLUGIN_ID + "." + "metaclassFactories";
+	public static final String STYLES_REGISTER_ID = PDEPlugin.PLUGIN_ID + "." + "styles";
 
 	static final String METACLASS = "metaclass";
 	static final String TYPE = "type";
@@ -49,6 +51,7 @@ public class ExtensionService {
 	static final String SETPOSTACTION = "SetPostAction";
 	static final String OVERWRITE = "overwrite";
 	static final String COMMAND = "command";
+	static final String STYLE = "style";
 	static final String TRUE = "true";
 
 	static final String CONVERTERS = "converters";
@@ -78,8 +81,7 @@ public class ExtensionService {
 				}
 			}
 
-			IConfigurationElement[] metaclassConfigurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(
-					METACLASS_REGISTER_ID);
+			IConfigurationElement[] metaclassConfigurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(METACLASS_REGISTER_ID);
 			for (IConfigurationElement configurationElement : metaclassConfigurationElements) {
 				if (METACLASS.equals(configurationElement.getName())) {
 					String componentName = configurationElement.getAttribute(TYPE);
@@ -164,13 +166,26 @@ public class ExtensionService {
 		}
 
 		IConfigurationElement[] commandsConfigurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(COMMANDS_REGISTER_ID);
-		for (IConfigurationElement converterConfigurationElement : commandsConfigurationElements) {
-			if (COMMAND.equals(converterConfigurationElement.getName())) {
+		for (IConfigurationElement commandConfigurationElement : commandsConfigurationElements) {
+			if (COMMAND.equals(commandConfigurationElement.getName())) {
 				// register converters here
-				String commandName = converterConfigurationElement.getAttribute(NAME);
+				String commandName = commandConfigurationElement.getAttribute(NAME);
 				try {
-					ICommand newInstance = (ICommand) converterConfigurationElement.createExecutableExtension(CLASS);
+					ICommand newInstance = (ICommand) commandConfigurationElement.createExecutableExtension(CLASS);
 					XWT.registerCommand(commandName, newInstance);
+				} catch (Exception e) {
+					e.printStackTrace();
+					PDEPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, PDEPlugin.PLUGIN_ID, "Converter registration error", e));
+				}
+			}
+		}
+
+		IConfigurationElement[] stylesConfigurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(STYLES_REGISTER_ID);
+		for (IConfigurationElement styleConfigurationElement : stylesConfigurationElements) {
+			if (STYLE.equals(styleConfigurationElement.getName())) {
+				try {
+					IStyle newInstance = (IStyle) styleConfigurationElement.createExecutableExtension(CLASS);
+					XWT.addDefaultStyle(newInstance);
 				} catch (Exception e) {
 					e.printStackTrace();
 					PDEPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, PDEPlugin.PLUGIN_ID, "Converter registration error", e));

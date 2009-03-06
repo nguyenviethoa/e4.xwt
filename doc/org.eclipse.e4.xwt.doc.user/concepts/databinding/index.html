@@ -15,12 +15,14 @@
 <p></p>
 
 <ul>
-	<li>What is Data Binding?</li>
-	<li>Basic Data Binding Concepts</li>
-	<li>Creating a Data Binding</li>
+	<li><a href="#databinding_01">What is Data Binding?</a></li>
+	<li><a href="#databinding_02">Basic Data Binding Concepts</a></li>
+	<li><a href="#databinding_03">Creating a Data Binding</a></li>
+	<li><a href="#databinding_04">Specifying the path expression of data binding</a></li>
+	<li><a href="#databinding_05">Based on JFace Data binding</a></li>
 </ul>
 
-<h3>What is Data Binding?</h3>
+<h3><a name="databinding_01"></a>What is Data Binding?</h3>
 <p>Data Binding is the process that establishes a connection between
 the application UI and business logic. If the binding has the correct
 settings and the data provides the proper notifications, then, when the
@@ -29,7 +31,7 @@ changes automatically. Data binding can also mean that if an outer
 representation of the data in an element changes, then the underlying
 data can be automatically updated to reflect the change.</p>
 
-<h3>Basic Data Binding Concepts</h3>
+<h3><a name="databinding_02"></a>Basic Data Binding Concepts</h3>
 <p>Regardless of what element you are binding and the nature of your
 data source, each binding always follows the model illustrated by the
 following figure:</p>
@@ -70,11 +72,39 @@ if the binding source provides the proper notifications.</p>
 
 <p>You may want your application to enable users to change the data
 and propagate it back to the source object. Or you may not want to
-enable users to update the source data.</p>
+enable users to update the source data. You can control this by setting
+the Mode property of your Binding object. The following figure
+illustrates the different types of data flow:</p>
+
+<p align="center"><img src="images/databinding_02.png" /></p>
+
+<ul>
+	<li>OneWay binding causes changes to the source property to
+	automatically update the target property, but changes to the target
+	property are not propagated back to the source property. This type of
+	binding is appropriate if the control being bound is implicitly
+	read-only. For instance, you may bind to a source such as a stock
+	ticker or perhaps your target property has no control interface
+	provided for making changes, such as a data-bound background color of a
+	table. If there is no need to monitor the changes of the target
+	property, using the OneWay binding mode avoids the overhead of the
+	TwoWay binding mode.</li>
+	<li>TwoWay binding causes changes to either the source property or
+	the target property to automatically update the other. This type of
+	binding is appropriate for editable forms or other fully-interactive UI
+	scenarios. Most properties default to OneWay binding, but some
+	dependency properties (typically properties of user-editable controls
+	such as the Text property of TextBox and the IsChecked property of
+	CheckBox) default to TwoWay binding. A programmatic way to determine
+	whether a dependency property binds one-way or two-way by default is to
+	get the property metadata of the property using GetMetadata and then
+	check the Boolean value of the BindsTwoWayByDefault property.</li>
+	<li></li>
+	<li></li>
+</ul>
 -->
 
-
-<h3>Creating a Data Binding</h3>
+<h3><a name="databinding_03"></a>Creating a Data Binding</h3>
 
 <p>In XWT project, you establish a data binding using the Binding
 object, and each binding usually has four components: binding target,
@@ -242,6 +272,74 @@ binds the string of Text. When you change the string in Text, the
 content of Label changed synchronously.</p>
 <p><img src="images/" /></p>
 -->
+
+<h3><a name="databinding_04"></a>Specifying the path expression of data binding</h3>
+<p>In XWT, it also support path expression of data binding. If your
+binding source is an object, you use the Path property to specify the
+value to use for your binding. For example, if you want binding the city
+of the manager of a company, which is the data context of the window.
+you can specify the path as "manager.address.city".</p>
+
+<p><img src="images/mac-feature_22.png" /></p>
+
+
+<!-- 
+<h3>Binding to Collections</h3>
+
+<p>A binding source object can be treated either as a single object
+of which the properties contain data or as a data collection of
+polymorphic objects that are often grouped together (such as the result
+of a query to a database). So far we've only discussed binding to single
+objects, however, binding to a data collection is a common scenario. For
+example, a common scenario is to use an ItemsControl such as a
+ListViewer or TableViewer to display a data collection.</p>
+
+ -->
+
+<h3><a name="databinding_05"></a>Based on JFace Data binding</h3>
+
+<p>XWT also support data binding based on JFace. You can use an
+ItemsControl such as ListViewer or TabelViewer to display a data
+collection. Look at the example below, the ListViewer binds a Company
+class which has a employees member with collection type.</p>
+
+<pre>
+<span class="XMLElementTag">&lt;Composite</span> 
+&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLAttrTag">DataContext</span>=<span
+	class="XMLAttrValue">"{StaticResource myCompany}"</span><span
+	class="XMLElementTag">&gt;</span> 
+&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;x:Composite.Resources&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;j:Company</span> <span class="XMLAttrTag">x:Key</span>=<span
+	class="XMLAttrValue">"myCompany"</span><span class="XMLElementTag">&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;j:Company.employees&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;j:Employee</span> <span class="XMLAttrTag">Name</span>=<span
+	class="XMLAttrValue">"Thomas"</span> <span class="XMLElementTag">/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;j:Employee</span> <span class="XMLAttrTag">Name</span>=<span
+	class="XMLAttrValue">"Jin"</span> <span class="XMLElementTag">/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;/j:Company.employees&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;/j:Company&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/x:Composite.Resources&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;ListViewer</span> <span
+	class="XMLAttrTag">input</span>=<span class="XMLAttrValue">"{Binding Path=employees}"</span><span
+	class="XMLElementTag">&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/ListViewer&gt;</span>
+<span class="XMLElementTag">&lt;/Composite&gt;</span>
+</pre>
+
+
+
+
+
+
 
 
 

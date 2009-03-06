@@ -12,7 +12,9 @@ package org.eclipse.e4.xwt;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,7 +38,6 @@ import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
-import org.eclipse.e4.xwt.impl.LoadData;
 import org.eclipse.e4.xwt.impl.LoadingContext;
 import org.eclipse.e4.xwt.impl.NameScope;
 import org.eclipse.e4.xwt.input.ICommand;
@@ -86,6 +87,36 @@ import org.eclipse.swt.widgets.Widget;
  * @author yyang
  */
 public class XWT {
+	/**
+	 * style of type int is used to create SWT element
+	 */
+	public static final String CONTAINER_PROPERTY = "XWT.Container";
+	public static final String INIT_STYLE_PROPERTY = "XWT.Style";
+
+	/**
+	 * Default styles to apply. The value should be a collection or Array of IStyle
+	 * 
+	 */
+	public static final String DEFAULT_STYLES_PROPERTY = "XWT.DefaultStyles";
+
+	/**
+	 * Enabled or disabled the styles. By default, it is enabled
+	 * 
+	 */
+	public static final String DISBALE_STYLES_PROPERTY = "XWT.DisabledStyles";
+
+	/**
+	 * The DataContext to setup in root element
+	 * 
+	 */
+	public static final String DATACONTEXT_PROPERTY = "XWT.DataContext";
+
+	/**
+	 * Resources to associate to root element
+	 * 
+	 */
+	public static final String RESOURCE_DICTIONARY_PROPERTY = "XWT.Resources";
+
 	static Core core = new Core(new ResourceLoaderFactory());
 
 	private static boolean initialized = false;
@@ -95,6 +126,7 @@ public class XWT {
 	private static Set<Tracking> trackingSet = new HashSet<Tracking>();
 	private static Map<String, ICommand> commands = new HashMap<String, ICommand>();
 	private static ILogger logger;
+	private static Collection<IStyle> defaultStyles = new ArrayList<IStyle>();
 
 	/**
 	 * Get the system logger.
@@ -251,21 +283,7 @@ public class XWT {
 	 * 
 	 */
 	static public synchronized Control load(URL file) throws Exception {
-		return load(file, (ResourceDictionary) null);
-	}
-
-	/**
-	 * Load the file content with a DataContext. All widget will be created but they are showed. This method returns the root element. The DataContext will be associated to the root element.
-	 */
-	static public synchronized Control load(URL file, int styles, Object dataContext) throws Exception {
-		return load(null, file, styles, dataContext, null);
-	}
-
-	/**
-	 * Load the file content with a DataContext and a ResourceDictionary. All widget will be created but they are showed. This method returns the root element. The DataContext will be associated to the root element.
-	 */
-	static public synchronized Control load(URL file, int styles, Object dataContext, ResourceDictionary dictionary) throws Exception {
-		return load(null, file, styles, dataContext, dictionary);
+		return loadWithOptions(file, Collections.EMPTY_MAP);
 	}
 
 	/**
@@ -279,105 +297,118 @@ public class XWT {
 	 * Load the file content under a Composite. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
 	static public synchronized Control load(Composite parent, URL file) throws Exception {
-		return load(parent, file, -1, null);
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(CONTAINER_PROPERTY, parent);
+		return loadWithOptions(file, options);
 	}
 
 	/**
 	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
 	static public synchronized Control load(Composite parent, URL file, Object dataContext) throws Exception {
-		return load(parent, file, -1, dataContext);
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(CONTAINER_PROPERTY, parent);
+		options.put(DATACONTEXT_PROPERTY, dataContext);
+		return loadWithOptions(file, options);
 	}
 
 	/**
 	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
 	static public synchronized Control load(Composite parent, Class<?> viewType, Object dataContext) throws Exception {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(CONTAINER_PROPERTY, parent);
+		options.put(DATACONTEXT_PROPERTY, dataContext);
+		return loadWithOptions(viewType, options);
+	}
+
+	static protected Map<String, Object> prepareOptions(Map<String, Object> options) {
+		Boolean disabledStyle = (Boolean) options.get(DISBALE_STYLES_PROPERTY);
+		if (!Boolean.TRUE.equals(disabledStyle)) {
+			Collection<IStyle> defaultStyles = getDefaultStyles();
+			Object styles = options.get(DEFAULT_STYLES_PROPERTY);
+			if (styles != null) {
+				if (styles instanceof IStyle) {
+					defaultStyles.add((IStyle) styles);
+				} else if (styles instanceof Collection) {
+					for (IStyle style : (Collection<IStyle>) styles) {
+						defaultStyles.add(style);
+					}
+				} else if (styles instanceof Object[]) {
+					for (Object element : (Object[]) styles) {
+						if (element instanceof IStyle) {
+							defaultStyles.add((IStyle) element);
+						} else {
+							throw new XWTException("IStyle is expected in [styles] paramters.");
+						}
+					}
+				}
+				options.remove(DEFAULT_STYLES_PROPERTY);
+			}
+			if (!defaultStyles.isEmpty()) {
+				ResourceDictionary dictionary = (ResourceDictionary) options.get(RESOURCE_DICTIONARY_PROPERTY);
+				if (dictionary == null) {
+					dictionary = new ResourceDictionary();
+					if (options == Collections.EMPTY_MAP) {
+						options = new HashMap<String, Object>();
+					}
+					options.put(RESOURCE_DICTIONARY_PROPERTY, dictionary);
+				}
+				dictionary.put(Core.DEFAULT_STYLES_KEY, defaultStyles);
+			}
+		}
+		return options;
+	}
+
+	/**
+	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 */
+	static public synchronized Control loadWithOptions(Class<?> viewType, Map<String, Object> options) throws Exception {
 		ILoadingContext context = getLoadingContext();
 		try {
 			setLoadingContext(new LoadingContext(viewType.getClassLoader()));
-			return load(parent, viewType.getResource(viewType.getSimpleName() + ".xwt"), -1, dataContext);
+			options = prepareOptions(options);
+			return loadWithOptions(viewType.getResource(viewType.getSimpleName() + ".xwt"), options);
 		} finally {
 			setLoadingContext(context);
 		}
 	}
 
 	/**
-	 * Load the file content under a Composite with a style and a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
-	 */
-	static public synchronized Control load(Composite parent, URL file, int styles, Object dataContext) throws Exception {
-		return load(parent, file, -1, dataContext, null);
-	}
-
-	/**
-	 * Load the file content under a Composite with a style, a DataContext and a ResourceDictionary. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
-	 */
-	static public synchronized Control load(Composite parent, URL file, int styles, Object dataContext, ResourceDictionary dictionary) throws Exception {
-		ILoadData loadData = ILoadData.DefaultLoadData;
-		if (dataContext != null || parent != null) {
-			loadData = new LoadData();
-			loadData.setParent(parent);
-			loadData.setDataContext(dataContext);
-		}
-		return load(file, loadData);
-	}
-
-	/**
 	 * Open and show the file content in a new Shell.
 	 */
 	static public synchronized void open(final URL url) throws Exception {
-		open(url, null);
-	}
-
-	/**
-	 * load the file content. The corresponding UI element is not yet created
-	 */
-	static public synchronized Control load(InputStream stream, URL file) throws Exception {
-		return load(stream, file, ILoadData.DefaultLoadData);
-	}
-
-	/**
-	 * load the content from a stream with a given DataContext. The root elements will be hold by Composite parent
-	 */
-	static public synchronized Control load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception {
-		return load(parent, stream, file, -1, dataContext);
-	}
-
-	/**
-	 * load the content from a stream with a style and a DataContext. The root elements will be hold by Composite parent
-	 */
-	static public synchronized Control load(Composite parent, InputStream stream, URL file, int styles, Object dataContext) throws Exception {
-		return load(parent, stream, file, -1, dataContext, null);
+		open(url, Collections.EMPTY_MAP);
 	}
 
 	/**
 	 * load the content from a stream with a style, a DataContext and a ResourceDictionary. The root elements will be hold by Composite parent
 	 */
-	static public synchronized Control load(Composite parent, InputStream stream, URL file, int styles, Object dataContext, ResourceDictionary dictionary) throws Exception {
-		LoadData loadData = new LoadData();
-		loadData.setParent(parent);
-		loadData.setDataContext(dataContext);
-		loadData.setStyles(styles);
-		loadData.setResourceDictionary(dictionary);
-		return load(stream, file, loadData);
+	static public synchronized Control load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(CONTAINER_PROPERTY, parent);
+		options.put(DATACONTEXT_PROPERTY, dataContext);
+		return loadWithOptions(stream, file, options);
 	}
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
 	static public synchronized void open(URL url, Object dataContext) throws Exception {
-		open(url, dataContext, null);
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(DATACONTEXT_PROPERTY, dataContext);
+		open(url, options);
 	}
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public synchronized void open(final URL url, final Object dataContext, final ResourceDictionary dictionary) throws Exception {
+	static public synchronized void open(final URL url, final Map<String, Object> options) throws Exception {
 
 		Realm.runWithDefault(SWTObservables.getRealm(Display.getDefault()), new Runnable() {
 			public void run() {
 				try {
-					Control control = load(url, -1, dataContext, dictionary);
+					Control control = loadWithOptions(url, options);
 					Shell shell = control.getShell();
 					shell.addDisposeListener(new DisposeListener() {
 						public void widgetDisposed(DisposeEvent e) {
@@ -426,12 +457,25 @@ public class XWT {
 		throw new XWTException("Converter is missing of type: " + targetType.getName());
 	}
 
-	static private synchronized Control load(URL url, ILoadData loadData) throws Exception {
+	static public synchronized Control loadWithOptions(URL url, Map<String, Object> options) throws Exception {
 		checkInitialize();
-		Composite object = loadData.getParent();
+		Composite object = (Composite) options.get(XWT.CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object) : getLoadingContext());
-		Control visualObject = core.load(loadingContext, url, loadData);
+		options = prepareOptions(options);
+		Control visualObject = core.load(loadingContext, url, options);
 		return visualObject;
+	}
+
+	/**
+	 * 
+	 * @param stream
+	 * @param url
+	 * @param options
+	 * @return
+	 * @throws Exception
+	 */
+	static public synchronized Control load(InputStream stream, URL url) throws Exception {
+		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
 
 	/**
@@ -443,11 +487,12 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public synchronized Control load(InputStream stream, URL url, ILoadData loadData) throws Exception {
+	static public synchronized Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
 		checkInitialize();
-		Composite object = loadData.getParent();
+		Composite object = (Composite) options.get(XWT.CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object) : getLoadingContext());
-		Control visualObject = core.load(loadingContext, stream, url, loadData);
+		options = prepareOptions(options);
+		Control visualObject = core.load(loadingContext, stream, url, options);
 		return visualObject;
 	}
 
@@ -816,5 +861,29 @@ public class XWT {
 	 */
 	static public void unregisterCommand(String name) {
 		commands.remove(name);
+	}
+
+	/**
+	 * Add a default style
+	 * 
+	 * @param style
+	 * @return
+	 */
+	static public void addDefaultStyle(IStyle style) {
+		defaultStyles.add(style);
+	}
+
+	/**
+	 * Remove a default style
+	 * 
+	 * @param style
+	 * @return
+	 */
+	static public void removeDefaultStyle(IStyle style) {
+		defaultStyles.remove(style);
+	}
+
+	static public Collection<IStyle> getDefaultStyles() {
+		return new ArrayList<IStyle>(defaultStyles);
 	}
 }

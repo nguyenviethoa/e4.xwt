@@ -3,7 +3,7 @@
 	<Composite.layout>
 		<GridLayout numColumns="2" />
 	</Composite.layout>
-	<Group text="Name">
+	<Group x:Name="group" text="Name">
 		<Group.layout>
 			<GridLayout numColumns="2" />
 		</Group.layout>

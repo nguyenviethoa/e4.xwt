@@ -38,6 +38,7 @@ public class Main {
 	 * @throws FileNotFoundException
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException {
+		XWT.addTracking(Tracking.DATABINDING);
 		URL url = Main.class.getResource("main.xwt");
 		try {
 			EPackage.Registry.INSTANCE.put(Demo_modelPackage.eNS_URI, Demo_modelPackage.eINSTANCE);
