@@ -5,20 +5,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.e4.xwt.IStyle;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * <Composite>
- *   <Composite.Resources>
- *      <CSSStyle x:Key="style" url="/test/style.css"/>
- *   </Composite.Resources>
- *   <Label text="Hello"/>
- * </Composite>
+ * <Composite> <Composite.Resources> <CSSStyle x:Key="style" url="/test/style.css"/> </Composite.Resources> <Label text="Hello"/> </Composite>
  */
 public class CCSStyle implements IStyle {
 	protected String url;
@@ -27,6 +21,22 @@ public class CCSStyle implements IStyle {
 	private Object engine;
 	private Display display;
 
+	private Class<?> jfaceViewerClass;
+	private Method getControl;
+
+	public CCSStyle() {
+		this(null);
+	}
+
+	public CCSStyle(String url) {
+		this.url = url;
+		try {
+			jfaceViewerClass = Class.forName("org.eclipse.jface.viewers.Viewer"); //$NON-NLS-1$
+			getControl = jfaceViewerClass.getMethod("getControl");
+		} catch (Throwable e) {
+		}
+	}
+
 	public void initialize(Display display) {
 		if (this.display != null && this.display == display) {
 			return;
@@ -34,7 +44,14 @@ public class CCSStyle implements IStyle {
 		this.display = display;
 		// Instantiate SWT CSS Engine
 		try {
-			Class<?> engineClass = Class.forName("org.eclipse.e4.ui.css.nebula.engine.CSSNebulaEngineImpl"); //$NON-NLS-1$
+			Class<?> engineClass = null;
+
+			try {
+				engineClass = Class.forName("org.eclipse.e4.ui.css.nebula.engine.CSSNebulaEngineImpl"); //$NON-NLS-1$
+			} catch (Throwable e) {
+				engineClass = Class.forName("org.eclipse.e4.ui.css.swt.engine.CSSSWTEngineImpl"); //$NON-NLS-1$
+			}
+
 			Constructor<?> ctor = engineClass.getConstructor(new Class[] { Display.class, Boolean.TYPE });
 			engine = ctor.newInstance(new Object[] { display, Boolean.TRUE });
 			display.setData("org.eclipse.e4.ui.css.core.engine", engine); //$NON-NLS-1$
@@ -44,17 +61,27 @@ public class CCSStyle implements IStyle {
 			Class<?> errorHandlerImplClass = Class.forName("org.eclipse.e4.ui.css.core.impl.engine.CSSErrorHandlerImpl"); //$NON-NLS-1$
 			setErrorHandler.invoke(engine, new Object[] { errorHandlerImplClass.newInstance() });
 
-			URL resolveUrl = FileLocator.resolve(new URL(url));
-			display.setData("org.eclipse.e4.ui.css.core.cssURL", resolveUrl); //$NON-NLS-1$		
+			Method urlResolver = null;
+			try {
+				Class<?> fileLocatorClass = Class.forName("org.eclipse.core.runtime.FileLocator"); //$NON-NLS-1$
+				urlResolver = fileLocatorClass.getMethod("resolve", new Class[] { URL.class }); //$NON-NLS-1$
+			} catch (Throwable e) {
+			}
 
-			InputStream stream = resolveUrl.openStream();
+			URL contentURL = new URL(url);
+			if (urlResolver != null) {
+				contentURL = (URL) urlResolver.invoke(null, new Object[] { contentURL });
+			}
+			display.setData("org.eclipse.e4.ui.css.core.cssURL", contentURL); //$NON-NLS-1$		
+
+			InputStream stream = contentURL.openStream();
 			Method parseStyleSheet = engineClass.getMethod("parseStyleSheet", new Class[] { InputStream.class }); //$NON-NLS-1$
 			parseStyleSheet.invoke(engine, new Object[] { stream });
 			stream.close();
 
 			applyStyles = engineClass.getMethod("applyStyles", new Class[] { Object.class, Boolean.TYPE }); //$NON-NLS-1$
 		} catch (Throwable e) {
-			System.err.println("Warning - could not initialize CSS styling (but the applicationCSS property has a value) : " + e.toString()); //$NON-NLS-1$
+			System.err.println("Warning - could not initialize CSS styling : " + e.toString()); //$NON-NLS-1$
 		}
 	}
 
@@ -78,20 +105,22 @@ public class CCSStyle implements IStyle {
 		if (url == null || url.length() == 0) {
 			return;
 		}
+
 		String name = XWT.getElementName(target);
 		Control control = null;
 		if (target instanceof Control) {
 			control = (Control) target;
-		} else if (target instanceof Viewer) {
-			Viewer viewer = (Viewer) target;
-			control = (Control) viewer.getControl();
+		} else if (getControl != null && jfaceViewerClass.isInstance(target)) {
+			try {
+				control = (Control) getControl.invoke(target);
+			} catch (Throwable e) {
+				throw new XWTException(e);
+			}
 		}
 		if (control != null) {
 			initialize(control.getDisplay());
-			//
-			// 
-			control.setData("org.eclipse.e4.ui.css.CssClassName", name);
 			control.setData("org.eclipse.e4.ui.css.id", name);
+			control.setData("org.eclipse.e4.ui.css.CssClassName", "properties");
 			try {
 				applyStyles.invoke(engine, new Object[] { control, Boolean.FALSE });
 			} catch (Exception e) {
