@@ -20,6 +20,9 @@ public class CCSStyle implements IStyle {
 	private Display display;
 
 	public void initialize(Display display) {
+		if (this.display != null && this.display == display) {
+			return;
+		}
 		this.display = display;
 		// Instantiate SWT CSS Engine
 		try {
@@ -76,9 +79,7 @@ public class CCSStyle implements IStyle {
 			control = (Control) viewer.getControl();
 		}
 		if (control != null) {
-			if (display == null) {
-				initialize(control.getDisplay());
-			}
+			initialize(control.getDisplay());
 			//
 			// 
 			control.setData("org.eclipse.e4.ui.css.CssClassName", name);
