@@ -74,24 +74,23 @@ public class CSSStyle implements IStyle {
 		// Instantiate SWT CSS Engine
 		try {
 			Class<?> engineClass = null;
-
 			try {
-				engineClass = Class.forName("org.eclipse.e4.ui.css.nebula.engine.CSSNebulaEngineImpl"); //$NON-NLS-1$
+				engineClass = loadClass("org.eclipse.e4.ui.css.nebula.engine.CSSNebulaEngineImpl"); //$NON-NLS-1$
 			} catch (Throwable e) {
-				engineClass = Class.forName("org.eclipse.e4.ui.css.swt.engine.CSSSWTEngineImpl"); //$NON-NLS-1$
+				engineClass = loadClass("org.eclipse.e4.ui.css.swt.engine.CSSSWTEngineImpl"); //$NON-NLS-1$
 			}
 
 			Constructor<?> ctor = engineClass.getConstructor(new Class[] { Display.class, Boolean.TYPE });
 			engine = ctor.newInstance(new Object[] { display, Boolean.TRUE });
 
-			Class<?> errorHandlerClass = Class.forName("org.eclipse.e4.ui.css.core.engine.CSSErrorHandler"); //$NON-NLS-1$
+			Class<?> errorHandlerClass = loadClass("org.eclipse.e4.ui.css.core.engine.CSSErrorHandler"); //$NON-NLS-1$
 			Method setErrorHandler = engineClass.getMethod("setErrorHandler", new Class[] { errorHandlerClass }); //$NON-NLS-1$
-			Class<?> errorHandlerImplClass = Class.forName("org.eclipse.e4.ui.css.core.impl.engine.CSSErrorHandlerImpl"); //$NON-NLS-1$
+			Class<?> errorHandlerImplClass = loadClass("org.eclipse.e4.ui.css.core.impl.engine.CSSErrorHandlerImpl"); //$NON-NLS-1$
 			setErrorHandler.invoke(engine, new Object[] { errorHandlerImplClass.newInstance() });
 
 			Method urlResolver = null;
 			try {
-				Class<?> fileLocatorClass = Class.forName("org.eclipse.core.runtime.FileLocator"); //$NON-NLS-1$
+				Class<?> fileLocatorClass = loadClass("org.eclipse.core.runtime.FileLocator"); //$NON-NLS-1$
 				urlResolver = fileLocatorClass.getMethod("resolve", new Class[] { URL.class }); //$NON-NLS-1$
 			} catch (Throwable e) {
 			}
@@ -109,6 +108,14 @@ public class CSSStyle implements IStyle {
 			applyStyles = engineClass.getMethod("applyStyles", new Class[] { Object.class, Boolean.TYPE }); //$NON-NLS-1$
 		} catch (Throwable e) {
 			System.err.println("Warning - could not initialize CSS styling : " + e.toString()); //$NON-NLS-1$
+		}
+	}
+
+	protected Class<?> loadClass(String className) throws ClassNotFoundException {
+		try {
+			return Class.forName(className); //$NON-NLS-1$
+		} catch (ClassNotFoundException e) {
+			return Thread.currentThread().getContextClassLoader().loadClass(className);
 		}
 	}
 
