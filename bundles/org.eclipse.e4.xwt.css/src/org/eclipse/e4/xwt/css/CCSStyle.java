@@ -26,9 +26,9 @@ public class CCSStyle implements IStyle {
 			engine = ctor.newInstance(new Object[] { display, Boolean.TRUE });
 			display.setData("org.eclipse.e4.ui.css.core.engine", engine); //$NON-NLS-1$
 
-			Class errorHandlerClass = Class.forName("org.eclipse.e4.ui.css.core.engine.CSSErrorHandler"); //$NON-NLS-1$
+			Class<?> errorHandlerClass = Class.forName("org.eclipse.e4.ui.css.core.engine.CSSErrorHandler"); //$NON-NLS-1$
 			Method setErrorHandler = engineClass.getMethod("setErrorHandler", new Class[] { errorHandlerClass }); //$NON-NLS-1$
-			Class errorHandlerImplClass = Class.forName("org.eclipse.e4.ui.css.core.impl.engine.CSSErrorHandlerImpl"); //$NON-NLS-1$
+			Class<?> errorHandlerImplClass = Class.forName("org.eclipse.e4.ui.css.core.impl.engine.CSSErrorHandlerImpl"); //$NON-NLS-1$
 			setErrorHandler.invoke(engine, new Object[] { errorHandlerImplClass.newInstance() });
 
 			URL resolveUrl = FileLocator.resolve(new URL(url));
