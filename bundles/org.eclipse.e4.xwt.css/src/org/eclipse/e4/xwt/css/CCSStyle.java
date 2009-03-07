@@ -52,7 +52,15 @@ public class CCSStyle implements IStyle {
 	}
 
 	public void setUrl(String url) {
+		if (this.url == url || (this.url != null && this.url.equals(url))) {
+			return;
+		}
 		this.url = url;
+		reset();
+	}
+
+	protected void reset() {
+		display = null;
 	}
 
 	public void applyStyle(Object target) {
