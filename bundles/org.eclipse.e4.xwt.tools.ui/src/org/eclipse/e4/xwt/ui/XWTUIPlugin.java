@@ -122,7 +122,7 @@ public class XWTUIPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public void openExamlPerspective() {
+	public void openXWTPerspective() {
 		IWorkbench workbench = getWorkbench();
 		int count = workbench.getWorkbenchWindowCount();
 		if (count == 0) {
@@ -139,7 +139,7 @@ public class XWTUIPlugin extends AbstractUIPlugin {
 		try {
 			workbench.showPerspective(XWTPerspectiveFactory.XWT_PERSPECTIVE_ID, window);
 		} catch (WorkbenchException e) {
-			System.out.println("Can't Open EXaml Perspective");
+			System.out.println("Can't Open XWT Perspective");
 		}
 	}
 }

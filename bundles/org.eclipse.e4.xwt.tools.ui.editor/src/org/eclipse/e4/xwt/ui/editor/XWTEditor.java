@@ -123,7 +123,7 @@ public class XWTEditor extends VEXEditor {
 	 */
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
-		XWTUIPlugin.getDefault().openExamlPerspective();
+		XWTUIPlugin.getDefault().openXWTPerspective();
 	}
 
 	@Override
@@ -278,6 +278,7 @@ public class XWTEditor extends VEXEditor {
 					view.setContent(value, file);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				ExceptionHandle.handle(e, "");
 			}
 		}

@@ -87,7 +87,7 @@ public class NewUIFileWizard extends Wizard implements INewWizard {
 	protected void tryToOpenPerspective() {
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				XWTUIPlugin.getDefault().openExamlPerspective();
+				XWTUIPlugin.getDefault().openXWTPerspective();
 			}
 		});
 	}

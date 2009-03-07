@@ -12,10 +12,30 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * <Composite> <Composite.Resources> <CSSStyle x:Key="style" url="/test/style.css"/> </Composite.Resources> <Label text="Hello"/> </Composite>
+ * This class handles the CSS style for XWT element. It can be used in two ways:
+ * <ol>
+ * <ul>
+ * 1. Global style<br/>
+ * XWT.addDefaultStyle()
+ * </ul>
+ * <ul>
+ * 2. Inline style
+ * 
+ * <pre>
+ * &lt;Composite&gt;
+ *   &lt;Composite.Resources&gt;
+ *     &lt;CSSStyle x:Key=&quot;style&quot; url=&quot;/test/style.css&quot;/&gt;
+ *   &lt;/Composite.Resources&gt;
+ *   &lt;Label text=&quot;Hello&quot;/&gt;
+ * &lt;/Composite&gt;
+ * </pre>
+ * 
+ * </ul>
+ * </ol>
  */
 public class CSSStyle implements IStyle {
 	protected URL url;
+	protected String content;
 
 	private Method applyStyles;
 	private Object engine;
@@ -25,11 +45,20 @@ public class CSSStyle implements IStyle {
 	private Method getControl;
 
 	public CSSStyle() {
-		this(null);
+		this((String) null);
 	}
 
 	public CSSStyle(URL url) {
 		this.url = url;
+		try {
+			jfaceViewerClass = Class.forName("org.eclipse.jface.viewers.Viewer"); //$NON-NLS-1$
+			getControl = jfaceViewerClass.getMethod("getControl");
+		} catch (Throwable e) {
+		}
+	}
+
+	public CSSStyle(String content) {
+		this.content = content;
 		try {
 			jfaceViewerClass = Class.forName("org.eclipse.jface.viewers.Viewer"); //$NON-NLS-1$
 			getControl = jfaceViewerClass.getMethod("getControl");
@@ -54,7 +83,6 @@ public class CSSStyle implements IStyle {
 
 			Constructor<?> ctor = engineClass.getConstructor(new Class[] { Display.class, Boolean.TYPE });
 			engine = ctor.newInstance(new Object[] { display, Boolean.TRUE });
-			display.setData("org.eclipse.e4.ui.css.core.engine", engine); //$NON-NLS-1$
 
 			Class<?> errorHandlerClass = Class.forName("org.eclipse.e4.ui.css.core.engine.CSSErrorHandler"); //$NON-NLS-1$
 			Method setErrorHandler = engineClass.getMethod("setErrorHandler", new Class[] { errorHandlerClass }); //$NON-NLS-1$
@@ -72,7 +100,6 @@ public class CSSStyle implements IStyle {
 			if (urlResolver != null) {
 				contentURL = (URL) urlResolver.invoke(null, new Object[] { contentURL });
 			}
-			display.setData("org.eclipse.e4.ui.css.core.cssURL", contentURL); //$NON-NLS-1$		
 
 			InputStream stream = contentURL.openStream();
 			Method parseStyleSheet = engineClass.getMethod("parseStyleSheet", new Class[] { InputStream.class }); //$NON-NLS-1$
@@ -94,6 +121,18 @@ public class CSSStyle implements IStyle {
 			return;
 		}
 		this.url = url;
+		reset();
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		if (this.content == content || (this.content != null && this.content.equals(content))) {
+			return;
+		}
+		this.content = content;
 		reset();
 	}
 
@@ -119,8 +158,9 @@ public class CSSStyle implements IStyle {
 		}
 		if (control != null) {
 			initialize(control.getDisplay());
-			control.setData("org.eclipse.e4.ui.css.id", name);
-			control.setData("org.eclipse.e4.ui.css.CssClassName", "properties");
+			if (name != null) {
+				control.setData("org.eclipse.e4.ui.css.id", name);
+			}
 			try {
 				applyStyles.invoke(engine, new Object[] { control, Boolean.FALSE });
 			} catch (Exception e) {

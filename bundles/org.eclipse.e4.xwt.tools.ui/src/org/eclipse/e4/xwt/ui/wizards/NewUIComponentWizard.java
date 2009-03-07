@@ -42,7 +42,7 @@ public class NewUIComponentWizard extends NewElementWizard {
 		if (res) {
 			tryToOpenResource();
 		}
-		XWTUIPlugin.getDefault().openExamlPerspective();
+		XWTUIPlugin.getDefault().openXWTPerspective();
 		return res;
 	}
 
