@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Display;
  * <Composite> <Composite.Resources> <CSSStyle x:Key="style" url="/test/style.css"/> </Composite.Resources> <Label text="Hello"/> </Composite>
  */
 public class CSSStyle implements IStyle {
-	protected String url;
+	protected URL url;
 
 	private Method applyStyles;
 	private Object engine;
@@ -28,7 +28,7 @@ public class CSSStyle implements IStyle {
 		this(null);
 	}
 
-	public CSSStyle(String url) {
+	public CSSStyle(URL url) {
 		this.url = url;
 		try {
 			jfaceViewerClass = Class.forName("org.eclipse.jface.viewers.Viewer"); //$NON-NLS-1$
@@ -68,7 +68,7 @@ public class CSSStyle implements IStyle {
 			} catch (Throwable e) {
 			}
 
-			URL contentURL = new URL(url);
+			URL contentURL = url;
 			if (urlResolver != null) {
 				contentURL = (URL) urlResolver.invoke(null, new Object[] { contentURL });
 			}
@@ -85,11 +85,11 @@ public class CSSStyle implements IStyle {
 		}
 	}
 
-	public String getUrl() {
+	public URL getUrl() {
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public void setUrl(URL url) {
 		if (this.url == url || (this.url != null && this.url.equals(url))) {
 			return;
 		}
@@ -102,7 +102,7 @@ public class CSSStyle implements IStyle {
 	}
 
 	public void applyStyle(Object target) {
-		if (url == null || url.length() == 0) {
+		if (url == null) {
 			return;
 		}
 
