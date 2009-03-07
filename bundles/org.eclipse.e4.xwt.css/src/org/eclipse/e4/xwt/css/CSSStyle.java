@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * <Composite> <Composite.Resources> <CSSStyle x:Key="style" url="/test/style.css"/> </Composite.Resources> <Label text="Hello"/> </Composite>
  */
-public class CCSStyle implements IStyle {
+public class CSSStyle implements IStyle {
 	protected String url;
 
 	private Method applyStyles;
@@ -24,11 +24,11 @@ public class CCSStyle implements IStyle {
 	private Class<?> jfaceViewerClass;
 	private Method getControl;
 
-	public CCSStyle() {
+	public CSSStyle() {
 		this(null);
 	}
 
-	public CCSStyle(String url) {
+	public CSSStyle(String url) {
 		this.url = url;
 		try {
 			jfaceViewerClass = Class.forName("org.eclipse.jface.viewers.Viewer"); //$NON-NLS-1$
