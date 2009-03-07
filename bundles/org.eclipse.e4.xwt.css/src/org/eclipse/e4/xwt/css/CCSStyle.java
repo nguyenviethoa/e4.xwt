@@ -17,8 +17,10 @@ public class CCSStyle implements IStyle {
 
 	private Method applyStyles;
 	private Object engine;
+	private Display display;
 
 	public void initialize(Display display) {
+		this.display = display;
 		// Instantiate SWT CSS Engine
 		try {
 			Class<?> engineClass = Class.forName("org.eclipse.e4.ui.css.nebula.engine.CSSNebulaEngineImpl"); //$NON-NLS-1$
@@ -54,6 +56,9 @@ public class CCSStyle implements IStyle {
 	}
 
 	public void applyStyle(Object target) {
+		if (url == null || url.length() == 0) {
+			return;
+		}
 		String name = XWT.getElementName(target);
 		Control control = null;
 		if (target instanceof Control) {
@@ -63,6 +68,9 @@ public class CCSStyle implements IStyle {
 			control = (Control) viewer.getControl();
 		}
 		if (control != null) {
+			if (display == null) {
+				initialize(control.getDisplay());
+			}
 			//
 			// 
 			control.setData("org.eclipse.e4.ui.css.CssClassName", name);
