@@ -12,6 +12,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ * <Composite>
+ *   <Composite.Resources>
+ *      <CSSStyle x:Key="style" url="/test/style.css"/>
+ *   </Composite.Resources>
+ *   <Label text="Hello"/>
+ * </Composite>
+ */
 public class CCSStyle implements IStyle {
 	protected String url;
 
