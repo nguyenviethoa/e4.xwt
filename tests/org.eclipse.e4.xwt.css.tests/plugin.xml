@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="tests.contribution1"
+            nameFilter="*.xwt"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="XWT CSS"
+               path="additions"
+               id="org.eclipse.e4.xwt.css.tests.XWT">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Style Open"
+               class="org.eclipse.e4.xwt.css.tests.popup.actions.StyleOpen"
+               menubarPath="org.eclipse.e4.xwt.css.tests.XWT/group1"
+               enablesFor="1"
+               id="org.eclipse.e4.xwt.css.tests.popup.actions.StyleOpen">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
