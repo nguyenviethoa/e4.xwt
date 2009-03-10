@@ -203,20 +203,20 @@ public class ResourceLoader implements IVisualElementLoader {
 						LoggerManager.log(e);
 					}
 				}
-
-				if (loadedObject != null && loadedMethod != null && widget != null) {
-					Event event = new Event();
-					event.doit = true;
-					event.widget = widget;
-					try {
-						loadedMethod.invoke(loadedObject, new Object[] { event });
-					} catch (Exception e) {
-						throw new XWTException("");
-					}
-					loadedObject = null;
-					loadedMethod = null;
-					widget = null;
+			}
+			// Try to invoke loaded event every time?
+			if (loadedObject != null && loadedMethod != null && widget != null) {
+				Event event = new Event();
+				event.doit = true;
+				event.widget = widget;
+				try {
+					loadedMethod.invoke(loadedObject, new Object[] { event });
+				} catch (Exception e) {
+					throw new XWTException("");
 				}
+				loadedObject = null;
+				loadedMethod = null;
+				widget = null;
 			}
 		}
 
@@ -358,38 +358,41 @@ public class ResourceLoader implements IVisualElementLoader {
 				if (swtObject == null) {
 					return null;
 				}
-				// set first data context and resource dictionary
-				setDataContext(metaclass, swtObject, dico, dataContext);
-
-				applyStyles(element, swtObject);
-
-				// get databindingMessages
-				if (dataBindingTrack != null) {
-					dataBindingTrack.tracking(swtObject, element, dataContext);
-				}
 			}
+		}
 
-			// set parent relationship and viewer
-			if (swtObject instanceof Widget) {
+		// set first data context and resource dictionary
+		setDataContext(metaclass, swtObject, dico, dataContext);
+
+		applyStyles(element, swtObject);
+
+		// get databindingMessages
+		if (dataBindingTrack != null) {
+			dataBindingTrack.tracking(swtObject, element, dataContext);
+		}
+
+		// set parent relationship and viewer
+		if (swtObject instanceof Widget) {
+			if (parent != null) {
 				((Widget) swtObject).setData(IUserDataConstants.XWT_PARENT_KEY, parent);
-			} else if (JFacesHelper.isViewer(swtObject)) {
-				Control control = JFacesHelper.getControl(swtObject);
-				control.setData(IUserDataConstants.XWT_PARENT_KEY, parent);
-				control.setData(IUserDataConstants.XWT_VIEWER_KEY, swtObject);
-			} else if (swtObject instanceof TableItemProperty.Cell) {
-				((TableItemProperty.Cell) swtObject).setParent((TableItem) parent);
 			}
+		} else if (JFacesHelper.isViewer(swtObject)) {
+			Control control = JFacesHelper.getControl(swtObject);
+			control.setData(IUserDataConstants.XWT_PARENT_KEY, parent);
+			control.setData(IUserDataConstants.XWT_VIEWER_KEY, swtObject);
+		} else if (swtObject instanceof TableItemProperty.Cell) {
+			((TableItemProperty.Cell) swtObject).setParent((TableItem) parent);
+		}
 
-			for (String key : options.keySet()) {
-				if (XWT.CONTAINER_PROPERTY.equalsIgnoreCase(key) || XWT.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || XWT.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || XWT.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
-					continue;
-				}
-				IProperty property = metaclass.findProperty(key);
-				if (property == null) {
-					throw new XWTException("Property " + key + " not found.");
-				}
-				property.setValue(swtObject, options.get(key));
+		for (String key : options.keySet()) {
+			if (XWT.CONTAINER_PROPERTY.equalsIgnoreCase(key) || XWT.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || XWT.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || XWT.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
+				continue;
 			}
+			IProperty property = metaclass.findProperty(key);
+			if (property == null) {
+				throw new XWTException("Property " + key + " not found.");
+			}
+			property.setValue(swtObject, options.get(key));
 		}
 		if (scopedObject == null && swtObject instanceof Widget) {
 			scopedObject = swtObject;
@@ -469,6 +472,9 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 
 			Attribute attribute = element.getAttribute(IConstants.XAML_RESOURCES);
+			if (attribute == null) {
+				attribute = element.getAttribute(IConstants.XWT_NAMESPACE, IConstants.XAML_RESOURCES);
+			}
 			if (attribute != null) {
 				for (DocumentObject doc : attribute.getChildren()) {
 					Element elem = (Element) doc;
@@ -534,7 +540,6 @@ public class ResourceLoader implements IVisualElementLoader {
 				continue;
 			}
 		}
-
 	}
 
 	protected Object getDataContext(Element element, Widget swtObject) {

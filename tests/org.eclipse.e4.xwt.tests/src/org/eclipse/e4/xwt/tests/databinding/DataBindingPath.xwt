@@ -9,9 +9,9 @@
 		<GridLayout numColumns="3"/>
 	</Shell.layout>
 	
-	<x:Shell.Resources>
+	<Shell.Resources>
 		<y:Company x:Key="myData"/>
-	</x:Shell.Resources>
+	</Shell.Resources>
 	
 	<Label text="Name"/>
 	<Text x:style="BORDER" text="{Binding Path=manager.address.city}">

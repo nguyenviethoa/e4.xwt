@@ -8,32 +8,23 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.style.java;
+package org.eclipse.e4.xwt.tests.style.css;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.css.CSSStyle;
 
-public class LoadingStyle {
-
-	/**
-	 * Style is provided in loading. The style is applied only on this file.
-	 * 
-	 * @param args
-	 */
+public class HelloWorld {
 	public static void main(String[] args) {
-
-		URL url = LoadingStyle.class.getResource("Style" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = HelloWorld.class.getResource(HelloWorld.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
-			Map<String, Object> options = new HashMap<String, Object>();
-			options.put(XWT.DEFAULT_STYLES_PROPERTY, new GreenStyle());
-			XWT.open(url, options);
+			URL cssURL = HelloWorld.class.getResource("style.css");			
+			XWT.addDefaultStyle(new CSSStyle(cssURL));			
+			XWT.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 }

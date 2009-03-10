@@ -10,12 +10,12 @@
 	    		<Button text="Item1"/>	
     		</ExpandItem.control>
     	</ExpandItem>
-    	<ExpandItem text="A label add for item1">
+    	<ExpandItem text="A label add for item1" expanded="true" >
     		<ExpandItem.control>
     			<Label text="Item2"/>	
     		</ExpandItem.control>
     	</ExpandItem>
-    	<ExpandItem text="A text add for item1">
+    	<ExpandItem text="A text add for item1" >
     		<ExpandItem.control>
 	    		<Text x:style="BORDER" text="Item3"/>	
     		</ExpandItem.control>
