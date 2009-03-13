@@ -1,0 +1,35 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt"
+	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding.dataprovider"
+	Size="400, 300">
+	<Shell.layout>
+		<GridLayout numColumns="2"/>
+	</Shell.layout>
+	
+	<Shell.Resources>
+		<ObjectDataProvider x:Key="myBook" ObjectType="{x:Type y:Bookstore}" MethodName="getFirstBook">
+		</ObjectDataProvider>
+	</Shell.Resources>
+	
+	<Label text="Title Language"/>
+	<Text x:style="BORDER" text="{Binding Source={StaticResource myBook}, Path=title.lang}">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Text.layoutData>
+	</Text>
+	<Label text="Title"/>
+	<Text x:style="BORDER" text="{Binding Source={StaticResource myBook}, Path=title}">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Text.layoutData>
+	</Text>
+	<Label text="Price"/>
+	<Text x:style="BORDER" text="{Binding Source={StaticResource myBook}, Path=price}">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Text.layoutData>
+	</Text>
+</Shell>

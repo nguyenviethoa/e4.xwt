@@ -36,6 +36,10 @@ import org.eclipse.e4.xwt.converters.StringToIntArray;
 import org.eclipse.e4.xwt.converters.StringToInteger;
 import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
+import org.eclipse.e4.xwt.converters.StringToURL;
+import org.eclipse.e4.xwt.dataproviders.IDataProvider;
+import org.eclipse.e4.xwt.dataproviders.impl.ObjectDataProvider;
+import org.eclipse.e4.xwt.dataproviders.impl.XmlDataProvider;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.impl.LoadingContext;
@@ -127,6 +131,8 @@ public class XWT {
 	private static Map<String, ICommand> commands = new HashMap<String, ICommand>();
 	private static ILogger logger;
 	private static Collection<IStyle> defaultStyles = new ArrayList<IStyle>();
+
+	private static Collection<IDataProvider> dataProviders = new ArrayList<IDataProvider>();
 
 	/**
 	 * Get the system logger.
@@ -656,6 +662,7 @@ public class XWT {
 		XWT.registerConvertor(new StringToImage());
 		XWT.registerConvertor(new StringToPoint());
 		XWT.registerConvertor(new StringToRectangle());
+		XWT.registerConvertor(new StringToURL());
 
 		Class<?> type = org.eclipse.swt.browser.Browser.class;
 		Metaclass browserMetaclass = (Metaclass) XWT.registerMetaclass(type);
@@ -769,6 +776,9 @@ public class XWT {
 
 		XWT.registerMetaclass(DefaultCellModifier.class);
 		XWT.registerMetaclass(DefaultLabelProvider.class);
+
+		XWT.registerMetaclass(XmlDataProvider.class);
+		XWT.registerMetaclass(ObjectDataProvider.class);
 	}
 
 	public static ILoadingContext findLoadingContext(Object container) {
@@ -895,5 +905,27 @@ public class XWT {
 
 	static public Collection<IStyle> getDefaultStyles() {
 		return new ArrayList<IStyle>(defaultStyles);
+	}
+
+	public static void addDataProvider(IDataProvider dataProvider) {
+		if (dataProvider == null) {
+			return;
+		}
+		if (!dataProviders.contains(dataProvider)) {
+			dataProviders.add(dataProvider);
+		}
+	}
+
+	public static void removeDataProvider(IDataProvider dataProvider) {
+		if (dataProvider == null) {
+			return;
+		}
+		if (dataProviders.contains(dataProvider)) {
+			dataProviders.remove(dataProvider);
+		}
+	}
+
+	public static Collection<IDataProvider> getDataProviders() {
+		return dataProviders;
 	}
 }

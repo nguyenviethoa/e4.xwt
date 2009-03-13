@@ -10,33 +10,19 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.databinding.AbstractDataBinding;
+import org.eclipse.e4.xwt.databinding.DataProviderBinding;
+import org.eclipse.e4.xwt.databinding.JavaBeanBinding;
+import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
-import org.eclipse.e4.xwt.utils.LoggerManager;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.viewers.ViewerColumn;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -45,9 +31,8 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class BindingMetaclass extends Metaclass {
 
-	private static final Map<Object, BindingContext> bindingContext = new HashMap<Object, BindingContext>();
-
 	public static class Binding implements IBinding {
+		private String xPath;
 		private String path;
 		private Object source;
 
@@ -83,6 +68,14 @@ public class BindingMetaclass extends Metaclass {
 			this.elementName = elementName;
 		}
 
+		public void setXPath(String xPath) {
+			this.xPath = xPath;
+		}
+
+		public String getXPath() {
+			return xPath;
+		}
+
 		protected Object getSourceObject() {
 			if (source instanceof IBinding) {
 				return ((IBinding) source).getValue();
@@ -103,101 +96,50 @@ public class BindingMetaclass extends Metaclass {
 			if (data != null) {
 				return data;
 			}
-
 			return XWT.getDataContext(control);
+		}
+
+		private ResourceDictionary getResourceDictionary(Widget widget) {
+			ResourceDictionary data = (ResourceDictionary) widget.getData(IUserDataConstants.XWT_RESOURCES_KEY);
+			Widget parent = widget;
+			while ((data == null || data.isEmpty()) && (parent = (Widget) parent.getData(IUserDataConstants.XWT_PARENT_KEY)) != null)
+				data = (ResourceDictionary) ((Widget) parent).getData(IUserDataConstants.XWT_RESOURCES_KEY);
+			return data;
 		}
 
 		public Object getValue() {
 			Object dataContext = getSourceObject();
-			if (dataContext == null) {
-				return null;
+			AbstractDataBinding dataBinding = null;
+			if (dataContext != null && path != null) {
+				dataBinding = new JavaBeanBinding(dataContext, control, path);
+			} else {
+				dataContext = getDataProvider();
+				if (dataContext != null && (path != null || xPath != null)) {
+					dataBinding = new DataProviderBinding((IDataProvider) dataContext, control, xPath != null ? xPath : path);
+				}
 			}
-			if (path != null) {
-				java.util.List<Object> dataContexts = new ArrayList<Object>();
-				dataContexts.add(dataContext);
-				String[] paths = path.trim().split("\\.");
-				IObservableValue observeData = null;
-				String propertyName = null;
-				if (paths.length > 1) {
-					for (int i = 0; i < paths.length - 1; i++) {
-						String path = paths[i];
-						if (dataContext != null) {
-							bindingContext.put(dataContext, new BindingContext(dataContext));
-							dataContext = getObserveData(dataContext, path);
-							dataContexts.add(dataContext);
-						}
-					}
-					propertyName = paths[paths.length - 1];
-				} else if (paths.length == 1) {
-					propertyName = path;
-				}
-				observeData = BeansObservables.observeValue(dataContext, propertyName);
-
-				final IObservableValue observeWidget = createObservable(control);
-				if (observeWidget != null) {
-					DataBindingContext bindingContext = new DataBindingContext();
-					bindingContext.bindValue(observeWidget, observeData, null, null);
-				}
-				BindingContext bc = new BindingContext(dataContext);
-				bc.observeValue = observeData;
-				bc.observeWidget = observeWidget;
-				bc.propertyName = propertyName;
-				bindingContext.put(dataContext, bc);
-				// addDataContextListener(observeWidget, path, dataContexts, observeData);
-				return observeData.getValue();
+			if (dataBinding != null) {
+				return dataBinding.getValue();
 			}
 			return dataContext;
 		}
 
-		// private void addDataContextListener(IObservableValue observeWidget, String path, java.util.List<Object> dataContexts, IObservableValue observeData) {
-		// DataContextChangeListener propertyChangeListener = new DataContextChangeListener(observeWidget, path, dataContexts, observeData);
-		// for (Object dataContext : dataContexts) {
-		// Class<?> dataContextClass = dataContext.getClass();
-		// Field[] fields = dataContextClass.getDeclaredFields();
-		// try {
-		// Method addListenerMethod = dataContextClass.getDeclaredMethod("addPropertyChangeListener", new Class[] { String.class, PropertyChangeListener.class });
-		// for (Field field : fields) {
-		// if (!PropertyChangeSupport.class.equals(field.getType())) {
-		// addListenerMethod.invoke(dataContext, new Object[] { field.getName(), propertyChangeListener });
-		// }
-		// }
-		// } catch (Exception e) {
-		// LoggerManager.log(e);
-		// }
-		// }
-		// }
-
-		private Object getObserveData(Object dataContext, String path) {
-			try {
-				Class<?> dataContextClass = dataContext.getClass();
-				String getMethiodName = "get" + path.substring(0, 1).toUpperCase() + path.substring(1);
-				Method getMethod = dataContextClass.getDeclaredMethod(getMethiodName, new Class[] {});
-				if (getMethod != null) {
-					return getMethod.invoke(dataContext, new Object[] {});
+		private Object getDataProvider() {
+			if (control != null) {
+				ResourceDictionary rd = getResourceDictionary(control);
+				if (rd == null || rd.isEmpty()) {
+					return null;
 				}
-			} catch (SecurityException e) {
-				LoggerManager.log(e);
-			} catch (NoSuchMethodException e) {
-				LoggerManager.log(e);
-			} catch (IllegalArgumentException e) {
-				LoggerManager.log(e);
-			} catch (IllegalAccessException e) {
-				LoggerManager.log(e);
-			} catch (InvocationTargetException e) {
-				LoggerManager.log(e);
+				for (String key : rd.keySet()) {
+					Object object = rd.get(key);
+					if (object instanceof IDataProvider && key.equals(((IDataProvider) object).getKey())) {
+						return object;
+					}
+				}
 			}
 			return null;
 		}
 
-		private ISWTObservableValue createObservable(Widget widget) {
-			if (widget instanceof Text)
-				return SWTObservables.observeText((Text) widget, SWT.Modify);
-			if (widget instanceof Label)
-				return SWTObservables.observeText((Label) widget);
-			if (widget instanceof Combo)
-				return SWTObservables.observeText((Combo) widget);
-			return null;
-		}
 	}
 
 	public BindingMetaclass() {
@@ -221,104 +163,4 @@ public class BindingMetaclass extends Metaclass {
 		return newInstance;
 	}
 
-	static class BindingContext {
-		String propertyName;
-		Object source;
-		IObservableValue observeValue;
-		IObservableValue observeWidget;
-
-		public BindingContext(Object source) {
-			this.source = source;
-			addListener(source);
-		}
-
-		public void setNewValue(Object newValue) {
-			if (newValue != null && newValue.getClass() == source.getClass() && observeValue != null && propertyName != null && observeWidget != null) {
-
-				Field[] fields = source.getClass().getDeclaredFields();
-				for (Field field : fields) {
-					Object oldPropertyValue = getPropertyValue(source, field.getName());
-					Object newPropertyValue = getPropertyValue(newValue, field.getName());
-					if (oldPropertyValue != null && oldPropertyValue != newPropertyValue) {
-						BindingContext bc = bindingContext.get(oldPropertyValue);
-						if (bc != null) {
-							bc.setNewValue(newPropertyValue);
-						}
-					}
-				}
-
-				observeValue = BeansObservables.observeValue(newValue, propertyName);
-				addListener(newValue);
-				source = newValue;
-				bindingContext.put(source, this);
-				if (observeWidget != null) {
-					DataBindingContext bindingContext = new DataBindingContext();
-					bindingContext.bindValue(observeWidget, observeValue, null, null);
-				}
-			}
-		}
-
-		private Object getPropertyValue(Object object, String propertyName) {
-			String getMethodName = "get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
-			try {
-				Method getMethod1 = object.getClass().getDeclaredMethod(getMethodName, new Class[] {});
-				if (getMethod1 != null) {
-					return getMethod1.invoke(object, new Object[] {});
-				}
-			} catch (Exception e) {
-			}
-			return null;
-		}
-
-		private void applyNewValue(Object oldValue, Object newValue) {
-			BindingContext bc = bindingContext.get(oldValue);
-			if (bc == null) {
-				if (oldValue.getClass() == newValue.getClass() && oldValue.getClass() != String.class) {
-					// children, ...
-					Field[] fields = oldValue.getClass().getDeclaredFields();
-					for (Field field : fields) {
-						Object oldPropertyValue = getPropertyValue(oldValue, field.getName());
-						Object newPropertyValue = getPropertyValue(newValue, field.getName());
-						if (oldPropertyValue != null && oldPropertyValue != newPropertyValue) {
-							applyNewValue(oldPropertyValue, newPropertyValue);
-						}
-					}
-				}
-				return;
-			}
-			bc.setNewValue(newValue);
-		}
-
-		public void addListener(Object dataContext) {
-			if (dataContext == null) {
-				return;
-			}
-			PropertyChangeListener p = new PropertyChangeListener() {
-				public void propertyChange(java.beans.PropertyChangeEvent evt) {
-					Object oldValue = evt.getOldValue();
-					Object newValue = evt.getNewValue();
-					if (oldValue == newValue) {
-						return;
-					}
-					applyNewValue(oldValue, newValue);
-				}
-			};
-
-			Class<?> dataContextClass = dataContext.getClass();
-			Field[] fields = dataContextClass.getDeclaredFields();
-			try {
-				Method addListenerMethod = dataContextClass.getDeclaredMethod("addPropertyChangeListener", new Class[] { String.class, PropertyChangeListener.class });
-				try {
-					for (Field field : fields) {
-						if (!PropertyChangeSupport.class.equals(field.getType())) {
-							addListenerMethod.invoke(dataContext, new Object[] { field.getName(), p });
-						}
-					}
-				} catch (Exception e) {
-					LoggerManager.log(e);
-				}
-			} catch (Exception e) {
-			}
-		}
-	}
 }

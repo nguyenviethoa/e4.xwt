@@ -8,13 +8,21 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.tests.databinding.dataprovider.xml;
 
-/**
- * A Data Binding provider defines the nature of Data Binding such as Bean Object Binding, EMF Object Binding, XML data Binding or Data Base binding
- * 
- * @author yyang
- */
-public interface IDataBindingProvider {
+import java.net.URL;
 
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
+
+public class XmlDataProvider_Source {
+	public static void main(String[] args) {
+
+		URL url = XmlDataProvider_Source.class.getResource(XmlDataProvider_Source.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

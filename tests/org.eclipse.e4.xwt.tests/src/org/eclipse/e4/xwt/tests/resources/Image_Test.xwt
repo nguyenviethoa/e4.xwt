@@ -4,6 +4,6 @@
 	<Shell.layout>
 		<GridLayout numColumns="1"/>
 	</Shell.layout>
-	<Label x:style="BORDER" Image="D:\\demo.gif"/>
+	<Label x:style="BORDER" Image="D:\demo.gif"/>
 	<Button text="Hello SWT: " Image="/demo.gif"/>
 </Shell>

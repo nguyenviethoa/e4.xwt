@@ -60,6 +60,8 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 
 	protected HashMap<String, String> namespaceMapping = new HashMap<String, String>();
 
+	private boolean needNormalizeName = true;
+
 	/**
 	 * Parse the XAML extension Markup: {StaticResource test} {StaticResource RessourceKey=test} {DynamicResource {x:Static SystemColors.ControlBrushKey}}
 	 * 
@@ -183,6 +185,9 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 				} else {
 					if (token.equals("=")) {
 						equals = true;
+						if ("xpath".equalsIgnoreCase(attributeName)) {
+							attributeValue = tokenizer.nextToken(",");
+						}
 						continue;
 					}
 					if (token.equals(",")) {
@@ -433,7 +438,9 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 
 		namespace = normalizeNamespace(namespace);
 		name = normalizeName(name);
-
+		if (name.equalsIgnoreCase("xdata")) {
+			needNormalizeName = false;
+		}
 		// Check the reference element.
 		String id = getDefaultAttribute(attrs, "id");
 		String refID = null;
@@ -542,6 +549,10 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 
 			// Post the element registration.
 			elementManager.postElement((Element) element);
+		}
+
+		if (name.equalsIgnoreCase("xdata")) {
+			needNormalizeName = true;
 		}
 	}
 
@@ -687,7 +698,9 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	 * @return the normalized tag name.
 	 */
 	private String normalizeName(String tagName) {
-
+		if (!needNormalizeName) {
+			return tagName;
+		}
 		StringBuffer buffer = new StringBuffer();
 
 		boolean isH = false;

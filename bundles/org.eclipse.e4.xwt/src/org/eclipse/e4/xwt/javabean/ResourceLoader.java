@@ -37,6 +37,7 @@ import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTMaps;
+import org.eclipse.e4.xwt.dataproviders.IXmlDataProvider;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IDataContextControl;
@@ -287,7 +288,20 @@ public class ResourceLoader implements IVisualElementLoader {
 		Object dataContext = options.get(XWT.DATACONTEXT_PROPERTY);
 		String name = element.getName();
 		String namespace = element.getNamespace();
-		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace) && IConstants.XAML_X_NULL.equalsIgnoreCase(name)) {
+		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)) {
+			if (IConstants.XAML_X_NULL.equalsIgnoreCase(name)) {
+				return null;
+			}
+			if ("Type".equalsIgnoreCase(name) && constraintType != null && constraintType == Class.class) {
+				DocumentObject[] children = element.getChildren();
+				if (children != null && children[0] instanceof Element) {
+					Element type = (Element) children[0];
+					IMetaclass metaclass = XWT.getMetaclass(type.getName(), type.getNamespace());
+					if (metaclass != null) {
+						return metaclass.getType();
+					}
+				}
+			}
 			return null;
 		}
 		IMetaclass metaclass = XWT.getMetaclass(name, namespace);
@@ -385,7 +399,8 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 
 		for (String key : options.keySet()) {
-			if (XWT.CONTAINER_PROPERTY.equalsIgnoreCase(key) || XWT.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || XWT.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || XWT.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
+			if (XWT.CONTAINER_PROPERTY.equalsIgnoreCase(key) || XWT.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || XWT.DATACONTEXT_PROPERTY.equalsIgnoreCase(key)
+					|| XWT.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
 			IProperty property = metaclass.findProperty(key);
@@ -425,12 +440,46 @@ public class ResourceLoader implements IVisualElementLoader {
 					((Control) editor).setData(PropertiesConstants.DATA_CONTROLEDITOR_OF_CONTROL, swtObject);
 				}
 			}
+		} else if (swtObject instanceof IXmlDataProvider) {
+			for (DocumentObject doc : element.getChildren()) {
+				if ("XData".equalsIgnoreCase(doc.getName()) && IConstants.XWT_X_NAMESPACE.equals(doc.getNamespace())) {
+					String content = getDocContent(doc);
+					if (content != null) {
+						((IXmlDataProvider) swtObject).setXDataContent(content);
+					}
+				}
+			}
 		}
 		for (String delayed : delayedAttributes) {
 			initAttribute(metaclass, swtObject, element, null, delayed);
 		}
 		popStack();
 		return swtObject;
+	}
+
+	private String getDocContent(DocumentObject object) {
+		String content = object.getContent();
+		if (content != null) {
+			return content;
+		}
+		StringBuilder sb = new StringBuilder();
+		DocumentObject[] children = object.getChildren();
+		for (int i = 0; i < children.length; i++) {
+			String name = children[i].getName();
+			sb.append("<");
+			sb.append(name + " ");
+			if (children[i] instanceof Element) {
+				String[] attributeNames = ((Element) children[i]).attributeNames();
+				for (String attrName : attributeNames) {
+					sb.append(attrName + "=\"");
+					sb.append(((Element) children[i]).getAttribute(attrName).getContent() + "\"");
+				}
+			}
+			sb.append(">");
+			sb.append(getDocContent(children[i]));
+			sb.append("</" + name + ">");
+		}
+		return content = sb.toString();
 	}
 
 	private void setDataContext(IMetaclass metaclass, Object swtObject, ResourceDictionary dico, Object dataContext) throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
@@ -997,6 +1046,9 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (contentValue != null && ("Image".equalsIgnoreCase(attrName) || "BackgroundImage".equalsIgnoreCase(attrName))) {
 				contentValue = getImagePath(attribute, contentValue);
 			}
+			if (contentValue != null && "Source".equalsIgnoreCase(attrName) && target instanceof IXmlDataProvider) {
+				contentValue = getSourceURL(contentValue);
+			}
 			Object value = null;
 			DocumentObject[] children = attribute.getChildren();
 			if (contentValue == null) {
@@ -1081,6 +1133,34 @@ public class ResourceLoader implements IVisualElementLoader {
 		} catch (Exception e) {
 			LoggerManager.log(e);
 		}
+	}
+
+	/**
+	 * @param contentValue
+	 * @return
+	 */
+	private String getSourceURL(String contentValue) {
+		URL url = null;
+		try {
+			url = new URL(contentValue);
+		} catch (MalformedURLException e) {
+			if (!contentValue.startsWith("/")) {
+				contentValue = "/" + contentValue;
+			}
+			ILoadingContext loadingContext = context.getLoadingContext();
+			URL resource = loadingContext.getClassLoader().getResource(contentValue);
+			if (resource == null) {
+				try {
+					resource = new URL(context.getResourcePath() + contentValue);
+				} catch (MalformedURLException e1) {
+				}
+			}
+			return resource.toString();
+		}
+		if (url != null) {
+			return url.toString();
+		}
+		return contentValue;
 	}
 
 	protected Class<?> getJavaType(DocumentObject element) {
@@ -1187,14 +1267,26 @@ public class ResourceLoader implements IVisualElementLoader {
 				String prefix = strContent.substring(0, position);
 				strContent = removeSubString(strContent, prefix + ":");
 			}
-			StyleSetterMap setterMap = new StyleSetterMap(strContent);
+			Map<String, String> contents = new HashMap<String, String>();
 			for (DocumentObject docs : element.getChildren()) {
 				Element setter = (Element) docs;
-				String setterProperty = setter.getAttribute("Property").getContent();
-				String setterValue = setter.getAttribute("Value").getContent();
-				setterMap.put(setterProperty, setterValue);
+				Attribute attribute = setter.getAttribute("Property");
+				if (attribute == null) {
+					continue; // Not for styles, maybe here are the codes of define databindings,
+				}
+				String setterProperty = attribute.getContent();
+				attribute = setter.getAttribute("Value");
+				if (attribute == null) {
+					continue;// Not for styles
+				}
+				String setterValue = attribute.getContent();
+				contents.put(setterProperty, setterValue);
 			}
-			dico.put(strContent, setterMap);
+			if (!contents.isEmpty()) {
+				StyleSetterMap setterMap = new StyleSetterMap(strContent);
+				setterMap.putAll(contents);
+				dico.put(strContent, setterMap);
+			}
 		}
 	}
 

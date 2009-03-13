@@ -1,0 +1,31 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt"
+	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding"
+	Size="400, 300">
+	<Shell.layout>
+		<GridLayout numColumns="3"/>
+	</Shell.layout>
+	
+	<Shell.Resources>
+		<XmlDataProvider x:Key="myBooks" XPath="/bookstore">
+    		<x:XData>
+    		<bookstore>
+       			<book category="COOKING">
+					<title lang="en">Everyday Italian</title>
+					<author>Giada De Laurentiis</author>
+					<year>2005</year>
+					<price>30.00</price>
+				</book>
+    		</bookstore>
+    		</x:XData>
+		</XmlDataProvider>
+	</Shell.Resources>
+	
+	<Label text="Name"/>
+	<Text x:style="BORDER" text="{Binding Source={StaticResource myBooks}, XPath=book/title/text()}">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Text.layoutData>
+	</Text>
+</Shell>
