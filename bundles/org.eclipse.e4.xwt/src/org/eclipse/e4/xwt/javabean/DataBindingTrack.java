@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
@@ -147,12 +146,7 @@ public class DataBindingTrack {
 								dataContext2 = getObserveData(dataContext2, path1);
 							}
 						}
-						BeansObservables.observeValue(dataContext2, paths[paths.length - 1]);
-					} else if (paths.length == 1) {
-						BeansObservables.observeValue(dataContext2, path);
 					}
-				} else {
-
 				}
 			} catch (Exception ex) {
 				addErrorWidgetId(element.getParent().getParent().getId());
@@ -183,7 +177,7 @@ public class DataBindingTrack {
 		}
 	}
 
-	private Object getObserveData(Object dataContext, String path) {
+	public static Object getObserveData(Object dataContext, String path) {
 		try {
 			Class<?> dataContextClass = dataContext.getClass();
 			String getMethiodName = "get" + path.substring(0, 1).toUpperCase() + path.substring(1);

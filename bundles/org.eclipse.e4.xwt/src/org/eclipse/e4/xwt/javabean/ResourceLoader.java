@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IIndexedElement;
@@ -47,6 +48,7 @@ import org.eclipse.e4.xwt.impl.IVisualElementLoader;
 import org.eclipse.e4.xwt.impl.NameScope;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
+import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass.Binding;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
@@ -381,6 +383,40 @@ public class ResourceLoader implements IVisualElementLoader {
 		applyStyles(element, swtObject);
 
 		// get databindingMessages
+		if (swtObject instanceof Binding) {
+			//
+			// TODO To move in ObjectDataProvider
+			//
+			Binding newInstance = (Binding) swtObject;
+			String path = null;
+			Attribute attr = element.getAttribute("Path");
+			if (null == attr)
+				attr = element.getAttribute("path");
+			if (null != attr)
+				path = attr.getContent();
+			Object dataContext2 = null;
+			try {
+				dataContext2 = newInstance.getValue();
+				if (path != null && path.length() > 0) {
+					String[] paths = path.trim().split("\\.");
+					if (paths.length > 1) {
+						String path1 = "";
+						for (int i = 0; i < paths.length - 1; i++) {
+							path1 = paths[i];
+							if (dataContext2 != null) {
+								dataContext2 = DataBindingTrack.getObserveData(dataContext2, path1);
+							}
+						}
+						BeansObservables.observeValue(dataContext2, paths[paths.length - 1]);
+					} else if (paths.length == 1) {
+						BeansObservables.observeValue(dataContext2, path);
+					}
+				}
+			} catch (Exception ex) {
+				LoggerManager.log(ex);
+			}
+		}
+
 		if (dataBindingTrack != null) {
 			dataBindingTrack.tracking(swtObject, element, dataContext);
 		}
@@ -399,8 +435,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 
 		for (String key : options.keySet()) {
-			if (XWT.CONTAINER_PROPERTY.equalsIgnoreCase(key) || XWT.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || XWT.DATACONTEXT_PROPERTY.equalsIgnoreCase(key)
-					|| XWT.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
+			if (XWT.CONTAINER_PROPERTY.equalsIgnoreCase(key) || XWT.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || XWT.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || XWT.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
 			IProperty property = metaclass.findProperty(key);
