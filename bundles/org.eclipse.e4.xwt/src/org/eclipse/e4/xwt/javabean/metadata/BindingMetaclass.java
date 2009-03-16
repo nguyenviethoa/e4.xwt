@@ -113,7 +113,9 @@ public class BindingMetaclass extends Metaclass {
 			if (dataContext != null && path != null) {
 				dataBinding = new JavaBeanBinding(dataContext, control, path);
 			} else {
-				dataContext = getDataProvider();
+				if (dataContext == null) {
+					dataContext = getDataProvider();
+				}
 				if (dataContext != null && (path != null || xPath != null)) {
 					dataBinding = new DataProviderBinding((IDataProvider) dataContext, control, xPath != null ? xPath : path);
 				}
