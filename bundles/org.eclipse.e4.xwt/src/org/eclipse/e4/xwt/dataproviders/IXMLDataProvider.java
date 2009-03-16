@@ -15,7 +15,7 @@ import java.net.URL;
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public interface IXmlDataProvider extends IDataProvider {
+public interface IXMLDataProvider extends IDataProvider {
 
 	void setSource(URL xmlSource);
 

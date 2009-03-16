@@ -39,7 +39,7 @@ import org.eclipse.e4.xwt.converters.StringToRectangle;
 import org.eclipse.e4.xwt.converters.StringToURL;
 import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.e4.xwt.dataproviders.impl.ObjectDataProvider;
-import org.eclipse.e4.xwt.dataproviders.impl.XmlDataProvider;
+import org.eclipse.e4.xwt.dataproviders.impl.XMLDataProvider;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.impl.LoadingContext;
@@ -777,7 +777,7 @@ public class XWT {
 		XWT.registerMetaclass(DefaultCellModifier.class);
 		XWT.registerMetaclass(DefaultLabelProvider.class);
 
-		XWT.registerMetaclass(XmlDataProvider.class);
+		XWT.registerMetaclass(XMLDataProvider.class);
 		XWT.registerMetaclass(ObjectDataProvider.class);
 	}
 

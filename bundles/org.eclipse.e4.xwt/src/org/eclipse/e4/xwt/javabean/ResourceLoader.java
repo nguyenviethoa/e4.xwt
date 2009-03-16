@@ -37,7 +37,7 @@ import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTMaps;
-import org.eclipse.e4.xwt.dataproviders.IXmlDataProvider;
+import org.eclipse.e4.xwt.dataproviders.IXMLDataProvider;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IDataContextControl;
@@ -440,12 +440,12 @@ public class ResourceLoader implements IVisualElementLoader {
 					((Control) editor).setData(PropertiesConstants.DATA_CONTROLEDITOR_OF_CONTROL, swtObject);
 				}
 			}
-		} else if (swtObject instanceof IXmlDataProvider) {
+		} else if (swtObject instanceof IXMLDataProvider) {
 			for (DocumentObject doc : element.getChildren()) {
 				if ("XData".equalsIgnoreCase(doc.getName()) && IConstants.XWT_X_NAMESPACE.equals(doc.getNamespace())) {
 					String content = getDocContent(doc);
 					if (content != null) {
-						((IXmlDataProvider) swtObject).setXDataContent(content);
+						((IXMLDataProvider) swtObject).setXDataContent(content);
 					}
 				}
 			}
@@ -1046,7 +1046,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (contentValue != null && ("Image".equalsIgnoreCase(attrName) || "BackgroundImage".equalsIgnoreCase(attrName))) {
 				contentValue = getImagePath(attribute, contentValue);
 			}
-			if (contentValue != null && "Source".equalsIgnoreCase(attrName) && target instanceof IXmlDataProvider) {
+			if (contentValue != null && "Source".equalsIgnoreCase(attrName) && target instanceof IXMLDataProvider) {
 				contentValue = getSourceURL(contentValue);
 			}
 			Object value = null;

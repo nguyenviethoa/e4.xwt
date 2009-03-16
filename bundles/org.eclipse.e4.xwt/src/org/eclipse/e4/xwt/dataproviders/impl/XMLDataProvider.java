@@ -22,13 +22,13 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.eclipse.e4.xwt.dataproviders.IXmlDataProvider;
+import org.eclipse.e4.xwt.dataproviders.IXMLDataProvider;
 import org.w3c.dom.Document;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public class XmlDataProvider extends AbstractDataProvider implements IXmlDataProvider {
+public class XMLDataProvider extends AbstractDataProvider implements IXMLDataProvider {
 
 	private URL source;
 

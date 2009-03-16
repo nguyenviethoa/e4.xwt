@@ -167,8 +167,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 			for (PropertyDescriptor pd : propertyDescriptors) {
 				if (path.equals(pd.getName())) {
 					Method readMethod = pd.getReadMethod();
-					Object value = readMethod.invoke(target, null);
-					return value;
+					return readMethod.invoke(target, null);
 				}
 			}
 			Field[] fields = type.getDeclaredFields();
