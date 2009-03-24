@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.ui.editor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +22,7 @@ import org.eclipse.e4.xwt.ui.ExceptionHandle;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
 import org.eclipse.e4.xwt.ui.editor.render.XWTRender;
 import org.eclipse.e4.xwt.ui.editor.treeviewer.XWTTableTreeViewer;
+import org.eclipse.e4.xwt.ui.editor.util.UserDefinedDropProxy;
 import org.eclipse.e4.xwt.ui.utils.DisplayUtil;
 import org.eclipse.e4.xwt.ui.utils.ImageManager;
 import org.eclipse.e4.xwt.ui.utils.ProjectContext;
@@ -32,7 +34,9 @@ import org.eclipse.e4.xwt.vex.VEXFileChecker;
 import org.eclipse.e4.xwt.vex.VEXFileFormator;
 import org.eclipse.e4.xwt.vex.VEXRenderer;
 import org.eclipse.e4.xwt.vex.VEXTextEditorHelper;
+import org.eclipse.e4.xwt.vex.toolpalette.ContextType;
 import org.eclipse.e4.xwt.vex.toolpalette.Entry;
+import org.eclipse.e4.xwt.vex.toolpalette.ToolPaletteFactory;
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaProject;
@@ -42,6 +46,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
+import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
@@ -53,11 +58,14 @@ import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -79,10 +87,12 @@ import org.eclipse.ui.internal.progress.ProgressManager;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.tabletree.IDesignViewer;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeHelpContextIds;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 public class XWTEditor extends VEXEditor {
@@ -91,6 +101,8 @@ public class XWTEditor extends VEXEditor {
 
 	private IFile javaFile;
 	private String className;
+
+	private UserDefinedDropProxy dropProxy;
 
 	private ToolItem previewTool;
 	private ToolItem generateTool;
@@ -275,7 +287,12 @@ public class XWTEditor extends VEXEditor {
 			try {
 				XWTView view = (XWTView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(XWTView.ID);
 				if (view != null) {
-					view.setContent(value, file);
+					try {
+						view.setContentWithException(value, file);
+					} catch (Exception e) {
+						// TODO Display to workbench message
+						e.printStackTrace();
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -355,6 +372,21 @@ public class XWTEditor extends VEXEditor {
 			dragSource.setTransfer(types);
 		}
 		dragSource.addDragListener(dragSourceAdapter);
+		if (dropProxy == null) {
+			dropProxy = new UserDefinedDropProxy(this);
+		}
+		final PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
+		if (part != null) {
+			TreeViewer treeViewer = part.getTreeViewer();
+			dragSource = (DragSource) treeViewer.getControl().getData(DND.DRAG_SOURCE_KEY);
+			if (dragSource != null) {
+				dragSource.addDragListener(new DragSourceAdapter() {
+					public void dragStart(DragSourceEvent event) {
+						part.setLinkingEnabled(false);
+					}
+				});
+			}
+		}
 	}
 
 	private IProgressMonitor getProgressMonitor() {
@@ -369,6 +401,10 @@ public class XWTEditor extends VEXEditor {
 		protected int dropCaretOffset = -1;
 		private Map<String, String> name2content = new HashMap<String, String>();
 
+		public void dragOperationChanged(DropTargetEvent event) {
+			super.dragOperationChanged(event);
+		}
+
 		public void drop(DropTargetEvent event) {
 			IFile file = (IFile) getTextEditor().getEditorInput().getAdapter(IFile.class);
 
@@ -378,6 +414,10 @@ public class XWTEditor extends VEXEditor {
 				formator.format(document, file.getContentDescription().getContentType().getId());
 			} catch (CoreException e) {
 				e.printStackTrace();
+			}
+			PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
+			if (part != null) {
+				part.setLinkingEnabled(true);
 			}
 		}
 
@@ -397,9 +437,15 @@ public class XWTEditor extends VEXEditor {
 				return;
 			}
 			Object element = selection.getFirstElement();
+			Entry entry = null;
 			if (element instanceof Entry) {
-				Entry entry = (Entry) element;
-
+				entry = (Entry) element;
+			} else if (dropProxy.isUserDefined(element)) {
+				entry = ToolPaletteFactory.eINSTANCE.createEntry();
+				entry.setScope("Composite");
+				entry.setContext(ContextType.XML_TAG);
+			}
+			if (entry != null) {
 				VEXContext context = getContext();
 
 				StructuredTextEditor textEditor = getTextEditor();
@@ -424,6 +470,8 @@ public class XWTEditor extends VEXEditor {
 				return;
 			}
 			Object element = selection.getFirstElement();
+			Template template = null;
+
 			if (element instanceof Entry) {
 				Entry entry = (Entry) element;
 
@@ -431,34 +479,60 @@ public class XWTEditor extends VEXEditor {
 				updateLayoutEntry(entry, event.x, event.y);
 				updateLayoutDataEntry(entry, event.x, event.y);
 
-				IDocument document = getTextEditor().getTextViewer().getDocument();
+				template = new Template(entry.getName(), "", entry.getContext().getName(), entry.getContent(), true);
 
-				Template template = new Template(entry.getName(), "", entry.getContext().getName(), entry.getContent(), true);
-
-				ContextTypeRegistry registry = XMLUIPlugin.getDefault().getTemplateContextRegistry();
-				if (registry != null) {
-					TemplateContextType type = registry.getContextType(template.getContextTypeId());
-
-					int length = 0;
-
-					DocumentTemplateContext templateContext = new DocumentTemplateContext(type, document, new Position(dropCaretOffset, length));
-					if (templateContext.canEvaluate(template)) {
-						try {
-							TemplateBuffer templateBuffer = templateContext.evaluate(template);
-							String templateString = templateBuffer.getString();
-							document.replace(dropCaretOffset, length, templateString);
-
-							StyledText styledText = getTextWidget();
-							int position = getCursorOffset(templateBuffer) + dropCaretOffset;
-							styledText.setCaretOffset(position);
-							styledText.setFocus();
-						} catch (Exception e) {
-							throw new RuntimeException(e);
+			} else if (dropProxy.isUserDefined(element)) {
+				template = new Template(dropProxy.getName(), "", ContextType.XML_TAG.getName(), dropProxy.getContent(), true);
+				if (dropProxy.isNsURINew()) {
+					String pattern = "xmlns:" + dropProxy.getPrefix() + "=\"" + dropProxy.getNamespace() + "\" ";
+					Template tem = new Template("xmlns:" + dropProxy.getPrefix(), "", ContextType.XML_ATTRIBUTE.getName(), pattern, true);
+					StructuredTextEditor textEditor = getTextEditor();
+					StructuredTextViewer textViewer = textEditor.getTextViewer();
+					IDOMNode node = VEXTextEditorHelper.getNode(textViewer, 0);
+					NamedNodeMap attributes = node.getAttributes();
+					int dropNsIndex = 0;
+					for (int i = 0; i < attributes.getLength(); i++) {
+						IDOMAttr attr = (IDOMAttr) attributes.item(i);
+						String nodeName = attr.getNodeName();
+						if ("xmlns:x".equals(nodeName)) {
+							dropNsIndex = attr.getEndOffset();
+							break;
 						}
 					}
+					dropCaretOffset += pattern.length();
+					insert(tem, dropNsIndex);
 				}
+			}
+			if (template != null) {
+				insert(template, dropCaretOffset);
 			} else {
 				super.dropAccept(event);
+			}
+		}
+
+		private void insert(Template template, int dropCaretOffset) {
+			IDocument document = getTextEditor().getTextViewer().getDocument();
+			ContextTypeRegistry registry = XMLUIPlugin.getDefault().getTemplateContextRegistry();
+			if (registry != null) {
+				TemplateContextType type = registry.getContextType(template.getContextTypeId());
+
+				int length = 0;
+
+				DocumentTemplateContext templateContext = new DocumentTemplateContext(type, document, new Position(dropCaretOffset, length));
+				if (templateContext.canEvaluate(template)) {
+					try {
+						TemplateBuffer templateBuffer = templateContext.evaluate(template);
+						String templateString = templateBuffer.getString();
+						document.replace(dropCaretOffset, length, templateString);
+
+						StyledText styledText = getTextWidget();
+						int position = getCursorOffset(templateBuffer) + dropCaretOffset;
+						styledText.setCaretOffset(position);
+						styledText.setFocus();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
 			}
 		}
 
@@ -492,18 +566,29 @@ public class XWTEditor extends VEXEditor {
 			}
 			String nodeName = node.getNodeName();
 			String name = entry.getName();
-			String tagName = null;
+//			String tagName = null;
 			if (nodeName != null && name.toLowerCase().endsWith("layout")) {
-				if (nodeName.indexOf(":") != -1) {
-					tagName = nodeName.substring(nodeName.lastIndexOf(":") + 1);
-				} else {
-					tagName = nodeName;
-				}
+//				String prefix = null;
+//				if (nodeName.indexOf(":") != -1) {
+//					prefix = nodeName.substring(0, nodeName.lastIndexOf(":"));
+//					tagName = nodeName.substring(nodeName.lastIndexOf(":") + 1);
+//				} else {
+//					tagName = nodeName;
+//				}
 				String content = name2content.get(name);
 				if (content == null) {
 					name2content.put(name, content = entry.getContent());
 				}
-				String newContent = content.replace("Composite", tagName);
+				String source = "Composite";
+				StringTokenizer stk = new StringTokenizer(content, "<>");
+				while (stk.hasMoreTokens()) {
+					String nextToken = stk.nextToken();
+					if (nextToken.endsWith(".layout")) {
+						source = nextToken.substring(0, nextToken.lastIndexOf("."));
+						break;
+					}
+				}
+				String newContent = content.replace(source, nodeName);
 				entry.setContent(newContent);
 			}
 		}

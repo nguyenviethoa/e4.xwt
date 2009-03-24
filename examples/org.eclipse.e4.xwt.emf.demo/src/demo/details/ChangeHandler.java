@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.Event;
 public class ChangeHandler {
 	protected void modify(Event event) {
 		ListViewer contacts = (ListViewer) XWT.findElementByName(event.widget, "contacts");
-		contacts.refresh();
+		if (contacts != null) {
+			contacts.refresh();
+		}
 	}
 }

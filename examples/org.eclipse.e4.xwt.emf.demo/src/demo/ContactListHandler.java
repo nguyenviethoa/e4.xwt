@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
-import demo.details.ButtonHandler;
+import demo.details.ChangeHandler;
 
 public class ContactListHandler {
 	private Map<Object, Control> controls = new HashMap<Object, Control>();
@@ -62,9 +62,9 @@ public class ContactListHandler {
 			try {
 				URL url = null;
 				if (writable.getSelection())
-					url = ButtonHandler.class.getResource("details_writable.xwt");
+					url = ChangeHandler.class.getResource("details_writable.xwt");
 				else
-					url = ButtonHandler.class.getResource("details.xwt");
+					url = ChangeHandler.class.getResource("details.xwt");
 
 				control = XWT.load(parent, url, selection);
 				parent.layout();
