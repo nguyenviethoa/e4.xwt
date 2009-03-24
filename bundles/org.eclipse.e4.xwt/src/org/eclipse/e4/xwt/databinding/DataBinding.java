@@ -13,7 +13,6 @@ package org.eclipse.e4.xwt.databinding;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.internal.databinding.swt.SWTProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
