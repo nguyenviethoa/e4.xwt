@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IIndexedElement;
@@ -38,7 +37,8 @@ import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTMaps;
-import org.eclipse.e4.xwt.dataproviders.IXMLDataProvider;
+import org.eclipse.e4.xwt.dataproviders.IDataProvider;
+import org.eclipse.e4.xwt.dataproviders.IXmlDataProvider;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IDataContextControl;
@@ -322,7 +322,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				dataBindingTrack.addWidgetElement(element);
 			}
 			Shell shell = null;
-			if (styles == -1) {
+			if (styleValue == null || styleValue == -1) {
 				styleValue = SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX | SWT.RESIZE;
 			}
 			shell = new Shell(display, styleValue);
@@ -382,41 +382,6 @@ public class ResourceLoader implements IVisualElementLoader {
 
 		applyStyles(element, swtObject);
 
-		// get databindingMessages
-		if (swtObject instanceof Binding) {
-			//
-			// TODO To move in ObjectDataProvider
-			//
-			Binding newInstance = (Binding) swtObject;
-			String path = null;
-			Attribute attr = element.getAttribute("Path");
-			if (null == attr)
-				attr = element.getAttribute("path");
-			if (null != attr)
-				path = attr.getContent();
-			Object dataContext2 = null;
-			try {
-				dataContext2 = newInstance.getValue();
-				if (path != null && path.length() > 0) {
-					String[] paths = path.trim().split("\\.");
-					if (paths.length > 1) {
-						String path1 = "";
-						for (int i = 0; i < paths.length - 1; i++) {
-							path1 = paths[i];
-							if (dataContext2 != null) {
-								dataContext2 = DataBindingTrack.getObserveData(dataContext2, path1);
-							}
-						}
-						BeansObservables.observeValue(dataContext2, paths[paths.length - 1]);
-					} else if (paths.length == 1) {
-						BeansObservables.observeValue(dataContext2, path);
-					}
-				}
-			} catch (Exception ex) {
-				LoggerManager.log(ex);
-			}
-		}
-
 		if (dataBindingTrack != null) {
 			dataBindingTrack.tracking(swtObject, element, dataContext);
 		}
@@ -475,12 +440,12 @@ public class ResourceLoader implements IVisualElementLoader {
 					((Control) editor).setData(PropertiesConstants.DATA_CONTROLEDITOR_OF_CONTROL, swtObject);
 				}
 			}
-		} else if (swtObject instanceof IXMLDataProvider) {
+		} else if (swtObject instanceof IDataProvider) {
 			for (DocumentObject doc : element.getChildren()) {
-				if ("XData".equalsIgnoreCase(doc.getName()) && IConstants.XWT_X_NAMESPACE.equals(doc.getNamespace())) {
-					String content = getDocContent(doc);
+				if (IConstants.XWT_X_NAMESPACE.equals(doc.getNamespace())) {
+					String content = doc.getContent();
 					if (content != null) {
-						((IXMLDataProvider) swtObject).setXDataContent(content);
+						((IDataProvider) swtObject).setProperty(doc.getName(), content);
 					}
 				}
 			}
@@ -490,31 +455,6 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		popStack();
 		return swtObject;
-	}
-
-	private String getDocContent(DocumentObject object) {
-		String content = object.getContent();
-		if (content != null) {
-			return content;
-		}
-		StringBuilder sb = new StringBuilder();
-		DocumentObject[] children = object.getChildren();
-		for (int i = 0; i < children.length; i++) {
-			String name = children[i].getName();
-			sb.append("<");
-			sb.append(name + " ");
-			if (children[i] instanceof Element) {
-				String[] attributeNames = ((Element) children[i]).attributeNames();
-				for (String attrName : attributeNames) {
-					sb.append(attrName + "=\"");
-					sb.append(((Element) children[i]).getAttribute(attrName).getContent() + "\"");
-				}
-			}
-			sb.append(">");
-			sb.append(getDocContent(children[i]));
-			sb.append("</" + name + ">");
-		}
-		return content = sb.toString();
 	}
 
 	private void setDataContext(IMetaclass metaclass, Object swtObject, ResourceDictionary dico, Object dataContext) throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
@@ -718,18 +658,17 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 
 		HashSet<String> done = new HashSet<String>();
-		for (String attrName : element.attributeNames()) {
-			{
-				if ("name".equalsIgnoreCase(attrName) && (targetObject instanceof Widget)) {
-					Attribute attribute = element.getAttribute(attrName);
-					String namespace = attribute.getNamespace();
-					if (IConstants.XWT_NAMESPACE.equals(namespace)) {
-						nameScoped.addObject(attribute.getContent(), targetObject);
-						continue;
-					}
-				}
-			}
 
+		Attribute nameAttr = element.getAttribute(IConstants.XAML_X_NAME);
+		if (nameAttr == null) {
+			nameAttr = element.getAttribute(IConstants.XWT_NAMESPACE, IConstants.XAML_X_NAME);
+		}
+		if (nameAttr != null) {
+			nameScoped.addObject(nameAttr.getContent(), targetObject);
+			done.add(IConstants.XAML_X_NAME);
+		}
+
+		for (String attrName : element.attributeNames()) {
 			if (IConstants.XWT_X_NAMESPACE.equals(element.getAttribute(attrName).getNamespace())) {
 				continue;
 			} else if (delayedAttributes != null && isDelayedProperty(attrName.toLowerCase(), metaclass.getType()))
@@ -1081,7 +1020,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (contentValue != null && ("Image".equalsIgnoreCase(attrName) || "BackgroundImage".equalsIgnoreCase(attrName))) {
 				contentValue = getImagePath(attribute, contentValue);
 			}
-			if (contentValue != null && "Source".equalsIgnoreCase(attrName) && target instanceof IXMLDataProvider) {
+			if (contentValue != null && "Source".equalsIgnoreCase(attrName) && target instanceof IXmlDataProvider) {
 				contentValue = getSourceURL(contentValue);
 			}
 			Object value = null;
@@ -1116,6 +1055,9 @@ public class ResourceLoader implements IVisualElementLoader {
 							value = attribute.getContent();
 						} else {
 							value = doCreate(target, (Element) child, type, EMPTY_MAP);
+							if (value instanceof Binding) {
+								((Binding) value).setType(attrName);
+							}
 						}
 					}
 				}

@@ -8,9 +8,13 @@ Require-Bundle:
  org.eclipse.core.databinding.beans;bundle-version="1.1.0",
  org.eclipse.swt;bundle-version="3.4.0",
  org.eclipse.core.databinding;bundle-version="1.1.0",
- org.eclipse.jface;bundle-version="3.4.0"
+ org.eclipse.jface;bundle-version="3.4.0",
+ com.ibm.icu;bundle-version="3.8.1"
 Export-Package: org.eclipse.e4.xwt,
  org.eclipse.e4.xwt.converters,
+ org.eclipse.e4.xwt.databinding,
+ org.eclipse.e4.xwt.dataproviders,
+ org.eclipse.e4.xwt.dataproviders.observable,
  org.eclipse.e4.xwt.input,
  org.eclipse.e4.xwt.javabean,
  org.eclipse.e4.xwt.javabean.metadata,

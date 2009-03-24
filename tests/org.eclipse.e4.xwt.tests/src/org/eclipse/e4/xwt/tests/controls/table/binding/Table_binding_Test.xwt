@@ -6,14 +6,14 @@
 	<Shell.layout>
 		<GridLayout numColumns="1"/>
 	</Shell.layout>
-	<x:Shell.Resources>
+	<Shell.Resources>
 		<j:Company x:Key="myCompany">
 			<j:Company.employees>
 				<j:Employee Name="Thomas"/>
 				<j:Employee Name="Jin"/>
 			</j:Company.employees>
 		</j:Company>
-	</x:Shell.Resources>
+	</Shell.Resources>
 	
 	<Table x:style="BORDER|SINGLE|FULL_SELECTION" HeaderVisible="true" LinesVisible="true">
 		<TableColumn width="150" text="Name"/>

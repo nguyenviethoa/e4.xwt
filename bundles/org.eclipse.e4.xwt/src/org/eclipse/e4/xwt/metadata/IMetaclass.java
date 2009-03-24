@@ -45,4 +45,6 @@ public interface IMetaclass {
 	public Class<?> getType();
 
 	public IProperty addProperty(IProperty property);
+
+	public Class<?> getDataContextType();
 }

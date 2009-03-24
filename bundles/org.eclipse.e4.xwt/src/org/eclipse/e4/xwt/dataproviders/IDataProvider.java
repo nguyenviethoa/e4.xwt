@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.dataproviders;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
 
 /**
  * A Data Binding provider defines the nature of Data Binding such as Bean Object Binding, EMF Object Binding, XML data Binding or Data Base binding
@@ -18,10 +20,48 @@ package org.eclipse.e4.xwt.dataproviders;
  */
 public interface IDataProvider {
 
+	/**
+	 * Set a key for this data provider.
+	 * 
+	 * @param key
+	 */
 	void setKey(String key);
 
+	/**
+	 * Get the key of this data provider.
+	 * 
+	 * @return
+	 */
 	String getKey();
 
+	/**
+	 * Return the data of the provider, this value can be not used for databindings.
+	 * 
+	 * @param path
+	 * @return
+	 */
 	Object getData(String path);
 
+	/**
+	 * Create a databinding data with given path.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	IObservableValue createObservableValue(Object valueType, String path);
+
+	/**
+	 * Process context of databindings.
+	 * 
+	 * @return
+	 */
+	IBindingContext getBindingContext();
+
+	Object getProperty(String property);
+
+	void setProperty(String property, Object object);
+
+	boolean hasProperty(String property);
+
+	void removeProperty(String property);
 }

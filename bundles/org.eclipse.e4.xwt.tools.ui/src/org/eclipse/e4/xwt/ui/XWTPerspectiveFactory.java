@@ -57,8 +57,8 @@ public class XWTPerspectiveFactory implements IPerspectiveFactory {
 	private void addNewWizardShortcuts() {
 
 		// Eface Creation Wizards.
-		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizard.newUIFile");
-		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizard.newUIComponent");
+		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizards.newUIFile");
+		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizards.NewMediatorWizard");
 
 		// Default JDT Wizards.
 		factory.addNewWizardShortcut("org.eclipse.jdt.ui.wizards.NewPackageCreationWizard"); //$NON-NLS-1$

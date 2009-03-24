@@ -15,7 +15,7 @@ import java.net.URL;
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public interface IXMLDataProvider extends IDataProvider {
+public interface IXmlDataProvider extends IDataProvider {
 
 	void setSource(URL xmlSource);
 
@@ -24,8 +24,4 @@ public interface IXMLDataProvider extends IDataProvider {
 	void setXPath(String xPath);
 
 	String getXPath();
-
-	void setXDataContent(String content);
-
-	String getXDataContent();
 }

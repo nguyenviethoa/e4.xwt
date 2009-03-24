@@ -363,6 +363,15 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.xml.sax.helpers.DefaultHandler#skippedEntity(java.lang.String)
+	 */
+	public void skippedEntity(String name) throws SAXException {
+		super.skippedEntity(name);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	@Override

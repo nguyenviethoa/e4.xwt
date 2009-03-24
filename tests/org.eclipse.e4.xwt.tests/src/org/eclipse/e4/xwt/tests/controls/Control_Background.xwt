@@ -1,6 +1,6 @@
 <Shell xmlns="http://www.eclipse.org/xwt/presentation"
 	xmlns:x="http://www.eclipse.org/xwt"
-	text="Control Background Color Test">
+	text="Control Background Color Test" x:style="SWT.CLOSE">
 	<Shell.layout>
 		<GridLayout/>
 	</Shell.layout>

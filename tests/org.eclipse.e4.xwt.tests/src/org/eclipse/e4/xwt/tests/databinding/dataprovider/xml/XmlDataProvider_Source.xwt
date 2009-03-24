@@ -18,4 +18,10 @@
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
+	<Label text="{Binding Source={StaticResource myBooks}, XPath=//book[author='Neal Stephenson']/title/text()}">
+		<Label.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Label.layoutData>
+	</Label>
 </Shell>

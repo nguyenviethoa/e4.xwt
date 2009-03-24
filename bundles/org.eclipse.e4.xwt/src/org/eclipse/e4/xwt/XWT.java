@@ -38,8 +38,7 @@ import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
 import org.eclipse.e4.xwt.converters.StringToURL;
 import org.eclipse.e4.xwt.dataproviders.IDataProvider;
-import org.eclipse.e4.xwt.dataproviders.impl.ObjectDataProvider;
-import org.eclipse.e4.xwt.dataproviders.impl.XMLDataProvider;
+import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.impl.LoadingContext;
@@ -133,6 +132,9 @@ public class XWT {
 	private static Collection<IStyle> defaultStyles = new ArrayList<IStyle>();
 
 	private static Collection<IDataProvider> dataProviders = new ArrayList<IDataProvider>();
+
+	public static Display display;
+	public static Realm realm;
 
 	/**
 	 * Get the system logger.
@@ -393,6 +395,13 @@ public class XWT {
 	/**
 	 * Open and show the file content in a new Shell.
 	 */
+	static public synchronized void open(Class<?> type) throws Exception {
+		open(type.getResource(type.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX), Collections.EMPTY_MAP);
+	}
+
+	/**
+	 * Open and show the file content in a new Shell.
+	 */
 	static public synchronized void open(final URL url) throws Exception {
 		open(url, Collections.EMPTY_MAP);
 	}
@@ -419,9 +428,16 @@ public class XWT {
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public synchronized void open(final URL url, final Map<String, Object> options) throws Exception {
+	static public synchronized void open(Class<?> type, Object dataContext) throws Exception {
+		open(type.getResource(type.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX), dataContext);
+	}
 
-		Realm.runWithDefault(SWTObservables.getRealm(Display.getDefault()), new Runnable() {
+	/**
+	 * load the file content. The corresponding UI element is not yet created
+	 */
+	static public synchronized void open(final URL url, final Map<String, Object> options) throws Exception {
+		checkInitialize();
+		Realm.runWithDefault(realm, new Runnable() {
 			public void run() {
 				try {
 					Control control = loadWithOptions(url, options);
@@ -601,6 +617,9 @@ public class XWT {
 		if (type == double.class) {
 			return Double.class;
 		}
+		if (type == float.class) {
+			return Float.class;
+		}
 		if (type == boolean.class) {
 			return Boolean.class;
 		}
@@ -643,6 +662,13 @@ public class XWT {
 			return;
 		}
 		initialized = true;
+		display = Display.getCurrent();
+		if (display == null) {
+			display = new Display();
+		}
+		if (realm == null) {
+			realm = SWTObservables.getRealm(display);
+		}
 
 		core.registerService(ValueConvertorRegister.class, new ValueConvertorRegister());
 		core.registerMetaclassManager(IConstants.XWT_NAMESPACE, new MetaclassManager(null, null));
@@ -663,6 +689,12 @@ public class XWT {
 		XWT.registerConvertor(new StringToPoint());
 		XWT.registerConvertor(new StringToRectangle());
 		XWT.registerConvertor(new StringToURL());
+
+		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
+		convertorRegister.register(String.class, float.class, new StringToFloat());
+		convertorRegister.register(String.class, int.class, new StringToInteger());
+		convertorRegister.register(String.class, boolean.class, new StringToBoolean());
+		convertorRegister.register(String.class, double.class, new StringToDouble());
 
 		Class<?> type = org.eclipse.swt.browser.Browser.class;
 		Metaclass browserMetaclass = (Metaclass) XWT.registerMetaclass(type);
@@ -755,17 +787,18 @@ public class XWT {
 		type = org.eclipse.swt.widgets.Widget.class;
 		metaclass = (Metaclass) XWT.registerMetaclass(type);
 		metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT, IUserDataConstants.XWT_DATACONTEXT_KEY));
-		for (Class<?> cls : JFacesHelper.getSupportedElements()) {
-			XWT.registerMetaclass(cls);
-		}
-		core.registerMetaclass(new ComboBoxCellEditorMetaclass(core.getMetaclass(ComboBoxCellEditor.class.getSuperclass())), IConstants.XWT_NAMESPACE);
 
-		type = org.eclipse.jface.viewers.TableViewer.class;
+		type = org.eclipse.jface.viewers.ColumnViewer.class;
 		metaclass = (Metaclass) core.getMetaclass(type);
 		if (metaclass != null) {
 			metaclass.addProperty(new DynamicBeanProperty(type, String[].class, PropertiesConstants.PROPERTY_COLUMN_PROPERTIES, PropertiesConstants.PROPERTY_COLUMN_PROPERTIES));
 			metaclass.addProperty(new TableViewerColumnsProperty());
 		}
+
+		for (Class<?> cls : JFacesHelper.getSupportedElements()) {
+			XWT.registerMetaclass(cls);
+		}
+		core.registerMetaclass(new ComboBoxCellEditorMetaclass(core.getMetaclass(ComboBoxCellEditor.class.getSuperclass())), IConstants.XWT_NAMESPACE);
 
 		type = org.eclipse.jface.viewers.TableViewerColumn.class;
 		core.registerMetaclass(new TableViewerColumnMetaClass(core.getMetaclass(type.getSuperclass())), IConstants.XWT_NAMESPACE);
@@ -777,7 +810,6 @@ public class XWT {
 		XWT.registerMetaclass(DefaultCellModifier.class);
 		XWT.registerMetaclass(DefaultLabelProvider.class);
 
-		XWT.registerMetaclass(XMLDataProvider.class);
 		XWT.registerMetaclass(ObjectDataProvider.class);
 	}
 
@@ -913,6 +945,7 @@ public class XWT {
 		}
 		if (!dataProviders.contains(dataProvider)) {
 			dataProviders.add(dataProvider);
+			registerMetaclass(dataProvider.getClass());
 		}
 	}
 

@@ -29,8 +29,12 @@ import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Monitor;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -55,22 +59,36 @@ public class Metaclass implements IMetaclass {
 		this.type = type;
 		this.name = type.getSimpleName();
 		this.superClass = superClass;
-
+		String packageName = "";
+		if (type.getPackage() != null) {
+			packageName = type.getPackage().getName();
+		}
 		try {
 			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
 			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 			for (PropertyDescriptor p : propertyDescriptors) {
+				String propertyName = p.getName();
+				Class<?> propertyType = p.getPropertyType();
+				if ("class".equals(propertyName)) {
+					continue;
+				}
+				if (("data".equals(propertyName) && packageName.startsWith("org.eclipse.swt.")) || ("handle".equals(propertyName) && propertyType == int.class) || ("monitor".equals(propertyName) && propertyType == Monitor.class) || ("region".equals(propertyName) && propertyType == Region.class) || ("parent".equals(propertyName) && propertyType == Composite.class) || ("shell".equals(propertyName) && propertyType == Shell.class) || ("display".equals(propertyName) && propertyType == Display.class)) {
+					continue;
+				}
+
 				if (p.getPropertyType() != null) {
 					IProperty property = (superClass != null ? superClass.findProperty(p.getName()) : null);
 					if (property != null && !property.isDefault()) {
 						addProperty(property);
 					} else {
-						addProperty(new BeanProperty(p));
+						if (p.getWriteMethod() != null || !p.getPropertyType().isPrimitive()) {
+							addProperty(new BeanProperty(p));
+						}
 					}
 				}
 			}
 			for (Field f : type.getDeclaredFields()) {
-				if (!propertyCache.containsKey(normalize(f.getName())) && !Modifier.isFinal(f.getModifiers())) {
+				if (!propertyCache.containsKey(normalize(f.getName())) && !Modifier.isFinal(f.getModifiers()) && Modifier.isPublic(f.getModifiers())) {
 					addProperty(new FieldProperty(f));
 				}
 			}
@@ -405,5 +423,9 @@ public class Metaclass implements IMetaclass {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public Class<?> getDataContextType() {
+		return Object.class;
 	}
 }

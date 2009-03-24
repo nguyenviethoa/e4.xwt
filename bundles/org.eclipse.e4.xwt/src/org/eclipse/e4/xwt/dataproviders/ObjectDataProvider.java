@@ -8,16 +8,19 @@
  * Contributors:                                                               *        
  *     Soyatec - initial API and implementation                                *
  *******************************************************************************/
-package org.eclipse.e4.xwt.dataproviders.impl;
+package org.eclipse.e4.xwt.dataproviders;
 
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.e4.xwt.dataproviders.IObjectDataProvider;
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
+import org.eclipse.e4.xwt.databinding.ObjectBindingContext;
+import org.eclipse.e4.xwt.dataproviders.observable.BeanObservableValue;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -30,6 +33,8 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	private String methodName;
 
 	private List<Object> methodParameters;
+
+	private ObjectBindingContext bindingContext = new ObjectBindingContext();
 
 	/*
 	 * (non-Javadoc)
@@ -149,37 +154,60 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		Object target = getTarget();
 		int index = path.indexOf(".");
 		while (index != -1 && target != null) {
-			target = getValue(path.substring(0, index), target);
+			target = BeanObservableValue.getValue(target, path.substring(0, index));
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
-		if (target == null) {
-			return null;
-		}
-		return getValue(path, target);
+		return BeanObservableValue.getValue(target, path);
 	}
 
-	private Object getValue(String path, Object target) {
-		Class<?> type = target.getClass();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.dataproviders.impl.AbstractDataProvider#createObservableValue(java.lang.String)
+	 */
+	public IObservableValue createObservableValue(Object valueType, String fullPath) {
+		Object dataContext = getTarget();
+		String propertyName = null;
+		String[] paths = fullPath.trim().split("\\.");
+		if (paths.length > 1) {
+			for (int i = 0; i < paths.length - 1; i++) {
+				String path = paths[i];
+				if (dataContext != null) {
+					bindingContext.addObservable(dataContext);
+					dataContext = BeanObservableValue.getValue(dataContext, path);
+				}
+			}
+			propertyName = paths[paths.length - 1];
+		} else if (paths.length == 1) {
+			propertyName = fullPath;
+		}
+		if (isBeanSupport(dataContext)) {
+			return BeansObservables.observeValue(XWT.realm, dataContext, propertyName);
+		}
+		return new BeanObservableValue(valueType, dataContext, propertyName);
+	}
+
+	private boolean isBeanSupport(Object target) {
+		Method method = null;
 		try {
-			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
-			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-			for (PropertyDescriptor pd : propertyDescriptors) {
-				if (path.equals(pd.getName())) {
-					Method readMethod = pd.getReadMethod();
-					return readMethod.invoke(target, null);
-				}
+			try {
+				method = target.getClass().getMethod("addPropertyChangeListener", new Class[] { String.class, PropertyChangeListener.class });
+			} catch (NoSuchMethodException e) {
+				method = target.getClass().getMethod("addPropertyChangeListener", new Class[] { PropertyChangeListener.class });
 			}
-			Field[] fields = type.getDeclaredFields();
-			for (Field field : fields) {
-				if (path.equals(field.getName())) {
-					Object object = field.get(target);
-					return object;
-				}
-			}
-		} catch (Exception e) {
+		} catch (SecurityException e) {
+		} catch (NoSuchMethodException e) {
 		}
-		throw new IllegalArgumentException("Can't get value from class['" + target.getClass().getName() + "'] by using path['" + path + "'].");
+		return method != null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getBindingContext()
+	 */
+	public IBindingContext getBindingContext() {
+		return bindingContext;
+	}
 }

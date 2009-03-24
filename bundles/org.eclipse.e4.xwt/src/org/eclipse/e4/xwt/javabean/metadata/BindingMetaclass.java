@@ -12,10 +12,9 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.databinding.AbstractDataBinding;
-import org.eclipse.e4.xwt.databinding.DataProviderBinding;
-import org.eclipse.e4.xwt.databinding.JavaBeanBinding;
+import org.eclipse.e4.xwt.databinding.DataBinding;
 import org.eclipse.e4.xwt.dataproviders.IDataProvider;
+import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
@@ -32,6 +31,11 @@ import org.eclipse.swt.widgets.Widget;
 public class BindingMetaclass extends Metaclass {
 
 	public static class Binding implements IBinding {
+
+		/**
+		 * which used to decide binding type, not only text.
+		 */
+		private String type;
 		private String xPath;
 		private String path;
 		private Object source;
@@ -76,6 +80,21 @@ public class BindingMetaclass extends Metaclass {
 			return xPath;
 		}
 
+		/**
+		 * @param type
+		 *            the type to set
+		 */
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		/**
+		 * @return the type
+		 */
+		public String getType() {
+			return type;
+		}
+
 		protected Object getSourceObject() {
 			if (source instanceof IBinding) {
 				return ((IBinding) source).getValue();
@@ -109,16 +128,16 @@ public class BindingMetaclass extends Metaclass {
 
 		public Object getValue() {
 			Object dataContext = getSourceObject();
-			AbstractDataBinding dataBinding = null;
-			if (dataContext != null && path != null) {
-				dataBinding = new JavaBeanBinding(dataContext, control, path);
+			IDataProvider dataProvider = null;
+			DataBinding dataBinding = null;
+			if (dataContext != null) {
+				dataProvider = new ObjectDataProvider();
+				((ObjectDataProvider) dataProvider).setObjectInstance(dataContext);
 			} else {
-				if (dataContext == null) {
-					dataContext = getDataProvider();
-				}
-				if (dataContext != null && (path != null || xPath != null)) {
-					dataBinding = new DataProviderBinding((IDataProvider) dataContext, control, xPath != null ? xPath : path);
-				}
+				dataProvider = getDataProvider();
+			}
+			if (dataProvider != null && (path != null || xPath != null)) {
+				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type);
 			}
 			if (dataBinding != null) {
 				return dataBinding.getValue();
@@ -126,7 +145,7 @@ public class BindingMetaclass extends Metaclass {
 			return dataContext;
 		}
 
-		private Object getDataProvider() {
+		private IDataProvider getDataProvider() {
 			if (control != null) {
 				ResourceDictionary rd = getResourceDictionary(control);
 				if (rd == null || rd.isEmpty()) {
@@ -135,7 +154,7 @@ public class BindingMetaclass extends Metaclass {
 				for (String key : rd.keySet()) {
 					Object object = rd.get(key);
 					if (object instanceof IDataProvider && key.equals(((IDataProvider) object).getKey())) {
-						return object;
+						return (IDataProvider) object;
 					}
 				}
 			}

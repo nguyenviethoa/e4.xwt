@@ -20,7 +20,7 @@
 		</Button>
 		<Button text="button2">
 			<Button.layout>
-			    <FormData top="{Binding ElementName="Button1"}, 10" left="0, 0" bottom="40, 0" right="40, 0"/>
+			    <FormData top="{Binding ElementName=Button1}, 10" left="0, 0" bottom="40, 0" right="40, 0"/>
 			</Button.layout>
 		</Button>
 	</Group>

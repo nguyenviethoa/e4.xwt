@@ -3,7 +3,7 @@
 	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding.dataprovider"
 	Size="400, 300">
 	<Shell.layout>
-		<GridLayout numColumns="2"/>
+		<GridLayout numColumns="3"/>
 	</Shell.layout>
 	
 	<Shell.Resources>
@@ -18,6 +18,12 @@
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
+	<Label text="{Binding Source={StaticResource myBooks},Path=title.lang}">
+		<Label.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Label.layoutData>
+	</Label>
 	<Label text="Title"/>
 	<Text x:style="BORDER" text="{Binding Source={StaticResource myBook}, Path=title}">
 		<Text.layoutData>
@@ -25,6 +31,12 @@
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
+	<Label text="{Binding Source={StaticResource myBooks}, Path=title}">
+		<Label.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Label.layoutData>
+	</Label>
 	<Label text="Price"/>
 	<Text x:style="BORDER" text="{Binding Source={StaticResource myBook}, Path=price}">
 		<Text.layoutData>
@@ -32,4 +44,10 @@
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
+	<Label text="{Binding Source={StaticResource myBooks}, Path=price}">
+		<Label.layoutData>
+			<GridData horizontalAlignment="FILL"
+         		grabExcessHorizontalSpace="true"/>
+		</Label.layoutData>
+	</Label>
 </Shell>

@@ -54,6 +54,8 @@ public class ElementManager {
 	 */
 	private Element rootElement;
 
+	private Element xDataElement;
+
 	private static Random RANDOM = new Random();
 
 	public static String generateID(String typeName) {
@@ -215,6 +217,9 @@ public class ElementManager {
 
 		InputStream input = url.openStream();
 		doLoad(input);
+
+		input = documentRoot.openStream();
+		loadXData(input);
 		input.close();
 		return rootElement;
 	}
@@ -243,6 +248,9 @@ public class ElementManager {
 			input = documentRoot.openStream();
 		}
 		doLoad(input);
+
+		input = documentRoot.openStream();
+		loadXData(input);
 		input.close();
 		return rootElement;
 	}
@@ -259,6 +267,10 @@ public class ElementManager {
 
 		InputStream input = documentRoot.openStream();
 		doLoad(input);
+
+		input = documentRoot.openStream();
+		loadXData(input);
+
 		input.close();
 		return rootElement;
 	}
@@ -278,6 +290,20 @@ public class ElementManager {
 			throw new SAXException(pce.getLocalizedMessage(), pce);
 		} catch (IOException ioe) {
 			throw new SAXException(ioe.getLocalizedMessage(), ioe);
+		}
+	}
+
+	private void loadXData(InputStream stream) {
+		if (xDataElement != null) {
+			try {
+				SAXParser parser = parserFactory.newSAXParser();
+				parser.getXMLReader().setErrorHandler(errorHandler);
+				StringBuilder out = new StringBuilder();
+				parser.parse(stream, new XDataHandler(out));
+				String content = out.toString();
+				xDataElement.setContent(content);
+			} catch (Exception e) {
+			}
 		}
 	}
 
@@ -303,6 +329,9 @@ public class ElementManager {
 	protected void postElement(Element element) {
 		assert element == null;
 		assert !elements.containsKey(element.getId()) : "Element not found in registry: " + element.getId();
+		if ("xdata".equalsIgnoreCase(element.getName()) && IConstants.XWT_X_NAMESPACE.equals(element.getNamespace())) {
+			xDataElement = element;
+		}
 	}
 
 	/**
@@ -311,7 +340,6 @@ public class ElementManager {
 	 */
 	private void doLoad(InputStream stream) throws Exception {
 		assert stream == null;
-
 		ElementHandler contentHandler = new ElementHandler(this);
 		try {
 			SAXParser parser = parserFactory.newSAXParser();
@@ -355,4 +383,5 @@ public class ElementManager {
 		// Reset code base.
 		documentRoot.reset();
 	}
+
 }

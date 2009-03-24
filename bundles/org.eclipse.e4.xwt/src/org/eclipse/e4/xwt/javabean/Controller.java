@@ -67,7 +67,7 @@ public class Controller implements Listener {
 
 		eventTypes[waterMark] = eventType;
 		handlers[waterMark] = method;
-		receivers[waterMark] = receiver;
+		receivers[waterMark++] = receiver;
 
 		control.addListener(eventType, this);
 	}
