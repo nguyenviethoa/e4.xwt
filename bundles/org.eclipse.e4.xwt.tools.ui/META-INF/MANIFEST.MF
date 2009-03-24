@@ -21,3 +21,4 @@ Export-Package: org.eclipse.e4.xwt.ui,
  org.eclipse.e4.xwt.ui.utils,
  org.eclipse.e4.xwt.ui.views
 Bundle-Localization: plugin
+Import-Package: org.eclipse.text.edits

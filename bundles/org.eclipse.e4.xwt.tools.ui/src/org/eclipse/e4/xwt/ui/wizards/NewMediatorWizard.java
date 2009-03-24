@@ -16,22 +16,29 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 
-public class NewUIComponentWizard extends NewElementWizard {
+public class NewMediatorWizard extends NewElementWizard {
 
-	private NewUIComponentWizardPage fPage;
+	private NewMediatorWizardPage fPage;
 
-	public NewUIComponentWizard() {
+	public NewMediatorWizard() {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-		setWindowTitle("New UI component in XWT");
+		setWindowTitle("New Mediator in XWT");
+	}
+
+	public NewMediatorWizard(IType contextType) {
+		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
+		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
+		setWindowTitle("New Mediator in XWT");
 	}
 
 	public void addPages() {
-		fPage = new NewUIComponentWizardPage();
+		fPage = new NewMediatorWizardPage();
 		fPage.init(getSelection());
 		addPage(fPage);
 	}

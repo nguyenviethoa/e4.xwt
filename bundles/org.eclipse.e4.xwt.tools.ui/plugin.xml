@@ -36,7 +36,7 @@
           category="org.eclipse.e4.xwt.ui.category.xwt"
           class="org.eclipse.e4.xwt.ui.wizards.NewUIFileWizard"
           icon="icons/full/etool16/xaml_wiz.png"
-          id="org.eclipse.e4.xwt.ui.wizard.newUIFile"
+          id="org.eclipse.e4.xwt.ui.wizards.newUIFile"
           name="%wizard.name.0">
        <description>
           %wizard.description.0
@@ -44,10 +44,10 @@
     </wizard>
     <wizard
           category="org.eclipse.e4.xwt.ui.category.xwt"
-          class="org.eclipse.e4.xwt.ui.wizards.NewUIComponentWizard"
+          class="org.eclipse.e4.xwt.ui.wizards.NewMediatorWizard"
           hasPages="true"
           icon="icons/full/etool16/newexprj_wiz.png"
-          id="org.eclipse.e4.xwt.ui.wizard.newUIComponent"
+          id="org.eclipse.e4.xwt.ui.wizards.NewMediatorWizard"
           name="%wizard.name.1">
        <description>
           %wizard.description.1
