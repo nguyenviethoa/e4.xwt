@@ -59,23 +59,16 @@ public class Metaclass implements IMetaclass {
 		this.type = type;
 		this.name = type.getSimpleName();
 		this.superClass = superClass;
-		String packageName = "";
-		if (type.getPackage() != null) {
-			packageName = type.getPackage().getName();
-		}
+
 		try {
 			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
 			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 			for (PropertyDescriptor p : propertyDescriptors) {
 				String propertyName = p.getName();
 				Class<?> propertyType = p.getPropertyType();
-				if ("class".equals(propertyName)) {
+				if (shouldIgnored(type, propertyName, propertyType)) {
 					continue;
 				}
-				if (("data".equals(propertyName) && packageName.startsWith("org.eclipse.swt.")) || ("handle".equals(propertyName) && propertyType == int.class) || ("monitor".equals(propertyName) && propertyType == Monitor.class) || ("region".equals(propertyName) && propertyType == Region.class) || ("parent".equals(propertyName) && propertyType == Composite.class) || ("shell".equals(propertyName) && propertyType == Shell.class) || ("display".equals(propertyName) && propertyType == Display.class)) {
-					continue;
-				}
-
 				if (p.getPropertyType() != null) {
 					IProperty property = (superClass != null ? superClass.findProperty(p.getName()) : null);
 					if (property != null && !property.isDefault()) {
@@ -88,7 +81,13 @@ public class Metaclass implements IMetaclass {
 				}
 			}
 			for (Field f : type.getDeclaredFields()) {
-				if (!propertyCache.containsKey(normalize(f.getName())) && !Modifier.isFinal(f.getModifiers()) && Modifier.isPublic(f.getModifiers())) {
+				String propertyName = f.getName();
+				Class<?> propertyType = f.getType();
+				if (shouldIgnored(type, propertyName, propertyType)) {
+					continue;
+				}
+
+				if (!propertyCache.containsKey(normalize(propertyName)) && !Modifier.isFinal(f.getModifiers()) && Modifier.isPublic(f.getModifiers())) {
 					addProperty(new FieldProperty(f));
 				}
 			}
@@ -103,6 +102,23 @@ public class Metaclass implements IMetaclass {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private boolean shouldIgnored(Class<?> type, String propertyName, Class<?> propertyType) {
+		String packageName = "";
+		if (type.getPackage() != null) {
+			packageName = type.getPackage().getName();
+		}
+		if (("data".equals(propertyName) && packageName.startsWith("org.eclipse.swt."))) {
+			return true;
+		}
+		if ("class".equals(propertyName)) {
+			return true;
+		}
+		if (("handle".equals(propertyName) && int.class == propertyType) || ("monitor".equals(propertyName) && Monitor.class == propertyType) || ("region".equals(propertyName) && Region.class == propertyType) || ("parent".equals(propertyName) && Composite.class == propertyType) || ("shell".equals(propertyName) && Shell.class == propertyType) || ("display".equals(propertyName) && Display.class == propertyType)) {
+			return true;
+		}
+		return false;
 	}
 
 	private boolean isWidgetType(Class<?> type) {

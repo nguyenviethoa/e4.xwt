@@ -10,33 +10,26 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.editor;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.ui.ExceptionHandle;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
+import org.eclipse.e4.xwt.ui.editor.dnd.ImageDnDAdapter;
+import org.eclipse.e4.xwt.ui.editor.dnd.PaletteDnDAdapter;
+import org.eclipse.e4.xwt.ui.editor.dnd.UserDefinedDnDAdapter;
 import org.eclipse.e4.xwt.ui.editor.render.XWTRender;
 import org.eclipse.e4.xwt.ui.editor.treeviewer.XWTTableTreeViewer;
-import org.eclipse.e4.xwt.ui.editor.util.UserDefinedDropProxy;
 import org.eclipse.e4.xwt.ui.utils.DisplayUtil;
 import org.eclipse.e4.xwt.ui.utils.ImageManager;
 import org.eclipse.e4.xwt.ui.utils.ProjectContext;
 import org.eclipse.e4.xwt.ui.views.XWTView;
 import org.eclipse.e4.xwt.vex.VEXCodeSynchronizer;
-import org.eclipse.e4.xwt.vex.VEXContext;
 import org.eclipse.e4.xwt.vex.VEXEditor;
 import org.eclipse.e4.xwt.vex.VEXFileChecker;
 import org.eclipse.e4.xwt.vex.VEXFileFormator;
 import org.eclipse.e4.xwt.vex.VEXRenderer;
-import org.eclipse.e4.xwt.vex.VEXTextEditorHelper;
-import org.eclipse.e4.xwt.vex.toolpalette.ContextType;
-import org.eclipse.e4.xwt.vex.toolpalette.Entry;
-import org.eclipse.e4.xwt.vex.toolpalette.ToolPaletteFactory;
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaProject;
@@ -48,16 +41,7 @@ import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.templates.ContextTypeRegistry;
-import org.eclipse.jface.text.templates.DocumentTemplateContext;
-import org.eclipse.jface.text.templates.GlobalTemplateVariables;
-import org.eclipse.jface.text.templates.Template;
-import org.eclipse.jface.text.templates.TemplateBuffer;
-import org.eclipse.jface.text.templates.TemplateContextType;
-import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.util.LocalSelectionTransfer;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -67,15 +51,14 @@ import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DropTarget;
-import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -85,15 +68,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.progress.ProgressManager;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.tabletree.IDesignViewer;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeHelpContextIds;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 
 public class XWTEditor extends VEXEditor {
 	/** The Java editor. */
@@ -102,7 +79,7 @@ public class XWTEditor extends VEXEditor {
 	private IFile javaFile;
 	private String className;
 
-	private UserDefinedDropProxy dropProxy;
+	private DropTargetListener dropTargetAdapter;
 
 	private ToolItem previewTool;
 	private ToolItem generateTool;
@@ -287,12 +264,7 @@ public class XWTEditor extends VEXEditor {
 			try {
 				XWTView view = (XWTView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(XWTView.ID);
 				if (view != null) {
-					try {
-						view.setContentWithException(value, file);
-					} catch (Exception e) {
-						// TODO Display to workbench message
-						e.printStackTrace();
-					}
+					view.setContent(value, file);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -332,6 +304,9 @@ public class XWTEditor extends VEXEditor {
 	}
 
 	public void initializeDND(VEXEditor editor) {
+		if (dropTargetAdapter == null) {
+			dropTargetAdapter = createDropTargetListener();
+		}
 		update(editor);
 	}
 
@@ -372,9 +347,9 @@ public class XWTEditor extends VEXEditor {
 			dragSource.setTransfer(types);
 		}
 		dragSource.addDragListener(dragSourceAdapter);
-		if (dropProxy == null) {
-			dropProxy = new UserDefinedDropProxy(this);
-		}
+		// if (dropProxy == null) {
+		// dropProxy = new XWTEditorDropProxy(this);
+		// }
 		final PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
 		if (part != null) {
 			TreeViewer treeViewer = part.getTreeViewer();
@@ -395,230 +370,35 @@ public class XWTEditor extends VEXEditor {
 		return monitor;
 	}
 
-	private DropTargetAdapter dropTargetAdapter = new DropTargetAdapter() {
-		static final int CARET_WIDTH = 2;
+	private XWTDropTargetListener createDropTargetListener() {
+		XWTDropTargetListener dropTargetListener = new XWTDropTargetListener() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.swt.dnd.DropTargetAdapter#drop(org.eclipse.swt.dnd.DropTargetEvent)
+			 */
+			public void drop(DropTargetEvent event) {
+				super.drop(event);
+				IFile file = (IFile) getTextEditor().getEditorInput().getAdapter(IFile.class);
 
-		protected int dropCaretOffset = -1;
-		private Map<String, String> name2content = new HashMap<String, String>();
-
-		public void dragOperationChanged(DropTargetEvent event) {
-			super.dragOperationChanged(event);
-		}
-
-		public void drop(DropTargetEvent event) {
-			IFile file = (IFile) getTextEditor().getEditorInput().getAdapter(IFile.class);
-
-			VEXFileFormator formator = new VEXFileFormator();
-			IDocument document = getTextEditor().getTextViewer().getDocument();
-			try {
-				formator.format(document, file.getContentDescription().getContentType().getId());
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-			PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
-			if (part != null) {
-				part.setLinkingEnabled(true);
-			}
-		}
-
-		@Override
-		public void dragLeave(DropTargetEvent event) {
-			StyledText styledText = getTextWidget();
-
-			if (dropCaretOffset != -1) {
-				refreshCaret(styledText, dropCaretOffset);
-			}
-		}
-
-		@Override
-		public void dragOver(DropTargetEvent event) {
-			IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
-			if (selection == null) {
-				return;
-			}
-			Object element = selection.getFirstElement();
-			Entry entry = null;
-			if (element instanceof Entry) {
-				entry = (Entry) element;
-			} else if (dropProxy.isUserDefined(element)) {
-				entry = ToolPaletteFactory.eINSTANCE.createEntry();
-				entry.setScope("Composite");
-				entry.setContext(ContextType.XML_TAG);
-			}
-			if (entry != null) {
-				VEXContext context = getContext();
-
-				StructuredTextEditor textEditor = getTextEditor();
-				StructuredTextViewer textViewer = textEditor.getTextViewer();
-				int cursor = VEXTextEditorHelper.getOffsetAtPoint(textViewer, new Point(event.x, event.y));
-				IDOMNode node = VEXTextEditorHelper.getNode(textViewer, cursor);
-				int position = context.findDropPosition(node, entry, cursor);
-				if (position < 0) {
-					event.detail = DND.DROP_NONE;
-				} else {
-					StyledText styledText = getTextWidget();
-					dropCaretOffset = position;
-					refreshCaret(styledText, dropCaretOffset);
+				VEXFileFormator formator = new VEXFileFormator();
+				IDocument document = getTextEditor().getTextViewer().getDocument();
+				try {
+					formator.format(document, file.getContentDescription().getContentType().getId());
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+				PackageExplorerPart part = PackageExplorerPart.getFromActivePerspective();
+				if (part != null) {
+					part.setLinkingEnabled(true);
 				}
 			}
-			super.dragOver(event);
-		}
-
-		public void dropAccept(DropTargetEvent event) {
-			IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
-			if (selection == null) {
-				return;
-			}
-			Object element = selection.getFirstElement();
-			Template template = null;
-
-			if (element instanceof Entry) {
-				Entry entry = (Entry) element;
-
-				// update layout and layoutData.
-				updateLayoutEntry(entry, event.x, event.y);
-				updateLayoutDataEntry(entry, event.x, event.y);
-
-				template = new Template(entry.getName(), "", entry.getContext().getName(), entry.getContent(), true);
-
-			} else if (dropProxy.isUserDefined(element)) {
-				template = new Template(dropProxy.getName(), "", ContextType.XML_TAG.getName(), dropProxy.getContent(), true);
-				if (dropProxy.isNsURINew()) {
-					String pattern = "xmlns:" + dropProxy.getPrefix() + "=\"" + dropProxy.getNamespace() + "\" ";
-					Template tem = new Template("xmlns:" + dropProxy.getPrefix(), "", ContextType.XML_ATTRIBUTE.getName(), pattern, true);
-					StructuredTextEditor textEditor = getTextEditor();
-					StructuredTextViewer textViewer = textEditor.getTextViewer();
-					IDOMNode node = VEXTextEditorHelper.getNode(textViewer, 0);
-					NamedNodeMap attributes = node.getAttributes();
-					int dropNsIndex = 0;
-					for (int i = 0; i < attributes.getLength(); i++) {
-						IDOMAttr attr = (IDOMAttr) attributes.item(i);
-						String nodeName = attr.getNodeName();
-						if ("xmlns:x".equals(nodeName)) {
-							dropNsIndex = attr.getEndOffset();
-							break;
-						}
-					}
-					dropCaretOffset += pattern.length();
-					insert(tem, dropNsIndex);
-				}
-			}
-			if (template != null) {
-				insert(template, dropCaretOffset);
-			} else {
-				super.dropAccept(event);
-			}
-		}
-
-		private void insert(Template template, int dropCaretOffset) {
-			IDocument document = getTextEditor().getTextViewer().getDocument();
-			ContextTypeRegistry registry = XMLUIPlugin.getDefault().getTemplateContextRegistry();
-			if (registry != null) {
-				TemplateContextType type = registry.getContextType(template.getContextTypeId());
-
-				int length = 0;
-
-				DocumentTemplateContext templateContext = new DocumentTemplateContext(type, document, new Position(dropCaretOffset, length));
-				if (templateContext.canEvaluate(template)) {
-					try {
-						TemplateBuffer templateBuffer = templateContext.evaluate(template);
-						String templateString = templateBuffer.getString();
-						document.replace(dropCaretOffset, length, templateString);
-
-						StyledText styledText = getTextWidget();
-						int position = getCursorOffset(templateBuffer) + dropCaretOffset;
-						styledText.setCaretOffset(position);
-						styledText.setFocus();
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-			}
-		}
-
-		private int getCursorOffset(TemplateBuffer buffer) {
-			TemplateVariable[] variables = buffer.getVariables();
-			for (int i = 0; i != variables.length; i++) {
-				TemplateVariable variable = variables[i];
-				if (variable.getType().equals(GlobalTemplateVariables.Cursor.NAME))
-					return variable.getOffsets()[0];
-			}
-
-			return buffer.getString().length();
-		}
-
-		void refreshCaret(StyledText text, int newOffset) {
-			if (newOffset != -1) {
-				Point newPos = text.getLocationAtOffset(newOffset);
-				int newHeight = text.getLineHeight(newOffset);
-				text.redraw(newPos.x, newPos.y, CARET_WIDTH, newHeight, false);
-			}
-		}
-
-		protected void updateLayoutEntry(Entry entry, int x, int y) {
-
-			StructuredTextEditor textEditor = getTextEditor();
-			StructuredTextViewer textViewer = textEditor.getTextViewer();
-			int cursor = VEXTextEditorHelper.getOffsetAtPoint(textViewer, new Point(x, y));
-			Node node = VEXTextEditorHelper.getNode(textViewer, cursor);
-			while (node.getNodeType() == IDOMNode.TEXT_NODE) {
-				node = node.getParentNode();
-			}
-			String nodeName = node.getNodeName();
-			String name = entry.getName();
-//			String tagName = null;
-			if (nodeName != null && name.toLowerCase().endsWith("layout")) {
-//				String prefix = null;
-//				if (nodeName.indexOf(":") != -1) {
-//					prefix = nodeName.substring(0, nodeName.lastIndexOf(":"));
-//					tagName = nodeName.substring(nodeName.lastIndexOf(":") + 1);
-//				} else {
-//					tagName = nodeName;
-//				}
-				String content = name2content.get(name);
-				if (content == null) {
-					name2content.put(name, content = entry.getContent());
-				}
-				String source = "Composite";
-				StringTokenizer stk = new StringTokenizer(content, "<>");
-				while (stk.hasMoreTokens()) {
-					String nextToken = stk.nextToken();
-					if (nextToken.endsWith(".layout")) {
-						source = nextToken.substring(0, nextToken.lastIndexOf("."));
-						break;
-					}
-				}
-				String newContent = content.replace(source, nodeName);
-				entry.setContent(newContent);
-			}
-		}
-
-		protected void updateLayoutDataEntry(Entry entry, int x, int y) {
-			StructuredTextEditor textEditor = getTextEditor();
-			StructuredTextViewer textViewer = textEditor.getTextViewer();
-			int cursor = VEXTextEditorHelper.getOffsetAtPoint(textViewer, new Point(x, y));
-			Node node = VEXTextEditorHelper.getNode(textViewer, cursor);
-			while (node.getNodeType() == IDOMNode.TEXT_NODE) {
-				node = node.getParentNode();
-			}
-			String nodeName = node.getNodeName();
-			String name = entry.getName();
-			String tagName = null;
-			if (nodeName != null && name.toLowerCase().endsWith("data")) {
-				if (nodeName.indexOf(":") != -1) {
-					tagName = nodeName.substring(nodeName.lastIndexOf(":") + 1);
-				} else {
-					tagName = nodeName;
-				}
-				String content = name2content.get(name);
-				if (content == null) {
-					name2content.put(name, content = entry.getContent());
-				}
-				String newContent = content.replace("Control", tagName);
-				entry.setContent(newContent);
-			}
-		}
-	};
+		};
+		dropTargetListener.addDnDAdapter(new PaletteDnDAdapter(this));
+		dropTargetListener.addDnDAdapter(new UserDefinedDnDAdapter(this));
+		dropTargetListener.addDnDAdapter(new ImageDnDAdapter(this));
+		return dropTargetListener;
+	}
 
 	@Override
 	public void setFocus() {

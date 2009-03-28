@@ -60,6 +60,7 @@ import org.eclipse.e4.xwt.utils.DocumentObjectSorter;
 import org.eclipse.e4.xwt.utils.LoggerManager;
 import org.eclipse.e4.xwt.utils.NamespaceHelper;
 import org.eclipse.e4.xwt.utils.ObjectUtil;
+import org.eclipse.e4.xwt.utils.PathHelper;
 import org.eclipse.e4.xwt.utils.TableEditorHelper;
 import org.eclipse.e4.xwt.utils.UserDataHelper;
 import org.eclipse.e4.xwt.xml.Attribute;
@@ -1308,7 +1309,13 @@ public class ResourceLoader implements IVisualElementLoader {
 			ILoadingContext loadingContext = context.getLoadingContext();
 			URL resource = loadingContext.getClassLoader().getResource(contentValue);
 			if (resource == null) {
-				resource = new URL(context.getResourcePath() + contentValue);
+				URL resourcePath = context.getResourcePath();
+				String fPath = resourcePath.toString();
+				String absolutePath = PathHelper.getAbsolutePath(fPath, contentValue);
+				if ((file = new File(absolutePath)).exists()) {
+					return file.toURI().toURL().toString();
+				}
+				resource = new URL(absolutePath);
 			}
 			return resource.toString();
 		} catch (MalformedURLException e) {

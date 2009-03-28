@@ -160,6 +160,9 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 	 */
 	public void doDynamicPalette(Point point) {
 		IDOMNode node = getDOMNode(point);
+		if (palettePage == null) {
+			return;
+		}
 
 		if (node != null) {
 			Node parentNode = node.getParentNode();

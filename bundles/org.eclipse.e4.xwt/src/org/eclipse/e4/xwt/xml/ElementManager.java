@@ -346,16 +346,16 @@ public class ElementManager {
 			parser.getXMLReader().setErrorHandler(errorHandler);
 			parser.parse(stream, contentHandler);
 		} catch (SAXException saxe) {
-			Exception cause = saxe.getException();
-			try {
-				if (cause != null) {
-					XWT.getLogger().error(cause);
-				} else {
-					XWT.getLogger().error(saxe);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			// Exception cause = saxe.getException();
+			// try {
+			// if (cause != null) {
+			// XWT.getLogger().error(cause);
+			// } else {
+			// XWT.getLogger().error(saxe);
+			// }
+			// } catch (Exception e) {
+			// // e.printStackTrace();
+			// }
 			throw saxe;
 		} catch (ParserConfigurationException pce) {
 			try {

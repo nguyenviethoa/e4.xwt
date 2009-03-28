@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.vex;
 
+import org.eclipse.e4.xwt.vex.toolpalette.ContextType;
 import org.eclipse.e4.xwt.vex.toolpalette.Entry;
 import org.eclipse.emf.common.util.URI;
 import org.w3c.dom.Node;
@@ -66,4 +67,6 @@ public interface VEXContext {
 	 * @return -1 if non position found
 	 */
 	int findDropPosition(Node node, Entry entry, int cursorPosition);
+
+	int findDropPosition(Node node, String scope, ContextType contextType, int cursorPosition);
 }

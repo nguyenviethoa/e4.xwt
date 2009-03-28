@@ -21,10 +21,19 @@ import org.w3c.dom.NodeList;
 public abstract class AbstractContext implements VEXContext {
 
 	public int findDropPosition(Node node, Entry entry, int documentPosition) {
-		IDOMNode treeNode = (IDOMNode) node;
 		String scope = entry.getScope();
 		ContextType contextType = entry.getContext();
 
+		return findDropPosition(node, scope, contextType, documentPosition);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.vex.VEXContext#findDropPosition(org.w3c.dom.Node, java.lang.String, org.eclipse.e4.xwt.vex.toolpalette.ContextType, int)
+	 */
+	public int findDropPosition(Node node, String scope, ContextType contextType, int cursorPosition) {
+		IDOMNode treeNode = (IDOMNode) node;
 		// check scope first
 		if (scope != null) {
 			String scopeName = scope.trim();
@@ -42,7 +51,7 @@ public abstract class AbstractContext implements VEXContext {
 		case XML_ATTRIBUTE:
 			break;
 		case XML_ATTRIBUTE_VALUE: {
-			ITextRegion completionRegion = VEXTextEditorHelper.getCompletionRegion(documentPosition, treeNode);
+			ITextRegion completionRegion = VEXTextEditorHelper.getCompletionRegion(cursorPosition, treeNode);
 
 			String regionType = completionRegion.getType();
 
@@ -67,7 +76,7 @@ public abstract class AbstractContext implements VEXContext {
 			// }
 			// IDOMNode xmlnode = treeNode;
 
-			ITextRegion completionRegion = VEXTextEditorHelper.getCompletionRegion(documentPosition, treeNode);
+			ITextRegion completionRegion = VEXTextEditorHelper.getCompletionRegion(cursorPosition, treeNode);
 
 			String regionType = completionRegion.getType();
 
@@ -87,7 +96,7 @@ public abstract class AbstractContext implements VEXContext {
 			throw new UnsupportedOperationException();
 		}
 
-		return documentPosition;
+		return cursorPosition;
 	}
 
 	/**
