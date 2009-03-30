@@ -30,10 +30,9 @@
 		<td width="70%" valign="top">
 		<p>The XWT supports all standard layouts such as FillLayout,
 		FormLayout, GridLayout, RowLayout, StackLayout.</p>
-		<p>It also handles all SWT events and two additional events
-		"Initialized" and "loaded". "Initialized" is the event occurs when the
-		UI is initialized and "Loaded" is the event occurs when the window or
-		page is load.</p>		</td>
+		<p>It also handles all SWT events and an additional event "loaded". The "loaded" is the event occurs when the resource file is loaded.</p>
+		<p>A facility method "InitializeComponent" can be used in the control class for the initailization purpose. It plays the same rule as &quot;loaded&quot; event and it is called before the &quot;loaded&quot; event.</p>
+	  </td>
 	</tr>
 
 	<tr>
@@ -65,10 +64,10 @@
 		<td width="30%" valign="top" align="left">
 		<h3>Support of JFaces viewers</h3>		</td>
 		<td width="70%" valign="top">
-		<p>It supports JFace ListViewer and TableViewer. The following
-		Viewer binds to a Company object. The data can be stored in an Array
-		or in a collection.</p>
-		<p>This is ListViewer.</p>
+		<p>XWT supports JFace ListViewer, TableViewer. The following
+		Viewer binds to a Company object. The &quot;input&quot; data must be an Array
+		or a collection.</p>
+		<p>Here is an example of ListViewer.</p>
 		<p><img src="images/mac-feature_06.png" /></p>
 
 		<p>Below is a TableViewer example with the definition of two table
@@ -84,7 +83,7 @@
 		<td width="30%" valign="top" align="left">
 		<h3>Easy support of custom widgets</h3>		</td>
 		<td width="70%" valign="top">
-		<p>Capable integrate directly user-defined Widget in Java into
+		<p>Capable to integrate directly user-defined Widget in Java into
 		XWT.</p>
 		<p>The customized UI &quot;UserControl&quot; contains a Button
 		with a selection event.</p>
@@ -92,7 +91,7 @@
 		<p><img src="images/mac-feature_20.png" /></p>
 
 		<p>Now integrate the above example into a new XWT component
-		directly. See the screenshot below.</p>
+		directly.</p>
 		<p><img src="images/mac-feature_10.png" /></p>
 
 		<p>Here is the result.</p>
@@ -108,7 +107,7 @@
 		<h3>Style</h3>		</td>
 		<td width="70%" valign="top">
 		<p>All the controls in XWT has an additional property
-		&quot;style&quot;, which can select a style object where you can
+		&quot;style&quot;, which can select a Style object where you can
 		define a common appearance such as fonts, colors and images.</p>
 		<p>In the following example, we defined the background of Label
 		with red color.</p>
@@ -157,7 +156,7 @@
 		If a node has not a data context specification, it inherits the data
 		context of his parent. The data binding expression in a property
 		relies on the data context of Node.</p>
-		<p>&nbsp;</p>		</td>
+	  </td>
 	</tr>
 	<tr>
 		<td colspan="2">
@@ -179,7 +178,7 @@
 		<hr />		</td>
 	</tr>
 	<tr>
-		<td width="30%" valign="top" align="left"><b>Debug logging</b></td>
+		<td width="30%" valign="top" align="left"><b>Debug tracking</b></td>
 		<td width="70%" valign="top">
 		<p>Data Binding requires always a consistent configuration between data model, binding expression and UI structure. In a real application, it becomes quickly complex and the trouble shooting can be a headache work without a specific tool. This option displays UI element tree structure with the associated data context and its resolution with data binding expression. It can identify and indicate quickly the location and nature of errors.</p>
 		<p>Take the example above, add an event button. Run the project.</p>
@@ -316,7 +315,7 @@
 		<h3>Styling</h3>
 		</td>
 		<td width="70%" valign="top">
-        <p>XWT implements a customizable styling mechanism. A style can be applied in several levels:</p>
+        <p>In addition to the embedded XML-based style, XWT implements a customizable styling mechanism. A styling can be applied in several levels:</p>
 	    <ul>
 	      <li>Application</li>
 	      <li>Resource View</li>
