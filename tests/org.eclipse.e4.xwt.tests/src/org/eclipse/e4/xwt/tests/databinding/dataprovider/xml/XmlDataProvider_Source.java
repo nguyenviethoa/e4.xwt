@@ -14,9 +14,11 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.xml.XmlDataProvider;
 
 public class XmlDataProvider_Source {
 	public static void main(String[] args) {
+		XWT.registerMetaclass(XmlDataProvider.class);
 
 		URL url = XmlDataProvider_Source.class.getResource(XmlDataProvider_Source.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {

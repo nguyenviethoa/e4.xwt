@@ -10,20 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.databinding;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
 public class Person {
-	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
-
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		changeSupport.addPropertyChangeListener(propertyName, listener);
-	}
-
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		changeSupport.removePropertyChangeListener(propertyName, listener);
-	}
-
 	private String name = "toto";
 	private Address address;
 
@@ -32,9 +19,7 @@ public class Person {
 	}
 
 	public void setName(String value) {
-		String oldValue = this.name;
 		this.name = value;
-		changeSupport.firePropertyChange("name", oldValue, value);
 	}
 
 	public String getName() {
@@ -46,9 +31,7 @@ public class Person {
 	}
 
 	public void setAddress(Address address) {
-		Address oldValue = this.address;
 		this.address = address;
-		changeSupport.firePropertyChange("address", oldValue, address);
 	}
 
 }

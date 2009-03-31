@@ -14,7 +14,7 @@ import org.eclipse.e4.xwt.dataproviders.observable.XWTObservableValue;
 import org.w3c.dom.Node;
 
 /**
- * @author jliu jin.liu@soyatec.com
+ * @author jliu (jin.liu@soyatec.com)
  */
 public class XmlObservableValue extends XWTObservableValue {
 
