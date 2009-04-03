@@ -73,7 +73,8 @@ public class MetaclassManager {
 				return factory.create(javaClass, superMetaclass);
 			}
 		}
-		return new Metaclass(javaClass, superMetaclass);
+		boolean lazyLoading = false; // TODO Get value from preference
+		return new Metaclass(javaClass, superMetaclass, lazyLoading);
 	}
 
 	public static String normalizePropertyName(String name) {

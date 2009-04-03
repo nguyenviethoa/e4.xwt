@@ -49,7 +49,6 @@ import org.eclipse.e4.xwt.javabean.ValueConvertorRegister;
 import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass;
 import org.eclipse.e4.xwt.javabean.metadata.ComboBoxCellEditorMetaclass;
 import org.eclipse.e4.xwt.javabean.metadata.ExpandItemHeightAction;
-import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.javabean.metadata.MetaclassManager;
 import org.eclipse.e4.xwt.javabean.metadata.TableEditorMetaclass;
 import org.eclipse.e4.xwt.javabean.metadata.TableViewerColumnMetaClass;
@@ -697,9 +696,9 @@ public class XWT {
 		convertorRegister.register(String.class, double.class, new StringToDouble());
 
 		Class<?> type = org.eclipse.swt.browser.Browser.class;
-		Metaclass browserMetaclass = (Metaclass) XWT.registerMetaclass(type);
+		IMetaclass browserMetaclass = (IMetaclass) XWT.registerMetaclass(type);
 		browserMetaclass.addProperty(new DynamicProperty(type, String.class, PropertiesConstants.PROPERTY_URL));
-		Metaclass buttonMetaclass = (Metaclass) XWT.registerMetaclass(org.eclipse.swt.widgets.Button.class);
+		IMetaclass buttonMetaclass = (IMetaclass) XWT.registerMetaclass(org.eclipse.swt.widgets.Button.class);
 		buttonMetaclass.addProperty(new DataProperty(ICommand.class, IConstants.XAML_COMMAND, IUserDataConstants.XWT_COMMAND_KEY));
 
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Canvas.class);
@@ -721,7 +720,7 @@ public class XWT {
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Listener.class);
 		XWT.registerMetaclass(org.eclipse.swt.widgets.List.class);
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Menu.class);
-		Metaclass menuItemMetaclass = (Metaclass) XWT.registerMetaclass(org.eclipse.swt.widgets.MenuItem.class);
+		IMetaclass menuItemMetaclass = (IMetaclass) XWT.registerMetaclass(org.eclipse.swt.widgets.MenuItem.class);
 		menuItemMetaclass.addProperty(new DataProperty(ICommand.class, IConstants.XAML_COMMAND, IUserDataConstants.XWT_COMMAND_KEY));
 
 		XWT.registerMetaclass(org.eclipse.swt.widgets.MessageBox.class);
@@ -737,7 +736,7 @@ public class XWT {
 
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Table.class);
 		type = org.eclipse.swt.widgets.TableItem.class;
-		Metaclass metaclass = (Metaclass) XWT.registerMetaclass(type);
+		IMetaclass metaclass = (IMetaclass) XWT.registerMetaclass(type);
 		metaclass.addProperty(new TableItemProperty());
 		metaclass.addProperty(new TableItemEditorProperty());
 		metaclass.addProperty(new DynamicBeanProperty(TableItem.class, String[].class, PropertiesConstants.PROPERTY_TEXTS, PropertiesConstants.PROPERTY_TEXT));
@@ -750,7 +749,7 @@ public class XWT {
 		TableEditorMetaclass.addProperty(new TableEditorDynamicProperty());
 
 		type = org.eclipse.swt.widgets.TableColumn.class;
-		metaclass = (Metaclass) XWT.registerMetaclass(type);
+		metaclass = (IMetaclass) XWT.registerMetaclass(type);
 		metaclass.addProperty(new TableColumnEditorProperty());
 
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Text.class);
@@ -763,7 +762,7 @@ public class XWT {
 		XWT.registerMetaclass(org.eclipse.swt.widgets.TreeColumn.class);
 		XWT.registerMetaclass(org.eclipse.swt.widgets.TreeItem.class);
 		type = org.eclipse.swt.widgets.TreeItem.class;
-		metaclass = (Metaclass) XWT.registerMetaclass(type);
+		metaclass = (IMetaclass) XWT.registerMetaclass(type);
 		metaclass.addProperty(new DynamicBeanProperty(TreeItem.class, String[].class, PropertiesConstants.PROPERTY_TEXTS, PropertiesConstants.PROPERTY_TEXT));
 
 		// XWT.registerMetaclass(org.eclipse.swt.layout.FillData.class);
@@ -785,11 +784,11 @@ public class XWT {
 		XWT.registerMetaclass(org.eclipse.swt.custom.StyledText.class);
 
 		type = org.eclipse.swt.widgets.Widget.class;
-		metaclass = (Metaclass) XWT.registerMetaclass(type);
+		metaclass = (IMetaclass) XWT.registerMetaclass(type);
 		metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT, IUserDataConstants.XWT_DATACONTEXT_KEY));
 
 		type = org.eclipse.jface.viewers.ColumnViewer.class;
-		metaclass = (Metaclass) core.getMetaclass(type);
+		metaclass = (IMetaclass) core.getMetaclass(type);
 		if (metaclass != null) {
 			metaclass.addProperty(new DynamicBeanProperty(type, String[].class, PropertiesConstants.PROPERTY_COLUMN_PROPERTIES, PropertiesConstants.PROPERTY_COLUMN_PROPERTIES));
 			metaclass.addProperty(new TableViewerColumnsProperty());
@@ -803,7 +802,7 @@ public class XWT {
 		type = org.eclipse.jface.viewers.TableViewerColumn.class;
 		core.registerMetaclass(new TableViewerColumnMetaClass(core.getMetaclass(type.getSuperclass())), IConstants.XWT_NAMESPACE);
 
-		metaclass = (Metaclass) core.getMetaclass(type);
+		metaclass = (IMetaclass) core.getMetaclass(type);
 		metaclass.addProperty(new TableViewerColumnWidthProperty());
 		metaclass.addProperty(new TableViewerColumnTextProperty());
 

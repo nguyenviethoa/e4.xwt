@@ -224,12 +224,6 @@ public class Core {
 			return resourcePath;
 		}
 
-		// public Object getService(Class<?> type) {
-		// ServiceReference serviceReference =
-		// context.getServiceReference(type.getName());
-		// return context.getService(serviceReference);
-		// }
-
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -239,17 +233,6 @@ public class Core {
 			return encoding;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.soyatec.xaml.IExtensionContext#getExtension(java.lang.String)
-		 */
-		// public IUElement getExtension(Element element) {
-		// if (extensionManager == null) {
-		// return null;
-		// }
-		// return extensionManager.getExtension(element, this);
-		// }
 		public Object getProperty(String name) {
 			return properties.get(name);
 		}
