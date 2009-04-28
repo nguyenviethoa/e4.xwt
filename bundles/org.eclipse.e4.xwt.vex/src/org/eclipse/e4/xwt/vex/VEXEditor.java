@@ -14,16 +14,20 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.xwt.vex.palette.CustomPalettePage;
 import org.eclipse.e4.xwt.vex.palette.PaletteResourceManager;
 import org.eclipse.e4.xwt.vex.palette.PaletteViewManager;
+import org.eclipse.e4.xwt.vex.palette.customize.CustomizeComponentFactory;
+import org.eclipse.e4.xwt.vex.palette.customize.model.CustomizeComponent;
 import org.eclipse.e4.xwt.vex.palette.part.DynamicPaletteViewer;
 import org.eclipse.e4.xwt.vex.swt.AnimatedImage;
 import org.eclipse.e4.xwt.vex.swt.CustomSashForm;
@@ -43,10 +47,26 @@ import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.requests.SimpleFactory;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.views.palette.PalettePage;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.SubStatusLineManager;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.IRewriteTarget;
+import org.eclipse.jface.text.ITextListener;
+import org.eclipse.jface.text.ITextViewerExtension;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.text.templates.ContextTypeRegistry;
+import org.eclipse.jface.text.templates.DocumentTemplateContext;
+import org.eclipse.jface.text.templates.GlobalTemplateVariables;
+import org.eclipse.jface.text.templates.Template;
+import org.eclipse.jface.text.templates.TemplateBuffer;
+import org.eclipse.jface.text.templates.TemplateContextType;
+import org.eclipse.jface.text.templates.TemplateVariable;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -76,11 +96,14 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -113,6 +136,8 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 	/** Tools Palette objects */
 	private PaletteResourceManager tResourceManager;
 	private static PalettePage palettePage;
+
+	private IStatusLineManager slManager;
 
 	protected PropertyChangeListener changeListener = new PropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent evt) {
@@ -165,7 +190,12 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 		}
 
 		if (node != null) {
-			Node parentNode = node.getParentNode();
+			Node parentNode = null;
+			if (node instanceof IDOMText) {
+				parentNode = node.getParentNode();
+			} else {
+				parentNode = node;
+			}
 
 			tResourceManager = getPaletteResourceManager();
 			Resource dynamicResource = tResourceManager.getDynamicResource();
@@ -223,7 +253,9 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 
 			// add the dynamic palette
 			if (parentNode.getLocalName() != null && !parentNode.getLocalName().equals("")) { //$NON-NLS-1$
+
 				List<Entry> insert = getSubEntries(parentNode, entries);
+				// insert.addAll(customizeComponentList);
 				if (insert != null) {
 					for (Entry ent : insert) {
 						if (ent.getScope() != null && ent.getScope().equals(parentNode.getLocalName())) {
@@ -237,12 +269,47 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 						}
 					}
 				}
+				List<Entry> customizeComponentList = getCustomizeEntries();
+				for (Entry entry : customizeComponentList) {
+					if (entry.getScope() != null && entry.getScope().equals(parentNode.getLocalName())) {
+						Entry subEntry = (Entry) EcoreUtil.copy(entry);
+						// add sub entry
+						dynamicEntryRoot.getEntries().add(subEntry);
+						CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(subEntry.getName(), subEntry.getToolTip(), subEntry, new SimpleFactory(dynamicResource.getClass()), ImageHelper.getImageDescriptor(tResourceManager, subEntry.getIcon()), ImageHelper.getImageDescriptor(tResourceManager, subEntry.getLargeIcon()));
+						dynamicPaletteGroup.add(component);
+					}
+				}
 			}
 			root.add(dynamicPaletteGroup);
 			RootEditPart rootEditPart = dynamicPaletteViewer.getRootEditPart();
 			refreshAllEditParts(rootEditPart);
 			System.out.println();
 		}
+	}
+
+	public List<Entry> getCustomizeEntries() {
+		List<Entry> result = new ArrayList<Entry>();
+		List<String> customizeComponentNameList = CustomizeComponentFactory.getCustomizeComponentFactory().getCustomizeComponentNameList();
+		if (customizeComponentNameList != null) {
+			Entry entry = null;
+			for (int i = 0; i < customizeComponentNameList.size(); i++) {
+				CustomizeComponent customizeComponent = CustomizeComponentFactory.getCustomizeComponentFactory().getCustomizeComponentByName(customizeComponentNameList.get(i));
+				if (customizeComponent != null) {
+					entry = ToolPaletteFactory.eINSTANCE.createEntry();
+					entry.setName(customizeComponent.getName());
+					entry.setScope(customizeComponent.getScope());
+					entry.setIcon(customizeComponent.getIcon());
+					entry.setLargeIcon(customizeComponent.getLargeIcon());
+					entry.setToolTip(customizeComponent.getTooptip());
+					entry.setContent(customizeComponent.getContent());
+				}
+				if (entry != null) {
+					result.add(entry);
+
+				}
+			}
+		}
+		return result;
 	}
 
 	private void refreshAllEditParts(EditPart part) {
@@ -284,7 +351,7 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 	private List<Entry> getSubEntries(Node node, List<Entry> entries) {
 		List<Entry> result = null;
 		for (Entry entry : entries) {
-			if (entry.getName().equals(node.getLocalName())) {
+			if (entry.getName().equalsIgnoreCase(node.getLocalName())) {
 				result = entry.getEntries();
 			}
 			if (result == null) {
@@ -401,7 +468,7 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 		if (render == null) {
 			render = createRender(container);
 		}
-
+		slManager = getEditorSite().getActionBars().getStatusLineManager();
 		return composite;
 	}
 
@@ -463,6 +530,34 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 
 			textViewer.getTextWidget().addMouseListener(mouseAdapter);
 			textViewer.getTextWidget().addKeyListener(keyAdapter);
+
+			textViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					StructuredTextViewer textViewer = fTextEditor.getTextViewer();
+					StyledText control = (StyledText) textViewer.getTextWidget();
+					Caret caret = control.getCaret();
+					if (caret != null) {
+						Point location = caret.getLocation();
+						// if (!isExecuted) {
+						doDynamicPalette(location);
+						// }
+						// isExecuted = false;
+					}
+				}
+			});
+
+			textViewer.addTextListener(new ITextListener() {
+				public void textChanged(TextEvent event) {
+					// TODO Auto-generated method stub
+					StructuredTextViewer textViewer = fTextEditor.getTextViewer();
+					StyledText control = (StyledText) textViewer.getTextWidget();
+					Caret caret = control.getCaret();
+					if (caret != null) {
+						Point location = caret.getLocation();
+						// updatePasteActionState(location);
+					}
+				}
+			});
 
 			IDocument document = textViewer.getDocument();
 			document.addDocumentListener(new DocumentListener());
@@ -599,19 +694,21 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 			String value = newInput.get();
 			IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
 
-			container.setCursor(container.getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
-			while (!container.getDisplay().readAndDispatch()) {
-			}
-			if (render != null && render.updateView(value, file)) {
-				if (loadingMessage != null && !loadingMessage.isDisposed()) {
-					loadingMessage.dispose();
-					loadingMessage = null;
+			if (container.getDisplay() != null) {
+				container.setCursor(container.getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
+				while (!container.getDisplay().readAndDispatch()) {
 				}
-				return true;
-			}
-			if (loadingMessage != null && !loadingMessage.isDisposed()) {
-				loadingMessage.stop();
-				loadingMessage.setText("No window found or an error occurs."); //$NON-NLS-1$
+				if (render != null && render.updateView(value, file)) {
+					if (loadingMessage != null && !loadingMessage.isDisposed()) {
+						loadingMessage.dispose();
+						loadingMessage = null;
+					}
+					return true;
+				}
+				if (loadingMessage != null && !loadingMessage.isDisposed()) {
+					loadingMessage.stop();
+					loadingMessage.setText("No window found or an error occurs."); //$NON-NLS-1$
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -730,98 +827,160 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 	 * @param entry
 	 */
 	public void defaultCreation(Entry entry) {
-		System.out.println(entry.getId());
-		System.out.println(entry.getName());
-		System.out.println(entry.getScope());
-		System.out.println(entry.getIcon());
-		System.out.println(entry.getLargeIcon());
-		System.out.println(entry.getToolTip());
-		System.out.println(entry.getContent());
-
 		StyledText control = fTextEditor.getTextViewer().getTextWidget();
 		Caret caret = control.getCaret();
 		if (caret != null) {
 			Point location = caret.getLocation();
 			IDOMNode node = getDOMNode(location);
-			Point addEntryPosition = getAddEntryPosition(location, node);
-			if (addEntryPosition != null) {
-				insertEntry(addEntryPosition, node);
-				updateStatusBarMessage("node " + entry.getName() + " has been insert");
+			IStructuredDocumentRegion refionDocumentRegion = node.getFirstStructuredDocumentRegion();
+			int caretOffset = getAddEntryPosition(refionDocumentRegion, location, node, entry);
+			if (caretOffset >= 0) {
+				insertEntry(caretOffset, entry);
+				updateStatusBarMessage(EditorMessages.VEXEditor_NODE + entry.getName() + EditorMessages.VEXEditor_SUBFIX_OK);
 			} else {
-				updateStatusBarMessage("node " + entry.getName() + " can not be insert");
+				updateStatusBarMessage(EditorMessages.VEXEditor_NODE + entry.getName() + EditorMessages.VEXEditor_SUBFIX_FAIL);
 			}
+			adjustAfterDefaultCreation(node);
 		}
 
 	}
 
 	/**
+	 * @param node
+	 */
+	public void adjustAfterDefaultCreation(Node node) {
+		Point location = getCurrentLocation();
+		doDynamicPalette(location);
+	}
+
+	/**
+	 * @return
+	 */
+	public Point getCurrentLocation() {
+		StructuredTextEditor textEditor = getTextEditor();
+		StructuredTextViewer textViewer = textEditor.getTextViewer();
+		StyledText control = (StyledText) textViewer.getTextWidget();
+		Caret caret = control.getCaret();
+		Point location = caret.getLocation();
+		return location;
+	}
+
+	/**
 	 * get the insert position from the given start location, using for add an node to VEX editor
 	 * 
-	 * @author BOB
+	 * @param refionDocumentRegion
 	 * @param startLocation
 	 * @param addNode
-	 * @return insert Point, or null
+	 * @param addEntry
+	 * @return
 	 */
-	private Point getAddEntryPosition(Point startLocation, IDOMNode addNode) {
-
-		/*-----------------------reference code---------------------------*/
-
-		// IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
-		// if (selection == null) {
-		// return;
-		// }
-		// Object element = selection.getFirstElement();
-		// if (element instanceof Entry) {
-		// Entry entry = (Entry) element;
-		//
-		// // update layout and layoutData.
-		// updateLayoutEntry(entry, event.x, event.y);
-		// updateLayoutDataEntry(entry, event.x, event.y);
-		//
-		// IDocument document = getTextEditor().getTextViewer().getDocument();
-		//
-		// Template template = new Template(entry.getName(), "", entry.getContext().getName(), entry.getContent(), true);
-		//
-		// ContextTypeRegistry registry = XMLUIPlugin.getDefault().getTemplateContextRegistry();
-		// if (registry != null) {
-		// TemplateContextType type = registry.getContextType(template.getContextTypeId());
-		//
-		// int length = 0;
-		//
-		// DocumentTemplateContext templateContext = new DocumentTemplateContext(type, document, new Position(dropCaretOffset, length));
-		// if (templateContext.canEvaluate(template)) {
-		// try {
-		// TemplateBuffer templateBuffer = templateContext.evaluate(template);
-		// String templateString = templateBuffer.getString();
-		// document.replace(dropCaretOffset, length, templateString);
-		//
-		// StyledText styledText = getTextWidget();
-		// int position = getCursorOffset(templateBuffer) + dropCaretOffset;
-		// styledText.setCaretOffset(position);
-		// styledText.setFocus();
-		// } catch (Exception e) {
-		// throw new RuntimeException(e);
-		// }
-		// }
-		// }
-		// } else {
-		// super.dropAccept(event);
-		// }
-		/*-----------------------reference code---------------------------*/
-
-		return null;
+	protected int getAddEntryPosition(IStructuredDocumentRegion refionDocumentRegion, Point startLocation, IDOMNode addNode, Entry addEntry) {
+		StructuredTextEditor textEditor = getTextEditor();
+		StructuredTextViewer textViewer = textEditor.getTextViewer();
+		int cursor = VEXTextEditorHelper.getOffsetAtPoint(textViewer, startLocation);
+		if (addNode.getParentNode() == null) {
+			return -1;
+		}
+		int caretOffset = context.findDropPosition(addNode, addEntry, cursor);
+		if (caretOffset < 0) {
+			IStructuredDocumentRegion refionDocumentRegion2 = refionDocumentRegion.getNext();
+			int starat = 0;
+			int end = 0;
+			if (refionDocumentRegion2 != null) {
+				starat = refionDocumentRegion2.getStartOffset();
+				end = refionDocumentRegion2.getEndOffset();
+			}
+			Point point = new Point(starat, end);
+			IStructuredDocumentRegion endStructuredDocumentRegion = addNode.getEndStructuredDocumentRegion();
+			int insertPosition = -1;
+			if (endStructuredDocumentRegion != null) {
+				insertPosition = endStructuredDocumentRegion.getEnd();
+			} else {
+				IStructuredDocumentRegion startStructuredDocumentRegion = addNode.getStartStructuredDocumentRegion();
+				if (startStructuredDocumentRegion != null) {
+					insertPosition = startStructuredDocumentRegion.getEnd();
+				}
+			}
+			addNode = (IDOMNode) addNode.getParentNode();
+			int firstValue = getAddEntryPosition(refionDocumentRegion2, point, addNode, addEntry);
+			if (firstValue > insertPosition) {
+				return firstValue;
+			}
+			if (firstValue == -1) {
+				return -1;
+			}
+			return insertPosition;
+		}
+		return caretOffset;
 	}
 
 	/**
 	 * insert node at special location
 	 * 
-	 * @author BOB
-	 * @param insertLocation
-	 * @param addNode
+	 * @param caretOffset
+	 * @param addEntry
 	 */
-	private void insertEntry(Point insertLocation, IDOMNode addNode) {
+	private void insertEntry(int caretOffset, Entry addEntry) {
+		IDocument document = getTextEditor().getTextViewer().getDocument();
+		Template template = new Template(addEntry.getName(), "", addEntry.getContext().getName(), addEntry.getContent(), true); //$NON-NLS-1$
+		ContextTypeRegistry registry = XMLUIPlugin.getDefault().getTemplateContextRegistry();
+		if (registry != null) {
+			TemplateContextType type = registry.getContextType(template.getContextTypeId());
 
-		return;
+			int length = 0;
+
+			DocumentTemplateContext templateContext = new DocumentTemplateContext(type, document, new Position(caretOffset, length));
+			if (templateContext.canEvaluate(template)) {
+				try {
+					// fix bug about dnd element undo
+					IRewriteTarget target = null;
+					StructuredTextEditor textEditor = getTextEditor();
+					StructuredTextViewer textViewer = textEditor.getTextViewer();
+					if (textViewer instanceof ITextViewerExtension) {
+						ITextViewerExtension extension = (ITextViewerExtension) textViewer;
+						target = extension.getRewriteTarget();
+					}
+					if (target != null)
+						target.beginCompoundChange();
+
+					TemplateBuffer templateBuffer = templateContext.evaluate(template);
+					String templateString = templateBuffer.getString();
+					document.replace(caretOffset, length, templateString);
+
+					StyledText styledText = getTextWidget();
+					int position = getCursorOffset(templateBuffer) + caretOffset;
+					styledText.setCaretOffset(position);
+					styledText.setFocus();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+
+		IFile file = (IFile) getTextEditor().getEditorInput().getAdapter(IFile.class);
+
+		VEXFileFormator formator = new VEXFileFormator();
+		try {
+			formator.format(document, file.getContentDescription().getContentType().getId());
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * @param buffer
+	 * @return
+	 */
+	private int getCursorOffset(TemplateBuffer buffer) {
+		TemplateVariable[] variables = buffer.getVariables();
+		for (int i = 0; i != variables.length; i++) {
+			TemplateVariable variable = variables[i];
+			if (variable.getType().equals(GlobalTemplateVariables.Cursor.NAME))
+				return variable.getOffsets()[0];
+		}
+
+		return buffer.getString().length();
 	}
 
 	/**
@@ -831,7 +990,11 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 	 * @param message
 	 */
 	private void updateStatusBarMessage(String message) {
-
-		return;
+		if (slManager != null) {
+			if (slManager instanceof SubStatusLineManager) {
+				((SubStatusLineManager) slManager).setVisible(true);
+			}
+			slManager.setMessage(message);
+		}
 	}
 }

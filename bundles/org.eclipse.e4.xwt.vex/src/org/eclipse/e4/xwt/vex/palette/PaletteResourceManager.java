@@ -16,6 +16,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.xwt.vex.Activator;
 import org.eclipse.e4.xwt.vex.EditorMessages;
 import org.eclipse.e4.xwt.vex.VEXEditor;
 import org.eclipse.emf.common.util.URI;
@@ -33,6 +36,11 @@ import org.eclipse.ui.IEditorInput;
 public class PaletteResourceManager {
 	private static final String DEFAULT_PATH = EditorMessages.PaletteResourceManager_toolkit;
 	private static final String DEFAULT_ICON_PATH = EditorMessages.PaletteResourceManager_icons;
+
+	public static final String PALETTE_CONTENT_PROVIDER_ID = Activator.PLUGIN_ID + ".paletteContentProvider";
+	public static final String GENARATOR = "generator";
+	public static final String CLASS = "class";
+
 	private URI resourcePath;
 	private URI iconsPath;
 	private Resource resource;
@@ -51,6 +59,26 @@ public class PaletteResourceManager {
 	}
 
 	public Resource getResource() {
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(PALETTE_CONTENT_PROVIDER_ID);
+		for (IConfigurationElement configurationElement : configurationElements) {
+			if (GENARATOR.equals(configurationElement.getName())) {
+				// get PaletteContentProvider here
+				try {
+					IPaletteContentProvider paletteContentProvider = (IPaletteContentProvider) configurationElement.createExecutableExtension(CLASS);
+					if (paletteContentProvider != null) {
+						ResourceSet rs = new ResourceSetImpl();
+						String location = Activator.getDefault().getStateLocation().toPortableString(); // .getBundle().getLocation();
+						URI uri = URI.createFileURI(location + "/tools/toolkit.toolpalette");
+						Resource newResource = rs.createResource(uri);
+						newResource.load(paletteContentProvider.getPaletteInputStream(), null);
+						return newResource;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 		if (resource == null) {
 			URI modelFilePath = getResourceFile();
 			if (modelFilePath != null) {

@@ -12,6 +12,8 @@ package org.eclipse.e4.xwt.vex.palette.customize;
 
 import org.eclipse.e4.xwt.vex.palette.customize.actions.AddCustomizePaletteAction;
 import org.eclipse.e4.xwt.vex.palette.customize.actions.DeleteCustomizeComponentAction;
+import org.eclipse.e4.xwt.vex.palette.customize.actions.ExportCustomizeComponentsAction;
+import org.eclipse.e4.xwt.vex.palette.customize.actions.ImportCustomizeComponentsAction;
 import org.eclipse.e4.xwt.vex.palette.customize.actions.ModifyCustomizeComponentAction;
 import org.eclipse.e4.xwt.vex.palette.part.CustomizePaletteViewer;
 import org.eclipse.gef.EditPart;
@@ -37,6 +39,8 @@ public class CustomerPaletteContextMenuProvider extends PaletteContextMenuProvid
 			EditPart selectedPart = (EditPart) paletteViewer.getSelectedEditParts().get(0);
 			// add the add customize menu to the popup menu
 			menu.appendToGroup(GEFActionConstants.GROUP_REST, new AddCustomizePaletteAction(paletteViewer, null, InvokeType.MenuAdd));
+			menu.appendToGroup(GEFActionConstants.GROUP_SAVE, new ExportCustomizeComponentsAction());
+			menu.appendToGroup(GEFActionConstants.GROUP_SAVE, new ImportCustomizeComponentsAction());
 			if (selectedPart instanceof ToolEntryEditPart) {
 				String selectedComponentName = ((CombinedTemplateCreationEntry) selectedPart.getModel()).getLabel();
 				String selectComponentName = selectedComponentName;

@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.vex;
 
 import org.eclipse.e4.xwt.vex.toolpalette.ContextType;
 import org.eclipse.e4.xwt.vex.toolpalette.Entry;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -38,9 +39,12 @@ public abstract class AbstractContext implements VEXContext {
 		if (scope != null) {
 			String scopeName = scope.trim();
 			if (scopeName.length() > 0) {
-				Node parentNode = treeNode.getParentNode();
-				if (parentNode == null || !isKindOf(parentNode, scopeName)) {
-					return -1;
+				// check from registered class
+				if (treeNode.getNodeType() == Node.TEXT_NODE) {
+					Node parentNode = treeNode.getParentNode();
+					if (parentNode == null || !isKindOf(parentNode, scopeName)) {
+						return -1;
+					}
 				}
 			}
 		}
@@ -80,13 +84,21 @@ public abstract class AbstractContext implements VEXContext {
 
 			String regionType = completionRegion.getType();
 
-			if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE || regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS || regionType == DOMRegionContext.XML_TAG_NAME) {
+			if (regionType == DOMRegionContext.XML_PI_CLOSE || regionType == DOMRegionContext.XML_PI_OPEN || regionType == DOMRegionContext.XML_CONTENT || regionType == DOMRegionContext.XML_TAG_OPEN || regionType == DOMRegionContext.XML_TAG_CLOSE || regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE || regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS || regionType == DOMRegionContext.XML_TAG_NAME || regionType == DOMRegionContext.XML_END_TAG_OPEN) {
 				// in case of attribute, find the first text node
 				NodeList nodeList = treeNode.getChildNodes();
-				for (int i = 0; i < nodeList.getLength(); i++) {
+				int length = nodeList.getLength();
+				for (int i = 0; i < length; i++) {
 					Node child = nodeList.item(i);
 					if (child.getNodeType() == Node.TEXT_NODE) {
 						return ((IDOMNode) child).getEndOffset();
+					}
+				}
+
+				if (regionType == DOMRegionContext.XML_END_TAG_OPEN && length == 0) {
+					IStructuredDocumentRegion endStructuredDocumentRegion = treeNode.getEndStructuredDocumentRegion();
+					if (cursorPosition == endStructuredDocumentRegion.getStart()) {
+						return cursorPosition;
 					}
 				}
 			}

@@ -22,8 +22,12 @@ import org.eclipse.e4.xwt.vex.palette.PaletteResourceManager;
 import org.eclipse.e4.xwt.vex.palette.customize.model.CustomizeComponent;
 import org.eclipse.e4.xwt.vex.palette.part.CustomizePaletteViewer;
 import org.eclipse.e4.xwt.vex.toolpalette.Entry;
+import org.eclipse.e4.xwt.vex.toolpalette.ToolPalette;
 import org.eclipse.e4.xwt.vex.toolpalette.ToolPaletteFactory;
+import org.eclipse.e4.xwt.vex.toolpalette.impl.ToolPaletteImpl;
 import org.eclipse.e4.xwt.vex.util.ImageHelper;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.PaletteEntry;
@@ -67,7 +71,7 @@ public class CustomizeComponentFactory {
 	}
 
 	private void refreshVEXEditorList() {
-		/*--------------------------support multiple editor-----------------------------*/
+		/* --------------------------support multiple editor----------------------------- */
 		allVEXEditorList.clear();
 		IEditorReference[] editorList = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
 		for (IEditorReference editorReference : editorList) {
@@ -76,7 +80,7 @@ public class CustomizeComponentFactory {
 				allVEXEditorList.add((VEXEditor) editorTemp);
 			}
 		}
-		/*--------------------------support multiple editor-----------------------------*/
+		/* --------------------------support multiple editor----------------------------- */
 
 	}
 
@@ -234,6 +238,52 @@ public class CustomizeComponentFactory {
 	}
 
 	/**
+	 * @return
+	 */
+	public ToolPalette getCustomizeToolPalette() {
+		ToolPalette toolPalette = ToolPaletteFactory.eINSTANCE.createToolPalette();
+		if (customizeComponentList.size() > 0) {
+			// add customize components
+			for (CustomizeComponent customizeComponent : customizeComponentList) {
+				Entry entry = ToolPaletteFactory.eINSTANCE.createEntry();
+				entry.setName(customizeComponent.getName());
+				entry.setScope(customizeComponent.getScope());
+				entry.setIcon(customizeComponent.getIcon());
+				entry.setLargeIcon(customizeComponent.getLargeIcon());
+				entry.setToolTip(customizeComponent.getTooptip());
+				entry.setContent(customizeComponent.getContent());
+
+				toolPalette.getEntries().add(entry);
+			}
+		}
+		return toolPalette;
+	}
+
+	/**
+	 * @param resource
+	 */
+	public void importCustomizeTool(Resource resource) {
+		EList<EObject> contents = resource.getContents();
+		for (EObject object : contents) {
+			if (object instanceof ToolPaletteImpl) {
+				ToolPaletteImpl toolPaletteImpl = (ToolPaletteImpl) object;
+				EList<Entry> entries = toolPaletteImpl.getEntries();
+				for (Entry entry : entries) {
+					CustomizeComponent component = new CustomizeComponent();
+					component.setName(entry.getName());
+					component.setScope(entry.getScope());
+					component.setIcon(entry.getIcon());
+					component.setLargeIcon(entry.getLargeIcon());
+					component.setTooptip(entry.getToolTip());
+					component.setContent(entry.getContent());
+					customizeComponentList.add(component);
+				}
+			}
+		}
+		refreshPalette();
+	}
+
+	/**
 	 * return customize components model list
 	 * */
 	public List<CustomizeComponent> getComponents() {
@@ -347,5 +397,30 @@ public class CustomizeComponentFactory {
 			}
 		}
 		return false;
+	}
+
+	public List<String> getCustomizeComponentNameList() {
+		List<String> customizeComponentNameList = new ArrayList<String>();
+
+		if (customizeComponentList != null) {
+			for (CustomizeComponent component : customizeComponentList) {
+				String name = component.getName();
+				customizeComponentNameList.add(name);
+			}
+		}
+		return customizeComponentNameList;
+	}
+
+	public CustomizeComponent getCustomizeComponentByName(String name) {
+		CustomizeComponent component = null;
+		if (customizeComponentList != null) {
+			for (CustomizeComponent comp : customizeComponentList) {
+				if (comp.getName().equals(name)) {
+					component = comp;
+					break;
+				}
+			}
+		}
+		return component;
 	}
 }

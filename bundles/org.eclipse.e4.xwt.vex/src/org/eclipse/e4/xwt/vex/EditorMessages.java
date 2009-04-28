@@ -68,6 +68,19 @@ public class EditorMessages extends NLS {
 	public static String VEXEditor_Dynamic;
 	public static String VEXEditor_DynamicCategory;
 
+	public static String VEXEditor_NODE;
+	public static String VEXEditor_SUBFIX_FAIL;
+	public static String VEXEditor_SUBFIX_OK;
+
+	public static String ImportCustomizeComponentsAction_ActionText;
+	public static String ImportCustomizeComponentsAction_DialogText;
+	public static String ImportCustomizeComponentsAction_ERROR;
+	public static String ImportCustomizeComponentsAction_ERROR_INFORMATION;
+	public static String ExportCustomizeComponentsAction_ActionText;
+	public static String ExportCustomizeComponentsAction_DialogText;
+	public static String ExportCustomizeComponentsAction_INFORMATION;
+	public static String ExportCustomizeComponentsAction_SUCCESS;
+
 	private static final String BUNDLE_NAME = EditorMessages.class.getPackage().getName() + ".messages"; //$NON-NLS-1$
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, EditorMessages.class);
