@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.databinding.DataBinding;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.impl.IBinding;
@@ -43,6 +45,8 @@ public class BindingMetaclass extends Metaclass {
 		private String elementName;
 
 		private Widget control;
+
+		private String mode;
 
 		public Object getSource() {
 			return source;
@@ -95,6 +99,14 @@ public class BindingMetaclass extends Metaclass {
 			return type;
 		}
 
+		public String getMode() {
+			return mode;
+		}
+
+		public void setMode(String mode) {
+			this.mode = mode;
+		}
+
 		protected Object getSourceObject() {
 			if (source instanceof IBinding) {
 				return ((IBinding) source).getValue();
@@ -140,6 +152,21 @@ public class BindingMetaclass extends Metaclass {
 				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type);
 			}
 			if (dataBinding != null) {
+				if (elementName != null && control != null) {
+					IObservableValue observableWidget = dataBinding.getObservableWidget();
+					/* If observableWidget is null, we need only return the data from provider. */
+					if (observableWidget == null) {
+						return dataProvider.getData(path);
+					}
+					IObservableValue observableSource = dataBinding.createSourceWidget(dataContext);
+					IBindingContext bindingContext = dataProvider.getBindingContext();
+					if (bindingContext != null) {
+						bindingContext.bind(observableSource, observableWidget);
+					}
+					if (observableSource != null) {
+						return observableSource.getValue();
+					}
+				}
 				return dataBinding.getValue();
 			}
 			return dataContext;
