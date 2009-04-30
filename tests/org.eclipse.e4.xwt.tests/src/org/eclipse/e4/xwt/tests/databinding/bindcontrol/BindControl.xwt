@@ -1,0 +1,23 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation" xmlns:x="http://www.eclipse.org/xwt"
+	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding" Size="400, 300">
+	<Shell.layout>
+		<GridLayout numColumns="2" />
+	</Shell.layout>
+	<Text x:Name="theTextBox" Text="Hello" enabled="true" visible="true"
+	background="SWT.COLOR_CYAN" foreground="SWT.COLOR_BLACK" font="3">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+				grabExcessHorizontalSpace="true" />
+		</Text.layoutData>
+	</Text>
+	<Text x:style="BORDER" Text="{Binding ElementName=theTextBox, Path=Text}"
+		enabled="{Binding ElementName=theTextBox, Path=enabled}" visible="{Binding ElementName=theTextBox,Path=visible}"
+		background="{Binding ElementName=theTextBox,Path=background}" foreground="{Binding ElementName=theTextBox,Path=foreground}"
+		font="{Binding ElementName=theTextBox,Path=font}">
+		
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+				grabExcessHorizontalSpace="true" />
+		</Text.layoutData>
+	</Text>
+</Shell>
