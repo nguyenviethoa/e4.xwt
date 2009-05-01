@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.6 $  $Date: 2008/07/06 02:04:54 $ 
+ *  $Revision: 1.2 $  $Date: 2009/02/03 00:32:19 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -65,15 +65,19 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 		trim.y = -trim.y + titleHeight;
 		if (decorations.getMenuBar() != null) {
 			Menu menu = decorations.getMenuBar();
-			try {
-				Class osClass = Class.forName("org.eclipse.swt.internal.gtk.OS"); //$NON-NLS-1$
-				Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[] { int.class }); //$NON-NLS-1$
-				Object ret = method.invoke(menu, new Object[] { new Integer(menu.handle) });
-				if (ret != null) {
-					int menuBarHeight = ((Integer) ret).intValue();
-					trim.y -= menuBarHeight;
+			if (menu != null) {
+				try {
+					Class osClass = Class.forName("org.eclipse.swt.internal.gtk.OS"); //$NON-NLS-1$
+					Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[] { int.class }); //$NON-NLS-1$
+					Field handleField = menu.getClass().getField("handle");
+					Integer menuHandle = (Integer) handleField.get(menu);
+					Object ret = method.invoke(menu, new Object[] { new Integer(menuHandle) });
+					if (ret != null) {
+						int menuBarHeight = ((Integer) ret).intValue();
+						trim.y -= menuBarHeight;
+					}
+				} catch (Throwable t) {
 				}
-			} catch (Throwable t) {
 			}
 		}
 		return new Point(trim.x, trim.y);
