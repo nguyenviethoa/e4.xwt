@@ -264,11 +264,11 @@ public class XWTEditor extends VEXEditor {
 			try {
 				XWTView view = (XWTView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(XWTView.ID);
 				if (view != null) {
-					view.setContent(value, file);
+					view.setContentWithException(value, file);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				ExceptionHandle.handle(e, "");
+				// No need to handle the refresh.s 
+				// ExceptionHandle.handle(e, "");
 			}
 		}
 	}
