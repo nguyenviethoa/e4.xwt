@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.vex.swt;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.eclipse.swt.browser.Browser;
@@ -153,10 +154,10 @@ public class Win32ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 			gc.setFont(f);
 
 		try {
-			int hwnd = aControl.handle;
+			int hwnd = getIntHandle(aControl);			
 			if (aControl instanceof Tree) {
 				int hwndParent = (Integer) getParent.invoke(null, hwnd);
-				if (hwndParent != aControl.getParent().handle) {
+				if (hwndParent != getIntHandle(aControl.getParent())) {
 					hwnd = hwndParent;
 					print_bits |= PRF_CHILDREN;
 				}

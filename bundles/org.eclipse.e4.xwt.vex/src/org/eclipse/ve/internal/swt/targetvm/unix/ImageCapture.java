@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.3 $  $Date: 2009/05/01 22:15:15 $ 
+ *  $Revision: 1.4 $  $Date: 2009/05/03 13:32:15 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -141,19 +141,8 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 			}
 		}
 		if (image == null) {
-				try {
-					Field handleField = control.getClass().getField("handle");
-					int handle = (Integer) handleField.get(control);
-					image = getImageOfHandle(handle, control.getDisplay(), includeChildren, maxWidth, maxHeight);
-				} catch (SecurityException e) {
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (NoSuchFieldException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
+			int handle = getIntHandle(control);
+			image = getImageOfHandle(handle, control.getDisplay(), includeChildren, maxWidth, maxHeight);
 		}
 		if (control instanceof Decorations) {
 			Decorations decorations = (Decorations) control;

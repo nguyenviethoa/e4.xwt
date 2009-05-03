@@ -10,9 +10,11 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.4 $  $Date: 2008/07/06 02:04:54 $ 
+ *  $Revision: 1.2 $  $Date: 2009/02/03 00:32:19 $ 
  */
 package org.eclipse.e4.xwt.vex.swt;
+
+import java.lang.reflect.Field;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.graphics.GC;
@@ -98,5 +100,22 @@ public abstract class ImageCapture {
 			}
 		}
 		return instance;
+	}
+	
+	public static int getIntHandle(Control control) {
+		try {
+			Field handleField = control.getClass().getField("handle");
+			handleField.setAccessible(true);
+			return (Integer) handleField.get(control);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 }
