@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.2 $  $Date: 2008/07/06 02:04:54 $ 
+ *  $Revision: 1.2 $  $Date: 2009/02/03 00:32:19 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.macosx;
 
@@ -87,7 +87,14 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 					}
 				}
 			} else {
-				controlHandle = control.handle;
+				try {
+					Field handleField = control.getClass().getField("handle");
+					controlHandle = (Integer) handleField.get(control);
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				}
 				shellHandle = shellHandleField.getInt(control.getShell());
 			}
 
