@@ -27,6 +27,7 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass.Binding;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.utils.LoggerManager;
+import org.eclipse.e4.xwt.utils.ObjectUtil;
 import org.eclipse.e4.xwt.xml.Attribute;
 import org.eclipse.e4.xwt.xml.Element;
 import org.eclipse.swt.widgets.Widget;
@@ -179,15 +180,12 @@ public class DataBindingTrack {
 
 	public static Object getObserveData(Object dataContext, String path) {
 		try {
-			Class<?> dataContextClass = dataContext.getClass();
-			String getMethiodName = "get" + path.substring(0, 1).toUpperCase() + path.substring(1);
-			Method getMethod = dataContextClass.getDeclaredMethod(getMethiodName, new Class[] {});
+			Class<?> dataContextClass = dataContext.getClass();			
+			Method getMethod = ObjectUtil.findGetter(dataContextClass, path, null);
 			if (getMethod != null) {
 				return getMethod.invoke(dataContext, new Object[] {});
 			}
 		} catch (SecurityException e) {
-			LoggerManager.log(e);
-		} catch (NoSuchMethodException e) {
 			LoggerManager.log(e);
 		} catch (IllegalArgumentException e) {
 			LoggerManager.log(e);

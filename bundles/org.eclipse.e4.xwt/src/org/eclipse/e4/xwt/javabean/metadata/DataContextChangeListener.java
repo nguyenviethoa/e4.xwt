@@ -24,6 +24,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.beans.IBeanObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.utils.ObjectUtil;
 
 public class DataContextChangeListener implements PropertyChangeListener {
 	IObservableValue observeWidget;
@@ -94,9 +95,8 @@ public class DataContextChangeListener implements PropertyChangeListener {
 		Object object = evtNewValue;
 		for (int i = 1; paths.length - 1 > i; i++) {
 			String path1 = paths[i];
-			String getMethodName = "get" + path1.substring(0, 1).toUpperCase() + path1.substring(1);
 			try {
-				Method getMethod1 = object.getClass().getDeclaredMethod(getMethodName, new Class[] {});
+				Method getMethod1 = ObjectUtil.findGetter(object.getClass(), path1, null);
 				if (getMethod1 != null) {
 					object = getMethod1.invoke(object, new Object[] {});
 					break;

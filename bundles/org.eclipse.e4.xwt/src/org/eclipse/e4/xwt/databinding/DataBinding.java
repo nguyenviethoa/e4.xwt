@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * @author jliu jin.liu@soyatec.com
+ * @author jliu (jin.liu@soyatec.com)
  */
 public class DataBinding {
 

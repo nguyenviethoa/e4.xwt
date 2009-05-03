@@ -13,6 +13,8 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.eclipse.e4.xwt.utils.ObjectUtil;
+
 /**
  * This class is used to extend the Java Bean model
  * 
@@ -63,6 +65,6 @@ public class DynamicProperty extends AbstractProperty {
 	}
 
 	public static Method createGetter(Class<?> type, String name) throws SecurityException, NoSuchMethodException {
-		return type.getMethod("get" + Character.toUpperCase(name.charAt(0)) + name.substring(1), null);
+		return ObjectUtil.findGetter(type, name, null);
 	}
 }

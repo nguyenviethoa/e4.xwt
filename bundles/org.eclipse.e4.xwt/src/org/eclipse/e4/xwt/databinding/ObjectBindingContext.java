@@ -22,6 +22,7 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.beans.IBeanObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.utils.LoggerManager;
+import org.eclipse.e4.xwt.utils.ObjectUtil;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -60,9 +61,8 @@ public class ObjectBindingContext extends BindingContext {
 	}
 
 	private Object getPropertyValue(Object object, String propertyName) {
-		String getMethodName = "get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
 		try {
-			Method getMethod1 = object.getClass().getDeclaredMethod(getMethodName, new Class[] {});
+			Method getMethod1 = ObjectUtil.findGetter(object.getClass(), propertyName, null);
 			if (getMethod1 != null) {
 				return getMethod1.invoke(object, new Object[] {});
 			}
