@@ -1,24 +1,31 @@
 <Shell xmlns="http://www.eclipse.org/xwt/presentation" xmlns:x="http://www.eclipse.org/xwt"
-	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding" Size="400, 300">
+	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding">
 	<Shell.layout>
 		<GridLayout numColumns="2" />
 	</Shell.layout>
-	<Button x:Style="SWT.CHECK" x:Name="theTextBox" Text="Hello" enabled="true" visible="true"
-	background="SWT.COLOR_CYAN" foreground="SWT.COLOR_BLACK" font="3">
-		<Button.layoutData>
-			<GridData horizontalAlignment="FILL"
-				grabExcessHorizontalSpace="true" />
-		</Button.layoutData>
+	<Button x:Style="SWT.CHECK" x:Name="StateBox" Text="Selection State"
+		enabled="true" visible="true">
 	</Button>
-	<Button x:style="SWT.CHECK" Text="Hello Clone"
-		Selection="{Binding ElementName=theTextBox, Path=Selection}"
-		enabled="{Binding ElementName=theTextBox, Path=enabled}" visible="{Binding ElementName=theTextBox,Path=visible}"
-		background="{Binding ElementName=theTextBox,Path=background}" foreground="{Binding ElementName=theTextBox,Path=foreground}"
-		font="{Binding ElementName=theTextBox,Path=font}">
-		
-		<Button.layoutData>
-			<GridData horizontalAlignment="FILL"
-				grabExcessHorizontalSpace="true" />
-		</Button.layoutData>
+	<Button x:style="SWT.CHECK"
+		Text="{Binding ElementName=StateBox,Path=foreground}" Selection="{Binding ElementName=StateBox, Path=Selection}"
+		enabled="{Binding ElementName=StateBox, Path=enabled}" visible="{Binding ElementName=StateBox,Path=visible}"
+		background="{Binding ElementName=StateBox,Path=background}"
+		foreground="{Binding ElementName=StateBox,Path=foreground}" font="{Binding ElementName=StateBox,Path=font}">
 	</Button>
+	<Text x:Style="SWT.BORDER" name="Message" text="Text Binding"
+		foreground="Red">
+	</Text>
+	<Text x:Style="SWT.BORDER" text="{Binding ElementName=Message, Path=text}"
+		foreground="{Binding ElementName=Message, Path=foreground}">
+	</Text>
+	<Button x:style="SWT.CHECK" x:Name="VisibleBox" 
+		Text="Visible" Selection="true">
+	</Button>
+	<Label x:Style="SWT.BORDER" text="Visible Binding" visible="{Binding ElementName=VisibleBox, Path=Selection}">
+	</Label>
+	<Button x:style="SWT.CHECK" x:Name="EnabledBox" 
+		Text="Enabled" Selection="true">
+	</Button>
+	<Text x:Style="SWT.BORDER" text="Enaled Binding" enabled="{Binding ElementName=EnabledBox, Path=Selection}">
+	</Text>
 </Shell>
