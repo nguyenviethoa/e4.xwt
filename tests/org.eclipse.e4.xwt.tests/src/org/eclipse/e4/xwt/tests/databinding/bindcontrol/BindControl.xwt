@@ -1,31 +1,58 @@
 <Shell xmlns="http://www.eclipse.org/xwt/presentation" xmlns:x="http://www.eclipse.org/xwt"
-	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding">
+	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding" xmlns:j="clr-namespace:java.lang">
 	<Shell.layout>
 		<GridLayout numColumns="2" />
 	</Shell.layout>
+	<!-- Selection property -->
 	<Button x:Style="SWT.CHECK" x:Name="StateBox" Text="Selection State"
 		enabled="true" visible="true">
 	</Button>
-	<Button x:style="SWT.CHECK"
-		Text="{Binding ElementName=StateBox,Path=foreground}" Selection="{Binding ElementName=StateBox, Path=Selection}"
-		enabled="{Binding ElementName=StateBox, Path=enabled}" visible="{Binding ElementName=StateBox,Path=visible}"
-		background="{Binding ElementName=StateBox,Path=background}"
-		foreground="{Binding ElementName=StateBox,Path=foreground}" font="{Binding ElementName=StateBox,Path=font}">
+	<Button x:style="SWT.CHECK" Text="{Binding ElementName=StateBox,Path=Text}"
+		Selection="{Binding ElementName=StateBox, Path=Selection}">
 	</Button>
-	<Text x:Style="SWT.BORDER" name="Message" text="Text Binding"
-		foreground="Red">
+	<!-- Text property -->
+	<Text x:Style="SWT.BORDER" name="Message" text="Text Binding">
 	</Text>
 	<Text x:Style="SWT.BORDER" text="{Binding ElementName=Message, Path=text}"
 		foreground="{Binding ElementName=Message, Path=foreground}">
 	</Text>
-	<Button x:style="SWT.CHECK" x:Name="VisibleBox" 
-		Text="Visible" Selection="true">
+	<!-- Visible property -->
+	<Button x:style="SWT.CHECK" x:Name="VisibleBox" Text="Visible"
+		Selection="true">
 	</Button>
-	<Label x:Style="SWT.BORDER" text="Visible Binding" visible="{Binding ElementName=VisibleBox, Path=Selection}">
+	<Label text="Visible Binding" visible="{Binding ElementName=VisibleBox, Path=Selection}">
 	</Label>
-	<Button x:style="SWT.CHECK" x:Name="EnabledBox" 
-		Text="Enabled" Selection="true">
+	<!-- Enable property -->
+	<Button x:style="SWT.CHECK" x:Name="EnabledBox" Text="Enabled"
+		Selection="true">
 	</Button>
-	<Text x:Style="SWT.BORDER" text="Enaled Binding" enabled="{Binding ElementName=EnabledBox, Path=Selection}">
-	</Text>
+	<Button x:Style="SWT.BORDER" text="Push me"
+		enabled="{Binding ElementName=EnabledBox, Path=Selection}">
+	</Button>
+	<Label name="ColorView" text="Color Viewer"
+		foreground="{Binding ElementName=FGColorSelector, Path=Text}" 
+		background="{Binding ElementName=FGColorSelector, Path=Text}"/>
+	<Group text="Setting">
+		<Group.layout>
+			<GridLayout numColumns="2" />
+		</Group.layout>
+		<Label text="Background:"></Label>
+		<Combo text="Black" Name="FGColorSelector">
+			<Combo.items>
+				<j:String>Red</j:String>
+				<j:String>Blue</j:String>
+				<j:String>Green</j:String>
+				<j:String>White</j:String>
+			</Combo.items>
+		</Combo>
+		<Label text="Background:"></Label>
+		<Combo text="White" Name="BGColorSelector">
+			<Combo.items>
+				<j:String>Red</j:String>
+				<j:String>Blue</j:String>
+				<j:String>Green</j:String>
+				<j:String>White</j:String>
+			</Combo.items>
+		</Combo>
+	</Group>
 </Shell>
