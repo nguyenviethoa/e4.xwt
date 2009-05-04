@@ -97,7 +97,7 @@ public class MetaclassManager {
 		// if using default package(null), use only name as class name, else use package.class as class name
 		String className = packageName.length() == 0 ? name : (packageName + "." + name);
 		// try {
-		Class type = ClassLoaderUtil.loadClass(context, className);
+		Class<?> type = ClassLoaderUtil.loadClass(context, className);
 		if (type == null) {
 			LoggerManager.log(new IllegalStateException("Cannot load " + className));
 		}
