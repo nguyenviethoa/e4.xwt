@@ -11,14 +11,8 @@
 
 package org.eclipse.e4.xwt.databinding;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 
-import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.swt.widgets.Control;
 
 /**
