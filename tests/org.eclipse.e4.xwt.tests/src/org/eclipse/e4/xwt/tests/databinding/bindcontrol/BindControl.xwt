@@ -26,17 +26,14 @@
 	<Button x:style="SWT.CHECK" x:Name="EnabledBox" Text="Enabled"
 		Selection="true">
 	</Button>
-	<Button x:Style="SWT.BORDER" text="Push me"
+	<Button text="Push me"
 		enabled="{Binding ElementName=EnabledBox, Path=Selection}">
 	</Button>
-	<Label name="ColorView" text="Color Viewer"
-		foreground="{Binding ElementName=FGColorSelector, Path=Text}" 
-		background="{Binding ElementName=FGColorSelector, Path=Text}"/>
 	<Group text="Setting">
 		<Group.layout>
 			<GridLayout numColumns="2" />
 		</Group.layout>
-		<Label text="Background:"></Label>
+		<Label text="Foreground:"></Label>
 		<Combo text="Black" Name="FGColorSelector">
 			<Combo.items>
 				<j:String>Red</j:String>
@@ -55,4 +52,7 @@
 			</Combo.items>
 		</Combo>
 	</Group>
+	<Label name="ColorView" text="Color Viewer"
+		foreground="{Binding ElementName=FGColorSelector, Path=Text}" 
+		background="{Binding ElementName=BGColorSelector, Path=Text}"/>
 </Shell>

@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
-import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.impl.IBinding;
@@ -142,6 +141,12 @@ public class BindingMetaclass extends Metaclass {
 			Object dataContext = getSourceObject();
 			IDataProvider dataProvider = null;
 			DataBinding dataBinding = null;
+			if (dataContext != null && dataContext instanceof Control) {
+				ControlDataBinding controlDataBinding = new ControlDataBinding((Control) dataContext, (Control) control, path, type);
+				if (controlDataBinding != null) {
+					return controlDataBinding.getValue();
+				}
+			}
 			if (dataContext != null) {
 				dataProvider = new ObjectDataProvider();
 				((ObjectDataProvider) dataProvider).setObjectInstance(dataContext);
@@ -152,21 +157,6 @@ public class BindingMetaclass extends Metaclass {
 				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type);
 			}
 			if (dataBinding != null) {
-				if (elementName != null && control != null) {
-					IObservableValue observableWidget = dataBinding.getObservableWidget();
-					/* If observableWidget is null, we need only return the data from provider. */
-					if (observableWidget == null) {
-						return dataProvider.getData(path);
-					}
-					IObservableValue observableSource = dataBinding.createSourceWidget(dataContext);
-					IBindingContext bindingContext = dataProvider.getBindingContext();
-					if (bindingContext != null) {
-						bindingContext.bind(observableSource, observableWidget);
-					}
-					if (observableSource != null) {
-						return observableSource.getValue();
-					}
-				}
 				return dataBinding.getValue();
 			}
 			return dataContext;

@@ -12,15 +12,12 @@ package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.dataproviders.IDataProvider;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public class DataBinding {
+public class DataBinding implements IDataBinding {
 
 	private IDataProvider dataProvider;
 	private Object target;
@@ -113,64 +110,7 @@ public class DataBinding {
 	 */
 	protected IObservableValue createObservableWidget() {
 		if (target instanceof Control) {
-			Control control = (Control) target;
-			if (SWTProperties.TEXT.equalsIgnoreCase(type)) {
-				if (control instanceof Text)
-					return SWTObservables.observeText(control, SWT.Modify);
-				return SWTObservables.observeText(control);
-			} else if (SWTProperties.VISIBLE.equalsIgnoreCase(type)) {
-				return SWTObservables.observeVisible(control);
-			} else if (SWTProperties.BACKGROUND.equalsIgnoreCase(type)) {
-				return SWTObservables.observeBackground(control);
-			} else if (SWTProperties.ENABLED.equalsIgnoreCase(type)) {
-				return SWTObservables.observeEnabled(control);
-			} else if (SWTProperties.FONT.equalsIgnoreCase(type)) {
-				return SWTObservables.observeFont(control);
-			} else if (SWTProperties.FOREGROUND.equalsIgnoreCase(type)) {
-				return SWTObservables.observeForeground(control);
-			} else if (SWTProperties.MAX.equalsIgnoreCase(type)) {
-				return SWTObservables.observeMax(control);
-			} else if (SWTProperties.MIN.equalsIgnoreCase(type)) {
-				return SWTObservables.observeMin(control);
-			} else if (SWTProperties.SELECTION.equalsIgnoreCase(type)) {
-				return SWTObservables.observeSelection(control);
-			} else if (SWTProperties.SELECTION_INDEX.equalsIgnoreCase(type)) {
-				return SWTObservables.observeSingleSelectionIndex(control);
-			} else if (SWTProperties.TOOLTIP_TEXT.equalsIgnoreCase(type)) {
-				return SWTObservables.observeTooltipText(control);
-			}
-		}
-		return null;
-	}
-
-	public IObservableValue createSourceWidget(Object object) {
-		if (object instanceof Control) {
-			Control control = (Control) object;
-			if (SWTProperties.TEXT.equalsIgnoreCase(type)) {
-				if (control instanceof Text)
-					return SWTObservables.observeText(control, SWT.Modify);
-				return SWTObservables.observeText(control);
-			} else if (SWTProperties.VISIBLE.equalsIgnoreCase(type)) {
-				return SWTObservables.observeVisible(control);
-			} else if (SWTProperties.BACKGROUND.equalsIgnoreCase(type)) {
-				return SWTObservables.observeBackground(control);
-			} else if (SWTProperties.ENABLED.equalsIgnoreCase(type)) {
-				return SWTObservables.observeEnabled(control);
-			} else if (SWTProperties.FONT.equalsIgnoreCase(type)) {
-				return SWTObservables.observeFont(control);
-			} else if (SWTProperties.FOREGROUND.equalsIgnoreCase(type)) {
-				return SWTObservables.observeForeground(control);
-			} else if (SWTProperties.MAX.equalsIgnoreCase(type)) {
-				return SWTObservables.observeMax(control);
-			} else if (SWTProperties.MIN.equalsIgnoreCase(type)) {
-				return SWTObservables.observeMin(control);
-			} else if (SWTProperties.SELECTION.equalsIgnoreCase(type)) {
-				return SWTObservables.observeSelection(control);
-			} else if (SWTProperties.SELECTION_INDEX.equalsIgnoreCase(type)) {
-				return SWTObservables.observeSingleSelectionIndex(control);
-			} else if (SWTProperties.TOOLTIP_TEXT.equalsIgnoreCase(type)) {
-				return SWTObservables.observeTooltipText(control);
-			}
+			return ObservableValueUtil.observePropertyValue((Control) target, type);
 		}
 		return null;
 	}

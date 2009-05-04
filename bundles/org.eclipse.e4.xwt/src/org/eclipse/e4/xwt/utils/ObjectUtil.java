@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * Object Tools.
  * 
- * @author yyang
+ * @author yyang (yves.yang@soyatec.com)
  * @version 1.0
  */
 public class ObjectUtil {
@@ -265,7 +265,7 @@ public class ObjectUtil {
 					return null;
 				}
 			} catch (NoSuchMethodException e2) {
-				return null;
+				method = findCaseIgnoreGetter(clazz, name, type);
 			}
 			// :~
 		}
@@ -287,6 +287,24 @@ public class ObjectUtil {
 		return null;
 	}
 
+	private static Method findCaseIgnoreGetter(Class<?> clazz, String name, Class<?> type) {
+		String getterName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+		String isName = "is" + name.substring(0, 1).toUpperCase() + name.substring(1);
+
+		for (Method element : clazz.getMethods()) {
+			if (element.getParameterTypes().length != 0) {
+				continue;
+			}
+			if (element.getName().equalsIgnoreCase(getterName)) {
+				return element;
+			}
+			if (element.getName().equalsIgnoreCase(isName) && element.getReturnType() != Boolean.class && element.getReturnType() != boolean.class) {
+				return element;
+			}
+		}
+		return null;
+	}	
+	
 	/**
 	 * Find superclasses and add them to list.
 	 */

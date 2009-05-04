@@ -1067,12 +1067,22 @@ public class ResourceLoader implements IVisualElementLoader {
 				value = XWT.convertFrom(property.getType(), contentValue);
 			}
 			if (value != null) {
-				if (!property.getType().isAssignableFrom(value.getClass()) || value instanceof IBinding) {
-					IConverter converter = XWT.findConvertor(value.getClass(), property.getType());
+				Class<?> propertyType = property.getType();
+				if (!propertyType.isAssignableFrom(value.getClass()) || value instanceof IBinding) {
+					Object orginalValue = value;
+					IConverter converter = XWT.findConvertor(value.getClass(), propertyType);
 					if (converter != null) {
 						value = converter.convert(value);
+						if (value != null && orginalValue instanceof IBinding && !propertyType.isAssignableFrom(value.getClass())) {
+							converter = XWT.findConvertor(value.getClass(), propertyType);
+							if (converter != null) {
+								value = converter.convert(value);
+							} else {
+								LoggerManager.log(new XWTException("Convertor " + value.getClass().getSimpleName() + "->" + propertyType.getSimpleName() + " is not found"));
+							}
+						}
 					} else {
-						LoggerManager.log(new XWTException("Convertor " + value.getClass().getSimpleName() + "->" + property.getType().getSimpleName() + " is not found"));
+						LoggerManager.log(new XWTException("Convertor " + value.getClass().getSimpleName() + "->" + propertyType.getSimpleName() + " is not found"));
 					}
 				}
 				property.setValue(target, value);

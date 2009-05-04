@@ -20,7 +20,7 @@ import org.eclipse.jface.util.Util;
 /**
  * Notes: Binding type is java.lang.String.
  * 
- * @author jliu jin.liu@soyatec.com
+ * @author jliu (jin.liu@soyatec.com)
  */
 public class XWTObservableValue extends AbstractObservableValue {
 
