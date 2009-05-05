@@ -18,13 +18,13 @@
 	</Text>
 	<!-- Visible property -->
 	<Button x:style="SWT.CHECK" x:Name="VisibleBox" Text="Visible"
-		Selection="true">
+		Selection="false">
 	</Button>
 	<Label text="Visible Binding" visible="{Binding ElementName=VisibleBox, Path=Selection}">
 	</Label>
 	<!-- Enable property -->
 	<Button x:style="SWT.CHECK" x:Name="EnabledBox" Text="Enabled"
-		Selection="true">
+		Selection="false">
 	</Button>
 	<Button text="Push me"
 		enabled="{Binding ElementName=EnabledBox, Path=Selection}">
