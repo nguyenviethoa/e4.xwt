@@ -6,6 +6,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
@@ -15,12 +16,16 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ObservableValueUtil {
 	static final String TEXT = "text";
-	public static final Class<?>[] ARGUMENT_TYPES = new Class[] {Control.class};
+	public static final Class<?>[] ARGUMENT_TYPES = new Class[] { Control.class };
 
 	public static IObservableValue observePropertyValue(Control control, String property) {
 		if (TEXT.equalsIgnoreCase(property)) {
 			if (control instanceof Text)
 				return SWTObservables.observeText(control, SWT.Modify);
+			// widget button is not supported at 3.4 version.
+			if (SWT.getVersion() == 3449 && control instanceof Button) {
+				return null;
+			}
 			return SWTObservables.observeText(control);
 		} else {
 			String getterName = "observe" + property.substring(0, 1).toUpperCase() + property.substring(1);

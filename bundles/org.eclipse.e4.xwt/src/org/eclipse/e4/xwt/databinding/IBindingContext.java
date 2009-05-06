@@ -10,11 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 /**
  * @author jliu jin.liu@soyatec.com
  */
 public interface IBindingContext {
-	void bind(IObservableValue source, IObservableValue target);
+	void bind(IObservableValue source, IObservableValue target, UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget);
 }

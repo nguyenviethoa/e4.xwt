@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.swt.widgets.Control;
@@ -83,7 +84,7 @@ public class DataBinding implements IDataBinding {
 		IObservableValue observableSource = getObservableSource(valueType);
 		IBindingContext bindingContext = dataProvider.getBindingContext();
 		if (bindingContext != null) {
-			bindingContext.bind(observableSource, observableWidget);
+			bindingContext.bind(observableSource, observableWidget, new UpdateValueStrategy(), new UpdateValueStrategy());
 		}
 		if (observableSource != null) {
 			return observableSource.getValue();

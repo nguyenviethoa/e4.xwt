@@ -22,6 +22,11 @@
 	</Button>
 	<Label text="Visible Binding" visible="{Binding ElementName=VisibleBox, Path=Selection}">
 	</Label>
+	<!-- Visible property bound to text -->
+	<Text x:Name="StateText" x:Style="SWT.BORDER" Text="true">
+	</Text>
+	<Button text="bound to text" visible="{Binding ElementName=StateText, Path=Text}">
+	</Button>
 	<!-- Enable property -->
 	<Button x:style="SWT.CHECK" x:Name="EnabledBox" Text="Enabled"
 		Selection="false">

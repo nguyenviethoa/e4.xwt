@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.beans.IBeanObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -134,8 +135,8 @@ public class ObjectBindingContext extends BindingContext {
 	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider.BindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
-	public void bind(IObservableValue source, IObservableValue target) {
-		super.bind(source, target);
+	public void bind(IObservableValue source, IObservableValue target, UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
+		super.bind(source, target, targetToModel, modelToTarget);
 		if (source instanceof IBeanObservable) {
 			IBeanObservable beanValue = (IBeanObservable) source;
 			propertyName = beanValue.getPropertyDescriptor().getName();
