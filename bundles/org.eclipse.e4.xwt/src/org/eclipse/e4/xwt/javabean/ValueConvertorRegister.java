@@ -31,6 +31,9 @@ public class ValueConvertorRegister {
 		if (convertors == null) {
 			if (source.isEnum()) {
 				convertors = register.get(Enum.class);
+				if (convertors == null) {
+					return null;
+				}
 			} else {
 				Class<?>[] interfacees = source.getInterfaces();
 				for (Class<?> class1 : interfacees) {

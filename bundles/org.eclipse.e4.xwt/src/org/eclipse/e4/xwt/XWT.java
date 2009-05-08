@@ -24,6 +24,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.e4.xwt.converters.BindingToObject;
 import org.eclipse.e4.xwt.converters.DateToString;
+import org.eclipse.e4.xwt.converters.EnumToString;
 import org.eclipse.e4.xwt.converters.ObjectToObject;
 import org.eclipse.e4.xwt.converters.ObjectToString;
 import org.eclipse.e4.xwt.converters.StringToBoolean;
@@ -676,6 +677,7 @@ public class XWT {
 
 		XWT.registerConvertor(new ObjectToString());
 		XWT.registerConvertor(new DateToString());
+		XWT.registerConvertor(new EnumToString());
 		XWT.registerConvertor(new StringToInteger());
 		XWT.registerConvertor(new StringToFloat());
 		XWT.registerConvertor(new StringToDouble());

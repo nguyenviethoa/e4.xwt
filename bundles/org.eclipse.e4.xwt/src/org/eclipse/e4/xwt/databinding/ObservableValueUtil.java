@@ -28,6 +28,9 @@ public class ObservableValueUtil {
 			}
 			return SWTObservables.observeText(control);
 		} else {
+			if (property == null) {
+				return null;
+			}
 			String getterName = "observe" + property.substring(0, 1).toUpperCase() + property.substring(1);
 			Method method;
 			try {

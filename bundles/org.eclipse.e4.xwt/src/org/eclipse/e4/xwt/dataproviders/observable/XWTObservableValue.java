@@ -82,9 +82,9 @@ public class XWTObservableValue extends AbstractObservableValue {
 	protected void doSetValue(Object value) {
 		updating = true;
 		Object oldValue = doGetValue();
-		value = convert(value);
-		doSetApprovedValue(value);
+		value = convert(oldValue == null ? null : oldValue.getClass(), value);
 		if (!Util.equals(oldValue, value)) {
+			doSetApprovedValue(value);
 			fireValueChange(Diffs.createValueDiff(oldValue, value));
 			eventManager.dispatchEvent(new Event(observed, oldValue, value, VALUE_CHANGED_EVENT));
 		}
@@ -95,8 +95,11 @@ public class XWTObservableValue extends AbstractObservableValue {
 	 * @param value
 	 * @return
 	 */
-	protected Object convert(Object value) {
+	protected Object convert(Class type, Object value) {
 		if (value != null) {
+			if (type != null && type.isEnum() && value instanceof String) {
+				return Enum.valueOf(type, (String) value);
+			}
 			IConverter c = XWT.findConvertor(value.getClass(), (Class<?>) getValueType());
 			if (c != null) {
 				return c.convert(value);

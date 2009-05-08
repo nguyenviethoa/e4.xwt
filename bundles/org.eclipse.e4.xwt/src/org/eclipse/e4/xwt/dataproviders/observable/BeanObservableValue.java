@@ -90,9 +90,19 @@ public class BeanObservableValue extends XWTObservableValue {
 						writeMethod.setAccessible(true);
 					}
 					Class<?>[] parameterTypes = writeMethod.getParameterTypes();
-					IConverter c = XWT.findConvertor(value.getClass(), parameterTypes[0]);
-					if (c != null) {
-						value = c.convert(value);
+					Class targetType = parameterTypes[0];
+					if (targetType != value.getClass()) {
+						if (targetType.isEnum() && value instanceof String) {
+							try {
+								writeMethod.invoke(observed, new Object[] { Enum.valueOf(targetType, (String) value) });
+								return;
+							} catch (Exception e) {
+							}
+						}
+						IConverter c = XWT.findConvertor(value.getClass(), targetType);
+						if (c != null) {
+							value = c.convert(value);
+						}
 					}
 					writeMethod.invoke(observed, new Object[] { value });
 					return;
@@ -104,7 +114,15 @@ public class BeanObservableValue extends XWTObservableValue {
 					if (!field.isAccessible()) {
 						field.setAccessible(true);
 					}
-					IConverter c = XWT.findConvertor(value.getClass(), field.getType());
+					Class fieldType = field.getType();
+					if (fieldType.isEnum() && value instanceof String) {
+						try {
+							field.set(observed, Enum.valueOf(fieldType, (String) value));
+							return;
+						} catch (Exception e) {
+						}
+					}
+					IConverter c = XWT.findConvertor(value.getClass(), fieldType);
 					if (c != null) {
 						value = c.convert(value);
 					}
