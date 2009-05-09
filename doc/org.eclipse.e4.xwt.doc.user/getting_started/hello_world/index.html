@@ -14,29 +14,29 @@
 developing a "Hello World" step by step.</p>
 
 <ul>
-	<li><a href="#hello_01">How to create a UI component</a></li>
+	<li><a href="#hello_01">How to create a Mediator</a></li>
 	<li><a href="#hello_02">How to use XWT editor to develop UI
 	appearance</a></li>
-	<li><a href="#hello_03">How to load and open the UI component
+	<li><a href="#hello_03">How to load and open the Mediator
 	in API</a></li>
 	<li><a href="#hello_04">Download</a></li>
 </ul>
 
-<h3><a name="hello_01"></a>How to create a UI component</h3>
+<h3><a name="hello_01"></a>How to create a Mediator</h3>
 <p>First of all, we need to create a Java project to host our
 application. If there is already one, you can reuse it without any
 additional configuration. In this sample, we name our Java project
 "Hello".</p>
 
 <p>Then, right click the Java project, select
-the context menu New &rarr; Other... &rarr; XWT &rarr; New UI Component and click Next button.</p>
+the context menu New &rarr; Other... &rarr; XWT &rarr; New Mediator and click Next button.</p>
 <p align="center"><image src="image/hello_01.png" /></p>
 
 <p>In the pop-up dialog, fill the Package as 'demo' and Name as
 'Hello'.</p>
 <p align="center"><image src="image/hello_02.png" /></p>
 
-<p>Click the Finish button. We create a UI component which consists of the two files: </p>
+<p>Click the Finish button. We create a Mediator which consists of the two files: </p>
 <ul>
   <li>Hello.xwt</li>
   <li>Hello.java</li>
@@ -80,10 +80,10 @@ button.setText(<span class="JavaString">"Hello, world!"</span>);
 view it. It running as below.</p>
 <image src="image/hello_04.png" />
 
-<h3><a name="hello_03"></a>How to load and open the UI component in
+<h3><a name="hello_03"></a>How to load and open the Mediator in
 API</h3>
-<p>The load and open a UI component in API is pretty straightforward.  We need call the services of the class XWT: load() or open() . </p>
-<p>Create a new Java class named &lsquo;Application&rsquo; with main method and you  can use the following codes to load and open our UI component.</p>
+<p>The load and open a Mediator in API is pretty straightforward.  We need call the services of the class XWT: load() or open() . </p>
+<p>Create a new Java class named &lsquo;Application&rsquo; with main method and you  can use the following codes to load and open our Mediator.</p>
 <pre>
 <span class="JavaKeyword">public class</span> Application {
 

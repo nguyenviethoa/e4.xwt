@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <toc label="XWT Developer Guide" link_to="Yves YANG">
-   <topic href="overview/index.html" label="Overview">
+   <topic href="concepts/overview/index.html" label="Overview">
    </topic>
    <topic label="Concepts">
       <topic href="concepts/markup_language/index.html" label="Markup language">
@@ -23,11 +23,9 @@
       </topic>
    </topic>
    <topic label="Tools">
-      <topic href="tools/new_component/index.html" label="New UI Component Wizard">
+      <topic href="tools/new_mediator/index.html" label="New UI Meditor Wizard">
       </topic>
-      <topic href="tools/ui_file/index.html" label="New UI File">
-      </topic>
-      <topic label="Open Preview">
+      <topic href="tools/new_ui_file/index.html" label="New UI File">
       </topic>
       <topic href="tools/ui_editor/index.html" label="Open Component editor">
       </topic>

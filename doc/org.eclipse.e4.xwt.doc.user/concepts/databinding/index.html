@@ -18,8 +18,11 @@
 	<li><a href="#databinding_01">What is Data Binding?</a></li>
 	<li><a href="#databinding_02">Basic Data Binding Concepts</a></li>
 	<li><a href="#databinding_03">Creating a Data Binding</a></li>
-	<li><a href="#databinding_04">Specifying the path expression of data binding</a></li>
+	<li><a href="#databinding_04">Specifying the path expression
+	of data binding</a></li>
+	<!-- 
 	<li><a href="#databinding_05">Based on JFace Data binding</a></li>
+	 -->
 </ul>
 
 <h3><a name="databinding_01"></a>What is Data Binding?</h3>
@@ -29,7 +32,16 @@ settings and the data provides the proper notifications, then, when the
 data changes its value, the elements that bound to the data reflect
 changes automatically. Data binding can also mean that if an outer
 representation of the data in an element changes, then the underlying
-data can be automatically updated to reflect the change.</p>
+data can be automatically updated to reflect the change. For example, if
+the user edits the value in a Text element, the underlying data is
+automatically updated to reflect that change.</p>
+
+<p>A typical use of data binding is to place server or local
+configuration data into forms or other UI controls. In XWT, this concept
+is expanded to include the binding of a broad range of properties to a
+variety of data sources. In XWT, dependency properties of elements can
+be bound to CLR objects and XML data.</p>
+
 
 <h3><a name="databinding_02"></a>Basic Data Binding Concepts</h3>
 <p>Regardless of what element you are binding and the nature of your
@@ -204,7 +216,8 @@ below.</p>
 	class="XMLElementTag">&lt;/Text.layoutData&gt;</span>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/Text&gt;</span>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;Label</span> <span
-	class="XMLAttrTag">text</span>=<span class="XMLAttrValue">"{Binding Path=name}"</span>&gt;</span>
+	class="XMLAttrTag">text</span>=<span class="XMLAttrValue">"{Binding Path=name}"</span><span
+	class="XMLElementTag">&gt;</span>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
 	class="XMLElementTag">&lt;Label.layoutData&gt;</span>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
@@ -262,8 +275,12 @@ the following codes.</p>
 	class="XMLElementTag">&gt;</span>
 	
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;Label</span> <span
-	class="XMLAttrTag">text</span>=<span class="XMLAttrValue">"{Binding Path=name}"</span>&gt;</span>
+	class="XMLAttrTag">text</span>=<span class="XMLAttrValue">"{Binding Path=name}"</span><span
+	class="XMLElementTag">&gt;</span>
 </pre>
+
+<p>Note: Notice the code above, the Path value <tt>name</tt> is
+declared in the Person class.</p>
 
 <!--  
 <p>Click preview to view the UI or right click DataBinding.xwt,
@@ -273,15 +290,94 @@ content of Label changed synchronously.</p>
 <p><img src="images/" /></p>
 -->
 
-<h3><a name="databinding_04"></a>Specifying the path expression of data binding</h3>
+<h3><a name="databinding_04"></a>Specifying the path expression of
+data binding</h3>
+<p>Notice that in the previous example, the binding source is
+specified by setting the <tt>DataContext</tt> property on the Shell
+element. The Text and Label inherits the DataContext value from the
+Shell, which is its parent element. Here the binding path <tt>name</tt>
+is declared in the Person class. So the binding target can find the
+binding source directly. But in some case, the binding source is not the
+associated class, in XWT, there is a another solutions: specifying the
+path expression of the data binding.</p>
+
+<p>For example, in a application we associate a Company object in
+Shell to a key "myData".</p>
+
+<pre>
+<span class="XMLElementTag">&lt;Shell</span> 
+&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLAttrTag">DataContext</span>=<span
+	class="XMLAttrValue">"{StaticResource myData}"</span><span
+	class="XMLElementTag">&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;Shell.Resources&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;y:Company</span> <span class="XMLAttrTag">x:Key</span>=<span
+	class="XMLAttrValue">"myData"</span><span class="XMLElementTag">/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/Shell.Resources&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;...
+<span class="XMLElementTag">&lt;/Shell&gt;</span>
+</pre>
+
+<p>There are three object class: Company, Person and Address. The
+Address object contains a string city. And the <tt>address</tt> is
+initialized in Person constructor.</p>
+<p>Person:</p>
+<pre>
+<span class="JavaKeyword">public class</span> Person {
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="JavaKeyword">private</span> Address <span
+	class="JavaMember">address</span>;
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="JavaKeyword">public</span> Person() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="JavaMember">address</span> = <span
+	class="JavaKeyword">new</span> Address();
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;...
+}
+</pre>
+<p>In Company class, there instance a Person type variable <tt>manager</tt>.</p>
+<p>Company:</p>
+<pre>
+<span class="JavaKeyword">public class</span> Company {
+&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="JavaKeyword">private</span> Person <span
+	class="JavaMember">manager</span> = <span class="JavaKeyword">new</span> Person();
+&nbsp;&nbsp;&nbsp;&nbsp;...
+}
+</pre>
+
+<p>Now, if the user want create a Text in Shell and binding the
+value to the city member. XWT supplied a simple way for this case that
+only need to set the Path value as <tt>manager.address.city</tt>, See
+the code below.</p>
+
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;Text</span> <span
+	class="XMLAttrTag">x:style</span>=<span class="XMLAttrValue">"BORDER"</span> <span
+	class="XMLAttrTag">text</span>=<span class="XMLAttrValue">"{Binding Path=manager.address.city}"</span><span
+	class="XMLElementTag">&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;Text.layoutData&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;GridData</span> <span class="XMLAttrTag">horizontalAlignment</span>=<span
+	class="XMLAttrValue">"FILL"</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLAttrTag">grabExcessHorizontalSpace</span>=<span
+	class="XMLAttrValue">"true"</span><span class="XMLElementTag">/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+	class="XMLElementTag">&lt;/Text.layoutData&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/Text&gt;</span>
+</pre>
+<!-- 
 <p>In XWT, it also support path expression of data binding. If your
-binding source is an object, you use the Path property to specify the
-value to use for your binding. For example, if you want binding the city
-of the manager of a company, which is the data context of the window.
-you can specify the path as "manager.address.city".</p>
+binding source is an object, you can use the Path property to specify
+the value to use for your binding. For example, if you want binding the
+city of the manager of a company, which is the data context of the
+window. you can specify the path as "manager.address.city".</p>
 
 <p><img src="images/mac-feature_22.png" /></p>
-
+ -->
 
 <!-- 
 <h3>Binding to Collections</h3>
@@ -294,14 +390,11 @@ objects, however, binding to a data collection is a common scenario. For
 example, a common scenario is to use an ItemsControl such as a
 ListViewer or TableViewer to display a data collection.</p>
 
- -->
+
 
 <h3><a name="databinding_05"></a>Based on JFace Data binding</h3>
 
-<p>XWT also support data binding based on JFace. You can use an
-ItemsControl such as ListViewer or TabelViewer to display a data
-collection. Look at the example below, the ListViewer binds a Company
-class which has a employees member with collection type.</p>
+
 
 <pre>
 <span class="XMLElementTag">&lt;Composite</span> 
@@ -334,7 +427,7 @@ class which has a employees member with collection type.</p>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;/ListViewer&gt;</span>
 <span class="XMLElementTag">&lt;/Composite&gt;</span>
 </pre>
-
+ -->
 
 
 
