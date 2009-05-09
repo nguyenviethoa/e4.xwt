@@ -397,7 +397,123 @@
 		<p><img src="images/mac-feature_23.png" /></p>
 		</td>
 	</tr>
+</table>
 
+<table border="0" width="80%" cellpadding="10" cellspacing="0">
+  <tr>
+    <td colspan="2"><hr />
+      <h2>M3</h2>
+      <hr /></td>
+  </tr>
+  <tr id="itemname">
+    <td width="30%" valign="top" align="left"><b>Multilple Data Binding models</b></td>
+    <td width="70%" valign="top"><p>The data binding depends closely on data model. For Java, the first class data binding model is Java Bean, which is already supported in previous version. An enterprise application deals with also other Data models such as XML, EMF Ecore, RDBMS, Web services etc. A flexible and customizable solution in XWT is absolutely necessary to support all possible Data models. </p>
+      <p>In M3, XWT introduces a new concept to handle some different types of data than Java POJO. This concept relies on the class IDataProvider, IBindingContext and IDataBinding. Each Data type should implements these three types to integrate data model into  XWT's Data Binding engine. The Java Bean data binding is handled mainly by the class ObjectDataProvider. </p>
+    <p>A new plugin &quot;org.eclipse.e4.xwt.xml&quot; is created to implement the XML data provider.  </p>    </td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+  <tr id="itemname2">
+    <td width="30%" valign="top" align="left"><strong>Widget Binding</strong></td>
+    <td width="70%" valign="top"><p>Widget binding is a kind of Data Binding between UI Widgets. Every widget can be used not only as View, but also as Model. The property synchronization between UI Widgets provides a powerful declarative solution to handle simply dynamic aspect of UI and to get rid of noise listeners in Java code. </p>
+      <p>This solution relies on the new features of JFace Data Binding for SWT. </p>
+      <p>The following code is used to bind the selection state of  two Buttons on the property &quot;Selection&quot;. </p>
+      <p><img src="images/code.png" width="655" height="76" /></p>
+      <p align="center"><img src="images/WidgetBinding1.png" width="319" height="289" /></p>
+    <p align="left">The widgets in left column is in synchronization with the widgets in right column respectively. </p>
+    <p align="center"><img src="images/WidgetBinding2.png" width="319" height="289" /></p>
+    <p>In the couple of binding at the buttom, the text of two Combo is symchronized with the &quot;background&quot; and &quot;foreground&quot; of a Label. When the selection of Combo get changed, the Label appeance gets updated immediately. </p></td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr/>    </td>
+  </tr>
+  <tr id="itemname3">
+    <td width="30%" valign="top" align="left"><b>Advanced UI Mediator wizard</b></td>
+    <td width="70%" valign="top"><p>Mediator is a new concept of XWT introduced in release. It is in fact a data Presentation Unit. It handles the interactions between users and application data via graphic UI. It consists of up to four elements: </p>
+      <ul>
+        <li>View, graphic UI</li>
+        <li>Controller, the agent to deal with UI event and application logic</li>
+        <li>Data context, the type of data to show</li>
+        <li>Meta-model service, provides the structure of mediator</li>
+      </ul>
+      <p>Each mediator can be plugin-ed and play anywhere under the same kind of DataContext. </p>
+      <p>The wizard "UI Component" get renamed as "UI Mediator". The wizard has be improved to create a Mediator from a selected class, which is used as Data Context.
+    <p><img src="images/wizard1.png" width="600" height="442" />    
+    <p>
+    
+    <p align="center"><img src="images/wizard2.png" width="491" height="456" />        
+    <p align="justify">This wizard will creates a mediator with three files: XML view, Java controller and Meta-model service in Java, and it will generate the default content based on the Data Context model.    
+    <p align="justify">Here is an example of Person with attribute: name, age, nationality and a reference Address.
+    
+    <p align="center"><img src="images/PersonDemo.png" width="410" height="179" /></td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr />    </td>
+  </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+</table>
+<h1>M3</h1>
+<table border="0" width="80%" cellpadding="10" cellspacing="0">
+  <tr>
+    <td colspan="2"><hr />
+      <h2>XWT</h2>
+      <hr /></td>
+  </tr>
+  <tr id="itemname">
+    <td width="30%" valign="top" align="left"><b>Multilple Data Binding models</b></td>
+    <td width="70%" valign="top"><p>The data binding depends closely on data model. For Java, the first class data binding model is Java Bean, which is already supported in previous version. An enterprise application deals with also other Data models such as XML, EMF Ecore, RDBMS, Web services etc. A flexible and customizable solution in XWT is absolutely necessary to support all possible Data models. </p>
+      <p>In M3, XWT introduces a new concept to handle some different types of data than Java POJO. This concept relies on the class IDataProvider, IBindingContext and IDataBinding. Each Data type should implements these three types to integrate data model into  XWT's Data Binding engine. The Java Bean data binding is handled mainly by the class ObjectDataProvider. </p>
+    <p>A new plugin &quot;org.eclipse.e4.xwt.xml&quot; is created to implement the XML data provider.  </p>    </td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr /></td>
+  </tr>
+  <tr id="itemname2">
+    <td width="30%" valign="top" align="left"><strong>Widget Binding</strong></td>
+    <td width="70%" valign="top"><p>Widget binding is a kind of Data Binding between UI Widgets. Every widget can be used not only as View, but also as Model. The property synchronization between UI Widgets provides a powerful declarative solution to handle simply dynamic aspect of UI and to get rid of noise listeners in Java code. </p>
+      <p>This solution relies on the new features of JFace Data Binding for SWT. </p>
+      <p>The following code is used to bind the selection state of  two Buttons on the property &quot;Selection&quot;. </p>
+      <p><img src="images/code.png" width="655" height="76" /></p>
+      <p align="center"><img src="images/WidgetBinding1.png" width="319" height="289" /></p>
+    <p align="left">The widgets in left column is in synchronization with the widgets in right column respectively. </p>
+    <p align="center"><img src="images/WidgetBinding2.png" width="319" height="289" /></p>
+    <p>In the couple of binding at the buttom, the text of two Combo is symchronized with the &quot;background&quot; and &quot;foreground&quot; of a Label. When the selection of Combo get changed, the Label appeance gets updated immediately. </p></td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr/>    </td>
+  </tr>
+  <tr id="itemname3">
+    <td width="30%" valign="top" align="left"><b>Advanced UI Mediator wizard</b></td>
+    <td width="70%" valign="top"><p>Mediator is a new concept of XWT introduced in release. It is in fact a data Presentation Unit. It handles the interactions between users and application data via graphic UI. It consists of up to four elements: </p>
+      <ul>
+        <li>View, graphic UI</li>
+        <li>Controller, the agent to deal with UI event and application logic</li>
+        <li>Data context, the type of data to show</li>
+        <li>Meta-model service, provides the structure of mediator</li>
+      </ul>
+      <p>Each mediator can be plugin-ed and play anywhere under the same kind of DataContext. </p>
+      <p>The wizard "UI Component" get renamed as "UI Mediator". The wizard has be improved to create a Mediator from a selected class, which is used as Data Context.
+    <p><img src="images/wizard1.png" width="600" height="442" />    
+    <p>
+    
+    <p align="center"><img src="images/wizard2.png" width="491" height="456" />        
+    <p align="justify">This wizard will creates a mediator with three files: XML view, Java controller and Meta-model service in Java, and it will generate the default content based on the Data Context model.    
+    <p align="justify">Here is an example of Person with attribute: name, age, nationality and a reference Address.
+    
+    <p align="center"><img src="images/PersonDemo.png" width="410" height="179" /></td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr />    </td>
+  </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
 </table>
 </body>
 <p><img src="../cpy.png" /></p>
