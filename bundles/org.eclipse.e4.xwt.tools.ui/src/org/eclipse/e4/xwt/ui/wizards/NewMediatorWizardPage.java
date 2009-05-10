@@ -295,21 +295,22 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 		PrintStream printStream = new PrintStream(arrayOutputStream);
 
-		printStream.println("<j:" + type.getElementName() + " xmlns=\"" + IConstants.XWT_NAMESPACE + "\"");
+		printStream.println("<c:" + type.getElementName() + " xmlns=\"" + IConstants.XWT_NAMESPACE + "\"");
 
 		printStream.println("\t xmlns:x=\"" + IConstants.XWT_X_NAMESPACE + "\"");
 		String packageName = type.getPackageFragment().getElementName();
 		if (packageName != null/* && packageName.length() > 0 */) {
-			printStream.println("\t xmlns:j=\"" + IConstants.XAML_CLR_NAMESPACE_PROTO + packageName + "\"");
+			printStream.println("\t xmlns:c=\"" + IConstants.XAML_CLR_NAMESPACE_PROTO + packageName + "\"");
 		}
+		printStream.println("\t xmlns:j=\"" + IConstants.XAML_CLR_NAMESPACE_PROTO +  "java.lang\"");
 		printStream.println("\t x:Class=\"" + hostClassName + "\">");
-		printStream.println("\t <j:" + type.getElementName() + ".layout>");
+		printStream.println("\t <c:" + type.getElementName() + ".layout>");
 		printStream.println("\t\t <GridLayout " + " numColumns=\"4\" />");
-		printStream.println("\t </j:" + type.getElementName() + ".layout>");
+		printStream.println("\t </c:" + type.getElementName() + ".layout>");
 
 		appendBeanContent(printStream);
 
-		printStream.println("</j:" + type.getElementName() + ">");
+		printStream.println("</c:" + type.getElementName() + ">");
 
 		try {
 			byte[] content = arrayOutputStream.toByteArray();
@@ -348,6 +349,21 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 					printStream.println("\t\t\t\t horizontalAlignment=\"GridData.FILL\" widthHint=\"100\"/>");
 					printStream.println("\t\t </Text.layoutData>");
 					printStream.println("\t </Text>");
+				} else if (propertyType.isEnum()) {
+					printStream.println("\t <Label text=\"" + pd.getDisplayName() + "\"/>");
+					printStream.println("\t <Combo text=\"{Binding path=" + pd.getName() + "}\">");
+					printStream.println("\t\t <Combo.layoutData>");
+					printStream.println("\t\t\t <GridData grabExcessHorizontalSpace=\"true\"");
+					printStream.println("\t\t\t\t horizontalAlignment=\"GridData.FILL\" widthHint=\"100\"/>");
+					printStream.println("\t\t </Combo.layoutData>");
+					
+					printStream.println("\t\t <Combo.items>");
+					for (Object object : propertyType.getEnumConstants()) {
+						printStream.println("\t\t\t <j:String>" + object.toString() + "</j:String>");						
+					}
+					printStream.println("\t\t </Combo.items>");
+					printStream.println("\t </Combo>");
+					
 				} else {
 					printStream.println("\t <Group text=\"" + pd.getDisplayName() + "\">");
 					printStream.println("\t\t <Group.layout>");
@@ -355,7 +371,7 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 					printStream.println("\t\t </Group.layout>");
 
 					String elementType = propertyType.getSimpleName() + "Mediator";
-					printStream.println("\t\t <j:" + elementType + " DataContext=\"{Binding path=" + pd.getName() + "}\"/>");
+					printStream.println("\t\t <c:" + elementType + " DataContext=\"{Binding path=" + pd.getName() + "}\"/>");
 
 					printStream.println("\t\t <Group.layoutData>");
 					printStream.println("\t\t\t <GridData grabExcessHorizontalSpace=\"true\" horizontalSpan=\"4\"");
