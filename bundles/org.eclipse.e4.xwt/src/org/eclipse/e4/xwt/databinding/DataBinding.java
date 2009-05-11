@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.swt.widgets.Control;
@@ -24,14 +23,14 @@ public class DataBinding implements IDataBinding {
 	private Object target;
 	private String path;
 	private String type;
-
+	private String mode;
 	private IObservableValue observableSource;
 	private IObservableValue observableWidget;
 
 	/**
 	 * Constructor for dataProvider.
 	 */
-	public DataBinding(IDataProvider dataProvider, Object target, String path, String type) {
+	public DataBinding(IDataProvider dataProvider, Object target, String path, String type, String mode) {
 		assert dataProvider != null : "DataProvider is null";
 		assert target != null : "Binding widget is null";
 		assert path != null : "Binding path is null";
@@ -39,6 +38,7 @@ public class DataBinding implements IDataBinding {
 		this.setTarget(target);
 		this.path = path;
 		this.type = type;
+		this.mode = mode;
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class DataBinding implements IDataBinding {
 		IObservableValue observableSource = getObservableSource(valueType);
 		IBindingContext bindingContext = dataProvider.getBindingContext();
 		if (bindingContext != null) {
-			bindingContext.bind(observableSource, observableWidget, new UpdateValueStrategy(), new UpdateValueStrategy());
+			bindingContext.bind(observableSource, observableWidget, mode);
 		}
 		if (observableSource != null) {
 			return observableSource.getValue();

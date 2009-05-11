@@ -142,7 +142,7 @@ public class BindingMetaclass extends Metaclass {
 			IDataProvider dataProvider = null;
 			DataBinding dataBinding = null;
 			if (dataContext != null && dataContext instanceof Control) {
-				ControlDataBinding controlDataBinding = new ControlDataBinding((Control) dataContext, (Control) control, path, type);
+				ControlDataBinding controlDataBinding = new ControlDataBinding((Control) dataContext, (Control) control, path, type, mode);
 				if (controlDataBinding != null) {
 					return controlDataBinding.getValue();
 				}
@@ -154,7 +154,7 @@ public class BindingMetaclass extends Metaclass {
 				dataProvider = getDataProvider();
 			}
 			if (dataProvider != null && (path != null || xPath != null)) {
-				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type);
+				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type, mode);
 			}
 			if (dataBinding != null) {
 				return dataBinding.getValue();

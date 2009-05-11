@@ -24,32 +24,44 @@ public class BindingContext implements IBindingContext {
 	public IObservableValue observeValue;
 	public IObservableValue observeWidget;
 
+	public enum Mode {
+		TwoWay, OneWay, OneTime
+	};
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
-	public void bind(IObservableValue source, IObservableValue target, UpdateValueStrategy targetToSource, UpdateValueStrategy sourceToTarget) {
+	public void bind(IObservableValue source, IObservableValue target, String mode) {
 		if (source != null && target != null) {
 			this.observeValue = source;
 			this.observeWidget = target;
+			int sourceToTargetPolicy = UpdateValueStrategy.POLICY_UPDATE;
+			int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
 			DataBindingContext core = new DataBindingContext(XWT.realm);
-
+			// Set policy to UpdateValueStrategy.
+			if (mode != null) {
+				if (mode.equalsIgnoreCase(Mode.OneWay.toString())) {
+					targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
+				} else if (mode.equalsIgnoreCase(Mode.OneTime.toString())) {
+					sourceToTargetPolicy = UpdateValueStrategy.POLICY_NEVER;
+					targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
+				}
+			}
 			// Add converter to UpdateValueStrategy.
 			Object sourceValueType = source.getValueType();
 			Object targetValueType = target.getValueType();
 			Class<?> sourceType = (sourceValueType instanceof Class<?>) ? (Class<?>) sourceValueType : sourceValueType.getClass();
 			Class<?> targetType = (targetValueType instanceof Class<?>) ? (Class<?>) targetValueType : targetValueType.getClass();
-			if (sourceToTarget == null) {
-				sourceToTarget = new UpdateValueStrategy();
-			}
+
+			UpdateValueStrategy sourceToTarget = new UpdateValueStrategy(sourceToTargetPolicy);
 			IConverter m2t = XWT.findConvertor(sourceType, targetType);
 			if (m2t != null) {
 				sourceToTarget.setConverter(m2t);
 			}
-			if (targetToSource == null) {
-				targetToSource = new UpdateValueStrategy();
-			}
+
+			UpdateValueStrategy targetToSource = new UpdateValueStrategy(targetToSourcePolicy);
 			IConverter t2m = XWT.findConvertor(targetType, sourceType);
 			if (t2m != null) {
 				targetToSource.setConverter(t2m);

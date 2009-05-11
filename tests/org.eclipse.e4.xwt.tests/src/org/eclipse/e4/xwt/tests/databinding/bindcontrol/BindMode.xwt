@@ -1,0 +1,51 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation" xmlns:x="http://www.eclipse.org/xwt"
+	xmlns:y="clr-namespace:org.eclipse.e4.xwt.tests.databinding" Size="500, 400">
+	<Shell.layout>
+		<GridLayout numColumns="3" />
+	</Shell.layout>
+	<!-- Mode:OneWay -->
+	<Label Text="Binding Mode:OneWay">
+	</Label>
+	<Text x:Style="SWT.BORDER" x:Name="theOneWayTextBox" Text="OneWay">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+				grabExcessHorizontalSpace="true" />
+		</Text.layoutData>
+	</Text>
+	<Text x:style="SWT.BORDER" Text="{Binding ElementName=theOneWayTextBox, Path=Text, Mode=OneWay}">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+				grabExcessHorizontalSpace="true" />
+		</Text.layoutData>
+	</Text>
+	<!-- Mode:OneTime -->
+	<Label Text="Binding Mode:OneTime">
+	</Label>
+	<Text x:Style="SWT.BORDER" x:Name="theOneTimeTextBox" Text="OneTime">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+				grabExcessHorizontalSpace="true" />
+		</Text.layoutData>
+	</Text>
+	<Text x:style="SWT.BORDER" Text="{Binding ElementName=theOneTimeTextBox, Path=Text, Mode=OneTime}">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+				grabExcessHorizontalSpace="true" />
+		</Text.layoutData>
+	</Text>
+	<!-- Mode:TwoWay -->
+	<Label Text="Binding Mode:TwoWay">
+	</Label>
+	<Text x:Style="SWT.BORDER" x:Name="theTwoWayTextBox" Text="TwoWay">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+				grabExcessHorizontalSpace="true" />
+		</Text.layoutData>
+	</Text>
+	<Text x:style="SWT.BORDER" Text="{Binding ElementName=theTwoWayTextBox, Path=Text, Mode=TwoWay}">
+		<Text.layoutData>
+			<GridData horizontalAlignment="FILL"
+				grabExcessHorizontalSpace="true" />
+		</Text.layoutData>
+	</Text>
+</Shell>

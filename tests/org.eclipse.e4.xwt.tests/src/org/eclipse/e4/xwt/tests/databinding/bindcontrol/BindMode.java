@@ -8,13 +8,21 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.databinding;
+package org.eclipse.e4.xwt.tests.databinding.bindcontrol;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+import java.net.URL;
 
-/**
- * @author jliu jin.liu@soyatec.com
- */
-public interface IBindingContext {
-	void bind(IObservableValue source, IObservableValue target, String mode);
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
+
+public class BindMode {
+	public static void main(String[] args) {
+
+		URL url = BindMode.class.getResource(BindMode.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

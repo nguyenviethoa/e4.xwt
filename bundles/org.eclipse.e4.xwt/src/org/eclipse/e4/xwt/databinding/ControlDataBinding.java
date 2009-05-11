@@ -11,7 +11,6 @@
 
 package org.eclipse.e4.xwt.databinding;
 
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.swt.widgets.Control;
 
@@ -26,11 +25,14 @@ public class ControlDataBinding {
 	private String sourceProperty;
 	private String targetProperty;
 
-	public ControlDataBinding(Control source, Control target, String sourceProperty, String targetProperty) {
+	private String mode;
+
+	public ControlDataBinding(Control source, Control target, String sourceProperty, String targetProperty, String mode) {
 		this.source = source;
 		this.target = target;
 		this.sourceProperty = sourceProperty;
 		this.targetProperty = targetProperty;
+		this.mode = mode;
 	}
 
 	/**
@@ -43,7 +45,7 @@ public class ControlDataBinding {
 			return null;
 		}
 		IBindingContext bindingContext = new BindingContext();
-		bindingContext.bind(sourceWidget, targetWidget, new UpdateValueStrategy(), new UpdateValueStrategy());
+		bindingContext.bind(sourceWidget, targetWidget, mode);
 		if (sourceWidget != null) {
 			return sourceWidget.getValue();
 		}
