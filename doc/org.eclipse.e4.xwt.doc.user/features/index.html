@@ -467,46 +467,61 @@
   </tr>
   <tr id="itemname">
     <td width="30%" valign="top" align="left"><b>Multilple Data Binding models</b></td>
-    <td width="70%" valign="top"><p>The data binding depends closely on data model. For Java, the first class data binding model is Java Bean, which is already supported in previous version. An enterprise application deals with also other Data models such as XML, EMF Ecore, RDBMS, Web services etc. A flexible and customizable solution in XWT is absolutely necessary to support all possible Data models. </p>
-      <p>In M3, XWT introduces a new concept to handle some different types of data than Java POJO. This concept relies on the class IDataProvider, IBindingContext and IDataBinding. Each Data type should implements these three types to integrate data model into  XWT's Data Binding engine. The Java Bean data binding is handled mainly by the class ObjectDataProvider. </p>
-    <p>A new plugin &quot;org.eclipse.e4.xwt.xml&quot; is created to implement the XML data provider.  </p>    </td>
+    <td width="70%" valign="top"><p>Data binding depends closely on a particular data model. For Java,         the first class data binding model is Java Beans, which is already supported in previous versions of XWT.         An enterprise application also deals with other data models such as XML, EMF Ecore, RDBMS,         Web services, etc. A flexible and customizable solution in XWT is absolutely necessary to support         all possible data models. </p>
+      <p>In M3, XWT introduces a new concept to handle some different types of data than Java POJOs.         This concept relies on the classes IDataProvider, IBindingContext and IDataBinding. Each data type         should implement these three types to integrate their data model with XWT's data binding engine.         The Java Bean data binding is mainly handled by the class ObjectDataProvider. </p>
+    <p>A new plugin "org.eclipse.e4.xwt.xml" has been added to implement the XML data provider.</p>    </td>
   </tr>
   <tr>
     <td colspan="2"><hr /></td>
   </tr>
   <tr id="itemname2">
     <td width="30%" valign="top" align="left"><strong>Widget Binding</strong></td>
-    <td width="70%" valign="top"><p>Widget binding is a kind of Data Binding between UI Widgets. Every widget can be used not only as View, but also as Model. The property synchronization between UI Widgets provides a powerful declarative solution to handle simply dynamic aspect of UI and to get rid of noise listeners in Java code. </p>
-      <p>This solution relies on the new features of JFace Data Binding for SWT. </p>
-      <p>The following code is used to bind the selection state of  two Buttons on the property &quot;Selection&quot;. </p>
+    <td width="70%" valign="top"><p>Widget binding is a kind of data binding between UI Widgets.       In <a href="http://en.wikipedia.org/wiki/Model-view-controller">MVC</a> terms,       every widget can be used not only as a <em>view</em>, but also as <em>model</em>. Proper synchronization       between UI widgets provides a powerful declarative solution to simply handle dynamic       aspects of UI design and to get rid of bulky listeners in Java code. </p>
+      <p>This solution relies on the new features of JFace data binding for SWT.</p>
+      <p>The following code is used to bind the selection state of  two Buttons on the property "Selection". </p>
       <p><img src="images/code.png" width="655" height="76" /></p>
       <p align="center"><img src="images/WidgetBinding1.png" width="319" height="289" /></p>
-    <p align="left">The widgets in left column is in synchronization with the widgets in right column respectively. </p>
+    <p align="left">The widgets in the left column are in sync with the respective widgets in the right column. </p>
     <p align="center"><img src="images/WidgetBinding2.png" width="319" height="289" /></p>
-    <p>In the couple of binding at the buttom, the text of two Combo is symchronized with the &quot;background&quot; and &quot;foreground&quot; of a Label. When the selection of Combo get changed, the Label appeance gets updated immediately. </p></td>
+    <p>A single widget can also be bound to multiple widgets. In the above case,       the text of two Combo instances is synchronized with the "background"       and "foreground" of a Label. When the selection of either Combo changes,       the label appearance gets updated immediately. </p></td>
   </tr>
   <tr>
     <td colspan="2"><hr/>    </td>
   </tr>
   <tr id="itemname3">
     <td width="30%" valign="top" align="left"><b>Advanced UI Mediator wizard</b></td>
-    <td width="70%" valign="top"><p>Mediator is a new concept of XWT introduced in release. It is in fact a data Presentation Unit. It handles the interactions between users and application data via graphic UI. It consists of up to four elements: </p>
+    <td width="70%" valign="top"><p>Mediator is a new concept added to XWT in this milestone.       It is in fact a data Presentation Unit. It handles the interactions between users and        application data via graphic UI. It consists of up to four elements: </p>
       <ul>
         <li>View, graphic UI</li>
         <li>Controller, the agent to deal with UI event and application logic</li>
         <li>Data context, the type of data to show</li>
         <li>Meta-model service, provides the structure of mediator</li>
       </ul>
-      <p>Each mediator can be plugin-ed and play anywhere under the same kind of DataContext. </p>
-      <p>The wizard "UI Component" get renamed as "UI Mediator". The wizard has be improved to create a Mediator from a selected class, which is used as Data Context.
-    <p><img src="images/wizard1.png" width="600" height="442" />    
+      <p>Each mediator can be plugged in anywhere under the same kind of data context.</p>
+      <p>The wizard "UI Component" has been renamed to "UI Mediator". The wizard has be         improved to create a Mediator from a selected class, which is used as the data context.</p>
+      <p><img src="images/wizard1.png" width="600" height="442" />    
     <p>
     
     <p align="center"><img src="images/wizard2.png" width="491" height="456" />        
-    <p align="justify">This wizard will creates a mediator with three files: XML view, Java controller and Meta-model service in Java, and it will generate the default content based on the Data Context model.    
-    <p align="justify">Here is an example of Person with attribute: name, age, nationality and a reference Address.
-    
+    <p align="justify">This wizard will create a mediator with three files: XML view, Java       controller and Meta-model service in Java, and it will generate the default content based on the data context model.    
+    <p align="justify">Here is an example of a person object with attributes: name, age, nationality and a reference address.    
     <p align="center"><img src="images/PersonDemo.png" width="410" height="179" /></td>
+  </tr>
+  <tr>
+    <td colspan="2"><hr />    </td>
+  </tr>
+  <tr id="itemname4">
+   <td width="30%" valign="top" align="left"><b>Data binding direction</b></td>
+    <td width="70%" valign="top"><p>Data flow of a binding can go from the view to the  model (for example, the source value changes when a user edits  the value of a Text) and/or from the model to the view (for example, your Text field gets updated with changes in the model). Date flow is controlled by a property &quot;Mode&quot; of type enumeration BindingMode:</p>
+      <ul>
+        <li><b>TwoWay </b>Moves changes, from either the bound control or the source of the binding, to one other in a bi-directional way. (This is the default mode.)</li>
+        <li><b>OneWay</b> Moves changes only from the source to the control. As changes occur in the source, the bound control's data is changed.</li>
+        <li><b>OneTime</b> Data is bound only at startup, and changes to the source are ignored once the control is filled with data the first time.</li>
+     </ul>
+     <p>The following example shows how to set the Mode property.</p>
+     <p align="center"><img src="images/BindingMode1.png" width="649" height="332" />     
+     <p align="center"><img src="images/BindingMode2.png" width="349" height="218" /> 
+     </td>
   </tr>
   <tr>
     <td colspan="2"><hr />    </td>
