@@ -75,7 +75,6 @@ data binding, you are binding your Text to the XML data.</p>
 this topic discusses many of the concepts associated with and some of
 the properties and usage of the Binding object.</p>
 
-<!--  
 <p><b>Direction of the Data Flow</b></p>
 <p>As mentioned previously and as indicated by the arrow in the
 figure above, the data flow of a binding can go from the binding target
@@ -85,14 +84,12 @@ if the binding source provides the proper notifications.</p>
 <p>You may want your application to enable users to change the data
 and propagate it back to the source object. Or you may not want to
 enable users to update the source data. You can control this by setting
-the Mode property of your Binding object. The following figure
-illustrates the different types of data flow:</p>
-
-<p align="center"><img src="images/databinding_02.png" /></p>
+the Mode property of your Binding object. XWT supports three ways to handle the 
+binding: <tt>One Way</tt>, <tt>One Time</tt> and <tt>Two Way</tt>.</p>
 
 <ul>
-	<li>OneWay binding causes changes to the source property to
-	automatically update the target property, but changes to the target
+	<li><tt>One Way</tt> binding causes changes to the source property
+	to automatically update the target property, but changes to the target
 	property are not propagated back to the source property. This type of
 	binding is appropriate if the control being bound is implicitly
 	read-only. For instance, you may bind to a source such as a stock
@@ -101,20 +98,19 @@ illustrates the different types of data flow:</p>
 	table. If there is no need to monitor the changes of the target
 	property, using the OneWay binding mode avoids the overhead of the
 	TwoWay binding mode.</li>
-	<li>TwoWay binding causes changes to either the source property or
-	the target property to automatically update the other. This type of
-	binding is appropriate for editable forms or other fully-interactive UI
-	scenarios. Most properties default to OneWay binding, but some
-	dependency properties (typically properties of user-editable controls
-	such as the Text property of TextBox and the IsChecked property of
-	CheckBox) default to TwoWay binding. A programmatic way to determine
-	whether a dependency property binds one-way or two-way by default is to
-	get the property metadata of the property using GetMetadata and then
-	check the Boolean value of the BindsTwoWayByDefault property.</li>
-	<li></li>
-	<li></li>
+
+	<li><tt>One Time</tt> bind causes changes to the source property
+	to the target property only at the startup, and any changes to the
+	source property are ignored once the control is filled with data the
+	first time.</li>
+
+	<li><tt>Two Way</tt> binding causes changes to either the source
+	property or the target property to automatically update the other. This
+	type of binding is appropriate for editable forms or other
+	fully-interactive UI scenarios. All properties default to <tt>TwoWay</tt>
+	binding.</li>
+
 </ul>
--->
 
 <h3><a name="databinding_03"></a>Creating a Data Binding</h3>
 
