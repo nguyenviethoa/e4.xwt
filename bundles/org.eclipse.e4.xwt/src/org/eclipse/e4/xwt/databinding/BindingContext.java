@@ -54,19 +54,30 @@ public class BindingContext implements IBindingContext {
 			Object targetValueType = target.getValueType();
 			Class<?> sourceType = (sourceValueType instanceof Class<?>) ? (Class<?>) sourceValueType : sourceValueType.getClass();
 			Class<?> targetType = (targetValueType instanceof Class<?>) ? (Class<?>) targetValueType : targetValueType.getClass();
+			if (sourceType == null) {
+				sourceType = Object.class;
+			}
 
+			if (targetType == null) {
+				targetType = Object.class;
+			}
+			
 			UpdateValueStrategy sourceToTarget = new UpdateValueStrategy(sourceToTargetPolicy);
-			IConverter m2t = XWT.findConvertor(sourceType, targetType);
-			if (m2t != null) {
-				sourceToTarget.setConverter(m2t);
+			if (!targetType.isAssignableFrom(sourceType)) {
+				IConverter m2t = XWT.findConvertor(sourceType, targetType);
+				if (m2t != null) {
+					sourceToTarget.setConverter(m2t);
+				}				
 			}
 
 			UpdateValueStrategy targetToSource = new UpdateValueStrategy(targetToSourcePolicy);
-			IConverter t2m = XWT.findConvertor(targetType, sourceType);
-			if (t2m != null) {
-				targetToSource.setConverter(t2m);
+			if (!sourceType.isAssignableFrom(targetType)) {
+				IConverter t2m = XWT.findConvertor(targetType, sourceType);
+				if (t2m != null) {
+					targetToSource.setConverter(t2m);
+				}
 			}
-
+			
 			core.bindValue(target, source, targetToSource, sourceToTarget);
 		}
 	}
