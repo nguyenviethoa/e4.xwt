@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.databinding.ObjectBindingContext;
 import org.eclipse.e4.xwt.dataproviders.observable.BeanObservableValue;
@@ -64,6 +65,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 			try {
 				objectInstance = objectType.newInstance();
 			} catch (Exception e) {
+				throw new XWTException(e);
 			}
 		}
 		return objectInstance;

@@ -21,7 +21,7 @@ public interface IObjectDataProvider extends IDataProvider {
 
 	Class<?> getObjectType();
 
-	void setObjectInstance(Object objectImstance);
+	void setObjectInstance(Object objectInstance);
 
 	Object getObjectInstance();
 
