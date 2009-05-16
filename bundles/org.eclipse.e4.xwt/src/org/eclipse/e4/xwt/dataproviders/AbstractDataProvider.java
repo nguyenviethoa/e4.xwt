@@ -12,10 +12,8 @@ package org.eclipse.e4.xwt.dataproviders;
 
 import java.util.HashMap;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.databinding.IBindingContext;
-import org.eclipse.e4.xwt.dataproviders.observable.XWTObservableValue;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -23,23 +21,6 @@ import org.eclipse.e4.xwt.dataproviders.observable.XWTObservableValue;
 public abstract class AbstractDataProvider implements IDataProvider {
 
 	private HashMap<String, Object> properties = new HashMap<String, Object>();
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#createObservableValue(java.lang.String)
-	 */
-	public IObservableValue createObservableValue(Object valueType, String path) {
-		Object data = AbstractDataProvider.this.getData(path);
-		if (data != null) {
-			return createDefaultObservableValue(valueType, data);
-		}
-		return null;
-	}
-	
-	protected IObservableValue createDefaultObservableValue(Object valueType, Object data) {
-		return new XWTObservableValue(valueType, data);
-	}
 
 	/*
 	 * (non-Javadoc)

@@ -166,7 +166,7 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 		if (data != null && data instanceof Node) {
 			return new XmlObservableValue(valueType, (Node) data);
 		}
-		return super.createObservableValue(valueType, path);
+		return null;
 	}
 
 	/*

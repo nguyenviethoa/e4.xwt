@@ -22,7 +22,7 @@ import org.eclipse.jface.util.Util;
  * 
  * @author jliu (jin.liu@soyatec.com)
  */
-public class XWTObservableValue extends AbstractObservableValue {
+public abstract class XWTObservableValue extends AbstractObservableValue {
 
 	public static final String VALUE_CHANGED_EVENT = "EVENT_NODE_VALUE_CHANGED";
 
@@ -111,9 +111,7 @@ public class XWTObservableValue extends AbstractObservableValue {
 	/**
 	 * @param value
 	 */
-	protected void doSetApprovedValue(Object value) {
-
-	}
+	protected abstract void doSetApprovedValue(Object value);
 
 	/*
 	 * (non-Javadoc)
