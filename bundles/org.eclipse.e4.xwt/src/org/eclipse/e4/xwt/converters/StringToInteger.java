@@ -15,19 +15,21 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.conversion.StringToNumberConverter;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.swt.layout.GridData;
 
 /**
  * String to Integer converter
  * 
- * @author yyang
+ * @author yyang (yves.yang@soyatec.com)
  */
 public class StringToInteger implements IConverter {
 	private static final String GRIDDATA_PREFIX = "GRIDDATA.";
 	private static final String STYLES_SEP = "|";
 	public static StringToInteger instance = new StringToInteger();
-
+	protected StringToNumberConverter toNumberConverter = StringToNumberConverter.toInteger(false);
+	
 	public Object convert(Object fromObject) {
 		String str = (String) fromObject;
 		if (str.indexOf(STYLES_SEP) != -1) {
@@ -50,9 +52,9 @@ public class StringToInteger implements IConverter {
 			return 0;
 		}
 		try {
-			// Quick solution for numbers.
-			return Integer.parseInt(str.trim());
-		} catch (NumberFormatException e) {
+			// Quick solution for numbers.			
+			return (Integer) toNumberConverter.convert(str.trim());
+		} catch (Exception e) {
 			str = str.toUpperCase().trim();
 			if (str.startsWith(GRIDDATA_PREFIX)) {
 				return convertGridDataInt(str);

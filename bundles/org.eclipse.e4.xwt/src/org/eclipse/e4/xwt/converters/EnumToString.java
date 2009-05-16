@@ -14,6 +14,7 @@ package org.eclipse.e4.xwt.converters;
 import org.eclipse.core.databinding.conversion.IConverter;
 
 public class EnumToString implements IConverter {
+	public static EnumToString instance = new EnumToString();
 
 	/*
 	 * (non-Javadoc)

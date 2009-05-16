@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Font;
  * @author yyang
  */
 public class StringToFont implements IConverter {
+	public static StringToFont instance = new StringToFont();
 
 	public Object convert(Object fromObject) {
 		return ResourceManager.resources.getFont((String) fromObject);

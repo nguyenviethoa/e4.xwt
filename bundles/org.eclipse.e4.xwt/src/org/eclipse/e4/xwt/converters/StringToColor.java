@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Color;
  * @author jliu
  */
 public class StringToColor implements IConverter {
+	public static StringToColor instance = new StringToColor();
 
 	/*
 	 * (non-Javadoc)

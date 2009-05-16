@@ -21,27 +21,8 @@ import org.eclipse.e4.xwt.dataproviders.observable.XWTObservableValue;
  * @author jliu (jin.liu@soyatec.com)
  */
 public abstract class AbstractDataProvider implements IDataProvider {
-	private String key;
 
 	private HashMap<String, Object> properties = new HashMap<String, Object>();
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.IDataProvider#getKey()
-	 */
-	public String getKey() {
-		return key;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.IDataProvider#setKey(java.lang.String)
-	 */
-	public void setKey(String key) {
-		this.key = key;
-	}
 
 	/*
 	 * (non-Javadoc)

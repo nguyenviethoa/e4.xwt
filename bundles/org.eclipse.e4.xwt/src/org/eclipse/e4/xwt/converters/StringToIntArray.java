@@ -22,6 +22,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
  * @author jliu
  */
 public class StringToIntArray implements IConverter {
+	public static StringToIntArray instance = new StringToIntArray();
 
 	/*
 	 * (non-Javadoc)

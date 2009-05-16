@@ -164,6 +164,29 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getDataType(java.lang.String)
+	 */
+	public Class<?> getDataType(String path) {
+		Object target = getTarget();
+		if (target == null) {
+			return null;
+		}		
+		Class<?> type = target.getClass();
+		if (path == null) {
+			return type;
+		}
+		int index = path.indexOf(".");
+		while (index != -1 && target != null) {
+			type = BeanObservableValue.getValueType(type, path.substring(0, index));
+			path = path.substring(index + 1);
+			index = path.indexOf(".");
+		}
+		return BeanObservableValue.getValueType(type, path);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.impl.AbstractDataProvider#createObservableValue(java.lang.String)
 	 */
 	public IObservableValue createObservableValue(Object valueType, String fullPath) {

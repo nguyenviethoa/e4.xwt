@@ -147,6 +147,14 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 		}
 		return root;
 	}
+	
+	public Class<?> getDataType(String path) {
+		Object data = getData(path);
+		if (data == null) {
+			return null;
+		}
+		return data.getClass();
+	}
 
 	/*
 	 * (non-Javadoc)

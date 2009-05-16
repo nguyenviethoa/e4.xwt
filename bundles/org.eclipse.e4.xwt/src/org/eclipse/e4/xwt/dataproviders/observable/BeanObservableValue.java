@@ -72,6 +72,29 @@ public class BeanObservableValue extends XWTObservableValue {
 		return null;
 	}
 
+	public static Class<?> getValueType(Class<?> type, String propertyName) {
+		if (type == null || propertyName == null || propertyName.indexOf(".") != -1) {
+			return null;
+		}
+		try {
+			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
+			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+			for (PropertyDescriptor pd : propertyDescriptors) {
+				if (propertyName.equals(pd.getName())) {
+					return pd.getPropertyType();
+				}
+			}
+			Field[] fields = type.getDeclaredFields();
+			for (Field field : fields) {
+				if (propertyName.equals(field.getName())) {
+					return field.getType();
+				}
+			}
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -18,7 +18,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
  * @author yyang
  */
 public class StringToBoolean implements IConverter {
-	public static StringToInteger instance = new StringToInteger();
+	public static StringToBoolean instance = new StringToBoolean();
 
 	public Object convert(Object fromObject) {
 		String str = (String) fromObject;

@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Point;
  * @author yyang
  */
 public class StringToPoint implements IConverter {
+	public static StringToPoint instance = new StringToPoint();
 
 	public Object convert(Object fromObject) {
 		int x = 0;

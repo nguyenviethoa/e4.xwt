@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Rectangle;
  * @author yyang
  */
 public class StringToRectangle implements IConverter {
+	public static StringToRectangle instance = new StringToRectangle();
 
 	public Object convert(Object fromObject) {
 		int x = 0;

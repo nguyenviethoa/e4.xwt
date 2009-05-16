@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Image;
  * @author jliu
  */
 public class StringToImage implements IConverter {
+	public static StringToImage instance = new StringToImage();
 
 	/*
 	 * (non-Javadoc)

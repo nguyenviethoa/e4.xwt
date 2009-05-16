@@ -19,6 +19,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
  * @author jliu
  */
 public class ObjectToString implements IConverter {
+	public static ObjectToString instance = new ObjectToString();
 
 	/*
 	 * (non-Javadoc)

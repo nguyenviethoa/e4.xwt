@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.conversion.NumberToStringConverter;
+import org.eclipse.core.databinding.conversion.StringToNumberConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.e4.xwt.converters.BindingToObject;
 import org.eclipse.e4.xwt.converters.DateToString;
@@ -29,8 +31,6 @@ import org.eclipse.e4.xwt.converters.ObjectToObject;
 import org.eclipse.e4.xwt.converters.ObjectToString;
 import org.eclipse.e4.xwt.converters.StringToBoolean;
 import org.eclipse.e4.xwt.converters.StringToColor;
-import org.eclipse.e4.xwt.converters.StringToDouble;
-import org.eclipse.e4.xwt.converters.StringToFloat;
 import org.eclipse.e4.xwt.converters.StringToFont;
 import org.eclipse.e4.xwt.converters.StringToImage;
 import org.eclipse.e4.xwt.converters.StringToIntArray;
@@ -675,27 +675,50 @@ public class XWT {
 		core.registerMetaclass(new BindingMetaclass(), IConstants.XWT_NAMESPACE);
 		core.registerMetaclass(new TableEditorMetaclass(core.getMetaclass(ControlEditor.class)), IConstants.XWT_NAMESPACE);
 
-		XWT.registerConvertor(new ObjectToString());
-		XWT.registerConvertor(new DateToString());
-		XWT.registerConvertor(new EnumToString());
-		XWT.registerConvertor(new StringToInteger());
-		XWT.registerConvertor(new StringToFloat());
-		XWT.registerConvertor(new StringToDouble());
-		XWT.registerConvertor(new StringToBoolean());
-		XWT.registerConvertor(new StringToIntArray());
-		XWT.registerConvertor(new BindingToObject());
-		XWT.registerConvertor(new StringToColor());
-		XWT.registerConvertor(new StringToFont());
-		XWT.registerConvertor(new StringToImage());
-		XWT.registerConvertor(new StringToPoint());
-		XWT.registerConvertor(new StringToRectangle());
-		XWT.registerConvertor(new StringToURL());
+		XWT.registerConvertor(ObjectToString.instance);
+		XWT.registerConvertor(DateToString.instance);
+		XWT.registerConvertor(EnumToString.instance);
+		XWT.registerConvertor(StringToInteger.instance);
+		XWT.registerConvertor(StringToNumberConverter.toBigDecimal());
+		XWT.registerConvertor(StringToNumberConverter.toByte(false));
+		XWT.registerConvertor(StringToNumberConverter.toLong(false));
+		XWT.registerConvertor(StringToNumberConverter.toShort(false));
+		XWT.registerConvertor(StringToNumberConverter.toFloat(false));
+		XWT.registerConvertor(StringToNumberConverter.toDouble(false));
+		
+		XWT.registerConvertor(NumberToStringConverter.fromInteger(false));
+		XWT.registerConvertor(NumberToStringConverter.fromBigDecimal());
+		XWT.registerConvertor(NumberToStringConverter.fromByte(false));
+		XWT.registerConvertor(NumberToStringConverter.fromLong(false));
+		XWT.registerConvertor(NumberToStringConverter.fromShort(false));
+		XWT.registerConvertor(NumberToStringConverter.fromFloat(false));
+		XWT.registerConvertor(NumberToStringConverter.fromDouble(false));
+
+		XWT.registerConvertor(StringToBoolean.instance);
+		XWT.registerConvertor(StringToIntArray.instance);
+		XWT.registerConvertor(BindingToObject.instance);
+		XWT.registerConvertor(StringToColor.instance);
+		XWT.registerConvertor(StringToFont.instance);
+		XWT.registerConvertor(StringToImage.instance);
+		XWT.registerConvertor(StringToPoint.instance);
+		XWT.registerConvertor(StringToRectangle.instance);
+		XWT.registerConvertor(StringToURL.instance);
 
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
-		convertorRegister.register(String.class, float.class, new StringToFloat());
-		convertorRegister.register(String.class, int.class, new StringToInteger());
-		convertorRegister.register(String.class, boolean.class, new StringToBoolean());
-		convertorRegister.register(String.class, double.class, new StringToDouble());
+		convertorRegister.register(String.class, float.class, StringToNumberConverter.toFloat(true));
+		convertorRegister.register(String.class, int.class, StringToInteger.instance);
+		convertorRegister.register(String.class, short.class, StringToNumberConverter.toShort(true));
+		convertorRegister.register(String.class, long.class, StringToNumberConverter.toLong(true));
+		convertorRegister.register(String.class, byte.class, StringToNumberConverter.toByte(true));
+		convertorRegister.register(String.class, boolean.class, StringToBoolean.instance);
+		convertorRegister.register(String.class, double.class, StringToNumberConverter.toDouble(true));
+
+		convertorRegister.register(float.class, String.class, NumberToStringConverter.fromFloat(true));
+		convertorRegister.register(int.class, String.class, NumberToStringConverter.fromInteger(true));
+		convertorRegister.register(short.class, String.class, NumberToStringConverter.fromShort(true));
+		convertorRegister.register(long.class, String.class, NumberToStringConverter.fromLong(true));
+		convertorRegister.register(byte.class, String.class, NumberToStringConverter.fromByte(true));
+		convertorRegister.register(double.class, String.class, NumberToStringConverter.fromDouble(true));
 
 		Class<?> type = org.eclipse.swt.browser.Browser.class;
 		IMetaclass browserMetaclass = (IMetaclass) XWT.registerMetaclass(type);

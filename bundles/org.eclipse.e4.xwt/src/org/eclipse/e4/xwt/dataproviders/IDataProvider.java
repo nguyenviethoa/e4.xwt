@@ -19,21 +19,7 @@ import org.eclipse.e4.xwt.databinding.IBindingContext;
  * @author yyang
  */
 public interface IDataProvider {
-
-	/**
-	 * Set a key for this data provider.
-	 * 
-	 * @param key
-	 */
-	void setKey(String key);
-
-	/**
-	 * Get the key of this data provider.
-	 * 
-	 * @return
-	 */
-	String getKey();
-
+	
 	/**
 	 * Return the data of the provider, this value can be not used for databindings.
 	 * 
@@ -41,6 +27,14 @@ public interface IDataProvider {
 	 * @return
 	 */
 	Object getData(String path);
+	
+	/**
+	 * Return the data type of the provider.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	Class<?> getDataType(String path);
 
 	/**
 	 * Create a databinding data with given path.

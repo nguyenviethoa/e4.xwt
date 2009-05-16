@@ -19,6 +19,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
  * @author jliu (jin.liu@soyatec.com)
  */
 public class StringToURL implements IConverter {
+	public static StringToURL instance = new StringToURL();
 
 	/*
 	 * (non-Javadoc)

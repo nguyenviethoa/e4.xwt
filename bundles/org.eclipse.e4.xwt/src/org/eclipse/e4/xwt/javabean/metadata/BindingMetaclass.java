@@ -170,7 +170,7 @@ public class BindingMetaclass extends Metaclass {
 				}
 				for (String key : rd.keySet()) {
 					Object object = rd.get(key);
-					if (object instanceof IDataProvider && key.equals(((IDataProvider) object).getKey())) {
+					if (object instanceof IDataProvider) {
 						return (IDataProvider) object;
 					}
 				}

@@ -80,7 +80,8 @@ public class DataBinding implements IDataBinding {
 		if (observableWidget == null) {
 			return dataProvider.getData(path);
 		}
-		Object valueType = observableWidget.getValueType();
+		// TODO
+		Object valueType = dataProvider.getDataType(path);
 		IObservableValue observableSource = getObservableSource(valueType);
 		IBindingContext bindingContext = dataProvider.getBindingContext();
 		if (bindingContext != null) {
