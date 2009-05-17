@@ -11,7 +11,7 @@
 package org.eclipse.e4.xwt.converters;
 
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass;
+import org.eclipse.e4.xwt.impl.IBinding;
 
 /**
  * Binding to Object covnerter
@@ -22,12 +22,12 @@ public class BindingToObject implements IConverter {
 	public static BindingToObject instance = new BindingToObject();
 
 	public Object convert(Object fromObject) {
-		BindingMetaclass.Binding binding = (BindingMetaclass.Binding) fromObject;
+		IBinding binding = (IBinding) fromObject;
 		return binding.getValue();
 	}
 
 	public Object getFromType() {
-		return BindingMetaclass.Binding.class;
+		return IBinding.class;
 	}
 
 	public Object getToType() {
