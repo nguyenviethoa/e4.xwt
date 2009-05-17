@@ -119,7 +119,7 @@ public abstract class XWTObservableValue extends AbstractObservableValue {
 	 * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doGetValue()
 	 */
 	protected Object doGetValue() {
-		return observed.toString();
+		return observed;
 	}
 
 	/*
