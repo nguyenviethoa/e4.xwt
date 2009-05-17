@@ -18,9 +18,10 @@
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
-	<Label text="{Binding Source={StaticResource myBooks},Path=title.lang}">
+	<Label text="{Binding Source={StaticResource myBook},Path=title.lang}">
 		<Label.layoutData>
 			<GridData horizontalAlignment="FILL"
+				widthHint="100"
          		grabExcessHorizontalSpace="true"/>
 		</Label.layoutData>
 	</Label>
