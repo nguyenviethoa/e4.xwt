@@ -12,6 +12,8 @@ package org.eclipse.e4.xwt.dataproviders;
 
 import java.util.List;
 
+import org.eclipse.e4.xwt.IDataProvider;
+
 /**
  * @author jliu (jin.liu@soyatec.com)
  */

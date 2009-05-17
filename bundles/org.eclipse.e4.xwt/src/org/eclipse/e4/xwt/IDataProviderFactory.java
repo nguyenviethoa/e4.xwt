@@ -8,22 +8,23 @@
  * Contributors:                                                               *        
  *     Soyatec - initial API and implementation                                *
  *******************************************************************************/
-package org.eclipse.e4.xwt.dataproviders;
-
-import java.net.URL;
-
-import org.eclipse.e4.xwt.IDataProvider;
+package org.eclipse.e4.xwt;
 
 /**
- * @author jliu (jin.liu@soyatec.com)
+ * 
+ * @author yyang (yves.yang@soyatec.com)
  */
-public interface IXmlDataProvider extends IDataProvider {
+public interface IDataProviderFactory {
+	/**
+	 * The type of the Data provider
+	 * @return
+	 */
+	Class<?> getType();
 
-	void setSource(URL xmlSource);
-
-	URL getSource();
-
-	void setXPath(String xPath);
-
-	String getXPath();
+	/**
+	 * 
+	 * @param dataContext
+	 * @return null if this factory doesn't match with the data context
+	 */
+	IDataProvider create(Object dataContext);
 }

@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata;
 
+import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
-import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
@@ -154,9 +154,7 @@ public class BindingMetaclass extends Metaclass {
 				if (dataContext instanceof IDataProvider) {
 					dataProvider = (IDataProvider) dataContext;
 				} else {
-					ObjectDataProvider newDataProvider = new ObjectDataProvider();
-					newDataProvider.setObjectInstance(dataContext);
-					dataProvider = newDataProvider;
+					dataProvider = XWT.findDataProvider(dataContext);
 				}
 			} 
 
@@ -169,7 +167,7 @@ public class BindingMetaclass extends Metaclass {
 			return dataContext;
 		}
 	}
-
+	
 	public BindingMetaclass() {
 		super(BindingMetaclass.Binding.class, null);
 	}

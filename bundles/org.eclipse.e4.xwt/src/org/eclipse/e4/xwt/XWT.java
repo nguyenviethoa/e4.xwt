@@ -38,7 +38,6 @@ import org.eclipse.e4.xwt.converters.StringToInteger;
 import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
 import org.eclipse.e4.xwt.converters.StringToURL;
-import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
@@ -131,7 +130,7 @@ public class XWT {
 	private static ILogger logger;
 	private static Collection<IStyle> defaultStyles = new ArrayList<IStyle>();
 
-	private static Collection<IDataProvider> dataProviders = new ArrayList<IDataProvider>();
+	private static Collection<IDataProviderFactory> dataProviderFactories = new ArrayList<IDataProviderFactory>();
 
 	public static Display display;
 	public static Realm realm;
@@ -963,26 +962,38 @@ public class XWT {
 		return new ArrayList<IStyle>(defaultStyles);
 	}
 
-	public static void addDataProvider(IDataProvider dataProvider) {
-		if (dataProvider == null) {
+	public static void addDataProvider(IDataProviderFactory dataProviderFactory) {
+		if (dataProviderFactory == null) {
 			return;
 		}
-		if (!dataProviders.contains(dataProvider)) {
-			dataProviders.add(dataProvider);
-			registerMetaclass(dataProvider.getClass());
+		if (!dataProviderFactories.contains(dataProviderFactory)) {
+			dataProviderFactories.add(dataProviderFactory);
+			registerMetaclass(dataProviderFactory.getType());
 		}
 	}
 
-	public static void removeDataProvider(IDataProvider dataProvider) {
+	public static void removeDataProvider(IDataProviderFactory dataProvider) {
 		if (dataProvider == null) {
 			return;
 		}
-		if (dataProviders.contains(dataProvider)) {
-			dataProviders.remove(dataProvider);
+		if (dataProviderFactories.contains(dataProvider)) {
+			dataProviderFactories.remove(dataProvider);
 		}
 	}
 
-	public static Collection<IDataProvider> getDataProviders() {
-		return dataProviders;
+	public static Collection<IDataProviderFactory> getDataProviders() {
+		return dataProviderFactories;
+	}
+	
+	public static IDataProvider findDataProvider(Object dataContext) {
+		for (IDataProviderFactory factory : dataProviderFactories) {
+			IDataProvider dataProvider = factory.create(dataContext);
+			if (dataProvider != null) {
+				return dataProvider;
+			}
+		}
+		ObjectDataProvider dataProvider = new ObjectDataProvider();
+		dataProvider.setObjectInstance(dataContext);
+		return dataProvider;
 	}
 }

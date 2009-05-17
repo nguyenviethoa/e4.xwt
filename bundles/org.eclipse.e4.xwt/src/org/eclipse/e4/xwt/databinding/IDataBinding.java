@@ -1,6 +1,6 @@
 package org.eclipse.e4.xwt.databinding;
 
-import org.eclipse.e4.xwt.dataproviders.IDataProvider;
+import org.eclipse.e4.xwt.IDataProvider;
 
 public interface IDataBinding {
 	public IDataProvider getDataProvider();

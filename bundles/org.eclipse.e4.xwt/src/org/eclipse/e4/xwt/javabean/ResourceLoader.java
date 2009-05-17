@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IIndexedElement;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.IStyle;
@@ -37,7 +38,6 @@ import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTMaps;
-import org.eclipse.e4.xwt.dataproviders.IDataProvider;
 import org.eclipse.e4.xwt.dataproviders.IXmlDataProvider;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IBinding;
@@ -473,16 +473,21 @@ public class ResourceLoader implements IVisualElementLoader {
 		return targetObject;
 	}
 
-	private void setDataContext(IMetaclass metaclass, Object swtObject, ResourceDictionary dico, Object dataContext) throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	private void setDataContext(IMetaclass metaclass, Object targetObject, ResourceDictionary dico, Object dataContext) throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		Widget widget = null;
 		IMetaclass widgetMetaclass = metaclass;
-		if (JFacesHelper.isViewer(swtObject)) {
-			widget = JFacesHelper.getControl(swtObject);
+		if (JFacesHelper.isViewer(targetObject)) {
+			widget = JFacesHelper.getControl(targetObject);
 			widgetMetaclass = XWT.getMetaclass(widget.getClass());
-		} else if (swtObject instanceof Widget) {
-			widget = (Widget) swtObject;
+		} else if (targetObject instanceof Widget) {
+			widget = (Widget) targetObject;
+		} else {
+			widget = loadData.getCurrentWidget();
 		}
 		if (widget != null) {
+			if (targetObject instanceof BindingMetaclass.Binding) {
+				((BindingMetaclass.Binding) targetObject).setControl(widget);
+			}
 			if (dico != null) {
 				widget.setData(IUserDataConstants.XWT_RESOURCES_KEY, dico);
 			}

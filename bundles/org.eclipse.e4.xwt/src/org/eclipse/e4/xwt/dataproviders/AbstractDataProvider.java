@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.dataproviders;
 
 import java.util.HashMap;
 
+import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.databinding.IBindingContext;
 
