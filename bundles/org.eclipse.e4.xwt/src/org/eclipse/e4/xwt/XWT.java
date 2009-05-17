@@ -962,7 +962,7 @@ public class XWT {
 		return new ArrayList<IStyle>(defaultStyles);
 	}
 
-	public static void addDataProvider(IDataProviderFactory dataProviderFactory) {
+	public static void addDataProviderFactory(IDataProviderFactory dataProviderFactory) {
 		if (dataProviderFactory == null) {
 			return;
 		}
@@ -972,7 +972,7 @@ public class XWT {
 		}
 	}
 
-	public static void removeDataProvider(IDataProviderFactory dataProvider) {
+	public static void removeDataProviderFactory(IDataProviderFactory dataProvider) {
 		if (dataProvider == null) {
 			return;
 		}
@@ -981,7 +981,7 @@ public class XWT {
 		}
 	}
 
-	public static Collection<IDataProviderFactory> getDataProviders() {
+	public static Collection<IDataProviderFactory> getDataProviderFactories() {
 		return dataProviderFactories;
 	}
 	

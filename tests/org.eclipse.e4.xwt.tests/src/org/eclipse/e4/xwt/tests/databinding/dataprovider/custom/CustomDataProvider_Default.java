@@ -18,13 +18,15 @@ import org.eclipse.e4.xwt.IDataProviderFactory;
 import org.eclipse.e4.xwt.XWT;
 
 /**
+ * Introduce the Default Data provider
+ * 
  * @author yyang (yves.yang@soyatec.com)
  */
 public class CustomDataProvider_Default {
 	public static void main(String[] args) {
 		URL url = CustomDataProvider_Default.class.getResource(CustomDataProvider_Default.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
-			XWT.addDataProvider(new IDataProviderFactory(){
+			XWT.addDataProviderFactory(new IDataProviderFactory(){
 				public Class<?> getType() {
 					return CustomDataProvider.class;
 				}

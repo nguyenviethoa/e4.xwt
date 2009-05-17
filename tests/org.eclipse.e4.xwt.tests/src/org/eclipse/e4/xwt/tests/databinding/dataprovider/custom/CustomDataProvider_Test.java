@@ -16,6 +16,8 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
 /**
+ * Introduce the Data provider with data context together in XML
+ * 
  * @author yyang (yves.yang@soyatec.com)
  */
 public class CustomDataProvider_Test {
