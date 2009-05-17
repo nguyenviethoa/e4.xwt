@@ -107,8 +107,11 @@ public class BindingMetaclass extends Metaclass {
 		}
 
 		protected Object getSourceObject() {
-			if (source instanceof IBinding) {
-				return ((IBinding) source).getValue();
+			if (source!= null) {
+				if (source instanceof IBinding) {
+					return ((IBinding) source).getValue();
+				}
+				return source;
 			} else if (elementName != null) {
 				return XWT.findElementByName(control, elementName);
 			}
@@ -148,11 +151,15 @@ public class BindingMetaclass extends Metaclass {
 				}
 			}
 			if (dataContext != null) {
-				dataProvider = new ObjectDataProvider();
-				((ObjectDataProvider) dataProvider).setObjectInstance(dataContext);
-			} else {
-				dataProvider = getDataProvider();
-			}
+				if (dataContext instanceof IDataProvider) {
+					dataProvider = (IDataProvider) dataContext;
+				} else {
+					ObjectDataProvider newDataProvider = new ObjectDataProvider();
+					newDataProvider.setObjectInstance(dataContext);
+					dataProvider = newDataProvider;
+				}
+			} 
+
 			if (dataProvider != null && (path != null || xPath != null)) {
 				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type, mode);
 			}
@@ -161,23 +168,6 @@ public class BindingMetaclass extends Metaclass {
 			}
 			return dataContext;
 		}
-
-		private IDataProvider getDataProvider() {
-			if (control != null) {
-				ResourceDictionary rd = getResourceDictionary(control);
-				if (rd == null || rd.isEmpty()) {
-					return null;
-				}
-				for (String key : rd.keySet()) {
-					Object object = rd.get(key);
-					if (object instanceof IDataProvider) {
-						return (IDataProvider) object;
-					}
-				}
-			}
-			return null;
-		}
-
 	}
 
 	public BindingMetaclass() {

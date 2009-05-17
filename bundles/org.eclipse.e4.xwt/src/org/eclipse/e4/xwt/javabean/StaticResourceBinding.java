@@ -25,23 +25,19 @@ public class StaticResourceBinding implements IBinding {
 		this.key = key;
 	}
 
-	private ResourceDictionary getResourceDictionary(Widget widget) {
-		ResourceDictionary data = (ResourceDictionary) widget.getData(IUserDataConstants.XWT_RESOURCES_KEY);
-		Widget parent = widget;
-		while (data == null && (parent = (Widget) parent.getData(IUserDataConstants.XWT_PARENT_KEY)) != null)
-			data = (ResourceDictionary) ((Widget) parent).getData(IUserDataConstants.XWT_RESOURCES_KEY);
-		return data;
-	}
-
 	public Object getValue() {
-		ResourceDictionary dico = getResourceDictionary(widget);
-		if (dico == null) {
-			throw new XWTException("Can not find resource dictionary");
+		Widget parent = widget;		
+		while (parent != null) {
+			ResourceDictionary dico = (ResourceDictionary) ((Widget) parent).getData(IUserDataConstants.XWT_RESOURCES_KEY);
+			if (dico != null && dico.containsKey(key)) {
+				Object data = dico.get(key);
+				if (data instanceof IBinding) {
+					return ((IBinding) data).getValue();
+				}
+				return data;
+			}
+			parent = (Widget) parent.getData(IUserDataConstants.XWT_PARENT_KEY);
 		}
-		Object data = dico.get(key);
-		if (data instanceof IBinding) {
-			return ((IBinding) data).getValue();
-		}
-		return data;
+		throw new XWTException("Key " + key + " is not found.");			
 	}
 }
