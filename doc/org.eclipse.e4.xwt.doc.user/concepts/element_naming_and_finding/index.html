@@ -17,7 +17,7 @@ scope&quot;. The named scope corresponds with a XWT resource file.</p>
 <h2>Finding in Java</h2>
 <p>XWT uses x:Name property or Name property to name a component.
 This section will show how to name an element and how to find an element
-in Java class.</p>
+by its name in Java class.</p>
 
 <p>In the example below, we will create a Label named Message and a
 Button.</p>
@@ -31,7 +31,7 @@ Button.</p>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLAttrTag">x:Class</span>=<span
 	class="XMLAttrValue">"org.eclipse.e4.xwt.tests.name.Name_x"</span>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLAttrTag">text</span>=<span
-	class="XMLAttrValue">"NameT test"</span><span class="XMLElement">&gt;</span>
+	class="XMLAttrValue">"NameT test"</span><span class="XMLElementTag">&gt;</span>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="XMLElementTag">&lt;Shell.layout&gt;</span>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
 	class="XMLElementTag">&lt;GridLayout</span> <span class="XMLAttrTag">numColumns</span>=<span
@@ -71,18 +71,17 @@ will open instead. Please see the Java code below.</p>
 }
 </pre>
 
-
-
 <p>The first argument of findElementByName() indicates the start
 point of search. Precisely, the search starts with its NamedScope. If
 the name is not find in the current NamedScope, the search will proceed
 in its parent NamedScope. The &quot;null&quot; will be returned if the
 name is not found in the entire tree structure.<br>
 </p>
-<h2>Element Binding</h2>
-<p>The element also can be found via Control Binding between UI
-elements. It mostly used in an element binding. Element binding is a
-connection of two UI element. Please see the example below.</p>
+<h2>Element Finding</h2>
+<p>In XWT XML, an element also can be found by its name. It mostly
+used in control binding. Control binding is used to establish a
+connection among two or more UI elements.</p>
+
 <pre>
 <span class="XMLElementTag">&lt;Shell</span> <span class="XMLAttrTag">xmlns</span>=<span
 	class="XMLAttrValue">"http://www.eclipse.org/xwt/presentation"</span>
@@ -151,13 +150,12 @@ connection of two UI element. Please see the example below.</p>
 <span class="XMLElementTag">&lt;/Shell&gt;</span>
 </pre>
 
-<p>Consider the example above, we name the first button "Button1" by
-<b>x:Name</b> property. Then we keep the <b>top</b> property of the
-second button synchronized with the first button. Here using a binding
-object to establish a binding and <b>ElementName</b> property to specify
-the source object.</p>
-
-
+<p>Consider the above example, it start to search from <tt>top="{Binding
+ElementName=Button1}</tt>, it try to find the element named <tt>Button1</tt>
+in the current NamedScope, if not found, the search will proceed in its
+parent NamedScope. If the element is exist in the tree structure and it
+has the correct settings. the <tt>top</tt> property of the second button
+synchronized with <tt>Button1</tt>, Or the code will show error.</p>
 
 
 </body>
