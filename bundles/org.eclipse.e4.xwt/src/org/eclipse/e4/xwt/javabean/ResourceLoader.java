@@ -390,9 +390,9 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 		}
 		if (targetObject instanceof Widget) {
-			loadData.setCurrentWidget((Widget)targetObject);
+			loadData.setCurrentWidget((Widget) targetObject);
 		}
-		
+
 		// set first data context and resource dictionary
 		setDataContext(metaclass, targetObject, dico, dataContext);
 
@@ -1064,8 +1064,7 @@ public class ResourceLoader implements IVisualElementLoader {
 							if (metaclass instanceof BindingMetaclass) {
 								String key = child.getContent();
 								value = new StaticResourceBinding(loadData.getCurrentWidget(), key);
-							}
-							else {
+							} else {
 								setStyleProperty(target, child, metaclass);
 								return;
 							}
@@ -1235,11 +1234,11 @@ public class ResourceLoader implements IVisualElementLoader {
 		Widget composite = (Widget) target;
 		ResourceDictionary dico = null;
 		if (composite != null) {
-			dico = (ResourceDictionary) composite.getData(IUserDataConstants.XWT_STYLE_KEY);
+			dico = (ResourceDictionary) composite.getData(IUserDataConstants.XWT_RESOURCES_KEY);
 		}
 		if (dico == null) {
 			dico = new ResourceDictionary();
-			composite.setData(IUserDataConstants.XWT_STYLE_KEY, dico);
+			composite.setData(IUserDataConstants.XWT_RESOURCES_KEY, dico);
 		}
 		if (attribute != null) {
 			for (DocumentObject doc : attribute.getChildren()) {
@@ -1308,7 +1307,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (target instanceof Widget) {
 			Widget composite = (Widget) target;
 			if (composite instanceof Control) {
-				ResourceDictionary dico = (ResourceDictionary) composite.getData(IUserDataConstants.XWT_STYLE_KEY);
+				ResourceDictionary dico = (ResourceDictionary) composite.getData(IUserDataConstants.XWT_RESOURCES_KEY);
 				if (dico != null) {
 					return dico;
 				} else {
