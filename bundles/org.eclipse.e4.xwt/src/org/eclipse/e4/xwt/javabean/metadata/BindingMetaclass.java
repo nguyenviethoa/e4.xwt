@@ -11,11 +11,9 @@
 package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.IDataProvider;
-import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
-import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.impl.IBinding;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
@@ -107,7 +105,7 @@ public class BindingMetaclass extends Metaclass {
 		}
 
 		protected Object getSourceObject() {
-			if (source!= null) {
+			if (source != null) {
 				if (source instanceof IBinding) {
 					return ((IBinding) source).getValue();
 				}
@@ -132,14 +130,6 @@ public class BindingMetaclass extends Metaclass {
 			return XWT.getDataContext(control);
 		}
 
-		private ResourceDictionary getResourceDictionary(Widget widget) {
-			ResourceDictionary data = (ResourceDictionary) widget.getData(IUserDataConstants.XWT_RESOURCES_KEY);
-			Widget parent = widget;
-			while ((data == null || data.isEmpty()) && (parent = (Widget) parent.getData(IUserDataConstants.XWT_PARENT_KEY)) != null)
-				data = (ResourceDictionary) ((Widget) parent).getData(IUserDataConstants.XWT_RESOURCES_KEY);
-			return data;
-		}
-
 		public Object getValue() {
 			Object dataContext = getSourceObject();
 			IDataProvider dataProvider = null;
@@ -156,7 +146,7 @@ public class BindingMetaclass extends Metaclass {
 				} else {
 					dataProvider = XWT.findDataProvider(dataContext);
 				}
-			} 
+			}
 
 			if (dataProvider != null && (path != null || xPath != null)) {
 				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type, mode);
@@ -167,7 +157,7 @@ public class BindingMetaclass extends Metaclass {
 			return dataContext;
 		}
 	}
-	
+
 	public BindingMetaclass() {
 		super(BindingMetaclass.Binding.class, null);
 	}
