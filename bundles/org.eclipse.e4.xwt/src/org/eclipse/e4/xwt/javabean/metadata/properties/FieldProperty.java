@@ -13,7 +13,9 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 
 /**
  * @author jliu
@@ -46,8 +48,18 @@ public class FieldProperty extends AbstractProperty {
 	 * @see org.eclipse.e4.xwt.metadata.IProperty#setValue(java.lang.Object, java.lang.Object)
 	 */
 	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
-		if (field.getType() != value.getClass())
-			value = XWT.findConvertor(value.getClass(), field.getType()).convert(value);
+		if (value != null) {
+			Class<?> fieldType = field.getType();
+			Class<?> valueType = value.getClass();
+			if (!fieldType.isAssignableFrom(value.getClass())) {
+				IConverter converter = XWT.findConvertor(valueType, fieldType);
+				if (converter != null) {
+					value = converter.convert(value);
+				} else {
+					throw new XWTException("Converter " + valueType.getName() + "->" + fieldType.getName());
+				}
+			}
+		}
 		field.set(target, value);
 		fireSetPostAction(target, this, value);
 	}
