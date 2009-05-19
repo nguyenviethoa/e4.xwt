@@ -16,10 +16,10 @@ public class DataProperty extends AbstractProperty {
 	protected String key;
 
 	public DataProperty(String name, String key) {
-		this(Object.class, name, key);
+		this(name, Object.class, key);
 	}
 
-	public DataProperty(Class<?> propertyType, String name, String key) {
+	public DataProperty(String name, Class<?> propertyType, String key) {
 		super(name, propertyType);
 		this.key = key;
 	}

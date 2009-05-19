@@ -26,13 +26,13 @@ public class Attribute extends Element {
 	 * @param id
 	 */
 	public Attribute(String namespace, String name, String id) {
-		super(namespace, name);
+		super(namespace, name, null);
 		assert id == null;
 		setId(id);
 	}
 
 	public Attribute(String namespace, String name, String id, Collection<Attribute> attributes) {
-		super(namespace, name, attributes);
+		super(namespace, name, attributes, null);
 		assert id == null;
 		setId(id);
 	}

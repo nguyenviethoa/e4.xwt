@@ -28,6 +28,22 @@ public class Element extends DocumentObject {
 
 	private Map<String, Map<String, Attribute>> externalAttributes;
 
+	private String[] xmlnsMapping;
+
+	public String getXmlns(String prefix) {
+		if (prefix == null) {
+			prefix = "";
+		}
+		if (xmlnsMapping != null) {
+			for (int i = 0; i < xmlnsMapping.length; i++) {
+				if (prefix.equals(xmlnsMapping[i++])) {
+					return xmlnsMapping[i];
+				}
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Default constructor
 	 * 
@@ -40,12 +56,23 @@ public class Element extends DocumentObject {
 	 * @param originalAttributes
 	 *            element arributes
 	 */
-	public Element(String namespace, String name) {
-		this(namespace, name, null);
+	public Element(String namespace, String name, Map<String, String> xmlnsMapping) {
+		this(namespace, name, null, xmlnsMapping);
 	}
 
-	public Element(String namespace, String name, Collection<Attribute> attributes) {
+	public Element(String namespace, String name, Collection<Attribute> attributes, Map<String, String> xmlnsMapping) {
 		super(namespace, name);
+		if (xmlnsMapping != null) {
+			this.xmlnsMapping = new String[xmlnsMapping.size() * 2];
+			int i = 0;
+			for (String key : xmlnsMapping.keySet()) {
+				if (key == null) {
+					key = "";
+				}
+				this.xmlnsMapping[i++] = key;
+				this.xmlnsMapping[i++] = xmlnsMapping.get(key);
+			}
+		}
 
 		this.originalAttributes = Collections.EMPTY_MAP;
 		this.externalAttributes = Collections.EMPTY_MAP;

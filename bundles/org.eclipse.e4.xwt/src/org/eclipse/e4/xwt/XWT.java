@@ -37,12 +37,15 @@ import org.eclipse.e4.xwt.converters.StringToIntArray;
 import org.eclipse.e4.xwt.converters.StringToInteger;
 import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
+import org.eclipse.e4.xwt.converters.StringToType;
 import org.eclipse.e4.xwt.converters.StringToURL;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.impl.Core;
 import org.eclipse.e4.xwt.impl.IUserDataConstants;
 import org.eclipse.e4.xwt.impl.LoadingContext;
 import org.eclipse.e4.xwt.impl.NameScope;
+import org.eclipse.e4.xwt.impl.Setter;
+import org.eclipse.e4.xwt.impl.Style;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.javabean.ResourceLoaderFactory;
 import org.eclipse.e4.xwt.javabean.ValueConvertorRegister;
@@ -56,6 +59,7 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.DataProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicBeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
+import org.eclipse.e4.xwt.javabean.metadata.properties.StyleProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableColumnEditorProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableEditorDynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemEditorProperty;
@@ -684,7 +688,7 @@ public class XWT {
 		XWT.registerConvertor(StringToNumberConverter.toShort(false));
 		XWT.registerConvertor(StringToNumberConverter.toFloat(false));
 		XWT.registerConvertor(StringToNumberConverter.toDouble(false));
-		
+
 		XWT.registerConvertor(NumberToStringConverter.fromInteger(false));
 		XWT.registerConvertor(NumberToStringConverter.fromBigDecimal());
 		XWT.registerConvertor(NumberToStringConverter.fromByte(false));
@@ -702,6 +706,7 @@ public class XWT {
 		XWT.registerConvertor(StringToPoint.instance);
 		XWT.registerConvertor(StringToRectangle.instance);
 		XWT.registerConvertor(StringToURL.instance);
+		XWT.registerConvertor(StringToType.instance);
 
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
 		convertorRegister.register(String.class, float.class, StringToNumberConverter.toFloat(true));
@@ -723,7 +728,7 @@ public class XWT {
 		IMetaclass browserMetaclass = (IMetaclass) XWT.registerMetaclass(type);
 		browserMetaclass.addProperty(new DynamicProperty(type, String.class, PropertiesConstants.PROPERTY_URL));
 		IMetaclass buttonMetaclass = (IMetaclass) XWT.registerMetaclass(org.eclipse.swt.widgets.Button.class);
-		buttonMetaclass.addProperty(new DataProperty(ICommand.class, IConstants.XAML_COMMAND, IUserDataConstants.XWT_COMMAND_KEY));
+		buttonMetaclass.addProperty(new DataProperty(IConstants.XAML_COMMAND, ICommand.class, IUserDataConstants.XWT_COMMAND_KEY));
 
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Canvas.class);
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Caret.class);
@@ -745,7 +750,7 @@ public class XWT {
 		XWT.registerMetaclass(org.eclipse.swt.widgets.List.class);
 		XWT.registerMetaclass(org.eclipse.swt.widgets.Menu.class);
 		IMetaclass menuItemMetaclass = (IMetaclass) XWT.registerMetaclass(org.eclipse.swt.widgets.MenuItem.class);
-		menuItemMetaclass.addProperty(new DataProperty(ICommand.class, IConstants.XAML_COMMAND, IUserDataConstants.XWT_COMMAND_KEY));
+		menuItemMetaclass.addProperty(new DataProperty(IConstants.XAML_COMMAND, ICommand.class, IUserDataConstants.XWT_COMMAND_KEY));
 
 		XWT.registerMetaclass(org.eclipse.swt.widgets.MessageBox.class);
 		XWT.registerMetaclass(org.eclipse.swt.widgets.ProgressBar.class);
@@ -810,6 +815,7 @@ public class XWT {
 		type = org.eclipse.swt.widgets.Widget.class;
 		metaclass = (IMetaclass) XWT.registerMetaclass(type);
 		metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT, IUserDataConstants.XWT_DATACONTEXT_KEY));
+		metaclass.addProperty(new StyleProperty());
 
 		type = org.eclipse.jface.viewers.ColumnViewer.class;
 		metaclass = (IMetaclass) core.getMetaclass(type);
@@ -834,6 +840,9 @@ public class XWT {
 		XWT.registerMetaclass(DefaultLabelProvider.class);
 
 		XWT.registerMetaclass(ObjectDataProvider.class);
+
+		XWT.registerMetaclass(Style.class);
+		XWT.registerMetaclass(Setter.class);
 	}
 
 	public static ILoadingContext findLoadingContext(Object container) {
@@ -984,7 +993,7 @@ public class XWT {
 	public static Collection<IDataProviderFactory> getDataProviderFactories() {
 		return dataProviderFactories;
 	}
-	
+
 	public static IDataProvider findDataProvider(Object dataContext) {
 		for (IDataProviderFactory factory : dataProviderFactories) {
 			IDataProvider dataProvider = factory.create(dataContext);

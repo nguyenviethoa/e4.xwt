@@ -146,7 +146,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 			if (namespace == null) {
 				namespace = defaultNamespace;
 			}
-			Element element = new Element(namespace, name);
+			Element element = new Element(namespace, name, namespaceMapping);
 			element.setId(elementManager.generateID(name));
 			if (current != null) {
 				current.addChild(element);
@@ -451,13 +451,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 			needNormalizeName = false;
 		}
 		// Check the reference element.
-		String id = getDefaultAttribute(attrs, "id");
-		String refID = null;
-
-		// Check and parse element id.
-		if (id == null) {
-			id = elementManager.generateID(name);
-		}
+		String id = ElementManager.generateID(name);
 
 		// Check the same id elements.
 		if (elementManager.hasElement(id)) {
@@ -467,21 +461,8 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		// Process attributes: original, external
 		Set<Attribute> attributes = new HashSet<Attribute>();
 		for (int i = 0, len = attrs.getLength(); i < len; i++) {
-
 			String attrUri = normalizeNamespace(attrs.getURI(i));
 			String attrName = attrs.getLocalName(i);
-
-			if (IConstants.XWT_NAMESPACE.equalsIgnoreCase(attrUri)) {
-				if ("id".equals(attrName)) {
-					id = attrs.getValue(i);
-					continue;
-				}
-
-				if ("ref".equals(attrName)) {
-					refID = attrs.getValue(i);
-					continue;
-				}
-			}
 
 			Attribute attribute;
 			int index = attrName.indexOf('.');
@@ -499,32 +480,8 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		}
 
 		// Create or reference element.
-		Element element;
-		if (refID == null) {
-			element = new Element(namespace, name, attributes);
-		} else {
-			Element existedElement = (Element) elementManager.getElement(refID);
-			if (existedElement != null) {
-
-				if (!existedElement.getName().equals(name)) {
-					throw new SAXException(getFormattedMessage("Elements named \"%s\" and \"%s\" are not same: %s", id, existedElement.getId(), name));
-				}
-
-				if (!existedElement.getNamespace().equals(namespace)) {
-					throw new SAXException(getFormattedMessage("Elements named \"%s\" and \"%s\" are not same: %s", id, existedElement.getId(), namespace));
-				}
-
-				element = (Element) existedElement.clone();
-			} else {
-				throw new SAXException(getFormattedMessage("Element reference not found: %s", refID));
-			}
-		}
+		Element element = new Element(namespace, name, attributes, namespaceMapping);
 		element.setId(id);
-
-		// If reference id is not null, process the additional attributes.
-		if (refID != null) {
-			element.setAttributes(attributes);
-		}
 
 		// Add current node to stack
 		if (!elementStack.isEmpty()) {
@@ -578,7 +535,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 					String content = text.substring(index + 1);
 					String namespace = namespaceMapping.get(ns);
 					if (namespace != null) {
-						Element childElement = new Element(namespace, content);
+						Element childElement = new Element(namespace, content, namespaceMapping);
 						childElement.setId(elementManager.generateID(element.getName()));
 						element.addChild(childElement);
 						return;

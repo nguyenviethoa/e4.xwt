@@ -8,19 +8,32 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean;
+package org.eclipse.e4.xwt.impl;
 
-import java.util.HashMap;
+/**
+ * Setter of the class Style, which is used to define the in-line XAML style
+ * 
+ * @see Style
+ * @author yyang
+ */
+public class Setter {
+	protected String property;
 
-public class StyleSetterMap extends HashMap<String, String> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String key;
-
-	public StyleSetterMap(String key) {
-		this.key = key;
+	public String getProperty() {
+		return property;
 	}
+
+	public void setProperty(String property) {
+		this.property = property;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	protected String value;
 }

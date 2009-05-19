@@ -6,7 +6,7 @@
 	</Composite.layout>	
 	
 	<Composite.Resources>
-		<Style TargetType="j:MyUserControl">
+		<Style x:Key="any" TargetType="j:MyUserControl">
 			<Setter Property="Background" Value="Red"/>
 		</Style>
 	</Composite.Resources>

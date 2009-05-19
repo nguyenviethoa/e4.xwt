@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
 import org.eclipse.e4.xwt.impl.IBinding;
@@ -135,9 +136,13 @@ public class BindingMetaclass extends Metaclass {
 			IDataProvider dataProvider = null;
 			DataBinding dataBinding = null;
 			if (dataContext != null && dataContext instanceof Control) {
-				ControlDataBinding controlDataBinding = new ControlDataBinding((Control) dataContext, (Control) control, path, type, mode);
-				if (controlDataBinding != null) {
-					return controlDataBinding.getValue();
+				try {
+					ControlDataBinding controlDataBinding = new ControlDataBinding((Control) dataContext, (Control) control, path, type, mode);
+					if (controlDataBinding != null) {
+						return controlDataBinding.getValue();
+					}
+				} catch (XWTException e) {
+					// in case the property cannot be bound. return value
 				}
 			}
 			if (dataContext != null) {

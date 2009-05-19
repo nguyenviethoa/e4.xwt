@@ -5,7 +5,7 @@
 	</Composite.layout>	
 	
 	<Composite.Resources>
-		<Style TargetType="Label">
+		<Style x:Key="any" TargetType="Label">
 			<Setter Property="Background" Value="Red"/>
 		</Style>
 	</Composite.Resources>
