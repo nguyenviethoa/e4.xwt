@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.xml;
 
-import org.eclipse.e4.xwt.dataproviders.observable.XWTObservableValue;
+import org.eclipse.e4.xwt.databinding.XWTObservableValue;
 import org.w3c.dom.Node;
 
 /**

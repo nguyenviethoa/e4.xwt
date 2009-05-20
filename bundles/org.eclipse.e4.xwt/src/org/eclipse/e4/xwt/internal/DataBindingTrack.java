@@ -9,7 +9,7 @@
  *     Soyatec - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.e4.xwt.internal.javabean;
+package org.eclipse.e4.xwt.internal;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,8 +24,8 @@ import java.util.Set;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.internal.jface.JFacesHelper;
 import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass.Binding;
-import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.utils.LoggerManager;
 import org.eclipse.e4.xwt.utils.ObjectUtil;
 import org.eclipse.e4.xwt.xml.Attribute;

@@ -23,8 +23,6 @@ import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
 import org.eclipse.e4.xwt.Tracking;
-import org.eclipse.e4.xwt.javabean.metadata.MetaclassManager;
-import org.eclipse.e4.xwt.javabean.metadata.MetaclassService;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.xml.DocumentObject;
 import org.eclipse.e4.xwt.xml.DocumentRoot;

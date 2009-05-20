@@ -16,7 +16,6 @@ Export-Package: org.eclipse.e4.xwt,
  org.eclipse.e4.xwt.input,
  org.eclipse.e4.xwt.javabean.metadata,
  org.eclipse.e4.xwt.javabean.metadata.properties,
- org.eclipse.e4.xwt.jface,
  org.eclipse.e4.xwt.metadata,
  org.eclipse.e4.xwt.utils,
  org.eclipse.e4.xwt.xml

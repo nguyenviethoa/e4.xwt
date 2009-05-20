@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.jface;
+package org.eclipse.e4.xwt.internal.jface;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IIndexedElement;
@@ -17,22 +17,24 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 
-public class TextCellEditor extends org.eclipse.jface.viewers.TextCellEditor implements IIndexedElement {
+public class ComboBoxCellEditor extends org.eclipse.jface.viewers.ComboBoxCellEditor implements IIndexedElement {
 	protected CellEditorHelper cellEditorHelper;
 
-	public TextCellEditor(Composite parent) {
-		super(parent);
+	public ComboBoxCellEditor() {
+		super();
 	}
 
-	public TextCellEditor(Composite parent, int style) {
-		super(parent, style);
+	public ComboBoxCellEditor(Composite parent, String[] items, int style) {
+		super(parent, items, style);
+	}
+
+	public ComboBoxCellEditor(Composite parent, String[] items) {
+		super(parent, items);
 	}
 
 	@Override
 	protected void doSetValue(Object value) {
-		if (value == null) {
-			super.doSetValue("");
-		} else {
+		if (value != null) {
 			Class<?> targetType = getTargetType();
 			if (targetType != String.class) {
 				IConverter converter = XWT.findConvertor(targetType, String.class);
@@ -40,21 +42,34 @@ public class TextCellEditor extends org.eclipse.jface.viewers.TextCellEditor imp
 					value = converter.convert(value);
 				}
 			}
-			super.doSetValue(value);
+			String[] items = getItems();
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].equals(value)) {
+					super.doSetValue(i);
+					return;
+				}
+			}
 		}
+		super.doSetValue(-1);
 	}
 
 	@Override
 	protected Object doGetValue() {
 		Object value = super.doGetValue();
+		String[] items = getItems();
+		int selected = (Integer) value;
+		if (selected < 0) {
+			return null;
+		}
+		String selectedString = items[selected];
 		Class<?> targetType = getTargetType();
-		if (targetType != value.getClass()) {
-			IConverter converter = XWT.findConvertor(value.getClass(), targetType);
+		if (targetType != String.class) {
+			IConverter converter = XWT.findConvertor(String.class, targetType);
 			if (converter != null) {
-				value = converter.convert(value);
+				return converter.convert(value);
 			}
 		}
-		return value;
+		return selectedString;
 	}
 
 	protected Class<?> getTargetType() {
