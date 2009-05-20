@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataProvider;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.swt.widgets.Control;
 
 /**
@@ -111,7 +112,10 @@ public class DataBinding implements IDataBinding {
 	 */
 	protected IObservableValue createObservableWidget() {
 		if (target instanceof Control) {
-			return ObservableValueUtil.observePropertyValue((Control) target, type);
+			try {
+				return ObservableValueUtil.observePropertyValue((Control) target, type);
+			} catch (XWTException e) {
+			}
 		}
 		return null;
 	}
