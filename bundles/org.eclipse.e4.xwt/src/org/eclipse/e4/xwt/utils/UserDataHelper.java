@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.utils;
 
-import org.eclipse.e4.xwt.impl.IBinding;
-import org.eclipse.e4.xwt.impl.IUserDataConstants;
-import org.eclipse.e4.xwt.impl.NameScope;
+import org.eclipse.e4.xwt.internal.IBinding;
+import org.eclipse.e4.xwt.internal.IUserDataConstants;
+import org.eclipse.e4.xwt.internal.NameScope;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.TableTreeItem;

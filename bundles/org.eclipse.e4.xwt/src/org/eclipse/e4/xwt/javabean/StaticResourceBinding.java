@@ -12,8 +12,8 @@ package org.eclipse.e4.xwt.javabean;
 
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.impl.IBinding;
-import org.eclipse.e4.xwt.impl.IUserDataConstants;
+import org.eclipse.e4.xwt.internal.IBinding;
+import org.eclipse.e4.xwt.internal.IUserDataConstants;
 import org.eclipse.swt.widgets.Widget;
 
 public class StaticResourceBinding implements IBinding {

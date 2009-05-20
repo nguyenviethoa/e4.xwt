@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean;
+package org.eclipse.e4.xwt.internal.javabean;
 
 import java.lang.reflect.Method;
 

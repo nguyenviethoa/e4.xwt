@@ -25,7 +25,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.impl.Core;
+import org.eclipse.e4.xwt.internal.Core;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
