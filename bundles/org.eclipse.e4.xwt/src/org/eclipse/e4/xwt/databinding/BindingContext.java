@@ -14,6 +14,8 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.InverseValueConverter;
 import org.eclipse.e4.xwt.XWT;
 
 /**
@@ -33,7 +35,7 @@ public class BindingContext implements IBindingContext {
 	 * 
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
-	public void bind(IObservableValue source, IObservableValue target, String mode) {
+	public void bind(IObservableValue source, IObservableValue target, IDataBinding dataBinding) {
 		if (source != null && target != null) {
 			this.observeValue = source;
 			this.observeWidget = target;
@@ -41,12 +43,17 @@ public class BindingContext implements IBindingContext {
 			int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
 			DataBindingContext core = new DataBindingContext(XWT.realm);
 			// Set policy to UpdateValueStrategy.
-			if (mode != null) {
-				if (mode.equalsIgnoreCase(Mode.OneWay.toString())) {
+			if (dataBinding != null) {
+				switch (dataBinding.getBindingMode()) {
+				case OneWay:
 					targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
-				} else if (mode.equalsIgnoreCase(Mode.OneTime.toString())) {
+					break;
+				case OneTime:
 					sourceToTargetPolicy = UpdateValueStrategy.POLICY_NEVER;
 					targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
+					break;
+				default:
+					break;
 				}
 			}
 			// Add converter to UpdateValueStrategy.
@@ -61,23 +68,28 @@ public class BindingContext implements IBindingContext {
 			if (targetType == null) {
 				targetType = Object.class;
 			}
-			
+
+			IValueConverter converter = dataBinding.getConverter();
 			UpdateValueStrategy sourceToTarget = new UpdateValueStrategy(sourceToTargetPolicy);
-			if (!targetType.isAssignableFrom(sourceType)) {
+			if (converter != null) {
+				sourceToTarget.setConverter(converter);
+			} else if (!targetType.isAssignableFrom(sourceType)) {
 				IConverter m2t = XWT.findConvertor(sourceType, targetType);
 				if (m2t != null) {
 					sourceToTarget.setConverter(m2t);
-				}				
+				}
 			}
 
 			UpdateValueStrategy targetToSource = new UpdateValueStrategy(targetToSourcePolicy);
-			if (!sourceType.isAssignableFrom(targetType)) {
-				IConverter t2m = XWT.findConvertor(targetType, sourceType);
+			if (converter != null) {
+				targetToSource.setConverter(new InverseValueConverter(converter));
+			} else if (!sourceType.isAssignableFrom(targetType)) {
+				IConverter t2m = XWT.findConvertor(sourceType, targetType);
 				if (t2m != null) {
 					targetToSource.setConverter(t2m);
 				}
 			}
-			
+
 			core.bindValue(target, source, targetToSource, sourceToTarget);
 		}
 	}

@@ -12,27 +12,31 @@
 package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.IDataProvider;
+import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.swt.widgets.Control;
 
 /**
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class ControlDataBinding {
+public class ControlDataBinding implements IDataBinding {
 	private Control source;
 	private Control target;
 
 	private String sourceProperty;
 	private String targetProperty;
+	private IValueConverter converter;
 
-	private String mode;
+	private BindingMode mode = BindingMode.TwoWay;
 
-	public ControlDataBinding(Control source, Control target, String sourceProperty, String targetProperty, String mode) {
+	public ControlDataBinding(Control source, Control target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter) {
 		this.source = source;
 		this.target = target;
 		this.sourceProperty = sourceProperty;
 		this.targetProperty = targetProperty;
 		this.mode = mode;
+		this.converter = converter;
 	}
 
 	/**
@@ -45,7 +49,7 @@ public class ControlDataBinding {
 			return null;
 		}
 		IBindingContext bindingContext = new BindingContext();
-		bindingContext.bind(sourceWidget, targetWidget, mode);
+		bindingContext.bind(sourceWidget, targetWidget, this);
 		if (sourceWidget != null) {
 			return sourceWidget.getValue();
 		}
@@ -57,5 +61,21 @@ public class ControlDataBinding {
 			return ObservableValueUtil.observePropertyValue((Control) object, property);
 		}
 		return null;
+	}
+
+	public BindingMode getBindingMode() {
+		return mode;
+	}
+
+	public IValueConverter getConverter() {
+		return converter;
+	}
+
+	public IDataProvider getDataProvider() {
+		return null;
+	}
+
+	public Object getTarget() {
+		return target;
 	}
 }

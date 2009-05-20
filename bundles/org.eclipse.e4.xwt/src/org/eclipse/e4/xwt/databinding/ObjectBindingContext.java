@@ -134,8 +134,8 @@ public class ObjectBindingContext extends BindingContext {
 	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider.BindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
-	public void bind(IObservableValue source, IObservableValue target, String mode) {
-		super.bind(source, target, mode);
+	public void bind(IObservableValue source, IObservableValue target, IDataBinding dataBinding) {
+		super.bind(source, target, dataBinding);
 		if (source instanceof IBeanObservable) {
 			IBeanObservable beanValue = (IBeanObservable) source;
 			propertyName = beanValue.getPropertyDescriptor().getName();

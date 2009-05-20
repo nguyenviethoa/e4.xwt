@@ -12,10 +12,13 @@ package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataProvider;
+import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.swt.widgets.Control;
 
 /**
+ * The default implementation of the dataBinding object.
+ * 
  * @author jliu (jin.liu@soyatec.com)
  */
 public class DataBinding implements IDataBinding {
@@ -24,14 +27,23 @@ public class DataBinding implements IDataBinding {
 	private Object target;
 	private String path;
 	private String type;
-	private String mode;
+	private BindingMode mode = BindingMode.TwoWay;
 	private IObservableValue observableSource;
 	private IObservableValue observableWidget;
+	private IValueConverter converter;
+
+	public IValueConverter getConverter() {
+		return converter;
+	}
+
+	public void setConverter(IValueConverter converter) {
+		this.converter = converter;
+	}
 
 	/**
 	 * Constructor for dataProvider.
 	 */
-	public DataBinding(IDataProvider dataProvider, Object target, String path, String type, String mode) {
+	public DataBinding(IDataProvider dataProvider, Object target, String path, String type, BindingMode mode, IValueConverter converter) {
 		assert dataProvider != null : "DataProvider is null";
 		assert target != null : "Binding widget is null";
 		assert path != null : "Binding path is null";
@@ -40,6 +52,11 @@ public class DataBinding implements IDataBinding {
 		this.path = path;
 		this.type = type;
 		this.mode = mode;
+		this.converter = converter;
+	}
+
+	public BindingMode getBindingMode() {
+		return mode;
 	}
 
 	/**
@@ -85,7 +102,7 @@ public class DataBinding implements IDataBinding {
 		IObservableValue observableSource = getObservableSource(valueType);
 		IBindingContext bindingContext = dataProvider.getBindingContext();
 		if (bindingContext != null && observableSource != null) {
-			bindingContext.bind(observableSource, observableWidget, mode);
+			bindingContext.bind(observableSource, observableWidget, this);
 		}
 		if (observableSource != null) {
 			return observableSource.getValue();

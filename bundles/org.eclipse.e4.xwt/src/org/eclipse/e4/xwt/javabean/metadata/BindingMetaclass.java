@@ -11,8 +11,10 @@
 package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.IDataProvider;
+import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.databinding.BindingMode;
 import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
 import org.eclipse.e4.xwt.impl.IBinding;
@@ -31,7 +33,6 @@ import org.eclipse.swt.widgets.Widget;
 public class BindingMetaclass extends Metaclass {
 
 	public static class Binding implements IBinding {
-
 		/**
 		 * which used to decide binding type, not only text.
 		 */
@@ -44,7 +45,17 @@ public class BindingMetaclass extends Metaclass {
 
 		private Widget control;
 
-		private String mode;
+		private BindingMode mode = BindingMode.TwoWay;
+
+		private IValueConverter converter;
+
+		public IValueConverter getConverter() {
+			return converter;
+		}
+
+		public void setConverter(IValueConverter converter) {
+			this.converter = converter;
+		}
 
 		public Object getSource() {
 			return source;
@@ -97,11 +108,11 @@ public class BindingMetaclass extends Metaclass {
 			return type;
 		}
 
-		public String getMode() {
+		public BindingMode getMode() {
 			return mode;
 		}
 
-		public void setMode(String mode) {
+		public void setMode(BindingMode mode) {
 			this.mode = mode;
 		}
 
@@ -137,10 +148,8 @@ public class BindingMetaclass extends Metaclass {
 			DataBinding dataBinding = null;
 			if (dataContext != null && dataContext instanceof Control) {
 				try {
-					ControlDataBinding controlDataBinding = new ControlDataBinding((Control) dataContext, (Control) control, path, type, mode);
-					if (controlDataBinding != null) {
-						return controlDataBinding.getValue();
-					}
+					ControlDataBinding controlDataBinding = new ControlDataBinding((Control) dataContext, (Control) control, path, type, mode, converter);
+					return controlDataBinding.getValue();
 				} catch (XWTException e) {
 					// in case the property cannot be bound. return value
 				}
@@ -154,7 +163,7 @@ public class BindingMetaclass extends Metaclass {
 			}
 
 			if (dataProvider != null && (path != null || xPath != null)) {
-				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type, mode);
+				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type, mode, converter);
 			}
 			if (dataBinding != null) {
 				return dataBinding.getValue();
