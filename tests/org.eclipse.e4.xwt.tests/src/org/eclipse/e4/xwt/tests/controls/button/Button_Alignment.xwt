@@ -5,9 +5,9 @@
 		<GridLayout numColumns="1"/>
 	</Shell.layout>
 	<Group text="buttons">
-		<Button text="Alignment(LEFT)" Bounds="10, 10, 200, 50" alignment="LEFT"/>
-		<Button text="Alignment(CENTER)" Bounds="10, 70, 200, 50" alignment="CENTER"/>
-		<Button text="Alignment(RIGHT)" Bounds="10, 130, 200, 50" alignment="RIGHT"/>
+		<Button name="ButtonLeft" text="Alignment(LEFT)" Bounds="10, 10, 200, 50" alignment="LEFT"/>
+		<Button name="ButtonCenter" text="Alignment(CENTER)" Bounds="10, 70, 200, 50" alignment="CENTER"/>
+		<Button name="ButtonRight" text="Alignment(RIGHT)" Bounds="10, 130, 200, 50" alignment="RIGHT"/>
 	</Group>
 	<Group text="arrows">
 		<Group.layout>

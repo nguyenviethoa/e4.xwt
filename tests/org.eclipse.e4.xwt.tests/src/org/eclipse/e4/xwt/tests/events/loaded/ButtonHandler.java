@@ -14,8 +14,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
 
 public class ButtonHandler {
+	public static final String Message = "OK -> Loaded";
+
 	protected void onLoaded(Event event) {
 		Button button = (Button) event.widget;
-		button.setText("OK -> Loaded");
+		button.setText(Message);
 	}
 }

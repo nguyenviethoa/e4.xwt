@@ -9,6 +9,6 @@ public class ControlTestSuite extends TestSuite {
 	}
 
 	public ControlTestSuite() {
-		addTest(new TestSuite(SimpleControlTest.class));
+		addTest(new TestSuite(ControlsTests.class));
 	}
 }

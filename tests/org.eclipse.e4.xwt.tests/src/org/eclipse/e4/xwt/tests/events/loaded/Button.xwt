@@ -4,5 +4,5 @@
 	<Shell.layout>
 		<GridLayout numColumns="2"/>
 	</Shell.layout>	
-	<Button text="Wrong result" Loaded="onLoaded"/>
+	<Button name="Button" text="Wrong result" Loaded="onLoaded"/>
 </Shell>

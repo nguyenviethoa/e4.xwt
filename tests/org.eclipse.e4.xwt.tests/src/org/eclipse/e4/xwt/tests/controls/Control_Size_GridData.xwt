@@ -4,14 +4,14 @@
 	<Shell.layout>
 		<GridLayout numColumns="1"/>
 	</Shell.layout>
-	<Label x:style="BORDER" text="Label(100, 40)" Alignment="CENTER">
+	<Label name="targetLabel" x:style="BORDER" text="Label(100, 40)" Alignment="CENTER">
 		<Label.layoutData>
 			<GridData widthHint="100" heightHint="40" horizontalAlignment="CENTER" verticalAlignment="CENTER"/>
 		</Label.layoutData>
 	</Label>
-	<Button text="Button(120, 120)">
+	<Button name="targetButton" text="Button(200, 200)">
 		<Button.layoutData>
-			<GridData widthHint="120" heightHint="120"/>
+			<GridData widthHint="200" heightHint="200"/>
 		</Button.layoutData>
 	</Button>
 </Shell>

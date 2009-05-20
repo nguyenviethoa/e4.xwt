@@ -14,11 +14,11 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 public class UserControl extends Composite {
+	public static final String Message = "OK -> Initialized";
 
 	public UserControl(Composite parent, int style) {
 		super(parent, style);
@@ -26,11 +26,11 @@ public class UserControl extends Composite {
 
 	protected void initializeComponent() {
 		Button button = (Button) XWT.findElementByName(this, "button");
-		button.setText("OK -> Initialized");
+		button.setText(Message);
 	}
 
 	public static void main(String[] args) {
-		
+
 		URL url = UserControl.class.getResource(UserControl.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

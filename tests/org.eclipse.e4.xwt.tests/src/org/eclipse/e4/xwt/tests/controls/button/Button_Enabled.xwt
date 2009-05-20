@@ -4,6 +4,6 @@
 	<Shell.layout>
 		<GridLayout numColumns="1"/>
 	</Shell.layout>
-	<Button text="Enabled(true)" enabled="true"/>
-	<Button text="Enabled(false)" enabled="false"/>
+	<Button name="EnabledButton" text="Enabled(true)" enabled="true"/>
+	<Button name="NotEnabledButton" text="Enabled(false)" enabled="false"/>
 </Shell>

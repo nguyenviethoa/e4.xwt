@@ -4,5 +4,5 @@
 	<Shell.layout>
 		<GridLayout numColumns="2"/>
 	</Shell.layout>	
-	<Button text="Hello, world" SelectionEvent="selection"/>
+	<Button name="ButtonEvent" text="Hello, world" SelectionEvent="selection"/>
 </Shell>
