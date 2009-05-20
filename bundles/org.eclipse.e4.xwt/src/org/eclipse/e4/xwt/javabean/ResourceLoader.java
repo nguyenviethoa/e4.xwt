@@ -38,16 +38,15 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.dataproviders.IXmlDataProvider;
-import org.eclipse.e4.xwt.impl.Core;
-import org.eclipse.e4.xwt.impl.IBinding;
-import org.eclipse.e4.xwt.impl.IDataContextControl;
-import org.eclipse.e4.xwt.impl.IRenderingContext;
-import org.eclipse.e4.xwt.impl.IUserDataConstants;
-import org.eclipse.e4.xwt.impl.IVisualElementLoader;
-import org.eclipse.e4.xwt.impl.NameScope;
-import org.eclipse.e4.xwt.impl.Setter;
-import org.eclipse.e4.xwt.impl.Style;
 import org.eclipse.e4.xwt.input.ICommand;
+import org.eclipse.e4.xwt.internal.Core;
+import org.eclipse.e4.xwt.internal.IBinding;
+import org.eclipse.e4.xwt.internal.IRenderingContext;
+import org.eclipse.e4.xwt.internal.IUserDataConstants;
+import org.eclipse.e4.xwt.internal.IVisualElementLoader;
+import org.eclipse.e4.xwt.internal.NameScope;
+import org.eclipse.e4.xwt.internal.Setter;
+import org.eclipse.e4.xwt.internal.Style;
 import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass.Binding;
@@ -496,16 +495,11 @@ public class ResourceLoader implements IVisualElementLoader {
 				widget.setData(IUserDataConstants.XWT_RESOURCES_KEY, dico);
 			}
 			if (dataContext != null) {
-				if (widget instanceof IDataContextControl) {
-					IDataContextControl contextControl = (IDataContextControl) widget;
-					contextControl.setDataContext(dataContext);
+				IProperty property = widgetMetaclass.findProperty(IConstants.XAML_DATACONTEXT);
+				if (property != null) {
+					property.setValue(widget, dataContext);
 				} else {
-					IProperty property = widgetMetaclass.findProperty(IConstants.XAML_DATACONTEXT);
-					if (property != null) {
-						property.setValue(widget, dataContext);
-					} else {
-						throw new XWTException("DataContext is missing in " + widgetMetaclass.getType().getName());
-					}
+					throw new XWTException("DataContext is missing in " + widgetMetaclass.getType().getName());
 				}
 			}
 		}

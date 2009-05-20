@@ -1,4 +1,4 @@
-package org.eclipse.e4.xwt.impl;
+package org.eclipse.e4.xwt.internal;
 
 public interface IUserDataConstants {
 	String XWT_CONTROLLER_KEY = "__XWT.Controller";

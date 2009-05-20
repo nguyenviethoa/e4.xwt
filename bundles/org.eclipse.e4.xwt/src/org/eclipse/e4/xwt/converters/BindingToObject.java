@@ -11,7 +11,7 @@
 package org.eclipse.e4.xwt.converters;
 
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.impl.IBinding;
+import org.eclipse.e4.xwt.internal.IBinding;
 
 /**
  * Binding to Object covnerter

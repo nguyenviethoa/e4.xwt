@@ -8,30 +8,12 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.impl;
+package org.eclipse.e4.xwt.internal;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.Map;
 
-import org.eclipse.e4.xwt.ILoadingContext;
+import org.eclipse.e4.xwt.xml.Element;
 
-/**
- * @author yyang
- * @version 1.0
- */
-public interface IRenderingContext {
-	public String getNamespace();
-
-	public URL getResourcePath();
-
-	public InputStream openStream(String path) throws IOException;
-
-	public String getEncoding();
-
-	public Object getProperty(String name);
-
-	public void setProperty(String name, Object value);
-
-	public ILoadingContext getLoadingContext();
+public interface IVisualElementLoader {
+	public Object createCLRElement(Element element, Map<String, Object> options);
 }

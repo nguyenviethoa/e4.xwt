@@ -8,32 +8,30 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.impl;
+package org.eclipse.e4.xwt.internal;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import org.eclipse.e4.xwt.ILoadingContext;
 
 /**
- * Setter of the class Style, which is used to define the in-line XAML style
- * 
- * @see Style
  * @author yyang
+ * @version 1.0
  */
-public class Setter {
-	protected String property;
+public interface IRenderingContext {
+	public String getNamespace();
 
-	public String getProperty() {
-		return property;
-	}
+	public URL getResourcePath();
 
-	public void setProperty(String property) {
-		this.property = property;
-	}
+	public InputStream openStream(String path) throws IOException;
 
-	public String getValue() {
-		return value;
-	}
+	public String getEncoding();
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+	public Object getProperty(String name);
 
-	protected String value;
+	public void setProperty(String name, Object value);
+
+	public ILoadingContext getLoadingContext();
 }

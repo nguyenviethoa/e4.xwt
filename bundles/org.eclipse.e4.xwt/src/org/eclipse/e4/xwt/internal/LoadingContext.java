@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.impl;
+package org.eclipse.e4.xwt.internal;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ILoadingContext;
