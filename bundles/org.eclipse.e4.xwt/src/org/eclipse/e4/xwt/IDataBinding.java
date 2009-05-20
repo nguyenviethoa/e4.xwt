@@ -1,7 +1,6 @@
-package org.eclipse.e4.xwt.databinding;
+package org.eclipse.e4.xwt;
 
-import org.eclipse.e4.xwt.IDataProvider;
-import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.databinding.BindingMode;
 
 public interface IDataBinding {
 	public IDataProvider getDataProvider();

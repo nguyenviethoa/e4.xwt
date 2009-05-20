@@ -12,8 +12,8 @@ package org.eclipse.e4.xwt.tests.databinding.dataprovider.custom;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.databinding.XWTObservableValue;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
-import org.eclipse.e4.xwt.dataproviders.observable.XWTObservableValue;
 
 /**
  * An sample a custom data provider

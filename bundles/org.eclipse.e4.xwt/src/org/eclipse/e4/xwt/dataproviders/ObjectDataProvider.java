@@ -17,11 +17,11 @@ import java.util.List;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.databinding.IBindingContext;
+import org.eclipse.e4.xwt.databinding.BeanObservableValue;
 import org.eclipse.e4.xwt.databinding.ObjectBindingContext;
-import org.eclipse.e4.xwt.dataproviders.observable.BeanObservableValue;
 
 /**
  * @author jliu (jin.liu@soyatec.com)

@@ -12,6 +12,8 @@
 package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.IBindingContext;
+import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.swt.widgets.Control;

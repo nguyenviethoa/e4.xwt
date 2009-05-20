@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.databinding;
+package org.eclipse.e4.xwt;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 

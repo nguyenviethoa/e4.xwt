@@ -11,7 +11,6 @@
 package org.eclipse.e4.xwt;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.databinding.IBindingContext;
 
 /**
  * A Data Binding provider defines the nature of Data Binding such as Bean Object Binding, EMF Object Binding, XML data Binding or Data Base binding

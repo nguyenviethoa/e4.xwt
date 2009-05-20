@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.dataproviders.observable;
+package org.eclipse.e4.xwt.databinding;
 
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
