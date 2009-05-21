@@ -37,7 +37,6 @@ import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTMaps;
-import org.eclipse.e4.xwt.dataproviders.IXmlDataProvider;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.Core;
 import org.eclipse.e4.xwt.internal.DataBindingTrack;
@@ -77,6 +76,7 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -1012,10 +1012,10 @@ public class ResourceLoader implements IVisualElementLoader {
 					contentValue = removeSubString(contentValue, "'");
 				}
 			}
-			if (contentValue != null && ("Image".equalsIgnoreCase(attrName) || "BackgroundImage".equalsIgnoreCase(attrName))) {
+			if (contentValue != null && (Image.class.isAssignableFrom(property.getType()))) {
 				contentValue = getImagePath(attribute, contentValue);
 			}
-			if (contentValue != null && "Source".equalsIgnoreCase(attrName) && target instanceof IXmlDataProvider) {
+			if (contentValue != null && (URL.class.isAssignableFrom(property.getType()))) {
 				contentValue = getSourceURL(contentValue);
 			}
 			Object value = null;

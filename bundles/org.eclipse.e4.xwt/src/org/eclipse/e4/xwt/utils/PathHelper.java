@@ -17,7 +17,7 @@ import java.util.StringTokenizer;
  */
 public class PathHelper {
 
-	public static final String URL_IDENTIFY_PREFIX = "file:/";
+	public static final String URL_IDENTIFY_PREFIX = "file:";
 	public static final String BACKWARD_SLASH = "\\";
 	public static final String FORWARD_SLASH = "/";
 	public static final String RELATIVE_PATH_SIG = "../";
@@ -73,6 +73,9 @@ public class PathHelper {
 		if (source.startsWith(URL_IDENTIFY_PREFIX)) {
 			prefix = URL_IDENTIFY_PREFIX;
 			source = source.substring(URL_IDENTIFY_PREFIX.length());
+			if (System.getProperty("os.arch").startsWith("Win")) {
+				source = source.substring(1);				
+			}
 		}
 		File file = new File(source);
 		if (!file.exists()) {
@@ -101,6 +104,10 @@ public class PathHelper {
 				}
 			}
 		}
+		if (System.getProperty("os.arch").startsWith("Win")) {
+			source = "/" + source;				
+		}
+
 		return (prefix != null ? prefix : "") + source + FORWARD_SLASH + relative;
 	}
 
