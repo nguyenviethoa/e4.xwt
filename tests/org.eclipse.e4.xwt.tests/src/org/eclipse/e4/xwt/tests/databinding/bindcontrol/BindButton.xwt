@@ -4,7 +4,7 @@
 		<GridLayout numColumns="2" />
 	</Shell.layout>
 	<Button x:Style="SWT.CHECK" x:Name="theTextBox" Text="Hello" enabled="true" visible="true"
-	background="SWT.COLOR_CYAN" foreground="SWT.COLOR_BLACK" font="3">
+		background="SWT.COLOR_CYAN" foreground="SWT.COLOR_BLACK" font="3">
 		<Button.layoutData>
 			<GridData horizontalAlignment="FILL"
 				grabExcessHorizontalSpace="true" />
@@ -12,7 +12,7 @@
 	</Button>
 	<Button x:style="SWT.CHECK" Text="Hello Clone"
 		Selection="{Binding ElementName=theTextBox, Path=Selection}"
-		enabled="{Binding ElementName=theTextBox, Path=enabled}" visible="{Binding ElementName=theTextBox,Path=visible}"
+		enabled="{Binding ElementName=theTextBox, Path=enabled}"
 		background="{Binding ElementName=theTextBox,Path=background}" foreground="{Binding ElementName=theTextBox,Path=foreground}"
 		font="{Binding ElementName=theTextBox,Path=font}">
 		
