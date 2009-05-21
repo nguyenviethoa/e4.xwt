@@ -13,20 +13,11 @@ package org.eclipse.e4.xwt.tests.events.loaded.multipleClass;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
 
-public class TestHander {
+public class RootHander {
 	int index = 0;
 
-	public void performLoadedbb(Event event) {
+	public void performLoaded(Event event) {
 		Button button = (Button) event.widget;
-		button.setText("Loadedbb: i = " + index++);
+		button.setText("" + ++index);
 	}
-
-	/**
-	 * @param event
-	 */
-	public void performLoadedaa(Event event) {
-		Button button = (Button) event.widget;
-		button.setText("Loadedaa: i = " + index++);
-	}
-
 }

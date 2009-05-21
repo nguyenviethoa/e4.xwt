@@ -26,7 +26,11 @@ public class ObservableValueUtil {
 			if (SWT.getVersion() == 3449 && control instanceof Button) {
 				return null;
 			}
-			return SWTObservables.observeText(control);
+			try {
+				return SWTObservables.observeText(control);
+			} catch (IllegalArgumentException e) {
+				throw new XWTException(e);
+			}
 		} else {
 			if (property == null) {
 				return null;

@@ -86,7 +86,7 @@ public class BindingContext implements IBindingContext {
 			if (converter != null) {
 				targetToSource.setConverter(new InverseValueConverter(converter));
 			} else if (!sourceType.isAssignableFrom(targetType)) {
-				IConverter t2m = XWT.findConvertor(sourceType, targetType);
+				IConverter t2m = XWT.findConvertor(targetType, sourceType);
 				if (t2m != null) {
 					targetToSource.setConverter(t2m);
 				}

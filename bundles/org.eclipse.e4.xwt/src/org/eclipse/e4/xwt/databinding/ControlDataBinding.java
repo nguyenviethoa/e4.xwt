@@ -16,6 +16,7 @@ import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.swt.widgets.Control;
 
 /**
@@ -47,7 +48,10 @@ public class ControlDataBinding implements IDataBinding {
 	public Object getValue() {
 		IObservableValue sourceWidget = createWidget(source, sourceProperty);
 		IObservableValue targetWidget = createWidget(target, targetProperty);
-		if (targetWidget == null || sourceWidget == null) {
+		if (targetWidget == null) {
+			if (sourceWidget != null) {
+				return sourceWidget.getValue();
+			}
 			return null;
 		}
 		IBindingContext bindingContext = new BindingContext();
@@ -60,7 +64,10 @@ public class ControlDataBinding implements IDataBinding {
 
 	public IObservableValue createWidget(Object object, String property) {
 		if (object instanceof Control) {
-			return ObservableValueUtil.observePropertyValue((Control) object, property);
+			try {
+				return ObservableValueUtil.observePropertyValue((Control) object, property);
+			} catch (XWTException e) {
+			}
 		}
 		return null;
 	}

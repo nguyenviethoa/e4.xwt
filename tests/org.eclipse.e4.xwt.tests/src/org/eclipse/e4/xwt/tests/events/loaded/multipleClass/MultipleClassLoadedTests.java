@@ -13,14 +13,16 @@ public class MultipleClassLoadedTests extends XWTTestCase {
 		URL url = org.eclipse.e4.xwt.tests.events.loaded.multipleClass.Button.class.getResource(org.eclipse.e4.xwt.tests.events.loaded.multipleClass.Button.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, null, new Runnable() {
 			public void run() {
-				checkButton();
+				checkButton("RootButton1", "1");
+				checkButton("RootButton2", "2");
+				checkButton("ChildButton", "1");
 			}
 
-			public void checkButton() {
-				Object element = XWT.findElementByName(root, "Button");
+			public void checkButton(String name, String text) {
+				Object element = XWT.findElementByName(root, name);
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
-				assertEquals(button.getText(), org.eclipse.e4.xwt.tests.events.loaded.ButtonHandler.Message);
+				assertEquals(button.getText(), text);
 			}
 		});
 	}

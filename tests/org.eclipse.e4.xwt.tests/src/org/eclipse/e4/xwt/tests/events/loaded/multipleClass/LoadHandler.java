@@ -20,8 +20,7 @@ public class LoadHandler {
 	 * @param event
 	 */
 	public void performLoaded(Event event) {
-		// TODO Auto-generated method stub
 		Button button = (Button) event.widget;
-		button.setText("loaded............ " + index++);
+		button.setText("" + ++index);
 	}
 }
