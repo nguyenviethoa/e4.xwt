@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.layout;
+package org.eclipse.e4.xwt.tests.controls.layout;
 
 import java.net.URL;
 

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.e4.xwt.tests;
 
 import junit.framework.Test;
@@ -6,7 +16,12 @@ import junit.framework.TestSuite;
 import org.eclipse.e4.xwt.tests.controls.ControlTestSuite;
 import org.eclipse.e4.xwt.tests.events.EventsTestSuite;
 import org.eclipse.e4.xwt.tests.name.NameTestSuite;
+import org.eclipse.e4.xwt.tests.resources.ResourcesTestSuite;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class XwtTestSuite extends TestSuite {
 	public static final Test suite() {
 		return new XwtTestSuite();
@@ -14,19 +29,23 @@ public class XwtTestSuite extends TestSuite {
 
 	/**
 	 * The execution of the tests must be started from simple to complex in order.
-	 * <ol>
-	 * <il>XAML</il> <il>UI</il> <il>DataBining</il>
-	 * </ol>
 	 */
 	public XwtTestSuite() {
 		// XAML
 		addXAMLTests();
 
 		// widgets SWT
-		addSWTTests();
+		addControlsTests();
+
+		addUserControlTests();
+
+		addKeyBindingTests();
 
 		// widgets JFace
 		addJFaceTests();
+
+		// i18n
+		addI18NTests();
 
 		// events
 		addEventTests();
@@ -34,11 +53,8 @@ public class XwtTestSuite extends TestSuite {
 		// data binding
 		addDataBindingTests();
 
-		// Widget binding
-		addWidgetBindingTests();
-
-		// Data provider
-		addDataProviderTests();
+		// Presentation tests
+		addPresentationTests();
 
 		// Style provider
 		addStyleTests();
@@ -46,10 +62,20 @@ public class XwtTestSuite extends TestSuite {
 
 	protected void addXAMLTests() {
 		addTest(NameTestSuite.suite());
+		addTest(ResourcesTestSuite.suite());
 	}
 
-	protected void addSWTTests() {
+	protected void addControlsTests() {
 		addTest(ControlTestSuite.suite());
+	}
+
+	protected void addUserControlTests() {
+	}
+
+	protected void addKeyBindingTests() {
+	}
+
+	protected void addPresentationTests() {
 	}
 
 	protected void addJFaceTests() {
@@ -62,10 +88,7 @@ public class XwtTestSuite extends TestSuite {
 	protected void addDataBindingTests() {
 	}
 
-	protected void addWidgetBindingTests() {
-	}
-
-	protected void addDataProviderTests() {
+	protected void addI18NTests() {
 	}
 
 	protected void addStyleTests() {

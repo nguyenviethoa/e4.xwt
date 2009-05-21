@@ -1,18 +1,17 @@
 <Shell xmlns="http://www.eclipse.org/xwt/presentation"
 	xmlns:x="http://www.eclipse.org/xwt"
-	x:Class="org.eclipse.e4.xwt.tests.layout.StackLayout_Test"
-	text="RowLayout - Test">
+	x:Class="org.eclipse.e4.xwt.tests.controls.layout.FillLayout_Test"
+	text="FillLayout - Test">
 	<Shell.layout>
 		<GridLayout numColumns="2"/>
 	</Shell.layout>
 	<Group text="layout">
-		<Group.layout>
-		    <StackLayout/>
-		</Group.layout>
 		<Group.layoutData>
-			<GridData horizontalAlignment="FILL" verticalAlignment="FILL">
-			</GridData>
+			<GridData horizontalAlignment="FILL" verticalAlignment="FILL"/>
 		</Group.layoutData>
+		<Group.layout>
+		    <FillLayout type="HORIZONTAL"/>
+		</Group.layout>
 		<Button text="button1"/>
 		<Button text="button2"/>
 		<Button text="button3"/>
@@ -23,24 +22,20 @@
 		<Group.layout>
 		    <GridLayout numColumns="2"/>
 		</Group.layout>
-		<Group text ="topControl">
-			<Group.layoutData>
-				<GridData horizontalAlignment="FILL" verticalAlignment="FILL">
-				</GridData>
-			</Group.layoutData>
+		<Group text ="Type">
 			<Group.layout>
-	  	 		<GridLayout numColumns="3"/>
+		    	<FillLayout type="VERTICAL"/>
 			</Group.layout>
-			<Button x:style="PUSH" text="Below" selection="true" SelectionEvent="updateStackBelow"/>
-			<Label x:style="BORDER" text="              "/>
-			<Button x:style="PUSH" text="Top" SelectionEvent="updateStackAbove"/>
+			<Button x:style="RADIO" text="SWT.HORIZONTAL" selection="true" SelectionEvent="updateTypeHorizontal"/>
+			<Button x:style="RADIO" text="SWT.VERTICAL" SelectionEvent="updateTypeVertical"/>
 		</Group>
-		<Group text ="Margins">
+		<Group text ="Margins and Spacings">
 			<Group.layout>
 		    	<GridLayout numColumns="2"/>
 			</Group.layout>
 			<Label text="marginWidth"/><Spinner x:Name="marginWidth" x:style="BORDER" selection="0" SelectionEvent="updateMarginWidth"/>
 			<Label text="marginHeight"/><Spinner x:style="BORDER" selection="0" SelectionEvent="updateMarginHeight"/>
+			<Label text="spacing"/><Spinner x:style="BORDER" selection="0" SelectionEvent="updateSpacing"/>
 		</Group>
 	</Group>
 </Shell>

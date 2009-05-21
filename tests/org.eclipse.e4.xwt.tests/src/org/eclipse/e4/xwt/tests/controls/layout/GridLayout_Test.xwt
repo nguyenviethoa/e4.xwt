@@ -1,6 +1,6 @@
 <Shell xmlns="http://www.eclipse.org/xwt/presentation"
 	xmlns:x="http://www.eclipse.org/xwt"
-	x:Class="org.eclipse.e4.xwt.tests.layout.GridLayout_Test"
+	x:Class="org.eclipse.e4.xwt.tests.controls.layout.GridLayout_Test"
 	text="GridLayout - Test">
 	<Shell.layout>
 		<GridLayout numColumns="2"/>

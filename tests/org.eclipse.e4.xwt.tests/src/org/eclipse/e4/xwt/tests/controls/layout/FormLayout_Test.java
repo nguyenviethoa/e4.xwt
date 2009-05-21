@@ -8,16 +8,14 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.layout;
+package org.eclipse.e4.xwt.tests.controls.layout;
 
 import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -25,10 +23,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Widget;
 
-public class FillLayout_Test {
+public class FormLayout_Test {
 	public static void main(String[] args) {
 		
-		URL url = FillLayout_Test.class.getResource(FillLayout_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormLayout_Test.class.getResource(FormLayout_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -37,15 +35,19 @@ public class FillLayout_Test {
 	}
 
 	private Group findGroup(Widget widget) {
-		if (widget instanceof Control) {
-			Control control = (Control) widget;
-			Composite parent = control.getParent();
-			for (Control child : parent.getChildren()) {
+		if (widget == null) {
+			return null;
+		}
+		if (widget instanceof Composite) {
+			Composite composite = (Composite) widget;
+			for (Control child : composite.getChildren()) {
 				if (child instanceof Group && (("layout".equals(((Group) child).getText())))) {
 					return ((Group) child);
 				}
 			}
-			return findGroup(parent.getParent());
+			return findGroup(composite.getParent());
+		} else if (widget instanceof Control) {
+			return findGroup(((Control) widget).getParent());
 		}
 		return null;
 	}
@@ -57,31 +59,11 @@ public class FillLayout_Test {
 		}
 	}
 
-	protected void updateTypeHorizontal(Event event) {
-		Button widget = (Button) event.widget;
-		Group layGroup = findGroup(widget);
-		if (layGroup != null) {
-			FillLayout layout = (FillLayout) layGroup.getLayout();
-			layout.type = SWT.HORIZONTAL;
-			layout(layGroup);
-		}
-	}
-
-	protected void updateTypeVertical(Event event) {
-		Button widget = (Button) event.widget;
-		Group layGroup = findGroup(widget);
-		if (layGroup != null) {
-			FillLayout layout = (FillLayout) layGroup.getLayout();
-			layout.type = SWT.VERTICAL;
-			layout(layGroup);
-		}
-	}
-
 	protected void updateMarginWidth(Event event) {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FillLayout layout = (FillLayout) layGroup.getLayout();
+			FormLayout layout = (FormLayout) layGroup.getLayout();
 			layout.marginWidth = widget.getSelection();
 			layout(layGroup);
 		}
@@ -91,8 +73,48 @@ public class FillLayout_Test {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FillLayout layout = (FillLayout) layGroup.getLayout();
+			FormLayout layout = (FormLayout) layGroup.getLayout();
 			layout.marginHeight = widget.getSelection();
+			layout(layGroup);
+		}
+	}
+
+	protected void updateMarginLeft(Event event) {
+		Spinner widget = (Spinner) event.widget;
+		Group layGroup = findGroup(widget);
+		if (layGroup != null) {
+			FormLayout layout = (FormLayout) layGroup.getLayout();
+			layout.marginLeft = widget.getSelection();
+			layout(layGroup);
+		}
+	}
+
+	protected void updateMarginRight(Event event) {
+		Spinner widget = (Spinner) event.widget;
+		Group layGroup = findGroup(widget);
+		if (layGroup != null) {
+			FormLayout layout = (FormLayout) layGroup.getLayout();
+			layout.marginRight = widget.getSelection();
+			layout(layGroup);
+		}
+	}
+
+	protected void updateMarginTop(Event event) {
+		Spinner widget = (Spinner) event.widget;
+		Group layGroup = findGroup(widget);
+		if (layGroup != null) {
+			FormLayout layout = (FormLayout) layGroup.getLayout();
+			layout.marginTop = widget.getSelection();
+			layout(layGroup);
+		}
+	}
+
+	protected void updateMarginBottom(Event event) {
+		Spinner widget = (Spinner) event.widget;
+		Group layGroup = findGroup(widget);
+		if (layGroup != null) {
+			FormLayout layout = (FormLayout) layGroup.getLayout();
+			layout.marginBottom = widget.getSelection();
 			layout(layGroup);
 		}
 	}
@@ -101,7 +123,7 @@ public class FillLayout_Test {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FillLayout layout = (FillLayout) layGroup.getLayout();
+			FormLayout layout = (FormLayout) layGroup.getLayout();
 			layout.spacing = widget.getSelection();
 			layout(layGroup);
 		}

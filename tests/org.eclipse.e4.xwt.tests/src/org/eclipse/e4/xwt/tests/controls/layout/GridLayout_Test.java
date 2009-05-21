@@ -8,14 +8,15 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.layout;
+package org.eclipse.e4.xwt.tests.controls.layout;
 
 import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -23,10 +24,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Widget;
 
-public class FormLayout_Test1 {
+public class GridLayout_Test {
 	public static void main(String[] args) {
 		
-		URL url = FormLayout_Test1.class.getResource(FormLayout_Test1.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = GridLayout_Test.class.getResource(GridLayout_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -35,21 +36,27 @@ public class FormLayout_Test1 {
 	}
 
 	private Group findGroup(Widget widget) {
-		if (widget == null) {
-			return null;
-		}
-		if (widget instanceof Composite) {
-			Composite composite = (Composite) widget;
-			for (Control child : composite.getChildren()) {
+		if (widget instanceof Control) {
+			Control control = (Control) widget;
+			Composite parent = control.getParent();
+			for (Control child : parent.getChildren()) {
 				if (child instanceof Group && (("layout".equals(((Group) child).getText())))) {
 					return ((Group) child);
 				}
 			}
-			return findGroup(composite.getParent());
-		} else if (widget instanceof Control) {
-			return findGroup(((Control) widget).getParent());
+			return findGroup(parent.getParent());
 		}
 		return null;
+	}
+
+	protected void updateNumColumns(Event event) {
+		Spinner widget = (Spinner) event.widget;
+		Group layGroup = findGroup(widget);
+		if (layGroup != null) {
+			GridLayout layout = (GridLayout) layGroup.getLayout();
+			layout.numColumns = widget.getSelection();
+			layout(layGroup);
+		}
 	}
 
 	private void layout(Composite composite) {
@@ -59,11 +66,24 @@ public class FormLayout_Test1 {
 		}
 	}
 
+	protected void updateMakeColunsEqual(Event event) {
+		Button widget = (Button) event.widget;
+		Group layGroup = findGroup(widget);
+		if (layGroup != null) {
+			GridLayout layout = (GridLayout) layGroup.getLayout();
+			layout.makeColumnsEqualWidth = widget.getSelection();
+			for (Control control : layGroup.getChildren()) {
+				control.setLayoutData(null);
+			}
+			layout(layGroup);
+		}
+	}
+
 	protected void updateMarginWidth(Event event) {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FormLayout layout = (FormLayout) layGroup.getLayout();
+			GridLayout layout = (GridLayout) layGroup.getLayout();
 			layout.marginWidth = widget.getSelection();
 			layout(layGroup);
 		}
@@ -73,7 +93,7 @@ public class FormLayout_Test1 {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FormLayout layout = (FormLayout) layGroup.getLayout();
+			GridLayout layout = (GridLayout) layGroup.getLayout();
 			layout.marginHeight = widget.getSelection();
 			layout(layGroup);
 		}
@@ -83,7 +103,7 @@ public class FormLayout_Test1 {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FormLayout layout = (FormLayout) layGroup.getLayout();
+			GridLayout layout = (GridLayout) layGroup.getLayout();
 			layout.marginLeft = widget.getSelection();
 			layout(layGroup);
 		}
@@ -93,7 +113,7 @@ public class FormLayout_Test1 {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FormLayout layout = (FormLayout) layGroup.getLayout();
+			GridLayout layout = (GridLayout) layGroup.getLayout();
 			layout.marginRight = widget.getSelection();
 			layout(layGroup);
 		}
@@ -103,7 +123,7 @@ public class FormLayout_Test1 {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FormLayout layout = (FormLayout) layGroup.getLayout();
+			GridLayout layout = (GridLayout) layGroup.getLayout();
 			layout.marginTop = widget.getSelection();
 			layout(layGroup);
 		}
@@ -113,18 +133,28 @@ public class FormLayout_Test1 {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FormLayout layout = (FormLayout) layGroup.getLayout();
+			GridLayout layout = (GridLayout) layGroup.getLayout();
 			layout.marginBottom = widget.getSelection();
 			layout(layGroup);
 		}
 	}
 
-	protected void updateSpacing(Event event) {
+	protected void updateHSpacing(Event event) {
 		Spinner widget = (Spinner) event.widget;
 		Group layGroup = findGroup(widget);
 		if (layGroup != null) {
-			FormLayout layout = (FormLayout) layGroup.getLayout();
-			layout.spacing = widget.getSelection();
+			GridLayout layout = (GridLayout) layGroup.getLayout();
+			layout.horizontalSpacing = widget.getSelection();
+			layout(layGroup);
+		}
+	}
+
+	protected void updateVSpacing(Event event) {
+		Spinner widget = (Spinner) event.widget;
+		Group layGroup = findGroup(widget);
+		if (layGroup != null) {
+			GridLayout layout = (GridLayout) layGroup.getLayout();
+			layout.verticalSpacing = widget.getSelection();
 			layout(layGroup);
 		}
 	}
