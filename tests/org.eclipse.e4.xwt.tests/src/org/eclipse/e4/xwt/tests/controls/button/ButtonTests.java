@@ -99,7 +99,6 @@ public class ButtonTests extends XWTTestCase {
 				checkToggleButton();
 				checkArrowButton();
 				checkFlatButton();
-				checkBorderButton();
 			}
 
 			public void checkPushButton() {
@@ -142,13 +141,6 @@ public class ButtonTests extends XWTTestCase {
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
 				assertTrue((button.getStyle() & SWT.FLAT) == SWT.FLAT);
-			}
-
-			public void checkBorderButton() {
-				Object element = XWT.findElementByName(root, "BorderButton");
-				assertTrue(element instanceof Button);
-				Button button = (Button) element;
-				assertTrue((button.getStyle() & SWT.BORDER) == SWT.BORDER);
 			}
 		});
 	}
