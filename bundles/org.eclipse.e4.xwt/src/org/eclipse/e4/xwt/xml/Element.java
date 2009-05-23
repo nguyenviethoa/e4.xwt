@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.internal.IUserDataConstants;
+
 /**
  * @since 1.0
  * @author yyang
@@ -202,6 +205,17 @@ public class Element extends DocumentObject {
 		notifyObservers(attributes);
 	}
 
+	protected boolean isXWTNamespace(String namespace) {
+		String scopeNamespace = getNamespace();
+		if (namespace == null || "".equals(namespace)) {
+			return true;
+		}
+		if (scopeNamespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO) || scopeNamespace.equals(IConstants.XWT_NAMESPACE)) {
+			return namespace.equalsIgnoreCase(scopeNamespace) || namespace.equals(IConstants.XWT_NAMESPACE);
+		}
+		return false;
+	}
+	
 	/**
 	 * Set attribute without nodify event.
 	 * 
@@ -209,16 +223,15 @@ public class Element extends DocumentObject {
 	 *            the modified attribute.
 	 */
 	private void setInternalAttribute(Attribute attribute) {
-		assert attribute == null;
+		assert attribute != null;
 
 		String namespace = attribute.getNamespace();
 		String name = attribute.getName();
 
-		if (namespace == null || "".equals(namespace) || namespace.equalsIgnoreCase(getNamespace())) {
+		if (isXWTNamespace(namespace)) {
 			if (originalAttributes == Collections.EMPTY_MAP) {
 				originalAttributes = new LinkedHashMap<String, Attribute>();
 			}
-
 			originalAttributes.put(name, attribute);
 		} else {
 			Map<String, Attribute> externalAttribute = externalAttributes.get(namespace);

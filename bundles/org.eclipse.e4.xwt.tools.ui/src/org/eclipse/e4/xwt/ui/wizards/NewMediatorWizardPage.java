@@ -295,7 +295,7 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 		PrintStream printStream = new PrintStream(arrayOutputStream);
 
-		printStream.println("<c:" + type.getElementName() + " xmlns=\"" + IConstants.XWT_NAMESPACE + "\"");
+		printStream.println("<Composite xmlns=\"" + IConstants.XWT_NAMESPACE + "\"");
 
 		printStream.println("\t xmlns:x=\"" + IConstants.XWT_X_NAMESPACE + "\"");
 		String packageName = type.getPackageFragment().getElementName();
@@ -304,13 +304,13 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 		}
 		printStream.println("\t xmlns:j=\"" + IConstants.XAML_CLR_NAMESPACE_PROTO +  "java.lang\"");
 		printStream.println("\t x:Class=\"" + hostClassName + "\">");
-		printStream.println("\t <c:" + type.getElementName() + ".layout>");
+		printStream.println("\t <Composite.layout>");
 		printStream.println("\t\t <GridLayout " + " numColumns=\"4\" />");
-		printStream.println("\t </c:" + type.getElementName() + ".layout>");
+		printStream.println("\t </Composite.layout>");
 
 		appendBeanContent(printStream);
 
-		printStream.println("</c:" + type.getElementName() + ">");
+		printStream.println("</Composite>");
 
 		try {
 			byte[] content = arrayOutputStream.toByteArray();

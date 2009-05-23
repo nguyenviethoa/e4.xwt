@@ -15,13 +15,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
 public class UserControl extends Composite {
-
+	static public final String SELECTION_MESSAGE = "OK";
+	
 	public UserControl(Composite parent, int style) {
 		super(parent, style);
 	}
 
 	protected void selection(Event event) {
 		Button button = (Button) event.widget;
-		button.setText("OK");
+		button.setText(SELECTION_MESSAGE);
 	}
 }

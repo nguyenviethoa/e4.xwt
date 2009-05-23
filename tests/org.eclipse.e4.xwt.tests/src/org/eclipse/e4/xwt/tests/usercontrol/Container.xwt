@@ -4,5 +4,5 @@
 	<Composite.layout>
 		<GridLayout numColumns="2"/>
 	</Composite.layout>	
-	<y:UserControl/>
+	<y:UserControl Name="childControl"/>
 </Composite>

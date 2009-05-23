@@ -352,6 +352,14 @@ public class ResourceLoader implements IVisualElementLoader {
 				setDataContext(metaclass, targetObject, dico, dataContext);
 			}
 			pushStack();
+			
+			// for Shell
+			Attribute classAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS);
+			if (classAttribute != null) {
+				String className = classAttribute.getContent();
+				loadShellCLR(className, shell);
+			}
+			
 		} else {
 			pushStack();
 
@@ -387,7 +395,22 @@ public class ResourceLoader implements IVisualElementLoader {
 				} else {
 					parameters = (styleValue != null ? new Object[] { parent, styleValue } : new Object[] { parent });
 				}
-				targetObject = metaclass.newInstance(parameters);
+				
+				// x:Class
+				{
+					Attribute classAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS);
+					if (classAttribute != null) {
+						String className = classAttribute.getContent();
+						targetObject = loadCLR(className, parameters, metaclass.getType());
+					}
+					if (targetObject == null) {
+						targetObject = metaclass.newInstance(parameters);
+					}
+					else {
+						metaclass = XWT.getMetaclass(targetObject);
+					}
+				}
+
 				if (targetObject == null) {
 					return null;
 				}
@@ -658,19 +681,8 @@ public class ResourceLoader implements IVisualElementLoader {
 
 	private void init(IMetaclass metaclass, Object targetObject, Element element, List<String> delayedAttributes) throws Exception {
 		// editors for TableItem,
-		{
-			if (targetObject instanceof TableItem) {
-				installTableEditors((TableItem) targetObject);
-			}
-		}
-
-		// x:Class
-		{
-			Attribute classAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS);
-			if (classAttribute != null) {
-				String className = classAttribute.getContent();
-				loadCLR(className, targetObject);
-			}
+		if (targetObject instanceof TableItem) {
+			installTableEditors((TableItem) targetObject);
 		}
 
 		// x:DataContext
@@ -908,27 +920,43 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		return 0;
 	}
-
-	private boolean loadCLR(String className, Object currentObject) {
+	
+	private void loadShellCLR(String className, Shell shell) {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(), className);
 		try {
-			if (currentObject.getClass() != type) {
-				Object instance = type.newInstance();
-				loadData.setClr(instance);
-				if (currentObject instanceof Widget) {
-					UserDataHelper.setCLR((Widget) currentObject, instance);
-				}
-			} else {
-				loadData.setClr(currentObject);
-				if (currentObject instanceof Widget) {
-					UserDataHelper.setCLR((Widget) currentObject, currentObject);
-				}
-			}
-			return true;
+			Object instance = type.newInstance();
+			loadData.setClr(instance);
+			UserDataHelper.setCLR(shell, instance);
 		} catch (Exception e) {
 			LoggerManager.log(e);
 		}
-		return false;
+	}
+
+
+	private Object loadCLR(String className, Object[] parameters, Class<?> currentTagType) {
+		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(), className);
+		try {
+			if (currentTagType != null && currentTagType.isAssignableFrom(type)) {
+				IMetaclass metaclass = XWT.getMetaclass(type);
+				Object instance = metaclass.newInstance(parameters);
+				loadData.setClr(instance);
+				// use x:Class's instance 
+				if (instance instanceof Widget) {
+					UserDataHelper.setCLR((Widget) instance, instance);
+				}
+				return instance;
+			} 
+			else {
+				Object instance = type.newInstance();
+				loadData.setClr(instance);
+				if (instance instanceof Widget) {
+					UserDataHelper.setCLR((Widget) instance, instance);
+				}
+			}
+		} catch (Exception e) {
+			LoggerManager.log(e);
+		}
+		return null;
 	}
 
 	private void trace(String message) {
