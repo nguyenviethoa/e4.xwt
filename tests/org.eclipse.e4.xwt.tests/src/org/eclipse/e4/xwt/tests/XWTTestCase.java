@@ -64,6 +64,7 @@ public abstract class XWTTestCase extends TestCase {
 			while (display.readAndDispatch())
 				;
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
