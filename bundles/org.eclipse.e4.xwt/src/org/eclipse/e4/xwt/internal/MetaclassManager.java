@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.IMetaclassFactory;
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.utils.ClassLoaderUtil;
@@ -31,10 +32,13 @@ public class MetaclassManager {
 	protected Collection<Class<?>> classRegister = new HashSet<Class<?>>();
 	protected MetaclassManager parent;
 	protected MetaclassService service;
+	
+	private XWTLoader xwtLoader;
 
-	public MetaclassManager(MetaclassService service, MetaclassManager parent) {
+	public MetaclassManager(MetaclassService service, MetaclassManager parent,XWTLoader xwtLoader) {
 		this.parent = parent;
 		this.service = service;
+		this.xwtLoader = xwtLoader;
 	}
 
 	public Collection<IMetaclass> getAllMetaclasses() {
@@ -71,11 +75,11 @@ public class MetaclassManager {
 		if (service != null) {
 			IMetaclassFactory factory = service.findFactory(javaClass);
 			if (factory != null) {
-				return factory.create(javaClass, superMetaclass);
+				return factory.create(javaClass, superMetaclass,xwtLoader);
 			}
 		}
 		boolean lazyLoading = false; // TODO Get value from preference
-		return new Metaclass(javaClass, superMetaclass, lazyLoading);
+		return new Metaclass(javaClass, superMetaclass, lazyLoading,xwtLoader);
 	}
 
 	public static String normalizePropertyName(String name) {

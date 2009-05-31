@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata;
 
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.utils.UserDataHelper;
 import org.eclipse.swt.custom.TableEditor;
@@ -18,8 +19,8 @@ import org.eclipse.swt.widgets.Widget;
 
 public class TableEditorMetaclass extends Metaclass {
 
-	public TableEditorMetaclass(IMetaclass superClass) {
-		super(TableEditor.class, superClass);
+	public TableEditorMetaclass(IMetaclass superClass,XWTLoader xwtLoader) {
+		super(TableEditor.class, superClass,xwtLoader);
 	}
 
 	/**

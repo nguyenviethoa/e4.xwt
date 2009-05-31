@@ -14,6 +14,7 @@ import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.databinding.BindingMode;
 import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
@@ -44,6 +45,8 @@ public class BindingMetaclass extends Metaclass {
 		private String elementName;
 
 		private Widget control;
+		
+		private XWTLoader xwtLoader;
 
 		private BindingMode mode = BindingMode.TwoWay;
 
@@ -158,7 +161,7 @@ public class BindingMetaclass extends Metaclass {
 				if (dataContext instanceof IDataProvider) {
 					dataProvider = (IDataProvider) dataContext;
 				} else {
-					dataProvider = XWT.findDataProvider(dataContext);
+					dataProvider = xwtLoader.findDataProvider(dataContext);
 				}
 			}
 
@@ -170,10 +173,14 @@ public class BindingMetaclass extends Metaclass {
 			}
 			return dataContext;
 		}
+
+		public void setXWTLoader(XWTLoader xwtLoader) {
+			this.xwtLoader = xwtLoader;
+		}
 	}
 
-	public BindingMetaclass() {
-		super(BindingMetaclass.Binding.class, null);
+	public BindingMetaclass(XWTLoader xwtLoader) {
+		super(BindingMetaclass.Binding.class, null,xwtLoader);
 	}
 
 	@Override
@@ -190,6 +197,7 @@ public class BindingMetaclass extends Metaclass {
 		else if (parameters[0] instanceof ViewerColumn) {
 			newInstance.setControl(((ViewerColumn) parameters[0]).getViewer().getControl());
 		}
+		newInstance.setXWTLoader(xwtLoader);
 		return newInstance;
 	}
 

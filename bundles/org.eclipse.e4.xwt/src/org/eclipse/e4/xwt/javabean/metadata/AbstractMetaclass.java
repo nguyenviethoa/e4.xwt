@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.internal.jface.JFacesHelper;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
@@ -45,6 +46,8 @@ public class AbstractMetaclass implements IMetaclass {
 	protected String name;
 	protected IMetaclass superClass;
 
+	protected XWTLoader xwtLoader;
+	
 	protected boolean buildTypedEvents;
 
 	private boolean initialize = false;
@@ -78,6 +81,11 @@ public class AbstractMetaclass implements IMetaclass {
 		return false;
 	}
 
+	protected final XWTLoader getXWTLoader()
+	{
+		return xwtLoader;
+	}
+	
 	public IProperty addProperty(IProperty property) {
 		String name = normalize(property.getName());
 		return propertyCache.put(name, property);
@@ -87,7 +95,7 @@ public class AbstractMetaclass implements IMetaclass {
 		if (buildTypedEvents) {
 			return;
 		}
-		if (isSubclassOf(XWT.getMetaclass(Widget.class))) {
+		if (isSubclassOf(getXWTLoader().getMetaclass(Widget.class))) {
 			addTypedEvent("Activate", SWT.Activate);
 			addTypedEvent("Arm", SWT.Arm);
 			addTypedEvent("Close", SWT.Close);
@@ -322,7 +330,7 @@ public class AbstractMetaclass implements IMetaclass {
 			} else
 				throw new IllegalStateException();
 			if (Control.class.isAssignableFrom(getType()) && !(directParent instanceof Composite)) {
-				directParent = XWT.findCompositeParent(directParent);
+				directParent = getXWTLoader().findCompositeParent(directParent);
 			}
 
 			Object styleValue = null;

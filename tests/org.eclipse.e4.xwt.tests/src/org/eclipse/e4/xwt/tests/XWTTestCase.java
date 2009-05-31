@@ -15,10 +15,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
@@ -42,11 +39,6 @@ public abstract class XWTTestCase extends TestCase {
 			root = XWT.load(url);
 			assertNotNull(root);
 			Shell shell = root.getShell();
-			shell.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent e) {
-					ResourceManager.resources.dispose();
-				}
-			});
 			shell.open();
 			Display display = shell.getDisplay();
 			if (prepareAction != null) {

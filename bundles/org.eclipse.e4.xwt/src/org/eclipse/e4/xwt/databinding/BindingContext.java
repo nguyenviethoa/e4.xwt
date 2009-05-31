@@ -43,7 +43,7 @@ public class BindingContext implements IBindingContext {
 			this.observeWidget = target;
 			int sourceToTargetPolicy = UpdateValueStrategy.POLICY_UPDATE;
 			int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
-			DataBindingContext core = new DataBindingContext(XWT.realm);
+			DataBindingContext core = new DataBindingContext(XWT.getRealm());
 			// Set policy to UpdateValueStrategy.
 			if (dataBinding != null) {
 				switch (dataBinding.getBindingMode()) {

@@ -38,7 +38,7 @@ public abstract class XWTObservableValue extends AbstractObservableValue {
 	 * 
 	 */
 	public XWTObservableValue(Object valueType, Object observed) {
-		super(XWT.realm);
+		super(XWT.getRealm());
 		this.valueType = valueType;
 		this.observed = observed;
 		init();

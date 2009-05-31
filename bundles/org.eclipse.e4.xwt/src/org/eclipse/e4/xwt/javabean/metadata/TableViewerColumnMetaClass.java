@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import java.lang.reflect.Constructor;
 
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -20,8 +21,8 @@ import org.eclipse.swt.widgets.TableColumn;
 
 public class TableViewerColumnMetaClass extends Metaclass {
 
-	public TableViewerColumnMetaClass(IMetaclass superClass) {
-		super(TableViewerColumn.class, superClass);
+	public TableViewerColumnMetaClass(IMetaclass superClass, XWTLoader xwtLoader) {
+		super(TableViewerColumn.class, superClass, xwtLoader);
 	}
 
 	/**

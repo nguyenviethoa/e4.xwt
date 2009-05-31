@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.IMetaclassFactory;
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 
 /**
@@ -26,11 +27,18 @@ import org.eclipse.e4.xwt.metadata.IMetaclass;
 public class MetaclassService {
 	protected Map<String, MetaclassManager> map = new HashMap<String, MetaclassManager>();
 	protected ArrayList<IMetaclassFactory> factories = new ArrayList<IMetaclassFactory>();
+	
+	private XWTLoader xwtLoader;
+
+
+	public MetaclassService(XWTLoader xwtLoader) {
+		this.xwtLoader = xwtLoader;
+	}
 
 	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
 		MetaclassManager manager = map.get(namespace);
 		if (manager == null) {
-			manager = new MetaclassManager(this, map.get(IConstants.XWT_NAMESPACE));
+			manager = new MetaclassManager(this, map.get(IConstants.XWT_NAMESPACE),xwtLoader);
 			map.put(namespace, manager);
 		}
 		return manager.getMetaclass(context, name, namespace);
@@ -51,7 +59,7 @@ public class MetaclassService {
 			String key = IConstants.XAML_CLR_NAMESPACE_PROTO + ":" + packageName;
 			manager = map.get(key);
 			if (manager == null) {
-				manager = new MetaclassManager(this, manager);
+				manager = new MetaclassManager(this, manager, xwtLoader);
 				map.put(key, manager);
 			}
 			metaclass = manager.getMetaclass(type);

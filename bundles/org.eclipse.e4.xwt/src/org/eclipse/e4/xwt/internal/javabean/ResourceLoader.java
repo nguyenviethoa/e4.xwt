@@ -34,8 +34,8 @@ import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.IStyle;
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.Tracking;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.Core;
@@ -258,13 +258,13 @@ public class ResourceLoader implements IVisualElementLoader {
 	 */
 	public Object createCLRElement(Element element, Map<String, Object> options) {
 		try {
-			Composite parent = (Composite) options.get(XWT.CONTAINER_PROPERTY);
-			if (!XWT.getTrackings().isEmpty()) {
+			Composite parent = (Composite) options.get(XWTLoader.CONTAINER_PROPERTY);
+			if (!context.getXWTLoader().getTrackings().isEmpty()) {
 				dataBindingTrack = new DataBindingTrack();
 			}
 			parentLoader = (ResourceLoader) options.get(RESOURCE_LOADER_PROPERTY);
 			options.remove(RESOURCE_LOADER_PROPERTY);
-			ResourceDictionary resourceDictionary = (ResourceDictionary) options.get(XWT.RESOURCE_DICTIONARY_PROPERTY);
+			ResourceDictionary resourceDictionary = (ResourceDictionary) options.get(XWTLoader.RESOURCE_DICTIONARY_PROPERTY);
 			if (resourceDictionary != null) {
 				Object styles = resourceDictionary.get(Core.DEFAULT_STYLES_KEY);
 				if (styles != null) {
@@ -277,9 +277,9 @@ public class ResourceLoader implements IVisualElementLoader {
 			// get databinding messages and print into console view
 			if (dataBindingTrack != null) {
 				String dataBindingMessage = dataBindingTrack.getDataBindMessage();// getDataBindMessage();
-				org.eclipse.e4.xwt.ILogger log = XWT.getLogger();
+				org.eclipse.e4.xwt.ILogger log = context.getXWTLoader().getLogger();
 				log.addMessage(dataBindingMessage, Tracking.DATABINDING);
-				log.printInfo(dataBindingMessage, Tracking.DATABINDING, XWT.getTrackings());
+				log.printInfo(dataBindingMessage, Tracking.DATABINDING, context.getXWTLoader().getTrackings());
 			}
 			if (control instanceof Composite) {
 				((Composite) control).layout();
@@ -293,12 +293,12 @@ public class ResourceLoader implements IVisualElementLoader {
 
 	private Object doCreate(Object parent, Element element, Class<?> constraintType, Map<String, Object> options) throws Exception {
 		int styles = -1;
-		if (options.containsKey(XWT.INIT_STYLE_PROPERTY)) {
-			styles = (Integer) options.get(XWT.INIT_STYLE_PROPERTY);
+		if (options.containsKey(XWTLoader.INIT_STYLE_PROPERTY)) {
+			styles = (Integer) options.get(XWTLoader.INIT_STYLE_PROPERTY);
 		}
 
-		ResourceDictionary dico = (ResourceDictionary) options.get(XWT.RESOURCE_DICTIONARY_PROPERTY);
-		Object dataContext = options.get(XWT.DATACONTEXT_PROPERTY);
+		ResourceDictionary dico = (ResourceDictionary) options.get(XWTLoader.RESOURCE_DICTIONARY_PROPERTY);
+		Object dataContext = options.get(XWTLoader.DATACONTEXT_PROPERTY);
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)) {
@@ -310,19 +310,19 @@ public class ResourceLoader implements IVisualElementLoader {
 				if (children != null && children.length > 0) {
 					if (children[0] instanceof Element) {
 						Element type = (Element) children[0];
-						IMetaclass metaclass = XWT.getMetaclass(type.getName(), type.getNamespace());
+						IMetaclass metaclass = context.getXWTLoader().getMetaclass(type.getName(), type.getNamespace());
 						if (metaclass != null) {
 							return metaclass.getType();
 						}
 					}
 				} else {
 					String content = element.getContent();
-					return XWT.convertFrom(Class.class, content);
+					return context.getXWTLoader().convertFrom(Class.class, content);
 				}
 			}
 			return null;
 		}
-		IMetaclass metaclass = XWT.getMetaclass(name, namespace);
+		IMetaclass metaclass = context.getXWTLoader().getMetaclass(name, namespace);
 		if (constraintType != null && !(IBinding.class.isAssignableFrom(metaclass.getType())) && (!constraintType.isAssignableFrom(metaclass.getType()))) {
 			if (!constraintType.isArray() || !constraintType.getComponentType().isAssignableFrom(metaclass.getType()))
 				return null;
@@ -375,13 +375,13 @@ public class ResourceLoader implements IVisualElementLoader {
 						childDataContext = dataContext;
 					}
 					Map<String, Object> nestedOptions = new HashMap<String, Object>();
-					nestedOptions.put(XWT.CONTAINER_PROPERTY, parent);
+					nestedOptions.put(XWTLoader.CONTAINER_PROPERTY, parent);
 					if (styleValue != null) {
-						nestedOptions.put(XWT.INIT_STYLE_PROPERTY, styleValue);
+						nestedOptions.put(XWTLoader.INIT_STYLE_PROPERTY, styleValue);
 					}
-					nestedOptions.put(XWT.DATACONTEXT_PROPERTY, childDataContext);
+					nestedOptions.put(XWTLoader.DATACONTEXT_PROPERTY, childDataContext);
 					nestedOptions.put(RESOURCE_LOADER_PROPERTY, this);
-					targetObject = XWT.loadWithOptions(file, nestedOptions);
+					targetObject = context.getXWTLoader().loadWithOptions(file, nestedOptions);
 					if (targetObject == null) {
 						return null;
 					}
@@ -407,7 +407,7 @@ public class ResourceLoader implements IVisualElementLoader {
 						targetObject = metaclass.newInstance(parameters);
 					}
 					else {
-						metaclass = XWT.getMetaclass(targetObject);
+						metaclass = context.getXWTLoader().getMetaclass(targetObject);
 					}
 				}
 
@@ -443,7 +443,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 
 		for (String key : options.keySet()) {
-			if (XWT.CONTAINER_PROPERTY.equalsIgnoreCase(key) || XWT.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || XWT.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || XWT.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
+			if (XWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key) || XWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || XWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || XWTLoader.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
 			IProperty property = metaclass.findProperty(key);
@@ -454,7 +454,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		if (scopedObject == null && targetObject instanceof Widget) {
 			scopedObject = targetObject;
-			nameScoped = new NameScope((parent == null ? null : XWT.findNameContext((Widget) parent)));
+			nameScoped = new NameScope((parent == null ? null : context.getXWTLoader().findNameContext((Widget) parent)));
 			UserDataHelper.bindNameContext((Widget) targetObject, nameScoped);
 		}
 
@@ -505,7 +505,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		IMetaclass widgetMetaclass = metaclass;
 		if (JFacesHelper.isViewer(targetObject)) {
 			widget = JFacesHelper.getControl(targetObject);
-			widgetMetaclass = XWT.getMetaclass(widget.getClass());
+			widgetMetaclass = context.getXWTLoader().getMetaclass(widget.getClass());
 		} else if (targetObject instanceof Widget) {
 			widget = (Widget) targetObject;
 		} else {
@@ -589,7 +589,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	private int getColumnIndex(Element columnElement) {
 		String name = columnElement.getName();
 		String namespace = columnElement.getNamespace();
-		IMetaclass metaclass = XWT.getMetaclass(name, namespace);
+		IMetaclass metaclass = context.getXWTLoader().getMetaclass(name, namespace);
 		int index = -1;
 		Class<?> type = metaclass.getType();
 		if (TableViewerColumn.class.isAssignableFrom(type)) {
@@ -674,9 +674,9 @@ public class ResourceLoader implements IVisualElementLoader {
 			return null;
 		}
 		if (styles == -1) {
-			return (Integer) XWT.findConvertor(String.class, Integer.class).convert(attribute.getContent());
+			return (Integer) context.getXWTLoader().findConvertor(String.class, Integer.class).convert(attribute.getContent());
 		}
-		return styles | (Integer) XWT.findConvertor(String.class, Integer.class).convert(attribute.getContent());
+		return styles | (Integer) context.getXWTLoader().findConvertor(String.class, Integer.class).convert(attribute.getContent());
 	}
 
 	private void init(IMetaclass metaclass, Object targetObject, Element element, List<String> delayedAttributes) throws Exception {
@@ -864,7 +864,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		try {
 			Class<?> type = NamespaceHelper.loadCLRClass(context.getLoadingContext(), name, namespace);
-			IMetaclass metaclass = XWT.getMetaclass(name, namespace);
+			IMetaclass metaclass = context.getXWTLoader().getMetaclass(name, namespace);
 			if (type == null) {
 				if (metaclass != null)
 					type = metaclass.getType();
@@ -892,7 +892,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			} else {
 				Constructor<?> constructor = type.getConstructor(type);
 				if (constructor != null) {
-					instance = constructor.newInstance(XWT.convertFrom(type, content));
+					instance = constructor.newInstance(context.getXWTLoader().convertFrom(type, content));
 				} else {
 					LoggerManager.log(new XWTException("Constructor \"" + name + "(" + type.getSimpleName() + ")\" is not found"));
 				}
@@ -937,7 +937,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(), className);
 		try {
 			if (currentTagType != null && currentTagType.isAssignableFrom(type)) {
-				IMetaclass metaclass = XWT.getMetaclass(type);
+				IMetaclass metaclass = context.getXWTLoader().getMetaclass(type);
 				Object instance = metaclass.newInstance(parameters);
 				loadData.setClr(instance);
 				// use x:Class's instance 
@@ -976,7 +976,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					if (target == null) {
 						LoggerManager.log(new XWTException("Property \"" + segments[i] + "\" is null."));
 					}
-					currentMetaclass = XWT.getMetaclass(target);
+					currentMetaclass = context.getXWTLoader().getMetaclass(target);
 				} else {
 					LoggerManager.log(new XWTException("Property \"" + segments[i] + "\" not found."));
 				}
@@ -988,7 +988,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	}
 
 	private void addCommandExecuteListener(String commandName, final Widget targetButton) {
-		final ICommand commandObj = XWT.getCommand(commandName);
+		final ICommand commandObj = context.getXWTLoader().getCommand(commandName);
 		if (commandObj != null) {
 			targetButton.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
@@ -1091,17 +1091,17 @@ public class ResourceLoader implements IVisualElementLoader {
 						contentValue = findNamespace(attribute, prefix) + contentValue.substring(index);
 					}
 				}
-				value = XWT.convertFrom(property.getType(), contentValue);
+				value = context.getXWTLoader().convertFrom(property.getType(), contentValue);
 			}
 			if (value != null) {
 				Class<?> propertyType = property.getType();
 				if (!propertyType.isAssignableFrom(value.getClass()) || value instanceof IBinding) {
 					Object orginalValue = value;
-					IConverter converter = XWT.findConvertor(value.getClass(), propertyType);
+					IConverter converter = context.getXWTLoader().findConvertor(value.getClass(), propertyType);
 					if (converter != null) {
 						value = converter.convert(value);
 						if (value != null && orginalValue instanceof IBinding && !propertyType.isAssignableFrom(value.getClass())) {
-							converter = XWT.findConvertor(value.getClass(), propertyType);
+							converter = context.getXWTLoader().findConvertor(value.getClass(), propertyType);
 							if (converter != null) {
 								value = converter.convert(value);
 							} else {
@@ -1133,7 +1133,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 
 			if (attribute.attributeNames(IConstants.XWT_NAMESPACE).length > 0) {
-				IMetaclass propertyMetaclass = XWT.getMetaclass(property.getType());
+				IMetaclass propertyMetaclass = context.getXWTLoader().getMetaclass(property.getType());
 				if (value == null) {
 					value = property.getValue(target);
 				}
@@ -1184,7 +1184,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace) && IConstants.XAML_X_NULL.equalsIgnoreCase(name)) {
 			return null;
 		}
-		IMetaclass metaclass = XWT.getMetaclass(name, namespace);
+		IMetaclass metaclass = context.getXWTLoader().getMetaclass(name, namespace);
 		if (metaclass == null) {
 			return null;
 		}

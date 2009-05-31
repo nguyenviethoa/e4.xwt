@@ -12,7 +12,7 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import java.lang.reflect.Constructor;
 
-import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.internal.jface.ComboBoxCellEditor;
 import org.eclipse.e4.xwt.internal.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Widget;
 
 public class ComboBoxCellEditorMetaclass extends Metaclass {
 
-	public ComboBoxCellEditorMetaclass(IMetaclass superClass) {
-		super(ComboBoxCellEditor.class, superClass);
+	public ComboBoxCellEditorMetaclass(IMetaclass superClass, XWTLoader xwtLoader) {
+		super(ComboBoxCellEditor.class, superClass, xwtLoader);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class ComboBoxCellEditorMetaclass extends Metaclass {
 		} else
 			throw new IllegalStateException();
 		if (Control.class.isAssignableFrom(getType()) && !(parent instanceof Composite)) {
-			directParent = XWT.findCompositeParent(parent);
+			directParent = xwtLoader.findCompositeParent(parent);
 		}
 
 		return directParent;

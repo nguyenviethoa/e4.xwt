@@ -23,6 +23,7 @@ import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
 import org.eclipse.e4.xwt.Tracking;
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.xml.DocumentObject;
 import org.eclipse.e4.xwt.xml.DocumentRoot;
@@ -39,9 +40,11 @@ public class Core {
 
 	private HashMap<DocumentObject, IVisualElementLoader> elementsLoaders = new HashMap<DocumentObject, IVisualElementLoader>();
 
-	MetaclassService metaclassService = new MetaclassService();
+	MetaclassService metaclassService;
 
 	IElementLoaderFactory loaderFactory;
+	
+	private XWTLoader xwtLoader;
 
 	static public ILogger nullLog = new ILogger() {
 		private Map<Tracking, String> messageMap = new HashMap<Tracking, String>();
@@ -83,9 +86,11 @@ public class Core {
 		}
 	};
 
-	public Core(IElementLoaderFactory loaderFactory) {
+	public Core(IElementLoaderFactory loaderFactory, XWTLoader xwtLoader) {
 		this.loaderFactory = loaderFactory;
 		this.registrations = new HashMap<Class<?>, Object>();
+		this.xwtLoader = xwtLoader;
+		this.metaclassService = new MetaclassService(xwtLoader);
 	}
 
 	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
@@ -188,7 +193,7 @@ public class Core {
 		return null;
 	}
 
-	static private class ExtensionContext implements IRenderingContext {
+	private class ExtensionContext implements IRenderingContext {
 
 		private Map<String, Object> properties = new HashMap<String, Object>();
 
@@ -245,6 +250,9 @@ public class Core {
 
 		public void setLoadingContext(ILoadingContext loadingContext) {
 			this.loadingContext = loadingContext;
+		}
+		public XWTLoader getXWTLoader() {
+			return xwtLoader;
 		}
 	}
 

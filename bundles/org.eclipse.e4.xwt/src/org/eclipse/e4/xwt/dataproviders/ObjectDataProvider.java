@@ -208,7 +208,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 			propertyName = fullPath;
 		}
 		if (isBeanSupport(dataContext)) {
-			return BeansObservables.observeValue(XWT.realm, dataContext, propertyName);
+			return BeansObservables.observeValue(XWT.getRealm(), dataContext, propertyName);
 		}
 		return new BeanObservableValue(valueType, dataContext, propertyName);
 	}
