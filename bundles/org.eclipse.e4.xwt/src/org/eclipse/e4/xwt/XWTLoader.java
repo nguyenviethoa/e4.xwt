@@ -12,6 +12,7 @@
 package org.eclipse.e4.xwt;
 
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -650,6 +651,44 @@ public class XWTLoader {
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
 		convertorRegister.register(source, target, converter);
 	}
+	
+	protected void registerConvertor(Class<?> converter, String methodName) {
+		try {
+			Method method = converter.getDeclaredMethod(methodName);
+			Object object = method.invoke(null);
+			if (object instanceof IConverter) {
+				registerConvertor((IConverter)object);
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	protected void registerConvertor(Class<?> converterType, String methodName, boolean value) {
+		IConverter converter = loadConvertor(converterType, methodName, value);
+		if (converter != null) {
+			registerConvertor(converter);
+		}
+	}
+
+	protected void registerConvertor(ValueConvertorRegister convertorRegister, Class<?> source, Class<?> target, Class<?> converterType, String methodName, boolean value) {
+		IConverter converter = loadConvertor(converterType, methodName, value);
+		if (converter != null) {
+			convertorRegister.register(source, target, converter);
+		}
+	}
+
+	protected IConverter loadConvertor(Class<?> converter, String methodName, boolean value) {
+		try {
+			Method method = converter.getDeclaredMethod(methodName);
+			Object object = method.invoke(null, value);
+			if (object instanceof IConverter) {
+				return (IConverter)object;
+			}
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
 
 	/**
 	 * Add a tracking option
@@ -802,18 +841,29 @@ public class XWTLoader {
 		registerConvertor(DateToString.instance);
 		registerConvertor(EnumToString.instance);
 		registerConvertor(StringToInteger.instance);
-		registerConvertor(StringToNumberConverter.toBigDecimal());
-		registerConvertor(StringToNumberConverter.toByte(false));
+		// It is not supported by eclipse 3.4.1
+		registerConvertor(StringToNumberConverter.class, "toBigDecimal");
+		registerConvertor(StringToNumberConverter.class, "toByte", false);
+		
 		registerConvertor(StringToNumberConverter.toLong(false));
-		registerConvertor(StringToNumberConverter.toShort(false));
+		
+		// It is not supported by eclipse 3.4.1
+		registerConvertor(StringToNumberConverter.class, "toShort", false);
+		
 		registerConvertor(StringToNumberConverter.toFloat(false));
 		registerConvertor(StringToNumberConverter.toDouble(false));
 
 		registerConvertor(NumberToStringConverter.fromInteger(false));
-		registerConvertor(NumberToStringConverter.fromBigDecimal());
-		registerConvertor(NumberToStringConverter.fromByte(false));
+
+		// It is not supported by eclipse 3.4.1
+		registerConvertor(NumberToStringConverter.class, "fromBigDecimal");
+		registerConvertor(NumberToStringConverter.class, "fromByte", false);
+		
 		registerConvertor(NumberToStringConverter.fromLong(false));
-		registerConvertor(NumberToStringConverter.fromShort(false));
+		
+		// It is not supported by eclipse 3.4.1
+		registerConvertor(NumberToStringConverter.class, "fromShort", false);
+		
 		registerConvertor(NumberToStringConverter.fromFloat(false));
 		registerConvertor(NumberToStringConverter.fromDouble(false));
 
@@ -831,17 +881,33 @@ public class XWTLoader {
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
 		convertorRegister.register(String.class, float.class, StringToNumberConverter.toFloat(true));
 		convertorRegister.register(String.class, int.class, StringToInteger.instance);
-		convertorRegister.register(String.class, short.class, StringToNumberConverter.toShort(true));
+
+		// It is not supported by eclipse 3.4.1
+		// convertorRegister.register(String.class, short.class, StringToNumberConverter.toShort(true));
+		registerConvertor(convertorRegister, String.class, short.class, StringToNumberConverter.class, "toShort", true);
+		
 		convertorRegister.register(String.class, long.class, StringToNumberConverter.toLong(true));
-		convertorRegister.register(String.class, byte.class, StringToNumberConverter.toByte(true));
+
+		// It is not supported by eclipse 3.4.1
+		// convertorRegister.register(String.class, byte.class, StringToNumberConverter.toByte(true));
+		registerConvertor(convertorRegister, String.class, byte.class, StringToNumberConverter.class, "toByte", true);
+		
 		convertorRegister.register(String.class, boolean.class, StringToBoolean.instance);
 		convertorRegister.register(String.class, double.class, StringToNumberConverter.toDouble(true));
 
 		convertorRegister.register(float.class, String.class, NumberToStringConverter.fromFloat(true));
 		convertorRegister.register(int.class, String.class, NumberToStringConverter.fromInteger(true));
-		convertorRegister.register(short.class, String.class, NumberToStringConverter.fromShort(true));
+		
+		// It is not supported by eclipse 3.4.1
+		// convertorRegister.register(short.class, String.class, NumberToStringConverter.fromShort(true));
+		registerConvertor(convertorRegister, short.class, String.class, NumberToStringConverter.class, "fromShort", true);
+		
 		convertorRegister.register(long.class, String.class, NumberToStringConverter.fromLong(true));
-		convertorRegister.register(byte.class, String.class, NumberToStringConverter.fromByte(true));
+		
+		// It is not supported by eclipse 3.4.1
+		// convertorRegister.register(byte.class, String.class, NumberToStringConverter.fromByte(true));
+		registerConvertor(convertorRegister, byte.class, String.class, NumberToStringConverter.class, "fromByte", true);
+		
 		convertorRegister.register(double.class, String.class, NumberToStringConverter.fromDouble(true));
 
 		Class<?> type = org.eclipse.swt.browser.Browser.class;
