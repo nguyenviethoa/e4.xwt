@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.2 $  $Date: 2009/02/03 00:32:19 $ 
+ *  $Revision: 1.3 $  $Date: 2009/05/03 13:44:46 $ 
  */
 package org.eclipse.e4.xwt.vex.swt;
 
@@ -78,8 +78,19 @@ public abstract class ImageCapture {
 	}
 
 	public Image defaultCapture(Control control) {
-		Rectangle bounds = control.getBounds();
-		return getImage(control, bounds.width, bounds.height, true);
+		Image image = new Image(control.getDisplay(), control.getBounds());
+		GC gc = new GC(image);
+		try {
+			if (control.print(gc)) {
+				return image;
+			} else {
+				image.dispose();
+				Rectangle bounds = control.getBounds();
+				return getImage(control, bounds.width, bounds.height, true);	
+			}	
+		} finally {
+			gc.dispose();
+		}
 	}
 
 	protected abstract Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren);
