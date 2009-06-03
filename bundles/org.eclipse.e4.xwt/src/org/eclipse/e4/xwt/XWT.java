@@ -359,4 +359,8 @@ public class XWT {
 	static public Realm getRealm() {
 		return XWTLoaderManager.getDefault().getRealm();
 	}
+
+	static public boolean isXWTNamespace(String namespace) {
+		return IConstants.XWT_X_NAMESPACE.equals(namespace) || IConstants.XWT_NAMESPACE.equals(namespace) || namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO);
+	}
 }

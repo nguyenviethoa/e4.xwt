@@ -36,6 +36,7 @@ import org.eclipse.e4.xwt.IStyle;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.Tracking;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.input.ICommand;
@@ -783,7 +784,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		// handle foreigner namespace
 		//
 		for (String namespace : element.attributeNamespaces()) {
-			if (IConstants.XWT_X_NAMESPACE.equals(namespace) || IConstants.XWT_NAMESPACE.equals(namespace) || namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
+			if (XWT.isXWTNamespace(namespace)) {
 				continue;
 			}
 			INamespaceHandler namespaceHandler = loader.getNamespaceHandler(namespace);

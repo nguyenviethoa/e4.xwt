@@ -21,6 +21,7 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -468,12 +469,12 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 			int index = attrName.indexOf('.');
 			if (index != -1) {
 				String prefix = normalizeName(attrName.substring(0, attrName.indexOf('.')));
-				String attributeName = normalizeName(attrName.substring(attrName.indexOf('.') + 1));
+				String attributeName = (XWT.isXWTNamespace(attrUri) ? normalizeName(attrName.substring(attrName.indexOf('.') + 1)) : attrName);
 
 				attribute = new Attribute(attrUri, attributeName, id);
 				attribute.setPrefix(prefix);
 			} else {
-				attribute = new Attribute(attrUri, normalizeName(attrName), id);
+				attribute = new Attribute(attrUri, (XWT.isXWTNamespace(attrUri) ? normalizeName(attrName) : attrName), id);
 			}
 			handleContent(attribute, attrs.getValue(i));
 			attributes.add(attribute);
@@ -567,7 +568,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	 */
 	private void preProperty(String namespace, String name, Attributes attrs) throws SAXException {
 		String elementTag = normalizeName(name.substring(0, name.indexOf('.')));
-		String attributeName = normalizeName(name.substring(name.indexOf('.') + 1));
+		String attributeName = (XWT.isXWTNamespace(namespace) ? normalizeName(name.substring(name.indexOf('.') + 1)) : name);
 		String elementId = null;
 
 		// Search the owner element and get the ID.
@@ -595,11 +596,11 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 				int index = attrName.indexOf('.');
 				if (index != -1) {
 					String prefix = normalizeName(attrName.substring(0, attrName.indexOf('.')));
-					String aName = normalizeName(attrName.substring(attrName.indexOf('.') + 1));
+					String aName = (XWT.isXWTNamespace(namespace) ? normalizeName(attrName.substring(attrName.indexOf('.') + 1)) : attrName);
 					attr = new Attribute(attrUri, aName, elementId);
 					attr.setPrefix(prefix);
 				} else {
-					attr = new Attribute(attrUri, normalizeName(attrName), elementId);
+					attr = new Attribute(attrUri, (XWT.isXWTNamespace(namespace) ? normalizeName(attrName) : attrName), elementId);
 				}
 				handleContent(attr, attrs.getValue(i));
 				collection.add(attr);
