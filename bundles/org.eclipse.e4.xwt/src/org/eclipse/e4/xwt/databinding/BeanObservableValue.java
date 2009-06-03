@@ -57,7 +57,9 @@ public class BeanObservableValue extends XWTObservableValue {
 			for (PropertyDescriptor pd : propertyDescriptors) {
 				if (propertyName.equalsIgnoreCase(pd.getName())) {
 					Method readMethod = pd.getReadMethod();
-					return readMethod.invoke(target, null);
+					if (readMethod != null) {
+						return readMethod.invoke(target, null);
+					}
 				}
 			}
 			Field[] fields = type.getDeclaredFields();
@@ -109,6 +111,9 @@ public class BeanObservableValue extends XWTObservableValue {
 			for (PropertyDescriptor pd : propertyDescriptors) {
 				if (propertyName.equals(pd.getName())) {
 					Method writeMethod = pd.getWriteMethod();
+					if (writeMethod == null) {
+						return;
+					}
 					if (!writeMethod.isAccessible()) {
 						writeMethod.setAccessible(true);
 					}
