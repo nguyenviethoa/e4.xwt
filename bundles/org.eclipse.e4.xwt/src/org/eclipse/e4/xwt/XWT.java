@@ -271,8 +271,21 @@ public class XWT {
 		return XWTLoaderManager.getDefault().findConvertor(source, target);
 	}
 
+	/**
+	 * Switch current loading context
+	 * 
+	 */
 	public static void setLoadingContext(ILoadingContext loadingContext) {
 		XWTLoaderManager.getDefault().setLoadingContext(loadingContext);
+	}
+
+	/**
+	 * Return current loading context
+	 * 
+	 * @return ILoadingContext
+	 */
+	public static ILoadingContext getLoadingContext() {
+		return XWTLoaderManager.getDefault().getLoadingContext();
 	}
 
 	/**

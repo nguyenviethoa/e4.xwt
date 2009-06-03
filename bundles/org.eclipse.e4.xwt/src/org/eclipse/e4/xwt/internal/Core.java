@@ -43,7 +43,7 @@ public class Core {
 	MetaclassService metaclassService;
 
 	IElementLoaderFactory loaderFactory;
-	
+
 	private XWTLoader xwtLoader;
 
 	static public ILogger nullLog = new ILogger() {
@@ -102,6 +102,13 @@ public class Core {
 			return getMetaclassService().getMetaclass((Class<?>) object);
 		}
 		return getMetaclassService().getMetaclass(object.getClass());
+	}
+
+	public IMetaclass getMetaclass(Object object, String namespace) {
+		if (object instanceof Class) {
+			return getMetaclassService().getMetaclass((Class<?>) object, namespace);
+		}
+		return getMetaclassService().getMetaclass(object.getClass(), namespace);
 	}
 
 	public Collection<IMetaclass> getAllMetaclasses(String namespace) {
@@ -251,6 +258,7 @@ public class Core {
 		public void setLoadingContext(ILoadingContext loadingContext) {
 			this.loadingContext = loadingContext;
 		}
+
 		public XWTLoader getXWTLoader() {
 			return xwtLoader;
 		}

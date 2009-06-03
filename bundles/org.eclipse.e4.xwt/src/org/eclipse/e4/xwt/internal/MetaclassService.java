@@ -27,9 +27,8 @@ import org.eclipse.e4.xwt.metadata.IMetaclass;
 public class MetaclassService {
 	protected Map<String, MetaclassManager> map = new HashMap<String, MetaclassManager>();
 	protected ArrayList<IMetaclassFactory> factories = new ArrayList<IMetaclassFactory>();
-	
-	private XWTLoader xwtLoader;
 
+	private XWTLoader xwtLoader;
 
 	public MetaclassService(XWTLoader xwtLoader) {
 		this.xwtLoader = xwtLoader;
@@ -38,7 +37,7 @@ public class MetaclassService {
 	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
 		MetaclassManager manager = map.get(namespace);
 		if (manager == null) {
-			manager = new MetaclassManager(this, map.get(IConstants.XWT_NAMESPACE),xwtLoader);
+			manager = new MetaclassManager(this, map.get(IConstants.XWT_NAMESPACE), xwtLoader);
 			map.put(namespace, manager);
 		}
 		return manager.getMetaclass(context, name, namespace);
@@ -57,11 +56,28 @@ public class MetaclassService {
 				packageName = packageObject.getName();
 			}
 			String key = IConstants.XAML_CLR_NAMESPACE_PROTO + ":" + packageName;
-			manager = map.get(key);
-			if (manager == null) {
-				manager = new MetaclassManager(this, manager, xwtLoader);
-				map.put(key, manager);
+			MetaclassManager childManager = map.get(key);
+			if (childManager == null) {
+				childManager = new MetaclassManager(this, manager, xwtLoader);
+				map.put(key, childManager);
 			}
+			metaclass = childManager.getMetaclass(type);
+			if (metaclass == null) {
+				childManager.register(type);
+				metaclass = childManager.getMetaclass(type);
+			}
+		}
+		return metaclass;
+	}
+
+	public IMetaclass getMetaclass(Class<?> type, String namepsace) {
+		MetaclassManager manager = map.get(namepsace);
+		if (manager == null) {
+			manager = new MetaclassManager(this, manager, xwtLoader);
+			map.put(namepsace, manager);
+		}
+		IMetaclass metaclass = manager.getMetaclass(type);
+		if (metaclass == null) {
 			metaclass = manager.getMetaclass(type);
 			if (metaclass == null) {
 				manager.register(type);

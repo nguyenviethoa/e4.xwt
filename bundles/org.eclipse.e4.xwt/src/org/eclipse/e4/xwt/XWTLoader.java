@@ -651,13 +651,13 @@ public class XWTLoader {
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
 		convertorRegister.register(source, target, converter);
 	}
-	
+
 	protected void registerConvertor(Class<?> converter, String methodName) {
 		try {
 			Method method = converter.getDeclaredMethod(methodName);
 			Object object = method.invoke(null);
 			if (object instanceof IConverter) {
-				registerConvertor((IConverter)object);
+				registerConvertor((IConverter) object);
 			}
 		} catch (Exception e) {
 		}
@@ -682,13 +682,12 @@ public class XWTLoader {
 			Method method = converter.getDeclaredMethod(methodName);
 			Object object = method.invoke(null, value);
 			if (object instanceof IConverter) {
-				return (IConverter)object;
+				return (IConverter) object;
 			}
 		} catch (Exception e) {
 		}
 		return null;
 	}
-
 
 	/**
 	 * Add a tracking option
@@ -835,7 +834,7 @@ public class XWTLoader {
 
 		core.registerMetaclassManager(IConstants.XWT_NAMESPACE, new MetaclassManager(null, null, this));
 		core.registerMetaclass(new BindingMetaclass(this), IConstants.XWT_NAMESPACE);
-		core.registerMetaclass(new TableEditorMetaclass(core.getMetaclass(ControlEditor.class), this), IConstants.XWT_NAMESPACE);
+		core.registerMetaclass(new TableEditorMetaclass(core.getMetaclass(ControlEditor.class, IConstants.XWT_NAMESPACE), this), IConstants.XWT_NAMESPACE);
 
 		registerConvertor(ObjectToString.instance);
 		registerConvertor(DateToString.instance);
@@ -844,12 +843,12 @@ public class XWTLoader {
 		// It is not supported by eclipse 3.4.1
 		registerConvertor(StringToNumberConverter.class, "toBigDecimal");
 		registerConvertor(StringToNumberConverter.class, "toByte", false);
-		
+
 		registerConvertor(StringToNumberConverter.toLong(false));
-		
+
 		// It is not supported by eclipse 3.4.1
 		registerConvertor(StringToNumberConverter.class, "toShort", false);
-		
+
 		registerConvertor(StringToNumberConverter.toFloat(false));
 		registerConvertor(StringToNumberConverter.toDouble(false));
 
@@ -858,12 +857,12 @@ public class XWTLoader {
 		// It is not supported by eclipse 3.4.1
 		registerConvertor(NumberToStringConverter.class, "fromBigDecimal");
 		registerConvertor(NumberToStringConverter.class, "fromByte", false);
-		
+
 		registerConvertor(NumberToStringConverter.fromLong(false));
-		
+
 		// It is not supported by eclipse 3.4.1
 		registerConvertor(NumberToStringConverter.class, "fromShort", false);
-		
+
 		registerConvertor(NumberToStringConverter.fromFloat(false));
 		registerConvertor(NumberToStringConverter.fromDouble(false));
 
@@ -885,29 +884,29 @@ public class XWTLoader {
 		// It is not supported by eclipse 3.4.1
 		// convertorRegister.register(String.class, short.class, StringToNumberConverter.toShort(true));
 		registerConvertor(convertorRegister, String.class, short.class, StringToNumberConverter.class, "toShort", true);
-		
+
 		convertorRegister.register(String.class, long.class, StringToNumberConverter.toLong(true));
 
 		// It is not supported by eclipse 3.4.1
 		// convertorRegister.register(String.class, byte.class, StringToNumberConverter.toByte(true));
 		registerConvertor(convertorRegister, String.class, byte.class, StringToNumberConverter.class, "toByte", true);
-		
+
 		convertorRegister.register(String.class, boolean.class, StringToBoolean.instance);
 		convertorRegister.register(String.class, double.class, StringToNumberConverter.toDouble(true));
 
 		convertorRegister.register(float.class, String.class, NumberToStringConverter.fromFloat(true));
 		convertorRegister.register(int.class, String.class, NumberToStringConverter.fromInteger(true));
-		
+
 		// It is not supported by eclipse 3.4.1
 		// convertorRegister.register(short.class, String.class, NumberToStringConverter.fromShort(true));
 		registerConvertor(convertorRegister, short.class, String.class, NumberToStringConverter.class, "fromShort", true);
-		
+
 		convertorRegister.register(long.class, String.class, NumberToStringConverter.fromLong(true));
-		
+
 		// It is not supported by eclipse 3.4.1
 		// convertorRegister.register(byte.class, String.class, NumberToStringConverter.fromByte(true));
 		registerConvertor(convertorRegister, byte.class, String.class, NumberToStringConverter.class, "fromByte", true);
-		
+
 		convertorRegister.register(double.class, String.class, NumberToStringConverter.fromDouble(true));
 
 		Class<?> type = org.eclipse.swt.browser.Browser.class;
@@ -960,7 +959,7 @@ public class XWTLoader {
 		registerMetaclass(ControlEditor.class);
 		registerMetaclass(TableEditor.class);
 
-		IMetaclass TableEditorMetaclass = getMetaclass(TableEditor.class);
+		IMetaclass TableEditorMetaclass = core.getMetaclass(TableEditor.class, IConstants.XWT_NAMESPACE);
 		TableEditorMetaclass.addProperty(new TableEditorDynamicProperty());
 
 		type = org.eclipse.swt.widgets.TableColumn.class;
@@ -1004,7 +1003,7 @@ public class XWTLoader {
 		metaclass.addProperty(new StyleProperty());
 
 		type = org.eclipse.jface.viewers.ColumnViewer.class;
-		metaclass = (IMetaclass) core.getMetaclass(type);
+		metaclass = (IMetaclass) core.getMetaclass(type, IConstants.XWT_NAMESPACE);
 		if (metaclass != null) {
 			metaclass.addProperty(new DynamicBeanProperty(type, String[].class, PropertiesConstants.PROPERTY_COLUMN_PROPERTIES, PropertiesConstants.PROPERTY_COLUMN_PROPERTIES));
 			metaclass.addProperty(new TableViewerColumnsProperty());
@@ -1013,12 +1012,12 @@ public class XWTLoader {
 		for (Class<?> cls : JFacesHelper.getSupportedElements()) {
 			registerMetaclass(cls);
 		}
-		core.registerMetaclass(new ComboBoxCellEditorMetaclass(core.getMetaclass(ComboBoxCellEditor.class.getSuperclass()), this), IConstants.XWT_NAMESPACE);
+		core.registerMetaclass(new ComboBoxCellEditorMetaclass(core.getMetaclass(ComboBoxCellEditor.class.getSuperclass(), IConstants.XWT_NAMESPACE), this), IConstants.XWT_NAMESPACE);
 
 		type = org.eclipse.jface.viewers.TableViewerColumn.class;
-		core.registerMetaclass(new TableViewerColumnMetaClass(core.getMetaclass(type.getSuperclass()), this), IConstants.XWT_NAMESPACE);
+		core.registerMetaclass(new TableViewerColumnMetaClass(core.getMetaclass(type.getSuperclass(), IConstants.XWT_NAMESPACE), this), IConstants.XWT_NAMESPACE);
 
-		metaclass = (IMetaclass) core.getMetaclass(type);
+		metaclass = (IMetaclass) core.getMetaclass(type, IConstants.XWT_NAMESPACE);
 		metaclass.addProperty(new TableViewerColumnWidthProperty());
 		metaclass.addProperty(new TableViewerColumnTextProperty());
 
@@ -1042,7 +1041,7 @@ public class XWTLoader {
 
 	public ILoadingContext getLoadingContext() {
 		if (_loadingContext == null) {
-			return LoadingContext.defaultLoadingContext;
+			_loadingContext = new LoadingContext(Thread.currentThread().getContextClassLoader().getParent());
 		}
 		return _loadingContext;
 	}
