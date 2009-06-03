@@ -61,6 +61,30 @@ public interface IXWTLoader {
 	 */
 	public static final String RESOURCE_DICTIONARY_PROPERTY = "XWT.Resources";
 
+	/**
+	 * 
+	 * @param nsmapace
+	 * @param handler
+	 */
+	public void registerNamespaceHandler(String nsmapace, INamespaceHandler handler);
+
+	/**
+	 * 
+	 * @param nsmapace
+	 */
+	public void unregisterNamespaceHandler(String nsmapace);
+
+	/**
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	public INamespaceHandler getNamespaceHandler(String nsmapace);
+
+	/**
+	 * 
+	 * @return
+	 */
 	public Realm getRealm();
 
 	/**

@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.XWTLoader;
 
 public class LoadingStyle {
 
@@ -30,7 +30,7 @@ public class LoadingStyle {
 		URL url = LoadingStyle.class.getResource("Style" + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			Map<String, Object> options = new HashMap<String, Object>();
-			options.put(XWTLoader.DEFAULT_STYLES_PROPERTY, new GreenStyle());
+			options.put(IXWTLoader.DEFAULT_STYLES_PROPERTY, new GreenStyle());
 			XWT.open(url, options);
 		} catch (Exception e) {
 			e.printStackTrace();

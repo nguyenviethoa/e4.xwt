@@ -31,6 +31,7 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IIndexedElement;
 import org.eclipse.e4.xwt.ILoadingContext;
+import org.eclipse.e4.xwt.INamespaceHandler;
 import org.eclipse.e4.xwt.IStyle;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.ResourceDictionary;
@@ -104,6 +105,7 @@ public class ResourceLoader implements IVisualElementLoader {
 
 	protected ResourceLoader parentLoader;
 	protected IRenderingContext context;
+	protected IXWTLoader loader;
 
 	protected Object scopedObject;
 	protected NameScope nameScoped;
@@ -247,8 +249,9 @@ public class ResourceLoader implements IVisualElementLoader {
 	/**
 	 * @param context
 	 */
-	public ResourceLoader(IRenderingContext context) {
+	public ResourceLoader(IRenderingContext context, IXWTLoader loader) {
 		this.context = context;
+		this.loader = loader;
 	}
 
 	/*
@@ -259,7 +262,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	public Object createCLRElement(Element element, Map<String, Object> options) {
 		try {
 			Composite parent = (Composite) options.get(IXWTLoader.CONTAINER_PROPERTY);
-			if (!context.getXWTLoader().getTrackings().isEmpty()) {
+			if (!loader.getTrackings().isEmpty()) {
 				dataBindingTrack = new DataBindingTrack();
 			}
 			parentLoader = (ResourceLoader) options.get(RESOURCE_LOADER_PROPERTY);
@@ -277,9 +280,9 @@ public class ResourceLoader implements IVisualElementLoader {
 			// get databinding messages and print into console view
 			if (dataBindingTrack != null) {
 				String dataBindingMessage = dataBindingTrack.getDataBindMessage();// getDataBindMessage();
-				org.eclipse.e4.xwt.ILogger log = context.getXWTLoader().getLogger();
+				org.eclipse.e4.xwt.ILogger log = loader.getLogger();
 				log.addMessage(dataBindingMessage, Tracking.DATABINDING);
-				log.printInfo(dataBindingMessage, Tracking.DATABINDING, context.getXWTLoader().getTrackings());
+				log.printInfo(dataBindingMessage, Tracking.DATABINDING, loader.getTrackings());
 			}
 			if (control instanceof Composite) {
 				((Composite) control).layout();
@@ -310,19 +313,19 @@ public class ResourceLoader implements IVisualElementLoader {
 				if (children != null && children.length > 0) {
 					if (children[0] instanceof Element) {
 						Element type = (Element) children[0];
-						IMetaclass metaclass = context.getXWTLoader().getMetaclass(type.getName(), type.getNamespace());
+						IMetaclass metaclass = loader.getMetaclass(type.getName(), type.getNamespace());
 						if (metaclass != null) {
 							return metaclass.getType();
 						}
 					}
 				} else {
 					String content = element.getContent();
-					return context.getXWTLoader().convertFrom(Class.class, content);
+					return loader.convertFrom(Class.class, content);
 				}
 			}
 			return null;
 		}
-		IMetaclass metaclass = context.getXWTLoader().getMetaclass(name, namespace);
+		IMetaclass metaclass = loader.getMetaclass(name, namespace);
 		if (constraintType != null && !(IBinding.class.isAssignableFrom(metaclass.getType())) && (!constraintType.isAssignableFrom(metaclass.getType()))) {
 			if (!constraintType.isArray() || !constraintType.getComponentType().isAssignableFrom(metaclass.getType()))
 				return null;
@@ -352,14 +355,14 @@ public class ResourceLoader implements IVisualElementLoader {
 				setDataContext(metaclass, targetObject, dico, dataContext);
 			}
 			pushStack();
-			
+
 			// for Shell
 			Attribute classAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS);
 			if (classAttribute != null) {
 				String className = classAttribute.getContent();
 				loadShellCLR(className, shell);
 			}
-			
+
 		} else {
 			pushStack();
 
@@ -381,7 +384,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					nestedOptions.put(IXWTLoader.DATACONTEXT_PROPERTY, childDataContext);
 					nestedOptions.put(RESOURCE_LOADER_PROPERTY, this);
-					targetObject = context.getXWTLoader().loadWithOptions(file, nestedOptions);
+					targetObject = loader.loadWithOptions(file, nestedOptions);
 					if (targetObject == null) {
 						return null;
 					}
@@ -395,7 +398,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				} else {
 					parameters = (styleValue != null ? new Object[] { parent, styleValue } : new Object[] { parent });
 				}
-				
+
 				// x:Class
 				{
 					Attribute classAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS);
@@ -405,9 +408,8 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
-					}
-					else {
-						metaclass = context.getXWTLoader().getMetaclass(targetObject);
+					} else {
+						metaclass = loader.getMetaclass(targetObject);
 					}
 				}
 
@@ -454,7 +456,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		if (scopedObject == null && targetObject instanceof Widget) {
 			scopedObject = targetObject;
-			nameScoped = new NameScope((parent == null ? null : context.getXWTLoader().findNameContext((Widget) parent)));
+			nameScoped = new NameScope((parent == null ? null : loader.findNameContext((Widget) parent)));
 			UserDataHelper.bindNameContext((Widget) targetObject, nameScoped);
 		}
 
@@ -505,7 +507,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		IMetaclass widgetMetaclass = metaclass;
 		if (JFacesHelper.isViewer(targetObject)) {
 			widget = JFacesHelper.getControl(targetObject);
-			widgetMetaclass = context.getXWTLoader().getMetaclass(widget.getClass());
+			widgetMetaclass = loader.getMetaclass(widget.getClass());
 		} else if (targetObject instanceof Widget) {
 			widget = (Widget) targetObject;
 		} else {
@@ -589,7 +591,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	private int getColumnIndex(Element columnElement) {
 		String name = columnElement.getName();
 		String namespace = columnElement.getNamespace();
-		IMetaclass metaclass = context.getXWTLoader().getMetaclass(name, namespace);
+		IMetaclass metaclass = loader.getMetaclass(name, namespace);
 		int index = -1;
 		Class<?> type = metaclass.getType();
 		if (TableViewerColumn.class.isAssignableFrom(type)) {
@@ -674,9 +676,9 @@ public class ResourceLoader implements IVisualElementLoader {
 			return null;
 		}
 		if (styles == -1) {
-			return (Integer) context.getXWTLoader().findConvertor(String.class, Integer.class).convert(attribute.getContent());
+			return (Integer) loader.findConvertor(String.class, Integer.class).convert(attribute.getContent());
 		}
-		return styles | (Integer) context.getXWTLoader().findConvertor(String.class, Integer.class).convert(attribute.getContent());
+		return styles | (Integer) loader.findConvertor(String.class, Integer.class).convert(attribute.getContent());
 	}
 
 	private void init(IMetaclass metaclass, Object targetObject, Element element, List<String> delayedAttributes) throws Exception {
@@ -776,6 +778,22 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 			}
 		}
+
+		//
+		// handle foreigner namespace
+		//
+		for (String namespace : element.attributeNamespaces()) {
+			if (IConstants.XWT_X_NAMESPACE.equals(namespace) || IConstants.XWT_NAMESPACE.equals(namespace) || namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
+				continue;
+			}
+			INamespaceHandler namespaceHandler = loader.getNamespaceHandler(namespace);
+			if (namespaceHandler != null) {
+				for (String attrName : element.attributeNames(namespace)) {
+					Attribute attribute = element.getAttribute(namespace, attrName);
+					namespaceHandler.handleAttribute(loadData.getCurrentWidget(), targetObject, attrName, attribute.getContent());
+				}
+			}
+		}
 	}
 
 	private Object getArrayProperty(Class<?> type, Object swtObject, DocumentObject element, String attrName) throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
@@ -864,7 +882,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		try {
 			Class<?> type = NamespaceHelper.loadCLRClass(context.getLoadingContext(), name, namespace);
-			IMetaclass metaclass = context.getXWTLoader().getMetaclass(name, namespace);
+			IMetaclass metaclass = loader.getMetaclass(name, namespace);
 			if (type == null) {
 				if (metaclass != null)
 					type = metaclass.getType();
@@ -892,7 +910,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			} else {
 				Constructor<?> constructor = type.getConstructor(type);
 				if (constructor != null) {
-					instance = constructor.newInstance(context.getXWTLoader().convertFrom(type, content));
+					instance = constructor.newInstance(loader.convertFrom(type, content));
 				} else {
 					LoggerManager.log(new XWTException("Constructor \"" + name + "(" + type.getSimpleName() + ")\" is not found"));
 				}
@@ -920,7 +938,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		return 0;
 	}
-	
+
 	private void loadShellCLR(String className, Shell shell) {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(), className);
 		try {
@@ -932,21 +950,19 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-
 	private Object loadCLR(String className, Object[] parameters, Class<?> currentTagType) {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(), className);
 		try {
 			if (currentTagType != null && currentTagType.isAssignableFrom(type)) {
-				IMetaclass metaclass = context.getXWTLoader().getMetaclass(type);
+				IMetaclass metaclass = loader.getMetaclass(type);
 				Object instance = metaclass.newInstance(parameters);
 				loadData.setClr(instance);
-				// use x:Class's instance 
+				// use x:Class's instance
 				if (instance instanceof Widget) {
 					UserDataHelper.setCLR((Widget) instance, instance);
 				}
 				return instance;
-			} 
-			else {
+			} else {
 				Object instance = type.newInstance();
 				loadData.setClr(instance);
 				if (instance instanceof Widget) {
@@ -976,7 +992,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					if (target == null) {
 						LoggerManager.log(new XWTException("Property \"" + segments[i] + "\" is null."));
 					}
-					currentMetaclass = context.getXWTLoader().getMetaclass(target);
+					currentMetaclass = loader.getMetaclass(target);
 				} else {
 					LoggerManager.log(new XWTException("Property \"" + segments[i] + "\" not found."));
 				}
@@ -988,7 +1004,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	}
 
 	private void addCommandExecuteListener(String commandName, final Widget targetButton) {
-		final ICommand commandObj = context.getXWTLoader().getCommand(commandName);
+		final ICommand commandObj = loader.getCommand(commandName);
 		if (commandObj != null) {
 			targetButton.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
@@ -1091,17 +1107,17 @@ public class ResourceLoader implements IVisualElementLoader {
 						contentValue = findNamespace(attribute, prefix) + contentValue.substring(index);
 					}
 				}
-				value = context.getXWTLoader().convertFrom(property.getType(), contentValue);
+				value = loader.convertFrom(property.getType(), contentValue);
 			}
 			if (value != null) {
 				Class<?> propertyType = property.getType();
 				if (!propertyType.isAssignableFrom(value.getClass()) || value instanceof IBinding) {
 					Object orginalValue = value;
-					IConverter converter = context.getXWTLoader().findConvertor(value.getClass(), propertyType);
+					IConverter converter = loader.findConvertor(value.getClass(), propertyType);
 					if (converter != null) {
 						value = converter.convert(value);
 						if (value != null && orginalValue instanceof IBinding && !propertyType.isAssignableFrom(value.getClass())) {
-							converter = context.getXWTLoader().findConvertor(value.getClass(), propertyType);
+							converter = loader.findConvertor(value.getClass(), propertyType);
 							if (converter != null) {
 								value = converter.convert(value);
 							} else {
@@ -1133,7 +1149,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 
 			if (attribute.attributeNames(IConstants.XWT_NAMESPACE).length > 0) {
-				IMetaclass propertyMetaclass = context.getXWTLoader().getMetaclass(property.getType());
+				IMetaclass propertyMetaclass = loader.getMetaclass(property.getType());
 				if (value == null) {
 					value = property.getValue(target);
 				}
@@ -1184,7 +1200,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace) && IConstants.XAML_X_NULL.equalsIgnoreCase(name)) {
 			return null;
 		}
-		IMetaclass metaclass = context.getXWTLoader().getMetaclass(name, namespace);
+		IMetaclass metaclass = loader.getMetaclass(name, namespace);
 		if (metaclass == null) {
 			return null;
 		}

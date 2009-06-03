@@ -42,6 +42,32 @@ public class XWT {
 	}
 
 	/**
+	 * 
+	 * @param nsmapace
+	 * @param handler
+	 */
+	public static void registerNamspaceHandler(String nsmapace, INamespaceHandler handler) {
+		XWTLoaderManager.getDefault().registerNamespaceHandler(nsmapace, handler);
+	}
+
+	/**
+	 * 
+	 * @param nsmapace
+	 */
+	public static void unregisterNamspaceHandler(String nsmapace) {
+		XWTLoaderManager.getDefault().unregisterNamespaceHandler(nsmapace);
+	}
+
+	/**
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	public static INamespaceHandler getNamspaceHandler(String nsmapace) {
+		return XWTLoaderManager.getDefault().getNamespaceHandler(nsmapace);
+	}
+
+	/**
 	 * Change the system logger
 	 * 
 	 * @param logger

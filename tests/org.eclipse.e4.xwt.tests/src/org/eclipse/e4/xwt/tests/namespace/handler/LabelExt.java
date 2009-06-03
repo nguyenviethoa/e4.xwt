@@ -8,30 +8,24 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.internal;
+package org.eclipse.e4.xwt.tests.namespace.handler;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
-import org.eclipse.e4.xwt.ILoadingContext;
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
 
 /**
- * @author yyang
- * @version 1.0
+ * @author jliu
  */
-public interface IRenderingContext {
-	public String getNamespace();
-
-	public URL getResourcePath();
-
-	public InputStream openStream(String path) throws IOException;
-
-	public String getEncoding();
-
-	public Object getProperty(String name);
-
-	public void setProperty(String name, Object value);
-
-	public ILoadingContext getLoadingContext();
+public class LabelExt {
+	public static void main(String[] args) {
+		URL url = LabelExt.class.getResource(LabelExt.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.registerNamspaceHandler("http://www.eclipse.org/ext", new ExtHandler());
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

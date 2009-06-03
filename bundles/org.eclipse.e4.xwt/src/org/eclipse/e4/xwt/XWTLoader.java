@@ -101,6 +101,7 @@ public class XWTLoader implements IXWTLoader {
 
 	private Set<Tracking> trackingSet = new HashSet<Tracking>();
 	private Map<String, ICommand> commands = new HashMap<String, ICommand>();
+	private Map<String, INamespaceHandler> nsHandlers = new HashMap<String, INamespaceHandler>();
 	private ILogger logger;
 	private Collection<IStyle> defaultStyles = new ArrayList<IStyle>();
 
@@ -144,6 +145,32 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public void setLogger(ILogger log) {
 		logger = log;
+	}
+
+	/**
+	 * 
+	 * @param nsmapace
+	 * @param handler
+	 */
+	public void registerNamespaceHandler(String nsmapace, INamespaceHandler handler) {
+		nsHandlers.put(nsmapace, handler);
+	}
+
+	/**
+	 * 
+	 * @param nsmapace
+	 */
+	public void unregisterNamespaceHandler(String nsmapace) {
+		nsHandlers.remove(nsmapace);
+	}
+
+	/**
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	public INamespaceHandler getNamespaceHandler(String nsmapace) {
+		return nsHandlers.get(nsmapace);
 	}
 
 	/*

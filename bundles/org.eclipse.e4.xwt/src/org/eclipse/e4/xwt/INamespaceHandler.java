@@ -8,30 +8,15 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.internal;
+package org.eclipse.e4.xwt;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
-import org.eclipse.e4.xwt.ILoadingContext;
+import org.eclipse.swt.widgets.Widget;
 
 /**
- * @author yyang
- * @version 1.0
+ * This class defines the public behavior to handle the foreigner namespace
+ * 
+ * @author yyang (yves.yang@soyatec.com)
  */
-public interface IRenderingContext {
-	public String getNamespace();
-
-	public URL getResourcePath();
-
-	public InputStream openStream(String path) throws IOException;
-
-	public String getEncoding();
-
-	public Object getProperty(String name);
-
-	public void setProperty(String name, Object value);
-
-	public ILoadingContext getLoadingContext();
+public interface INamespaceHandler {
+	void handleAttribute(Widget widget, Object target, String name, String value);
 }

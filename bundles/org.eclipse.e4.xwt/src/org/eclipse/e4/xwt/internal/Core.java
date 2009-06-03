@@ -162,7 +162,7 @@ public class Core {
 	}
 
 	protected IVisualElementLoader createElementLoader(IRenderingContext context, DocumentObject element) {
-		IVisualElementLoader creator = loaderFactory.createElementLoader(context);
+		IVisualElementLoader creator = loaderFactory.createElementLoader(context, xwtLoader);
 		elementsLoaders.put(element, creator);
 		return creator;
 	}
@@ -253,14 +253,6 @@ public class Core {
 
 		public ILoadingContext getLoadingContext() {
 			return loadingContext;
-		}
-
-		public void setLoadingContext(ILoadingContext loadingContext) {
-			this.loadingContext = loadingContext;
-		}
-
-		public IXWTLoader getXWTLoader() {
-			return xwtLoader;
 		}
 	}
 

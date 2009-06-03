@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal;
 
+import org.eclipse.e4.xwt.IXWTLoader;
 
 public interface IElementLoaderFactory {
-	IVisualElementLoader createElementLoader(IRenderingContext context);
+	IVisualElementLoader createElementLoader(IRenderingContext context, IXWTLoader loader);
 }

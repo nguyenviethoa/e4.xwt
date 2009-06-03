@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.javabean;
 
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.internal.IElementLoaderFactory;
 import org.eclipse.e4.xwt.internal.IRenderingContext;
 import org.eclipse.e4.xwt.internal.IVisualElementLoader;
@@ -18,7 +19,7 @@ public class ResourceLoaderFactory implements IElementLoaderFactory {
 	public ResourceLoaderFactory() {
 	}
 
-	public IVisualElementLoader createElementLoader(IRenderingContext context) {
-		return new ResourceLoader(context);
+	public IVisualElementLoader createElementLoader(IRenderingContext context, IXWTLoader loader) {
+		return new ResourceLoader(context, loader);
 	}
 }
