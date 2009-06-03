@@ -16,17 +16,17 @@ package org.eclipse.e4.xwt;
  */
 public class XWTLoaderManager {
 	/** Default XWT loader */
-	private static XWTLoader defaultXWTLoader = new XWTLoader();
+	private static IXWTLoader defaultXWTLoader = new XWTLoader();
 
 	/** Active XWT loader */
-	private static XWTLoader activeXWTLoader = null;
+	private static IXWTLoader activeXWTLoader = null;
 
 	/**
 	 * Returns the default instance of the XWT loader
 	 * 
 	 * @return the default instance of the XWT loader
 	 */
-	public static XWTLoader getDefault() {
+	public static IXWTLoader getDefault() {
 		return defaultXWTLoader;
 	}
 
@@ -35,8 +35,8 @@ public class XWTLoaderManager {
 	 * 
 	 * @return the instance of the XWT loader active
 	 */
-	public static XWTLoader getActive() {
-		XWTLoader xwtLoader = activeXWTLoader;
+	public static IXWTLoader getActive() {
+		IXWTLoader xwtLoader = activeXWTLoader;
 		if (xwtLoader == null) {
 			xwtLoader = getDefault();
 		}
@@ -51,7 +51,7 @@ public class XWTLoaderManager {
 	 * @param active
 	 *            true if the XWT loader is active, otherwise false
 	 */
-	public static void setActive(XWTLoader xwtLoader, boolean active) {
+	public static void setActive(IXWTLoader xwtLoader, boolean active) {
 		if (active) {
 			activeXWTLoader = xwtLoader;
 		} else if (xwtLoader != null && xwtLoader.equals(activeXWTLoader)) {

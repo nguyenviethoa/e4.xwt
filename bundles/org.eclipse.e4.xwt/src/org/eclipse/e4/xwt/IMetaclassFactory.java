@@ -21,5 +21,5 @@ import org.eclipse.e4.xwt.metadata.IMetaclass;
 public interface IMetaclassFactory {
 	boolean isFactoryOf(Class<?> type);
 
-	IMetaclass create(Class<?> type, IMetaclass superMetaclass, XWTLoader xwtLoader);
+	IMetaclass create(Class<?> type, IMetaclass superMetaclass, IXWTLoader xwtLoader);
 }

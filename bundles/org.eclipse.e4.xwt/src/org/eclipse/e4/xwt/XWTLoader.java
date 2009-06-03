@@ -94,38 +94,7 @@ import org.eclipse.swt.widgets.Widget;
  * 
  * @author yyang (yves.yang@soyatec.com) jliu (jin.liu@soyatec.com)
  */
-public class XWTLoader {
-	// Properties
-	/**
-	 * style of type int is used to create SWT element
-	 */
-	public static final String CONTAINER_PROPERTY = "XWT.Container";
-	public static final String INIT_STYLE_PROPERTY = "XWT.Style";
-
-	/**
-	 * Default styles to apply. The value should be a collection or Array of IStyle
-	 * 
-	 */
-	public static final String DEFAULT_STYLES_PROPERTY = "XWT.DefaultStyles";
-
-	/**
-	 * Enabled or disabled the styles. By default, it is enabled
-	 * 
-	 */
-	public static final String DISBALE_STYLES_PROPERTY = "XWT.DisabledStyles";
-
-	/**
-	 * The DataContext to setup in root element
-	 * 
-	 */
-	public static final String DATACONTEXT_PROPERTY = "XWT.DataContext";
-
-	/**
-	 * Resources to associate to root element
-	 * 
-	 */
-	public static final String RESOURCE_DICTIONARY_PROPERTY = "XWT.Resources";
-
+public class XWTLoader implements IXWTLoader {
 	// Declarations
 	private Core core = null;
 	private ILoadingContext _loadingContext = null;
@@ -152,10 +121,14 @@ public class XWTLoader {
 		initialize();
 	}
 
-	/**
-	 * Get the system logger.
+	public Realm getRealm() {
+		return realm;
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getLogger()
 	 */
 	public ILogger getLogger() {
 		if (logger == null) {
@@ -164,20 +137,19 @@ public class XWTLoader {
 		return logger;
 	}
 
-	/**
-	 * Change the system logger
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param logger
+	 * @see org.eclipse.e4.xwt.IXWTLoader#setLogger(org.eclipse.e4.xwt.ILogger)
 	 */
 	public void setLogger(ILogger log) {
 		logger = log;
 	}
 
-	/**
-	 * This namespace service returns the associated or declared namespace for a given class.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param javaclass
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getNamespace(java.lang.Class)
 	 */
 	public String getNamespace(Class<?> javaclass) {
 		if (getMetaclass(javaclass) != null) {
@@ -190,33 +162,28 @@ public class XWTLoader {
 		return IConstants.XAML_CLR_NAMESPACE_PROTO + javaclass.getPackage().getName();
 	}
 
-	/**
-	 * Get the name of the element, which is defined by <code>Name</code> or <code>x:Name</code>. Return <code>null</code>
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param object
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getElementName(java.lang.Object)
 	 */
 	public String getElementName(Object object) {
 		return UserDataHelper.getElementName(object);
 	}
 
-	/**
-	 * A NameContext is a manager of UI element's name in a scope. A name in a NameContext must be unique.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param widget
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#findNameContext(org.eclipse.swt.widgets.Widget)
 	 */
 	public NameScope findNameContext(Widget widget) {
 		return UserDataHelper.findNameContext(widget);
 	}
 
-	/**
-	 * Find a named UI element.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param context
-	 *            the start point of research.
-	 * @param name
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#findElementByName(org.eclipse.swt.widgets.Widget, java.lang.String)
 	 */
 	public Object findElementByName(Widget context, String name) {
 		NameScope nameContext = UserDataHelper.findNameContext(context);
@@ -226,61 +193,55 @@ public class XWTLoader {
 		return null;
 	}
 
-	/**
-	 * Get the DataContext of given element
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param context
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getDataContext(org.eclipse.swt.widgets.Widget)
 	 */
 	public Object getDataContext(Widget element) {
 		return UserDataHelper.getDataContext(element);
 	}
 
-	/**
-	 * Change the DataContext of given element
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param context
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#setDataContext(org.eclipse.swt.widgets.Widget, java.lang.Object)
 	 */
 	public void setDataContext(Widget widget, Object dataContext) {
 		UserDataHelper.setDataContext(widget, dataContext);
 	}
 
-	/**
-	 * Get the CLR (Common Language Runtime) object. If no CLR object is found in this element, the research will be propagated in it parent.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param widget
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getCLR(org.eclipse.swt.widgets.Widget)
 	 */
 	public Object getCLR(Widget widget) {
 		return UserDataHelper.getCLR(widget);
 	}
 
-	/**
-	 * Find the root shell
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param context
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#findShell(org.eclipse.swt.widgets.Widget)
 	 */
 	public Shell findShell(Widget context) {
 		return UserDataHelper.findShell(context);
 	}
 
-	/**
-	 * Find the closet parent of type Composite
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param context
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#findCompositeParent(org.eclipse.swt.widgets.Widget)
 	 */
 	public Composite findCompositeParent(Widget context) {
 		return UserDataHelper.findCompositeParent(context);
 	}
 
-	/**
-	 * Get the Metaclass of the given object
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param context
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getMetaclass(java.lang.Object)
 	 */
 	public IMetaclass getMetaclass(Object object) {
 		return core.getMetaclass(object);
@@ -303,23 +264,28 @@ public class XWTLoader {
 		}
 	}
 
-	/**
-	 * Load the file content. All widget will be created but they are showed. This method return the root element.
+	/*
+	 * (non-Javadoc)
 	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#load(java.net.URL)
 	 */
 	public synchronized Control load(URL file) throws Exception {
 		return loadWithOptions(file, Collections.EMPTY_MAP);
 	}
 
-	/**
-	 * Load the file content with a DataContext. All widget will be created but they are showed. This method returns the root element. The DataContext will be associated to the root element.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#load(java.net.URL, java.lang.Object)
 	 */
 	public synchronized Control load(URL file, Object dataContext) throws Exception {
 		return load(null, file, dataContext);
 	}
 
-	/**
-	 * Load the file content under a Composite. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite, java.net.URL)
 	 */
 	public synchronized Control load(Composite parent, URL file) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
@@ -327,8 +293,10 @@ public class XWTLoader {
 		return loadWithOptions(file, options);
 	}
 
-	/**
-	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite, java.net.URL, java.lang.Object)
 	 */
 	public synchronized Control load(Composite parent, URL file, Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
@@ -337,8 +305,10 @@ public class XWTLoader {
 		return loadWithOptions(file, options);
 	}
 
-	/**
-	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite, java.lang.Class, java.lang.Object)
 	 */
 	public synchronized Control load(Composite parent, Class<?> viewType, Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
@@ -385,8 +355,10 @@ public class XWTLoader {
 		return options;
 	}
 
-	/**
-	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#loadWithOptions(java.lang.Class, java.util.Map)
 	 */
 	public synchronized Control loadWithOptions(Class<?> viewType, Map<String, Object> options) throws Exception {
 		ILoadingContext context = getLoadingContext();
@@ -399,22 +371,28 @@ public class XWTLoader {
 		}
 	}
 
-	/**
-	 * Open and show the file content in a new Shell.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#open(java.lang.Class)
 	 */
 	public synchronized void open(Class<?> type) throws Exception {
 		open(type.getResource(type.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX), Collections.EMPTY_MAP);
 	}
 
-	/**
-	 * Open and show the file content in a new Shell.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#open(java.net.URL)
 	 */
 	public synchronized void open(final URL url) throws Exception {
 		open(url, Collections.EMPTY_MAP);
 	}
 
-	/**
-	 * load the content from a stream with a style, a DataContext and a ResourceDictionary. The root elements will be hold by Composite parent
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite, java.io.InputStream, java.net.URL, java.lang.Object)
 	 */
 	public synchronized Control load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
@@ -423,8 +401,10 @@ public class XWTLoader {
 		return loadWithOptions(stream, file, options);
 	}
 
-	/**
-	 * load the file content. The corresponding UI element is not yet created
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#open(java.net.URL, java.lang.Object)
 	 */
 	public synchronized void open(URL url, Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
@@ -432,15 +412,19 @@ public class XWTLoader {
 		open(url, options);
 	}
 
-	/**
-	 * load the file content. The corresponding UI element is not yet created
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#open(java.lang.Class, java.lang.Object)
 	 */
 	public synchronized void open(Class<?> type, Object dataContext) throws Exception {
 		open(type.getResource(type.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX), dataContext);
 	}
 
-	/**
-	 * load the file content. The corresponding UI element is not yet created
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#open(java.net.URL, java.util.Map)
 	 */
 	public synchronized void open(final URL url, final Map<String, Object> options) throws Exception {
 		Realm.runWithDefault(realm, new Runnable() {
@@ -465,24 +449,20 @@ public class XWTLoader {
 		});
 	}
 
-	/**
-	 * Data conversion service from String to a given type
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param type
-	 * @param string
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#convertFrom(org.eclipse.e4.xwt.metadata.IMetaclass, java.lang.String)
 	 */
 	public Object convertFrom(IMetaclass type, String string) {
 		Class<?> targetType = type.getType();
 		return convertFrom(targetType, string);
 	}
 
-	/**
-	 * Data conversion service from String to a given type
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param targetType
-	 * @param string
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#convertFrom(java.lang.Class, java.lang.String)
 	 */
 	public Object convertFrom(Class<?> targetType, String string) {
 		if (targetType == String.class) {
@@ -495,6 +475,11 @@ public class XWTLoader {
 		throw new XWTException("Converter is missing of type: " + targetType.getName());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#loadWithOptions(java.net.URL, java.util.Map)
+	 */
 	public synchronized Control loadWithOptions(URL url, Map<String, Object> options) throws Exception {
 		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object) : getLoadingContext());
@@ -503,26 +488,19 @@ public class XWTLoader {
 		return visualObject;
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param stream
-	 * @param url
-	 * @param options
-	 * @return
-	 * @throws Exception
+	 * @see org.eclipse.e4.xwt.IXWTLoader#load(java.io.InputStream, java.net.URL)
 	 */
 	public synchronized Control load(InputStream stream, URL url) throws Exception {
 		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
 
-	/**
-	 * Generic load method
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param stream
-	 * @param url
-	 * @param loadData
-	 * @return
-	 * @throws Exception
+	 * @see org.eclipse.e4.xwt.IXWTLoader#loadWithOptions(java.io.InputStream, java.net.URL, java.util.Map)
 	 */
 	public synchronized Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
 		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
@@ -532,59 +510,57 @@ public class XWTLoader {
 		return visualObject;
 	}
 
-	/**
-	 * Metaclass services to return all registered Metaclasses.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param stream
-	 * @param url
-	 * @param loadData
-	 * @return
-	 * @throws Exception
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getAllMetaclasses()
 	 */
 	public IMetaclass[] getAllMetaclasses() {
 		Collection<?> metaclasses = core.getAllMetaclasses(IConstants.XWT_NAMESPACE);
 		return metaclasses.toArray(new IMetaclass[metaclasses.size()]);
 	}
 
-	/**
-	 * Get the corresponding Metaclass
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param tagName
-	 * @param ns
-	 *            The namespace
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getMetaclass(java.lang.String, java.lang.String)
 	 */
 	public IMetaclass getMetaclass(String tagName, String ns) {
 		return (IMetaclass) core.getMetaclass(getLoadingContext(), tagName, ns);
 	}
 
-	/**
-	 * Register UI type
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param javaclass
+	 * @see org.eclipse.e4.xwt.IXWTLoader#registerMetaclass(java.lang.Class)
 	 */
 	public IMetaclass registerMetaclass(Class<?> type) {
 		return register(type, IConstants.XWT_NAMESPACE);
 	}
 
-	/**
-	 * Register Metaclass factory
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param javaclass
+	 * @see org.eclipse.e4.xwt.IXWTLoader#registerMetaclassFactory(org.eclipse.e4.xwt.IMetaclassFactory)
 	 */
 	public void registerMetaclassFactory(IMetaclassFactory metaclassFactory) {
 		core.registerMetaclassFactory(metaclassFactory);
 	}
 
-	/**
-	 * Register UI type
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param javaclass
+	 * @see org.eclipse.e4.xwt.IXWTLoader#register(java.lang.Class, java.lang.String)
 	 */
 	public IMetaclass register(Class<?> javaclass, String namespace) {
 		return core.registerMetaclass(javaclass, namespace);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getConverterService()
+	 */
 	public ConverterService getConverterService() {
 		ConverterService service = (ConverterService) core.getService(ConverterService.class);
 		if (service == null) {
@@ -623,11 +599,10 @@ public class XWTLoader {
 		return type;
 	}
 
-	/**
-	 * Find a Data converter
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param converter
-	 * @param type
+	 * @see org.eclipse.e4.xwt.IXWTLoader#findConvertor(java.lang.Class, java.lang.Class)
 	 */
 	public IConverter findConvertor(Class<?> source, Class<?> target) {
 		source = normalizedType(source);
@@ -639,11 +614,10 @@ public class XWTLoader {
 		return convertorRegister.findConverter(source, target);
 	}
 
-	/**
-	 * Register a Data converter
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param converter
-	 * @param type
+	 * @see org.eclipse.e4.xwt.IXWTLoader#registerConvertor(org.eclipse.core.databinding.conversion.IConverter)
 	 */
 	public void registerConvertor(IConverter converter) {
 		Class<?> source = (Class<?>) converter.getFromType();
@@ -689,10 +663,10 @@ public class XWTLoader {
 		return null;
 	}
 
-	/**
-	 * Add a tracking option
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param tracking
+	 * @see org.eclipse.e4.xwt.IXWTLoader#addTracking(org.eclipse.e4.xwt.Tracking)
 	 */
 	public void addTracking(Tracking tracking) {
 		if (!trackingSet.contains(tracking)) {
@@ -700,29 +674,28 @@ public class XWTLoader {
 		}
 	}
 
-	/**
-	 * Test if the tracking on argument is enabled.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param tracking
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#isTracking(org.eclipse.e4.xwt.Tracking)
 	 */
 	public boolean isTracking(Tracking tracking) {
 		return trackingSet.contains(tracking);
 	}
 
-	/**
-	 * Get all tracking options
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getTrackings()
 	 */
 	public Set<Tracking> getTrackings() {
 		return trackingSet;
 	}
 
-	/**
-	 * Remove a tracking option.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param tracking
+	 * @see org.eclipse.e4.xwt.IXWTLoader#removeTracking(org.eclipse.e4.xwt.Tracking)
 	 */
 	public void removeTracking(Tracking tracking) {
 		if (trackingSet.contains(tracking)) {
@@ -730,68 +703,74 @@ public class XWTLoader {
 		}
 	}
 
-	/**
-	 * Register a command to a name
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param name
-	 * @param command
+	 * @see org.eclipse.e4.xwt.IXWTLoader#registerCommand(java.lang.String, org.eclipse.e4.xwt.input.ICommand)
 	 */
 	public void registerCommand(String name, ICommand command) {
 		commands.put(name, command);
 	}
 
-	/**
-	 * Find a command by name
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param name
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getCommand(java.lang.String)
 	 */
 	public ICommand getCommand(String name) {
 		return commands.get(name);
 	}
 
-	/**
-	 * Return all registered commands
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getCommands()
 	 */
 	public Map<String, ICommand> getCommands() {
 		return commands;
 	}
 
-	/**
-	 * Unregister a command
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param name
+	 * @see org.eclipse.e4.xwt.IXWTLoader#unregisterCommand(java.lang.String)
 	 */
 	public void unregisterCommand(String name) {
 		commands.remove(name);
 	}
 
-	/**
-	 * Add a default style
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param style
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#addDefaultStyle(org.eclipse.e4.xwt.IStyle)
 	 */
 	public void addDefaultStyle(IStyle style) {
 		defaultStyles.add(style);
 	}
 
-	/**
-	 * Remove a default style
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param style
-	 * @return
+	 * @see org.eclipse.e4.xwt.IXWTLoader#removeDefaultStyle(org.eclipse.e4.xwt.IStyle)
 	 */
 	public void removeDefaultStyle(IStyle style) {
 		defaultStyles.remove(style);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getDefaultStyles()
+	 */
 	public Collection<IStyle> getDefaultStyles() {
 		return new ArrayList<IStyle>(defaultStyles);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#addDataProviderFactory(org.eclipse.e4.xwt.IDataProviderFactory)
+	 */
 	public void addDataProviderFactory(IDataProviderFactory dataProviderFactory) {
 		if (dataProviderFactory == null) {
 			return;
@@ -802,6 +781,11 @@ public class XWTLoader {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#removeDataProviderFactory(org.eclipse.e4.xwt.IDataProviderFactory)
+	 */
 	public void removeDataProviderFactory(IDataProviderFactory dataProvider) {
 		if (dataProvider == null) {
 			return;
@@ -811,10 +795,20 @@ public class XWTLoader {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getDataProviderFactories()
+	 */
 	public Collection<IDataProviderFactory> getDataProviderFactories() {
 		return dataProviderFactories;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#findDataProvider(java.lang.Object)
+	 */
 	public IDataProvider findDataProvider(Object dataContext) {
 		for (IDataProviderFactory factory : dataProviderFactories) {
 			IDataProvider dataProvider = factory.create(dataContext);
@@ -1031,14 +1025,29 @@ public class XWTLoader {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#findLoadingContext(java.lang.Object)
+	 */
 	public ILoadingContext findLoadingContext(Object container) {
 		return getLoadingContext();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getLoadingContext(org.eclipse.swt.widgets.Composite)
+	 */
 	public ILoadingContext getLoadingContext(Composite object) {
 		return getLoadingContext();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getLoadingContext()
+	 */
 	public ILoadingContext getLoadingContext() {
 		if (_loadingContext == null) {
 			_loadingContext = new LoadingContext(Thread.currentThread().getContextClassLoader().getParent());
@@ -1046,6 +1055,11 @@ public class XWTLoader {
 		return _loadingContext;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#setLoadingContext(org.eclipse.e4.xwt.ILoadingContext)
+	 */
 	public void setLoadingContext(ILoadingContext loadingContext) {
 		_loadingContext = loadingContext;
 	}

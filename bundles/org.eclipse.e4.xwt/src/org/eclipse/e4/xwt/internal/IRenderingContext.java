@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.eclipse.e4.xwt.ILoadingContext;
-import org.eclipse.e4.xwt.XWTLoader;
+import org.eclipse.e4.xwt.IXWTLoader;
 
 /**
  * @author yyang
@@ -36,5 +36,5 @@ public interface IRenderingContext {
 
 	public ILoadingContext getLoadingContext();
 	
-	public XWTLoader getXWTLoader();
+	public IXWTLoader getXWTLoader();
 }

@@ -12,9 +12,9 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.databinding.BindingMode;
 import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
@@ -46,7 +46,7 @@ public class BindingMetaclass extends Metaclass {
 
 		private Widget control;
 		
-		private XWTLoader xwtLoader;
+		private IXWTLoader xwtLoader;
 
 		private BindingMode mode = BindingMode.TwoWay;
 
@@ -174,12 +174,12 @@ public class BindingMetaclass extends Metaclass {
 			return dataContext;
 		}
 
-		public void setXWTLoader(XWTLoader xwtLoader) {
+		public void setXWTLoader(IXWTLoader xwtLoader) {
 			this.xwtLoader = xwtLoader;
 		}
 	}
 
-	public BindingMetaclass(XWTLoader xwtLoader) {
+	public BindingMetaclass(IXWTLoader xwtLoader) {
 		super(BindingMetaclass.Binding.class, null,xwtLoader);
 	}
 

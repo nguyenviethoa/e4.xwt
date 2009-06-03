@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata;
 
-import org.eclipse.e4.xwt.XWTLoader;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWTLoaderManager;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 
@@ -36,7 +36,7 @@ public class Metaclass extends AbstractMetaclass {
 	 * @param initialize
 	 * @param xwtLoader
 	 */
-	public Metaclass(Class<?> type, IMetaclass superClass, boolean initialize, XWTLoader xwtLoader) {
+	public Metaclass(Class<?> type, IMetaclass superClass, boolean initialize, IXWTLoader xwtLoader) {
 		this.type = type;
 		this.name = type.getSimpleName();
 		this.superClass = superClass;
@@ -62,7 +62,7 @@ public class Metaclass extends AbstractMetaclass {
 	 * @param type
 	 * @param superClass
 	 */
-	public Metaclass(Class<?> type, IMetaclass superClass, XWTLoader xwtLoader) {
+	public Metaclass(Class<?> type, IMetaclass superClass, IXWTLoader xwtLoader) {
 		this(type, superClass, true, xwtLoader);
 	}
 }

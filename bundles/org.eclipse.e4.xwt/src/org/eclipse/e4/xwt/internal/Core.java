@@ -22,8 +22,8 @@ import java.util.Set;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.Tracking;
-import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.xml.DocumentObject;
 import org.eclipse.e4.xwt.xml.DocumentRoot;
@@ -44,7 +44,7 @@ public class Core {
 
 	IElementLoaderFactory loaderFactory;
 
-	private XWTLoader xwtLoader;
+	private IXWTLoader xwtLoader;
 
 	static public ILogger nullLog = new ILogger() {
 		private Map<Tracking, String> messageMap = new HashMap<Tracking, String>();
@@ -86,7 +86,7 @@ public class Core {
 		}
 	};
 
-	public Core(IElementLoaderFactory loaderFactory, XWTLoader xwtLoader) {
+	public Core(IElementLoaderFactory loaderFactory, IXWTLoader xwtLoader) {
 		this.loaderFactory = loaderFactory;
 		this.registrations = new HashMap<Class<?>, Object>();
 		this.xwtLoader = xwtLoader;
@@ -259,7 +259,7 @@ public class Core {
 			this.loadingContext = loadingContext;
 		}
 
-		public XWTLoader getXWTLoader() {
+		public IXWTLoader getXWTLoader() {
 			return xwtLoader;
 		}
 	}

@@ -10,8 +10,8 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.internal.jface.JFacesHelper;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
@@ -46,7 +46,7 @@ public class AbstractMetaclass implements IMetaclass {
 	protected String name;
 	protected IMetaclass superClass;
 
-	protected XWTLoader xwtLoader;
+	protected IXWTLoader xwtLoader;
 	
 	protected boolean buildTypedEvents;
 
@@ -81,7 +81,7 @@ public class AbstractMetaclass implements IMetaclass {
 		return false;
 	}
 
-	protected final XWTLoader getXWTLoader()
+	protected final IXWTLoader getXWTLoader()
 	{
 		return xwtLoader;
 	}

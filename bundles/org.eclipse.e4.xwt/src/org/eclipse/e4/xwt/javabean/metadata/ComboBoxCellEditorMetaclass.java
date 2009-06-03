@@ -12,7 +12,7 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import java.lang.reflect.Constructor;
 
-import org.eclipse.e4.xwt.XWTLoader;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.internal.jface.ComboBoxCellEditor;
 import org.eclipse.e4.xwt.internal.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Widget;
 
 public class ComboBoxCellEditorMetaclass extends Metaclass {
 
-	public ComboBoxCellEditorMetaclass(IMetaclass superClass, XWTLoader xwtLoader) {
+	public ComboBoxCellEditorMetaclass(IMetaclass superClass, IXWTLoader xwtLoader) {
 		super(ComboBoxCellEditor.class, superClass, xwtLoader);
 	}
 

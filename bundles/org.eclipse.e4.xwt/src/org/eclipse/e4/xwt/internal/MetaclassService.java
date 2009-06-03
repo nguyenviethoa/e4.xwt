@@ -18,7 +18,7 @@ import java.util.Map;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.IMetaclassFactory;
-import org.eclipse.e4.xwt.XWTLoader;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 
 /**
@@ -28,9 +28,9 @@ public class MetaclassService {
 	protected Map<String, MetaclassManager> map = new HashMap<String, MetaclassManager>();
 	protected ArrayList<IMetaclassFactory> factories = new ArrayList<IMetaclassFactory>();
 
-	private XWTLoader xwtLoader;
+	private IXWTLoader xwtLoader;
 
-	public MetaclassService(XWTLoader xwtLoader) {
+	public MetaclassService(IXWTLoader xwtLoader) {
 		this.xwtLoader = xwtLoader;
 	}
 

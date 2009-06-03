@@ -331,6 +331,6 @@ public class XWT {
 	}
 
 	static public Realm getRealm() {
-		return XWTLoaderManager.getDefault().realm;
+		return XWTLoaderManager.getDefault().getRealm();
 	}
 }

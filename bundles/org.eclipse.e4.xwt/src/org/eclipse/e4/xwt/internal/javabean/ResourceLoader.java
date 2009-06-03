@@ -32,10 +32,10 @@ import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IIndexedElement;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.IStyle;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.Core;
@@ -258,13 +258,13 @@ public class ResourceLoader implements IVisualElementLoader {
 	 */
 	public Object createCLRElement(Element element, Map<String, Object> options) {
 		try {
-			Composite parent = (Composite) options.get(XWTLoader.CONTAINER_PROPERTY);
+			Composite parent = (Composite) options.get(IXWTLoader.CONTAINER_PROPERTY);
 			if (!context.getXWTLoader().getTrackings().isEmpty()) {
 				dataBindingTrack = new DataBindingTrack();
 			}
 			parentLoader = (ResourceLoader) options.get(RESOURCE_LOADER_PROPERTY);
 			options.remove(RESOURCE_LOADER_PROPERTY);
-			ResourceDictionary resourceDictionary = (ResourceDictionary) options.get(XWTLoader.RESOURCE_DICTIONARY_PROPERTY);
+			ResourceDictionary resourceDictionary = (ResourceDictionary) options.get(IXWTLoader.RESOURCE_DICTIONARY_PROPERTY);
 			if (resourceDictionary != null) {
 				Object styles = resourceDictionary.get(Core.DEFAULT_STYLES_KEY);
 				if (styles != null) {
@@ -293,12 +293,12 @@ public class ResourceLoader implements IVisualElementLoader {
 
 	private Object doCreate(Object parent, Element element, Class<?> constraintType, Map<String, Object> options) throws Exception {
 		int styles = -1;
-		if (options.containsKey(XWTLoader.INIT_STYLE_PROPERTY)) {
-			styles = (Integer) options.get(XWTLoader.INIT_STYLE_PROPERTY);
+		if (options.containsKey(IXWTLoader.INIT_STYLE_PROPERTY)) {
+			styles = (Integer) options.get(IXWTLoader.INIT_STYLE_PROPERTY);
 		}
 
-		ResourceDictionary dico = (ResourceDictionary) options.get(XWTLoader.RESOURCE_DICTIONARY_PROPERTY);
-		Object dataContext = options.get(XWTLoader.DATACONTEXT_PROPERTY);
+		ResourceDictionary dico = (ResourceDictionary) options.get(IXWTLoader.RESOURCE_DICTIONARY_PROPERTY);
+		Object dataContext = options.get(IXWTLoader.DATACONTEXT_PROPERTY);
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)) {
@@ -375,11 +375,11 @@ public class ResourceLoader implements IVisualElementLoader {
 						childDataContext = dataContext;
 					}
 					Map<String, Object> nestedOptions = new HashMap<String, Object>();
-					nestedOptions.put(XWTLoader.CONTAINER_PROPERTY, parent);
+					nestedOptions.put(IXWTLoader.CONTAINER_PROPERTY, parent);
 					if (styleValue != null) {
-						nestedOptions.put(XWTLoader.INIT_STYLE_PROPERTY, styleValue);
+						nestedOptions.put(IXWTLoader.INIT_STYLE_PROPERTY, styleValue);
 					}
-					nestedOptions.put(XWTLoader.DATACONTEXT_PROPERTY, childDataContext);
+					nestedOptions.put(IXWTLoader.DATACONTEXT_PROPERTY, childDataContext);
 					nestedOptions.put(RESOURCE_LOADER_PROPERTY, this);
 					targetObject = context.getXWTLoader().loadWithOptions(file, nestedOptions);
 					if (targetObject == null) {
@@ -443,7 +443,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 
 		for (String key : options.keySet()) {
-			if (XWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key) || XWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || XWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || XWTLoader.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
+			if (IXWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
 			IProperty property = metaclass.findProperty(key);
