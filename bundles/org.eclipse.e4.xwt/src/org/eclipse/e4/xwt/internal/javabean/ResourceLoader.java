@@ -69,7 +69,6 @@ import org.eclipse.e4.xwt.utils.UserDataHelper;
 import org.eclipse.e4.xwt.xml.Attribute;
 import org.eclipse.e4.xwt.xml.DocumentObject;
 import org.eclipse.e4.xwt.xml.Element;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -723,7 +722,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (nameAttr == null) {
 			nameAttr = element.getAttribute(IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_NAME);
 		}
-		if (nameAttr != null) {
+		if (nameAttr != null && getWidget(targetObject) != null) {
 			nameScoped.addObject(nameAttr.getContent(), targetObject);
 			done.add(IConstants.XAML_X_NAME);
 		}
@@ -748,6 +747,7 @@ public class ResourceLoader implements IVisualElementLoader {
 						continue; // done before
 					} else if (IConstants.XAML_X_NAME.equalsIgnoreCase(attrName)) {
 						nameScoped.addObject(element.getAttribute(namespace, attrName).getContent(), targetObject);
+						done.add(attrName);
 					} else if (IConstants.XAML_DATACONTEXT.equalsIgnoreCase(attrName)) {
 						continue; // done before
 					} else if (IConstants.XAML_X_ARRAY.equalsIgnoreCase(attrName)) {
@@ -778,15 +778,14 @@ public class ResourceLoader implements IVisualElementLoader {
 					done.add(attrName);
 				}
 			}
-
-			for (String attrName : element.attributeNames()) {
-				if (IConstants.XAML_X_NAME.equalsIgnoreCase(attrName) && (targetObject instanceof Widget)) {
-					continue;
-				}
-				if (!done.contains(attrName)) {
-					initAttribute(metaclass, targetObject, element, namespace, attrName);
-					done.add(attrName);
-				}
+		}
+		for (String attrName : element.attributeNames()) {
+			if (IConstants.XAML_X_NAME.equalsIgnoreCase(attrName) && getWidget(targetObject) != null) {
+				continue;
+			}
+			if (!done.contains(attrName) && !delayedAttributes.contains(attrName)) {
+				initAttribute(metaclass, targetObject, element, null, attrName);
+				done.add(attrName);
 			}
 		}
 
@@ -1343,11 +1342,6 @@ public class ResourceLoader implements IVisualElementLoader {
 			Collection<Class<?>> types = new ArrayList<Class<?>>();
 			types.add(TableEditor.class);
 			DELAYED_ATTRIBUTES.put("dynamic", types);
-		}
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(TableViewer.class);
-			DELAYED_ATTRIBUTES.put("labelprovider", types);
 		}
 	}
 
