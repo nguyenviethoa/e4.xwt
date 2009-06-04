@@ -419,8 +419,14 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 			}
 		}
-		if (targetObject instanceof Widget) {
-			loadData.setCurrentWidget((Widget) targetObject);
+		Widget widget = getWidget(targetObject);
+		if (widget != null) {
+			loadData.setCurrentWidget(widget);
+		}
+		if (scopedObject == null && widget != null) {
+			scopedObject = widget;
+			nameScoped = new NameScope((parent == null ? null : loader.findNameContext((Widget) parent)));
+			UserDataHelper.bindNameContext((Widget) targetObject, nameScoped);
 		}
 
 		// set first data context and resource dictionary
@@ -454,11 +460,6 @@ public class ResourceLoader implements IVisualElementLoader {
 				throw new XWTException("Property " + key + " not found.");
 			}
 			property.setValue(targetObject, options.get(key));
-		}
-		if (scopedObject == null && targetObject instanceof Widget) {
-			scopedObject = targetObject;
-			nameScoped = new NameScope((parent == null ? null : loader.findNameContext((Widget) parent)));
-			UserDataHelper.bindNameContext((Widget) targetObject, nameScoped);
 		}
 
 		List<String> delayedAttributes = new ArrayList<String>();
@@ -501,6 +502,15 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		popStack();
 		return targetObject;
+	}
+
+	protected Widget getWidget(Object target) {
+		if (JFacesHelper.isViewer(target)) {
+			return JFacesHelper.getControl(target);
+		} else if (target instanceof Widget) {
+			return (Widget) target;
+		}
+		return null;
 	}
 
 	private void setDataContext(IMetaclass metaclass, Object targetObject, ResourceDictionary dico, Object dataContext) throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
