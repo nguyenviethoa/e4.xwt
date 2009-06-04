@@ -8,10 +8,8 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.internal;
+package org.eclipse.e4.xwt;
 
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.ILoadingContext;
 
 public class LoadingContext implements ILoadingContext {
 	public static final LoadingContext defaultLoadingContext = new LoadingContext();

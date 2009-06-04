@@ -45,7 +45,6 @@ import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.Core;
 import org.eclipse.e4.xwt.internal.IUserDataConstants;
-import org.eclipse.e4.xwt.internal.LoadingContext;
 import org.eclipse.e4.xwt.internal.MetaclassManager;
 import org.eclipse.e4.xwt.internal.NameScope;
 import org.eclipse.e4.xwt.internal.Setter;
@@ -1077,7 +1076,7 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public ILoadingContext getLoadingContext() {
 		if (_loadingContext == null) {
-			_loadingContext = new LoadingContext(Thread.currentThread().getContextClassLoader().getParent());
+			return LoadingContext.defaultLoadingContext;
 		}
 		return _loadingContext;
 	}
