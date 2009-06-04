@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.workbench.views;
 
+import org.eclipse.e4.core.services.IDisposable;
 import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.services.IDisposable;
 
 /**
  * The default implementation of e4 view of IEclipseContext aware
