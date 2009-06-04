@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.IXWTLoader;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.jface.JFacesHelper;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
@@ -47,7 +46,7 @@ public class AbstractMetaclass implements IMetaclass {
 	protected IMetaclass superClass;
 
 	protected IXWTLoader xwtLoader;
-	
+
 	protected boolean buildTypedEvents;
 
 	private boolean initialize = false;
@@ -81,11 +80,10 @@ public class AbstractMetaclass implements IMetaclass {
 		return false;
 	}
 
-	protected final IXWTLoader getXWTLoader()
-	{
+	protected final IXWTLoader getXWTLoader() {
 		return xwtLoader;
 	}
-	
+
 	public IProperty addProperty(IProperty property) {
 		String name = normalize(property.getName());
 		return propertyCache.put(name, property);
@@ -389,7 +387,12 @@ public class AbstractMetaclass implements IMetaclass {
 			}
 			if (swtObject == null) {
 				if (defaultConstructor == null) {
-					throw new UnsupportedOperationException("Constructor no found.");
+					try {
+						swtObject = getType().newInstance();
+					} catch (Exception e) {
+						e.printStackTrace();
+						throw new UnsupportedOperationException("Constructor " + getType().getName() + " no found.");
+					}
 				}
 				swtObject = defaultConstructor.newInstance();
 			}
@@ -418,7 +421,7 @@ public class AbstractMetaclass implements IMetaclass {
 			for (PropertyDescriptor p : propertyDescriptors) {
 				String propertyName = p.getName();
 				Class<?> propertyType = p.getPropertyType();
-				if (shouldIgnored(type, propertyName, propertyType)) {
+				if (shouldIgnored(type, propertyName, propertyType) || propertyCache.containsKey(propertyName.toLowerCase())) {
 					continue;
 				}
 				if (p.getPropertyType() != null) {

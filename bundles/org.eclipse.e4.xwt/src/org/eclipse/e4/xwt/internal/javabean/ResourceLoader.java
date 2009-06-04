@@ -425,7 +425,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (scopedObject == null && widget != null) {
 			scopedObject = widget;
 			nameScoped = new NameScope((parent == null ? null : loader.findNameContext((Widget) parent)));
-			UserDataHelper.bindNameContext((Widget) targetObject, nameScoped);
+			UserDataHelper.bindNameContext((Widget) widget, nameScoped);
 		}
 
 		// set first data context and resource dictionary

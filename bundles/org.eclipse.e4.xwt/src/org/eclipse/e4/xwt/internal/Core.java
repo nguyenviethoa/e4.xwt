@@ -29,6 +29,7 @@ import org.eclipse.e4.xwt.xml.DocumentObject;
 import org.eclipse.e4.xwt.xml.DocumentRoot;
 import org.eclipse.e4.xwt.xml.Element;
 import org.eclipse.e4.xwt.xml.ElementManager;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 
 public class Core {
@@ -189,6 +190,10 @@ public class Core {
 			if (visual instanceof Control) {
 				return (Control) visual;
 			}
+			if (visual instanceof Viewer) {
+				return ((Viewer) visual).getControl();
+			}
+
 			Class<?> jfaceWindow = Class.forName("org.eclipse.jface.window.Window");
 			if (jfaceWindow != null && jfaceWindow.isInstance(visual)) {
 				Method createMethod = jfaceWindow.getDeclaredMethod("create");
