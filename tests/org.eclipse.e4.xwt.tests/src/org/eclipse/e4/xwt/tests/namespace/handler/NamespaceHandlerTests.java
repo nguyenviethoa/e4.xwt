@@ -21,7 +21,7 @@ public class NamespaceHandlerTests extends XWTTestCase {
 				Object element = XWT.findElementByName(root, "targetLabel");
 				assertTrue(element instanceof Label);
 				Label label = (Label) element;
-				assertEquals(label.getData("Id"), "Ext-Id");
+				assertEquals(label.getData("id"), "Ext-Id");
 			}
 		});
 	}
