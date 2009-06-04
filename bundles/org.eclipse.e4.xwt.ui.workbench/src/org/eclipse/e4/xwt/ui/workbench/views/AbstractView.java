@@ -12,6 +12,8 @@ package org.eclipse.e4.xwt.ui.workbench.views;
 
 import java.net.URL;
 
+import org.eclipse.e4.xwt.ILoadingContext;
+import org.eclipse.e4.xwt.LoadingContext;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.css.CSSHandler;
 import org.eclipse.swt.SWT;
@@ -57,13 +59,14 @@ public abstract class AbstractView {
 			for (Control child : parent.getChildren()) {
 				child.dispose();
 			}
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			ILoadingContext loadingContext = XWT.getLoadingContext();
 			try {
-				Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+				XWT.setLoadingContext(new LoadingContext(this.getClass().getClassLoader()));
 				XWT.load(parent, getURL(), input);
+				parent.layout(true, true);
 			} catch (Exception e) {
 			} finally {
-				Thread.currentThread().setContextClassLoader(classLoader);
+				XWT.setLoadingContext(loadingContext);
 				parent.setVisible(true);
 			}
 		}
