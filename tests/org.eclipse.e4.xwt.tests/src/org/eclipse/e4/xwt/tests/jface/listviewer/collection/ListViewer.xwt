@@ -5,15 +5,15 @@
 	<Composite.layout>
 		<GridLayout numColumns="2"/>
 	</Composite.layout>
-	<x:Composite.Resources>
+	<Composite.resources>
 		<j:Company x:Key="myCompany">
 			<j:Company.employees>
 				<j:Employee Name="Thomas"/>
 				<j:Employee Name="Jin"/>
 			</j:Company.employees>
 		</j:Company>
-	</x:Composite.Resources>
-	<ListViewer input="{Binding Path=employees}">
+	</Composite.resources>
+	<ListViewer name="ListViewer" input="{Binding Path=employees}">
 		<ListViewer.contentProvider>
 			<j:ContentProvider/>
 		</ListViewer.contentProvider>

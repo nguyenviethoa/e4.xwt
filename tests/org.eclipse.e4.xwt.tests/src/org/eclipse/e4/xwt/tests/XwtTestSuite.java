@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.e4.xwt.tests.controls.ControlTestSuite;
 import org.eclipse.e4.xwt.tests.events.EventsTestSuite;
+import org.eclipse.e4.xwt.tests.jface.JFaceTestSuite;
 import org.eclipse.e4.xwt.tests.name.NameTestSuite;
 import org.eclipse.e4.xwt.tests.namespace.handler.NamespacehandlerTestSuite;
 import org.eclipse.e4.xwt.tests.resources.ResourcesTestSuite;
@@ -80,6 +81,7 @@ public class XwtTestSuite extends TestSuite {
 	}
 
 	protected void addJFaceTests() {
+		addTest(JFaceTestSuite.suite());
 	}
 
 	protected void addEventTests() {

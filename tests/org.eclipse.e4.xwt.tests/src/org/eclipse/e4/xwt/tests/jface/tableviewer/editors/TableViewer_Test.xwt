@@ -7,7 +7,7 @@
 	<Composite.layout>
 		<GridLayout numColumns="2"/>
 	</Composite.layout>
-	<x:Composite.Resources>
+	<Composite.Resources>
 		<j:Company x:Key="myCompany">
 			<j:Company.employees>
 				<x:Array Type="j:Employee">
@@ -16,7 +16,7 @@
 				</x:Array>
 			</j:Company.employees>
 		</j:Company>
-	</x:Composite.Resources>
+	</Composite.Resources>
 	<TableViewer x:style="BORDER|SINGLE|FULL_SELECTION" input="{Binding Path=employees}">
 		<TableViewer.contentProvider>
 			<j:ContentProvider/>

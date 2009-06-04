@@ -15,7 +15,7 @@
 			</j:Company.employees>
 		</j:Company>
 	</Composite.Resources>
-	<TableViewer input="{Binding Path=employees}">
+	<TableViewer Name="TableViewer" input="{Binding Path=employees}">
 		<TableViewer.contentProvider>
 			<j:ContentProvider/>
 		</TableViewer.contentProvider>

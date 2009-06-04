@@ -16,6 +16,9 @@ import org.eclipse.swt.graphics.Image;
 
 public class LabelProvider implements ITableLabelProvider {
 
+	public LabelProvider() {
+	}
+
 	public void addListener(ILabelProviderListener listener) {
 	}
 
