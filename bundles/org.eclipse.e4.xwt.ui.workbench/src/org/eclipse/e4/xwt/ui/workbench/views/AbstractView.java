@@ -53,20 +53,24 @@ public abstract class AbstractView {
 		Class<?> inputType = getInputType();
 		if (inputType.isInstance(input)) {
 			this.input = input;
-			parent.setVisible(false);
-			for (Control child : parent.getChildren()) {
-				child.dispose();
-			}
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			try {
-				Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-				XWT.load(parent, getURL(), input);
-				parent.layout(true, true);
-			} catch (Exception e) {
-			} finally {
-				Thread.currentThread().setContextClassLoader(classLoader);
-				parent.setVisible(true);
-			}
+			refresh();
+		}
+	}
+
+	public void refresh() {
+		parent.setVisible(false);
+		for (Control child : parent.getChildren()) {
+			child.dispose();
+		}
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		try {
+			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+			XWT.load(parent, getURL(), input);
+			parent.layout(true, true);
+		} catch (Exception e) {
+		} finally {
+			Thread.currentThread().setContextClassLoader(classLoader);
+			parent.setVisible(true);
 		}
 	}
 }
