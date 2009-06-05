@@ -10,67 +10,27 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.workbench.views;
 
-import java.net.URL;
+import java.util.Collections;
 
-import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.css.CSSHandler;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 /**
  * The abstract class to handle the connection with e4 workbench.
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public abstract class AbstractView {
-	protected Composite parent;
+public abstract class AbstractView extends AbstractRootView {
 	protected Object input;
 
-	static {
-		XWT.registerNamspaceHandler(CSSHandler.NAMESPACE, CSSHandler.handler);
-	}
-
 	public AbstractView(Composite parent) {
-		this.parent = parent;
-		initialize();
+		super(parent);
 	}
-
-	protected void initialize() {
-		parent.setLayout(new FillLayout());
-		parent.getShell().setBackgroundMode(SWT.INHERIT_DEFAULT);
-	}
-
-	abstract public Class<?> getInputType();
-
-	abstract protected URL getURL();
 
 	public void setInput(Object input) {
 		if (this.input == input) {
 			return;
 		}
-		Class<?> inputType = getInputType();
-		if (inputType.isInstance(input)) {
-			this.input = input;
-			refresh();
-		}
-	}
-
-	public void refresh() {
-		parent.setVisible(false);
-		for (Control child : parent.getChildren()) {
-			child.dispose();
-		}
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		try {
-			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-			XWT.load(parent, getURL(), input);
-			parent.layout(true, true);
-		} catch (Exception e) {
-		} finally {
-			Thread.currentThread().setContextClassLoader(classLoader);
-			parent.setVisible(true);
-		}
+		doSetInput(input, Collections.EMPTY_MAP);
+		this.input = input;
 	}
 }

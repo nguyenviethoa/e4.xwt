@@ -19,11 +19,15 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public abstract class AbstractContextView extends AbstractView implements IDisposable {
+public abstract class AbstractContextView extends AbstractRootView implements IDisposable {
 	protected IEclipseContext outputContext;
 
 	public AbstractContextView(Composite parent, IEclipseContext outputContext) {
 		super(parent);
 		this.outputContext = outputContext;
+	}
+
+	public Class<?> getInputType() {
+		return null;
 	}
 }
