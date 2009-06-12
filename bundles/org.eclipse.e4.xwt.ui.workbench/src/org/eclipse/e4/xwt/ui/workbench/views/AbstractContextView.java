@@ -11,8 +11,8 @@
 package org.eclipse.e4.xwt.ui.workbench.views;
 
 import org.eclipse.e4.core.services.IDisposable;
+import org.eclipse.e4.core.services.annotations.In;
 import org.eclipse.e4.core.services.context.IEclipseContext;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * The default implementation of e4 view of IEclipseContext aware
@@ -20,14 +20,17 @@ import org.eclipse.swt.widgets.Composite;
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class AbstractContextView extends AbstractRootView implements IDisposable {
-	protected IEclipseContext outputContext;
+	private IEclipseContext context;
 
-	public AbstractContextView(Composite parent, IEclipseContext outputContext) {
-		super(parent);
-		this.outputContext = outputContext;
+	public IEclipseContext getContext() {
+		return context;
 	}
 
-	public Class<?> getInputType() {
-		return null;
+	@In
+	public void setContext(IEclipseContext context) {
+		if (context == null) {
+			return;
+		}
+		this.context = context;
 	}
 }

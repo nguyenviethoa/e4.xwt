@@ -12,25 +12,27 @@ package org.eclipse.e4.xwt.ui.workbench.views;
 
 import java.util.Collections;
 
-import org.eclipse.swt.widgets.Composite;
-
 /**
  * The abstract class to handle the connection with e4 workbench.
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public abstract class AbstractView extends AbstractRootView {
+public abstract class AbstractInputView extends AbstractRootView {
 	protected Object input;
 
-	public AbstractView(Composite parent) {
-		super(parent);
+	public AbstractInputView() {
 	}
+
+	abstract public Class<?> getInputType();
 
 	public void setInput(Object input) {
 		if (this.input == input) {
 			return;
 		}
-		doSetInput(input, Collections.EMPTY_MAP);
+		Class<?> inputType = getInputType();
+		if (inputType == null || inputType.isInstance(input)) {
+			refresh(input, Collections.EMPTY_MAP);
+		}
 		this.input = input;
 	}
 }

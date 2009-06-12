@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.e4.core.services.annotations.In;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.css.CSSHandler;
@@ -34,25 +35,18 @@ public abstract class AbstractRootView {
 		XWT.registerNamspaceHandler(CSSHandler.NAMESPACE, CSSHandler.handler);
 	}
 
-	public AbstractRootView(Composite parent) {
-		this.parent = parent;
-		initialize();
+	public AbstractRootView() {
 	}
 
-	protected void initialize() {
-		parent.getShell().setBackgroundMode(SWT.INHERIT_DEFAULT);
-	}
-
-	abstract public Class<?> getInputType();
-
-	abstract protected URL getURL();
-
-	protected void doSetInput(Object input, Map<String, Object> options) {
-		Class<?> inputType = getInputType();
-		if (inputType == null || inputType.isInstance(input)) {
-			refresh(input, options);
+	@In
+	public void setParent(Composite parent) {
+		if (parent != null && this.parent == null) {
+			this.parent = parent;
+			parent.getShell().setBackgroundMode(SWT.INHERIT_DEFAULT);
 		}
 	}
+
+	abstract protected URL getURL();
 
 	public void refresh(Object input, Map<String, Object> options) {
 		parent.setVisible(false);
@@ -68,10 +62,12 @@ public abstract class AbstractRootView {
 			}
 			newOptions.put(XWTLoader.CONTAINER_PROPERTY, parent);
 			newOptions.put(XWTLoader.DATACONTEXT_PROPERTY, input);
+			newOptions.put(XWTLoader.CLASS_PROPERTY, this);
 			XWT.loadWithOptions(getURL(), newOptions);
 			GridLayoutFactory.fillDefaults().generateLayout(parent);
 			parent.layout(true, true);
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			Thread.currentThread().setContextClassLoader(classLoader);
 			parent.setVisible(true);
