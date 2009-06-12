@@ -138,8 +138,15 @@ public class DataBinding implements IDataBinding {
 			}
 		}
 		if (target instanceof MenuItem) {
+			//
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
+			// testcase: org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
+			//
 			if ("enabled".equalsIgnoreCase(type)) {
 				return (new MenuItemEnabledValueProperty()).observe(target);
+			}
+			if ("selection".equalsIgnoreCase(type)) {
+				return (new MenuItemSelectionValueProperty()).observe(target);
 			}
 		}
 		return null;

@@ -1011,7 +1011,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					currentMetaclass = loader.getMetaclass(target);
 				} else {
-					LoggerManager.log(new XWTException("Property \"" + segments[i] + "\" not found."));
+					LoggerManager.log(new XWTException("Property \"" + segments[i] + "\" not found in " + element.getName() + "."));
 				}
 			}
 			initSegmentAttribute(currentMetaclass, segments[segments.length - 1], target, element, namespace, attrName);
