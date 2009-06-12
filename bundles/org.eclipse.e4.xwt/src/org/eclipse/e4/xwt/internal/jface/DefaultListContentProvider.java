@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.internal;
+package org.eclipse.e4.xwt.internal.jface;
 
 import java.util.Collection;
 

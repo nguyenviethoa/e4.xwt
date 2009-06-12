@@ -47,6 +47,9 @@ public class DefaultLabelProvider implements ITableLabelProvider {
 
 	public String getColumnText(Object element, int columnIndex) {
 		Object[] properties = tableViewer.getColumnProperties();
+		if (properties == null) {
+			throw new XWTException("property is missing in TableViewerColumn or TableViewer.columnProperties is missing.");
+		}
 		String propertyName = properties[columnIndex].toString();
 		try {
 			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(element.getClass());
