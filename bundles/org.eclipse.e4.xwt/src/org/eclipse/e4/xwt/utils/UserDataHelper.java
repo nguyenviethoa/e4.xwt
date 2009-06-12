@@ -71,9 +71,24 @@ public class UserDataHelper {
 		if (data != null) {
 			return (NameScope) data;
 		}
-		Widget parent = getParent(widget);
+		Widget parent = getTreeParent(widget);
 		if (parent != null) {
 			return findNameContext(parent);
+		}
+		return null;
+	}
+
+	public static Object findElementByName(Widget widget, String name) {
+		NameScope nameContext = (NameScope) widget.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
+		if (nameContext != null) {
+			Object element = nameContext.get(name);
+			if (element != null) {
+				return element;
+			}
+		}
+		Widget parent = getTreeParent(widget);
+		if (parent != null) {
+			return findElementByName(parent, name);
 		}
 		return null;
 	}
@@ -103,6 +118,10 @@ public class UserDataHelper {
 			return getCLR(parent);
 		}
 		return null;
+	}
+
+	public static Widget getTreeParent(Widget widget) {
+		return (Widget) widget.getData(IUserDataConstants.XWT_PARENT_KEY);
 	}
 
 	public static Control getParent(Widget widget) {

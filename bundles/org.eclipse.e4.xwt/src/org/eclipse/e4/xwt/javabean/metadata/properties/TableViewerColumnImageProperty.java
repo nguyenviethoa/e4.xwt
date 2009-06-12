@@ -13,16 +13,17 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class TableViewerColumnTextProperty extends AbstractProperty {
+public class TableViewerColumnImageProperty extends AbstractProperty {
 
-	public TableViewerColumnTextProperty() {
-		super(PropertiesConstants.PROPERTY_TEXT, String.class);
+	public TableViewerColumnImageProperty() {
+		super(PropertiesConstants.PROPERTY_IMAGE, Image.class);
 	}
 
 	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
@@ -32,7 +33,7 @@ public class TableViewerColumnTextProperty extends AbstractProperty {
 	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		TableViewerColumn tableViewerColumn = (TableViewerColumn) target;
 		TableColumn tableColumn = tableViewerColumn.getColumn();
-		String text = (String) value;
-		tableColumn.setText(text);
+		Image image = (Image) value;
+		tableColumn.setImage(image);
 	}
 }

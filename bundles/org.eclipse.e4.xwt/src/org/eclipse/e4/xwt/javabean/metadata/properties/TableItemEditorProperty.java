@@ -18,6 +18,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class TableItemEditorProperty extends AbstractProperty {
 
 	public TableItemEditorProperty() {

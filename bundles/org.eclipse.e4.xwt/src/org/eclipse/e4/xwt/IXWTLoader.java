@@ -55,6 +55,13 @@ public interface IXWTLoader {
 	 * 
 	 */
 	public static final String DATACONTEXT_PROPERTY = "XWT.DataContext";
+
+	/**
+	 * The DataContext to setup in root element
+	 * 
+	 */
+	public static final String CLASS_PROPERTY = "XWT.Class";
+
 	/**
 	 * Resources to associate to root element
 	 * 

@@ -32,6 +32,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class TableEditorDynamicProperty extends AbstractProperty {
 
 	public TableEditorDynamicProperty() {

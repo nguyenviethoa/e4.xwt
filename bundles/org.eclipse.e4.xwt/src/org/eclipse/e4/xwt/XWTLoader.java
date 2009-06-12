@@ -44,6 +44,7 @@ import org.eclipse.e4.xwt.converters.StringToURL;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.Core;
+import org.eclipse.e4.xwt.internal.DefaultListContentProvider;
 import org.eclipse.e4.xwt.internal.IUserDataConstants;
 import org.eclipse.e4.xwt.internal.MetaclassManager;
 import org.eclipse.e4.xwt.internal.NameScope;
@@ -69,6 +70,8 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.TableColumnEditorProperty
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableEditorDynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemEditorProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnImageProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnPropertyProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnTextProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnWidthProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnsProperty;
@@ -76,6 +79,10 @@ import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.e4.xwt.utils.UserDataHelper;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
+import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
+import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
+import org.eclipse.jface.databinding.viewers.ObservableSetTreeContentProvider;
 import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.DisposeEvent;
@@ -212,11 +219,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#findElementByName(org.eclipse.swt.widgets.Widget, java.lang.String)
 	 */
 	public Object findElementByName(Widget context, String name) {
-		NameScope nameContext = UserDataHelper.findNameContext(context);
-		if (nameContext != null) {
-			return nameContext.getObject(name);
-		}
-		return null;
+		return UserDataHelper.findElementByName(context, name);
 	}
 
 	/*
@@ -1040,6 +1043,8 @@ public class XWTLoader implements IXWTLoader {
 		metaclass = (IMetaclass) core.getMetaclass(type, IConstants.XWT_NAMESPACE);
 		metaclass.addProperty(new TableViewerColumnWidthProperty());
 		metaclass.addProperty(new TableViewerColumnTextProperty());
+		metaclass.addProperty(new TableViewerColumnImageProperty());
+		metaclass.addProperty(new TableViewerColumnPropertyProperty());
 
 		registerMetaclass(DefaultCellModifier.class);
 		registerMetaclass(DefaultLabelProvider.class);
@@ -1049,6 +1054,12 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(Style.class);
 		registerMetaclass(Setter.class);
 
+		registerMetaclass(DefaultListContentProvider.class);
+		registerMetaclass(ObservableListContentProvider.class);
+		registerMetaclass(ObservableListTreeContentProvider.class);
+		registerMetaclass(ObservableSetContentProvider.class);
+		registerMetaclass(ObservableListTreeContentProvider.class);
+		registerMetaclass(ObservableSetTreeContentProvider.class);
 	}
 
 	/*

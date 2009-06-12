@@ -15,6 +15,10 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.e4.xwt.xml.Element;
 import org.eclipse.swt.widgets.TableColumn;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class TableColumnEditorProperty extends AbstractProperty {
 
 	public TableColumnEditorProperty() {

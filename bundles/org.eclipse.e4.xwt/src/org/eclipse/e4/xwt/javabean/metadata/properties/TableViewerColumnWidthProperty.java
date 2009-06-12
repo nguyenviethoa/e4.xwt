@@ -15,6 +15,10 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.TableColumn;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class TableViewerColumnWidthProperty extends AbstractProperty {
 
 	public TableViewerColumnWidthProperty() {

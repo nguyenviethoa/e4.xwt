@@ -38,6 +38,7 @@ import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.Core;
@@ -404,7 +405,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					Attribute classAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS);
 					if (classAttribute != null) {
 						String className = classAttribute.getContent();
-						targetObject = loadCLR(className, parameters, metaclass.getType());
+						targetObject = loadCLR(className, parameters, metaclass.getType(), options);
 					}
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
@@ -451,7 +452,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 
 		for (String key : options.keySet()) {
-			if (IXWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key)) {
+			if (IXWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.RESOURCE_DICTIONARY_PROPERTY.equalsIgnoreCase(key) || IXWTLoader.CLASS_PROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
 			IProperty property = metaclass.findProperty(key);
@@ -960,10 +961,16 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private Object loadCLR(String className, Object[] parameters, Class<?> currentTagType) {
+	private Object loadCLR(String className, Object[] parameters, Class<?> currentTagType, Map<String, Object> options) {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(), className);
 		try {
-			if (currentTagType != null && currentTagType.isAssignableFrom(type)) {
+			Object clr = options.get(XWTLoader.CLASS_PROPERTY);
+			if (clr != null && type != null && type.isInstance(clr)) {
+				loadData.setClr(clr);
+				if (clr instanceof Widget) {
+					UserDataHelper.setCLR((Widget) clr, clr);
+				}
+			} else if (currentTagType != null && currentTagType.isAssignableFrom(type)) {
 				IMetaclass metaclass = loader.getMetaclass(type);
 				Object instance = metaclass.newInstance(parameters);
 				loadData.setClr(instance);

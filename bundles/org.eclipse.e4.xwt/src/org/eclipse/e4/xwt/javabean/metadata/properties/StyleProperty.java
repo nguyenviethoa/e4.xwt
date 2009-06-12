@@ -6,6 +6,10 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.Style;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class StyleProperty extends AbstractProperty {
 
 	public StyleProperty() {
