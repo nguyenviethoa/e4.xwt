@@ -11,22 +11,23 @@
 package org.eclipse.e4.xwt.converters;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.jface.viewers.ISelection;
 
 /**
  * String to Boolean converter
  * 
  * @author yyang
  */
-public class StringToBoolean implements IConverter {
-	public static StringToBoolean instance = new StringToBoolean();
+public class SelectionToBoolean implements IConverter {
+	public static SelectionToBoolean instance = new SelectionToBoolean();
 
 	public Object convert(Object fromObject) {
-		String str = (String) fromObject;
-		return "true".equalsIgnoreCase(str) ? Boolean.TRUE : Boolean.FALSE;
+		ISelection selection = (ISelection) fromObject;
+		return !selection.isEmpty();
 	}
 
 	public Object getFromType() {
-		return String.class;
+		return ISelection.class;
 	}
 
 	public Object getToType() {

@@ -27,10 +27,12 @@ import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.e4.xwt.converters.BindingToObject;
+import org.eclipse.e4.xwt.converters.CollectionToBoolean;
 import org.eclipse.e4.xwt.converters.DateToString;
 import org.eclipse.e4.xwt.converters.EnumToString;
 import org.eclipse.e4.xwt.converters.ObjectToObject;
 import org.eclipse.e4.xwt.converters.ObjectToString;
+import org.eclipse.e4.xwt.converters.SelectionToBoolean;
 import org.eclipse.e4.xwt.converters.StringToBoolean;
 import org.eclipse.e4.xwt.converters.StringToColor;
 import org.eclipse.e4.xwt.converters.StringToFont;
@@ -890,6 +892,8 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(NumberToStringConverter.fromDouble(false));
 
 		registerConvertor(StringToBoolean.instance);
+		registerConvertor(SelectionToBoolean.instance);
+		registerConvertor(CollectionToBoolean.instance);
 		registerConvertor(StringToIntArray.instance);
 		registerConvertor(BindingToObject.instance);
 		registerConvertor(StringToColor.instance);

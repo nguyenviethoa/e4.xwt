@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.converters;
 
+import java.util.Collection;
+
 import org.eclipse.core.databinding.conversion.IConverter;
 
 /**
@@ -17,16 +19,16 @@ import org.eclipse.core.databinding.conversion.IConverter;
  * 
  * @author yyang
  */
-public class StringToBoolean implements IConverter {
-	public static StringToBoolean instance = new StringToBoolean();
+public class CollectionToBoolean implements IConverter {
+	public static CollectionToBoolean instance = new CollectionToBoolean();
 
 	public Object convert(Object fromObject) {
-		String str = (String) fromObject;
-		return "true".equalsIgnoreCase(str) ? Boolean.TRUE : Boolean.FALSE;
+		Collection<?> collection = (Collection<?>) fromObject;
+		return !collection.isEmpty();
 	}
 
 	public Object getFromType() {
-		return String.class;
+		return Collection.class;
 	}
 
 	public Object getToType() {
