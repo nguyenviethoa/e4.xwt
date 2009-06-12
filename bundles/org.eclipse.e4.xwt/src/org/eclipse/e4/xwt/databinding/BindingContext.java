@@ -60,7 +60,13 @@ public class BindingContext implements IBindingContext {
 			}
 			// Add converter to UpdateValueStrategy.
 			Object sourceValueType = source.getValueType();
+			if (sourceValueType == null) {
+				sourceValueType = Object.class;
+			}
 			Object targetValueType = target.getValueType();
+			if (targetValueType == null) {
+				targetValueType = Object.class;
+			}
 			Class<?> sourceType = (sourceValueType instanceof Class<?>) ? (Class<?>) sourceValueType : sourceValueType.getClass();
 			Class<?> targetType = (targetValueType instanceof Class<?>) ? (Class<?>) targetValueType : targetValueType.getClass();
 			if (sourceType == null) {

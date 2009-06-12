@@ -30,6 +30,7 @@ import org.eclipse.e4.xwt.converters.BindingToObject;
 import org.eclipse.e4.xwt.converters.CollectionToBoolean;
 import org.eclipse.e4.xwt.converters.DateToString;
 import org.eclipse.e4.xwt.converters.EnumToString;
+import org.eclipse.e4.xwt.converters.ObjectToBoolean;
 import org.eclipse.e4.xwt.converters.ObjectToObject;
 import org.eclipse.e4.xwt.converters.ObjectToString;
 import org.eclipse.e4.xwt.converters.SelectionToBoolean;
@@ -892,6 +893,7 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(NumberToStringConverter.fromDouble(false));
 
 		registerConvertor(StringToBoolean.instance);
+		registerConvertor(ObjectToBoolean.instance);
 		registerConvertor(SelectionToBoolean.instance);
 		registerConvertor(CollectionToBoolean.instance);
 		registerConvertor(StringToIntArray.instance);

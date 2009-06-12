@@ -22,6 +22,7 @@ import org.eclipse.e4.xwt.internal.IBinding;
 import org.eclipse.e4.xwt.internal.IUserDataConstants;
 import org.eclipse.e4.xwt.internal.jface.JFacesHelper;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
@@ -45,7 +46,7 @@ public class BindingMetaclass extends Metaclass {
 		private String elementName;
 
 		private Widget control;
-		
+
 		private IXWTLoader xwtLoader;
 
 		private BindingMode mode = BindingMode.TwoWay;
@@ -149,9 +150,9 @@ public class BindingMetaclass extends Metaclass {
 			Object dataContext = getSourceObject();
 			IDataProvider dataProvider = null;
 			DataBinding dataBinding = null;
-			if (dataContext != null && dataContext instanceof Control) {
+			if (dataContext instanceof Control || dataContext instanceof Viewer) {
 				try {
-					ControlDataBinding controlDataBinding = new ControlDataBinding((Control) dataContext, (Control) control, path, type, mode, converter);
+					ControlDataBinding controlDataBinding = new ControlDataBinding(dataContext, control, path, type, mode, converter);
 					return controlDataBinding.getValue();
 				} catch (XWTException e) {
 					// in case the property cannot be bound. return value
@@ -180,7 +181,7 @@ public class BindingMetaclass extends Metaclass {
 	}
 
 	public BindingMetaclass(IXWTLoader xwtLoader) {
-		super(BindingMetaclass.Binding.class, null,xwtLoader);
+		super(BindingMetaclass.Binding.class, null, xwtLoader);
 	}
 
 	@Override

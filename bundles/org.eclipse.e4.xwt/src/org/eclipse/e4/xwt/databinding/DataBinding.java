@@ -17,6 +17,7 @@ import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.MenuItem;
 
 /**
  * The default implementation of the dataBinding object.
@@ -134,6 +135,11 @@ public class DataBinding implements IDataBinding {
 			try {
 				return ObservableValueUtil.observePropertyValue((Control) target, type);
 			} catch (XWTException e) {
+			}
+		}
+		if (target instanceof MenuItem) {
+			if ("enabled".equalsIgnoreCase(type)) {
+				return (new MenuItemEnabledValueProperty()).observe(target);
 			}
 		}
 		return null;

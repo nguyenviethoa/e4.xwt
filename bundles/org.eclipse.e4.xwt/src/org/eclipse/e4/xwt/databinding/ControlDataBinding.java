@@ -17,15 +17,17 @@ import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.MenuItem;
 
 /**
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
 public class ControlDataBinding implements IDataBinding {
-	private Control source;
-	private Control target;
+	private Object source;
+	private Object target;
 
 	private String sourceProperty;
 	private String targetProperty;
@@ -33,7 +35,7 @@ public class ControlDataBinding implements IDataBinding {
 
 	private BindingMode mode = BindingMode.TwoWay;
 
-	public ControlDataBinding(Control source, Control target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter) {
+	public ControlDataBinding(Object source, Object target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter) {
 		this.source = source;
 		this.target = target;
 		this.sourceProperty = sourceProperty;
@@ -66,6 +68,17 @@ public class ControlDataBinding implements IDataBinding {
 		if (object instanceof Control) {
 			try {
 				return ObservableValueUtil.observePropertyValue((Control) object, property);
+			} catch (XWTException e) {
+			}
+		}
+		if (object instanceof MenuItem) {
+			if ("enabled".equalsIgnoreCase(property)) {
+				return (new MenuItemEnabledValueProperty()).observe(object);
+			}
+		}
+		if (object instanceof Viewer) {
+			try {
+				return ObservableValueUtil.observePropertyValue((Viewer) object, property);
 			} catch (XWTException e) {
 			}
 		}
