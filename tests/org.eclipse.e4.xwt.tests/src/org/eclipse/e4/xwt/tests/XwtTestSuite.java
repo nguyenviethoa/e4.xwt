@@ -89,6 +89,7 @@ public class XwtTestSuite extends TestSuite {
 	}
 
 	protected void addDataBindingTests() {
+		addTest(EventsTestSuite.suite());
 	}
 
 	protected void addI18NTests() {

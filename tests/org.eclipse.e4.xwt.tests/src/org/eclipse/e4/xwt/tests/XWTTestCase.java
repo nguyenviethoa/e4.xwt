@@ -61,6 +61,24 @@ public abstract class XWTTestCase extends TestCase {
 		}
 	}
 
+	protected void runDebugTest(final URL url, Runnable prepareAction, Runnable checkAction1) {
+		try {
+			root = XWT.load(url);
+			assertNotNull(root);
+			Shell shell = root.getShell();
+			shell.open();
+			Display display = shell.getDisplay();
+			if (prepareAction != null) {
+				display.asyncExec(prepareAction);
+			}
+			while (!display.isDisposed())
+				display.readAndDispatch();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
 	protected void selectButton(Button button) {
 		Point size = button.getSize();
 		Display display = button.getDisplay();
@@ -72,6 +90,7 @@ public abstract class XWTTestCase extends TestCase {
 		upEvent.y = size.y / 2;
 		display.post(upEvent);
 
+		button.setSelection(true);
 		button.notifyListeners(SWT.Selection, upEvent);
 	}
 }
