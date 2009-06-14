@@ -19,7 +19,6 @@ import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemEnabledObservableValue;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemSelectionObservableValue;
-import org.eclipse.jface.internal.databinding.swt.SWTProperties;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MenuItem;
@@ -29,6 +28,9 @@ import org.eclipse.swt.widgets.MenuItem;
  * @author yyang (yves.yang@soyatec.com)
  */
 public class ControlDataBinding implements IDataBinding {
+	static final String ENABLED = "enabled";
+	static final String SELECTION = "selection";
+
 	private Object source;
 	private Object target;
 
@@ -79,10 +81,10 @@ public class ControlDataBinding implements IDataBinding {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
 			// testcase: org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
 			//
-			if (SWTProperties.ENABLED.equalsIgnoreCase(property)) {
-				return new MenuItemEnabledObservableValue((MenuItem)object);
-			} else if (SWTProperties.SELECTION.equalsIgnoreCase(property)) {
-				return new MenuItemSelectionObservableValue((MenuItem)object);
+			if (ENABLED.equalsIgnoreCase(property)) {
+				return new MenuItemEnabledObservableValue((MenuItem) object);
+			} else if (SELECTION.equalsIgnoreCase(property)) {
+				return new MenuItemSelectionObservableValue((MenuItem) object);
 			}
 		}
 		if (object instanceof Viewer) {
