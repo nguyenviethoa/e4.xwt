@@ -17,6 +17,9 @@ import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemEnabledObservableValue;
+import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemSelectionObservableValue;
+import org.eclipse.jface.internal.databinding.swt.SWTProperties;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MenuItem;
@@ -76,10 +79,10 @@ public class ControlDataBinding implements IDataBinding {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
 			// testcase: org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
 			//
-			if ("enabled".equalsIgnoreCase(property)) {
-				return (new MenuItemEnabledValueProperty()).observe(object);
-			} else if ("selection".equalsIgnoreCase(property)) {
-				return (new MenuItemSelectionValueProperty()).observe(object);
+			if (SWTProperties.ENABLED.equalsIgnoreCase(property)) {
+				return new MenuItemEnabledObservableValue((MenuItem)object);
+			} else if (SWTProperties.SELECTION.equalsIgnoreCase(property)) {
+				return new MenuItemSelectionObservableValue((MenuItem)object);
 			}
 		}
 		if (object instanceof Viewer) {
