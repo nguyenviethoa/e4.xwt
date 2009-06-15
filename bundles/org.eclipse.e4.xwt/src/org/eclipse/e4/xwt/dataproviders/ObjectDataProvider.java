@@ -119,7 +119,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		this.objectType = objectType;
 	}
 
-	private Object getTarget() {
+	protected Object getTarget() {
 		Object target = getObjectInstance();
 		if (target == null) {
 			return null;
@@ -172,7 +172,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		Object target = getTarget();
 		if (target == null) {
 			return null;
-		}		
+		}
 		Class<?> type = target.getClass();
 		if (path == null) {
 			return type;

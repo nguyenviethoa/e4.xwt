@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -276,6 +277,14 @@ public class XWT {
 
 	public static void addDataProviderFactory(IDataProviderFactory dataProviderFactory) {
 		XWTLoaderManager.getActive().addDataProviderFactory(dataProviderFactory);
+	}
+
+	public static void removeDataProviderFactory(IDataProviderFactory dataProviderFactory) {
+		XWTLoaderManager.getActive().removeDataProviderFactory(dataProviderFactory);
+	}
+
+	public static Collection<IDataProviderFactory> getDataProviderFactories() {
+		return XWTLoaderManager.getActive().getDataProviderFactories();
 	}
 
 	/**
