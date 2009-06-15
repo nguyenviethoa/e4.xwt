@@ -13,7 +13,7 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.eclipse.e4.xwt.utils.ObjectUtil;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 
 /**
  * This class is used to extend the Java Bean model

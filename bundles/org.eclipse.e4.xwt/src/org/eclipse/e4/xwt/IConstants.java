@@ -15,7 +15,7 @@ import java.util.Enumeration;
 import java.util.ListResourceBundle;
 import java.util.ResourceBundle;
 
-import org.eclipse.e4.xwt.xml.DocumentObject;
+import org.eclipse.e4.xwt.internal.xml.DocumentObject;
 
 /**
  * Shared constants

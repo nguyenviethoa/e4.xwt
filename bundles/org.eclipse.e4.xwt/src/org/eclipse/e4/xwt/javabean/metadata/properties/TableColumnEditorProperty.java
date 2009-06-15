@@ -12,7 +12,7 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.e4.xwt.xml.Element;
+import org.eclipse.e4.xwt.internal.xml.Element;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**

@@ -8,29 +8,33 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.converters;
 
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.core.IBinding;
+package org.eclipse.e4.xwt.internal.utils;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Binding to Object covnerter
+ * Logger Manager.
  * 
- * @author yyang
+ * @author jliu
  */
-public class BindingToObject implements IConverter {
-	public static BindingToObject instance = new BindingToObject();
+public class LoggerManager {
 
-	public Object convert(Object fromObject) {
-		IBinding binding = (IBinding) fromObject;
-		return binding.getValue();
+	private static Logger logger = Logger.getLogger("org.eclipse.e4.xwt.utils.LoggerManager");
+
+	private LoggerManager() {
 	}
 
-	public Object getFromType() {
-		return IBinding.class;
+	public static void log(Throwable e, String message) {
+		logger.log(Level.SEVERE, message, e);
 	}
 
-	public Object getToType() {
-		return Object.class;
+	public static void log(Throwable e) {
+		log(e, null);
+	}
+
+	public static void log(String message) {
+		log(null, message);
 	}
 }

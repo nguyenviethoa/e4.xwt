@@ -11,15 +11,17 @@ Require-Bundle:
  org.eclipse.jface;bundle-version="3.4.0"
 Export-Package: org.eclipse.e4.xwt,
  org.eclipse.e4.xwt.converters,
+ org.eclipse.e4.xwt.core,
  org.eclipse.e4.xwt.databinding,
  org.eclipse.e4.xwt.dataproviders,
  org.eclipse.e4.xwt.input,
+ org.eclipse.e4.xwt.internal.databinding.menuitem,
+ org.eclipse.e4.xwt.javabean,
  org.eclipse.e4.xwt.javabean.metadata,
  org.eclipse.e4.xwt.javabean.metadata.properties,
  org.eclipse.e4.xwt.jface,
  org.eclipse.e4.xwt.metadata,
- org.eclipse.e4.xwt.utils,
- org.eclipse.e4.xwt.xml
+ org.eclipse.e4.xwt.utils
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy

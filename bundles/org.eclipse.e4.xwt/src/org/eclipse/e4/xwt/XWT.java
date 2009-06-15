@@ -19,7 +19,7 @@ import java.util.Set;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.e4.xwt.input.ICommand;
-import org.eclipse.e4.xwt.internal.NameScope;
+import org.eclipse.e4.xwt.internal.core.NameScope;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;

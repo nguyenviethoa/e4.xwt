@@ -8,29 +8,12 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.converters;
+package org.eclipse.e4.xwt.core;
 
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.core.IBinding;
+import java.util.Map;
 
-/**
- * Binding to Object covnerter
- * 
- * @author yyang
- */
-public class BindingToObject implements IConverter {
-	public static BindingToObject instance = new BindingToObject();
+import org.eclipse.e4.xwt.internal.xml.Element;
 
-	public Object convert(Object fromObject) {
-		IBinding binding = (IBinding) fromObject;
-		return binding.getValue();
-	}
-
-	public Object getFromType() {
-		return IBinding.class;
-	}
-
-	public Object getToType() {
-		return Object.class;
-	}
+public interface IVisualElementLoader {
+	public Object createCLRElement(Element element, Map<String, Object> options);
 }

@@ -11,8 +11,8 @@
 package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.IXWTLoader;
+import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
-import org.eclipse.e4.xwt.utils.UserDataHelper;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Widget;

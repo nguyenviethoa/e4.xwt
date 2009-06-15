@@ -234,6 +234,5 @@ public class ResourceManager {
 				return null;
 			}
 		}
-
 	}
 }

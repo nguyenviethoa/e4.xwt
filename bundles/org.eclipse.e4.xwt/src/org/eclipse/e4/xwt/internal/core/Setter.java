@@ -8,29 +8,33 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.converters;
+package org.eclipse.e4.xwt.internal.core;
 
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.core.IBinding;
 
 /**
- * Binding to Object covnerter
+ * Setter of the class Style, which is used to define the in-line XAML style
  * 
+ * @see Style
  * @author yyang
  */
-public class BindingToObject implements IConverter {
-	public static BindingToObject instance = new BindingToObject();
+public class Setter {
+	protected String property;
 
-	public Object convert(Object fromObject) {
-		IBinding binding = (IBinding) fromObject;
-		return binding.getValue();
+	public String getProperty() {
+		return property;
 	}
 
-	public Object getFromType() {
-		return IBinding.class;
+	public void setProperty(String property) {
+		this.property = property;
 	}
 
-	public Object getToType() {
-		return Object.class;
+	public String getValue() {
+		return value;
 	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	protected String value;
 }

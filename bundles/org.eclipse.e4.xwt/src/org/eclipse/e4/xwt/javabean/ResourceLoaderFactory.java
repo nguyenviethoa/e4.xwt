@@ -8,29 +8,18 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.converters;
+package org.eclipse.e4.xwt.javabean;
 
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.core.IBinding;
+import org.eclipse.e4.xwt.IXWTLoader;
+import org.eclipse.e4.xwt.core.IElementLoaderFactory;
+import org.eclipse.e4.xwt.core.IRenderingContext;
+import org.eclipse.e4.xwt.core.IVisualElementLoader;
 
-/**
- * Binding to Object covnerter
- * 
- * @author yyang
- */
-public class BindingToObject implements IConverter {
-	public static BindingToObject instance = new BindingToObject();
-
-	public Object convert(Object fromObject) {
-		IBinding binding = (IBinding) fromObject;
-		return binding.getValue();
+public class ResourceLoaderFactory implements IElementLoaderFactory {
+	public ResourceLoaderFactory() {
 	}
 
-	public Object getFromType() {
-		return IBinding.class;
-	}
-
-	public Object getToType() {
-		return Object.class;
+	public IVisualElementLoader createElementLoader(IRenderingContext context, IXWTLoader loader) {
+		return new ResourceLoader(context, loader);
 	}
 }

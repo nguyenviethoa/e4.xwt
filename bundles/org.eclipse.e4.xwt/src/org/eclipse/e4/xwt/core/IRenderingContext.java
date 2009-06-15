@@ -8,29 +8,30 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.converters;
+package org.eclipse.e4.xwt.core;
 
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.core.IBinding;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import org.eclipse.e4.xwt.ILoadingContext;
 
 /**
- * Binding to Object covnerter
- * 
  * @author yyang
+ * @version 1.0
  */
-public class BindingToObject implements IConverter {
-	public static BindingToObject instance = new BindingToObject();
+public interface IRenderingContext {
+	public String getNamespace();
 
-	public Object convert(Object fromObject) {
-		IBinding binding = (IBinding) fromObject;
-		return binding.getValue();
-	}
+	public URL getResourcePath();
 
-	public Object getFromType() {
-		return IBinding.class;
-	}
+	public InputStream openStream(String path) throws IOException;
 
-	public Object getToType() {
-		return Object.class;
-	}
+	public String getEncoding();
+
+	public Object getProperty(String name);
+
+	public void setProperty(String name, Object value);
+
+	public ILoadingContext getLoadingContext();
 }

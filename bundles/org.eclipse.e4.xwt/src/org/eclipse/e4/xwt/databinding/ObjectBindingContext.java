@@ -22,8 +22,8 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.beans.IBeanObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataBinding;
-import org.eclipse.e4.xwt.utils.LoggerManager;
-import org.eclipse.e4.xwt.utils.ObjectUtil;
+import org.eclipse.e4.xwt.internal.utils.LoggerManager;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 
 /**
  * @author jliu jin.liu@soyatec.com

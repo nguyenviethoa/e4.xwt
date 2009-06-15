@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.internal.Style;
+import org.eclipse.e4.xwt.internal.core.Style;
 
 /**
  * 

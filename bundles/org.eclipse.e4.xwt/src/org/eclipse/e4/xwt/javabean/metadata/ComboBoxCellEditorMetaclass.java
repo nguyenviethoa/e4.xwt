@@ -13,8 +13,8 @@ package org.eclipse.e4.xwt.javabean.metadata;
 import java.lang.reflect.Constructor;
 
 import org.eclipse.e4.xwt.IXWTLoader;
-import org.eclipse.e4.xwt.internal.jface.ComboBoxCellEditor;
-import org.eclipse.e4.xwt.internal.jface.JFacesHelper;
+import org.eclipse.e4.xwt.jface.ComboBoxCellEditor;
+import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
