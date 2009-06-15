@@ -35,10 +35,10 @@ public class XWT {
 	/**
 	 * Get the system logger.
 	 * 
-	 * @return
+	 * @returnF
 	 */
 	public static ILogger getLogger() {
-		return XWTLoaderManager.getDefault().getLogger();
+		return XWTLoaderManager.getActive().getLogger();
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class XWT {
 	 * @param handler
 	 */
 	public static void registerNamspaceHandler(String nsmapace, INamespaceHandler handler) {
-		XWTLoaderManager.getDefault().registerNamespaceHandler(nsmapace, handler);
+		XWTLoaderManager.getActive().registerNamespaceHandler(nsmapace, handler);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class XWT {
 	 * @param nsmapace
 	 */
 	public static void unregisterNamspaceHandler(String nsmapace) {
-		XWTLoaderManager.getDefault().unregisterNamespaceHandler(nsmapace);
+		XWTLoaderManager.getActive().unregisterNamespaceHandler(nsmapace);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class XWT {
 	 * @return
 	 */
 	public static INamespaceHandler getNamspaceHandler(String nsmapace) {
-		return XWTLoaderManager.getDefault().getNamespaceHandler(nsmapace);
+		return XWTLoaderManager.getActive().getNamespaceHandler(nsmapace);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class XWT {
 	 * @param logger
 	 */
 	public static void setLogger(ILogger log) {
-		XWTLoaderManager.getDefault().setLogger(log);
+		XWTLoaderManager.getActive().setLogger(log);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class XWT {
 	 * @return
 	 */
 	public static String getElementName(Object object) {
-		return XWTLoaderManager.getDefault().getElementName(object);
+		return XWTLoaderManager.getActive().getElementName(object);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class XWT {
 	 * @return
 	 */
 	public static NameScope findNameContext(Widget widget) {
-		return XWTLoaderManager.getDefault().findNameContext(widget);
+		return XWTLoaderManager.getActive().findNameContext(widget);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class XWT {
 	 * @return
 	 */
 	public static Object findElementByName(Widget context, String name) {
-		return XWTLoaderManager.getDefault().findElementByName(context, name);
+		return XWTLoaderManager.getActive().findElementByName(context, name);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class XWT {
 	 * @return
 	 */
 	public static Object getDataContext(Widget element) {
-		return XWTLoaderManager.getDefault().getDataContext(element);
+		return XWTLoaderManager.getActive().getDataContext(element);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class XWT {
 	 * @return
 	 */
 	public static Object getCLR(Widget widget) {
-		return XWTLoaderManager.getDefault().getCLR(widget);
+		return XWTLoaderManager.getActive().getCLR(widget);
 	}
 
 	/**
@@ -135,11 +135,11 @@ public class XWT {
 	 * @return
 	 */
 	public static Shell findShell(Widget context) {
-		return XWTLoaderManager.getDefault().findShell(context);
+		return XWTLoaderManager.getActive().findShell(context);
 	}
 
 	public static IMetaclass getMetaclass(Object object) {
-		return XWTLoaderManager.getDefault().getMetaclass(object);
+		return XWTLoaderManager.getActive().getMetaclass(object);
 	}
 
 	/**
@@ -147,42 +147,42 @@ public class XWT {
 	 * 
 	 */
 	static public synchronized Control load(URL file) throws Exception {
-		return XWTLoaderManager.getDefault().load(file);
+		return XWTLoaderManager.getActive().load(file);
 	}
 
 	/**
 	 * Load the file content under a Composite. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
 	static public synchronized Control load(Composite parent, URL file) throws Exception {
-		return XWTLoaderManager.getDefault().load(parent, file);
+		return XWTLoaderManager.getActive().load(parent, file);
 	}
 
 	/**
 	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
 	static public synchronized Control load(Composite parent, URL file, Object dataContext) throws Exception {
-		return XWTLoaderManager.getDefault().load(parent, file, dataContext);
+		return XWTLoaderManager.getActive().load(parent, file, dataContext);
 	}
 
 	/**
 	 * Open and show the file content in a new Shell.
 	 */
 	static public synchronized void open(final URL url) throws Exception {
-		XWTLoaderManager.getDefault().open(url);
+		XWTLoaderManager.getActive().open(url);
 	}
 
 	/**
 	 * load the content from a stream with a style, a DataContext and a ResourceDictionary. The root elements will be hold by Composite parent
 	 */
 	static public synchronized Control load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception {
-		return XWTLoaderManager.getDefault().load(parent, stream, file, dataContext);
+		return XWTLoaderManager.getActive().load(parent, stream, file, dataContext);
 	}
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
 	static public synchronized void open(URL url, Object dataContext) throws Exception {
-		XWTLoaderManager.getDefault().open(url, dataContext);
+		XWTLoaderManager.getActive().open(url, dataContext);
 	}
 
 	/**
@@ -196,15 +196,15 @@ public class XWT {
 	 * load the file content. The corresponding UI element is not yet created
 	 */
 	static public synchronized void open(URL url, Map<String, Object> options) throws Exception {
-		XWTLoaderManager.getDefault().open(url, options);
+		XWTLoaderManager.getActive().open(url, options);
 	}
 
 	static public Object convertFrom(Class<?> targetType, String string) {
-		return XWTLoaderManager.getDefault().convertFrom(targetType, string);
+		return XWTLoaderManager.getActive().convertFrom(targetType, string);
 	}
 
 	static public synchronized Control loadWithOptions(URL url, Map<String, Object> options) throws Exception {
-		return XWTLoaderManager.getDefault().loadWithOptions(url, options);
+		return XWTLoaderManager.getActive().loadWithOptions(url, options);
 	}
 
 	/**
@@ -216,7 +216,7 @@ public class XWT {
 	 * @throws Exception
 	 */
 	static public synchronized Control load(InputStream stream, URL url) throws Exception {
-		return XWTLoaderManager.getDefault().load(stream, url);
+		return XWTLoaderManager.getActive().load(stream, url);
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class XWT {
 	 * @throws Exception
 	 */
 	static public IMetaclass[] getAllMetaclasses() {
-		return XWTLoaderManager.getDefault().getAllMetaclasses();
+		return XWTLoaderManager.getActive().getAllMetaclasses();
 	}
 
 	/**
@@ -241,7 +241,7 @@ public class XWT {
 	 * @return
 	 */
 	static public IMetaclass getMetaclass(String tagName, String ns) {
-		return XWTLoaderManager.getDefault().getMetaclass(tagName, ns);
+		return XWTLoaderManager.getActive().getMetaclass(tagName, ns);
 	}
 
 	/**
@@ -251,7 +251,7 @@ public class XWT {
 	 * @param type
 	 */
 	public static void registerConvertor(IConverter converter) {
-		XWTLoaderManager.getDefault().registerConvertor(converter);
+		XWTLoaderManager.getActive().registerConvertor(converter);
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class XWT {
 	 * @param command
 	 */
 	public static void registerCommand(String name, ICommand command) {
-		XWTLoaderManager.getDefault().registerCommand(name, command);
+		XWTLoaderManager.getActive().registerCommand(name, command);
 	}
 
 	/**
@@ -271,11 +271,11 @@ public class XWT {
 	 * @return
 	 */
 	public static void addDefaultStyle(IStyle style) {
-		XWTLoaderManager.getDefault().addDefaultStyle(style);
+		XWTLoaderManager.getActive().addDefaultStyle(style);
 	}
 
 	public static void addDataProviderFactory(IDataProviderFactory dataProviderFactory) {
-		XWTLoaderManager.getDefault().addDataProviderFactory(dataProviderFactory);
+		XWTLoaderManager.getActive().addDataProviderFactory(dataProviderFactory);
 	}
 
 	/**
@@ -284,7 +284,7 @@ public class XWT {
 	 * @param javaclass
 	 */
 	static public IMetaclass registerMetaclass(Class<?> type) {
-		return XWTLoaderManager.getDefault().registerMetaclass(type);
+		return XWTLoaderManager.getActive().registerMetaclass(type);
 	}
 
 	/**
@@ -294,7 +294,7 @@ public class XWT {
 	 * @param type
 	 */
 	static public IConverter findConvertor(Class<?> source, Class<?> target) {
-		return XWTLoaderManager.getDefault().findConvertor(source, target);
+		return XWTLoaderManager.getActive().findConvertor(source, target);
 	}
 
 	/**
@@ -302,7 +302,7 @@ public class XWT {
 	 * 
 	 */
 	public static void setLoadingContext(ILoadingContext loadingContext) {
-		XWTLoaderManager.getDefault().setLoadingContext(loadingContext);
+		XWTLoaderManager.getActive().setLoadingContext(loadingContext);
 	}
 
 	/**
@@ -311,7 +311,7 @@ public class XWT {
 	 * @return ILoadingContext
 	 */
 	public static ILoadingContext getLoadingContext() {
-		return XWTLoaderManager.getDefault().getLoadingContext();
+		return XWTLoaderManager.getActive().getLoadingContext();
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class XWT {
 	 * @param tracking
 	 */
 	static public void addTracking(Tracking tracking) {
-		XWTLoaderManager.getDefault().addTracking(tracking);
+		XWTLoaderManager.getActive().addTracking(tracking);
 	}
 
 	/**
@@ -330,7 +330,7 @@ public class XWT {
 	 * @return
 	 */
 	static public boolean isTracking(Tracking tracking) {
-		return XWTLoaderManager.getDefault().isTracking(tracking);
+		return XWTLoaderManager.getActive().isTracking(tracking);
 	}
 
 	/**
@@ -339,7 +339,7 @@ public class XWT {
 	 * @return
 	 */
 	static public Set<Tracking> getTrackings() {
-		return XWTLoaderManager.getDefault().getTrackings();
+		return XWTLoaderManager.getActive().getTrackings();
 	}
 
 	/**
@@ -349,15 +349,15 @@ public class XWT {
 	 * @return
 	 */
 	static public ICommand getCommand(String name) {
-		return XWTLoaderManager.getDefault().getCommand(name);
+		return XWTLoaderManager.getActive().getCommand(name);
 	}
 
 	public static IDataProvider findDataProvider(Object dataContext) {
-		return XWTLoaderManager.getDefault().findDataProvider(dataContext);
+		return XWTLoaderManager.getActive().findDataProvider(dataContext);
 	}
 
 	static public Realm getRealm() {
-		return XWTLoaderManager.getDefault().getRealm();
+		return XWTLoaderManager.getActive().getRealm();
 	}
 
 	static public boolean isXWTNamespace(String namespace) {
