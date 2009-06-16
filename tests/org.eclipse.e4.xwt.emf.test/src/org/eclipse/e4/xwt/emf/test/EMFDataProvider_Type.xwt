@@ -7,8 +7,8 @@
 	</Shell.layout>
 	
 	<Shell.Resources>
-		<EmfDataProvider x:Key="myBooks" eObjectType="{x:Type y:Book}">
-		</EmfDataProvider>
+		<EMFDataProvider x:Key="myBooks" eObjectType="{x:Type y:Book}">
+		</EMFDataProvider>
 	</Shell.Resources>
 	
 	<Label text="Name:"/>
