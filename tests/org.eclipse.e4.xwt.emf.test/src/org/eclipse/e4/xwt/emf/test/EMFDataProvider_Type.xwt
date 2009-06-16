@@ -1,37 +1,37 @@
 <Shell xmlns="http://www.eclipse.org/xwt/presentation"
 	xmlns:x="http://www.eclipse.org/xwt"
-	xmlns:y="clr-namespace:org.eclipse.e4.xwt.emf.test"
+	xmlns:y="clr-namespace:org.eclipse.e4.xwt.emf.test.books"
 	Size="400, 300">
 	<Shell.layout>
 		<GridLayout numColumns="3"/>
 	</Shell.layout>
 	
 	<Shell.Resources>
-		<EMFDataProvider x:Key="myBooks" ObjectType="{x:Type y:MyBooks}" MethodName="getBook" Path="title">
-		</EMFDataProvider>
+		<EmfDataProvider x:Key="myBooks" eObjectType="{x:Type y:Book}">
+		</EmfDataProvider>
 	</Shell.Resources>
 	
 	<Label text="Name:"/>
-	<Text x:style="BORDER" text="{Binding Source={StaticResource myBooks}, Path=text}">
+	<Text x:style="BORDER" text="{Binding Source={StaticResource myBooks}, Path=title.text}">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
-	<Text x:style="BORDER" text="{Binding Source={StaticResource myBooks}, Path=lan}">
+	<Text x:style="BORDER" text="{Binding Source={StaticResource myBooks}, Path=author}">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
 	<Label text="Copy:"/>
-	<Text x:style="BORDER"  text="{Binding Source={StaticResource myBooks}, Path=text}">
+	<Text x:style="BORDER"  text="{Binding Source={StaticResource myBooks}, Path=title.text}">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
-	<Text x:style="BORDER" text="{Binding Source={StaticResource myBooks}, Path=lan}">
+	<Text x:style="BORDER" text="{Binding Source={StaticResource myBooks}, Path=author}">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>

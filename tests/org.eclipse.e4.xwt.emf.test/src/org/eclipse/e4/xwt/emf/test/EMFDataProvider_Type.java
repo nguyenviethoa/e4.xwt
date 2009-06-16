@@ -17,12 +17,12 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.emf.EMFDataProvider;
 
 /**
- * @author jliu jin.liu@soyatec.com
+ * @author jliu (jin.liu@soyatec.com)
  */
-public class EMFDataProvider_Path2 {
+public class EMFDataProvider_Type {
 	public static void main(String[] args) {
 		XWT.registerMetaclass(EMFDataProvider.class);
-		URL url = EMFDataProvider_Path2.class.getResource(EMFDataProvider_Path2.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = EMFDataProvider_Type.class.getResource(EMFDataProvider_Type.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
