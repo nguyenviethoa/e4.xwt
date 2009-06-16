@@ -40,12 +40,7 @@ public class ControlDataBinding extends AbstractDataBinding {
 			sourceWidget = new WritableValue() {
 				@Override
 				public Object doGetValue() {
-					return getDataProvider().getData(source, getSourceProperty());
-				}
-
-				@Override
-				public void doSetValue(Object value) {
-					getDataProvider().setData(source, getSourceProperty(), value);
+					return getDataProvider().getData(super.doGetValue(), getSourceProperty());
 				}
 			};
 
