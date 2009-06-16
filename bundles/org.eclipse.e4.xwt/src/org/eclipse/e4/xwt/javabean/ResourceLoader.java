@@ -1243,12 +1243,17 @@ public class ResourceLoader implements IVisualElementLoader {
 	}
 
 	private String getImagePath(Attribute attribute, String contentValue) {
+		String value = contentValue;
 		try {
 			File file = new File(contentValue);
 			if (file.exists()) {
 				return file.toURI().toURL().toString();
 			}
 			if (!contentValue.startsWith("/")) {
+				URL url = context.getResourcePath();
+				if (url != null) {
+					return  url.toString() + "/" + contentValue;
+				}
 				contentValue = "/" + contentValue;
 			}
 			ILoadingContext loadingContext = context.getLoadingContext();
@@ -1264,7 +1269,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 			return resource.toString();
 		} catch (MalformedURLException e) {
-			return contentValue;
+			return value;
 		}
 	}
 
