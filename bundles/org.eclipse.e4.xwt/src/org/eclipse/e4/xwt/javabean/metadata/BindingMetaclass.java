@@ -10,178 +10,20 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata;
 
-import org.eclipse.e4.xwt.IDataProvider;
-import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.IXWTLoader;
-import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.core.IBinding;
-import org.eclipse.e4.xwt.core.IUserDataConstants;
-import org.eclipse.e4.xwt.databinding.BindingMode;
-import org.eclipse.e4.xwt.databinding.ControlDataBinding;
-import org.eclipse.e4.xwt.databinding.DataBinding;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Widget;
 
 /**
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
 public class BindingMetaclass extends Metaclass {
-
-	public static class Binding implements IBinding {
-		/**
-		 * which used to decide binding type, not only text.
-		 */
-		private String type;
-		private String xPath;
-		private String path;
-		private Object source;
-
-		private String elementName;
-
-		private Widget control;
-
-		private IXWTLoader xwtLoader;
-
-		private BindingMode mode = BindingMode.TwoWay;
-
-		private IValueConverter converter;
-
-		public IValueConverter getConverter() {
-			return converter;
-		}
-
-		public void setConverter(IValueConverter converter) {
-			this.converter = converter;
-		}
-
-		public Object getSource() {
-			return source;
-		}
-
-		public void setSource(Object source) {
-			this.source = source;
-		}
-
-		public String getPath() {
-			return path;
-		}
-
-		public void setControl(Widget control) {
-			this.control = control;
-		}
-
-		public void setPath(String path) {
-			this.path = path;
-		}
-
-		public String getElementName() {
-			return elementName;
-		}
-
-		public void setElementName(String elementName) {
-			this.elementName = elementName;
-		}
-
-		public void setXPath(String xPath) {
-			this.xPath = xPath;
-		}
-
-		public String getXPath() {
-			return xPath;
-		}
-
-		/**
-		 * @param type
-		 *            the type to set
-		 */
-		public void setType(String type) {
-			this.type = type;
-		}
-
-		/**
-		 * @return the type
-		 */
-		public String getType() {
-			return type;
-		}
-
-		public BindingMode getMode() {
-			return mode;
-		}
-
-		public void setMode(BindingMode mode) {
-			this.mode = mode;
-		}
-
-		protected Object getSourceObject() {
-			if (source != null) {
-				if (source instanceof IBinding) {
-					return ((IBinding) source).getValue();
-				}
-				return source;
-			} else if (elementName != null) {
-				return XWT.findElementByName(control, elementName);
-			}
-			if (control == null) {
-				return null;
-			}
-			Object data = control.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
-			if (data == null || data == this) {
-				Widget parent = (Widget) control.getData(IUserDataConstants.XWT_PARENT_KEY);
-				if (parent != null) {
-					return XWT.getDataContext(parent);
-				}
-				return null;
-			}
-			if (data != null) {
-				return data;
-			}
-			return XWT.getDataContext(control);
-		}
-
-		public Object getValue() {
-			Object dataContext = getSourceObject();
-			IDataProvider dataProvider = null;
-			DataBinding dataBinding = null;
-			if (dataContext instanceof Control || dataContext instanceof Viewer) {
-				try {
-					ControlDataBinding controlDataBinding = new ControlDataBinding(dataContext, control, path, type, mode, converter);
-					return controlDataBinding.getValue();
-				} catch (XWTException e) {
-					// in case the property cannot be bound. return value
-				}
-			}
-			if (dataContext != null) {
-				if (dataContext instanceof IDataProvider) {
-					dataProvider = (IDataProvider) dataContext;
-				} else {
-					dataProvider = xwtLoader.findDataProvider(dataContext);
-				}
-			}
-
-			if (dataProvider != null && (path != null || xPath != null)) {
-				dataBinding = new DataBinding(dataProvider, control, xPath != null ? xPath : path, type, mode, converter);
-			}
-			if (dataBinding != null) {
-				return dataBinding.getValue();
-			}
-			return dataContext;
-		}
-
-		public void setXWTLoader(IXWTLoader xwtLoader) {
-			this.xwtLoader = xwtLoader;
-		}
-	}
-
 	public BindingMetaclass(IXWTLoader xwtLoader) {
-		super(BindingMetaclass.Binding.class, null, xwtLoader);
+		super(Binding.class, null, xwtLoader);
 	}
 
 	@Override
@@ -201,5 +43,4 @@ public class BindingMetaclass extends Metaclass {
 		newInstance.setXWTLoader(xwtLoader);
 		return newInstance;
 	}
-
 }

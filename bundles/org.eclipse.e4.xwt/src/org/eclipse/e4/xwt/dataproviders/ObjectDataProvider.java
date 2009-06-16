@@ -153,14 +153,42 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getData(java.lang.String)
 	 */
 	public Object getData(String path) {
-		Object target = getTarget();
+		return getData(getTarget(), path);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getData(java.lang.String)
+	 */
+	public Object getData(Object object, String path) {
+		if (object instanceof IObservableValue) {
+			object = ((IObservableValue) object).getValue();
+		}
 		int index = path.indexOf(".");
-		while (index != -1 && target != null) {
-			target = BeanObservableValue.getValue(target, path.substring(0, index));
+		while (index != -1 && object != null) {
+			object = BeanObservableValue.getValue(object, path.substring(0, index));
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
-		return BeanObservableValue.getValue(target, path);
+		return BeanObservableValue.getValue(object, path);
+	}
+
+	public void setData(Object object, String path, Object value) {
+		if (object instanceof IObservableValue) {
+			object = ((IObservableValue) object).getValue();
+		}
+		int index = path.indexOf(".");
+		while (index != -1 && object != null) {
+			object = BeanObservableValue.getValue(object, path.substring(0, index));
+			path = path.substring(index + 1);
+			index = path.indexOf(".");
+		}
+		BeanObservableValue.setValue(object, path, value);
+	}
+
+	public void setData(String path, Object value) {
+		setData(getTarget(), path, value);
 	}
 
 	/*

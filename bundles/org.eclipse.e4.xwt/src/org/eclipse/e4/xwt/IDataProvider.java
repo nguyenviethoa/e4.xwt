@@ -18,7 +18,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
  * @author yyang
  */
 public interface IDataProvider {
-	
+
 	/**
 	 * Return the data of the provider, this value can be not used for databindings.
 	 * 
@@ -26,9 +26,33 @@ public interface IDataProvider {
 	 * @return
 	 */
 	Object getData(String path);
-	
+
 	/**
-	 * Return the data type of the provider.
+	 * Return the data of the provider, this value can be not used for databindings.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	Object getData(Object target, String path);
+
+	/**
+	 * Return the data of the provider, this value can be not used for databindings.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	void setData(String path, Object value);
+
+	/**
+	 * Return the data of the provider, this value can be not used for databindings.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	void setData(Object target, String path, Object value);
+
+	/**
+	 * Return the data type of the provider.lue
 	 * 
 	 * @param path
 	 * @return

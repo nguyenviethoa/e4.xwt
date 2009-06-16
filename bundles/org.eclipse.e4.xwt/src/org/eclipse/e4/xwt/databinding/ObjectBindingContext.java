@@ -21,7 +21,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.beans.IBeanObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.IDataBinding;
+import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 
@@ -135,7 +135,7 @@ public class ObjectBindingContext extends BindingContext {
 	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider.BindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
-	public void bind(IObservableValue source, IObservableValue target, IDataBinding dataBinding) {
+	public void bind(IObservableValue source, IObservableValue target, IDataBindingInfo dataBinding) {
 		super.bind(source, target, dataBinding);
 		if (source instanceof IBeanObservable) {
 			IBeanObservable beanValue = (IBeanObservable) source;

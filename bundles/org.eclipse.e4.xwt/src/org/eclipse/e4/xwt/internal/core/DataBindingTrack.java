@@ -28,7 +28,7 @@ import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.xml.Attribute;
 import org.eclipse.e4.xwt.internal.xml.Element;
-import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass.Binding;
+import org.eclipse.e4.xwt.javabean.metadata.Binding;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.swt.widgets.Widget;
 
@@ -180,7 +180,7 @@ public class DataBindingTrack {
 
 	public static Object getObserveData(Object dataContext, String path) {
 		try {
-			Class<?> dataContextClass = dataContext.getClass();			
+			Class<?> dataContextClass = dataContext.getClass();
 			Method getMethod = ObjectUtil.findGetter(dataContextClass, path, null);
 			if (getMethod != null) {
 				return getMethod.invoke(dataContext, new Object[] {});

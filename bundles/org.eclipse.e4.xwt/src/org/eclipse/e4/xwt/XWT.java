@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.NameScope;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -115,8 +116,22 @@ public class XWT {
 	 * @param context
 	 * @return
 	 */
+	public static Object getDataContext(Widget element, boolean resolved) {
+		Object value = XWTLoaderManager.getActive().getDataContext(element);
+		if (resolved && value instanceof IBinding) {
+			return ((IBinding) value).getValue();
+		}
+		return value;
+	}
+
+	/**
+	 * Get the DataContext of given element
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public static Object getDataContext(Widget element) {
-		return XWTLoaderManager.getActive().getDataContext(element);
+		return getDataContext(element, true);
 	}
 
 	/**

@@ -16,5 +16,5 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
  * @author jliu jin.liu@soyatec.com
  */
 public interface IBindingContext {
-	void bind(IObservableValue source, IObservableValue target, IDataBinding binding);
+	void bind(IObservableValue source, IObservableValue target, IDataBindingInfo binding);
 }

@@ -104,7 +104,11 @@ public class BeanObservableValue extends XWTObservableValue {
 	 */
 	protected void doSetApprovedValue(Object value) {
 		Object observed = getObserved();
-		Class<?> type = observed.getClass();
+		setValue(observed, propertyName, value);
+	}
+
+	public static void setValue(Object target, String propertyName, Object value) {
+		Class<?> type = target.getClass();
 		try {
 			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
 			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -122,7 +126,7 @@ public class BeanObservableValue extends XWTObservableValue {
 					if (targetType != value.getClass()) {
 						if (targetType.isEnum() && value instanceof String) {
 							try {
-								writeMethod.invoke(observed, new Object[] { Enum.valueOf(targetType, (String) value) });
+								writeMethod.invoke(target, new Object[] { Enum.valueOf(targetType, (String) value) });
 								return;
 							} catch (Exception e) {
 							}
@@ -132,7 +136,7 @@ public class BeanObservableValue extends XWTObservableValue {
 							value = c.convert(value);
 						}
 					}
-					writeMethod.invoke(observed, new Object[] { value });
+					writeMethod.invoke(target, new Object[] { value });
 					return;
 				}
 			}
@@ -145,7 +149,7 @@ public class BeanObservableValue extends XWTObservableValue {
 					Class fieldType = field.getType();
 					if (fieldType.isEnum() && value instanceof String) {
 						try {
-							field.set(observed, Enum.valueOf(fieldType, (String) value));
+							field.set(target, Enum.valueOf(fieldType, (String) value));
 							return;
 						} catch (Exception e) {
 						}
@@ -154,7 +158,7 @@ public class BeanObservableValue extends XWTObservableValue {
 					if (c != null) {
 						value = c.convert(value);
 					}
-					field.set(observed, value);
+					field.set(target, value);
 				}
 			}
 		} catch (Exception e) {

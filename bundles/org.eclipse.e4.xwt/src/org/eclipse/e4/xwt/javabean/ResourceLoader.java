@@ -41,6 +41,7 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.core.IBinding;
+import org.eclipse.e4.xwt.core.IDynamicBinding;
 import org.eclipse.e4.xwt.core.IRenderingContext;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.IVisualElementLoader;
@@ -60,9 +61,7 @@ import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
 import org.eclipse.e4.xwt.internal.xml.Attribute;
 import org.eclipse.e4.xwt.internal.xml.DocumentObject;
 import org.eclipse.e4.xwt.internal.xml.Element;
-import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
-import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass.Binding;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
@@ -525,8 +524,8 @@ public class ResourceLoader implements IVisualElementLoader {
 			widget = loadData.getCurrentWidget();
 		}
 		if (widget != null) {
-			if (targetObject instanceof BindingMetaclass.Binding) {
-				((BindingMetaclass.Binding) targetObject).setControl(widget);
+			if (targetObject instanceof IDynamicBinding) {
+				((IDynamicBinding) targetObject).setControl(widget);
 			}
 			if (dico != null) {
 				widget.setData(IUserDataConstants.XWT_RESOURCES_KEY, dico);
@@ -1109,8 +1108,8 @@ public class ResourceLoader implements IVisualElementLoader {
 							value = attribute.getContent();
 						} else {
 							value = doCreate(target, (Element) child, type, EMPTY_MAP);
-							if (value instanceof Binding) {
-								((Binding) value).setType(attrName);
+							if (value instanceof IDynamicBinding) {
+								((IDynamicBinding) value).setType(attrName);
 							}
 						}
 					}

@@ -10,10 +10,23 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.swt.widgets.Widget;
+
 /**
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public interface IBinding {
-	Object getValue();
+public interface IDynamicBinding extends IBinding {
+	IObservableValue createBoundSource();
+
+	void setControl(Widget control);
+
+	Widget getControl();
+
+	void setType(String type);
+
+	String getType();
+
+	boolean isControlSource();
 }

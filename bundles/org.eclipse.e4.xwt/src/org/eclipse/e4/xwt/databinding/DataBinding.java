@@ -12,86 +12,37 @@ package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
-import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemEnabledObservableValue;
-import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemSelectionObservableValue;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.MenuItem;
 
 /**
  * The default implementation of the dataBinding object.
  * 
  * @author jliu (jin.liu@soyatec.com)
  */
-public class DataBinding implements IDataBinding {
+public class DataBinding extends AbstractDataBinding {
 
-	private IDataProvider dataProvider;
-	private Object target;
-	private String path;
-	private String type;
-	private BindingMode mode = BindingMode.TwoWay;
 	private IObservableValue observableSource;
 	private IObservableValue observableWidget;
-	private IValueConverter converter;
 
-	public IValueConverter getConverter() {
-		return converter;
-	}
-
-	public void setConverter(IValueConverter converter) {
-		this.converter = converter;
+	/**
+	 * Constructor for dataProvider.
+	 */
+	public DataBinding(Object target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter, IDataProvider dataProvider) {
+		super(sourceProperty, targetProperty, target, mode, converter, dataProvider);
+		assert dataProvider != null : "DataProvider is null";
+		assert sourceProperty != null : "Binding path is null";
+		setDataProvider(dataProvider);
 	}
 
 	/**
 	 * Constructor for dataProvider.
 	 */
-	public DataBinding(IDataProvider dataProvider, Object target, String path, String type, BindingMode mode, IValueConverter converter) {
+	public DataBinding(IObservableValue observableSource, Object target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter, IDataProvider dataProvider) {
+		super(sourceProperty, targetProperty, target, mode, converter, dataProvider);
 		assert dataProvider != null : "DataProvider is null";
-		assert target != null : "Binding widget is null";
-		assert path != null : "Binding path is null";
-		this.dataProvider = dataProvider;
-		this.setTarget(target);
-		this.path = path;
-		this.type = type;
-		this.mode = mode;
-		this.converter = converter;
-	}
-
-	public BindingMode getBindingMode() {
-		return mode;
-	}
-
-	/**
-	 * @return the dataProvider
-	 */
-	public IDataProvider getDataProvider() {
-		return dataProvider;
-	}
-
-	/**
-	 * @param dataProvider
-	 *            the dataProvider to set
-	 */
-	public void setDataProvider(IDataProvider dataProvider) {
-		this.dataProvider = dataProvider;
-	}
-
-	/**
-	 * @return the path
-	 */
-	public String getPath() {
-		return path;
-	}
-
-	/**
-	 * @param path
-	 *            the path to set
-	 */
-	public void setPath(String path) {
-		this.path = path;
+		assert sourceProperty != null : "Binding path is null";
+		this.observableSource = observableSource;
 	}
 
 	/**
@@ -99,12 +50,12 @@ public class DataBinding implements IDataBinding {
 	 */
 	public Object getValue() {
 		IObservableValue observableWidget = getObservableWidget();
+		IDataProvider dataProvider = getDataProvider();
 		/* If observableWidget is null, we need only return the data from provider. */
 		if (observableWidget == null) {
-			return dataProvider.getData(path);
+			return dataProvider.getData(getSourceProperty());
 		}
-		Object valueType = dataProvider.getDataType(path);
-		IObservableValue observableSource = getObservableSource(valueType);
+		IObservableValue observableSource = getObservableSource();
 		IBindingContext bindingContext = dataProvider.getBindingContext();
 		if (bindingContext != null && observableSource != null) {
 			bindingContext.bind(observableSource, observableWidget, this);
@@ -115,64 +66,20 @@ public class DataBinding implements IDataBinding {
 		return null;
 	}
 
-	public IObservableValue getObservableSource(Object valueType) {
+	public IObservableValue getObservableSource() {
 		if (observableSource == null) {
-			observableSource = createObservableSource(valueType);
+			IDataProvider dataProvider = getDataProvider();
+			String sourceProperty = getSourceProperty();
+			Object valueType = dataProvider.getDataType(sourceProperty);
+			observableSource = dataProvider.createObservableValue(valueType, sourceProperty);
 		}
 		return observableSource;
 	}
 
 	public IObservableValue getObservableWidget() {
 		if (observableWidget == null) {
-			observableWidget = createObservableWidget();
+			observableWidget = ObservableValueUtil.createWidget(getTarget(), getTargetProperty());
 		}
 		return observableWidget;
-	}
-
-	/**
-	 * Create Observable Widget.
-	 */
-	protected IObservableValue createObservableWidget() {
-		if (target instanceof Control) {
-			try {
-				return ObservableValueUtil.observePropertyValue((Control) target, type);
-			} catch (XWTException e) {
-			}
-		}
-		if (target instanceof MenuItem) {
-			//
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
-			// testcase: org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
-			//
-			if (ControlDataBinding.ENABLED.equalsIgnoreCase(type)) {
-				return new MenuItemEnabledObservableValue((MenuItem) target);
-			}
-			if (ControlDataBinding.SELECTION.equalsIgnoreCase(type)) {
-				return new MenuItemSelectionObservableValue((MenuItem) target);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @param target
-	 *            the target to set
-	 */
-	public void setTarget(Object target) {
-		this.target = target;
-	}
-
-	/**
-	 * @return the target
-	 */
-	public Object getTarget() {
-		return target;
-	}
-
-	/**
-	 * Create Observable Source.
-	 */
-	protected IObservableValue createObservableSource(Object valueType) {
-		return dataProvider.createObservableValue(valueType, path);
 	}
 }

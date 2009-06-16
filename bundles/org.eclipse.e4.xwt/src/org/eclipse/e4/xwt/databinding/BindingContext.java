@@ -15,7 +15,7 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
-import org.eclipse.e4.xwt.IDataBinding;
+import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.InverseValueConverter;
 import org.eclipse.e4.xwt.XWT;
@@ -37,7 +37,7 @@ public class BindingContext implements IBindingContext {
 	 * 
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
-	public void bind(IObservableValue source, IObservableValue target, IDataBinding dataBinding) {
+	public void bind(IObservableValue source, IObservableValue target, IDataBindingInfo dataBinding) {
 		if (source != null && target != null) {
 			this.observeValue = source;
 			this.observeWidget = target;

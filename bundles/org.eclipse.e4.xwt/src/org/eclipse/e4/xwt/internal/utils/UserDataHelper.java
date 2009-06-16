@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.utils;
 
-import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.internal.core.NameScope;
 import org.eclipse.jface.viewers.Viewer;
@@ -187,10 +186,16 @@ public class UserDataHelper {
 		while (data == null && (parent = (Widget) parent.getData(IUserDataConstants.XWT_PARENT_KEY)) != null) {
 			data = ((Widget) parent).getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
 		}
-		if (data instanceof IBinding) {
-			return ((IBinding) data).getValue();
-		}
 		return data;
+	}
+
+	public static Widget getDataContextHost(Widget widget) {
+		Object data = widget.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
+		Widget parent = widget;
+		while (data == null && (parent = (Widget) parent.getData(IUserDataConstants.XWT_PARENT_KEY)) != null) {
+			data = ((Widget) parent).getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
+		}
+		return parent;
 	}
 
 	public static void setDataContext(Widget widget, Object dataContext) {
