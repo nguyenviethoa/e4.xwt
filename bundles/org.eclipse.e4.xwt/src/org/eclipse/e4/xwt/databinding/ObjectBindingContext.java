@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.beans.IBeanObservable;
+import org.eclipse.core.databinding.observable.IObserving;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
@@ -50,7 +50,7 @@ public class ObjectBindingContext extends BindingContext {
 				}
 			}
 
-			observeValue = BeansObservables.observeValue(newValue, propertyName);
+			observeValue = BeanObservableValueUtil.observeValue(newValue, propertyName);
 			addListener(newValue);
 			observed = newValue;
 			bindingContext.put(observed, this);
@@ -137,10 +137,15 @@ public class ObjectBindingContext extends BindingContext {
 	 */
 	public void bind(IObservableValue source, IObservableValue target, IDataBindingInfo dataBinding) {
 		super.bind(source, target, dataBinding);
-		if (source instanceof IBeanObservable) {
+		if (source instanceof BeanObservableValue) {
+			BeanObservableValue beanValue = (BeanObservableValue) source;
+			propertyName = beanValue.getPropertyName();
+		} else if (source instanceof IBeanObservable) {
 			IBeanObservable beanValue = (IBeanObservable) source;
 			propertyName = beanValue.getPropertyDescriptor().getName();
-			observed = beanValue.getObserved();
+		}
+		if (source instanceof IObserving) {
+			observed = ((IObserving) source).getObserved();
 			bindingContext.put(observed, this);
 			addListener(observed);
 		}

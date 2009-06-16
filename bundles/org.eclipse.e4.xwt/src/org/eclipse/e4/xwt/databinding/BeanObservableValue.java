@@ -165,4 +165,8 @@ public class BeanObservableValue extends XWTObservableValue {
 			e.printStackTrace();
 		}
 	}
+
+	public String getPropertyName() {
+		return propertyName;
+	}
 }

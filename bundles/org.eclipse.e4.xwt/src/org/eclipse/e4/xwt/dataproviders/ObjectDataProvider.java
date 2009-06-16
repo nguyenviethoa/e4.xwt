@@ -10,17 +10,15 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.dataproviders;
 
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.databinding.BeanObservableValue;
+import org.eclipse.e4.xwt.databinding.BeanObservableValueUtil;
 import org.eclipse.e4.xwt.databinding.ObjectBindingContext;
 
 /**
@@ -235,24 +233,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		} else if (paths.length == 1) {
 			propertyName = fullPath;
 		}
-		if (isBeanSupport(dataContext)) {
-			return BeansObservables.observeValue(XWT.getRealm(), dataContext, propertyName);
-		}
-		return new BeanObservableValue(valueType, dataContext, propertyName);
-	}
-
-	private boolean isBeanSupport(Object target) {
-		Method method = null;
-		try {
-			try {
-				method = target.getClass().getMethod("addPropertyChangeListener", new Class[] { String.class, PropertyChangeListener.class });
-			} catch (NoSuchMethodException e) {
-				method = target.getClass().getMethod("addPropertyChangeListener", new Class[] { PropertyChangeListener.class });
-			}
-		} catch (SecurityException e) {
-		} catch (NoSuchMethodException e) {
-		}
-		return method != null;
+		return BeanObservableValueUtil.observeValue(dataContext, propertyName);
 	}
 
 	/*

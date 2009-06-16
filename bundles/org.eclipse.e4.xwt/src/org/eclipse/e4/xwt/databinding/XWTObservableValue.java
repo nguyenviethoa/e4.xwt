@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Diffs;
+import org.eclipse.core.databinding.observable.IObserving;
 import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueDiff;
 import org.eclipse.e4.xwt.XWT;
@@ -22,7 +23,7 @@ import org.eclipse.jface.util.Util;
  * 
  * @author jliu (jin.liu@soyatec.com)
  */
-public abstract class XWTObservableValue extends AbstractObservableValue {
+public abstract class XWTObservableValue extends AbstractObservableValue implements IObserving {
 
 	public static final String VALUE_CHANGED_EVENT = "EVENT_NODE_VALUE_CHANGED";
 
