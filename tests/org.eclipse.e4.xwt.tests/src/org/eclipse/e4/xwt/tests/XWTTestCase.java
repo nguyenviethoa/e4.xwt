@@ -35,7 +35,9 @@ public abstract class XWTTestCase extends TestCase {
 	}
 
 	protected void runTest(final URL url, Runnable prepareAction, Runnable checkAction) {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		try {
+			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 			root = XWT.load(url);
 			assertNotNull(root);
 			Shell shell = root.getShell();
@@ -58,11 +60,15 @@ public abstract class XWTTestCase extends TestCase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
+		} finally {
+			Thread.currentThread().setContextClassLoader(classLoader);
 		}
 	}
 
 	protected void runDebugTest(final URL url, Runnable prepareAction, Runnable checkAction1) {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		try {
+			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 			root = XWT.load(url);
 			assertNotNull(root);
 			Shell shell = root.getShell();
@@ -76,6 +82,8 @@ public abstract class XWTTestCase extends TestCase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
+		} finally {
+			Thread.currentThread().setContextClassLoader(classLoader);
 		}
 	}
 
