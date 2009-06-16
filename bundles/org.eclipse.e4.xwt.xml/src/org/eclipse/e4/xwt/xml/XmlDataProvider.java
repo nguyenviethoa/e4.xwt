@@ -136,18 +136,34 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getData()
 	 */
-	public Object getData(String path) {
-		Object root = getRoot();
-		if (root == null || path == null) {
+	public Object getData(Object object, String path) {
+		if (object == null || path == null) {
 			return null;
 		}
-		if (root instanceof Node) {
-			Object selectObject = selectSingleNode((Node) root, path);
+		if (object instanceof Node) {
+			Object selectObject = selectSingleNode((Node) object, path);
 			return selectObject;
 		}
-		return root;
+		return object;
 	}
-	
+
+	public Object getData(String path) {
+		return getData(getRoot(), path);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getData()
+	 */
+	public void setData(Object object, String path, Object value) {
+		// TODO
+	}
+
+	public void setData(String path, Object value) {
+		// TODO
+	}
+
 	public Class<?> getDataType(String path) {
 		Object data = getData(path);
 		if (data == null) {

@@ -21,11 +21,25 @@ import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
  * @author yyang (yves.yang@soyatec.com)
  */
 public class CustomDataProvider extends AbstractDataProvider {
-	protected Class<?> objectType; 
-	protected DynamicObject object; 
-	
+	protected Class<?> objectType;
+	protected DynamicObject object;
+
 	public Object getData(String path) {
-		return getObjectInstance().getProperty(path);
+		return getData(getObjectInstance(), path);
+	}
+
+	public Object getData(Object object, String path) {
+		assert object instanceof DynamicObject;
+		return ((DynamicObject) object).getProperty(path);
+	}
+
+	public void setData(String path, Object value) {
+		setData(getObjectInstance(), path, value);
+	}
+
+	public void setData(Object object, String path, Object value) {
+		assert object instanceof DynamicObject;
+		((DynamicObject) object).setProperty(path, value);
 	}
 
 	public IObservableValue createObservableValue(Object valueType, final String path) {
@@ -36,7 +50,7 @@ public class CustomDataProvider extends AbstractDataProvider {
 				protected void doSetApprovedValue(Object value) {
 					CustomDataProvider.this.getObjectInstance().setProperty(path, value);
 				}
-				
+
 				@Override
 				protected Object doGetValue() {
 					return CustomDataProvider.this.getData(path);
@@ -45,11 +59,11 @@ public class CustomDataProvider extends AbstractDataProvider {
 		}
 		return null;
 	}
-	
+
 	public Class<?> getDataType(String path) {
 		return String.class;
 	}
-	
+
 	public void setObjectType(Class<?> objectType) {
 		this.objectType = objectType;
 	}
@@ -68,7 +82,7 @@ public class CustomDataProvider extends AbstractDataProvider {
 				object = (DynamicObject) objectType.newInstance();
 			} catch (Exception e) {
 				throw new XWTException(e);
-			}			
+			}
 		}
 		return object;
 	}
