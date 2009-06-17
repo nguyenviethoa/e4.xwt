@@ -7,7 +7,7 @@
 	</Shell.layout>
 	
 	<Shell.Resources>
-		<EMFDataProvider x:Key="myBooks" objectType="{x:Type y:Book}">
+		<EMFDataProvider x:Key="myBooks" objectInstance="{Binding}">
 		</EMFDataProvider>
 	</Shell.Resources>
 	

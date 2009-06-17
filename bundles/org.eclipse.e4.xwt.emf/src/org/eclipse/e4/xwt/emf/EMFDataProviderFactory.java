@@ -20,7 +20,9 @@ import org.eclipse.emf.ecore.EObject;
 public class EMFDataProviderFactory implements IDataProviderFactory {
 
 	public IDataProvider create(Object dataContext) {
-		return new EMFDataProvider();
+		EMFDataProvider dataProvider = new EMFDataProvider();
+		dataProvider.setObjectInstance((EObject) dataContext);
+		return dataProvider;
 	}
 
 	public Class<?> getType() {

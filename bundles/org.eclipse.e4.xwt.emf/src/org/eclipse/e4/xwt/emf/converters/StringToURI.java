@@ -18,6 +18,7 @@ import org.eclipse.emf.common.util.URI;
  * @author yyang (yves.yang@soyatec.com)
  */
 public class StringToURI implements IConverter {
+	public static StringToURI instance = new StringToURI();
 
 	public Object convert(Object fromObject) {
 		return URI.createURI(fromObject.toString());
