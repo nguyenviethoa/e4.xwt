@@ -20,7 +20,7 @@ import org.eclipse.e4.xwt.emf.test.books.BooksFactory;
 import org.eclipse.e4.xwt.emf.test.books.Title;
 
 /**
- * @author jliu jin.liu@soyatec.com
+ * @author yyang (yves.yang@soyatec.com)
  */
 public class EMFDataProvider_DataContext_Nested {
 	public static void main(String[] args) {

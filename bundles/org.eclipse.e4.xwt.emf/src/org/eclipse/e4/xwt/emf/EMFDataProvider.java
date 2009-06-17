@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  */
 public class EMFDataProvider extends AbstractDataProvider {
 	private URI typeURI;
+	private URI objectURI;
 
 	private ResourceSet resourceSet;
 
@@ -50,6 +51,14 @@ public class EMFDataProvider extends AbstractDataProvider {
 		return null;
 	}
 
+	protected URI getObjectURI() {
+		return objectURI;
+	}
+
+	protected void setObjectURI(URI objectURI) {
+		this.objectURI = objectURI;
+	}
+
 	protected URI getTypeURI() {
 		return typeURI;
 	}
@@ -60,11 +69,10 @@ public class EMFDataProvider extends AbstractDataProvider {
 
 	public EObject getObjectInstance() {
 		if (objectInstance == null) {
-			if (typeURI != null) {
-				if (resourceSet == null) {
-					resourceSet = new ResourceSetImpl();
-				}
-				EClass eClass = (EClass) resourceSet.getEObject(typeURI, true);
+			if (objectURI != null) {
+				objectInstance = getResourceSet().getEObject(objectURI, true);
+			} else if (typeURI != null) {
+				EClass eClass = (EClass) getResourceSet().getEObject(typeURI, true);
 				objectInstance = eClass.getEPackage().getEFactoryInstance().create(eClass);
 			}
 		}
@@ -72,6 +80,9 @@ public class EMFDataProvider extends AbstractDataProvider {
 	}
 
 	protected ResourceSet getResourceSet() {
+		if (resourceSet == null) {
+			resourceSet = new ResourceSetImpl();
+		}
 		return resourceSet;
 	}
 

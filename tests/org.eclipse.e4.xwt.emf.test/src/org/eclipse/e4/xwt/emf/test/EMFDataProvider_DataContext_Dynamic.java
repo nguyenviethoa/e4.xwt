@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * @author jliu jin.liu@soyatec.com
+ * @author yyang (yves.yang@soyatec.com)
  */
 public class EMFDataProvider_DataContext_Dynamic {
 	public static void main(String[] args) {
