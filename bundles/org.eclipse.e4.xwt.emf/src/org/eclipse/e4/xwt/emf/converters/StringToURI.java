@@ -8,22 +8,26 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.emf;
+package org.eclipse.e4.xwt.emf.converters;
 
-import org.eclipse.e4.xwt.IDataProvider;
-import org.eclipse.e4.xwt.IDataProviderFactory;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.emf.common.util.URI;
 
 /**
+ * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class EMFDataProviderFactory implements IDataProviderFactory {
+public class StringToURI implements IConverter {
 
-	public IDataProvider create(Object dataContext) {
-		return new EMFDataProvider();
+	public Object convert(Object fromObject) {
+		return URI.createURI(fromObject.toString());
 	}
 
-	public Class<?> getType() {
-		return EObject.class;
+	public Object getFromType() {
+		return String.class;
+	}
+
+	public Object getToType() {
+		return URI.class;
 	}
 }

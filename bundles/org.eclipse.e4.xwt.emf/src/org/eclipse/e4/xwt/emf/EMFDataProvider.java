@@ -8,25 +8,29 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.e4.xwt.emf;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 /**
- * @author jliu
- * 
+ * @author jliu (jin.liu@soyatec.com)
  */
 public class EMFDataProvider extends AbstractDataProvider {
+	private URI typeURI;
+
+	private ResourceSet resourceSet;
 
 	private String featureName;
-	private EObject eObject;
-	private Class<?> eObjectType;
+	private EObject objectInstance;
 
 	public IObservableValue createObservableValue(Object valueType, String path) {
 		EObject eObj = getTarget();
@@ -46,23 +50,45 @@ public class EMFDataProvider extends AbstractDataProvider {
 		return null;
 	}
 
-	public EObject getEObject() {
-		if (eObject == null && eObjectType != null) {
-			eObject = EMFUtility.getEObject(eObjectType);
-		}
-		return eObject;
+	protected URI getTypeURI() {
+		return typeURI;
 	}
 
-	public void setEObject(EObject eObject) {
-		this.eObject = eObject;
+	protected void setTypeURI(URI typeURI) {
+		this.typeURI = typeURI;
+	}
+
+	public EObject getObjectInstance() {
+		if (objectInstance == null) {
+			if (typeURI != null) {
+				if (resourceSet == null) {
+					resourceSet = new ResourceSetImpl();
+				}
+				EClass eClass = (EClass) resourceSet.getEObject(typeURI, true);
+				objectInstance = eClass.getEPackage().getEFactoryInstance().create(eClass);
+			}
+		}
+		return objectInstance;
+	}
+
+	protected ResourceSet getResourceSet() {
+		return resourceSet;
+	}
+
+	protected void setResourceSet(ResourceSet resourceSet) {
+		this.resourceSet = resourceSet;
+	}
+
+	public void setObjectInstance(EObject eObject) {
+		this.objectInstance = eObject;
 	}
 
 	public EObject getTarget() {
-		EObject eObj = getEObject();
-		if (eObj != null) {
+		EObject eObj = getObjectInstance();
+		if (eObj != null && featureName != null) {
 			return EMFUtility.getEObject(eObj, featureName);
 		}
-		return null;
+		return eObj;
 	}
 
 	/*
@@ -109,17 +135,6 @@ public class EMFDataProvider extends AbstractDataProvider {
 			}
 		}
 		return null;
-	}
-
-	public void setEObjectType(Class<?> eObjectType) {
-		this.eObjectType = eObjectType;
-	}
-
-	public Class<?> getEObjectType() {
-		if (eObjectType == null && eObject != null) {
-			eObjectType = eObject.getClass();
-		}
-		return eObjectType;
 	}
 
 	public void setFeatureName(String featureName) {
@@ -172,5 +187,4 @@ public class EMFDataProvider extends AbstractDataProvider {
 			}
 		}
 	}
-
 }

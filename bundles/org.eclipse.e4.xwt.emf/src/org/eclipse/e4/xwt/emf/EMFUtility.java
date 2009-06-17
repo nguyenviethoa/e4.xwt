@@ -58,12 +58,15 @@ public class EMFUtility {
 		return eObj;
 	}
 
-	public static EObject getEObject(Class<?> type) {
-		if (type == null) {
+	public static EObject getEObject(String typeName) {
+		if (typeName == null) {
 			return null;
 		}
+
 		EObject eObject = null;
 		try {
+			ClassLoader classLoader = XWT.getLoadingContext().getClassLoader();
+			Class<?> type = classLoader.loadClass(typeName);
 			Package p = type.getPackage();
 			Class<?>[] classes = getClasses(p.getName());
 			for (Class<?> class1 : classes) {
@@ -91,7 +94,6 @@ public class EMFUtility {
 		List<Class<?>> classes = new ArrayList<Class<?>>();
 		File directory = null;
 		try {
-
 			ClassLoader classLoader = XWT.getLoadingContext().getClassLoader();
 			URL resource = classLoader.getResource(pckgname.replace('.', '/'));
 			directory = new File(resource.getFile());
