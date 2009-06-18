@@ -14,7 +14,7 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.emf.EMFDataProviderFactory;
+import org.eclipse.e4.xwt.emf.EMFBinding;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class EMFDataProvider_DataContext_Dynamic {
 	public static void main(String[] args) {
-		XWT.addDataProviderFactory(new EMFDataProviderFactory());
+		EMFBinding.initialze();
 		URL url = EMFDataProvider_DataContext_Dynamic.class.getResource(EMFDataProvider_DataContext_Dynamic.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url, createBook());

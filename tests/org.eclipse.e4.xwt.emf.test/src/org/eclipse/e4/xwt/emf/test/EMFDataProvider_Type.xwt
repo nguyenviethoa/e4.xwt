@@ -7,7 +7,7 @@
 	</Shell.layout>
 	
 	<Shell.Resources>
-		<EMFDataProvider x:Key="myBooks" typeURI="TODO">
+		<EMFDataProvider x:Key="myBooks" typeURI="model/books.ecore#//Book">
 		</EMFDataProvider>
 	</Shell.Resources>
 	

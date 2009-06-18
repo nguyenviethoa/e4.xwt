@@ -14,14 +14,18 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.emf.EMFDataProvider;
+import org.eclipse.e4.xwt.emf.EMFBinding;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public class EMFDataProvider_Type {
 	public static void main(String[] args) {
-		XWT.registerMetaclass(EMFDataProvider.class);
+		EMFBinding.initialze();
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
+
 		URL url = EMFDataProvider_Type.class.getResource(EMFDataProvider_Type.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

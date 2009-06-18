@@ -14,17 +14,20 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.emf.EMFDataProviderFactory;
+import org.eclipse.e4.xwt.emf.EMFBinding;
 import org.eclipse.e4.xwt.emf.test.books.Book;
 import org.eclipse.e4.xwt.emf.test.books.BooksFactory;
+import org.eclipse.e4.xwt.emf.test.books.BooksPackage;
 import org.eclipse.e4.xwt.emf.test.books.Title;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author jliu jin.liu@soyatec.com
  */
 public class EMFDataProvider_DataContext {
 	public static void main(String[] args) {
-		XWT.addDataProviderFactory(new EMFDataProviderFactory());
+		EMFBinding.initialze();
 		URL url = EMFDataProvider_DataContext.class.getResource(EMFDataProvider_DataContext.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url, createBook());
@@ -34,6 +37,8 @@ public class EMFDataProvider_DataContext {
 	}
 
 	protected static Book createBook() {
+		EClass type = BooksPackage.eINSTANCE.getBook();
+		System.out.println(EcoreUtil.getURI(type));
 		Book harryPotter = BooksFactory.eINSTANCE.createBook();
 		Title title = BooksFactory.eINSTANCE.createTitle();
 		title.setLan("en");

@@ -14,7 +14,7 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.emf.EMFDataProvider;
+import org.eclipse.e4.xwt.emf.EMFBinding;
 import org.eclipse.e4.xwt.emf.test.books.Book;
 import org.eclipse.e4.xwt.emf.test.books.BooksFactory;
 import org.eclipse.e4.xwt.emf.test.books.Title;
@@ -24,7 +24,7 @@ import org.eclipse.e4.xwt.emf.test.books.Title;
  */
 public class EMFDataProvider_DataContext_Nested {
 	public static void main(String[] args) {
-		XWT.registerMetaclass(EMFDataProvider.class);
+		EMFBinding.initialze();
 		URL url = EMFDataProvider_DataContext_Nested.class.getResource(EMFDataProvider_DataContext_Nested.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			Book harryPotter = BooksFactory.eINSTANCE.createBook();
