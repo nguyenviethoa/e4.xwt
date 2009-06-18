@@ -11,8 +11,6 @@
 package org.eclipse.e4.xwt.emf;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.emf.converters.StringToURI;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -40,9 +38,7 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		XWT.registerMetaclass(EMFDataProvider.class);
-		XWT.addDataProviderFactory(new EMFDataProviderFactory());
-		XWT.registerConvertor(StringToURI.instance);
+		EMFBinding.initialze();
 	}
 
 	/*

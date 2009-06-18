@@ -40,7 +40,7 @@ public class EMFDataProvider extends AbstractDataProvider {
 			int index = path.lastIndexOf(".");
 			if (index != -1) {
 				String parent = path.substring(0, index);
-				eObj = EMFUtility.getEObject(eObj, parent);
+				eObj = EMFBinding.getEObject(eObj, parent);
 				featureName = path.substring(index + 1);
 			}
 			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
@@ -51,19 +51,19 @@ public class EMFDataProvider extends AbstractDataProvider {
 		return null;
 	}
 
-	protected URI getObjectURI() {
+	public URI getObjectURI() {
 		return objectURI;
 	}
 
-	protected void setObjectURI(URI objectURI) {
+	public void setObjectURI(URI objectURI) {
 		this.objectURI = objectURI;
 	}
 
-	protected URI getTypeURI() {
+	public URI getTypeURI() {
 		return typeURI;
 	}
 
-	protected void setTypeURI(URI typeURI) {
+	public void setTypeURI(URI typeURI) {
 		this.typeURI = typeURI;
 	}
 
@@ -97,7 +97,7 @@ public class EMFDataProvider extends AbstractDataProvider {
 	public EObject getTarget() {
 		EObject eObj = getObjectInstance();
 		if (eObj != null && featureName != null) {
-			return EMFUtility.getEObject(eObj, featureName);
+			return EMFBinding.getEObject(eObj, featureName);
 		}
 		return eObj;
 	}
@@ -137,7 +137,7 @@ public class EMFDataProvider extends AbstractDataProvider {
 			int index = path.lastIndexOf(".");
 			if (index != -1) {
 				String parent = path.substring(0, index);
-				eObj = EMFUtility.getEObject(eObj, parent);
+				eObj = EMFBinding.getEObject(eObj, parent);
 				featureName = path.substring(index + 1);
 			}
 			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
@@ -163,7 +163,7 @@ public class EMFDataProvider extends AbstractDataProvider {
 	 */
 	public Object getData(Object target, String path) {
 		if (target instanceof EObject) {
-			return EMFUtility.getEObject((EObject) target, path);
+			return EMFBinding.getEObject((EObject) target, path);
 		}
 		return null;
 	}
@@ -189,7 +189,7 @@ public class EMFDataProvider extends AbstractDataProvider {
 			int index = path.lastIndexOf(".");
 			if (index != -1) {
 				String parent = path.substring(0, index);
-				eObj = EMFUtility.getEObject(eObj, parent);
+				eObj = EMFBinding.getEObject(eObj, parent);
 				featureName = path.substring(index + 1);
 			}
 			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
