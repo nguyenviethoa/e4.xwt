@@ -99,5 +99,4 @@ public class NewPresentationWizard extends NewElementWizard {
 		fPage.performCancel();
 		return super.performCancel();
 	}
-	
 }
