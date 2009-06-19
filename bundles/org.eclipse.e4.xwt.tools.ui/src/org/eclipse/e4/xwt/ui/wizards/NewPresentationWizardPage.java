@@ -37,6 +37,8 @@ import org.eclipse.e4.xwt.ui.utils.ProjectContext;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
@@ -64,7 +66,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
-public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWizardPage {
+public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWizardPage {
 	public static final String VIEW_LOCATION = "Resources/vues/";
 
 	protected TableViewer modelTableViewer;
@@ -73,14 +75,16 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 
 	protected IResource guiResource;
 
-	private boolean shouldGenMetaclass;
+	private boolean shouldGenMetaclass = false;
 
 	private StringButtonDialogField fieldEditor;
 	private Button metaclassButton;
 
+	private IPackageFragment packageFragment;
+	
 	private String dataContext;
 
-	public NewMediatorWizardPage() {
+	public NewPresentationWizardPage() {
 		setTitle("New Wizard Creation");
 		setDescription("This wizard creates a *.xwt file with java host class.");
 	}
@@ -146,12 +150,11 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 		}
 
 		if (dataContextType != null) {
-			setTypeName(dataContextType.getElementName() + "Mediator", true);
+			setTypeName(dataContextType.getElementName(), true);
 			fieldEditor.setText(dataContextType.getFullyQualifiedName('.'));
-			shouldGenMetaclass = true;
 			metaclassButton.setSelection(shouldGenMetaclass);
 		}
-
+		
 		Dialog.applyDialogFont(composite);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IJavaHelpContextIds.NEW_CLASS_WIZARD_PAGE);
 	}
@@ -246,7 +249,19 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 		super.initTypePage(elem);
 		setSuperClass(getSuperClassName(), false);
 	}
-
+	
+	@Override
+	public void setPackageFragment(IPackageFragment pack, boolean canBeModified) {
+		String name = pack.getElementName();
+		IPackageFragmentRoot root = (IPackageFragmentRoot) pack.getParent();
+		try {
+			packageFragment = root.createPackageFragment(name + ".ui", false, new NullProgressMonitor());
+			super.setPackageFragment(packageFragment, canBeModified);
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	protected String getSuperClassName() {
 		return Composite.class.getName();
 	}
@@ -260,15 +275,6 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 
 	public int getModifiers() {
 		return F_PUBLIC;
-	}
-
-	/**
-	 * Returns the content of the superclass input field.
-	 * 
-	 * @return the superclass name
-	 */
-	public String getSuperClass() {
-		return super.getSuperClass();
 	}
 
 	/**
@@ -370,7 +376,7 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 					printStream.println("\t\t\t <FillLayout/>");
 					printStream.println("\t\t </Group.layout>");
 
-					String elementType = propertyType.getSimpleName() + "Mediator";
+					String elementType = propertyType.getSimpleName();
 					printStream.println("\t\t <c:" + elementType + " DataContext=\"{Binding path=" + pd.getName() + "}\"/>");
 
 					printStream.println("\t\t <Group.layoutData>");
@@ -475,5 +481,15 @@ public class NewMediatorWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWi
 
 	public IResource getGuiResource() {
 		return guiResource;
+	}
+	
+	public void performCancel() {
+		if (packageFragment != null) {
+			try {
+				packageFragment.delete(true, new NullProgressMonitor());
+			} catch (JavaModelException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

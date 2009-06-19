@@ -21,24 +21,24 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 
-public class NewMediatorWizard extends NewElementWizard {
+public class NewPresentationWizard extends NewElementWizard {
 
-	private NewMediatorWizardPage fPage;
+	private NewPresentationWizardPage fPage;
 
-	public NewMediatorWizard() {
+	public NewPresentationWizard() {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New Mediator in XWT");
 	}
 
-	public NewMediatorWizard(IType contextType) {
+	public NewPresentationWizard(IType contextType) {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New Mediator in XWT");
 	}
 
 	public void addPages() {
-		fPage = new NewMediatorWizardPage();
+		fPage = new NewPresentationWizardPage();
 		fPage.init(getSelection());
 		addPage(fPage);
 	}
@@ -93,5 +93,11 @@ public class NewMediatorWizard extends NewElementWizard {
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		fPage.createType(monitor); // use the full progress monitor
 	}
-
+	
+	@Override
+	public boolean performCancel() {
+		fPage.performCancel();
+		return super.performCancel();
+	}
+	
 }

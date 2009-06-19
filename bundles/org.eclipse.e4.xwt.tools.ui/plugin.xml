@@ -44,7 +44,7 @@
     </wizard>
     <wizard
           category="org.eclipse.e4.xwt.ui.category.xwt"
-          class="org.eclipse.e4.xwt.ui.wizards.NewMediatorWizard"
+          class="org.eclipse.e4.xwt.ui.wizards.NewPresentationWizard"
           hasPages="true"
           icon="icons/full/etool16/newexprj_wiz.png"
           id="org.eclipse.e4.xwt.ui.wizards.NewMediatorWizard"
