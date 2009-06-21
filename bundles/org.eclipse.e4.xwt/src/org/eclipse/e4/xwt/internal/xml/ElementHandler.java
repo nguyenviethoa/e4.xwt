@@ -194,7 +194,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 					if (token.equals(",")) {
 						if (attributeName != null) {
 							if (attributeValue != null) {
-								Attribute attribute = new Attribute(current.getNamespace(), attributeName, elementManager.generateID(current.getName()));
+								Attribute attribute = new Attribute(normalizeAttrNamespace(current.getNamespace()), attributeName, elementManager.generateID(current.getName()));
 								handleContent(attribute, attributeValue);
 								element.setAttribute(attribute);
 								current = attribute;
@@ -237,7 +237,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 			}
 
 			if (equals) {
-				Attribute attribute = new Attribute(current.getNamespace(), attributeName, elementManager.generateID(current.getName()));
+				Attribute attribute = new Attribute(normalizeAttrNamespace(current.getNamespace()), attributeName, elementManager.generateID(current.getName()));
 				if (attributeValue != null) {
 					handleContent(attribute, attributeValue);
 					element.setAttribute(attribute);
@@ -462,7 +462,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		// Process attributes: original, external
 		Set<Attribute> attributes = new HashSet<Attribute>();
 		for (int i = 0, len = attrs.getLength(); i < len; i++) {
-			String attrUri = normalizeNamespace(attrs.getURI(i));
+			String attrUri = normalizeAttrNamespace(attrs.getURI(i));
 			String attrName = attrs.getLocalName(i);
 
 			Attribute attribute;
@@ -606,7 +606,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 				collection.add(attr);
 			}
 
-			Attribute attribute = new Attribute(namespace, attributeName, elementId, collection);
+			Attribute attribute = new Attribute(normalizeAttrNamespace(namespace), attributeName, elementId, collection);
 			elementStack.push(attribute);
 			bufferStack.push(textBuffer);
 			textBuffer = null;
@@ -648,6 +648,23 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		}
 		if (uri.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
 			return uri;
+		}
+		return uri.toLowerCase();
+	}
+
+	/**
+	 * Normalize the namespace string. If uri is null or length is zero, returns default namespace.
+	 * 
+	 * @param uri
+	 *            The namespace which to normalize.
+	 * @return Returns the normalized namespace.
+	 */
+	private String normalizeAttrNamespace(String uri) {
+		if (uri == null || uri.length() == 0) {
+			uri = defaultNamespace;
+		}
+		if (uri.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
+			uri = defaultNamespace;
 		}
 		return uri.toLowerCase();
 	}

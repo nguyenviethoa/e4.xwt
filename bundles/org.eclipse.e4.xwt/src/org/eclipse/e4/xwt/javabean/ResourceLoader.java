@@ -645,7 +645,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		// x:DataContext
 		try {
 			{
-				Attribute dataContextAttribute = element.getAttribute(IConstants.XWT_NAMESPACE, "DataContext");
+				Attribute dataContextAttribute = element.getAttribute("DataContext");
 				if (dataContextAttribute != null) {
 					Widget composite = (Widget) swtObject;
 					DocumentObject documentObject = dataContextAttribute.getChildren()[0];

@@ -141,10 +141,10 @@ public class Binding implements IDynamicBinding {
 		return UserDataHelper.getDataContextHost(control);
 	}
 
-	public IObservableValue createBoundSource() {
+	public Object createBoundSource() {
 		Object source = getSourceObject();
 		if (source instanceof IDynamicBinding) {
-			IObservableValue value = ((IDynamicBinding) source).createBoundSource();
+			Object value = ((IDynamicBinding) source).createBoundSource();
 			if (value != null && path != null) {
 				return ObservableValueUtil.createWidget(value, path);
 			}
@@ -152,7 +152,7 @@ public class Binding implements IDynamicBinding {
 		if (source != null && path != null) {
 			return ObservableValueUtil.createWidget(source, path);
 		}
-		return null;
+		return getValue();
 	}
 
 	public boolean isControlSource() {

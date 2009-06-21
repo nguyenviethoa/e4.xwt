@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Widget;
  * @author yyang (yves.yang@soyatec.com)
  */
 public interface IDynamicBinding extends IBinding {
-	IObservableValue createBoundSource();
+	Object createBoundSource();
 
 	void setControl(Widget control);
 
