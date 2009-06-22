@@ -212,6 +212,30 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		return BeanObservableValue.getValueType(type, path);
 	}
 
+	/**
+	 * check if the property is read only
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public boolean isPropertyReadOnly(String path) {
+		Object target = getTarget();
+		if (target == null) {
+			return true;
+		}
+		Class<?> type = target.getClass();
+		if (path == null) {
+			return true;
+		}
+		int index = path.indexOf(".");
+		while (index != -1 && target != null) {
+			type = BeanObservableValue.getValueType(type, path.substring(0, index));
+			path = path.substring(index + 1);
+			index = path.indexOf(".");
+		}
+		return BeanObservableValue.isPropertyReadOnly(type, path);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

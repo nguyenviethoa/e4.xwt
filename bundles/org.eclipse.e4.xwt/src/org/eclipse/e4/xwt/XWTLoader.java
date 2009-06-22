@@ -504,7 +504,7 @@ public class XWTLoader implements IXWTLoader {
 		if (converter != null) {
 			return converter.convert(string);
 		}
-		throw new XWTException("Converter is missing of type: " + targetType.getName());
+		throw new XWTException("Converter is missing of type: " + targetType.getName() + " from String");
 	}
 
 	/*

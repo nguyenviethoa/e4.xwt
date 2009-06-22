@@ -125,6 +125,24 @@ public class EMFDataProvider extends AbstractDataProvider {
 		return null;
 	}
 
+	public boolean isPropertyReadOnly(String path) {
+		EObject eObj = getTarget();
+		if (eObj != null && path != null) {
+			String featureName = path;
+			int index = path.lastIndexOf(".");
+			if (index != -1) {
+				String parent = path.substring(0, index);
+				eObj = (EObject) getData(eObj, parent);
+				featureName = path.substring(index + 1);
+			}
+			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
+			if (feature != null) {
+				return !feature.isChangeable();
+			}
+		}
+		return true;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -9,6 +9,7 @@
 	
 	<Shell.Resources>
 		<y:Person x:Key="myData"/>
+		<y:MyConverter x:Key="myConverter"/>
 	</Shell.Resources>
 	
 	<Label text="Name"/>
@@ -18,7 +19,7 @@
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
-	<Label text="{Binding Path=name,converter=y:MyConverter}">
+	<Label text="{Binding Path=name,converter={StaticResource myConverter}}">
 		<Label.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>

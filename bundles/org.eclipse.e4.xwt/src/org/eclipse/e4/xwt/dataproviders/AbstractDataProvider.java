@@ -47,4 +47,8 @@ public abstract class AbstractDataProvider implements IDataProvider {
 	public void removeProperty(String property) {
 		properties.remove(property);
 	}
+
+	public boolean isPropertyReadOnly(String path) {
+		return false;
+	}
 }

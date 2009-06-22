@@ -330,8 +330,6 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (!constraintType.isArray() || !constraintType.getComponentType().isAssignableFrom(metaclass.getType()))
 				return null;
 		}
-		// ...
-		trace("load: " + metaclass.getName());
 		Object targetObject = null;
 		Integer styleValue = getStyleValue(element, styles);
 
@@ -645,7 +643,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		// x:DataContext
 		try {
 			{
-				Attribute dataContextAttribute = element.getAttribute("DataContext");
+				Attribute dataContextAttribute = element.getAttribute(IConstants.XAML_DATACONTEXT);
 				if (dataContextAttribute != null) {
 					Widget composite = (Widget) swtObject;
 					DocumentObject documentObject = dataContextAttribute.getChildren()[0];
@@ -991,12 +989,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	private void trace(String message) {
-		// System.out.println(message);
-	}
-
 	private void initAttribute(IMetaclass metaclass, Object targetObject, Element element, String namespace, String attrName) throws Exception {
-		trace("Set attribute: " + metaclass.getName() + "." + attrName);
 		if (attrName.indexOf('.') != -1) {
 			String[] segments = attrName.split("\\.");
 			IMetaclass currentMetaclass = metaclass;
@@ -1045,12 +1038,10 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (property == null) {
 			IEvent event = metaclass.findEvent(attrName);
 			if (event == null) {
-				trace("event is null: " + attrName);
 				return;
 			}
 			// add events for controls and items.
 			if (!(target instanceof Widget)) {
-				trace("property is null: " + attrName);
 				return;
 			}
 			loadData.updateEvent(context, (Widget) target, event, attribute, propertyName);
@@ -1252,7 +1243,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (!contentValue.startsWith("/")) {
 				URL url = context.getResourcePath();
 				if (url != null) {
-					return  url.toString() + "/" + contentValue;
+					return url.toString() + "/" + contentValue;
 				}
 				contentValue = "/" + contentValue;
 			}

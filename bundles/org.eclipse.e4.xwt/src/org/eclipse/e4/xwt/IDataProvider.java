@@ -60,6 +60,14 @@ public interface IDataProvider {
 	Class<?> getDataType(String path);
 
 	/**
+	 * check if the property is read only.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	boolean isPropertyReadOnly(String path);
+
+	/**
 	 * Create a databinding data with given path.
 	 * 
 	 * @param path

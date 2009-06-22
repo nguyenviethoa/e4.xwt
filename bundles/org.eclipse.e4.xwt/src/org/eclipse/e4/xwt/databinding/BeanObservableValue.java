@@ -14,6 +14,7 @@ import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
@@ -95,6 +96,29 @@ public class BeanObservableValue extends XWTObservableValue {
 		} catch (Exception e) {
 		}
 		return null;
+	}
+
+	public static boolean isPropertyReadOnly(Class<?> type, String propertyName) {
+		if (type == null || propertyName == null || propertyName.indexOf(".") != -1) {
+			return true;
+		}
+		try {
+			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
+			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+			for (PropertyDescriptor pd : propertyDescriptors) {
+				if (propertyName.equals(pd.getName())) {
+					return pd.getWriteMethod() == null;
+				}
+			}
+			Field[] fields = type.getDeclaredFields();
+			for (Field field : fields) {
+				if (propertyName.equals(field.getName())) {
+					return !Modifier.isPublic(field.getModifiers());
+				}
+			}
+		} catch (Exception e) {
+		}
+		return true;
 	}
 
 	/*

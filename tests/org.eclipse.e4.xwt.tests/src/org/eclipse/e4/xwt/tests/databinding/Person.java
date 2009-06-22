@@ -12,6 +12,22 @@ package org.eclipse.e4.xwt.tests.databinding;
 
 public class Person {
 	private String name = "toto";
+	private int age = 10;
+	private boolean maried = true;
+	private Country nationality = Country.FR;
+
+	public Country getNationality() {
+		return nationality;
+	}
+
+	public boolean isMaried() {
+		return maried;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
 	private Address address;
 
 	public Person() {
