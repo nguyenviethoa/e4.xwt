@@ -27,17 +27,22 @@ public class EMFDataProvider_DataContext_Nested {
 		EMFBinding.initialze();
 		URL url = EMFDataProvider_DataContext_Nested.class.getResource(EMFDataProvider_DataContext_Nested.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
-			Book harryPotter = BooksFactory.eINSTANCE.createBook();
-			Title title = BooksFactory.eINSTANCE.createTitle();
-			title.setLan("en");
-			title.setText("Harry Potter");
-			harryPotter.setTitle(title);
-			harryPotter.setAuthor("Neal Stephenson");
-			harryPotter.setPrice(29.99);
-			harryPotter.setYear(2005);
-			XWT.open(url, harryPotter);
+			XWT.open(url, createBook());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected static Book createBook() {
+		Book harryPotter = BooksFactory.eINSTANCE.createBook();
+		Title title = BooksFactory.eINSTANCE.createTitle();
+		title.setLan("en");
+		title.setText("Harry Potter");
+		harryPotter.setTitle(title);
+		harryPotter.setAuthor("Neal Stephenson");
+		harryPotter.setPrice(29.99);
+		harryPotter.setYear(2005);
+
+		return harryPotter;
 	}
 }

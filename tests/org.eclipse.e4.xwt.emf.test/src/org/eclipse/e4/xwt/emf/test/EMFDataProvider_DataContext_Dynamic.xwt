@@ -7,13 +7,13 @@
 	</Shell.layout>
 	
 	<Label text="Name:"/>
-	<Text x:style="BORDER" text="{Binding Path=title.text}">
+	<Text name="titleText" x:style="BORDER" text="{Binding Path=title.text}">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
-	<Text x:style="BORDER" text="{Binding Path=author}">
+	<Text name="authorText" x:style="BORDER" text="{Binding Path=author}">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
