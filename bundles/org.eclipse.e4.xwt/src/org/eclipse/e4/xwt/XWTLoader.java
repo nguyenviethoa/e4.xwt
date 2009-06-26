@@ -615,7 +615,7 @@ public class XWTLoader implements IXWTLoader {
 		return service;
 	}
 
-	private Class<?> normalizedType(Class<?> type) {
+	public static Class<?> normalizedType(Class<?> type) {
 		if (type == int.class) {
 			return Integer.class;
 		}

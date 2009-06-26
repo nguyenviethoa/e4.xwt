@@ -167,6 +167,14 @@ public class XWT {
 	}
 
 	/**
+	 * Load the file content. All widget will be created but they are showed. This method return the root element.
+	 * 
+	 */
+	static public synchronized Control load(URL file, Object dataContext) throws Exception {
+		return XWTLoaderManager.getActive().load(file, dataContext);
+	}
+
+	/**
 	 * Load the file content under a Composite. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
 	static public synchronized Control load(Composite parent, URL file) throws Exception {
