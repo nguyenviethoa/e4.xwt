@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * 
@@ -30,15 +31,19 @@ import org.eclipse.swt.widgets.Shell;
 public abstract class XWTTestCase extends TestCase {
 	protected Control root;
 
-	protected void runTest(final URL url) {
-		runTest(url, null, null);
+	protected void runTest(URL url) {
+		runTest(url, null, null, null);
 	}
 
-	protected void runTest(final URL url, Runnable prepareAction, Runnable checkAction) {
+	protected void runTest(URL url, Runnable prepareAction, Runnable checkAction) {
+		runTest(url, null, prepareAction, checkAction);
+	}
+
+	protected void runTest(final URL url, Object dataContext, Runnable prepareAction, Runnable checkAction) {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		try {
 			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-			root = XWT.load(url);
+			root = XWT.load(url, dataContext);
 			assertNotNull(root);
 			Shell shell = root.getShell();
 			shell.open();
@@ -100,5 +105,19 @@ public abstract class XWTTestCase extends TestCase {
 
 		button.setSelection(true);
 		button.notifyListeners(SWT.Selection, upEvent);
+	}
+
+	protected void assertText(String name, String value) {
+		Object element = XWT.findElementByName(root, name);
+		assertTrue(element instanceof Text);
+		Text text = (Text) element;
+		assertEquals(value, text.getText());
+	}
+
+	protected void setText(String name, String value) {
+		Object element = XWT.findElementByName(root, name);
+		assertTrue(element instanceof Text);
+		Text text = (Text) element;
+		text.setText(value);
 	}
 }

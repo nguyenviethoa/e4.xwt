@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.e4.xwt.tests.controls.ControlTestSuite;
+import org.eclipse.e4.xwt.tests.databinding.BindingTestSuite;
 import org.eclipse.e4.xwt.tests.events.EventsTestSuite;
 import org.eclipse.e4.xwt.tests.jface.JFaceTestSuite;
 import org.eclipse.e4.xwt.tests.name.NameTestSuite;
@@ -89,7 +90,7 @@ public class XwtTestSuite extends TestSuite {
 	}
 
 	protected void addDataBindingTests() {
-		addTest(EventsTestSuite.suite());
+		addTest(BindingTestSuite.suite());
 	}
 
 	protected void addI18NTests() {
@@ -98,7 +99,7 @@ public class XwtTestSuite extends TestSuite {
 	protected void addStyleTests() {
 	}
 
-	protected void addCustimizationTests() {
+	protected void addCustomizationTests() {
 		addTest(NamespacehandlerTestSuite.suite());
 	}
 }
