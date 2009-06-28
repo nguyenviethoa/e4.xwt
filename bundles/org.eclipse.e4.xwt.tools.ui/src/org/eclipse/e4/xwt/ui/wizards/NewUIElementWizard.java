@@ -21,24 +21,24 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 
-public class NewPresentationWizard extends NewElementWizard {
+public class NewUIElementWizard extends NewElementWizard {
 
-	private NewPresentationWizardPage fPage;
+	private NewUIElementWizardPage fPage;
 
-	public NewPresentationWizard() {
+	public NewUIElementWizard() {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New Mediator in XWT");
 	}
 
-	public NewPresentationWizard(IType contextType) {
+	public NewUIElementWizard(IType contextType) {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New Mediator in XWT");
 	}
 
 	public void addPages() {
-		fPage = new NewPresentationWizardPage();
+		fPage = new NewUIElementWizardPage();
 		fPage.init(getSelection());
 		addPage(fPage);
 	}

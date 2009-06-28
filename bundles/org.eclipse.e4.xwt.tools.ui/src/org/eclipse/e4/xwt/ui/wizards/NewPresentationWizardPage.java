@@ -252,14 +252,10 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 	
 	@Override
 	public void setPackageFragment(IPackageFragment pack, boolean canBeModified) {
-		String name = pack.getElementName();
+		String name = pack.getElementName() + ".ui";
 		IPackageFragmentRoot root = (IPackageFragmentRoot) pack.getParent();
-		try {
-			packageFragment = root.createPackageFragment(name + ".ui", false, new NullProgressMonitor());
-			super.setPackageFragment(packageFragment, canBeModified);
-		} catch (JavaModelException e) {
-			e.printStackTrace();
-		}
+		IPackageFragment packageFragment = root.getPackageFragment(name);
+		super.setPackageFragment(packageFragment, canBeModified);
 	}
 	
 	protected String getSuperClassName() {
@@ -481,15 +477,5 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 
 	public IResource getGuiResource() {
 		return guiResource;
-	}
-	
-	public void performCancel() {
-		if (packageFragment != null) {
-			try {
-				packageFragment.delete(true, new NullProgressMonitor());
-			} catch (JavaModelException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 }

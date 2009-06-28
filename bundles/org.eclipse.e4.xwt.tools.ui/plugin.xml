@@ -47,10 +47,21 @@
           class="org.eclipse.e4.xwt.ui.wizards.NewPresentationWizard"
           hasPages="true"
           icon="icons/full/etool16/newexprj_wiz.png"
-          id="org.eclipse.e4.xwt.ui.wizards.NewMediatorWizard"
+          id="org.eclipse.e4.xwt.ui.wizards.NewPresentationWizard"
           name="%wizard.name.1">
        <description>
           %wizard.description.1
+       </description>
+    </wizard>
+    <wizard
+          category="org.eclipse.e4.xwt.ui.category.xwt"
+          class="org.eclipse.e4.xwt.ui.wizards.NewUIElementWizard"
+          hasPages="true"
+          icon="icons/full/etool16/newexprj_wiz.png"
+          id="org.eclipse.e4.xwt.ui.wizards.NewUIElementWizard"
+          name="%wizard.name.2">
+       <description>
+          %wizard.description.2
        </description>
     </wizard>
  </extension>
