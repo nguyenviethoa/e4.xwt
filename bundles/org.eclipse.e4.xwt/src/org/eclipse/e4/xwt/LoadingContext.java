@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
-
 public class LoadingContext implements ILoadingContext {
 	public static final LoadingContext defaultLoadingContext = new LoadingContext();
 
@@ -28,6 +27,10 @@ public class LoadingContext implements ILoadingContext {
 			return Thread.currentThread().getContextClassLoader();
 		}
 		return classLoader;
+	}
+
+	public void setClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
 	}
 
 	public String getNamespace() {
