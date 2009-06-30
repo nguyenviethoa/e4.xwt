@@ -16,23 +16,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.ILoadingContext;
 
-public class LoadingContext implements ILoadingContext {
-	ClassLoader classLoader;
+public class LoadingContext extends org.eclipse.e4.xwt.LoadingContext {
 	String namespace = IConstants.XWT_NAMESPACE;
 	protected ArrayList<WeakReference<PropertyChangeListener>> changeSupport = new ArrayList<WeakReference<PropertyChangeListener>>();
 
-	public ClassLoader getClassLoader() {
-		return classLoader;
-	}
-
 	public String getNamespace() {
 		return namespace;
-	}
-
-	public void setClassLoader(ClassLoader classLoader) {
-		this.classLoader = classLoader;
 	}
 
 	public void setNamespace(String namespace) {
