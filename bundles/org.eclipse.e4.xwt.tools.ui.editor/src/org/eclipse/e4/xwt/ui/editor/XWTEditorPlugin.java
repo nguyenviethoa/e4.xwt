@@ -12,7 +12,9 @@ package org.eclipse.e4.xwt.ui.editor;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.pde.PDEPlugin;
+import org.eclipse.e4.xwt.vex.palette.customize.CustomWidgetManager;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -54,6 +56,13 @@ public class XWTEditorPlugin extends AbstractUIPlugin {
 		plugin = this;
 
 		PDEPlugin.getDefault();
+		
+		// Bug 274057 - Start
+		for (Class<?> cls: CustomWidgetManager.getInstance().getWidgetClassList())
+		{
+			XWT.registerMetaclass(cls);
+		}
+		// Bug 274057 - end
 	}
 
 	/*

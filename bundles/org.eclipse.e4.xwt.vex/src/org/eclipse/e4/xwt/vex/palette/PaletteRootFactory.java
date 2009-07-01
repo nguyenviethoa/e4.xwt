@@ -82,6 +82,10 @@ public class PaletteRootFactory {
 			EntryLabelProvider labelProvider = new EntryLabelProvider();
 			createToolPaletteStructure(componentsDrawer, contentProvider, labelProvider, resource);
 		}
+		
+		//  Bug 274057 - Modification - Start
+		CustomWidgetDrawer.addCustomWidgets(componentsDrawer);
+		//  Bug 274057 - Modification - End
 		return componentsDrawer;
 	}
 

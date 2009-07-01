@@ -7,9 +7,13 @@
  * 
  * Contributors:
  *     Soyatec - initial API and implementation
+ *     Anaik Trihoreau <anaik@anyware-tech.com> - Bug 274057
  *******************************************************************************/
 package org.eclipse.e4.xwt.vex;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -57,4 +61,88 @@ public class Activator extends AbstractUIPlugin {
 	public static Activator getDefault() {
 		return plugin;
 	}
+	
+	// Bug 274057 - Modification - Start
+	/**
+	 * Get an image from the local ImageRegistry. If the given Image's path is not already
+	 * registered, do it.
+	 * 
+	 * @param imagePath
+	 *        String, path and key identifying the image in the ImageRegistry
+	 * 
+	 * @return Image or null if nothing corresponds to the given key
+	 */
+	public static Image getImage(String imagePath)
+	{
+		return getImage(PLUGIN_ID, imagePath);
+	}
+
+	/**
+	 * Get an image at the given plug-in relative path from the local ImageRegistry. If the given
+	 * Image's path is not already registered, do it.
+	 * 
+	 * @param pluginId
+	 *        the plug-in identifier
+	 * @param imagePath
+	 *        String, path and key identifying the image in the ImageRegistry
+	 * 
+	 * @return Image or null if nothing corresponds to the given key
+	 */
+	public static Image getImage(String pluginId, String imagePath)
+	{
+		ImageRegistry imageRegistry = getDefault().getImageRegistry();
+		String key = pluginId + "_" + imagePath;
+		Image result = imageRegistry.get(key);
+
+		if (result == null && imagePath != null)
+		{
+			ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId,
+				imagePath);
+			imageRegistry.put(key, descriptor);
+			result = imageRegistry.get(key);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Get an image descriptor from the local ImageRegistry. If the given Image's path is not
+	 * already registered, do it.
+	 * 
+	 * @param imagePath
+	 *        String, path and key identifying the image in the ImageRegistry
+	 * 
+	 * @return ImageDescriptor or null if nothing corresponds to the given key
+	 */
+	public static ImageDescriptor getImageDescriptor(String imagePath)
+	{
+		return getImageDescriptor(PLUGIN_ID, imagePath);
+	}
+
+	/**
+	 * Get an image descriptor at the given plug-in relative path from the local ImageRegistry. If
+	 * the given Image's path is not already registered, do it.
+	 * 
+	 * @param pluginId
+	 *        the plug-in identifier
+	 * @param imagePath
+	 *        String, path and key identifying the image in the ImageRegistry
+	 * 
+	 * @return ImageDescriptor or null if nothing corresponds to the given key
+	 */
+	public static ImageDescriptor getImageDescriptor(String pluginId, String imagePath)
+	{
+		ImageRegistry imageRegistry = getDefault().getImageRegistry();
+		String key = pluginId + "_" + imagePath;
+		ImageDescriptor result = imageRegistry.getDescriptor(key);
+
+		if (result == null && imagePath != null)
+		{
+			result = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, imagePath);
+			imageRegistry.put(key, result);
+		}
+
+		return result;
+	}
+	// Bug 274057 - Modification - End
 }
