@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.workbench.views;
 
-import java.util.Collections;
-
 /**
  * The default class to handle the connection with e4 workbench.
  * 
@@ -28,17 +26,13 @@ public class XWTInputPart extends XWTStaticPart {
 		return inputType;
 	}
 
-	public void setInputType(Class<?> inputType) {
-		this.inputType = inputType;
-	}
-
 	public void setInput(Object input) {
 		if (this.input == input) {
 			return;
 		}
 		Class<?> inputType = getInputType();
 		if (inputType == null || inputType.isInstance(input)) {
-			refresh(input, Collections.EMPTY_MAP);
+			refresh(getURL(), input, getClassLoader());
 		}
 		this.input = input;
 	}

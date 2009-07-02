@@ -8,35 +8,18 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.ui.workbench;
+package org.eclipse.e4.xwt.ui.workbench.views;
 
-import java.io.InputStream;
-import java.net.URL;
+public abstract class XWTPartSwitcher extends XWTStaticPart {
+	
+	protected void refresh() {
+		XWTStaticPart switcher = getCurrentPart();
+		switchPart(switcher);
+	}
 
-/**
- * 
- * @author yyang (yves.yang@soyatec.com)
- */
-public interface IPartContentProvider {
+	protected abstract XWTStaticPart getCurrentPart();
 	
-	/**
-	 * Content stream 
-	 * 
-	 * @return
-	 */
-	InputStream getContent();
-	
-	/**
-	 * Resource location, used to resolve relative resources 
-	 * 
-	 * @return
-	 */
-	URL getBase();
-	
-	/**
-	 * Resource loader
-	 * 
-	 * @return
-	 */
-	ClassLoader getClassLoader();
+	public void switchPart(XWTStaticPart part) {
+		refresh(part.getURL(), part.getDataContext(), part.getClassLoader());		
+	}
 }
