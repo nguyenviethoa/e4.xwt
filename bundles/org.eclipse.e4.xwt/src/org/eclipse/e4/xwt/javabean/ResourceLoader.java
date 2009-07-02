@@ -404,6 +404,12 @@ public class ResourceLoader implements IVisualElementLoader {
 						String className = classAttribute.getContent();
 						targetObject = loadCLR(className, parameters, metaclass.getType(), options);
 					}
+					else {
+						Object clr = options.get(XWTLoader.CLASS_PROPERTY);
+						if (clr != null) {
+							loadData.setClr(clr);
+						}
+					}
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
 					} else {
