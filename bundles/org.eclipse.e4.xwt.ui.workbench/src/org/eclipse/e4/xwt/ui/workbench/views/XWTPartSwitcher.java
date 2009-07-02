@@ -10,16 +10,22 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.workbench.views;
 
+import org.eclipse.e4.xwt.ui.workbench.IStaticPart;
+
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public abstract class XWTPartSwitcher extends XWTStaticPart {
 	
 	protected void refresh() {
-		XWTStaticPart switcher = getCurrentPart();
+		IStaticPart switcher = getCurrentPart();
 		switchPart(switcher);
 	}
 
-	protected abstract XWTStaticPart getCurrentPart();
+	protected abstract IStaticPart getCurrentPart();
 	
-	public void switchPart(XWTStaticPart part) {
+	public void switchPart(IStaticPart part) {
 		refresh(part.getURL(), part.getDataContext(), part.getClassLoader());		
 	}
 }

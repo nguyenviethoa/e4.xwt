@@ -19,6 +19,10 @@ import org.eclipse.e4.xwt.ui.workbench.IPartContentProvider;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.widgets.Control;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public abstract class XWTDynamicPart extends XWTAbstractPart {
 	protected IPartContentProvider contentProvider;
 	

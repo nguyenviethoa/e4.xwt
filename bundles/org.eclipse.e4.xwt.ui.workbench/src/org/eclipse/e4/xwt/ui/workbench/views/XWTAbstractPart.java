@@ -21,6 +21,7 @@ import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.css.CSSHandler;
+import org.eclipse.e4.xwt.ui.workbench.IContentPart;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -31,7 +32,7 @@ import org.eclipse.swt.widgets.Control;
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public abstract class XWTAbstractPart {
+public abstract class XWTAbstractPart implements IContentPart {
 	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 	private String persistedState;
 
@@ -61,7 +62,7 @@ public abstract class XWTAbstractPart {
 		this.context = context;
 	}
 
-	protected Object getDataContext() {
+	public Object getDataContext() {
 		return getContext();
 	}	
 
