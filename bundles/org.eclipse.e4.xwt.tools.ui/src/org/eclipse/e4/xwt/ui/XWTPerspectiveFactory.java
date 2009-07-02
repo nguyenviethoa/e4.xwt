@@ -56,11 +56,12 @@ public class XWTPerspectiveFactory implements IPerspectiveFactory {
 
 	private void addNewWizardShortcuts() {
 
-		// Eface Creation Wizards.
+		// XWT Creation Wizards.
 		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizards.newUIFile");
 		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizards.NewPresentationWizard");
 		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizards.NewUIElementWizard");
-		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizards.NewE4PartWizard");
+		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizards.NewE4StaticPartWizard");
+		factory.addNewWizardShortcut("org.eclipse.e4.xwt.ui.wizards.NewE4DynamicPartWizard");
 
 		// Default JDT Wizards.
 		factory.addNewWizardShortcut("org.eclipse.jdt.ui.wizards.NewPackageCreationWizard"); //$NON-NLS-1$
@@ -83,5 +84,4 @@ public class XWTPerspectiveFactory implements IPerspectiveFactory {
 		factory.addShowViewShortcut(IPageLayout.ID_PROBLEM_VIEW);
 		factory.addShowViewShortcut(IPageLayout.ID_OUTLINE);
 	}
-
 }

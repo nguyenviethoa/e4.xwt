@@ -69,10 +69,21 @@
           class="org.eclipse.e4.xwt.ui.wizards.NewE4StaticPartWizard"
           hasPages="true"
           icon="icons/full/etool16/newexprj_wiz.png"
-          id="org.eclipse.e4.xwt.ui.wizards.NewE4PartWizard"
+          id="org.eclipse.e4.xwt.ui.wizards.NewE4StaticPartWizard"
           name="%wizard.name.3">
        <description>
           %wizard.description.3
+       </description>
+    </wizard>
+    <wizard
+          category="org.eclipse.e4.xwt.ui.category.xwt"
+          class="org.eclipse.e4.xwt.ui.wizards.NewE4DynamicPartWizard"
+          hasPages="true"
+          icon="icons/full/etool16/newexprj_wiz.png"
+          id="org.eclipse.e4.xwt.ui.wizards.NewE4DynamicPartWizard"
+          name="%wizard.name.4">
+       <description>
+          %wizard.description.4
        </description>
     </wizard>
  </extension>
