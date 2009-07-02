@@ -14,6 +14,7 @@ package org.eclipse.e4.xwt;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -240,8 +241,21 @@ public class XWT {
 	 * @throws Exception
 	 */
 	static public synchronized Control load(InputStream stream, URL url) throws Exception {
-		return XWTLoaderManager.getActive().load(stream, url);
+		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
+
+	/**
+	 * 
+	 * @param stream
+	 * @param url
+	 * @param options
+	 * @return
+	 * @throws Exception
+	 */
+	static public synchronized Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
+		return XWTLoaderManager.getActive().loadWithOptions(stream, url, options);
+	}
+
 
 	/**
 	 * Metaclass services to return all registered Metaclasses.

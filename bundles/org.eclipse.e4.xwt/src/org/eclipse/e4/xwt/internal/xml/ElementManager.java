@@ -256,26 +256,6 @@ public class ElementManager {
 	}
 
 	/**
-	 * @see Core
-	 */
-	protected Element load(File file) throws Exception {
-
-		reset();
-
-		// Initialize document root
-		documentRoot.init(null, file.getAbsolutePath());
-
-		InputStream input = documentRoot.openStream();
-		doLoad(input);
-
-		input = documentRoot.openStream();
-		loadXData(input);
-
-		input.close();
-		return rootElement;
-	}
-
-	/**
 	 * @see ElementHandler
 	 */
 	public void load(InputStream stream, DocumentObject parent) throws SAXException {

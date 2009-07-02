@@ -534,11 +534,11 @@ public class XWTLoader implements IXWTLoader {
 	 * 
 	 * @see org.eclipse.e4.xwt.IXWTLoader#loadWithOptions(java.io.InputStream, java.net.URL, java.util.Map)
 	 */
-	public synchronized Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
+	public synchronized Control loadWithOptions(InputStream stream, URL base, Map<String, Object> options) throws Exception {
 		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object) : getLoadingContext());
 		options = prepareOptions(options);
-		Control visualObject = core.load(loadingContext, stream, url, options);
+		Control visualObject = core.load(loadingContext, stream, base, options);
 		return visualObject;
 	}
 

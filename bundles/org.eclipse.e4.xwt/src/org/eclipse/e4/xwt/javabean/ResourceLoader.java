@@ -982,7 +982,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					UserDataHelper.setCLR((Widget) instance, instance);
 				}
 				return instance;
-			} else {
+			} else if (type != null){
 				Object instance = type.newInstance();
 				loadData.setClr(instance);
 				if (instance instanceof Widget) {
