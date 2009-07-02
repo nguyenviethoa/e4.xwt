@@ -10,27 +10,36 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.workbench.views;
 
-import org.eclipse.e4.core.services.IDisposable;
-import org.eclipse.e4.core.services.annotations.In;
-import org.eclipse.e4.core.services.context.IEclipseContext;
+import java.util.Collections;
 
 /**
- * The default implementation of e4 view of IEclipseContext aware
+ * The default class to handle the connection with e4 workbench.
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public abstract class AbstractContextView extends AbstractRootView implements IDisposable {
-	private IEclipseContext context;
+public class XWTInputPart extends XWTPart {
+	protected Object input;
+	protected Class<?> inputType;
 
-	public IEclipseContext getContext() {
-		return context;
+	public XWTInputPart() {
 	}
 
-	@In
-	public void setContext(IEclipseContext context) {
-		if (context == null) {
+	public Class<?> getInputType() {
+		return inputType;
+	}
+
+	public void setInputType(Class<?> inputType) {
+		this.inputType = inputType;
+	}
+
+	public void setInput(Object input) {
+		if (this.input == input) {
 			return;
 		}
-		this.context = context;
+		Class<?> inputType = getInputType();
+		if (inputType == null || inputType.isInstance(input)) {
+			refresh(input, Collections.EMPTY_MAP);
+		}
+		this.input = input;
 	}
 }
