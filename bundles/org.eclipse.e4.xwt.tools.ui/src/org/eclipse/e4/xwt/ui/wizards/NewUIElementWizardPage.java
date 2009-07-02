@@ -38,6 +38,7 @@ import org.eclipse.jdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.jdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
+import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -48,16 +49,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 
 public class NewUIElementWizardPage extends
-		org.eclipse.jdt.ui.wizards.NewClassWizardPage {
-	public static final String VIEW_LOCATION = "Resources/vues/";
-
-	protected TableViewer modelTableViewer;
-
+		NewClassWizardPage {
 	protected String superClass;
 
 	protected IResource guiResource;
-
-	private StringButtonDialogField fieldEditor;
 
 	public NewUIElementWizardPage() {
 		setTitle("New Wizard Creation");
@@ -92,28 +87,6 @@ public class NewUIElementWizardPage extends
 
 		setControl(composite);
 
-		NewElementWizard wizard = (NewElementWizard) getWizard();
-		IStructuredSelection selection = (IStructuredSelection) wizard
-				.getSelection();
-		IType dataContextType = null;
-		for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-			Object element = iterator.next();
-			if (element instanceof ICompilationUnit) {
-				ICompilationUnit unit = (ICompilationUnit) element;
-				dataContextType = unit.findPrimaryType();
-				break;
-			}
-			if (element instanceof IType) {
-				dataContextType = (IType) element;
-				break;
-			}
-		}
-
-		if (dataContextType != null) {
-			setTypeName(dataContextType.getElementName(), true);
-			fieldEditor.setText(dataContextType.getFullyQualifiedName('.'));
-		}
-
 		Dialog.applyDialogFont(composite);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite,
 				IJavaHelpContextIds.NEW_CLASS_WIZARD_PAGE);
@@ -136,31 +109,6 @@ public class NewUIElementWizardPage extends
 		}
 	}
 
-	/**
-	 * @param field
-	 */
-	public IType chooseDataContext() {
-		IJavaProject project = getJavaProject();
-		if (project == null) {
-			return null;
-		}
-
-		IJavaElement[] elements = new IJavaElement[] { project };
-		IJavaSearchScope scope = SearchEngine.createJavaSearchScope(elements);
-
-		FilteredTypesSelectionDialog dialog = new FilteredTypesSelectionDialog(
-				getShell(), false, getWizard().getContainer(), scope,
-				IJavaSearchConstants.CLASS);
-		dialog.setTitle("Choose a JavaBean");
-		dialog.setMessage("Choose a JavaBean as a DataContext Type.");
-		dialog.setInitialPattern("java.lang.Object");
-
-		if (dialog.open() == Window.OK) {
-			return (IType) dialog.getFirstResult();
-		}
-		return null;
-	}
-
 	@Override
 	protected void initTypePage(IJavaElement elem) {
 		super.initTypePage(elem);
@@ -169,15 +117,6 @@ public class NewUIElementWizardPage extends
 
 	protected String getSuperClassName() {
 		return Composite.class.getName();
-	}
-
-	protected void handleFieldChanged(String fieldName) {
-		super.handleFieldChanged(fieldName);
-		if (modelTableViewer != null
-				&& modelTableViewer.getSelection().isEmpty()
-				&& getErrorMessage() == null) {
-			setErrorMessage("Veuillez selectionner le type de vue.");
-		}
 	}
 
 	public int getModifiers() {
@@ -281,16 +220,6 @@ public class NewUIElementWizardPage extends
 		 */
 		return Character.toUpperCase(typeName.charAt(0))
 				+ typeName.substring(1);
-	}
-
-	@Override
-	public boolean isPageComplete() {
-		if (modelTableViewer != null
-				&& modelTableViewer.getSelection().isEmpty()) {
-			setErrorMessage("Please select a model type.");
-			return false;
-		}
-		return super.isPageComplete();
 	}
 
 	/**

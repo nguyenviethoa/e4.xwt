@@ -21,24 +21,24 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 
-public class NewPresentationWizard extends NewElementWizard {
+public class NewE4StaticPartWizard extends NewElementWizard {
 
-	private NewPresentationWizardPage fPage;
+	private NewE4StaticPartWizardPage fPage;
 
-	public NewPresentationWizard() {
+	public NewE4StaticPartWizard() {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-		setWindowTitle("New Data Presentation in XWT");
+		setWindowTitle("New e4 Static Part in XWT");
 	}
 
-	public NewPresentationWizard(IType contextType) {
+	public NewE4StaticPartWizard(IType contextType) {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-		setWindowTitle("New Data Presentation in XWT");
+		setWindowTitle("New e4 Static Part in XWT");
 	}
 
 	public void addPages() {
-		fPage = new NewPresentationWizardPage();
+		fPage = new NewE4StaticPartWizardPage();
 		fPage.init(getSelection());
 		addPage(fPage);
 	}

@@ -67,10 +67,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
 public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewClassWizardPage {
-	public static final String VIEW_LOCATION = "Resources/vues/";
-
-	protected TableViewer modelTableViewer;
-
 	protected String superClass;
 
 	protected IResource guiResource;
@@ -86,7 +82,7 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 
 	public NewPresentationWizardPage() {
 		setTitle("New Wizard Creation");
-		setDescription("This wizard creates a *.xwt file with java host class.");
+		setDescription("This wizard creates a data presentation.");
 	}
 
 	public void createControl(Composite parent) {
@@ -262,13 +258,6 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 		return Composite.class.getName();
 	}
 
-	protected void handleFieldChanged(String fieldName) {
-		super.handleFieldChanged(fieldName);
-		if (modelTableViewer != null && modelTableViewer.getSelection().isEmpty() && getErrorMessage() == null) {
-			setErrorMessage("Veuillez selectionner le type de vue.");
-		}
-	}
-
 	public int getModifiers() {
 		return F_PUBLIC;
 	}
@@ -439,15 +428,6 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 		 * Make sure the first character of the new Class name is a upperCase one. Because the Element parser of the XWT file convert the top element to this format.
 		 */
 		return Character.toUpperCase(typeName.charAt(0)) + typeName.substring(1);
-	}
-
-	@Override
-	public boolean isPageComplete() {
-		if (modelTableViewer != null && modelTableViewer.getSelection().isEmpty()) {
-			setErrorMessage("Please select a model type.");
-			return false;
-		}
-		return super.isPageComplete();
 	}
 
 	/**

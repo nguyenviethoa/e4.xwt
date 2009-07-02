@@ -28,13 +28,13 @@ public class NewUIElementWizard extends NewElementWizard {
 	public NewUIElementWizard() {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-		setWindowTitle("New Mediator in XWT");
+		setWindowTitle("New UI Element in XWT");
 	}
 
 	public NewUIElementWizard(IType contextType) {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-		setWindowTitle("New Mediator in XWT");
+		setWindowTitle("New UI Element in XWT");
 	}
 
 	public void addPages() {
