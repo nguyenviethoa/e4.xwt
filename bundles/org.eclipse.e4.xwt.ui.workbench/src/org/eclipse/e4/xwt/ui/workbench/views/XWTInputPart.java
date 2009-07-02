@@ -17,7 +17,7 @@ import java.util.Collections;
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class XWTInputPart extends XWTPart {
+public class XWTInputPart extends XWTStaticPart {
 	protected Object input;
 	protected Class<?> inputType;
 
