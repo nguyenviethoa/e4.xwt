@@ -18,6 +18,6 @@ public class NewE4StaticPartWizardPage extends NewUIElementWizardPage {
 	}
 	
 	protected String getSuperClassName() {
-		return "org.eclipse.e4.xwt.ui.workbench.views.XWTPart";
+		return "org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart";
 	}
 }
