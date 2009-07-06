@@ -966,9 +966,12 @@ public class ResourceLoader implements IVisualElementLoader {
 
 	private Object loadCLR(String className, Object[] parameters, Class<?> currentTagType, Map<String, Object> options) {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(), className);
+		if (type == null)  {
+			return null;
+		}
 		try {
 			Object clr = options.get(XWTLoader.CLASS_PROPERTY);
-			if (clr != null && type != null && type.isInstance(clr)) {
+			if (clr != null && type.isInstance(clr)) {
 				loadData.setClr(clr);
 				if (clr instanceof Widget) {
 					UserDataHelper.setCLR((Widget) clr, clr);
@@ -982,7 +985,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					UserDataHelper.setCLR((Widget) instance, instance);
 				}
 				return instance;
-			} else if (type != null){
+			} else {
 				Object instance = type.newInstance();
 				loadData.setClr(instance);
 				if (instance instanceof Widget) {
