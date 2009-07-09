@@ -34,13 +34,12 @@ import org.osgi.framework.Bundle;
 public class CustomWidgetManager
 {
 	private static final String CUSTOM_PALETTE_EXTENSION_ID = "org.eclipse.e4.xwt.vex.customPalette";
-	private static final String WIDGET_CATEGORY_ELEMENT = "WidgetCategory";
+	private static final String WIDGET_CATEGORY_ELEMENT = "category";
 	private static final String WIDGET_CATEGORY_NAME_ATTR = "name";
 	private static final String WIDGET_CATEGORY_ICON_ATTR = "icon";
-	private static final String WIDGET_ELEMENT = "Widget";
+	private static final String WIDGET_ELEMENT = "tool";
 	private static final String WIDGET_NAME_ATTR = "name";
 	private static final String WIDGET_CLASS_ATTR = "class";
-	private static final String WIDGET_BUNDLE_ID_ATTR = "bundleID";
 	private static final String WIDGET_SCOPE_ATTR = "scope";
 	private static final String WIDGET_ICON_ATTR = "icon";
 	private static final String WIDGET_TOOLTIP_ATTR = "tooltip";
@@ -48,7 +47,7 @@ public class CustomWidgetManager
 
 	private static CustomWidgetManager __instance;
 
-	private Map<WidgetCategory, List<Widget>> widgetMap = null;
+	private Map<Category, List<Tool>> widgetMap = null;
 	private Collection<Class<?>> widgetClassList = null;
 
 	/**
@@ -79,7 +78,7 @@ public class CustomWidgetManager
 	 * 
 	 * @return the custom widgets grouped by categories
 	 */
-	public Map<WidgetCategory, List<Widget>> getWidgetCategories()
+	public Map<Category, List<Tool>> getWidgetCategories()
 	{
 		return widgetMap;
 	}
@@ -101,10 +100,10 @@ public class CustomWidgetManager
 	private void initWidgetCategories()
 	{
 		// Init
-		widgetMap = new HashMap<WidgetCategory, List<Widget>>();
+		widgetMap = new HashMap<Category, List<Tool>>();
 		widgetClassList = new ArrayList<Class<?>>();
 
-		List<Widget> widgetList = null;
+		List<Tool> widgetList = null;
 
 		List<IConfigurationElement> confEltList = getExtensions(CUSTOM_PALETTE_EXTENSION_ID);
 		if (confEltList != null && !confEltList.isEmpty())
@@ -131,11 +130,11 @@ public class CustomWidgetManager
 						cfgElt.getAttribute(WIDGET_CATEGORY_ICON_ATTR));
 
 					// Adds the new category
-					WidgetCategory widgetCat = new WidgetCategory(nameCat, iconCat);
+					Category widgetCat = new Category(nameCat, iconCat);
 					widgetList = widgetMap.get(widgetCat);
 					if (widgetList == null)
 					{
-						widgetList = new ArrayList<Widget>();
+						widgetList = new ArrayList<Tool>();
 						widgetMap.put(widgetCat, widgetList);
 					}
 					// Gets the Widget elements
@@ -146,10 +145,14 @@ public class CustomWidgetManager
 						{
 							try
 							{
+								String bundleName = widgetElt.getContributor().getName();
 								// Load the class of the widget
-								Bundle bundle = Platform.getBundle(widgetElt.getAttribute(WIDGET_BUNDLE_ID_ATTR));
-								Class<?> theClass = bundle.loadClass(widgetElt.getAttribute(WIDGET_CLASS_ATTR));
-								widgetClassList.add(theClass);
+								Bundle bundle = Platform.getBundle(bundleName);
+								String className = widgetElt.getAttribute(WIDGET_CLASS_ATTR);
+								if (className != null) {
+									Class<?> theClass = bundle.loadClass(widgetElt.getAttribute(WIDGET_CLASS_ATTR));
+									widgetClassList.add(theClass);
+								}
 
 								// Get the icons
 								WidgetIcon icon = new WidgetIcon(extPlugInID,
@@ -161,7 +164,7 @@ public class CustomWidgetManager
 								String tooltip = widgetElt.getAttribute(WIDGET_TOOLTIP_ATTR);
 								String content = widgetElt.getAttribute(WIDGET_CONTENT_ATTR);
 
-								widgetList.add(new Widget(name, scope, tooltip, content, icon));
+								widgetList.add(new Tool(name, scope, tooltip, content, icon));
 							}
 							catch (Exception e)
 							{
@@ -204,12 +207,12 @@ public class CustomWidgetManager
 	/**
 	 * Class which defines a widget category
 	 */
-	public class WidgetCategory
+	public class Category
 	{
 		private String name = null;
 		private WidgetIcon icon = null;
 
-		public WidgetCategory(String name, WidgetIcon icon)
+		public Category(String name, WidgetIcon icon)
 		{
 			this.name = name;
 			this.icon = icon;
@@ -230,9 +233,9 @@ public class CustomWidgetManager
 		{
 
 			boolean equals = super.equals(obj);
-			if (!equals && obj instanceof WidgetCategory)
+			if (!equals && obj instanceof Category)
 			{
-				WidgetCategory widgetCat = (WidgetCategory) obj;
+				Category widgetCat = (Category) obj;
 				equals = (name == null && widgetCat.name == null)
 					|| (name != null && name.equals(widgetCat.name));
 			}
@@ -253,7 +256,7 @@ public class CustomWidgetManager
 	/**
 	 * Class which defines a widget
 	 */
-	public class Widget
+	public class Tool
 	{
 		private String name = null;
 		private String scope = null;
@@ -261,7 +264,7 @@ public class CustomWidgetManager
 		private String content = null;
 		private WidgetIcon icon = null;
 
-		public Widget(String name, String scope, String tooltip, String content, WidgetIcon icon)
+		public Tool(String name, String scope, String tooltip, String content, WidgetIcon icon)
 		{
 			this.name = name;
 			this.scope = scope;

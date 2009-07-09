@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.vex.palette.customize.CustomWidgetManager;
-import org.eclipse.e4.xwt.vex.palette.customize.CustomWidgetManager.Widget;
-import org.eclipse.e4.xwt.vex.palette.customize.CustomWidgetManager.WidgetCategory;
+import org.eclipse.e4.xwt.vex.palette.customize.CustomWidgetManager.Tool;
+import org.eclipse.e4.xwt.vex.palette.customize.CustomWidgetManager.Category;
 import org.eclipse.e4.xwt.vex.palette.customize.CustomWidgetManager.WidgetIcon;
 import org.eclipse.e4.xwt.vex.Activator;
 import org.eclipse.e4.xwt.vex.palette.part.ToolPaletteDrawer;
@@ -33,12 +33,12 @@ public class CustomWidgetDrawer
 	public static void addCustomWidgets(PaletteDrawer parentDrawer)
 	{
 
-		Map<WidgetCategory, List<Widget>> widgetMap = CustomWidgetManager.getInstance().getWidgetCategories();
+		Map<Category, List<Tool>> widgetMap = CustomWidgetManager.getInstance().getWidgetCategories();
 
-		for (Map.Entry<WidgetCategory, List<Widget>> widgetMapEntry: widgetMap.entrySet())
+		for (Map.Entry<Category, List<Tool>> widgetMapEntry: widgetMap.entrySet())
 		{
-			WidgetCategory widgetCategory = widgetMapEntry.getKey();
-			List<Widget> widgetList = widgetMapEntry.getValue();
+			Category widgetCategory = widgetMapEntry.getKey();
+			List<Tool> widgetList = widgetMapEntry.getValue();
 			if (!widgetList.isEmpty())
 			{
 				// Create a new palette drawer
@@ -54,7 +54,7 @@ public class CustomWidgetDrawer
 					parentDrawer.add(componentsDrawer);
 				}
 
-				for (Widget widget: widgetList)
+				for (Tool widget: widgetList)
 				{
 					Entry entry = ToolPaletteFactory.eINSTANCE.createEntry();
 					entry.setName(widget.getName());
