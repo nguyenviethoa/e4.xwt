@@ -48,6 +48,11 @@
    </element>
 
    <element name="category">
+      <annotation>
+         <documentation>
+            Tool&apos;s category is a container in palette. It can contains tools and sub catogories
+         </documentation>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="tool" minOccurs="1" maxOccurs="unbounded"/>
@@ -69,10 +74,29 @@
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="parentCategory" type="string">
+            <annotation>
+               <documentation>
+                  parent category id
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
    <element name="tool">
+      <annotation>
+         <documentation>
+            Tool entry definition
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="name" type="string" use="required">
             <annotation>
@@ -91,14 +115,14 @@
          <attribute name="content" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The content to be inserted in XML code. It is a template aware  text, which may contains template variables
                </documentation>
             </annotation>
          </attribute>
          <attribute name="tooltip" type="string">
             <annotation>
                <documentation>
-                  
+                  User help information
                </documentation>
             </annotation>
          </attribute>
@@ -136,7 +160,19 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;extension
+    point=&quot;org.eclipse.e4.xwt.vex.customPalette&quot;&gt;
+    &lt;category
+        icon=&quot;icons/new.png&quot;
+        name=&quot;My Category&quot;&gt;
+        &lt;tool
+            content=&quot;&amp;lt;RadioGroup x:style=&amp;quot;SWT.NONE&amp;quot;&amp;gt;&amp;lt;RadioGroup.layout&amp;gt;&amp;lt;GridLayout numColumns=&amp;quot;1&amp;quot; /&amp;gt;&amp;lt;/RadioGroup.layout&amp;gt;&amp;lt;/RadioGroup&amp;gt;&quot;
+            icon=&quot;icons/radiogroup.png&quot;
+            name=&quot;RadioGroup&quot;&gt;
+        &lt;/tool&gt;
+    &lt;/category&gt;
+ &lt;/extension&gt;
+
       </documentation>
    </annotation>
 
@@ -164,6 +200,7 @@
       </appInfo>
       <documentation>
          Anaik Trihoreau &lt;anaik@anyware-tech.com&gt; - Bug 274057
+Improved and integrated in XWT by yves ynag (yves.yang@soyatec.com)
       </documentation>
    </annotation>
 
