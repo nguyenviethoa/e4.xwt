@@ -11,10 +11,14 @@
 package org.eclipse.e4.xwt.ui.views;
 
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.xwt.ILoadingContext;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.ui.ExceptionHandle;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
 import org.eclipse.swt.SWT;
@@ -29,11 +33,14 @@ public class XWTView extends ViewPart {
 	public static final String ID = "org.eclipse.e4.xwt.ui.views.XWTView";
 
 	protected Composite container;
+	protected Map<String, Object> options;
 
 	/**
 	 * The constructor.
 	 */
 	public XWTView() {
+		options = new HashMap<String, Object>();
+		options.put(IXWTLoader.DESIGN_MODE_ROPERTY, Boolean.TRUE);
 	}
 
 	/**
@@ -43,7 +50,6 @@ public class XWTView extends ViewPart {
 		container = new Composite(parent, SWT.NONE);
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		container.setLayout(new GridLayout());
-		container.setBackground(container.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		container.setBackgroundMode(SWT.INHERIT_DEFAULT);
 	}
 
@@ -64,10 +70,11 @@ public class XWTView extends ViewPart {
 		if (loadingContext != null) {
 			XWT.setLoadingContext(loadingContext);
 		}
+		options.put(IXWTLoader.CONTAINER_PROPERTY, container);
 		if (code != null) {
-			XWT.load(container, new ByteArrayInputStream(code.getBytes()), file.getLocation().toFile().toURL(), null);
+			XWT.loadWithOptions(new ByteArrayInputStream(code.getBytes()), file.getLocation().toFile().toURL(), options);
 		} else {
-			XWT.load(container, file.getLocation().toFile().toURL());
+			XWT.loadWithOptions(file.getLocation().toFile().toURL(), options);
 		}
 		container.layout(true, true);
 	}

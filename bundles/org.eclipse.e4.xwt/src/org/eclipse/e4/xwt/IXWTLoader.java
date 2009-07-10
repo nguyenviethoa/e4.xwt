@@ -40,6 +40,12 @@ public interface IXWTLoader {
 	 */
 	public static final String CONTAINER_PROPERTY = "XWT.Container";
 	public static final String INIT_STYLE_PROPERTY = "XWT.Style";
+
+	/**
+	 * Used for editor/designer to pass design mode
+	 */	
+	public static final String DESIGN_MODE_ROPERTY = "XWT.DesignMode";
+	
 	/**
 	 * Default styles to apply. The value should be a collection or Array of IStyle
 	 * 

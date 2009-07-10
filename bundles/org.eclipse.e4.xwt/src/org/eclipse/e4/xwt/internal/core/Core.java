@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
@@ -26,14 +27,18 @@ import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.core.IElementLoaderFactory;
 import org.eclipse.e4.xwt.core.IRenderingContext;
+import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.IVisualElementLoader;
+import org.eclipse.e4.xwt.internal.xml.Attribute;
 import org.eclipse.e4.xwt.internal.xml.DocumentObject;
 import org.eclipse.e4.xwt.internal.xml.DocumentRoot;
 import org.eclipse.e4.xwt.internal.xml.Element;
 import org.eclipse.e4.xwt.internal.xml.ElementManager;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 
 public class Core {
 	static public final String DEFAULT_STYLES_KEY = "XWT.DefaultStyles";
@@ -182,30 +187,72 @@ public class Core {
 	public Control load(ILoadingContext loadingContext, InputStream stream, URL input, Map<String, Object> options) throws Exception {
 		// Detect from url or file path.
 		long start = System.currentTimeMillis();
+		Control control = null;
 		ElementManager manager = new ElementManager();
 		if (input != null) {
-			Element element = (stream == null ? manager.load(input) : manager.load(stream, input));
-			IRenderingContext context = new ExtensionContext(loadingContext, manager, manager.getRootElement().getNamespace());
+			Element element = (stream == null ? manager.load(input) : manager
+					.load(stream, input));
+			IRenderingContext context = new ExtensionContext(loadingContext,
+					manager, manager.getRootElement().getNamespace());
 			Object visual = createCLRElement(context, element, options);
 			if (TRACE_BENCH) {
-				System.out.println("Loaded: " + (System.currentTimeMillis() - start) + "  " + input.toString());
+				System.out.println("Loaded: "
+						+ (System.currentTimeMillis() - start) + "  "
+						+ input.toString());
 			}
 			if (visual instanceof Control) {
-				return (Control) visual;
-			}
-			if (visual instanceof Viewer) {
-				return ((Viewer) visual).getControl();
+				control = (Control) visual;
+			} else if (visual instanceof Viewer) {
+				control = ((Viewer) visual).getControl();
+			} else {
+				Class<?> jfaceWindow = Class
+						.forName("org.eclipse.jface.window.Window");
+				if (jfaceWindow != null && jfaceWindow.isInstance(visual)) {
+					Method createMethod = jfaceWindow
+							.getDeclaredMethod("create");
+					createMethod.invoke(visual);
+					Method method = jfaceWindow.getDeclaredMethod("getShell");
+					control = (Control) method.invoke(visual);
+				}
 			}
 
-			Class<?> jfaceWindow = Class.forName("org.eclipse.jface.window.Window");
-			if (jfaceWindow != null && jfaceWindow.isInstance(visual)) {
-				Method createMethod = jfaceWindow.getDeclaredMethod("create");
-				createMethod.invoke(visual);
-				Method method = jfaceWindow.getDeclaredMethod("getShell");
-				return (Control) method.invoke(visual);
+			if (control instanceof Composite) {
+				Object parent = options.get(IXWTLoader.CONTAINER_PROPERTY);
+				Object designMode = options.get(IXWTLoader.DESIGN_MODE_ROPERTY);
+				if (parent instanceof Composite) {
+					Composite parentComposite = (Composite) parent;
+					if (parentComposite.getLayout() == null
+							|| designMode == Boolean.TRUE) {
+						autoLayout(parentComposite, element);
+					}
+				} else if (parent == null || designMode == Boolean.TRUE) {
+					if (control instanceof Shell) {
+						autoLayout((Shell)control, element);
+					}
+					else {
+						autoLayout(control.getShell(), element);						
+					}
+				}
 			}
 		}
-		return null;
+		return control;
+	}
+
+	protected void autoLayout(Composite composite, Element element) {
+		if (element == null) {
+			return;
+		}
+		Attribute bounds = element.getAttribute("bounds");
+		if (bounds == null) {
+			bounds = element.getAttribute("bounds", IConstants.XWT_NAMESPACE);
+		}
+		Attribute size = element.getAttribute("size");
+		if (size == null) {
+			size = element.getAttribute("size", IConstants.XWT_NAMESPACE);
+		}
+		if (bounds == null && size == null) {
+			composite.pack();
+		}
 	}
 
 	private class ExtensionContext implements IRenderingContext {
@@ -222,7 +269,8 @@ public class Core {
 
 		protected ILoadingContext loadingContext;
 
-		public ExtensionContext(ILoadingContext loadingContext, ElementManager elementManager, String namespace) {
+		public ExtensionContext(ILoadingContext loadingContext,
+				ElementManager elementManager, String namespace) {
 			documentRoot = elementManager.getDocumentRoot();
 			resourcePath = documentRoot.getPath();
 			this.namespace = namespace;

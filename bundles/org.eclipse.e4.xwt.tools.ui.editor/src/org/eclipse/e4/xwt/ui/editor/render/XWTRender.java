@@ -13,9 +13,14 @@ package org.eclipse.e4.xwt.ui.editor.render;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.ui.utils.ProjectContext;
 import org.eclipse.e4.xwt.vex.VEXRenderer;
@@ -36,6 +41,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class XWTRender implements VEXRenderer {
 	private String hostClassName;
+	private Map<String, Object> options; 
 
 	/**
 	 * CanvasManager is used to draw the captured image and manage the ScrollBars.
@@ -54,6 +60,9 @@ public class XWTRender implements VEXRenderer {
 	public XWTRender(Canvas container, PropertyChangeListener changeListener) {
 		this.changeListener = changeListener;
 		canvasManager = new CanvasManager(container);
+		
+		options = new HashMap<String, Object>();
+		options.put(IXWTLoader.DESIGN_MODE_ROPERTY, Boolean.TRUE);
 	}
 
 	public void dispose() {
@@ -86,7 +95,7 @@ public class XWTRender implements VEXRenderer {
 			Control rootElement;
 			try {
 				ByteArrayInputStream inputStream = new ByteArrayInputStream(code.getBytes());
-				rootElement = XWT.load(inputStream, file.getLocationURI().toURL());
+				rootElement = XWT.loadWithOptions(inputStream, file.getLocationURI().toURL(), options);
 			} catch (Exception e) {
 				return false;
 			}
@@ -100,7 +109,7 @@ public class XWTRender implements VEXRenderer {
 
 				shell = rootElement.getShell();
 				shell.setFocus();
-				shell.pack();
+//				shell.pack();
 				shell.setLocation(rectangle.x + rectangle.width + 200, rectangle.y + rectangle.height + 200);
 				shell.open();
 
