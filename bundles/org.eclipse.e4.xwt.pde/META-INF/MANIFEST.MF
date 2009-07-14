@@ -14,3 +14,5 @@ Export-Package: org.eclipse.e4.xwt.pde,
  org.eclipse.e4.xwt.pde.ui,
  org.eclipse.e4.xwt.pde.ui.views
 Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+
