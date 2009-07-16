@@ -13,6 +13,6 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.e4.xwt.pde,
  org.eclipse.e4.xwt.pde.ui,
  org.eclipse.e4.xwt.pde.ui.views
-Bundle-Vendor: %providerName
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 
