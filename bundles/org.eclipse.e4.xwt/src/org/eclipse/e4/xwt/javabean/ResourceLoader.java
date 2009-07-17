@@ -412,6 +412,13 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
+						Widget widget = getWidget(targetObject);
+						if (widget != null) {
+							Object clr = loadData.getClr();
+							if (clr != null) {
+								UserDataHelper.setCLR(widget, clr);
+							}
+						}
 					} else {
 						metaclass = loader.getMetaclass(targetObject);
 					}

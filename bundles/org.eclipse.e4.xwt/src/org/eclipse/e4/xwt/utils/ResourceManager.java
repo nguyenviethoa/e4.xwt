@@ -111,6 +111,9 @@ public class ResourceManager {
 
 	static class ColorTool {
 		static Color getColor(String colorStr) {
+			if (NamedColorsUtil.hasColor(colorStr)) {
+				return NamedColorsUtil.getColor(colorStr);
+			}
 			if (colorStr.toLowerCase().startsWith("swt.")) {
 				return getSWTColor(colorStr);
 			} else if (colorStr.startsWith("#")) {
