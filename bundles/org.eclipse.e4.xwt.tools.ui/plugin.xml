@@ -95,7 +95,7 @@
           file-extensions="xwt"
           id="org.eclipse.e4.xwt.content-type"
           name="%content-type.name.0"
-          priority="normal">
+          priority="low">
     </content-type>
  </extension>
  <extension
