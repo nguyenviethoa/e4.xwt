@@ -13,13 +13,11 @@ package org.eclipse.e4.xwt.ui.editor.render;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.ui.utils.ProjectContext;

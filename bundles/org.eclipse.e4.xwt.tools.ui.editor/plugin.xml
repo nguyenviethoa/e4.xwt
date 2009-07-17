@@ -11,6 +11,9 @@
             icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui/icons/full/obj16/xaml.png"
             id="org.eclipse.e4.xwt.tools.ui.editor"
             name="%editor.name.0">
+         <contentTypeBinding
+               contentTypeId="org.eclipse.e4.xwt.content-type">
+         </contentTypeBinding>
       </editor>
    </extension>
    <extension
@@ -108,7 +111,7 @@
       </checker>
    </extension>
    <extension
-         id="id1"
+         id="org.eclipse.e4.xwt.vex.palettePath"
          point="org.eclipse.e4.xwt.vex.palettePath">
       <file
             iconsPath="icons/clcl16/"

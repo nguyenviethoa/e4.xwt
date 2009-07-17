@@ -27,6 +27,7 @@ import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.ui.utils.ImageManager;
+import org.eclipse.e4.xwt.utils.NamedColorsUtil;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.e4.xwt.vex.contentassist.SelectionCompletionProposal;
 import org.eclipse.e4.xwt.vex.contentassist.VEXTemplateCompletionProcessor;
@@ -67,6 +68,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class XWTContentAssistProcessor extends AbstractContentAssistProcessor implements IPropertyChangeListener {
+	static final String HANDLER_PREFIX = "on";
 	static SelectionCompletionProposal[] booleanProposals;
 	static SelectionCompletionProposal[] colorsProposals;
 	static SelectionCompletionProposal[] stylesProposals;
@@ -75,7 +77,7 @@ public class XWTContentAssistProcessor extends AbstractContentAssistProcessor im
 	protected IPreferenceStore fPreferenceStore = null;
 	protected IResource fResource = null;
 	private VEXTemplateCompletionProcessor fTemplateProcessor = null;
-	private List fTemplateContexts = new ArrayList();
+	private List<String> fTemplateContexts = new ArrayList<String>();
 
 	protected Comparator<ICompletionProposal> comparator = new Comparator<ICompletionProposal>() {
 
@@ -100,23 +102,40 @@ public class XWTContentAssistProcessor extends AbstractContentAssistProcessor im
 	static SelectionCompletionProposal[] getColorsProposals() {
 		if (colorsProposals == null) {
 			Collection<String> names = XWTMaps.getColorKeys();
-			colorsProposals = new SelectionCompletionProposal[names.size()];
+			String[] colorNames = NamedColorsUtil.getColorNames();
+			colorsProposals = new SelectionCompletionProposal[names.size() + colorNames.length];
 
 			int i = 0;
 			for (String colorStr : names) {
 				Color color = ResourceManager.resources.getColor(colorStr);
-				if (color != null) {
-					String pattern = "\"" + colorStr + "\"";
-					Image image = new Image(null, 16, 16);
-					GC gc = new GC(image);
-					gc.setBackground(color);
-					gc.fillRectangle(0, 0, 16, 16);
-					gc.dispose();
-					colorsProposals[i++] = new SelectionCompletionProposal(pattern, 0, 0, 1, colorStr.length(), image, colorStr, null, null);
+				SelectionCompletionProposal p = createColorProposal(color, colorStr);
+				if (p != null) {
+					colorsProposals[i++] = p;
+				}
+			}
+			for (String colorName : colorNames) {
+				Color color = ResourceManager.resources.getColor(colorName);
+				SelectionCompletionProposal p = createColorProposal(color, colorName);
+				if (p != null) {
+					colorsProposals[i++] = p;
 				}
 			}
 		}
 		return colorsProposals;
+	}
+
+	static SelectionCompletionProposal createColorProposal(Color color, String colorName) {
+		if (color != null) {
+			String pattern = "\"" + colorName + "\"";
+			Image image = new Image(null, 16, 16);
+			GC gc = new GC(image);
+			gc.setBackground(color);
+			gc.fillRectangle(0, 0, 16, 16);
+			gc.dispose();
+			return new SelectionCompletionProposal(pattern, 0, 0, 1, colorName.length(), image, colorName, null, null);
+		}
+		return null;
+
 	}
 
 	static SelectionCompletionProposal[] getStylesProposals() {
@@ -222,9 +241,9 @@ public class XWTContentAssistProcessor extends AbstractContentAssistProcessor im
 				}
 
 				if (!existing.contains(eventName)) {
-					String replacementString = eventName + "=\"perform" + eventName + "\" ";
+					String replacementString = eventName + "=\"" + HANDLER_PREFIX + eventName + "\" ";
 					Image image = ImageManager.get(ImageManager.IMG_EVENT);
-					SelectionCompletionProposal proposal = new SelectionCompletionProposal(replacementString, offset, replacementLength, eventName.length() + 2, eventName.length() + "perform".length(), image, eventName, null, "Event: " + eventName);
+					SelectionCompletionProposal proposal = new SelectionCompletionProposal(replacementString, offset, replacementLength, eventName.length() + 2, eventName.length() + HANDLER_PREFIX.length(), image, eventName, null, "Event: " + eventName);
 					if (useProposalList) {
 						proposalCollector.add(proposal);
 					} else {
