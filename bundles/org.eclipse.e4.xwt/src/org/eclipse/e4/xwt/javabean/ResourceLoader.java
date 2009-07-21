@@ -137,7 +137,7 @@ public class ResourceLoader implements IVisualElementLoader {
 
 		public LoadingData(LoadingData loadingData) {
 			this.loadedObject = loadingData.loadedObject;
-			this.loadedMethod = loadingData.loadedMethod;
+			this.loadedMethod = null;
 			this.hostWidget = loadingData.hostWidget;
 			this.parent = loadingData;
 			this.styles = loadingData.styles;

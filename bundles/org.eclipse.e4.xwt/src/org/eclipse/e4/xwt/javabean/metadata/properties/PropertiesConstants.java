@@ -30,7 +30,7 @@ public interface PropertiesConstants {
 	String PROPERTY_COLUMNS = "columns";
 	String PROPERTY_COLUMN_PROPERTIES = "columnProperties";
 
-	// Datas
+	// Data
 	String DATA_DEFINED_EDITOR = "Defined table editors";
 	String DATA_TABLE_UTIL = "tableUtil";
 	String DATA_CONTROLEDITOR_OF_CONTROL = "TableEditor of a control";
