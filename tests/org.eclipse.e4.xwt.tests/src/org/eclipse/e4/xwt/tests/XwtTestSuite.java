@@ -13,7 +13,7 @@ package org.eclipse.e4.xwt.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.e4.xwt.tests.controls.ControlTestSuite;
+import org.eclipse.e4.xwt.tests.controls.ControlsTestSuite;
 import org.eclipse.e4.xwt.tests.databinding.BindingTestSuite;
 import org.eclipse.e4.xwt.tests.events.EventsTestSuite;
 import org.eclipse.e4.xwt.tests.jface.JFaceTestSuite;
@@ -69,7 +69,7 @@ public class XwtTestSuite extends TestSuite {
 	}
 
 	protected void addControlsTests() {
-		addTest(ControlTestSuite.suite());
+		addTest(ControlsTestSuite.suite());
 	}
 
 	protected void addUserControlTests() {
