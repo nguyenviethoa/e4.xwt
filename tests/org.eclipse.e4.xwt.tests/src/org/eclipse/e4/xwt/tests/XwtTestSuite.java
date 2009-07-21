@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.e4.xwt.tests.clr.XWTTestSuite;
 import org.eclipse.e4.xwt.tests.controls.ControlsTestSuite;
 import org.eclipse.e4.xwt.tests.databinding.BindingTestSuite;
 import org.eclipse.e4.xwt.tests.events.EventsTestSuite;
@@ -36,6 +37,9 @@ public class XwtTestSuite extends TestSuite {
 	public XwtTestSuite() {
 		// XAML
 		addXAMLTests();
+
+		// XWT
+		addXWTTests();
 
 		// widgets SWT
 		addControlsTests();
@@ -66,6 +70,10 @@ public class XwtTestSuite extends TestSuite {
 	protected void addXAMLTests() {
 		addTest(NameTestSuite.suite());
 		addTest(ResourcesTestSuite.suite());
+	}
+
+	protected void addXWTTests() {
+		addTest(XWTTestSuite.suite());
 	}
 
 	protected void addControlsTests() {

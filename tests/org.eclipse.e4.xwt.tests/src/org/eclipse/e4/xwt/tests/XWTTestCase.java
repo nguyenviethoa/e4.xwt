@@ -11,11 +11,14 @@
 package org.eclipse.e4.xwt.tests;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.jface.bindings.keys.formatting.FormalKeyFormatter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -33,18 +36,24 @@ public abstract class XWTTestCase extends TestCase {
 	protected Control root;
 
 	protected void runTest(URL url) {
-		runTest(url, null, null, null);
+		runTest(url, null, null);
 	}
 
 	protected void runTest(URL url, Runnable prepareAction, Runnable checkAction) {
-		runTest(url, null, prepareAction, checkAction);
+		runTest(url, Collections.EMPTY_MAP, prepareAction, checkAction);
 	}
 
-	protected void runTest(final URL url, Object dataContext, Runnable prepareAction, Runnable checkAction) {
+	protected void runTest(URL url, Object dataContext, Runnable prepareAction, Runnable checkAction) {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
+		runTest(url, options, prepareAction, checkAction);
+	}
+
+	protected void runTest(final URL url, Map<String, Object> options, Runnable prepareAction, Runnable checkAction) {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		try {
 			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-			root = XWT.load(url, dataContext);
+			root = XWT.loadWithOptions(url, options);
 			assertNotNull(root);
 			Shell shell = root.getShell();
 			shell.open();
