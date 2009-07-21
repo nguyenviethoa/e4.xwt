@@ -15,6 +15,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.jface.bindings.keys.formatting.FormalKeyFormatter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -119,5 +120,13 @@ public abstract class XWTTestCase extends TestCase {
 		assertTrue(element instanceof Text);
 		Text text = (Text) element;
 		text.setText(value);
+	}
+	
+	
+	protected void assertEqualsArray(Object[] source, Object[] target) {
+		assertEquals(source.length, target.length);
+		for(int i = 0; i<source.length; i++) {
+			assertEquals(source[i], target[i]);			
+		}
 	}
 }

@@ -6,44 +6,35 @@
 		<GridLayout numColumns="2"/>
 	</Shell.layout>
 	<Label text="DROP_DOWN: "/>
-	<Combo x:style="DROP_DOWN">
+	<Combo name="combo1" x:style="DROP_DOWN">
 		<Combo.items>
 			<x:Array Type="j:String">
-            	  <j:String>"Line number foreground"</j:String>
-	              <j:String>"Matching bracketshighlight"</j:String>
-    	          <j:String>"Current line highlight"</j:String>
-        	      <j:String>"Print margin"</j:String>
-            	  <j:String>"Find scope"</j:String>
-   	    	      <j:String>"Linked position"</j:String>
-    	          <j:String>"Link"</j:String>
+	             <j:String>Item1</j:String>
+	             <j:String>Item2</j:String>
+	             <j:String>Item3</j:String>
+	             <j:String>Item4</j:String>
    		     </x:Array> 
 		</Combo.items>
 	</Combo>
 	<Label text="DROP_DOWN|READ_ONLY: "/>
-	<Combo x:style="DROP_DOWN|READ_ONLY">
+	<Combo name="combo2" x:style="DROP_DOWN|READ_ONLY">
 		<Combo.items>
 			<x:Array Type="j:String">
-            	  <j:String>"Line number foreground"</j:String>
-	              <j:String>"Matching bracketshighlight"</j:String>
-    	          <j:String>"Current line highlight"</j:String>
-        	      <j:String>"Print margin"</j:String>
-            	  <j:String>"Find scope"</j:String>
-   	    	      <j:String>"Linked position"</j:String>
-    	          <j:String>"Link"</j:String>
+	             <j:String>Item1</j:String>
+	             <j:String>Item2</j:String>
+	             <j:String>Item3</j:String>
+	             <j:String>Item4</j:String>
    		     </x:Array> 
 		</Combo.items>
 	</Combo>
 	<Label text="SIMPLE: "/>
-	<Combo x:style="SIMPLE">
+	<Combo name="combo3" x:style="SIMPLE" text="Item3">
 		<Combo.items>
 			<x:Array Type="j:String">
-            	  <j:String>"Line number foreground"</j:String>
-	              <j:String>"Matching bracketshighlight"</j:String>
-    	          <j:String>"Current line highlight"</j:String>
-        	      <j:String>"Print margin"</j:String>
-            	  <j:String>"Find scope"</j:String>
-   	    	      <j:String>"Linked position"</j:String>
-    	          <j:String>"Link"</j:String>
+	             <j:String>Item1</j:String>
+	             <j:String>Item2</j:String>
+	             <j:String>Item3</j:String>
+	             <j:String>Item4</j:String>
    		     </x:Array> 
 		</Combo.items>
 	</Combo>
