@@ -1,0 +1,30 @@
+<!-- *******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation for XWT
+ ****************************************************************************** -->
+<TableViewer xmlns="http://www.eclipse.org/xwt/presentation"
+    xmlns:x="http://www.eclipse.org/xwt"
+    xmlns:k="clr-namespace:org.eclipse.e4.demo.contacts.views"
+    xmlns:j="clr-namespace:java.lang"
+    name="TableViewer" x:Style="SWT.FULL_SELECTION" input="{Binding}">
+	<TableViewer.columns>
+		<TableViewerColumn width="80" text="{x:Static k:Messages.FirstName}" property="FirstName"/>
+		<TableViewerColumn width="80" text="{x:Static k:Messages.LastName}" property="LastName"/>
+	</TableViewer.columns>
+	<TableViewer.contentProvider>
+		<k:ContactContentProvider/>
+	</TableViewer.contentProvider>
+	<TableViewer.labelProvider>
+		<DefaultLabelProvider/>
+	</TableViewer.labelProvider>
+	<TableViewer.table HeaderVisible="true" SelectionEvent="selection"/>
+	<TableViewer.comparator>
+		<k:ContactViewerComparator />
+	</TableViewer.comparator>
+</TableViewer>

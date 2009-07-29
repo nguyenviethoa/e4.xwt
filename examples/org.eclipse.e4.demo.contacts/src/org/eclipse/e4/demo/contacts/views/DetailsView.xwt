@@ -1,0 +1,209 @@
+<!-- *******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation for XWT
+ ****************************************************************************** -->
+<Composite xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt" 
+	xmlns:css="http://www.eclipse.org/css" 
+	xmlns:c="clr-namespace:org.eclipse.e4.demo.contacts.views"
+	xmlns:j="clr-namespace:java.lang" 
+	x:Class="org.eclipse.e4.demo.contacts.views.DetailsView">
+	<Composite.layout>
+		<GridLayout numColumns="3" />
+	</Composite.layout>
+
+	<!-- General group text="{x:Static c:Messages.General} -->
+	<Label text="{x:Static c:Messages.General}" css:id="SeparatorLabel" >
+		<Label.layoutData>
+			<GridData horizontalSpan="3" grabExcessHorizontalSpace="true" widthHint="100"/>
+		</Label.layoutData>
+	</Label>
+	<Label text="{x:Static c:Messages.FullName}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+	<Text text="{Binding path=fullName}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+	<Label image="{Binding path=image}">
+		<Label.layoutData>
+			<GridData verticalSpan="4" widthHint="80" heightHint="100" />
+		</Label.layoutData>
+	</Label>
+
+	<Label text="{x:Static c:Messages.Company}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" widthHint="100"/>
+		</Label.layoutData>
+	</Label>
+	<Text text="{Binding path=company}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<Label text="{x:Static c:Messages.JobTitle}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+	<Text text="{Binding path=jobTitle}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<Label text="{x:Static c:Messages.Note}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" verticalAlignment="SWT.TOP" />
+		</Label.layoutData>
+	</Label>
+	<Text x:Style="SWT.MULTI" text="{Binding path=note}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true"
+				horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<!-- Business Address -->
+	<Label text="{x:Static c:Messages.BusinessAddress}" css:id="SeparatorLabel" >
+		<Label.layoutData>
+			<GridData horizontalSpan="3" grabExcessHorizontalSpace="true"/>
+		</Label.layoutData>
+	</Label>
+
+	<Label text="{x:Static c:Messages.Street}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+	<Text text="{Binding path=street}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true" horizontalSpan="2"
+				horizontalAlignment="GridData.FILL"/>
+		</Text.layoutData>
+	</Text>
+
+	<Label text="{x:Static c:Messages.City}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+	<Text text="{Binding path=city}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true" horizontalSpan="2"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<Label text="{x:Static c:Messages.ZIP}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+	<Text text="{Binding path=zip}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true" horizontalSpan="2"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<Label text="{x:Static c:Messages.State}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+	<Text text="{Binding path=state}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true" horizontalSpan="2"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<Label text="{x:Static c:Messages.Country}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+	<Text text="{Binding path=country}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true" horizontalSpan="2"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<!-- Business Phones -->
+	<Label text="{x:Static c:Messages.BusinessPhones}" css:id="SeparatorLabel">
+		<Label.layoutData>
+			<GridData horizontalSpan="3" grabExcessHorizontalSpace="true"/>
+		</Label.layoutData>
+	</Label>
+	<Label text="{x:Static c:Messages.Phone}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+
+	<Text text="{Binding path=phone}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true" horizontalSpan="2"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<Label text="{x:Static c:Messages.Mobile}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+
+	<Text text="{Binding path=mobile}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true" horizontalSpan="2"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<!-- Business Internet -->
+	<Label text="{x:Static c:Messages.BusinessInternet}" css:id="SeparatorLabel" >
+		<Label.layoutData>
+			<GridData horizontalSpan="3" grabExcessHorizontalSpace="true" widthHint="100"/>
+		</Label.layoutData>
+	</Label>
+	<Label text="{x:Static c:Messages.Email}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+
+	<Text text="{Binding path=email}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true" horizontalSpan="2"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+
+	<Label text="{x:Static c:Messages.WebPage}">
+		<Label.layoutData>
+			<GridData horizontalIndent="10" />
+		</Label.layoutData>
+	</Label>
+	<Text text="{Binding path=webPage}">
+		<Text.layoutData>
+			<GridData grabExcessHorizontalSpace="true" horizontalSpan="2"
+				horizontalAlignment="GridData.FILL" />
+		</Text.layoutData>
+	</Text>
+</Composite>
