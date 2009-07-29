@@ -8,7 +8,7 @@
  * 
  * Contributors:
  *     Kai Tödter - initial implementation
- *     Yves YANG - porting on XWT
+ *     Soyatec - porting on XWT
  ******************************************************************************/
 
 package org.eclipse.e4.demo.contacts.views;

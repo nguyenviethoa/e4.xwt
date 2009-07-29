@@ -1,0 +1,288 @@
+<!-- *******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation for XWT
+ ****************************************************************************** -->
+<Composite xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt" x:style="BORDER" x:name="dialog"
+	x:class="org.eclipse.e4.demo.e4photo.xwt.EditDialog">
+
+	<TabFolder>
+		<TabItem text="&amp;Image" image="/icons/filenav_nav.gif">
+			<TabItem.control>
+				<composite>
+					<label text="Software: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=software}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL" widthHint="200"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="Timestamp: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=timestamp}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="Width: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=width}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="Height: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=height}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="Orientation: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=orientation}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<Composite.layout>
+						<GridLayout numColumns="2" />
+					</Composite.layout>
+					<Composite.layoutData>
+						<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+							grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+					</Composite.layoutData>
+
+				</composite>
+			</TabItem.control>
+		</TabItem>
+		<TabItem text="&amp;Camera" image="/icons/filenav_nav.gif">
+			<TabItem.control>
+				<composite>
+					<label text="Make: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=make}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="ISO: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=iso}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="Model: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=model}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="Aperture: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=aperture}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="ExposureComp: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=exposureComp}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="Flash: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=flash}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="FocalLength: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=focalLength}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="Exposure: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=exposure}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="WhiteBalance: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=whiteBalance}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="ExposureProgram: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=exposureProgram}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="LightSource: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=lightSource}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+
+					<Composite.layout>
+						<GridLayout numColumns="2" />
+					</Composite.layout>
+					<Composite.layoutData>
+						<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+							grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+					</Composite.layoutData>
+
+				</composite>
+			</TabItem.control>
+		</TabItem>
+		<TabItem text="&amp;Location" image="/icons/filenav_nav.gif">
+			<TabItem.control>
+				<composite>
+					<label text="GPS Latitude: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=gpsLatitude}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<label text="GPS Longitude: ">
+						<label.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</label.layoutData>
+					</label>
+					<Text text="{Binding Path=gpsLongitude}" x:style="BORDER">
+						<Text.layoutData>
+							<GridData horizontalAlignment="FILL"
+								grabExcessHorizontalSpace="true" />
+						</Text.layoutData>
+					</Text>
+					<Composite.layout>
+						<GridLayout numColumns="2" />
+					</Composite.layout>
+					<Composite.layoutData>
+						<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+							grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+					</Composite.layoutData>
+
+				</composite>
+			</TabItem.control>
+		</TabItem>
+		<TabFolder.layoutData>
+			<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"
+				horizontalSpan="2" />
+		</TabFolder.layoutData>
+	</TabFolder>
+	<Composite.layout>
+		<GridLayout numColumns="2" />
+	</Composite.layout>
+	<Composite.layoutData>
+		<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
+			grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+	</Composite.layoutData>
+</Composite>
