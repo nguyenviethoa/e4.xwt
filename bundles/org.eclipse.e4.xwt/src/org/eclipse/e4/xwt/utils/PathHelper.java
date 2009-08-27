@@ -21,6 +21,7 @@ public class PathHelper {
 	public static final String BACKWARD_SLASH = "\\";
 	public static final String FORWARD_SLASH = "/";
 	public static final String RELATIVE_PATH_SIG = "../";
+	public static final String WHITE_SPACE_ASCII = "%20";
 
 	public static String getRelativePath(String source, String target) {
 		if (source == null || target == null) {
@@ -66,6 +67,12 @@ public class PathHelper {
 	}
 
 	public static String getAbsolutePath(String source, String relative) {
+		if (source.indexOf(WHITE_SPACE_ASCII) != -1) {
+			source = source.replace(WHITE_SPACE_ASCII, " ");
+		}
+		if (relative.indexOf(WHITE_SPACE_ASCII) != -1) {
+			relative = relative.replace(WHITE_SPACE_ASCII, " ");
+		}
 		if (source.startsWith(FORWARD_SLASH)) {
 			source = source.substring(1);
 		}
@@ -74,7 +81,7 @@ public class PathHelper {
 			prefix = URL_IDENTIFY_PREFIX;
 			source = source.substring(URL_IDENTIFY_PREFIX.length());
 			if (System.getProperty("os.arch").startsWith("Win")) {
-				source = source.substring(1);				
+				source = source.substring(1);
 			}
 		}
 		File file = new File(source);
@@ -105,7 +112,7 @@ public class PathHelper {
 			}
 		}
 		if (System.getProperty("os.arch").startsWith("Win")) {
-			source = "/" + source;				
+			source = "/" + source;
 		}
 
 		return (prefix != null ? prefix : "") + source + FORWARD_SLASH + relative;

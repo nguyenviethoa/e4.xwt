@@ -47,37 +47,34 @@ public class ResourceManager {
 
 	public Color getColor(String colorStr) {
 		Color color = key2Colors.get(colorStr);
-		if (color != null) {
-			return color;
+		if (color == null || color.isDisposed()) {
+			key2Colors.put(colorStr, color = ColorTool.getColor(colorStr));
 		}
-		key2Colors.put(colorStr, color = ColorTool.getColor(colorStr));
 		return color;
 	}
 
 	public Font getFont(String fontStr) {
 		Font font = key2Fonts.get(fontStr);
-		if (font != null) {
-			return font;
+		if (font == null || font.isDisposed()) {
+			key2Fonts.put(fontStr, font = FontTool.getFont(fontStr));
 		}
-		key2Fonts.put(fontStr, font = FontTool.getFont(fontStr));
 		return font;
 	}
 
 	public Image getImage(String imagePath) {
-		if (imagePath == null) {
-			return null;
-		}
-		Image image;
 		try {
+			if (imagePath == null) {
+				return null;
+			}
 			URL file = new URL(imagePath);
-			image = key2Images.get(file);
-			if (image == null) {
+			Image image = key2Images.get(file);
+			if (image == null || image.isDisposed()) {
 				key2Images.put(file, image = ImageTool.getImage(file));
 			}
+			return image;
 		} catch (Exception e) {
 			return null;
 		}
-		return image;
 	}
 
 	public void dispose() {

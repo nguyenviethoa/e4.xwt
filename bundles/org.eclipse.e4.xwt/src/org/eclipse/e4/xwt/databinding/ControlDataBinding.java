@@ -66,14 +66,14 @@ public class ControlDataBinding extends AbstractDataBinding {
 			if (sourceWidget != null) {
 				return sourceWidget.getValue();
 			}
-			return null;
+			return source;
 		}
 		IBindingContext bindingContext = new BindingContext();
 		bindingContext.bind(sourceWidget, targetWidget, this);
 		if (sourceWidget != null) {
 			return sourceWidget.getValue();
 		}
-		return null;
+		return source;
 	}
 
 	/**

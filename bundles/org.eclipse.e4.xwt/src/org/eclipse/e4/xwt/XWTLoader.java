@@ -36,7 +36,9 @@ import org.eclipse.e4.xwt.converters.ObjectToString;
 import org.eclipse.e4.xwt.converters.SelectionToBoolean;
 import org.eclipse.e4.xwt.converters.StringToBoolean;
 import org.eclipse.e4.xwt.converters.StringToColor;
+import org.eclipse.e4.xwt.converters.StringToEnum;
 import org.eclipse.e4.xwt.converters.StringToFont;
+import org.eclipse.e4.xwt.converters.StringToFormAttachment;
 import org.eclipse.e4.xwt.converters.StringToImage;
 import org.eclipse.e4.xwt.converters.StringToIntArray;
 import org.eclipse.e4.xwt.converters.StringToInteger;
@@ -642,6 +644,9 @@ public class XWTLoader implements IXWTLoader {
 		if (source == target || (source != Object.class && source.isAssignableFrom(target))) {
 			return ObjectToObject.instance;
 		}
+		if (String.class == source && target.isEnum()) {
+			return new StringToEnum(target);
+		}
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
 		return convertorRegister.findConverter(source, target);
 	}
@@ -905,6 +910,7 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(StringToRectangle.instance);
 		registerConvertor(StringToURL.instance);
 		registerConvertor(StringToType.instance);
+		registerConvertor(StringToFormAttachment.instance);
 
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core.getService(ValueConvertorRegister.class);
 		convertorRegister.register(String.class, float.class, StringToNumberConverter.toFloat(true));
