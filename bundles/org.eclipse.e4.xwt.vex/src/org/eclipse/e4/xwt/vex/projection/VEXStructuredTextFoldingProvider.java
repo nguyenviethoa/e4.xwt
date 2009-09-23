@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.vex.projection;
 
-import org.eclipse.wst.xml.ui.internal.projection.StructuredTextFoldingProviderXML;
+
 
 public class VEXStructuredTextFoldingProvider extends StructuredTextFoldingProviderXML {
 
