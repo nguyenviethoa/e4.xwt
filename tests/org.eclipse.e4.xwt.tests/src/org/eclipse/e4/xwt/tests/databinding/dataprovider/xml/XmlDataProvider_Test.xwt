@@ -22,13 +22,13 @@
 	</Shell.Resources>
 	
 	<Label text="Name"/>
-	<Text x:style="BORDER" text="{Binding Source={StaticResource myBooks}, XPath=//book/title/text()}">
+	<Text x:style="BORDER" text="{Binding Source={StaticResource myBooks}, path=//book/title/text()}">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
 		</Text.layoutData>
 	</Text>
-	<Label text="{Binding Source={StaticResource myBooks}, XPath=//book/title/text()}">
+	<Label text="{Binding Source={StaticResource myBooks}, path=//book/title/text()}">
 		<Label.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>

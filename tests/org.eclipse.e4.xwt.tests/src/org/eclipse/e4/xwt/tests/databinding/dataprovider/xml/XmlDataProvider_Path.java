@@ -16,11 +16,11 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.xml.XmlDataProvider;
 
-public class XmlDataProvider_XPath {
+public class XmlDataProvider_Path {
 	public static void main(String[] args) {
 		XWT.registerMetaclass(XmlDataProvider.class);
 
-		URL url = XmlDataProvider_XPath.class.getResource(XmlDataProvider_XPath.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = XmlDataProvider_Path.class.getResource(XmlDataProvider_Path.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
