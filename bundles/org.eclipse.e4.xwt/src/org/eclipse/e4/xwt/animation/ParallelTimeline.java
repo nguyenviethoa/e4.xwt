@@ -8,13 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.animation;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-
-/**
- * @author jliu jin.liu@soyatec.com
- */
-public interface IBindingContext {
-	void bind(IObservableValue source, IObservableValue target, IDataBindingInfo binding);
+public class ParallelTimeline extends TimelineGroup {
 }

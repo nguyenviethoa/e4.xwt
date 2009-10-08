@@ -8,13 +8,22 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.animation;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+public class ClockController {
+	protected Clock clock;
+	protected double speedRatio;
 
-/**
- * @author jliu jin.liu@soyatec.com
- */
-public interface IBindingContext {
-	void bind(IObservableValue source, IObservableValue target, IDataBindingInfo binding);
+	public Clock getClock() {
+		return clock;
+	}
+	public void setClock(Clock clock) {
+		this.clock = clock;
+	}
+	public double getSpeedRatio() {
+		return speedRatio;
+	}
+	public void setSpeedRatio(double speedRatio) {
+		this.speedRatio = speedRatio;
+	}
 }

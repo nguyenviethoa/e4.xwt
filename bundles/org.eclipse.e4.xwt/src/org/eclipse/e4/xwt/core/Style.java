@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.internal.core;
+package org.eclipse.e4.xwt.core;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +26,18 @@ import org.eclipse.e4.xwt.metadata.IProperty;
 public class Style {
 	protected Class<?> targetType;
 	protected Collection<Setter> setters;
+	protected Collection<TriggerBase> triggers;
+
+	public Collection<TriggerBase> getTriggers() {
+		if (triggers == null) {
+			return Collections.EMPTY_LIST;
+		}
+		return triggers;
+	}
+
+	public void setTriggers(Collection<TriggerBase> triggers) {
+		this.triggers = triggers;
+	}
 
 	public Class<?> getTargetType() {
 		return targetType;
@@ -59,6 +71,12 @@ public class Style {
 				} catch (Exception e) {
 					LoggerManager.log(e);
 				}
+			}
+		}
+		for (TriggerBase triggerBase : getTriggers()) {
+			if (triggerBase instanceof EventTrigger) {
+				EventTrigger eventTrigger = (EventTrigger) triggerBase;
+				
 			}
 		}
 	}

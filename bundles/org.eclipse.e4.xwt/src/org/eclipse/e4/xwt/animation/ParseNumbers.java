@@ -8,13 +8,20 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.animation;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+public class ParseNumbers {
+	public static String IntToString(int n, int m, int digits, char ch, int d) {
+		String value = Integer.toString(n, m);
 
-/**
- * @author jliu jin.liu@soyatec.com
- */
-public interface IBindingContext {
-	void bind(IObservableValue source, IObservableValue target, IDataBindingInfo binding);
+		if (ch != 0) {
+			String prefix = Character.toString(ch);
+
+			for (int i = digits - value.length(); i > 0; i--) {
+				value = prefix + value;
+			}
+		}
+
+		return value;
+	}
 }

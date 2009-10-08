@@ -8,13 +8,8 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.animation;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+public class Point3DAnimationBase extends AnimationTimeline {
 
-/**
- * @author jliu jin.liu@soyatec.com
- */
-public interface IBindingContext {
-	void bind(IObservableValue source, IObservableValue target, IDataBindingInfo binding);
 }

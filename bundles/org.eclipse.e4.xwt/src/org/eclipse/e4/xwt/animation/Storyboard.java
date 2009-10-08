@@ -8,13 +8,24 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.animation;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.metadata.IProperty;
 
-/**
- * @author jliu jin.liu@soyatec.com
- */
-public interface IBindingContext {
-	void bind(IObservableValue source, IObservableValue target, IDataBindingInfo binding);
+public class Storyboard extends ParallelTimeline {
+	protected String targetName;
+	protected IProperty targetProperty;
+
+	public String getTargetName() {
+		return targetName;
+	}
+	public void setTargetName(String targetName) {
+		this.targetName = targetName;
+	}
+	public IProperty getTargetProperty() {
+		return targetProperty;
+	}
+	public void setTargetProperty(IProperty targetProperty) {
+		this.targetProperty = targetProperty;
+	}
 }
