@@ -76,7 +76,11 @@ public class Style {
 		for (TriggerBase triggerBase : getTriggers()) {
 			if (triggerBase instanceof EventTrigger) {
 				EventTrigger eventTrigger = (EventTrigger) triggerBase;
-				
+				eventTrigger.apply(target);				
+			}
+			else if (triggerBase instanceof Trigger) {
+				Trigger trigger = (Trigger) triggerBase;
+				trigger.apply(target);
 			}
 		}
 	}

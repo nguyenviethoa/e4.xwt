@@ -26,6 +26,11 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.e4.xwt.animation.BeginStoryboard;
+import org.eclipse.e4.xwt.animation.DoubleAnimation;
+import org.eclipse.e4.xwt.animation.PauseStoryboard;
+import org.eclipse.e4.xwt.animation.StopStoryboard;
+import org.eclipse.e4.xwt.animation.Storyboard;
 import org.eclipse.e4.xwt.converters.BindingToObject;
 import org.eclipse.e4.xwt.converters.CollectionToBoolean;
 import org.eclipse.e4.xwt.converters.DateToString;
@@ -46,9 +51,11 @@ import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
 import org.eclipse.e4.xwt.converters.StringToType;
 import org.eclipse.e4.xwt.converters.StringToURL;
+import org.eclipse.e4.xwt.core.EventTrigger;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.Setter;
 import org.eclipse.e4.xwt.core.Style;
+import org.eclipse.e4.xwt.core.Trigger;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
@@ -505,6 +512,9 @@ public class XWTLoader implements IXWTLoader {
 		IConverter converter = findConvertor(String.class, targetType);
 		if (converter != null) {
 			return converter.convert(string);
+		}
+		if (targetType == Object.class) {
+			return string;
 		}
 		throw new XWTException("Converter is missing of type: " + targetType.getName() + " from String");
 	}
@@ -1066,12 +1076,24 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(Style.class);
 		registerMetaclass(Setter.class);
 
+		registerMetaclass(Trigger.class);
+		registerMetaclass(EventTrigger.class);
+
+		registerMetaclass(Storyboard.class);
+		registerMetaclass(BeginStoryboard.class);
+		registerMetaclass(StopStoryboard.class);
+		registerMetaclass(PauseStoryboard.class);
+		registerMetaclass(PauseStoryboard.class);
+		registerMetaclass(DoubleAnimation.class);
+		registerMetaclass(DoubleAnimation.class);
+		
 		registerMetaclass(DefaultListContentProvider.class);
 		registerMetaclass(ObservableListContentProvider.class);
 		registerMetaclass(ObservableListTreeContentProvider.class);
 		registerMetaclass(ObservableSetContentProvider.class);
 		registerMetaclass(ObservableListTreeContentProvider.class);
 		registerMetaclass(ObservableSetTreeContentProvider.class);
+
 	}
 
 	/*

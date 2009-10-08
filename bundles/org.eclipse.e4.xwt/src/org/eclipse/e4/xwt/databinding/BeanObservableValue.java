@@ -83,13 +83,13 @@ public class BeanObservableValue extends XWTObservableValue {
 			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
 			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 			for (PropertyDescriptor pd : propertyDescriptors) {
-				if (propertyName.equals(pd.getName())) {
+				if (propertyName.equalsIgnoreCase(pd.getName())) {
 					return pd.getPropertyType();
 				}
 			}
 			Field[] fields = type.getDeclaredFields();
 			for (Field field : fields) {
-				if (propertyName.equals(field.getName())) {
+				if (propertyName.equalsIgnoreCase(field.getName())) {
 					return field.getType();
 				}
 			}
