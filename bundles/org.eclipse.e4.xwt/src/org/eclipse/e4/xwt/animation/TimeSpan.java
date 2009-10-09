@@ -391,7 +391,7 @@ public class TimeSpan implements Serializable, Comparable {
 	}
 
 	/**
-	 * imitate“-”
+	 * imitate
 	 * 
 	 * 
 	 */
