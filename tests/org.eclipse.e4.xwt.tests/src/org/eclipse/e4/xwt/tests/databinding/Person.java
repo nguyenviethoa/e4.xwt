@@ -16,6 +16,10 @@ public class Person {
 	private boolean maried = true;
 	private Country nationality = Country.FR;
 
+	public void setMaried(boolean maried) {
+		this.maried = maried;
+	}
+
 	public Country getNationality() {
 		return nationality;
 	}
