@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.swt.widgets.Widget;
 
 /**

@@ -1,8 +1,5 @@
 package org.eclipse.e4.xwt.core;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -11,14 +8,23 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.databinding.BeanObservableValue;
 import org.eclipse.e4.xwt.databinding.ObservableValueUtil;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
-import org.eclipse.e4.xwt.metadata.IMetaclass;
-import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.swt.widgets.Widget;
 
 public class Trigger extends TriggerBase {
-	protected String property;
-	protected String sourceName;
-	protected Object value;
-	protected Collection<Setter> setters = new ArrayList<Setter>();
+	private String property;
+	private String sourceName;
+	private Operator operator = Operator.EQ;
+	private Object value;
+	private SetterBase[] setters;
+	
+	public Operator getOperator() {
+		return operator;
+	}
+
+	public void setOperator(Operator operator) {
+		this.operator = operator;
+	}
 
 	public String getProperty() {
 		return property;
@@ -44,26 +50,34 @@ public class Trigger extends TriggerBase {
 		this.value = value;
 	}
 
-	public Collection<Setter> getSetters() {
+	public SetterBase[] getSetters() {
+		if (setters == null) {
+			return SetterBase.EMPTY_SETTERS;
+		}
 		return setters;
 	}
 
-	public void setSetters(Collection<Setter> setters) {
+	public void setSetters(SetterBase[] setters) {
 		this.setters = setters;
 	}
 
-	public void apply(final Object target) {
+	public void on(final Object target) {
 		if (property != null) {
-			IObservableValue observableValue = ObservableValueUtil.createWidget(target, property);			
+			final Object source = getElementByName(target, sourceName);
+			IObservableValue observableValue = ObservableValueUtil.createWidget(source, property);			
 			observableValue.addValueChangeListener(new IValueChangeListener() {
 				public void handleValueChange(ValueChangeEvent event) {
-					Class<?> valueType = BeanObservableValue.getValueType(target
-							.getClass(), property);
+					Class<?> valueType = BeanObservableValue.getValueType(source.getClass(), property);
 					if (valueType == null) {
-						LoggerManager.log("Type of the property " + property + " is not found in " + target
+						LoggerManager.log("Type of the property " + property + " is not found in " + source
 								.getClass().getName());
 						return;
 					}
+					Widget widget = UserDataHelper.getWidget(source);
+					if (widget == null) {
+						return;
+					}
+					
 					//
 					// test value ==
 					//
@@ -77,19 +91,8 @@ public class Trigger extends TriggerBase {
 						return;
 					}
 					
-					IMetaclass metaclass = XWT.getMetaclass(target);
-					for (Setter setter : getSetters()) {
-						String propName = setter.getProperty();
-						String propValue = setter.getValue();
-						IProperty prop = metaclass.findProperty(propName);
-						if (prop != null && propValue != null) {
-							Object toValue = XWT.convertFrom(prop.getType(), propValue);
-							try {
-								prop.setValue(target, toValue);
-							} catch (Exception e) {
-								LoggerManager.log(e);
-							}
-						}
+					for (SetterBase setter : getSetters()) {
+						setter.applyTo(target);
 					}
 				}
 			});

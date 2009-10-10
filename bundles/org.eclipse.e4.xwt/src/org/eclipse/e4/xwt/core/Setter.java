@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
+import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.internal.utils.LoggerManager;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
+
 
 /**
  * Setter of the class Style, which is used to define the in-line XAML style
@@ -17,17 +22,17 @@ package org.eclipse.e4.xwt.core;
  * @see Style
  * @author yyang
  */
-public class Setter extends Setterbase {
+public class Setter extends SetterBase {
 	protected String property;
 	protected String value;
-	protected String tergatName;
+	protected String targetName;
 
-	public String getTergatName() {
-		return tergatName;
+	public String getTargetName() {
+		return targetName;
 	}
 
-	public void setTergatName(String tergatName) {
-		this.tergatName = tergatName;
+	public void setTargetName(String targetName) {
+		this.targetName = targetName;
 	}
 
 	public String getProperty() {
@@ -46,4 +51,23 @@ public class Setter extends Setterbase {
 		this.value = value;
 	}
 
+	public void applyTo(Object element) {
+		String propName = getProperty();
+		String propValue = getValue();
+		String targetName = getTargetName();
+		Object setterTarget = element;
+		if (targetName != null) {
+			setterTarget = TriggerBase.getElementByName(element, targetName);
+		}
+		IMetaclass metaclass = XWT.getMetaclass(setterTarget);
+		IProperty prop = metaclass.findProperty(propName);
+		if (prop != null && propValue != null) {
+			Object toValue = XWT.convertFrom(prop.getType(), propValue);
+			try {
+				prop.setValue(setterTarget, toValue);
+			} catch (Exception e) {
+				LoggerManager.log(e);
+			}
+		}
+	}
 }

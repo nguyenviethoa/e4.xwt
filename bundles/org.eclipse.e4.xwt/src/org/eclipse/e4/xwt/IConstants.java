@@ -37,6 +37,7 @@ public interface IConstants {
 	public final String XAML_X_NULL = "Null";
 	public final String XAML_X_SHARED = "Shared";
 	public final String XAML_DATACONTEXT = "DataContext";
+	public final String XAML_TRIGGERS = "Triggers";
 	public final String XAML_STYLE = "Style";
 	public final String XAML_COMMAND = "Command";
 	public final String XAML_CLR_NAMESPACE_PROTO = "clr-namespace:";

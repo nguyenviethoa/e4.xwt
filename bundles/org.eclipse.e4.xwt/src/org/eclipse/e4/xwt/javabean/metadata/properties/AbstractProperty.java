@@ -24,7 +24,7 @@ public abstract class AbstractProperty extends Behavior implements IProperty {
 
 	public AbstractProperty(String name, Class<?> type) {
 		super(name);
-		this.type = type;
+		setType(type);
 	}
 
 	public void addSetPostAction(ISetPostAction setPostAction) {
@@ -56,6 +56,30 @@ public abstract class AbstractProperty extends Behavior implements IProperty {
 	 * @see org.eclipse.e4.xwt.metadata.IProperty#setType(java.lang.Class)
 	 */
 	public void setType(Class<?> type) {
+		if (type == boolean.class) {
+			type = Boolean.class;
+		}
+		else if (type == int.class) {
+			type = Integer.class;
+		}
+		else if (type == long.class) {
+			type = Long.class;
+		}
+		else if (type == char.class) {
+			type = Character.class;
+		}
+		else if (type == float.class) {
+			type = Float.class;
+		}
+		else if (type == double.class) {
+			type = Double.class;
+		}
+		else if (type == byte.class) {
+			type = Byte.class;
+		}
+		else if (type == short.class) {
+			type = Short.class;
+		}
 		this.type = type;
 	}
 

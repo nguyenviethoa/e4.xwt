@@ -21,6 +21,7 @@ import java.util.Set;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.e4.xwt.core.IBinding;
+import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.NameScope;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -133,6 +134,26 @@ public class XWT {
 	 */
 	public static Object getDataContext(Widget element) {
 		return getDataContext(element, true);
+	}
+
+	/**
+	 * Get the Triggers of given element
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static TriggerBase[] getTriggers(Widget element) {
+		return XWTLoaderManager.getActive().getTriggers(element);
+	}
+
+	/**
+	 * Get the Triggers of given element
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static void setTriggers(Widget element, TriggerBase[] triggers) {
+		XWTLoaderManager.getActive().setTriggers(element, triggers);
 	}
 
 	/**

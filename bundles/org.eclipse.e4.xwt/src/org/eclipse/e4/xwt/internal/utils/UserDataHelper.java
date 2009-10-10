@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.utils;
 
+import org.eclipse.e4.xwt.core.EventTrigger;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
+import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.internal.core.NameScope;
+import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.TableTreeItem;
@@ -189,6 +192,18 @@ public class UserDataHelper {
 		return data;
 	}
 
+	public static TriggerBase[] getTriggers(Widget widget) {
+		TriggerBase[] triggers =  (TriggerBase[]) widget.getData(IUserDataConstants.XWT_TRIGGERS_KEY);
+		if (triggers == null) {
+			return TriggerBase.EMPTY_ARRAY;
+		}
+		return triggers;
+	}
+
+	public static void setTriggers(Widget widget, TriggerBase[] triggers) {
+		widget.setData(IUserDataConstants.XWT_TRIGGERS_KEY, triggers);
+	}
+
 	public static Widget getDataContextHost(Widget widget) {
 		Object data = widget.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
 		Widget parent = widget;
@@ -200,5 +215,14 @@ public class UserDataHelper {
 
 	public static void setDataContext(Widget widget, Object dataContext) {
 		widget.setData(IUserDataConstants.XWT_DATACONTEXT_KEY, dataContext);
+	}
+	
+	public static Widget getWidget(Object target) {
+		if (JFacesHelper.isViewer(target)) {
+			return JFacesHelper.getControl(target);
+		} else if (target instanceof Widget) {
+			return (Widget) target;
+		}
+		return null;
 	}
 }

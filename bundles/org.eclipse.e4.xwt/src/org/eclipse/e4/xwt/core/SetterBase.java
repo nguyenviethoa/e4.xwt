@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
-public class Setterbase {
+public abstract class SetterBase {
+	public static final SetterBase[] EMPTY_SETTERS = new SetterBase[0];
 
+	public abstract void applyTo(Object element);
 }

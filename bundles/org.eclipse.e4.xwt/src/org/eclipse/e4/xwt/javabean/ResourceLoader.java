@@ -40,6 +40,7 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.XWTMaps;
+import org.eclipse.e4.xwt.core.EventTrigger;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
 import org.eclipse.e4.xwt.core.IRenderingContext;
@@ -47,6 +48,8 @@ import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.IVisualElementLoader;
 import org.eclipse.e4.xwt.core.Setter;
 import org.eclipse.e4.xwt.core.Style;
+import org.eclipse.e4.xwt.core.Trigger;
+import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.DataBindingTrack;
@@ -161,7 +164,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			this.clr = clr;
 		}
 
-		public void updateEvent(IRenderingContext context, Widget control, IEvent event, Attribute attribute, String propertyName) {
+		public void updateEvent(IRenderingContext context, Widget control, IEvent event, String handler) {
 			Controller eventController = (Controller) control.getData(IUserDataConstants.XWT_CONTROLLER_KEY);
 			if (eventController == null) {
 				eventController = new Controller();
@@ -169,22 +172,21 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 			Method method = null;
 			Object clrObject = null;
-			String methodName = attribute.getContent();
 			LoadingData current = this;
 			ResourceLoader currentParentLoader = parentLoader;
 			while (current != null) {
 				Object receiver = current.getClr();
 				if (receiver != null) {
 					Class<?> clazz = receiver.getClass();
-					method = ObjectUtil.findMethod(clazz, methodName, Event.class);
+					method = ObjectUtil.findMethod(clazz, handler, Event.class);
 					if (method == null) {
 						// Load again.
 						clazz = ClassLoaderUtil.loadClass(context.getLoadingContext(), clazz.getName());
-						method = ObjectUtil.findMethod(clazz, methodName, Event.class);
+						method = ObjectUtil.findMethod(clazz, handler, Event.class);
 					}
 					if (method != null) {
 						clrObject = receiver;
-						if (propertyName.equalsIgnoreCase(Metaclass.LOADED)) {
+						if (event.getName().equalsIgnoreCase(Metaclass.LOADED)) {
 							method.setAccessible(true);
 							this.loadedObject = receiver;
 							this.loadedMethod = method;
@@ -201,10 +203,10 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 			}
 			if (method == null) {
-				LoggerManager.log(new XWTException("Event handler \"" + methodName + "\" is not found."));
+				LoggerManager.log(new XWTException("Event handler \"" + handler + "\" is not found."));
 			}
 		}
-
+		
 		public void end() {
 			if (parent == null || clr != parent.getClr()) {
 				Method method = ObjectUtil.findDeclaredMethod(clr.getClass(), "initializeComponent");
@@ -412,7 +414,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
-						Widget widget = getWidget(targetObject);
+						Widget widget = UserDataHelper.getWidget(targetObject);
 						if (widget != null) {
 							Object clr = loadData.getClr();
 							if (clr != null) {
@@ -429,7 +431,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 			}
 		}
-		Widget widget = getWidget(targetObject);
+		Widget widget = UserDataHelper.getWidget(targetObject);
 		if (widget != null) {
 			loadData.setCurrentWidget(widget);
 		}
@@ -483,7 +485,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 				setters.add((Setter) child);
 			}
-			((Style) targetObject).setSetters(setters);
+			((Style) targetObject).setSetters(setters.toArray(new Setter[setters.size()]));
 		} else if (targetObject instanceof ControlEditor) {
 			for (DocumentObject doc : element.getChildren()) {
 				Object editor = doCreate(parent, (Element) doc, null, Collections.EMPTY_MAP);
@@ -510,19 +512,23 @@ public class ResourceLoader implements IVisualElementLoader {
 		for (String delayed : delayedAttributes) {
 			initAttribute(metaclass, targetObject, element, null, delayed);
 		}
+		
+		postCreation(targetObject);
 		popStack();
 		return targetObject;
 	}
-
-	protected Widget getWidget(Object target) {
-		if (JFacesHelper.isViewer(target)) {
-			return JFacesHelper.getControl(target);
-		} else if (target instanceof Widget) {
-			return (Widget) target;
+	
+	protected void postCreation(Object target) {
+		Widget widget = UserDataHelper.getWidget(target);
+		if (widget == null) {
+			return;
 		}
-		return null;
+		TriggerBase[] triggers = UserDataHelper.getTriggers(widget);
+		for (TriggerBase triggerBase : triggers) {
+			triggerBase.on(target);
+		}
 	}
-
+	
 	private void setDataContext(IMetaclass metaclass, Object targetObject, ResourceDictionary dico, Object dataContext) throws IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		Widget widget = null;
 		IMetaclass widgetMetaclass = metaclass;
@@ -733,7 +739,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (nameAttr == null) {
 			nameAttr = element.getAttribute(IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_NAME);
 		}
-		if (nameAttr != null && getWidget(targetObject) != null) {
+		if (nameAttr != null && UserDataHelper.getWidget(targetObject) != null) {
 			nameScoped.addObject(nameAttr.getContent(), targetObject);
 			done.add(IConstants.XAML_X_NAME);
 		}
@@ -791,7 +797,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 		}
 		for (String attrName : element.attributeNames()) {
-			if (IConstants.XAML_X_NAME.equalsIgnoreCase(attrName) && getWidget(targetObject) != null) {
+			if (IConstants.XAML_X_NAME.equalsIgnoreCase(attrName) && UserDataHelper.getWidget(targetObject) != null) {
 				continue;
 			}
 			if (!done.contains(attrName) && !delayedAttributes.contains(attrName)) {
@@ -935,12 +941,15 @@ public class ResourceLoader implements IVisualElementLoader {
 				} else {
 					LoggerManager.log(new XWTException("Constructor \"" + name + "(" + type.getSimpleName() + ")\" is not found"));
 				}
-			}
-
+			}			
 			List<String> delayedAttributes = new ArrayList<String>();
 			init(metaclass, instance, element, delayedAttributes);
 			for (String delayed : delayedAttributes) {
 				initAttribute(metaclass, instance, element, null, delayed);
+			}
+			
+			for (DocumentObject doc : element.getChildren()) {
+				doCreate(instance, (Element) doc, null, Collections.EMPTY_MAP);
 			}
 			return instance;
 		} catch (Exception e) {
@@ -1060,7 +1069,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (!(target instanceof Widget)) {
 				return;
 			}
-			loadData.updateEvent(context, (Widget) target, event, attribute, propertyName);
+			loadData.updateEvent(context, (Widget) target, event, attribute.getContent());
 			return;
 		}
 		try {
@@ -1134,7 +1143,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 			if (value != null) {
 				Class<?> propertyType = property.getType();
-				if (!propertyType.isAssignableFrom(value.getClass()) || value instanceof IBinding) {
+				if (!propertyType.isAssignableFrom(value.getClass()) || (value instanceof IBinding && !(IBinding.class.isAssignableFrom(propertyType))) ) {
 					Object orginalValue = value;
 					IConverter converter = loader.findConvertor(value.getClass(), propertyType);
 					if (converter != null) {

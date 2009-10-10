@@ -54,32 +54,32 @@ public class DataBinding extends AbstractDataBinding {
 		IObservableValue observableSource = getObservableSource();
 		IBindingContext bindingContext = dataProvider.getBindingContext();
 		if (bindingContext != null && observableSource != null) {
-			Object target = getTarget();
-			if (target instanceof Text && getTargetProperty().equalsIgnoreCase("text")) {
-				String sourceProperty = getSourceProperty();
-				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
-					Text text = (Text) target;
-					text.setEditable(false);
-				}
-			} else if (target instanceof Button && getTargetProperty().equalsIgnoreCase("selection")) {
-				String sourceProperty = getSourceProperty();
-				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
-					Button button = (Button) target;
-					button.setEnabled(false);
-				}
-			} else if ((target instanceof Combo || target instanceof CCombo) && getTargetProperty().equalsIgnoreCase("text")) {
-				String sourceProperty = getSourceProperty();
-				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
-					Control control = (Control) target;
-					control.setEnabled(false);
-				}
-			} else if (target instanceof MenuItem && getTargetProperty().equalsIgnoreCase("selection")) {
-				String sourceProperty = getSourceProperty();
-				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
-					MenuItem menuItem = (MenuItem) target;
-					menuItem.setEnabled(false);
-				}
-			}
+//			Object target = getTarget();
+//			if (target instanceof Text && getTargetProperty().equalsIgnoreCase("text")) {
+//				String sourceProperty = getSourceProperty();
+//				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+//					Text text = (Text) target;
+//					text.setEditable(false);
+//				}
+//			} else if (target instanceof Button && getTargetProperty().equalsIgnoreCase("selection")) {
+//				String sourceProperty = getSourceProperty();
+//				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+//					Button button = (Button) target;
+//					button.setEnabled(false);
+//				}
+//			} else if ((target instanceof Combo || target instanceof CCombo) && getTargetProperty().equalsIgnoreCase("text")) {
+//				String sourceProperty = getSourceProperty();
+//				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+//					Control control = (Control) target;
+//					control.setEnabled(false);
+//				}
+//			} else if (target instanceof MenuItem && getTargetProperty().equalsIgnoreCase("selection")) {
+//				String sourceProperty = getSourceProperty();
+//				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+//					MenuItem menuItem = (MenuItem) target;
+//					menuItem.setEnabled(false);
+//				}
+//			}
 			bindingContext.bind(observableSource, observableWidget, this);
 		}
 		if (observableSource != null) {

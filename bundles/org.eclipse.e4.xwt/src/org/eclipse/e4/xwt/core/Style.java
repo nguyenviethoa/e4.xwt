@@ -10,14 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.internal.utils.LoggerManager;
-import org.eclipse.e4.xwt.metadata.IMetaclass;
-import org.eclipse.e4.xwt.metadata.IProperty;
-
 /**
  * The class defines the in-line XAML style
  * 
@@ -25,17 +17,17 @@ import org.eclipse.e4.xwt.metadata.IProperty;
  */
 public class Style {
 	protected Class<?> targetType;
-	protected Collection<Setter> setters;
-	protected Collection<TriggerBase> triggers;
+	protected SetterBase[] setters;
+	protected TriggerBase[] triggers;
 
-	public Collection<TriggerBase> getTriggers() {
+	public TriggerBase[] getTriggers() {
 		if (triggers == null) {
-			return Collections.EMPTY_LIST;
+			return TriggerBase.EMPTY_ARRAY;
 		}
 		return triggers;
 	}
 
-	public void setTriggers(Collection<TriggerBase> triggers) {
+	public void setTriggers(TriggerBase[] triggers) {
 		this.triggers = triggers;
 	}
 
@@ -47,41 +39,23 @@ public class Style {
 		this.targetType = targetType;
 	}
 
-	public Collection<Setter> getSetters() {
+	public SetterBase[] getSetters() {
 		if (setters == null) {
-			return Collections.EMPTY_LIST;
+			return SetterBase.EMPTY_SETTERS;
 		}
 		return setters;
 	}
 
-	public void setSetters(Collection<Setter> setters) {
+	public void setSetters(SetterBase[] setters) {
 		this.setters = setters;
 	}
 
 	public void apply(Object target) {
-		IMetaclass metaclass = XWT.getMetaclass(target);
-		for (Setter setter : getSetters()) {
-			String propName = setter.getProperty();
-			String propValue = setter.getValue();
-			IProperty prop = metaclass.findProperty(propName);
-			if (prop != null && propValue != null) {
-				Object value = XWT.convertFrom(prop.getType(), propValue);
-				try {
-					prop.setValue(target, value);
-				} catch (Exception e) {
-					LoggerManager.log(e);
-				}
-			}
+		for (SetterBase setter : getSetters()) {
+			setter.applyTo(target);
 		}
 		for (TriggerBase triggerBase : getTriggers()) {
-			if (triggerBase instanceof EventTrigger) {
-				EventTrigger eventTrigger = (EventTrigger) triggerBase;
-				eventTrigger.apply(target);				
-			}
-			else if (triggerBase instanceof Trigger) {
-				Trigger trigger = (Trigger) triggerBase;
-				trigger.apply(target);
-			}
+			triggerBase.on(target);				
 		}
 	}
 }

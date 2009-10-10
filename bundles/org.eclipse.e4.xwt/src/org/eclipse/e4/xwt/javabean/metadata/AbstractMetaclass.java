@@ -3,14 +3,19 @@ package org.eclipse.e4.xwt.javabean.metadata;
 import java.beans.BeanInfo;
 import java.beans.EventSetDescriptor;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.IXWTLoader;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.FieldProperty;
@@ -51,18 +56,25 @@ public class AbstractMetaclass implements IMetaclass {
 
 	private boolean initialize = false;
 
-	protected boolean shouldIgnored(Class<?> type, String propertyName, Class<?> propertyType) {
+	protected boolean shouldIgnored(Class<?> type, String propertyName,
+			Class<?> propertyType) {
 		String packageName = "";
 		if (type.getPackage() != null) {
 			packageName = type.getPackage().getName();
 		}
-		if (("data".equals(propertyName) && packageName.startsWith("org.eclipse.swt."))) {
+		if (("data".equals(propertyName) && packageName
+				.startsWith("org.eclipse.swt."))) {
 			return true;
 		}
 		if ("class".equals(propertyName)) {
 			return true;
 		}
-		if (("handle".equals(propertyName) && int.class == propertyType) || ("monitor".equals(propertyName) && Monitor.class == propertyType) || ("region".equals(propertyName) && Region.class == propertyType) || ("parent".equals(propertyName) && Composite.class == propertyType) || ("shell".equals(propertyName) && Shell.class == propertyType) || ("display".equals(propertyName) && Display.class == propertyType)) {
+		if (("handle".equals(propertyName) && int.class == propertyType)
+				|| ("monitor".equals(propertyName) && Monitor.class == propertyType)
+				|| ("region".equals(propertyName) && Region.class == propertyType)
+				|| ("parent".equals(propertyName) && Composite.class == propertyType)
+				|| ("shell".equals(propertyName) && Shell.class == propertyType)
+				|| ("display".equals(propertyName) && Display.class == propertyType)) {
 			return true;
 		}
 		return false;
@@ -143,7 +155,8 @@ public class AbstractMetaclass implements IMetaclass {
 
 	private void addTypedEvent(String name, int eventType) {
 		if (!routedEventCache.containsKey(normalize(name + "Event"))) {
-			routedEventCache.put(normalize(name + "Event"), new TypedEvent(name, eventType));
+			routedEventCache.put(normalize(name + "Event"), new TypedEvent(
+					name, eventType));
 		}
 	}
 
@@ -159,7 +172,8 @@ public class AbstractMetaclass implements IMetaclass {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#findEvent(java.lang.String)
+	 * @see
+	 * com.soyatec.xaswt.core.metadata.IMetaclass#findEvent(java.lang.String)
 	 */
 	public IEvent findEvent(String name) {
 		assertInitialize();
@@ -170,7 +184,8 @@ public class AbstractMetaclass implements IMetaclass {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#findProperty(java.lang.String)
+	 * @see
+	 * com.soyatec.xaswt.core.metadata.IMetaclass#findProperty(java.lang.String)
 	 */
 	public IProperty findProperty(String name) {
 		assertInitialize();
@@ -182,7 +197,8 @@ public class AbstractMetaclass implements IMetaclass {
 			try {
 				Method getter = DynamicProperty.createGetter(type, name);
 				Class<?> propertyType = getter.getReturnType();
-				Method setter = DynamicProperty.createSetter(type, propertyType, name);
+				Method setter = DynamicProperty.createSetter(type,
+						propertyType, name);
 				return new DynamicProperty(propertyType, setter, getter, name);
 			} catch (Exception e) {
 				return null;
@@ -223,7 +239,8 @@ public class AbstractMetaclass implements IMetaclass {
 	 */
 	public IProperty[] getProperties() {
 		assertInitialize();
-		return propertyCache.values().toArray(new IProperty[propertyCache.size()]);
+		return propertyCache.values().toArray(
+				new IProperty[propertyCache.size()]);
 	}
 
 	/*
@@ -256,7 +273,9 @@ public class AbstractMetaclass implements IMetaclass {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#isAssignableFrom(com.soyatec .xaswt.core.metadata.IMetaclass)
+	 * @see
+	 * com.soyatec.xaswt.core.metadata.IMetaclass#isAssignableFrom(com.soyatec
+	 * .xaswt.core.metadata.IMetaclass)
 	 */
 	public boolean isAssignableFrom(IMetaclass metaclass) {
 		return getType().isAssignableFrom(metaclass.getType());
@@ -265,7 +284,8 @@ public class AbstractMetaclass implements IMetaclass {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#isInstance(java.lang.Object)
+	 * @see
+	 * com.soyatec.xaswt.core.metadata.IMetaclass#isInstance(java.lang.Object)
 	 */
 	public boolean isInstance(Object object) {
 		return type.isInstance(object);
@@ -274,7 +294,9 @@ public class AbstractMetaclass implements IMetaclass {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#isSubclassOf(com.soyatec.xaswt .core.metadata.IMetaclass)
+	 * @see
+	 * com.soyatec.xaswt.core.metadata.IMetaclass#isSubclassOf(com.soyatec.xaswt
+	 * .core.metadata.IMetaclass)
 	 */
 	public boolean isSubclassOf(IMetaclass metaclass) {
 		assertInitialize();
@@ -296,7 +318,9 @@ public class AbstractMetaclass implements IMetaclass {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#isSuperclassOf(com.soyatec .xaswt.core.metadata.IMetaclass)
+	 * @see
+	 * com.soyatec.xaswt.core.metadata.IMetaclass#isSuperclassOf(com.soyatec
+	 * .xaswt.core.metadata.IMetaclass)
 	 */
 	public boolean isSuperclassOf(IMetaclass metaclass) {
 		return metaclass.isSubclassOf(this);
@@ -308,9 +332,99 @@ public class AbstractMetaclass implements IMetaclass {
 	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#newInstance()
 	 */
 	public Object newInstance(Object[] parameters) {
+		Object object = doNewInstance(parameters);
+		if (parameters != null && parameters.length > 0) {
+			try {
+				updateContainment(parameters[0], object);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return object;
+	}
+
+	private void updateContainment(Object parent, Object control)
+			throws IllegalAccessException, InvocationTargetException,
+			NoSuchFieldException {
+		if (control != null && parent != null && !(parent instanceof Widget)) {
+			//
+			// Add to default property identified by the type
+			//
+			IMetaclass parentMetaclass = XWT.getMetaclass(parent);
+			IProperty[] properties = parentMetaclass.getProperties();
+			IProperty useProperty = null;
+			int count = 0;
+			Class<?> childType = control.getClass();
+			for (IProperty property : properties) {
+				Class<?> propertyType = property.getType();
+				if (propertyType == null || propertyType == Object.class) {
+					continue;
+				}
+				if (propertyType.isArray()) {
+					Class<?> dataType = propertyType.getComponentType();
+					if (dataType.isAssignableFrom(childType)) {
+						if (useProperty == null) {
+							useProperty = property;
+						}
+						count++;
+					}
+				} else if (Collection.class.isAssignableFrom(propertyType)) {
+					if (useProperty == null) {
+						useProperty = property;
+					}
+					count++;
+				} else if (propertyType.isAssignableFrom(childType)) {
+					if (useProperty == null) {
+						useProperty = property;
+					}
+					count++;
+				}
+			}
+			if (count == 1) {
+				Class<?> propertyType = useProperty.getType();
+				if (propertyType.isArray()) {
+					Object[] existingValue = (Object[]) useProperty
+							.getValue(parent);
+					Class<?> dataType = propertyType.getComponentType();
+					Object[] value = null;
+					if (existingValue == null) {
+						value = (Object[]) Array.newInstance(dataType,1);
+						value[0] = control;
+					} else {
+						value = (Object[]) Array.newInstance(dataType,
+								existingValue.length + 1);
+						System.arraycopy(existingValue, 0, value, 0,
+								existingValue.length);
+						value[existingValue.length] = control;
+					}
+					useProperty.setValue(parent, value);
+				} else if (Collection.class.isAssignableFrom(propertyType)) {
+					Collection existingValue = (Collection) useProperty
+							.getValue(parent);
+					if (existingValue == null) {
+						existingValue = new ArrayList();
+					}
+					existingValue.add(control);
+					useProperty.setValue(parent, existingValue);
+				} else if (propertyType.isAssignableFrom(childType)) {
+					useProperty.setValue(parent, control);					
+				}
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#newInstance()
+	 */
+	public Object doNewInstance(Object[] parameters) {
 		assertInitialize();
 		try {
-			if (parameters.length == 0 || (!(parameters[0] instanceof Widget || JFacesHelper.isViewer(parameters[0])))) {
+			if (parameters.length == 0
+					|| (!(parameters[0] instanceof Widget || JFacesHelper
+							.isViewer(parameters[0])))) {
 				return getType().newInstance();
 			}
 		} catch (Exception e1) {
@@ -327,12 +441,16 @@ public class AbstractMetaclass implements IMetaclass {
 				directParent = JFacesHelper.getControl(parent);
 			} else
 				throw new IllegalStateException();
-			if (Control.class.isAssignableFrom(getType()) && !(directParent instanceof Composite)) {
+			if (Control.class.isAssignableFrom(getType())
+					&& !(directParent instanceof Composite)) {
 				directParent = getXWTLoader().findCompositeParent(directParent);
 			}
 
 			Object styleValue = null;
-			if (parameters.length == 2 && parameters[1] != null && (parameters[1].getClass() == int.class || parameters[1].getClass() == Integer.class)) {
+			if (parameters.length == 2
+					&& parameters[1] != null
+					&& (parameters[1].getClass() == int.class || parameters[1]
+							.getClass() == Integer.class)) {
 				styleValue = parameters[1];
 			}
 
@@ -349,13 +467,16 @@ public class AbstractMetaclass implements IMetaclass {
 
 				if (parameterTypes[0].isAssignableFrom(parent.getClass())) {
 					if (parameterTypes.length == 1) {
-						swtObject = constructor.newInstance(new Object[] { parent });
+						swtObject = constructor
+								.newInstance(new Object[] { parent });
 						break;
 					} else if (parameterTypes[1].isAssignableFrom(int.class)) {
 						if (styleValue == null)
-							swtObject = constructor.newInstance(new Object[] { parent, 0 });
+							swtObject = constructor.newInstance(new Object[] {
+									parent, 0 });
 						else
-							swtObject = constructor.newInstance(new Object[] { parent, styleValue });
+							swtObject = constructor.newInstance(new Object[] {
+									parent, styleValue });
 						break;
 					}
 				}
@@ -371,15 +492,22 @@ public class AbstractMetaclass implements IMetaclass {
 						continue;
 					}
 
-					if (parameterTypes[0].isAssignableFrom(directParent.getClass())) {
+					if (parameterTypes[0].isAssignableFrom(directParent
+							.getClass())) {
 						if (parameterTypes.length == 1) {
-							swtObject = constructor.newInstance(new Object[] { directParent });
+							swtObject = constructor
+									.newInstance(new Object[] { directParent });
 							break;
-						} else if (parameterTypes[1].isAssignableFrom(int.class)) {
+						} else if (parameterTypes[1]
+								.isAssignableFrom(int.class)) {
 							if (styleValue == null)
-								swtObject = constructor.newInstance(new Object[] { directParent, 0 });
+								swtObject = constructor
+										.newInstance(new Object[] {
+												directParent, 0 });
 							else
-								swtObject = constructor.newInstance(new Object[] { directParent, styleValue });
+								swtObject = constructor
+										.newInstance(new Object[] {
+												directParent, styleValue });
 							break;
 						}
 					}
@@ -391,7 +519,8 @@ public class AbstractMetaclass implements IMetaclass {
 						swtObject = getType().newInstance();
 					} catch (Exception e) {
 						e.printStackTrace();
-						throw new UnsupportedOperationException("Constructor " + getType().getName() + " no found.");
+						throw new UnsupportedOperationException("Constructor "
+								+ getType().getName() + " no found.");
 					}
 				}
 				swtObject = defaultConstructor.newInstance();
@@ -417,19 +546,24 @@ public class AbstractMetaclass implements IMetaclass {
 		}
 		try {
 			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
-			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+			PropertyDescriptor[] propertyDescriptors = beanInfo
+					.getPropertyDescriptors();
 			for (PropertyDescriptor p : propertyDescriptors) {
 				String propertyName = p.getName();
 				Class<?> propertyType = p.getPropertyType();
-				if (shouldIgnored(type, propertyName, propertyType) || propertyCache.containsKey(propertyName.toLowerCase())) {
+				if (shouldIgnored(type, propertyName, propertyType)
+						|| propertyCache
+								.containsKey(propertyName.toLowerCase())) {
 					continue;
 				}
 				if (p.getPropertyType() != null) {
-					IProperty property = (superClass != null ? superClass.findProperty(p.getName()) : null);
+					IProperty property = (superClass != null ? superClass
+							.findProperty(p.getName()) : null);
 					if (property != null && !property.isDefault()) {
 						addProperty(property);
 					} else {
-						if (p.getWriteMethod() != null || !p.getPropertyType().isPrimitive()) {
+						if (p.getWriteMethod() != null
+								|| !p.getPropertyType().isPrimitive()) {
 							addProperty(new BeanProperty(p));
 						}
 					}
@@ -442,17 +576,23 @@ public class AbstractMetaclass implements IMetaclass {
 					continue;
 				}
 
-				if (!propertyCache.containsKey(normalize(propertyName)) && !Modifier.isFinal(f.getModifiers()) && Modifier.isPublic(f.getModifiers())) {
+				if (!propertyCache.containsKey(normalize(propertyName))
+						&& !Modifier.isFinal(f.getModifiers())
+						&& Modifier.isPublic(f.getModifiers())) {
 					addProperty(new FieldProperty(f));
 				}
 			}
 
-			for (EventSetDescriptor eventSetDescriptor : beanInfo.getEventSetDescriptors()) {
-				BeanEvent event = new BeanEvent(eventSetDescriptor.getName(), eventSetDescriptor);
-				routedEventCache.put(normalize(eventSetDescriptor.getName() + "Event"), event);
+			for (EventSetDescriptor eventSetDescriptor : beanInfo
+					.getEventSetDescriptors()) {
+				BeanEvent event = new BeanEvent(eventSetDescriptor.getName(),
+						eventSetDescriptor);
+				routedEventCache.put(normalize(eventSetDescriptor.getName()
+						+ "Event"), event);
 			}
 			if (isWidgetType(type)) {
-				routedEventCache.put(normalize(LOADED), new LoadedEvent(LOADED));
+				routedEventCache
+						.put(normalize(LOADED), new LoadedEvent(LOADED));
 			}
 
 			markInitialized();

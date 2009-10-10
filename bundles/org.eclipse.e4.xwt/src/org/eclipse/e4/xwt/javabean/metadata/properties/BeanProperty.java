@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.core.IBinding;
 
 public class BeanProperty extends AbstractProperty {
 	protected PropertyDescriptor descriptor;
@@ -34,9 +35,11 @@ public class BeanProperty extends AbstractProperty {
 			Class<?>[] parameterTypes = writeMethod.getParameterTypes();
 			if (parameterTypes.length == 1) {
 				Class<?> paraType = parameterTypes[0];
-				IConverter convertor = XWT.findConvertor(value == null ? Object.class : value.getClass(), paraType);
-				if (convertor != null) {
-					value = convertor.convert(value);
+				if (!IBinding.class.isAssignableFrom(getType())) {
+					IConverter convertor = XWT.findConvertor(value == null ? Object.class : value.getClass(), paraType);
+					if (convertor != null) {
+						value = convertor.convert(value);
+					}					
 				}
 				writeMethod.invoke(target, value);
 				fireSetPostAction(target, this, value);

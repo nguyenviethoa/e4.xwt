@@ -51,11 +51,16 @@ import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
 import org.eclipse.e4.xwt.converters.StringToType;
 import org.eclipse.e4.xwt.converters.StringToURL;
+import org.eclipse.e4.xwt.core.Condition;
+import org.eclipse.e4.xwt.core.DataTrigger;
 import org.eclipse.e4.xwt.core.EventTrigger;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
+import org.eclipse.e4.xwt.core.MultiDataTrigger;
+import org.eclipse.e4.xwt.core.MultiTrigger;
 import org.eclipse.e4.xwt.core.Setter;
 import org.eclipse.e4.xwt.core.Style;
 import org.eclipse.e4.xwt.core.Trigger;
+import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
@@ -246,10 +251,29 @@ public class XWTLoader implements IXWTLoader {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.eclipse.e4.xwt.IXWTLoader#getDataContext(org.eclipse.swt.widgets.Widget)
+	 */
+	public TriggerBase[] getTriggers(Widget element) {
+		return UserDataHelper.getTriggers(element);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.e4.xwt.IXWTLoader#setDataContext(org.eclipse.swt.widgets.Widget, java.lang.Object)
 	 */
 	public void setDataContext(Widget widget, Object dataContext) {
 		UserDataHelper.setDataContext(widget, dataContext);
+	}
+
+	/**
+	 * Get the Triggers of given element
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public void setTriggers(Widget element, TriggerBase[] triggers) {
+		UserDataHelper.setTriggers(element, triggers);
 	}
 
 	/*
@@ -1045,6 +1069,7 @@ public class XWTLoader implements IXWTLoader {
 		type = org.eclipse.swt.widgets.Widget.class;
 		metaclass = (IMetaclass) registerMetaclass(type);
 		metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT, IUserDataConstants.XWT_DATACONTEXT_KEY));
+		metaclass.addProperty(new DataProperty(IConstants.XAML_TRIGGERS, TriggerBase[].class, IUserDataConstants.XWT_TRIGGERS_KEY));
 		metaclass.addProperty(new StyleProperty());
 
 		type = org.eclipse.jface.viewers.ColumnViewer.class;
@@ -1077,7 +1102,11 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(Setter.class);
 
 		registerMetaclass(Trigger.class);
+		registerMetaclass(MultiTrigger.class);
 		registerMetaclass(EventTrigger.class);
+		registerMetaclass(DataTrigger.class);
+		registerMetaclass(MultiDataTrigger.class);
+		registerMetaclass(Condition.class);
 
 		registerMetaclass(Storyboard.class);
 		registerMetaclass(BeginStoryboard.class);

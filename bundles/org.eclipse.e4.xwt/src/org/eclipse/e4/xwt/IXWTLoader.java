@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.e4.xwt.XWTLoader.ConverterService;
+import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.NameScope;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -157,12 +158,28 @@ public interface IXWTLoader {
 	public abstract Object getDataContext(Widget element);
 
 	/**
+	 * Get the Triggers of given element
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public abstract TriggerBase[] getTriggers(Widget element);
+
+	/**
 	 * Change the DataContext of given element
 	 * 
 	 * @param context
 	 * @return
 	 */
 	public abstract void setDataContext(Widget widget, Object dataContext);
+
+	/**
+	 * Change the Triggers of given element
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public abstract void setTriggers(Widget widget, TriggerBase[] triggers);
 
 	/**
 	 * Get the CLR (Common Language Runtime) object. If no CLR object is found in this element, the research will be propagated in it parent.

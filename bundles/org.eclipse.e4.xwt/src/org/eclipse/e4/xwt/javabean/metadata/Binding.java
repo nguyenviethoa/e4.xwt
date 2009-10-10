@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.IXWTLoader;
@@ -143,16 +142,34 @@ public class Binding implements IDynamicBinding {
 
 	public Object createBoundSource() {
 		Object source = getSourceObject();
+		if (source == null) {
+			source = XWT.getDataContext(control);
+		}
 		if (source instanceof IDynamicBinding) {
 			Object value = ((IDynamicBinding) source).createBoundSource();
 			if (value != null && path != null) {
-				return ObservableValueUtil.createWidget(value, path);
+				Widget widget = UserDataHelper.getWidget(value);
+				if (widget != null) {
+					return ObservableValueUtil.createWidget(value, path);
+				}
+				else {
+					IDataProvider dataProvider = getDataProvider(source);
+					return dataProvider.createObservableValue(source, path);
+				}
 			}
 		}
 		if (source != null && path != null) {
-			return ObservableValueUtil.createWidget(source, path);
+			Widget widget = UserDataHelper.getWidget(source);
+			if (widget != null) {
+				return ObservableValueUtil.createWidget(source, path);
+			}
+			else {
+				IDataProvider dataProvider = getDataProvider(source);
+				Object dataType = dataProvider.getDataType(path);
+				return dataProvider.createObservableValue(dataType, path);
+			}
 		}
-		return getValue();
+		return source;
 	}
 
 	public boolean isControlSource() {
