@@ -15,6 +15,7 @@ public class Person {
 	private int age = 10;
 	private boolean maried = true;
 	private Country nationality = Country.FR;
+	private Address address;
 
 	public void setMaried(boolean maried) {
 		this.maried = maried;
@@ -32,7 +33,9 @@ public class Person {
 		return age;
 	}
 
-	private Address address;
+	public void setAge(int age) {
+		this.age = age;
+	}
 
 	public Person() {
 		address = new Address();
@@ -45,7 +48,6 @@ public class Person {
 	public String getName() {
 		return name;
 	}
-
 	public Address getAddress() {
 		return address;
 	}
