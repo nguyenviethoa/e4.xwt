@@ -8,81 +8,103 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * Simple fade transition animation.
+ * 
+ */
 public class FadeAnimation {
-	protected Composite composite;
-	protected Shell animationShell;
-	protected Image backingStore;
-	
+	private Composite composite;
+	private Shell animationShell;
+	private Image backingStore;
+	private int step = -1;
+
 	public FadeAnimation(Composite composite) {
 		this.composite = composite;
 		if (composite != null && composite.isVisible()) {
 			initAnimation();
 		}
 	}
+
+	public int getStep() {
+		return step;
+	}
+
+	public void setStep(int step) {
+		this.step = step;
+	}
+
+	public void dispose() {
+		if (animationShell != null && !animationShell.isDisposed()) {
+			animationShell.getBackgroundImage().dispose();
+			animationShell.dispose();
+		}
+	}
 	
 	private Shell initAnimation() {
-		Shell baseShell = (composite instanceof Shell) ? (Shell) composite : composite.getShell();
-		GC gc = new GC(baseShell. getDisplay());
-		
+		Shell baseShell = (composite instanceof Shell) ? (Shell) composite
+				: composite.getShell();
+		GC gc = new GC(baseShell.getDisplay());
+
 		// Ensure that the platform supports advanced graphics
 		gc.setAdvanced(true);
 		if (!gc.getAdvanced()) {
 			gc.dispose();
 			return null;
 		}
-		
+
 		Rectangle psRect = composite.getBounds();
 		if (!(composite instanceof Shell)) {
 			Point position = composite.toDisplay(psRect.x, psRect.y);
 			psRect.x = position.x;
 			psRect.y = position.y;
 		}
-		
-		animationShell = new Shell(baseShell, SWT.NO_TRIM | SWT.ON_TOP);			
+
+		animationShell = new Shell(baseShell, SWT.NO_TRIM | SWT.ON_TOP);
 		animationShell.setBounds(psRect);
 
 		// Capture the background image
-//		long startTime = System.currentTimeMillis();
 		backingStore = new Image(animationShell.getDisplay(), psRect);
 		gc.setAdvanced(true);
 		gc.copyArea(backingStore, psRect.x, psRect.y);
 		gc.dispose();
-		
+
 		animationShell.setAlpha(255);
 		animationShell.setBackgroundImage(backingStore);
 		animationShell.setVisible(true);
-//		System.out.println("Capture time = " + (System.currentTimeMillis()- startTime)); //$NON-NLS-1$
-		
+
+		// Naive attempt to use fewer steps on large shells
+		if (step == -1) {
+			Rectangle ab = animationShell.getBounds();
+			long area = ab.width * ab.height;
+
+			step = 25;
+			if (area < 500000)
+				step = 10;
+			else if (area < 1000000)
+				step = 17;
+		}
+
 		return animationShell;
 	}
-	
+
 	public void play() {
 		if (animationShell == null) {
 			return;
 		}
-		
-		Rectangle ab = animationShell.getBounds();
-		long area = ab.width * ab.height;
-		
-		// Naive attempt to use fewer steps on large shells
-		int stepSize = 25;
-		if (area < 500000) stepSize = 10;
-		else if (area < 1000000) stepSize = 17;
 
-		
-		// 'Fade' the animation shell 
+		// 'Fade' the animation shell
 		while (animationShell.getAlpha() > 0) {
-			int newAlpha = (int) (animationShell.getAlpha() - stepSize);
-			if (newAlpha < 0) newAlpha = 0;
+			int newAlpha = (int) (animationShell.getAlpha() - step);
+			if (newAlpha < 0)
+				newAlpha = 0;
 			animationShell.setAlpha(newAlpha);
 			animationShell.update();
-			
-			// Special safety-check, some platforms lie about supporting advanced graphics..;-)
+
+			// Special safety-check, some platforms lie about supporting
+			// advanced graphics..;-)
 			if (animationShell.getAlpha() == 255)
-				break;  // it's broken so this makes sense...;-)
+				break; // it's broken so this makes sense...;-)
 		}
-		animationShell.getBackgroundImage().dispose();
-		animationShell.dispose();
-		backingStore.dispose();
+		dispose();
 	}
 }
