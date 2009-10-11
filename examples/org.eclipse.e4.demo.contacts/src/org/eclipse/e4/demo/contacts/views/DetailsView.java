@@ -29,6 +29,7 @@ public class DetailsView extends XWTInputPart {
 	
 	protected void refresh(URL url, Object dataContext, ClassLoader loader) {
 		FadeAnimation animation = new FadeAnimation(parent); 
+		animation.setStep(2);
 		super.refresh(url, dataContext, loader);
 		animation.play();
 	}
