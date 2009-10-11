@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.HashMap;
 
 import org.eclipse.e4.core.services.annotations.In;
-import org.eclipse.e4.core.services.annotations.Out;
 import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
@@ -34,7 +33,6 @@ import org.eclipse.swt.widgets.Control;
  */
 public abstract class XWTAbstractPart implements IContentPart {
 	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
-	private String persistedState;
 
 	protected Composite parent;
 
@@ -81,17 +79,7 @@ public abstract class XWTAbstractPart implements IContentPart {
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		changeSupport.removePropertyChangeListener(propertyName, listener);
 	}
-	
-	@In
-	void setPersistedState(String persistedState) {
-		changeSupport.firePropertyChange("persistedState", this.persistedState, this.persistedState = persistedState);
-	}
-
-	@Out
-	public String getPersistedState() {
-		return persistedState;
-	}
-	
+		
 	public ClassLoader getClassLoader() {
 		return this.getClass().getClassLoader();
 	}
