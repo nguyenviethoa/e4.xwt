@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.demo.contacts.views;
 
+import java.net.URL;
+
+import org.eclipse.e4.demo.contacts.handlers.FadeAnimation;
 import org.eclipse.e4.demo.contacts.model.Contact;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTInputPart;
 
@@ -22,5 +25,11 @@ public class DetailsView extends XWTInputPart {
 
 	public Class<Contact> getInputType() {
 		return Contact.class;
+	}
+	
+	protected void refresh(URL url, Object dataContext, ClassLoader loader) {
+		FadeAnimation animation = new FadeAnimation(parent); 
+		super.refresh(url, dataContext, loader);
+		animation.play();
 	}
 }
