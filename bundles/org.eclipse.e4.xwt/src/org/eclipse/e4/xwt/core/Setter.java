@@ -11,7 +11,6 @@
 package org.eclipse.e4.xwt.core;
 
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 
@@ -51,11 +50,12 @@ public class Setter extends SetterBase {
 		this.value = value;
 	}
 
-	public void applyTo(Object element) {
+	public Object applyTo(Object element) {
 		String propName = getProperty();
 		String propValue = getValue();
 		String targetName = getTargetName();
 		Object setterTarget = element;
+		Object oldValue = null;
 		if (targetName != null) {
 			setterTarget = TriggerBase.getElementByName(element, targetName);
 		}
@@ -64,9 +64,29 @@ public class Setter extends SetterBase {
 		if (prop != null && propValue != null) {
 			Object toValue = XWT.convertFrom(prop.getType(), propValue);
 			try {
+				oldValue = prop.getValue(setterTarget);
 				prop.setValue(setterTarget, toValue);
 			} catch (Exception e) {
-				LoggerManager.log(e);
+				throw new RuntimeException(e);
+			}
+		}
+		return oldValue;
+	}
+
+	public void undo(Object element, Object value) {
+		String propName = getProperty();
+		String targetName = getTargetName();
+		Object setterTarget = element;
+		if (targetName != null) {
+			setterTarget = TriggerBase.getElementByName(element, targetName);
+		}
+		IMetaclass metaclass = XWT.getMetaclass(setterTarget);
+		IProperty prop = metaclass.findProperty(propName);
+		if (prop != null) {
+			try {
+				prop.setValue(setterTarget, value);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
 	}

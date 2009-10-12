@@ -13,5 +13,6 @@ package org.eclipse.e4.xwt.core;
 public abstract class SetterBase {
 	public static final SetterBase[] EMPTY_SETTERS = new SetterBase[0];
 
-	public abstract void applyTo(Object element);
+	public abstract Object applyTo(Object element);
+	public abstract void undo(Object element, Object value);
 }

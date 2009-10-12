@@ -1,8 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.e4.xwt.core;
+
+import java.util.HashMap;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
@@ -49,7 +60,7 @@ public class DataTrigger extends TriggerBase {
 		this.setters = setters;
 	}	
 	
-	public void on(final Object target) {
+	public void on(Object target) {
 		if (value == null) {
 			return;
 		}
@@ -74,9 +85,9 @@ public class DataTrigger extends TriggerBase {
 			return;
 		}
 		IObservableValue observableValue = (IObservableValue) bindingTarget;
-		observableValue.addValueChangeListener(new IValueChangeListener() {
+		observableValue.addValueChangeListener(new AbstractValueChangeListener(target) {
 			public void handleValueChange(ValueChangeEvent event) {
-				Widget widget = UserDataHelper.getWidget(target);
+				Widget widget = UserDataHelper.getWidget(element);
 				if (widget == null) {
 					return;
 				}
@@ -98,7 +109,15 @@ public class DataTrigger extends TriggerBase {
 				}
 				
 				for (SetterBase setter : getSetters()) {
-					setter.applyTo(target);
+					try {
+						Object oldValue = setter.applyTo(element);
+						if (oldvalues == null) {
+							oldvalues = new HashMap<SetterBase, Object>();
+						}
+						oldvalues.put(setter, oldValue);
+					} catch (RuntimeException e) {
+						continue;
+					}
 				}
 			}
 		});

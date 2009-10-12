@@ -1,5 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
+import java.util.HashMap;
+
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
@@ -33,6 +47,24 @@ public abstract class TriggerBase {
 	}
 	
 	public abstract void on(Object target);
+	
+	abstract class AbstractValueChangeListener implements IValueChangeListener {
+		protected HashMap<SetterBase, Object> oldvalues = null;
+		protected Object element;
+
+		public AbstractValueChangeListener(Object element) {
+			this.element = element;
+		}
+		
+		protected void restoreValues() {
+			if (oldvalues == null) {
+				return;
+			}
+			for (SetterBase setter : oldvalues.keySet()) {
+				setter.undo(element, oldvalues.get(setter));
+			}
+		}
+	}
 	
 	public static Object getElementByName(Object target, String elementName) {
 		if (elementName != null && elementName.length() > 0) {
