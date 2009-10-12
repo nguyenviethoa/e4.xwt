@@ -65,6 +65,9 @@ public class XwtTestSuite extends TestSuite {
 
 		// Style provider
 		addStyleTests();
+
+		// triggers
+		addTriggerTests();
 	}
 
 	protected void addXAMLTests() {
@@ -105,6 +108,10 @@ public class XwtTestSuite extends TestSuite {
 	}
 
 	protected void addStyleTests() {
+	}
+
+	protected void addTriggerTests() {
+		addTest(BindingTestSuite.suite());
 	}
 
 	protected void addCustomizationTests() {

@@ -111,7 +111,7 @@ public class MultiTriggerTests extends XWTTestCase {
 				Button button1 = (Button) XWT.findElementByName(root, "button1");
 				assertFalse(button1.isVisible());
 				Button button2 = (Button) XWT.findElementByName(root, "button2");
-				assertFalse(button1.isVisible());
+				assertFalse(button2.isVisible());
 			}
 		});
 	}

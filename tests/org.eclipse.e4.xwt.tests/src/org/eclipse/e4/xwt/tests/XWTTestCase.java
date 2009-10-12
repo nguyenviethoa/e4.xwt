@@ -103,6 +103,10 @@ public abstract class XWTTestCase extends TestCase {
 	}
 
 	protected void selectButton(Button button) {
+		selectButton(button, true);
+	}
+
+	protected void selectButton(Button button, boolean selection) {
 		Point size = button.getSize();
 		Display display = button.getDisplay();
 		Event upEvent = new Event();
@@ -113,7 +117,7 @@ public abstract class XWTTestCase extends TestCase {
 		upEvent.y = size.y / 2;
 		display.post(upEvent);
 
-		button.setSelection(true);
+		button.setSelection(selection);
 		button.notifyListeners(SWT.Selection, upEvent);
 	}
 

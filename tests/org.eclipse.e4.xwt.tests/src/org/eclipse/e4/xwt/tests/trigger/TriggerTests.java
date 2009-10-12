@@ -79,6 +79,29 @@ public class TriggerTests extends XWTTestCase {
 		});
 	}
 
+	public void test_Button_Trigger_Setter_TargetName2() {
+		URL url = TriggerTests.class.getResource(Button_Click_Trigger_Setter_TargetName.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button button = (Button) XWT.findElementByName(root, "Button");
+				selectButton(button, true);
+				selectButton(button, false);
+			}
+		},
+		new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Button button = (Button) XWT.findElementByName(root, "target");
+				assertTrue(button.isVisible());
+			}
+		});
+	}
+
 	public void test_Button_Trigger_SourceName_Setter_TargetName() {
 		URL url = TriggerTests.class.getResource(Button_Click_Trigger_SourceName_Setter_TargetName.class
 				.getSimpleName()
