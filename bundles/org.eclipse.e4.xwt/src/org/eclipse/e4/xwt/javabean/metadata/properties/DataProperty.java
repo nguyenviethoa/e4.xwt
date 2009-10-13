@@ -10,25 +10,39 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.metadata.ISetPostAction;
 
 public class DataProperty extends AbstractProperty {
 	protected String key;
+	protected Object defaultValue;
 
 	public DataProperty(String name, String key) {
-		this(name, Object.class, key);
+		this(name, Object.class, key, null);
 	}
 
 	public DataProperty(String name, Class<?> propertyType, String key) {
+		this(name, propertyType, key, null);
+	}
+
+	public DataProperty(String name, Class<?> propertyType, String key, Object defaultValue) {
 		super(name, propertyType);
 		this.key = key;
+		this.defaultValue = defaultValue;
 	}
 
 	public Object getValue(Object target) {
-		return UserData.getLocalData(target, key);
+		Object object = UserData.getLocalData(target, key);
+		if (object == null) {
+			return defaultValue;
+		}
+		return object;
 	}
 
 	public void setValue(Object target, Object value) {
+		Object oldValue = UserData.getLocalData(target, key);
 		UserData.setData(target, key, value);
 	}
 }

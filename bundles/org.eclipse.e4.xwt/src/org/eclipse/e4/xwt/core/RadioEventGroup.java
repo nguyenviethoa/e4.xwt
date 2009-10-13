@@ -10,14 +10,23 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
+import org.eclipse.e4.xwt.internal.utils.UserData;
+
 public class RadioEventGroup extends AbstractEventGroup {
+	
 	public RadioEventGroup(String ... names) {
 		super(names);
 	}
 	
 	public void handleAfter(Object element, String event) {
+		String key = "_event.is" + event + "Event";
+		UserData.setData(element, key.toLowerCase(), true);
 	}
 
 	public void handleBefore(Object element, String event) {
+		for (String name : getEventNames()) {
+			String key = "is" + name + "Event";
+			UserData.removeLocalData(element, key.toLowerCase());
+		}
 	}
 }

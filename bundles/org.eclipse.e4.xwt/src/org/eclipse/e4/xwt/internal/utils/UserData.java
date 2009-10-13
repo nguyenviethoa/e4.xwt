@@ -57,7 +57,14 @@ public class UserData {
 		}
 		return dictionary.get(key);
 	}
-	
+
+	public Object removeData(String key) {
+		if (dictionary == null) {
+			return null;
+		}
+		return dictionary.remove(key);
+	}
+
 	public boolean containsKey(String key) {
 		if (dictionary == null) {
 			return false;
@@ -342,7 +349,19 @@ public class UserData {
 		}
 		return dataDictionary.getData(key);
 	}
-	
+
+	public static void removeLocalData(Object object, String key) {
+		Widget widget = getWidget(object);
+		if (widget == null) {
+			return;
+		}
+		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		if (dataDictionary == null) {
+			return;
+		}
+		dataDictionary.removeData(key);
+	}
+
 	
 	public static Map<String, Object> getLocalResources(Object object) {
 		return (Map<String, Object>)getLocalData(object, IUserDataConstants.XWT_RESOURCES_KEY);

@@ -13,6 +13,7 @@ public interface IEventConstants {
 	String MOUSE_ENTER = "MouseEnter";
 	String MOUSE_EXIT = "MouseExit";
 	String MOUSE_HOVER = "MouseHover";
+	String[] MOUSE_MOVING_GROUP = new String[] {MOUSE_ENTER, MOUSE_EXIT};
 
 	String MOUSE_DOUBLE_CLICK = "MouseDoubleClick";
 

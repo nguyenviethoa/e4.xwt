@@ -19,6 +19,7 @@ import org.eclipse.e4.xwt.IEventGroup;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.DataProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.FieldProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
@@ -157,9 +158,11 @@ public class AbstractMetaclass implements IMetaclass {
 	}
 
 	private void addTypedEvent(String name, int eventType) {
-		if (!routedEventCache.containsKey(normalize(name + "Event"))) {
-			routedEventCache.put(normalize(name + "Event"), new TypedEvent(
+		String key = normalize(name + "Event");
+		if (!routedEventCache.containsKey(key)) {
+			routedEventCache.put(key, new TypedEvent(
 					name, eventType));
+			addProperty(new DataProperty("is" + name, Boolean.class, "_event.is" + name));
 		}
 	}
 
@@ -590,8 +593,10 @@ public class AbstractMetaclass implements IMetaclass {
 					.getEventSetDescriptors()) {
 				BeanEvent event = new BeanEvent(eventSetDescriptor.getName(),
 						eventSetDescriptor);
-				routedEventCache.put(normalize(eventSetDescriptor.getName()
-						+ "Event"), event);
+				String name = normalize(eventSetDescriptor.getName()
+						+ "Event");
+				routedEventCache.put(name, event);
+				addProperty(new DataProperty("is" + name, Boolean.class, "_event.is" + name));
 			}
 			if (isWidgetType(type)) {
 				routedEventCache
