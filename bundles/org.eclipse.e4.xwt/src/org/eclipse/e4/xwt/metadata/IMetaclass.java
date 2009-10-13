@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.metadata;
 
+import org.eclipse.e4.xwt.IEventGroup;
+
 /**
  * UI metaclass
  * 
@@ -47,4 +49,8 @@ public interface IMetaclass {
 	public IProperty addProperty(IProperty property);
 
 	public Class<?> getDataContextType();
+	
+	public void addEventGroup(IEventGroup eventGroup);
+	
+	public IEventGroup getEventGroup(String event);
 }

@@ -27,7 +27,6 @@ import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.core.IElementLoaderFactory;
 import org.eclipse.e4.xwt.core.IRenderingContext;
-import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.IVisualElementLoader;
 import org.eclipse.e4.xwt.internal.xml.Attribute;
 import org.eclipse.e4.xwt.internal.xml.DocumentObject;

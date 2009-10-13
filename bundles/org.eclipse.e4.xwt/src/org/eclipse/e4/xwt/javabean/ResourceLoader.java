@@ -40,15 +40,12 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.XWTMaps;
-import org.eclipse.e4.xwt.core.EventTrigger;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
 import org.eclipse.e4.xwt.core.IRenderingContext;
-import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.IVisualElementLoader;
 import org.eclipse.e4.xwt.core.Setter;
 import org.eclipse.e4.xwt.core.Style;
-import org.eclipse.e4.xwt.core.Trigger;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
@@ -60,7 +57,7 @@ import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.NamespaceHelper;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.utils.TableEditorHelper;
-import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.internal.xml.Attribute;
 import org.eclipse.e4.xwt.internal.xml.DocumentObject;
 import org.eclipse.e4.xwt.internal.xml.Element;
@@ -165,11 +162,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 
 		public void updateEvent(IRenderingContext context, Widget control, IEvent event, String handler) {
-			Controller eventController = (Controller) control.getData(IUserDataConstants.XWT_CONTROLLER_KEY);
-			if (eventController == null) {
-				eventController = new Controller();
-				control.setData(IUserDataConstants.XWT_CONTROLLER_KEY, eventController);
-			}
+			Controller eventController = UserData.updateEventController(control);
 			Method method = null;
 			Object clrObject = null;
 			LoadingData current = this;
@@ -414,11 +407,11 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
-						Widget widget = UserDataHelper.getWidget(targetObject);
+						Widget widget = UserData.getWidget(targetObject);
 						if (widget != null) {
 							Object clr = loadData.getClr();
 							if (clr != null) {
-								UserDataHelper.setCLR(widget, clr);
+								UserData.setCLR(widget, clr);
 							}
 						}
 					} else {
@@ -431,14 +424,14 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 			}
 		}
-		Widget widget = UserDataHelper.getWidget(targetObject);
+		Widget widget = UserData.getWidget(targetObject);
 		if (widget != null) {
 			loadData.setCurrentWidget(widget);
 		}
 		if (scopedObject == null && widget != null) {
 			scopedObject = widget;
 			nameScoped = new NameScope((parent == null ? null : loader.findNameContext((Widget) parent)));
-			UserDataHelper.bindNameContext((Widget) widget, nameScoped);
+			UserData.bindNameContext((Widget) widget, nameScoped);
 		}
 
 		// set first data context and resource dictionary
@@ -453,12 +446,11 @@ public class ResourceLoader implements IVisualElementLoader {
 		// set parent relationship and viewer
 		if (targetObject instanceof Widget) {
 			if (parent != null) {
-				((Widget) targetObject).setData(IUserDataConstants.XWT_PARENT_KEY, parent);
+				UserData.setParent(targetObject, parent);
 			}
 		} else if (JFacesHelper.isViewer(targetObject)) {
-			Control control = JFacesHelper.getControl(targetObject);
-			control.setData(IUserDataConstants.XWT_PARENT_KEY, parent);
-			control.setData(IUserDataConstants.XWT_VIEWER_KEY, targetObject);
+			UserData.setParent(targetObject, parent);
+			UserData.setViewer(targetObject, targetObject);
 		} else if (targetObject instanceof TableItemProperty.Cell) {
 			((TableItemProperty.Cell) targetObject).setParent((TableItem) parent);
 		}
@@ -519,11 +511,11 @@ public class ResourceLoader implements IVisualElementLoader {
 	}
 	
 	protected void postCreation(Object target) {
-		Widget widget = UserDataHelper.getWidget(target);
+		Widget widget = UserData.getWidget(target);
 		if (widget == null) {
 			return;
 		}
-		TriggerBase[] triggers = UserDataHelper.getTriggers(widget);
+		TriggerBase[] triggers = UserData.getTriggers(widget);
 		for (TriggerBase triggerBase : triggers) {
 			triggerBase.on(target);
 		}
@@ -545,7 +537,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				((IDynamicBinding) targetObject).setControl(widget);
 			}
 			if (dico != null) {
-				widget.setData(IUserDataConstants.XWT_RESOURCES_KEY, dico);
+				UserData.setResources(widget, dico);
 			}
 			if (dataContext != null) {
 				IProperty property = widgetMetaclass.findProperty(IConstants.XAML_DATACONTEXT);
@@ -561,7 +553,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	private void applyStyles(Element element, Object targetObject) throws Exception {
 		if (targetObject instanceof Widget) {
 			Widget widget = (Widget) targetObject;
-			ResourceDictionary dico = (ResourceDictionary) widget.getData(IUserDataConstants.XWT_RESOURCES_KEY);
+			Map<String, Object> dico = UserData.getLocalResources(widget);
 			Attribute attribute = element.getAttribute(IConstants.XAML_RESOURCES);
 			if (attribute == null) {
 				attribute = element.getAttribute(IConstants.XWT_NAMESPACE, IConstants.XAML_RESOURCES);
@@ -570,7 +562,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				if (attribute.getChildren().length > 0) {
 					if (dico == null) {
 						dico = new ResourceDictionary();
-						widget.setData(IUserDataConstants.XWT_RESOURCES_KEY, dico);
+						UserData.setResources(widget, dico);
 					}
 
 					for (DocumentObject doc : attribute.getChildren()) {
@@ -594,7 +586,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			// apply the styles defined in parent's resources via TargetType
 			Widget current = widget;
 			while (current != null) {
-				dico = (ResourceDictionary) current.getData(IUserDataConstants.XWT_RESOURCES_KEY);
+				dico = UserData.getLocalResources(current);
 				if (dico != null) {
 					for (Object value : dico.values()) {
 						if (value instanceof Style) {
@@ -606,7 +598,7 @@ public class ResourceLoader implements IVisualElementLoader {
 						}
 					}
 				}
-				current = UserDataHelper.getParent(current);
+				current = UserData.getParent(current);
 			}
 		}
 
@@ -739,7 +731,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (nameAttr == null) {
 			nameAttr = element.getAttribute(IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_NAME);
 		}
-		if (nameAttr != null && UserDataHelper.getWidget(targetObject) != null) {
+		if (nameAttr != null && UserData.getWidget(targetObject) != null) {
 			nameScoped.addObject(nameAttr.getContent(), targetObject);
 			done.add(IConstants.XAML_X_NAME);
 		}
@@ -797,7 +789,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 		}
 		for (String attrName : element.attributeNames()) {
-			if (IConstants.XAML_X_NAME.equalsIgnoreCase(attrName) && UserDataHelper.getWidget(targetObject) != null) {
+			if (IConstants.XAML_X_NAME.equalsIgnoreCase(attrName) && UserData.getWidget(targetObject) != null) {
 				continue;
 			}
 			if (!done.contains(attrName) && !delayedAttributes.contains(attrName)) {
@@ -974,7 +966,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		try {
 			Object instance = type.newInstance();
 			loadData.setClr(instance);
-			UserDataHelper.setCLR(shell, instance);
+			UserData.setCLR(shell, instance);
 		} catch (Exception e) {
 			LoggerManager.log(e);
 		}
@@ -990,7 +982,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (clr != null && type.isInstance(clr)) {
 				loadData.setClr(clr);
 				if (clr instanceof Widget) {
-					UserDataHelper.setCLR((Widget) clr, clr);
+					UserData.setCLR((Widget) clr, clr);
 				}
 			} else if (currentTagType != null && currentTagType.isAssignableFrom(type)) {
 				IMetaclass metaclass = loader.getMetaclass(type);
@@ -998,14 +990,14 @@ public class ResourceLoader implements IVisualElementLoader {
 				loadData.setClr(instance);
 				// use x:Class's instance
 				if (instance instanceof Widget) {
-					UserDataHelper.setCLR((Widget) instance, instance);
+					UserData.setCLR((Widget) instance, instance);
 				}
 				return instance;
 			} else {
 				Object instance = type.newInstance();
 				loadData.setClr(instance);
 				if (instance instanceof Widget) {
-					UserDataHelper.setCLR((Widget) instance, instance);
+					UserData.setCLR((Widget) instance, instance);
 				}
 			}
 		} catch (Exception e) {

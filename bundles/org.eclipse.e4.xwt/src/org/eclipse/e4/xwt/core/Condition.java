@@ -66,7 +66,7 @@ public class Condition {
 		this.value = value;
 	}
 
-	public boolean evoluate(Object element) {
+	public boolean evaluate(Object element) {
 		String propertyName = getProperty();
 		String sourceName = getSourceName();
 		IBinding binding = getBinding();

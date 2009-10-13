@@ -11,7 +11,7 @@
 package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.IXWTLoader;
-import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.widgets.Table;
@@ -37,7 +37,7 @@ public class TableEditorMetaclass extends Metaclass {
 		if (widget instanceof Table) {
 			table = (Table) widget;
 		} else {
-			table = (Table) UserDataHelper.findParent((Widget) widget, Table.class);
+			table = (Table) UserData.findParent((Widget) widget, Table.class);
 		}
 		if (table == null) {
 			throw new IllegalStateException("Table parent is missing.");

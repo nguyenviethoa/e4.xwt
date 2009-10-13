@@ -11,9 +11,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.IEventGroup;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
@@ -43,6 +45,7 @@ public class AbstractMetaclass implements IMetaclass {
 
 	protected final Map<String, IProperty> propertyCache = new HashMap<String, IProperty>();
 	protected Map<String, IEvent> routedEventCache = new HashMap<String, IEvent>();
+	protected Map<String, IEventGroup> eventGroupCache = Collections.EMPTY_MAP;
 
 	public static final String LOADED = "Loaded";
 
@@ -609,4 +612,25 @@ public class AbstractMetaclass implements IMetaclass {
 	private boolean isInitialize() {
 		return initialize;
 	}
+	
+	public void addEventGroup(IEventGroup eventGroup) {
+		if (eventGroupCache == Collections.EMPTY_MAP) {
+			eventGroupCache = new HashMap<String, IEventGroup>();			
+		}
+		for (String string : eventGroup.getEventNames()) {
+			if (eventGroupCache.containsKey(string)) {
+				throw new IllegalArgumentException("Event \"" + string + "\" already existis in a group.");
+			}
+			eventGroupCache.put(string, eventGroup);
+		}
+	}
+	
+	public IEventGroup getEventGroup(String event) {
+		IEventGroup eventGroup = eventGroupCache.get(event);
+		if (eventGroup == null && superClass != null) {
+			return superClass.getEventGroup(event);
+		}
+		return eventGroup;
+	}
+	
 }

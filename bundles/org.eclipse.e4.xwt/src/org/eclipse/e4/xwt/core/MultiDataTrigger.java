@@ -15,7 +15,7 @@ import java.util.HashMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Widget;
 
 public class MultiDataTrigger extends TriggerBase {
@@ -45,7 +45,7 @@ public class MultiDataTrigger extends TriggerBase {
 
 		public void handleValueChange(ValueChangeEvent event) {
 			for (Condition condition : getConditions()) {
-				if (!condition.evoluate(element)) {
+				if (!condition.evaluate(element)) {
 					restoreValues();
 					return;
 				}
@@ -70,7 +70,7 @@ public class MultiDataTrigger extends TriggerBase {
 		if (getConditions().length == 0) {
 			return;
 		}		
-		Widget widget = UserDataHelper.getWidget(target);
+		Widget widget = UserData.getWidget(target);
 		if (widget == null) {
 			return;
 		}		
@@ -92,7 +92,7 @@ public class MultiDataTrigger extends TriggerBase {
 			}
 			else {
 				Object sourceObject = getElementByName(target, sourceName);
-				Widget sourceWidget = UserDataHelper.getWidget(sourceObject);
+				Widget sourceWidget = UserData.getWidget(sourceObject);
 				bindingTarget = XWT.getDataContext(sourceWidget);
 			}
 			

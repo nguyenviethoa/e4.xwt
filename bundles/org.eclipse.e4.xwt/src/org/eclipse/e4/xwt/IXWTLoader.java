@@ -413,6 +413,14 @@ public interface IXWTLoader {
 	public abstract void registerCommand(String name, ICommand command);
 
 	/**
+	 * Register a command to a name
+	 * 
+	 * @param name
+	 * @param command
+	 */
+	public abstract void registerEventGroup(Class<?> type, IEventGroup eventGroup);
+
+	/**
 	 * Find a command by name
 	 * 
 	 * @param name

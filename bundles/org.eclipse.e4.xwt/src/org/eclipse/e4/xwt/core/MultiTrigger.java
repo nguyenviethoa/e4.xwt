@@ -43,7 +43,7 @@ public class MultiTrigger extends TriggerBase {
 
 		public void handleValueChange(ValueChangeEvent event) {
 			for (Condition condition : getConditions()) {
-				if (!condition.evoluate(element)) {
+				if (!condition.evaluate(element)) {
 					restoreValues();
 					return;
 				}

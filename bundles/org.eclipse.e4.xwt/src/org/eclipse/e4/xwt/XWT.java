@@ -309,6 +309,16 @@ public class XWT {
 	 * @param converter
 	 * @param type
 	 */
+	public static void registerEventGroup(Class<?> type, IEventGroup eventGroup) {
+		XWTLoaderManager.getActive().registerEventGroup(type, eventGroup);
+	}
+
+	/**
+	 * Register a Data converter
+	 * 
+	 * @param converter
+	 * @param type
+	 */
 	public static void registerConvertor(IConverter converter) {
 		XWTLoaderManager.getActive().registerConvertor(converter);
 	}

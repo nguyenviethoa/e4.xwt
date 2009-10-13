@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
-import org.eclipse.swt.widgets.Widget;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 
 public class DataProperty extends AbstractProperty {
 	protected String key;
@@ -25,12 +25,10 @@ public class DataProperty extends AbstractProperty {
 	}
 
 	public Object getValue(Object target) {
-		Widget widget = (Widget) target;
-		return widget.getData(key);
+		return UserData.getLocalData(target, key);
 	}
 
 	public void setValue(Object target, Object value) {
-		Widget widget = (Widget) target;
-		widget.setData(key, value);
+		UserData.setData(target, key, value);
 	}
 }

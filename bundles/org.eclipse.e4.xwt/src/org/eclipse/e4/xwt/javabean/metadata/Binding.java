@@ -17,12 +17,11 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
-import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.databinding.BindingMode;
 import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
 import org.eclipse.e4.xwt.databinding.ObservableValueUtil;
-import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
@@ -126,18 +125,18 @@ public class Binding implements IDynamicBinding {
 		if (control == null) {
 			return null;
 		}
-		Object data = control.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
+		Object data = UserData.getLocalDataContext(control);
 		if (data == null || data == this) {
-			Widget parent = (Widget) control.getData(IUserDataConstants.XWT_PARENT_KEY);
+			Widget parent = UserData.getParent(control);
 			if (parent != null) {
-				return UserDataHelper.getDataContextHost(parent);
+				return UserData.getDataContextHost(parent);
 			}
 			return null;
 		}
 		if (data != null) {
 			return control;
 		}
-		return UserDataHelper.getDataContextHost(control);
+		return UserData.getDataContextHost(control);
 	}
 
 	public Object createBoundSource() {
@@ -148,7 +147,7 @@ public class Binding implements IDynamicBinding {
 		if (source instanceof IDynamicBinding) {
 			Object value = ((IDynamicBinding) source).createBoundSource();
 			if (value != null && path != null) {
-				Widget widget = UserDataHelper.getWidget(value);
+				Widget widget = UserData.getWidget(value);
 				if (widget != null) {
 					return ObservableValueUtil.createWidget(value, path);
 				}
@@ -159,7 +158,7 @@ public class Binding implements IDynamicBinding {
 			}
 		}
 		if (source != null && path != null) {
-			Widget widget = UserDataHelper.getWidget(source);
+			Widget widget = UserData.getWidget(source);
 			if (widget != null) {
 				return ObservableValueUtil.createWidget(source, path);
 			}
@@ -177,7 +176,7 @@ public class Binding implements IDynamicBinding {
 		if (source == null) {
 			Widget dataContextHost = getDataContextHost();
 			if (dataContextHost != null) {
-				source = dataContextHost.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
+				source = UserData.getLocalDataContext(dataContextHost);
 			}
 		}
 
@@ -193,7 +192,7 @@ public class Binding implements IDynamicBinding {
 		if (dataContext == null) {
 			Widget dataContextHost = getDataContextHost();
 			if (dataContextHost != null) {
-				dataContext = dataContextHost.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
+				dataContext = UserData.getLocalDataContext(dataContextHost);
 				if (dataContext instanceof IDynamicBinding) {
 					IDynamicBinding dynamicBinding = (IDynamicBinding) dataContext;
 					dataContext = dynamicBinding.createBoundSource();

@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.ui.ExceptionHandle;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
 import org.eclipse.swt.SWT;

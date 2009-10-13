@@ -13,6 +13,8 @@ package org.eclipse.e4.xwt.internal.core;
 import java.util.HashMap;
 
 public class NameScope extends HashMap<String, Object> {
+	private static final long serialVersionUID = 1L;
+	
 	private final NameScope parent;
 
 	public NameScope(NameScope parent) {

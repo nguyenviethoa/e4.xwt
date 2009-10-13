@@ -13,10 +13,9 @@ package org.eclipse.e4.xwt.core;
 import java.util.HashMap;
 
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
-import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Widget;
 
 public abstract class TriggerBase {
@@ -68,7 +67,7 @@ public abstract class TriggerBase {
 	
 	public static Object getElementByName(Object target, String elementName) {
 		if (elementName != null && elementName.length() > 0) {
-			Widget widget = UserDataHelper.getWidget(target);
+			Widget widget = UserData.getWidget(target);
 			if (widget != null) {
 				Object element = XWT.findElementByName(widget, elementName);
 				if (element != null) {

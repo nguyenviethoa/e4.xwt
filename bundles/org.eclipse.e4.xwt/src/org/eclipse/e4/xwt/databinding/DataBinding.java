@@ -14,12 +14,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * The default implementation of the dataBinding object.

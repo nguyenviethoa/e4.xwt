@@ -19,7 +19,7 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.databinding.BeanObservableValue;
 import org.eclipse.e4.xwt.databinding.ObservableValueUtil;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
-import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Widget;
 
 public class Trigger extends TriggerBase {
@@ -28,6 +28,10 @@ public class Trigger extends TriggerBase {
 	private Operator operator = Operator.EQ;
 	private Object value;
 	private SetterBase[] setters;
+	
+	public Trigger() {
+
+	}
 	
 	public Operator getOperator() {
 		return operator;
@@ -84,7 +88,7 @@ public class Trigger extends TriggerBase {
 								.getClass().getName());
 						return;
 					}
-					Widget widget = UserDataHelper.getWidget(source);
+					Widget widget = UserData.getWidget(source);
 					if (widget == null) {
 						return;
 					}

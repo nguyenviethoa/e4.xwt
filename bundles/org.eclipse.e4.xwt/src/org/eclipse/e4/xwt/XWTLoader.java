@@ -66,7 +66,7 @@ import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.MetaclassManager;
 import org.eclipse.e4.xwt.internal.core.NameScope;
-import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.ResourceLoaderFactory;
 import org.eclipse.e4.xwt.javabean.ValueConvertorRegister;
 import org.eclipse.e4.xwt.javabean.metadata.BindingMetaclass;
@@ -218,7 +218,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#getElementName(java.lang.Object)
 	 */
 	public String getElementName(Object object) {
-		return UserDataHelper.getElementName(object);
+		return UserData.getElementName(object);
 	}
 
 	/*
@@ -227,7 +227,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#findNameContext(org.eclipse.swt.widgets.Widget)
 	 */
 	public NameScope findNameContext(Widget widget) {
-		return UserDataHelper.findNameContext(widget);
+		return UserData.findNameContext(widget);
 	}
 
 	/*
@@ -236,7 +236,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#findElementByName(org.eclipse.swt.widgets.Widget, java.lang.String)
 	 */
 	public Object findElementByName(Widget context, String name) {
-		return UserDataHelper.findElementByName(context, name);
+		return UserData.findElementByName(context, name);
 	}
 
 	/*
@@ -245,7 +245,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#getDataContext(org.eclipse.swt.widgets.Widget)
 	 */
 	public Object getDataContext(Widget element) {
-		return UserDataHelper.getDataContext(element);
+		return UserData.getDataContext(element);
 	}
 
 	/*
@@ -254,7 +254,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#getDataContext(org.eclipse.swt.widgets.Widget)
 	 */
 	public TriggerBase[] getTriggers(Widget element) {
-		return UserDataHelper.getTriggers(element);
+		return UserData.getTriggers(element);
 	}
 
 	/*
@@ -263,7 +263,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#setDataContext(org.eclipse.swt.widgets.Widget, java.lang.Object)
 	 */
 	public void setDataContext(Widget widget, Object dataContext) {
-		UserDataHelper.setDataContext(widget, dataContext);
+		UserData.setDataContext(widget, dataContext);
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @return
 	 */
 	public void setTriggers(Widget element, TriggerBase[] triggers) {
-		UserDataHelper.setTriggers(element, triggers);
+		UserData.setTriggers(element, triggers);
 	}
 
 	/*
@@ -282,7 +282,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#getCLR(org.eclipse.swt.widgets.Widget)
 	 */
 	public Object getCLR(Widget widget) {
-		return UserDataHelper.getCLR(widget);
+		return UserData.getCLR(widget);
 	}
 
 	/*
@@ -291,7 +291,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#findShell(org.eclipse.swt.widgets.Widget)
 	 */
 	public Shell findShell(Widget context) {
-		return UserDataHelper.findShell(context);
+		return UserData.findShell(context);
 	}
 
 	/*
@@ -300,7 +300,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#findCompositeParent(org.eclipse.swt.widgets.Widget)
 	 */
 	public Composite findCompositeParent(Widget context) {
-		return UserDataHelper.findCompositeParent(context);
+		return UserData.findCompositeParent(context);
 	}
 
 	/*
@@ -808,6 +808,17 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public void unregisterCommand(String name) {
 		commands.remove(name);
+	}
+
+	/**
+	 * Register a command to a name
+	 * 
+	 * @param name
+	 * @param command
+	 */
+	public void registerEventGroup(Class<?> type, IEventGroup eventGroup) {
+		IMetaclass metaclass = getMetaclass(type);
+		metaclass.addEventGroup(eventGroup);
 	}
 
 	/*

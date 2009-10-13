@@ -16,7 +16,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Widget;
 
 public class DataTrigger extends TriggerBase {
@@ -64,7 +64,7 @@ public class DataTrigger extends TriggerBase {
 		if (value == null) {
 			return;
 		}
-		Widget widget = UserDataHelper.getWidget(target);
+		Widget widget = UserData.getWidget(target);
 		if (widget == null) {
 			return;
 		}		
@@ -87,7 +87,7 @@ public class DataTrigger extends TriggerBase {
 		IObservableValue observableValue = (IObservableValue) bindingTarget;
 		observableValue.addValueChangeListener(new AbstractValueChangeListener(target) {
 			public void handleValueChange(ValueChangeEvent event) {
-				Widget widget = UserDataHelper.getWidget(element);
+				Widget widget = UserData.getWidget(element);
 				if (widget == null) {
 					return;
 				}

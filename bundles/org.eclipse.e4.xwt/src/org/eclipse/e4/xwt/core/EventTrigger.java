@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
-import org.eclipse.e4.xwt.internal.utils.UserDataHelper;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.Controller;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -60,12 +60,8 @@ public class EventTrigger extends TriggerBase {
 				return;
 			}
 			
-			Widget widget = UserDataHelper.getWidget(target);
-			Controller eventController = (Controller) widget.getData(IUserDataConstants.XWT_CONTROLLER_KEY);
-			if (eventController == null) {
-				eventController = new Controller();
-				widget.setData(IUserDataConstants.XWT_CONTROLLER_KEY, eventController);
-			}
+			Widget widget = UserData.getWidget(target);
+			Controller eventController = UserData.updateEventController(widget);
 			Runnable runnable = createRunnable(source);
 			try {
 				Method method = runnable.getClass().getDeclaredMethod("run");

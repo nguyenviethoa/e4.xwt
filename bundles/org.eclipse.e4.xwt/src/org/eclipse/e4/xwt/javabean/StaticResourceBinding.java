@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean;
 
+import java.util.Map;
+
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Widget;
 
 public class StaticResourceBinding implements IBinding {
@@ -28,7 +31,7 @@ public class StaticResourceBinding implements IBinding {
 	public Object getValue() {
 		Widget parent = widget;		
 		while (parent != null) {
-			ResourceDictionary dico = (ResourceDictionary) ((Widget) parent).getData(IUserDataConstants.XWT_RESOURCES_KEY);
+			Map<String, Object> dico = UserData.getLocalResources(parent);
 			if (dico != null && dico.containsKey(key)) {
 				Object data = dico.get(key);
 				if (data instanceof IBinding) {
@@ -36,7 +39,7 @@ public class StaticResourceBinding implements IBinding {
 				}
 				return data;
 			}
-			parent = (Widget) parent.getData(IUserDataConstants.XWT_PARENT_KEY);
+			parent = (Widget) UserData.getParent(parent);
 		}
 		throw new XWTException("Key " + key + " is not found.");			
 	}
