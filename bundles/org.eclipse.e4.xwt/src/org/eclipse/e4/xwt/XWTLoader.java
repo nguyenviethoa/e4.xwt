@@ -57,6 +57,7 @@ import org.eclipse.e4.xwt.core.EventTrigger;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.MultiDataTrigger;
 import org.eclipse.e4.xwt.core.MultiTrigger;
+import org.eclipse.e4.xwt.core.RadioEventGroup;
 import org.eclipse.e4.xwt.core.Setter;
 import org.eclipse.e4.xwt.core.Style;
 import org.eclipse.e4.xwt.core.Trigger;
@@ -1082,7 +1083,15 @@ public class XWTLoader implements IXWTLoader {
 		metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT, IUserDataConstants.XWT_DATACONTEXT_KEY));
 		metaclass.addProperty(new DataProperty(IConstants.XAML_TRIGGERS, TriggerBase[].class, IUserDataConstants.XWT_TRIGGERS_KEY));
 		metaclass.addProperty(new StyleProperty());
-
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.KEY_GROUP));
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.MOUSE_GROUP));
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.MOUSE_MOVING_GROUP));
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.FOCUS_GROUP));
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.EXPAND_GROUP));
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.WINDOW_GROUP));
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.ACTIVATION_GROUP));
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.HARD_KEY));
+		
 		type = org.eclipse.jface.viewers.ColumnViewer.class;
 		metaclass = (IMetaclass) core.getMetaclass(type, IConstants.XWT_NAMESPACE);
 		if (metaclass != null) {

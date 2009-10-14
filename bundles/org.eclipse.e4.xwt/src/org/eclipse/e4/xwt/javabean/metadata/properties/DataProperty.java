@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.e4.xwt.metadata.IProperty;
-import org.eclipse.e4.xwt.metadata.ISetPostAction;
 
 public class DataProperty extends AbstractProperty {
 	protected String key;

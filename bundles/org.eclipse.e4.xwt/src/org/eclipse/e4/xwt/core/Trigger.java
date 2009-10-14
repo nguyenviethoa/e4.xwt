@@ -29,10 +29,6 @@ public class Trigger extends TriggerBase {
 	private Object value;
 	private SetterBase[] setters;
 	
-	public Trigger() {
-
-	}
-	
 	public Operator getOperator() {
 		return operator;
 	}
