@@ -22,7 +22,6 @@ import org.eclipse.e4.ui.model.application.MSashForm;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.workbench.ui.internal.UISchedulerStrategy;
 import org.eclipse.e4.workbench.ui.internal.Workbench;
-import org.eclipse.e4.workbench.ui.renderers.PartRenderingEngine;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -35,14 +34,11 @@ import org.eclipse.swt.widgets.Shell;
 public class ImageDialogHandler {
 
 	private class ImageDialog extends Dialog {
-		private PartRenderingEngine theRenderer;
 		private IEclipseContext dlgContext;
 
-		public ImageDialog(Shell shell, MApplication<?> app, PartRenderingEngine renderer) {
+		public ImageDialog(Shell shell, MApplication<?> app) {
 			super(shell);
 
-			theRenderer = renderer;
-			
 			dlgContext = EclipseContextFactory
 			.create(app.getContext(), UISchedulerStrategy.getInstance());
 
@@ -82,7 +78,6 @@ public class ImageDialogHandler {
 			// Create the model and use it to fill in the composite
 			MPart<MPart<?>> dlgModel = createDlgModel();
 			Workbench.initializeContext(dlgContext, dlgModel);
-			theRenderer.createGui(dlgModel, comp);
 
 			// Declare the source for selection listeners
 			dlgContext.set(IServiceConstants.ACTIVE_CHILD, dlgModel.getContext());
@@ -131,8 +126,8 @@ public class ImageDialogHandler {
 		}
 	}
 	
-	public void execute(Shell shell, MApplication<?> app, PartRenderingEngine renderer) {
-		ImageDialog dlg = new ImageDialog(shell, app, renderer);
+	public void execute(Shell shell, MApplication<?> app) {
+		ImageDialog dlg = new ImageDialog(shell, app);
 		dlg.open();
 	}
 
