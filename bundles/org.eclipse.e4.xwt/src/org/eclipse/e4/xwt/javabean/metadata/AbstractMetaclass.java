@@ -161,9 +161,9 @@ public class AbstractMetaclass implements IMetaclass {
 	private void addTypedEvent(String name, int eventType) {
 		String key = normalize(name + "Event");
 		if (!routedEventCache.containsKey(key)) {
-			routedEventCache.put(key, new TypedEvent(
-					name, eventType));
-			addProperty(new EventProperty("is" + key, Boolean.class, "_event.is" + key));
+			TypedEvent typedEvent = new TypedEvent(name, eventType);
+			routedEventCache.put(key, typedEvent);
+			addProperty(new EventProperty("is" + key, typedEvent, "_event.is" + key));
 		}
 	}
 
@@ -595,7 +595,7 @@ public class AbstractMetaclass implements IMetaclass {
 				String name = normalize(eventSetDescriptor.getName()
 						+ "Event");
 				routedEventCache.put(name, event);
-				addProperty(new EventProperty("is" + name, Boolean.class, "_event.is" + name));
+				addProperty(new EventProperty("is" + name, event, "_event.is" + name));
 			}
 			if (isWidgetType(type)) {
 				routedEventCache

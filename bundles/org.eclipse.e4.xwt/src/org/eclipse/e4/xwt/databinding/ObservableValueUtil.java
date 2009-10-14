@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
 import java.lang.reflect.Method;
@@ -64,7 +74,7 @@ public class ObservableValueUtil {
 		IMetaclass mateclass = XWT.getMetaclass(object);
 		IProperty property = mateclass.findProperty(propertyName);
 		if (property instanceof EventProperty) {
-			return new EventPropertyObservableValue(object, property);
+			return new EventPropertyObservableValue(object, (EventProperty)property);
 		}
 		return null;
 	}
@@ -121,7 +131,7 @@ public class ObservableValueUtil {
 		IMetaclass mateclass = XWT.getMetaclass(control);
 		IProperty property = mateclass.findProperty(propertyName);
 		if (property instanceof EventProperty) {
-			return new EventPropertyObservableValue(control, property);
+			return new EventPropertyObservableValue(control, (EventProperty)property);
 		}
 		return null;
 	}

@@ -10,24 +10,22 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
+import org.eclipse.e4.xwt.metadata.IEvent;
+
 /**
  * A property to hold the event state
  *
  * @author yyang (yves.yang@soyatec.com)
  */
 public class EventProperty extends DataProperty {
-
-	public EventProperty(String name, Class<?> propertyType, String key,
-			Object defaultValue) {
-		super(name, propertyType, key, defaultValue);
+	protected IEvent event;
+	
+	public EventProperty(String name, IEvent event, String key) {
+		super(name, Boolean.class, key, false);
+		this.event = event;
 	}
 
-	public EventProperty(String name, Class<?> propertyType, String key) {
-		super(name, propertyType, key);
+	public IEvent getEvent() {
+		return event;
 	}
-
-	public EventProperty(String name, String key) {
-		super(name, key);
-	}
-
 }

@@ -253,27 +253,12 @@ public class UserData {
 		return null;
 	}
 
-	public static Object getDataContext(Widget widget) {
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
-		Object dataContext = null;
-		if (dataDictionary != null) {
-			dataContext = dataDictionary.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
-			if (dataContext != null) {
-				return dataContext;
-			}
-		}
-		Widget parent = widget;
-		while (parent != null) {
-			dataDictionary = (UserData)parent.getData(IUserDataConstants.XWT_USER_DATA_KEY);
-			if (dataDictionary != null) {
-				dataContext = dataDictionary.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
-				if (dataContext != null) {
-					return dataContext;
-				}
-				parent = (Widget) dataDictionary.getData(IUserDataConstants.XWT_PARENT_KEY);
-			}
-		}
-		return dataContext;
+	public static Controller findEventController(Object widget) {
+		return (Controller)findData(widget, IUserDataConstants.XWT_CONTROLLER_KEY);
+	}
+
+	public static Object getDataContext(Object widget) {
+		return findData(widget, IUserDataConstants.XWT_DATACONTEXT_KEY);
 	}
 
 	public static TriggerBase[] getTriggers(Widget widget) {
@@ -398,16 +383,16 @@ public class UserData {
 		dataDictionary.setData(key, value);
 	}
 
-	public static Map<?, ?> getResources(Object object) {
+	public static Object findData(Object object, String key) {
 		Widget widget = getWidget(object);
 		if (widget == null) {
 			return Collections.EMPTY_MAP;
 		}
 		
 		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
-		Map<?, ?> resources = null;
+		Object resources = null;
 		if (dataDictionary != null) {
-			resources = (Map<?, ?>) dataDictionary.getData(IUserDataConstants.XWT_RESOURCES_KEY);
+			resources = dataDictionary.getData(key);
 			if (resources != null) {
 				return resources;
 			}
@@ -416,7 +401,7 @@ public class UserData {
 		while (parent != null) {
 			dataDictionary = (UserData)parent.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 			if (dataDictionary != null) {
-				resources = (Map<?, ?>) dataDictionary.getData(IUserDataConstants.XWT_RESOURCES_KEY);
+				resources = dataDictionary.getData(key);
 				if (resources != null) {
 					return resources;
 				}
@@ -424,6 +409,10 @@ public class UserData {
 			}
 		}
 		return null;
+	}
+	
+	public static Map<?, ?> getResources(Object object) {
+		return (Map<?, ?>) findData(object, IUserDataConstants.XWT_RESOURCES_KEY);
 	}
 	
 	public static void setObjectName(Object object, String name) {

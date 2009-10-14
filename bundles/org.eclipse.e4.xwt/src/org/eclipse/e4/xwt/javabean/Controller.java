@@ -67,6 +67,15 @@ public class Controller implements Listener {
 		return false;
 	}
 
+	public boolean hasEvent(Object receiver, IEvent event) {
+		for (int i = 0; i < receivers.length; i++) {
+			if (receivers[i] == receiver &&  names[i].equalsIgnoreCase(event.getName())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void addEvent(int eventType, String name, IEvent event, Widget control, Object receiver, Method method) {
 		if (eventTypes == null) {
 			eventTypes = new int[3];
@@ -101,86 +110,94 @@ public class Controller implements Listener {
 
 	public void setEvent(IEvent event, Widget control, Object receiver, Method method) {
 		String name = event.getName();
+		int eventType = getEventTypeByName(name);
+		if (eventType != SWT.None) {
+			addEvent(eventType, name, event, control, receiver, method);			
+		}
+		
+	}
+	
+	public static int getEventTypeByName(String name) {
 		if (IEventConstants.KEY_DOWN.equalsIgnoreCase(name)) {
-			addEvent(SWT.KeyDown, IEventConstants.KEY_DOWN, event, control, receiver, method);
+			return SWT.KeyDown;
 		} else if (IEventConstants.KEY_UP.equalsIgnoreCase(name)) {
-			addEvent(SWT.KeyUp, IEventConstants.KEY_UP, event, control, receiver, method);
+			return SWT.KeyUp;
 		} else if (IEventConstants.MOUSE_DOWN.equalsIgnoreCase(name)) {
-			addEvent(SWT.MouseDown, IEventConstants.MOUSE_DOWN, event, control, receiver, method);
+			return SWT.MouseDown;
 		} else if (IEventConstants.MOUSE_UP.equalsIgnoreCase(name)) {
-			addEvent(SWT.MouseUp, IEventConstants.MOUSE_UP, event, control, receiver, method);
+			return SWT.MouseUp;
 		} else if (IEventConstants.MOUSE_MOVE.equalsIgnoreCase(name)) {
-			addEvent(SWT.MouseMove, IEventConstants.MOUSE_MOVE, event, control, receiver, method);
+			return SWT.MouseMove;
 		} else if (IEventConstants.MOUSE_ENTER.equalsIgnoreCase(name)) {
-			addEvent(SWT.MouseEnter, IEventConstants.MOUSE_ENTER, event, control, receiver, method);
+			return SWT.MouseEnter;
 		} else if (IEventConstants.MOUSE_EXIT.equalsIgnoreCase(name)) {
-			addEvent(SWT.MouseExit, IEventConstants.MOUSE_EXIT, event, control, receiver, method);
+			return SWT.MouseExit;
 		} else if (IEventConstants.MOUSE_DOUBLE_CLICK.equalsIgnoreCase(name)) {
-			addEvent(SWT.MouseDoubleClick, IEventConstants.MOUSE_DOUBLE_CLICK, event, control, receiver, method);
+			return SWT.MouseDoubleClick;
 		} else if (IEventConstants.PAINT.equalsIgnoreCase(name)) {
-			addEvent(SWT.Paint, IEventConstants.PAINT, event, control, receiver, method);
+			return SWT.Paint;
 		} else if (IEventConstants.MOVE.equalsIgnoreCase(name)) {
-			addEvent(SWT.Move, IEventConstants.MOVE, event, control, receiver, method);
+			return SWT.Move;
 		} else if (IEventConstants.RESIZE.equalsIgnoreCase(name)) {
-			addEvent(SWT.Resize, IEventConstants.RESIZE, event, control, receiver, method);
+			return SWT.Resize;
 		} else if (IEventConstants.DISPOSE.equalsIgnoreCase(name)) {
-			addEvent(SWT.Dispose, IEventConstants.DISPOSE, event, control, receiver, method);
+			return SWT.Dispose;
 		} else if (IEventConstants.SELECTION.equalsIgnoreCase(name)) {
-			addEvent(SWT.Selection, IEventConstants.SELECTION, event, control, receiver, method);
+			return SWT.Selection;
 		} else if (IEventConstants.DEFAULT_SELECTION.equalsIgnoreCase(name)) {
-			addEvent(SWT.DefaultSelection, IEventConstants.DEFAULT_SELECTION, event, control, receiver, method);
+			return SWT.DefaultSelection;
 		} else if (IEventConstants.FOCUS_IN.equalsIgnoreCase(name)) {
-			addEvent(SWT.FocusIn, IEventConstants.FOCUS_IN, event, control, receiver, method);
+			return SWT.FocusIn;
 		} else if (IEventConstants.FOCUS_OUT.equalsIgnoreCase(name)) {
-			addEvent(SWT.FocusOut, IEventConstants.FOCUS_OUT, event, control, receiver, method);
+			return SWT.FocusOut;
 		} else if (IEventConstants.EXPAND.equalsIgnoreCase(name)) {
-			addEvent(SWT.Expand, IEventConstants.EXPAND, event, control, receiver, method);
+			return SWT.Expand;
 		} else if (IEventConstants.COLLAPSE.equalsIgnoreCase(name)) {
-			addEvent(SWT.Collapse, IEventConstants.COLLAPSE, event, control, receiver, method);
+			return SWT.Collapse;
 		} else if (IEventConstants.ICONIFY.equalsIgnoreCase(name)) {
-			addEvent(SWT.Iconify, IEventConstants.ICONIFY, event, control, receiver, method);
+			return SWT.Iconify;
 		} else if (IEventConstants.DEICONIFY.equalsIgnoreCase(name)) {
-			addEvent(SWT.Deiconify, IEventConstants.DEICONIFY, event, control, receiver, method);
+			return SWT.Deiconify;
 		} else if (IEventConstants.CLOSE.equalsIgnoreCase(name)) {
-			addEvent(SWT.Close, IEventConstants.CLOSE, event, control, receiver, method);
+			return SWT.Close;
 		} else if (IEventConstants.SHOW.equalsIgnoreCase(name)) {
-			addEvent(SWT.Show, IEventConstants.SHOW, event, control, receiver, method);
+			return SWT.Show;
 		} else if (IEventConstants.HIDE.equalsIgnoreCase(name)) {
-			addEvent(SWT.Hide, IEventConstants.HIDE, event, control, receiver, method);
+			return SWT.Hide;
 		} else if (IEventConstants.MODIFY.equalsIgnoreCase(name)) {
-			addEvent(SWT.Modify, IEventConstants.MODIFY, event, control, receiver, method);
+			return SWT.Modify;
 		} else if (IEventConstants.VERIFY.equalsIgnoreCase(name)) {
-			addEvent(SWT.Verify, IEventConstants.VERIFY, event, control, receiver, method);
+			return SWT.Verify;
 		} else if (IEventConstants.ACTIVATE.equalsIgnoreCase(name)) {
-			addEvent(SWT.Activate, IEventConstants.ACTIVATE, event, control, receiver, method);
+			return SWT.Activate;
 		} else if (IEventConstants.DEACTIVATE.equalsIgnoreCase(name)) {
-			addEvent(SWT.Deactivate, IEventConstants.DEACTIVATE, event, control, receiver, method);
+			return SWT.Deactivate;
 		} else if (IEventConstants.HELP.equalsIgnoreCase(name)) {
-			addEvent(SWT.Help, IEventConstants.HELP, event, control, receiver, method);
+			return SWT.Help;
 		} else if (IEventConstants.DRAG_SELECT.equalsIgnoreCase(name)) {
-			addEvent(SWT.DragDetect, IEventConstants.DRAG_SELECT, event, control, receiver, method);
+			return SWT.DragDetect;
 		} else if (IEventConstants.ARM.equalsIgnoreCase(name)) {
-			addEvent(SWT.Arm, IEventConstants.ARM, event, control, receiver, method);
+			return SWT.Arm;
 		} else if (IEventConstants.TRAVERSE.equalsIgnoreCase(name)) {
-			addEvent(SWT.Traverse, IEventConstants.TRAVERSE, event, control, receiver, method);
+			return SWT.Traverse;
 		} else if (IEventConstants.MOUSE_HOVER.equalsIgnoreCase(name)) {
-			addEvent(SWT.MouseHover, IEventConstants.MOUSE_HOVER, event, control, receiver, method);
+			return SWT.MouseHover;
 		} else if (IEventConstants.HARD_KEY_DOWN.equalsIgnoreCase(name)) {
-			addEvent(SWT.HardKeyDown, IEventConstants.HARD_KEY_DOWN, event, control, receiver, method);
+			return SWT.HardKeyDown;
 		} else if (IEventConstants.HARD_KEY_UP.equalsIgnoreCase(name)) {
-			addEvent(SWT.HardKeyUp, IEventConstants.HARD_KEY_UP, event, control, receiver, method);
+			return SWT.HardKeyUp;
 		} else if (IEventConstants.MENU_DETECT.equalsIgnoreCase(name)) {
-			addEvent(SWT.MenuDetect, IEventConstants.MENU_DETECT, event, control, receiver, method);
+			return SWT.MenuDetect;
 		} else if (IEventConstants.MOUSE_WHEEL.equalsIgnoreCase(name)) {
-			addEvent(SWT.MouseWheel, IEventConstants.MOUSE_WHEEL, event, control, receiver, method);
+			return SWT.MouseWheel;
 		} else if (IEventConstants.SETTINGS.equalsIgnoreCase(name)) {
-			addEvent(SWT.Settings, IEventConstants.SETTINGS, event, control, receiver, method);
+			return SWT.Settings;
 		} else if (IEventConstants.ERASE_ITEM.equalsIgnoreCase(name)) {
-			addEvent(SWT.EraseItem, IEventConstants.ERASE_ITEM, event, control, receiver, method);
+			return SWT.EraseItem;
 		} else if (IEventConstants.MEASURE_ITEM.equalsIgnoreCase(name)) {
-			addEvent(SWT.MeasureItem, IEventConstants.MEASURE_ITEM, event, control, receiver, method);
+			return SWT.MeasureItem;
 		} else if (IEventConstants.PAINT_ITEM.equalsIgnoreCase(name)) {
-			addEvent(SWT.PaintItem, IEventConstants.PAINT_ITEM, event, control, receiver, method);
+			return SWT.PaintItem;
 		}
 		// case SWT.PaintItem:
 		// firePaintItem(e);
@@ -206,6 +223,7 @@ public class Controller implements Listener {
 		// fireDrop(dnde);
 		// break;
 		// }
+		return SWT.None;
 	}
 
 	public void handleEvent(Event e) {
