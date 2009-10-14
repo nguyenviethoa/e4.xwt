@@ -177,10 +177,10 @@ public class Controller implements Listener {
 			addEvent(SWT.Settings, IEventConstants.SETTINGS, event, control, receiver, method);
 		} else if (IEventConstants.ERASE_ITEM.equalsIgnoreCase(name)) {
 			addEvent(SWT.EraseItem, IEventConstants.ERASE_ITEM, event, control, receiver, method);
-		} else if (IEventConstants.MEASURE_ITME.equalsIgnoreCase(name)) {
-			addEvent(SWT.MeasureItem, IEventConstants.MEASURE_ITME, event, control, receiver, method);
-		} else if (IEventConstants.PAINT_ITME.equalsIgnoreCase(name)) {
-			addEvent(SWT.PaintItem, IEventConstants.PAINT_ITME, event, control, receiver, method);
+		} else if (IEventConstants.MEASURE_ITEM.equalsIgnoreCase(name)) {
+			addEvent(SWT.MeasureItem, IEventConstants.MEASURE_ITEM, event, control, receiver, method);
+		} else if (IEventConstants.PAINT_ITEM.equalsIgnoreCase(name)) {
+			addEvent(SWT.PaintItem, IEventConstants.PAINT_ITEM, event, control, receiver, method);
 		}
 		// case SWT.PaintItem:
 		// firePaintItem(e);

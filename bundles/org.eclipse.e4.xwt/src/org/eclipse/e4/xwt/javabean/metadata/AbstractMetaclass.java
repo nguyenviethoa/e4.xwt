@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IEventGroup;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
@@ -110,49 +111,49 @@ public class AbstractMetaclass implements IMetaclass {
 			return;
 		}
 		if (isSubclassOf(getXWTLoader().getMetaclass(Widget.class))) {
-			addTypedEvent("Activate", SWT.Activate);
-			addTypedEvent("Arm", SWT.Arm);
-			addTypedEvent("Close", SWT.Close);
-			addTypedEvent("Collapse", SWT.Collapse);
-			addTypedEvent("Deactivate", SWT.Deactivate);
-			addTypedEvent("DefaultSelection", SWT.DefaultSelection);
-			addTypedEvent("Deiconify", SWT.Deiconify);
-			addTypedEvent("Dispose", SWT.Dispose);
-			addTypedEvent("DragDetect", SWT.DragDetect);
-			addTypedEvent("EraseItem", SWT.EraseItem);
-			addTypedEvent("Expand", SWT.Expand);
-			addTypedEvent("FocusIn", SWT.FocusIn);
-			addTypedEvent("FocusOut", SWT.FocusOut);
-			addTypedEvent("HardKeyDown", SWT.HardKeyDown);
-			addTypedEvent("HardKeyUp", SWT.HardKeyUp);
-			addTypedEvent("Help", SWT.Help);
-			addTypedEvent("Hide", SWT.Hide);
-			addTypedEvent("Iconify", SWT.Iconify);
-			addTypedEvent("KeyDown", SWT.KeyDown);
-			addTypedEvent("KeyUp", SWT.KeyUp);
-			addTypedEvent("MeasureItem", SWT.MeasureItem);
-			addTypedEvent("MenuDetect", SWT.MenuDetect);
-			addTypedEvent("Modify", SWT.Modify);
-			addTypedEvent("MouseDoubleClick", SWT.MouseDoubleClick);
-			addTypedEvent("MouseDown", SWT.MouseDown);
-			addTypedEvent("MouseEnter", SWT.MouseEnter);
-			addTypedEvent("MouseExit", SWT.MouseExit);
-			addTypedEvent("MouseHover", SWT.MouseHover);
-			addTypedEvent("MouseMove", SWT.MouseMove);
-			addTypedEvent("MouseUp", SWT.MouseUp);
-			addTypedEvent("MouseWheel", SWT.MouseWheel);
-			addTypedEvent("Move", SWT.Move);
-			addTypedEvent("Paint", SWT.Paint);
-			addTypedEvent("PaintItem", SWT.PaintItem);
-			addTypedEvent("Resize", SWT.Resize);
-			addTypedEvent("Selection", SWT.Selection); // sash
-			addTypedEvent("SetData", SWT.SetData);
+			addTypedEvent(IEventConstants.ACTIVATE, SWT.Activate);
+			addTypedEvent(IEventConstants.ARM, SWT.Arm);
+			addTypedEvent(IEventConstants.CLOSE, SWT.Close);
+			addTypedEvent(IEventConstants.COLLAPSE, SWT.Collapse);
+			addTypedEvent(IEventConstants.DEACTIVATE, SWT.Deactivate);
+			addTypedEvent(IEventConstants.DEFAULT_SELECTION, SWT.DefaultSelection);
+			addTypedEvent(IEventConstants.DEICONIFY, SWT.Deiconify);
+			addTypedEvent(IEventConstants.DISPOSE, SWT.Dispose);
+			addTypedEvent(IEventConstants.DRAG_SELECT, SWT.DragDetect);
+			addTypedEvent(IEventConstants.ERASE_ITEM, SWT.EraseItem);
+			addTypedEvent(IEventConstants.EXPAND, SWT.Expand);
+			addTypedEvent(IEventConstants.FOCUS_IN, SWT.FocusIn);
+			addTypedEvent(IEventConstants.FOCUS_OUT, SWT.FocusOut);
+			addTypedEvent(IEventConstants.HARD_KEY_DOWN, SWT.HardKeyDown);
+			addTypedEvent(IEventConstants.HARD_KEY_UP, SWT.HardKeyUp);
+			addTypedEvent(IEventConstants.HELP, SWT.Help);
+			addTypedEvent(IEventConstants.HIDE, SWT.Hide);
+			addTypedEvent(IEventConstants.ICONIFY, SWT.Iconify);
+			addTypedEvent(IEventConstants.KEY_DOWN, SWT.KeyDown);
+			addTypedEvent(IEventConstants.KEY_UP, SWT.KeyUp);
+			addTypedEvent(IEventConstants.MEASURE_ITEM, SWT.MeasureItem);
+			addTypedEvent(IEventConstants.MENU_DETECT, SWT.MenuDetect);
+			addTypedEvent(IEventConstants.MODIFY, SWT.Modify);
+			addTypedEvent(IEventConstants.MOUSE_DOUBLE_CLICK, SWT.MouseDoubleClick);
+			addTypedEvent(IEventConstants.MOUSE_DOWN, SWT.MouseDown);
+			addTypedEvent(IEventConstants.MOUSE_ENTER, SWT.MouseEnter);
+			addTypedEvent(IEventConstants.MOUSE_EXIT, SWT.MouseExit);
+			addTypedEvent(IEventConstants.MOUSE_HOVER, SWT.MouseHover);
+			addTypedEvent(IEventConstants.MOUSE_MOVE, SWT.MouseMove);
+			addTypedEvent(IEventConstants.MOUSE_UP, SWT.MouseUp);
+			addTypedEvent(IEventConstants.MOUSE_WHEEL, SWT.MouseWheel);
+			addTypedEvent(IEventConstants.MOVE, SWT.Move);
+			addTypedEvent(IEventConstants.PAINT, SWT.Paint);
+			addTypedEvent(IEventConstants.PAINT_ITEM, SWT.PaintItem);
+			addTypedEvent(IEventConstants.RESIZE, SWT.Resize);
+			addTypedEvent(IEventConstants.SELECTION, SWT.Selection); // sash
+			addTypedEvent(IEventConstants.SET_DATA, SWT.SetData);
 			// addTypedEvent ("Settings", SWT.Settings); // note: this event
 			// only goes to Display
-			addTypedEvent("Show", SWT.Show);
-			addTypedEvent("Traverse", SWT.Traverse);
-			addTypedEvent("Verify", SWT.Verify);
-			addTypedEvent("ImeComposition", SWT.ImeComposition);
+			addTypedEvent(IEventConstants.SHOW, SWT.Show);
+			addTypedEvent(IEventConstants.TRAVERSE, SWT.Traverse);
+			addTypedEvent(IEventConstants.VERIFY, SWT.Verify);
+			addTypedEvent(IEventConstants.IME_COMPOSITION, SWT.ImeComposition);
 		}
 		buildTypedEvents = true;
 	}
@@ -162,7 +163,7 @@ public class AbstractMetaclass implements IMetaclass {
 		if (!routedEventCache.containsKey(key)) {
 			routedEventCache.put(key, new TypedEvent(
 					name, eventType));
-			addProperty(new EventProperty("is" + name, Boolean.class, "_event.is" + name));
+			addProperty(new EventProperty("is" + key, Boolean.class, "_event.is" + key));
 		}
 	}
 
@@ -183,7 +184,6 @@ public class AbstractMetaclass implements IMetaclass {
 	 */
 	public IEvent findEvent(String name) {
 		assertInitialize();
-		buildTypedEvents();
 		return routedEventCache.get(normalize(name));
 	}
 
@@ -225,7 +225,6 @@ public class AbstractMetaclass implements IMetaclass {
 	 */
 	public IEvent[] getEvents() {
 		assertInitialize();
-		buildTypedEvents();
 		return routedEventCache.values().toArray(new IEvent[] {});
 	}
 
@@ -602,9 +601,9 @@ public class AbstractMetaclass implements IMetaclass {
 				routedEventCache
 						.put(normalize(LOADED), new LoadedEvent(LOADED));
 			}
-
+			
 			markInitialized();
-
+			buildTypedEvents();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

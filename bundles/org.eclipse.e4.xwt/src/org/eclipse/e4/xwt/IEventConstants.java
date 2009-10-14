@@ -66,7 +66,9 @@ public interface IEventConstants {
 	String SETTINGS = "Settings";
 
 	String ERASE_ITEM = "EraseItem";
-	String MEASURE_ITME = "MeasureItem";
+	String MEASURE_ITEM = "MeasureItem";
 
-	String PAINT_ITME = "PaintItem";
+	String PAINT_ITEM = "PaintItem";
+	String SET_DATA = "SetData";
+	String IME_COMPOSITION = "ImeComposition";
 }

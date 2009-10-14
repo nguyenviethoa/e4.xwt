@@ -3,9 +3,13 @@ package org.eclipse.e4.xwt.databinding;
 import java.lang.reflect.Method;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemEnabledObservableValue;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemSelectionObservableValue;
+import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.Viewer;
@@ -27,10 +31,13 @@ public class ObservableValueUtil {
 	public static final Class<?>[] CONTROL_ARGUMENT_TYPES = new Class[] { Control.class };
 	public static final Class<?>[] VIEWER_ARGUMENT_TYPES = new Class[] { Viewer.class };
 
-	public static IObservableValue createWidget(Object object, String property) {
+	public static IObservableValue createWidget(Object object, String propertyName) {
 		if (object instanceof Control) {
 			try {
-				return observePropertyValue((Control) object, property);
+				IObservableValue observableValue = observePropertyValue((Control) object, propertyName);
+				if (observableValue != null) {
+					return observableValue;
+				}
 			} catch (XWTException e) {
 			}
 		}
@@ -39,39 +46,54 @@ public class ObservableValueUtil {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
 			// testcase: org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
 			//
-			if (ENABLED.equalsIgnoreCase(property)) {
+			if (ENABLED.equalsIgnoreCase(propertyName)) {
 				return new MenuItemEnabledObservableValue((MenuItem) object);
-			} else if (SELECTION.equalsIgnoreCase(property)) {
+			} else if (SELECTION.equalsIgnoreCase(propertyName)) {
 				return new MenuItemSelectionObservableValue((MenuItem) object);
 			}
 		}
 		if (object instanceof Viewer) {
 			try {
-				return observePropertyValue((Viewer) object, property);
+				IObservableValue observableValue = observePropertyValue((Viewer) object, propertyName);
+				if (observableValue != null) {
+					return observableValue;
+				}
 			} catch (XWTException e) {
 			}
+		}
+		IMetaclass mateclass = XWT.getMetaclass(object);
+		IProperty property = mateclass.findProperty(propertyName);
+		if (property instanceof EventProperty) {
+			return new EventPropertyObservableValue(object, property);
 		}
 		return null;
 	}
 
-	public static IObservableValue observePropertyValue(Control control, String property) {
-		if (TEXT.equalsIgnoreCase(property)) {
-			if (control instanceof Text)
-				return SWTObservables.observeText(control, SWT.Modify);
+	public static IObservableValue observePropertyValue(Control control, String propertyName) {
+		if (TEXT.equalsIgnoreCase(propertyName)) {
+			if (control instanceof Text) {
+				IObservableValue observableValue = SWTObservables.observeText(control, SWT.Modify);
+				if (observableValue != null) {
+					return observableValue;
+				}
+			}
 			// widget button is not supported at 3.4 version.
 			if (SWT.getVersion() == 3449 && control instanceof Button) {
 				return null;
 			}
 			try {
-				return SWTObservables.observeText(control);
+				IObservableValue observableValue = SWTObservables.observeText(control);
+				if (observableValue != null) {
+					return observableValue;
+				}
 			} catch (IllegalArgumentException e) {
 				throw new XWTException(e);
 			}
 		} else {
-			if (property == null) {
+			if (propertyName == null) {
 				return null;
 			}
-			String getterName = "observe" + property.substring(0, 1).toUpperCase() + property.substring(1);
+			String getterName = "observe" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
 			Method method;
 			try {
 				method = SWTObservables.class.getMethod(getterName, CONTROL_ARGUMENT_TYPES);
@@ -87,11 +109,19 @@ public class ObservableValueUtil {
 					}
 				}
 				if (method != null) {
-					return (IObservableValue) method.invoke(null, control);
+					IObservableValue observableValue = (IObservableValue) method.invoke(null, control);
+					if (observableValue != null) {
+						return observableValue;
+					}
 				}
 			} catch (Exception e) {
 				throw new XWTException(e);
 			}
+		}
+		IMetaclass mateclass = XWT.getMetaclass(control);
+		IProperty property = mateclass.findProperty(propertyName);
+		if (property instanceof EventProperty) {
+			return new EventPropertyObservableValue(control, property);
 		}
 		return null;
 	}
@@ -116,7 +146,10 @@ public class ObservableValueUtil {
 				}
 			}
 			if (method != null) {
-				return (IObservableValue) method.invoke(null, viewer);
+				IObservableValue observableValue = (IObservableValue) method.invoke(null, viewer);
+				if (observableValue != null) {
+					return observableValue;
+				}
 			}
 		} catch (Exception e) {
 			throw new XWTException(e);
