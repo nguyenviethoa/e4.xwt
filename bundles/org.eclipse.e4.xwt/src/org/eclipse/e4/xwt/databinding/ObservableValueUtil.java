@@ -13,10 +13,13 @@ package org.eclipse.e4.xwt.databinding;
 import java.lang.reflect.Method;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.IObservableValueManager;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemEnabledObservableValue;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemSelectionObservableValue;
+import org.eclipse.e4.xwt.internal.utils.ObservableValueManager;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -74,7 +77,16 @@ public class ObservableValueUtil {
 		IMetaclass mateclass = XWT.getMetaclass(object);
 		IProperty property = mateclass.findProperty(propertyName);
 		if (property instanceof EventProperty) {
-			return new EventPropertyObservableValue(object, (EventProperty)property);
+			IObservableValueManager eventManager = UserData.getObservableValueManager(object);
+			if (eventManager == null) {
+				eventManager = new ObservableValueManager(object);
+				UserData.setObservableValueManager(object, eventManager);
+			}
+			IObservableValue observableValue = eventManager.getValue(property);
+			if (observableValue == null) {
+				observableValue = new EventPropertyObservableValue(object, (EventProperty)property);
+			}
+			return observableValue;
 		}
 		return null;
 	}

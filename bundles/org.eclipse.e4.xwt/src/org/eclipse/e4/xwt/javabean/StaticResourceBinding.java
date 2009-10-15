@@ -12,10 +12,8 @@ package org.eclipse.e4.xwt.javabean;
 
 import java.util.Map;
 
-import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
-import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Widget;
 

@@ -10,23 +10,41 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
-import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.IObservableValueManager;
+import org.eclipse.e4.xwt.metadata.IProperty;
 
 public class RadioEventGroup extends AbstractEventGroup {
-	
-	public RadioEventGroup(String ... names) {
+
+	public RadioEventGroup(String... names) {
 		super(names);
 	}
-	
-	public void handleAfter(Object element, String event) {
-		String key = "_event.is" + event + "Event";
-		UserData.setData(element, key.toLowerCase(), true);
+
+	public void fireEvent(Object object, IProperty property) {
+
 	}
 
-	public void handleBefore(Object element, String event) {
-		for (String name : getEventNames()) {
-			String key = "is" + name + "Event";
-			UserData.removeLocalData(element, key.toLowerCase());
-		}
+	public void registerEvent(IObservableValueManager manager,
+			IProperty property) {
+//		for (String name : getEventNames()) {
+//			String key = "is" + name + "Event";
+//			if (!raisedKey.equalsIgnoreCase(key)) {
+//				UserData.removeLocalData(element, key.toLowerCase());
+//			}
+//		}
 	}
+
+	// public void handleAfter(Object element, String event) {
+	// String key = "_event.is" + event + "Event";
+	// UserData.setData(element, key.toLowerCase(), true);
+	// }
+	//
+	// public void handleBefore(Object element, String event) {
+	// String raisedKey = "_event.is" + event + "Event";
+	// for (String name : getEventNames()) {
+	// String key = "is" + name + "Event";
+	// if (!raisedKey.equalsIgnoreCase(key)) {
+	// UserData.removeLocalData(element, key.toLowerCase());
+	// }
+	// }
+	// }
 }

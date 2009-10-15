@@ -171,7 +171,10 @@ public class ResourceLoader implements IVisualElementLoader {
 				Object receiver = current.getClr();
 				if (receiver != null) {
 					Class<?> clazz = receiver.getClass();
-					method = ObjectUtil.findMethod(clazz, handler, Event.class);
+					method = ObjectUtil.findMethod(clazz, handler, Object.class, Event.class);
+					if (method == null) {
+						method = ObjectUtil.findMethod(clazz, handler, Event.class);						
+					}
 					if (method == null) {
 						// Load again.
 						clazz = ClassLoaderUtil.loadClass(context.getLoadingContext(), clazz.getName());
@@ -185,7 +188,7 @@ public class ResourceLoader implements IVisualElementLoader {
 							this.loadedMethod = method;
 							this.hostWidget = control;
 						}
-						eventController.setEvent(event, control, clrObject, method);
+						eventController.setEvent(event, control, clrObject, control, method);
 						break;
 					}
 				}

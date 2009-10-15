@@ -18,6 +18,7 @@ import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.Controller;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
 public class EventTrigger extends TriggerBase {
@@ -62,26 +63,26 @@ public class EventTrigger extends TriggerBase {
 			
 			Widget widget = UserData.getWidget(target);
 			Controller eventController = UserData.updateEventController(widget);
-			Runnable runnable = createRunnable(source);
+			SettersAction runnable = createRunnable(source);
 			try {
-				Method method = runnable.getClass().getDeclaredMethod("run");
-				eventController.setEvent(event, widget, this, method);
+				Method method = runnable.getClass().getDeclaredMethod("run", Object.class, Event.class);
+				eventController.setEvent(event, widget, this, this, method);
 			} catch (Exception e) {
 				LoggerManager.log(e);
 			}
 		}
 	}
 	
-	protected Runnable createRunnable(Object target) {
+	protected SettersAction createRunnable(Object target) {
 		return new SettersAction(target);
 	}
 	
-	class SettersAction implements Runnable {
+	class SettersAction {
 		protected Object target;
 		public SettersAction(Object target) {
 			this.target = target;
 		}
-		public void run() {
+		public void run(Object object, Event event) {
 		}
 	}
 }

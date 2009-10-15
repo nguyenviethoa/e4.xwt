@@ -10,6 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
-public interface IIndexedElement {
-	void setIndex(Object parent, int index);
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.swt.widgets.Event;
+
+public interface IObservableValueManager {	
+	void registerValue(IProperty property, IObservableValue observableValue);
+	
+	IObservableValue getValue(IProperty property);
+	
+	void changeValueHandle(Object object, Event event);
 }

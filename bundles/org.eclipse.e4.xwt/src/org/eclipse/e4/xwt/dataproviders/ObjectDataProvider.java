@@ -133,7 +133,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 			}
 			try {
 				if (paras.isEmpty()) {
-					method = targetType.getDeclaredMethod(methodName, new Class<?>[0]);
+					method = targetType.getDeclaredMethod(methodName);
 					return method.invoke(target, new Object[0]);
 				} else {
 					method = targetType.getDeclaredMethod(methodName, paras.toArray(new Class<?>[paras.size()]));

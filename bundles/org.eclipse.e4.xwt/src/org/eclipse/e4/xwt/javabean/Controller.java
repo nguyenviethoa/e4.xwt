@@ -13,10 +13,7 @@ package org.eclipse.e4.xwt.javabean;
 import java.lang.reflect.Method;
 
 import org.eclipse.e4.xwt.IEventConstants;
-import org.eclipse.e4.xwt.IEventGroup;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.metadata.IEvent;
-import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -28,6 +25,7 @@ public class Controller implements Listener {
 	protected String[] names = null;
 	protected Method[] handlers = null;
 	protected Object[] receivers = null;
+	protected Object[] args = null;
 
 	protected void fireEvent(Event e) {
 		int eventType = e.type;
@@ -38,8 +36,17 @@ public class Controller implements Listener {
 		for (int i = 0; i < eventTypes.length; i++) {
 			if (eventTypes[i] == eventType) {
 				if (handlers[i] != null) {
-					handlers[i].setAccessible(true);
-					if (!invokeEvent(i, e)) {
+					try {
+						handlers[i].setAccessible(true);
+						// support old style
+						if (handlers[i].getParameterTypes().length == 1) {
+							handlers[i].invoke(receivers[i], e);							
+						}
+						else {
+							handlers[i].invoke(receivers[i], args[i], e);
+						}
+					} catch (Exception e1) {
+						e1.printStackTrace();
 						return;
 					}
 				}
@@ -47,27 +54,10 @@ public class Controller implements Listener {
 		}
 	}
 
-	protected boolean invokeEvent(int i, Event e) {
-		Object object = receivers[i];
-		String name = names[i];
-		IMetaclass metaclass = XWT.getMetaclass(object);
-		IEventGroup eventGroup = metaclass.getEventGroup(name);
-		if (eventGroup != null) {
-			eventGroup.handleBefore(object, name);
-		}
-		try {
-			handlers[i].invoke(object, e);
-			if (eventGroup != null) {
-				eventGroup.handleAfter(object, name);
-			}
-			return true;
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		return false;
-	}
-
 	public boolean hasEvent(Object receiver, IEvent event) {
+		if (receivers == null) {
+			return false;
+		}
 		for (int i = 0; i < receivers.length; i++) {
 			if (receivers[i] == receiver &&  names[i].equalsIgnoreCase(event.getName())){
 				return true;
@@ -76,45 +66,49 @@ public class Controller implements Listener {
 		return false;
 	}
 	
-	public void addEvent(int eventType, String name, IEvent event, Widget control, Object receiver, Method method) {
+	public void addEvent(int eventType, String name, IEvent event, Widget control, Object receiver, Object arg, Method method) {
 		if (eventTypes == null) {
 			eventTypes = new int[3];
 			handlers = new Method[3];
 			names = new String[3];
 			receivers = new Object[3];
+			args = new Object[3];
 		}
 		if (waterMark >= eventTypes.length) {
 			int[] oldEventTypes = eventTypes;
 			Method[] oldHandlers = handlers;
 			Object[] oldReceivers = receivers;
 			Object[] oldNames = names;
-
+			Object[] oldArgs = args;
+			
 			eventTypes = new int[waterMark + 3];
 			handlers = new Method[waterMark + 3];
 			receivers = new Object[waterMark + 3];
 			names = new String[waterMark + 3];
-
+			args = new Object[waterMark + 3];
+			
 			System.arraycopy(oldEventTypes, 0, eventTypes, 0, waterMark);
 			System.arraycopy(oldHandlers, 0, handlers, 0, waterMark);
 			System.arraycopy(oldReceivers, 0, receivers, 0, waterMark);
+			System.arraycopy(oldArgs, 0, args, 0, waterMark);
 			System.arraycopy(oldNames, 0, names, 0, waterMark);
 		}
 
 		eventTypes[waterMark] = eventType;
 		handlers[waterMark] = method;
-		receivers[waterMark++] = receiver;
+		receivers[waterMark] = receiver;
+		args[waterMark] = arg;
 		names[waterMark++] = name;
 
 		control.addListener(eventType, this);
 	}
 
-	public void setEvent(IEvent event, Widget control, Object receiver, Method method) {
+	public void setEvent(IEvent event, Widget control, Object receiver, Object arg, Method method) {
 		String name = event.getName();
 		int eventType = getEventTypeByName(name);
 		if (eventType != SWT.None) {
-			addEvent(eventType, name, event, control, receiver, method);			
+			addEvent(eventType, name, event, control, receiver, arg, method);			
 		}
-		
 	}
 	
 	public static int getEventTypeByName(String name) {

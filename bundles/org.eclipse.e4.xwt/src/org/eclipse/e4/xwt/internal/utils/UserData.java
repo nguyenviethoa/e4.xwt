@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.IObservableValueManager;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.internal.core.NameScope;
@@ -43,6 +44,15 @@ import org.eclipse.swt.widgets.Widget;
 
 public class UserData {
 	private HashMap<String, Object> dictionary = null;
+	private IObservableValueManager observableValueManager;
+	
+	protected IObservableValueManager getObservableValueManager() {
+		return observableValueManager;
+	}
+
+	protected void setObservableValueManager(IObservableValueManager observableValueManager) {
+		this.observableValueManager = observableValueManager;
+	}
 
 	public void setData(String key, Object value) {
 		if (dictionary == null) {
@@ -383,6 +393,29 @@ public class UserData {
 		dataDictionary.setData(key, value);
 	}
 
+	public static IObservableValueManager getObservableValueManager(Object object) {
+		Widget widget = getWidget(object);
+		if (widget == null) {
+			return null;
+		}
+		
+		UserData userData = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		if (userData != null) {
+			return userData.getObservableValueManager();
+		}
+		return null;
+	}
+	
+	public static void setObservableValueManager(Object object, IObservableValueManager eventManager) {
+		Widget widget = getWidget(object);
+		if (widget == null) {
+			throw new IllegalStateException("Not SWT Widget");
+		}
+		UserData userData = (UserData)updateDataDictionary(object);
+		userData.setObservableValueManager(eventManager);
+	}
+	
+	
 	public static Object findData(Object object, String key) {
 		Widget widget = getWidget(object);
 		if (widget == null) {
@@ -406,6 +439,9 @@ public class UserData {
 					return resources;
 				}
 				parent = (Widget) dataDictionary.getData(IUserDataConstants.XWT_PARENT_KEY);
+			}
+			else {
+				break;
 			}
 		}
 		return null;

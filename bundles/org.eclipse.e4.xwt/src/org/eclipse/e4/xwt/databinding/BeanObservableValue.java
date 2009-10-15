@@ -18,6 +18,9 @@ import java.lang.reflect.Modifier;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -70,6 +73,7 @@ public class BeanObservableValue extends XWTObservableValue {
 					return object;
 				}
 			}
+			return UserData.getLocalData(target, propertyName);
 		} catch (Exception e) {
 		}
 		return null;
@@ -93,6 +97,12 @@ public class BeanObservableValue extends XWTObservableValue {
 					return field.getType();
 				}
 			}
+			IMetaclass metaclass = XWT.getMetaclass(type);
+			IProperty property = metaclass.findProperty(propertyName);
+			if (property != null) {
+				return property.getType();
+			}
+			
 		} catch (Exception e) {
 		}
 		return null;
