@@ -15,9 +15,6 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Event;
-
 /**
  * @author jliu
  */

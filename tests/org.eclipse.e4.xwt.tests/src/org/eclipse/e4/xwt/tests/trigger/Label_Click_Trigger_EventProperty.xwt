@@ -5,11 +5,11 @@
 	</Composite.layout>	
 	
   <!-- The width of this button is animated. -->
-  <Button name="Button" x:Style="SWT.CHECK" Text="Trigger">
-    <Button.Triggers>
+  <Label name="Label" x:Style="SWT.CHECK" Text="Trigger">
+    <Label.Triggers>
 	   <Trigger Property="isMouseEnterEvent" Value="True">
-		  <Setter Property="Visible" Value="False" />
+		  <Setter Property="background" Value="Red" />
 	   </Trigger>
-    </Button.Triggers>
-  </Button>
+    </Label.Triggers>
+  </Label>
 </Composite>
