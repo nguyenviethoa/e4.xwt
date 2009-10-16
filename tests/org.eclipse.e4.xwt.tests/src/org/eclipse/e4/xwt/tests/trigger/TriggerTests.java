@@ -124,4 +124,48 @@ public class TriggerTests extends XWTTestCase {
 		});
 	}
 
+	public void test_Button_Click_Trigger_EventProperty() {
+		URL url = TriggerTests.class.getResource(Button_Click_Trigger_EventProperty.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button button = (Button) XWT.findElementByName(root, "source");
+				selectButton(button);
+			}
+		},
+		new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Button button = (Button) XWT.findElementByName(root, "target");
+				assertEquals("OK", button.getText());
+			}
+		});
+	}
+
+	public void test_Button_Click_Trigger_EventProperty2() {
+		URL url = TriggerTests.class.getResource(Button_Click_Trigger_EventProperty.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button button = (Button) XWT.findElementByName(root, "source");
+				selectButton(button, true);
+				selectButton(button, false);
+			}
+		},
+		new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Button button = (Button) XWT.findElementByName(root, "target");
+				assertEquals("Target", button.getText());
+			}
+		});
+	}
 }
