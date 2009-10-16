@@ -26,7 +26,7 @@ public interface IEventGroup {
 	 * @param object
 	 * @param property
 	 */
-	void fireEvent(Object object, IProperty property);
+	void fireEvent(IObservableValueManager manager, IProperty property);
 
 	/**
 	 * Register the event

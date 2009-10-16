@@ -20,4 +20,6 @@ public interface IObservableValueManager {
 	IObservableValue getValue(IProperty property);
 	
 	void changeValueHandle(Object object, Event event);
+	
+	Object getHost();
 }

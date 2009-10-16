@@ -2,12 +2,11 @@ package org.eclipse.e4.xwt.internal.utils;
 
 import java.util.HashMap;
 
-import org.eclipse.core.databinding.observable.Diffs;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IEventGroup;
 import org.eclipse.e4.xwt.IObservableValueManager;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.databinding.EventPropertyObservableValue;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -21,14 +20,30 @@ public class ObservableValueManager implements IObservableValueManager {
 		this.host = host;
 	}
 	
+	public Object getHost() {
+		return host;
+	}
+	
 	public void changeValueHandle(Object object, Event event){
+		// TODO the cast is not clean. 
 		EventProperty property = (EventProperty) object;
 		IObservableValue value = map.get(property.getName());
-		value.setValue(true);
+		if (value != null) {
+			Boolean oldValue = (Boolean) value.getValue();
+			if (oldValue == null) {
+				oldValue = false;
+			}
+			value.setValue(!oldValue);
+		}
 		
 		IMetaclass metaclass = XWT.getMetaclass(host);
-		IEventGroup eventGroup = metaclass.getEventGroup(property.getEvent().getName());
-		eventGroup.fireEvent(host, property);
+		
+		// TODO this conversion should be simplied
+		String eventName = IEventConstants.normalize(property.getEvent().getName());
+		IEventGroup eventGroup = metaclass.getEventGroup(eventName);
+		if (eventGroup != null) {
+			eventGroup.fireEvent(this, property);
+		}
 	}
 	
 	public void registerValue(IProperty property, IObservableValue observableValue) {
@@ -38,7 +53,12 @@ public class ObservableValueManager implements IObservableValueManager {
 		map.put(property.getName(), observableValue);
 		
 		IMetaclass metaclass = XWT.getMetaclass(host);
-		IEventGroup eventGroup = metaclass.getEventGroup(property.getName());
+		// TODO it is not clean. 
+		EventProperty eventProperty  = (EventProperty) property;
+		
+		// TODO this conversion should be simplied
+		String eventName = IEventConstants.normalize(eventProperty.getEvent().getName());		
+		IEventGroup eventGroup = metaclass.getEventGroup(eventName);
 		if (eventGroup != null) {
 			eventGroup.registerEvent(this, property);
 		}

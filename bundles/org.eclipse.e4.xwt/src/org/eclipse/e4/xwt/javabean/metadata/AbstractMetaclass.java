@@ -49,8 +49,6 @@ public class AbstractMetaclass implements IMetaclass {
 	protected Map<String, IEvent> routedEventCache = new HashMap<String, IEvent>();
 	protected Map<String, IEventGroup> eventGroupCache = Collections.EMPTY_MAP;
 
-	public static final String LOADED = "Loaded";
-
 	protected Class<?> type;
 	protected String name;
 	protected IMetaclass superClass;
@@ -159,11 +157,13 @@ public class AbstractMetaclass implements IMetaclass {
 	}
 
 	private void addTypedEvent(String name, int eventType) {
-		String key = normalize(name + "Event");
-		if (!routedEventCache.containsKey(key)) {
+		String eventName = IEventConstants.getEventName(name);
+		if (!routedEventCache.containsKey(eventName)) {
 			TypedEvent typedEvent = new TypedEvent(name, eventType);
-			routedEventCache.put(key, typedEvent);
-			addProperty(new EventProperty("is" + key, typedEvent, "_event.is" + key));
+			routedEventCache.put(eventName, typedEvent);
+			String eventPropertyName = IEventConstants.getEventPropertyName(name);
+			String eventDataName = IEventConstants.getEventPropertyDataName(name);
+			addProperty(new EventProperty(eventPropertyName, typedEvent, eventDataName));
 		}
 	}
 
@@ -590,16 +590,17 @@ public class AbstractMetaclass implements IMetaclass {
 
 			for (EventSetDescriptor eventSetDescriptor : beanInfo
 					.getEventSetDescriptors()) {
+				String name = IEventConstants.getEventName(eventSetDescriptor.getName());
 				BeanEvent event = new BeanEvent(eventSetDescriptor.getName(),
 						eventSetDescriptor);
-				String name = normalize(eventSetDescriptor.getName()
-						+ "Event");
 				routedEventCache.put(name, event);
-				addProperty(new EventProperty("is" + name, event, "_event.is" + name));
+				String propertyName = IEventConstants.getEventPropertyName(eventSetDescriptor.getName());
+				String propertyDataName = IEventConstants.getEventPropertyDataName(eventSetDescriptor.getName());
+				addProperty(new EventProperty(propertyName, event, propertyDataName));
 			}
 			if (isWidgetType(type)) {
 				routedEventCache
-						.put(normalize(LOADED), new LoadedEvent(LOADED));
+						.put(normalize(IEventConstants.XWT_LOADED), new LoadedEvent(IEventConstants.XWT_LOADED));
 			}
 			
 			markInitialized();
@@ -625,7 +626,12 @@ public class AbstractMetaclass implements IMetaclass {
 			if (eventGroupCache.containsKey(string)) {
 				throw new IllegalArgumentException("Event \"" + string + "\" already existis in a group.");
 			}
-			eventGroupCache.put(string, eventGroup);
+			String key = normalize(string);
+			if ("menudetecteventevent".equals(key)) {
+				System.out.println(string);
+			}
+			
+			eventGroupCache.put(key, eventGroup);
 		}
 	}
 	

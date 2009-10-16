@@ -40,9 +40,8 @@ public class Controller implements Listener {
 						handlers[i].setAccessible(true);
 						// support old style
 						if (handlers[i].getParameterTypes().length == 1) {
-							handlers[i].invoke(receivers[i], e);							
-						}
-						else {
+							handlers[i].invoke(receivers[i], e);
+						} else {
 							handlers[i].invoke(receivers[i], args[i], e);
 						}
 					} catch (Exception e1) {
@@ -59,20 +58,29 @@ public class Controller implements Listener {
 			return false;
 		}
 		for (int i = 0; i < receivers.length; i++) {
-			if (receivers[i] == receiver &&  names[i].equalsIgnoreCase(event.getName())){
+			if (receivers[i] == receiver
+					&& names[i].equalsIgnoreCase(event.getName())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	public void addEvent(int eventType, String name, IEvent event, Widget control, Object receiver, Object arg, Method method) {
+
+	public void addEvent(int eventType, String name, IEvent event,
+			Widget control, Object receiver, Object arg, Method method) {
 		if (eventTypes == null) {
 			eventTypes = new int[3];
 			handlers = new Method[3];
 			names = new String[3];
 			receivers = new Object[3];
 			args = new Object[3];
+		} else {
+			for (int i = 0; i < eventTypes.length; i++) {
+				if (eventTypes[i] == eventType && handlers[i] == method
+						&& receivers[i] == receivers && args[i] == arg) {
+					return;
+				}
+			}
 		}
 		if (waterMark >= eventTypes.length) {
 			int[] oldEventTypes = eventTypes;
@@ -80,13 +88,13 @@ public class Controller implements Listener {
 			Object[] oldReceivers = receivers;
 			Object[] oldNames = names;
 			Object[] oldArgs = args;
-			
+
 			eventTypes = new int[waterMark + 3];
 			handlers = new Method[waterMark + 3];
 			receivers = new Object[waterMark + 3];
 			names = new String[waterMark + 3];
 			args = new Object[waterMark + 3];
-			
+
 			System.arraycopy(oldEventTypes, 0, eventTypes, 0, waterMark);
 			System.arraycopy(oldHandlers, 0, handlers, 0, waterMark);
 			System.arraycopy(oldReceivers, 0, receivers, 0, waterMark);
@@ -103,14 +111,15 @@ public class Controller implements Listener {
 		control.addListener(eventType, this);
 	}
 
-	public void setEvent(IEvent event, Widget control, Object receiver, Object arg, Method method) {
+	public void setEvent(IEvent event, Widget control, Object receiver,
+			Object arg, Method method) {
 		String name = event.getName();
 		int eventType = getEventTypeByName(name);
 		if (eventType != SWT.None) {
-			addEvent(eventType, name, event, control, receiver, arg, method);			
+			addEvent(eventType, name, event, control, receiver, arg, method);
 		}
 	}
-	
+
 	public static int getEventTypeByName(String name) {
 		if (IEventConstants.KEY_DOWN.equalsIgnoreCase(name)) {
 			return SWT.KeyDown;

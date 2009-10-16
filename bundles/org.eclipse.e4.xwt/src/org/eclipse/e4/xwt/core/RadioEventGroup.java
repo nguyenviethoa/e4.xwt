@@ -10,7 +10,16 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IObservableValueManager;
+import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.internal.utils.LoggerManager;
+import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.javabean.Controller;
+import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
+import org.eclipse.e4.xwt.metadata.IEvent;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 
 public class RadioEventGroup extends AbstractEventGroup {
@@ -19,32 +28,56 @@ public class RadioEventGroup extends AbstractEventGroup {
 		super(names);
 	}
 
-	public void fireEvent(Object object, IProperty property) {
+	public void fireEvent(IObservableValueManager manager, IProperty property) {
+		Object host = manager.getHost();
+		Controller controller = UserData.findEventController(host);
+		if (controller == null) {
+			controller = UserData.updateEventController(host);
+		}
+		IMetaclass metaclass = XWT.getMetaclass(host); 
 
+		EventProperty reaisedEventProperty = (EventProperty) property;
+		String raisedName = reaisedEventProperty.getEvent().getName();
+		for (String name : getEventNames()) {
+			if (name.equalsIgnoreCase(raisedName)) {
+				continue;
+			}
+			String eventPropertyName = IEventConstants.getEventPropertyName(name);
+			IProperty eventProperty = metaclass.findProperty(eventPropertyName);
+
+			IObservableValue value = manager.getValue(eventProperty);
+			if (value != null) {
+				value.setValue(false);
+			}
+		}
 	}
 
 	public void registerEvent(IObservableValueManager manager,
 			IProperty property) {
-//		for (String name : getEventNames()) {
-//			String key = "is" + name + "Event";
-//			if (!raisedKey.equalsIgnoreCase(key)) {
-//				UserData.removeLocalData(element, key.toLowerCase());
-//			}
-//		}
-	}
+		Object host = manager.getHost();
+		Controller controller = UserData.findEventController(host);
+		if (controller == null) {
+			controller = UserData.updateEventController(host);
+		}
+		IMetaclass metaclass = XWT.getMetaclass(host); 
 
-	// public void handleAfter(Object element, String event) {
-	// String key = "_event.is" + event + "Event";
-	// UserData.setData(element, key.toLowerCase(), true);
-	// }
-	//
-	// public void handleBefore(Object element, String event) {
-	// String raisedKey = "_event.is" + event + "Event";
-	// for (String name : getEventNames()) {
-	// String key = "is" + name + "Event";
-	// if (!raisedKey.equalsIgnoreCase(key)) {
-	// UserData.removeLocalData(element, key.toLowerCase());
-	// }
-	// }
-	// }
+		EventProperty reaisedEventProperty = (EventProperty) property;
+		String raisedName = reaisedEventProperty.getEvent().getName();
+		for (String name : getEventNames()) {
+			if (name.equalsIgnoreCase(raisedName)) {
+				continue;
+			}
+			String eventPropertyName = IEventConstants.getEventPropertyName(name);
+			String eventName = IEventConstants.getEventName(name);
+			IEvent event = metaclass.findEvent(eventName);
+			IProperty eventProperty = metaclass.findProperty(eventPropertyName);
+			
+			try {
+				controller.setEvent(event, UserData.getWidget(host), manager, eventProperty, IObservableValueManager.class.getDeclaredMethod("changeValueHandle", Object.class, org.eclipse.swt.widgets.Event.class));
+			} catch (Exception e) {
+				LoggerManager.log(e);
+				return;
+			}
+		}
+	}
 }

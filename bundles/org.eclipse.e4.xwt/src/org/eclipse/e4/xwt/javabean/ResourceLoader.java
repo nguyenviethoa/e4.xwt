@@ -29,6 +29,7 @@ import java.util.Map;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IDataProvider;
+import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IIndexedElement;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.INamespaceHandler;
@@ -182,7 +183,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					if (method != null) {
 						clrObject = receiver;
-						if (event.getName().equalsIgnoreCase(Metaclass.LOADED)) {
+						if (event.getName().equalsIgnoreCase(IEventConstants.XWT_LOADED)) {
 							method.setAccessible(true);
 							this.loadedObject = receiver;
 							this.loadedMethod = method;
