@@ -23,6 +23,7 @@ import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.NameScope;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -343,6 +344,35 @@ public interface IXWTLoader {
 	 */
 	public abstract IMetaclass registerMetaclass(Class<?> type);
 
+	
+	/**
+	 * Get the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	public abstract Object getPropertyValue(Object uiElement, IProperty property);
+
+	/**
+	 * Set the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	public abstract void setPropertyValue(Object uiElement, IProperty property, Object value);
+	
+	/**
+	 * Remove the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	public abstract void removePropertyValue(Object uiElement, IProperty property);
+
+	/**
+	 * Remove the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	public abstract boolean hasPropertyValue(Object uiElement, IProperty property);
+	
 	/**
 	 * Register Metaclass factory
 	 * 

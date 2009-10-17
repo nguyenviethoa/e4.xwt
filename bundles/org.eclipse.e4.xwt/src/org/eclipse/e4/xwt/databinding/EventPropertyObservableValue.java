@@ -46,7 +46,7 @@ public class EventPropertyObservableValue extends XWTObservableValue {
 
 	@Override
 	protected void doSetApprovedValue(Object value) {
-		UserData.setData(getObserved(), property.getName(), value);		
+		UserData.setLocalData(getObserved(), property.getName(), value);		
 	}
 
 	protected Object doGetValue() {

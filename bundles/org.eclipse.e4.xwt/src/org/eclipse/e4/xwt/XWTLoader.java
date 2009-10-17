@@ -95,6 +95,7 @@ import org.eclipse.e4.xwt.jface.DefaultLabelProvider;
 import org.eclipse.e4.xwt.jface.DefaultListContentProvider;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -171,6 +172,43 @@ public class XWTLoader implements IXWTLoader {
 		logger = log;
 	}
 
+	/**
+	 * Get the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	public Object getPropertyValue(Object uiElement, IProperty property) {
+		return UserData.getLocalData(uiElement, property);
+	}
+
+	/**
+	 * Set the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	public void setPropertyValue(Object uiElement, IProperty property, Object value) {
+		UserData.setLocalData(uiElement, property, value);
+	}
+
+	/**
+	 * Remove the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	public void removePropertyValue(Object uiElement, IProperty property) {
+		UserData.removeLocalData(uiElement, property);
+	}
+
+	/**
+	 * Remove the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	public boolean hasPropertyValue(Object uiElement, IProperty property) {
+		return UserData.hasLocalData(uiElement, property);
+	}
+
+	
 	/**
 	 * 
 	 * @param nsmapace

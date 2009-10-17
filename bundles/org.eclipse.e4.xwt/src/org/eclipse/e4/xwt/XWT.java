@@ -24,7 +24,9 @@ import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.NameScope;
+import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -174,6 +176,16 @@ public class XWT {
 	 */
 	public static Shell findShell(Widget context) {
 		return XWTLoaderManager.getActive().findShell(context);
+	}
+
+	public static IProperty findProperty(Object object, String name) {
+		IMetaclass metaclass = XWTLoaderManager.getActive().getMetaclass(object);
+		return metaclass.findProperty(name);
+	}
+
+	public static IEvent findEvent(Object object, String name) {
+		IMetaclass metaclass = XWTLoaderManager.getActive().getMetaclass(object);
+		return metaclass.findEvent(name);
 	}
 
 	public static IMetaclass getMetaclass(Object object) {
@@ -362,6 +374,42 @@ public class XWT {
 	 */
 	static public IMetaclass registerMetaclass(Class<?> type) {
 		return XWTLoaderManager.getActive().registerMetaclass(type);
+	}
+
+	/**
+	 * Get the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	static public Object getPropertyValue(Object uiElement, IProperty property) {
+		return XWTLoaderManager.getActive().getPropertyValue(uiElement, property);
+	}
+
+	/**
+	 * Set the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	static public void setPropertyValue(Object uiElement, IProperty property, Object value) {
+		XWTLoaderManager.getActive().setPropertyValue(uiElement, property, value);
+	}
+
+	/**
+	 * Remove the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	static public void removePropertyValue(Object uiElement, IProperty property) {
+		XWTLoaderManager.getActive().removePropertyValue(uiElement, property);
+	}
+
+	/**
+	 * Remove the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	static public boolean hasPropertyValue(Object uiElement, IProperty property) {
+		return XWTLoaderManager.getActive().hasPropertyValue(uiElement, property);
 	}
 
 	/**

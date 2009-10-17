@@ -15,12 +15,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IObservableValueManager;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.internal.core.NameScope;
 import org.eclipse.e4.xwt.javabean.Controller;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.TableTreeItem;
@@ -43,7 +45,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 
 public class UserData {
-	private HashMap<String, Object> dictionary = null;
+	private HashMap<Object, Object> dictionary = null;
 	private IObservableValueManager observableValueManager;
 	
 	protected IObservableValueManager getObservableValueManager() {
@@ -54,35 +56,39 @@ public class UserData {
 		this.observableValueManager = observableValueManager;
 	}
 
-	public void setData(String key, Object value) {
+	public void setData(Object key, Object value) {
 		if (dictionary == null) {
-			dictionary = new HashMap<String, Object>();
+			dictionary = new HashMap<Object, Object>();
 		}
 		dictionary.put(key, value);
+		if (observableValueManager != null && (key instanceof IProperty)) {
+			IObservableValue observableValue = observableValueManager.getValue((IProperty)key);
+			observableValue.setValue(value);
+		}
 	}
 	
-	public Object getData(String key) {
+	public Object getData(Object key) {
 		if (dictionary == null) {
 			return null;
 		}
 		return dictionary.get(key);
 	}
 
-	public Object removeData(String key) {
+	public Object removeData(Object key) {
 		if (dictionary == null) {
 			return null;
 		}
 		return dictionary.remove(key);
 	}
 
-	public boolean containsKey(String key) {
+	public boolean containsKey(Object key) {
 		if (dictionary == null) {
 			return false;
 		}
 		return dictionary.containsKey(key);
 	}
 
-	public Collection<String> keySet() {
+	public Collection<Object> keySet() {
 		if (dictionary == null) {
 			return Collections.EMPTY_LIST;
 		}
@@ -180,7 +186,7 @@ public class UserData {
 	}
 
 	public static void setCLR(Widget widget, Object type) {
-		setData(widget, IUserDataConstants.XWT_CLR_KEY, type);
+		setLocalData(widget, IUserDataConstants.XWT_CLR_KEY, type);
 	}
 
 	public static Object getCLR(Widget widget) {
@@ -283,7 +289,7 @@ public class UserData {
 	}
 
 	public static void setTriggers(Object widget, TriggerBase[] triggers) {
-		setData(widget, IUserDataConstants.XWT_TRIGGERS_KEY, triggers);
+		setLocalData(widget, IUserDataConstants.XWT_TRIGGERS_KEY, triggers);
 	}
 
 	public static Widget getDataContextHost(Widget widget) {
@@ -313,7 +319,7 @@ public class UserData {
 	}
 
 	public static void setDataContext(Object widget, Object dataContext) {
-		setData(widget, IUserDataConstants.XWT_DATACONTEXT_KEY, dataContext);
+		setLocalData(widget, IUserDataConstants.XWT_DATACONTEXT_KEY, dataContext);
 	}
 	
 	public static Widget getWidget(Object target) {
@@ -333,6 +339,18 @@ public class UserData {
 		return getLocalData(object, IUserDataConstants.XWT_DATACONTEXT_KEY);
 	}
 
+	public static Object getLocalData(Object object, IProperty property) {
+		Widget widget = getWidget(object);
+		if (widget == null) {
+			return null;
+		}
+		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		if (dataDictionary == null) {
+			return null;
+		}
+		return dataDictionary.getData(property);
+	}
+
 	public static Object getLocalData(Object object, String key) {
 		Widget widget = getWidget(object);
 		if (widget == null) {
@@ -343,6 +361,30 @@ public class UserData {
 			return null;
 		}
 		return dataDictionary.getData(key);
+	}
+
+	public static boolean hasLocalData(Object object, IProperty property) {
+		Widget widget = getWidget(object);
+		if (widget == null) {
+			return false;
+		}
+		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		if (dataDictionary == null) {
+			return false;
+		}
+		return dataDictionary.containsKey(property);
+	}
+
+	public static void removeLocalData(Object object, IProperty property) {
+		Widget widget = getWidget(object);
+		if (widget == null) {
+			return;
+		}
+		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		if (dataDictionary == null) {
+			return;
+		}
+		dataDictionary.removeData(property);
 	}
 
 	public static void removeLocalData(Object object, String key) {
@@ -363,19 +405,19 @@ public class UserData {
 	}
 
 	public static void setResources(Object object, Map<?, ?> resources) {
-		setData(object, IUserDataConstants.XWT_RESOURCES_KEY, resources);
+		setLocalData(object, IUserDataConstants.XWT_RESOURCES_KEY, resources);
 	}
 
 	public static void setParent(Object object, Object parent) {
-		setData(object, IUserDataConstants.XWT_PARENT_KEY, parent);
+		setLocalData(object, IUserDataConstants.XWT_PARENT_KEY, parent);
 	}
 
 	public static void setViewer(Object object, Object parent) {
-		setData(object, IUserDataConstants.XWT_VIEWER_KEY, parent);
+		setLocalData(object, IUserDataConstants.XWT_VIEWER_KEY, parent);
 	}
 
 	public static void setEventController(Object object, Controller controller) {
-		setData(object, IUserDataConstants.XWT_CONTROLLER_KEY, controller);
+		setLocalData(object, IUserDataConstants.XWT_CONTROLLER_KEY, controller);
 	}
 
 	public static Controller updateEventController(Object object) {
@@ -388,9 +430,14 @@ public class UserData {
 		return controller;
 	}
 
-	public static void setData(Object object, String key, Object value) {
+	public static void setLocalData(Object object, String key, Object value) {
 		UserData dataDictionary = updateDataDictionary(object);
 		dataDictionary.setData(key, value);
+	}
+
+	public static void setLocalData(Object object, IProperty property, Object value) {
+		UserData dataDictionary = updateDataDictionary(object);
+		dataDictionary.setData(property, value);
 	}
 
 	public static IObservableValueManager getObservableValueManager(Object object) {
