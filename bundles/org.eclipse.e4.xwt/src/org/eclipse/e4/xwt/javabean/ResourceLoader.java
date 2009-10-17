@@ -1199,7 +1199,27 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (attribute == null) {
 			attribute = element.getAttribute(attrName);
 		}
-		IProperty property = metaclass.findProperty(propertyName);
+		IProperty property = null;
+		boolean isAttached = false;
+		{
+			String prefix = attribute.getPrefix();
+			if (prefix == null) {
+				property = metaclass.findProperty(propertyName);
+			} else {
+				//
+				IMetaclass metaclassAttached = loader.getMetaclass(prefix,
+						attribute.getNamespace());
+				if (metaclassAttached != null) {
+					property = metaclassAttached.findProperty(propertyName);
+					isAttached = true;
+				} else {
+					LoggerManager.log(attribute.getNamespace() + " -> "
+							+ prefix + " is not found.");
+					return;
+				}
+			}
+		}
+		
 		if (propertyName.equals(IConstants.XAML_DATACONTEXT)) {
 			property = null;
 		}
@@ -1346,7 +1366,12 @@ public class ResourceLoader implements IVisualElementLoader {
 								+ " is not found"));
 					}
 				}
-				property.setValue(target, value);
+				if (isAttached) {
+					UserData.setLocalData(target, property, value);
+				}
+				else {
+					property.setValue(target, value);
+				}
 			} else {
 				if (value == null) {
 					value = property.getValue(target);
