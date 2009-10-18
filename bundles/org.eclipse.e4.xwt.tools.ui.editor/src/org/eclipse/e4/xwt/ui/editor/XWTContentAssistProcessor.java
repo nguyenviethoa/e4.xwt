@@ -20,8 +20,10 @@ import java.util.List;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTMaps;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -236,8 +238,8 @@ public class XWTContentAssistProcessor extends AbstractContentAssistProcessor im
 				}
 
 				eventName = Character.toUpperCase(eventName.charAt(0)) + eventName.substring(1) + "Event";
-				if (event.getName() != null && event.getName().equals(Metaclass.LOADED)) {
-					eventName = Metaclass.LOADED;
+				if (event.getName() != null && event.getName().equals(IEventConstants.XWT_LOADED)) {
+					eventName = IEventConstants.XWT_LOADED;
 				}
 
 				if (!existing.contains(eventName)) {
