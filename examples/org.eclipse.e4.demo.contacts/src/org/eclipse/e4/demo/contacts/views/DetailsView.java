@@ -14,14 +14,14 @@ import java.net.URL;
 
 import org.eclipse.e4.demo.contacts.handlers.FadeAnimation;
 import org.eclipse.e4.demo.contacts.model.Contact;
-import org.eclipse.e4.xwt.ui.workbench.views.XWTInputPart;
+import org.eclipse.e4.xwt.ui.workbench.views.XWTSelectionStaticPart;
 
 /**
  * 
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class DetailsView extends XWTInputPart {
+public class DetailsView extends XWTSelectionStaticPart {
 
 	public Class<Contact> getInputType() {
 		return Contact.class;
@@ -29,7 +29,7 @@ public class DetailsView extends XWTInputPart {
 	
 	protected void refresh(URL url, Object dataContext, ClassLoader loader) {
 		FadeAnimation animation = new FadeAnimation(parent); 
-		animation.setStep(2);
+		animation.setStep(10);
 		super.refresh(url, dataContext, loader);
 		animation.play();
 	}

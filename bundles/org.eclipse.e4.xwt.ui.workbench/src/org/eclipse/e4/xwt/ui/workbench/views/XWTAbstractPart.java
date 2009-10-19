@@ -47,6 +47,8 @@ public abstract class XWTAbstractPart implements IContentPart {
 	}
 
 	private IEclipseContext context;
+	
+	protected Object dataContext;
 
 	public IEclipseContext getContext() {
 		return context;
@@ -61,8 +63,11 @@ public abstract class XWTAbstractPart implements IContentPart {
 	}
 
 	public Object getDataContext() {
+		if (dataContext != null) {
+			return dataContext;
+		}
 		return getContext();
-	}	
+	}
 
 	@In
 	public void setParent(Composite parent) {
@@ -85,6 +90,9 @@ public abstract class XWTAbstractPart implements IContentPart {
 	}
 	
 	protected void refresh(URL url, Object dataContext, ClassLoader loader) {
+		if (parent == null) {
+			return;
+		}
 		parent.setVisible(false);
 		for (Control child : parent.getChildren()) {
 			child.dispose();

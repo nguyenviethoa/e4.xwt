@@ -10,25 +10,19 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.workbench.views;
 
-import java.net.URL;
-
-import org.eclipse.e4.core.services.annotations.PostConstruct;
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.ui.workbench.IStaticPart;
-
 /**
- * The default class to handle the connection with e4 workbench.
- * As the value of data context. by default, there are two possibilities: Selection and DataContext 
+ * This part uses the Selection variable as data context
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class XWTStaticPart extends XWTAbstractPart implements IStaticPart {
-	@PostConstruct
-	protected void refresh() {
-		refresh(getURL(), getDataContext(), getClassLoader());
+public class XWTSelectionStaticPart extends XWTStaticPart {
+
+	public XWTSelectionStaticPart() {
 	}
+
+	public void setSelection(Object selection) {
+		dataContext = selection;
 		
-	public URL getURL() {
-		return this.getClass().getResource(this.getClass().getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		refresh();
 	}
 }
