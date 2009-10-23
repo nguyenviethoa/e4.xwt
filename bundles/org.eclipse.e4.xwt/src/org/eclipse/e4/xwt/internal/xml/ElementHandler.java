@@ -466,13 +466,13 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 			String attrName = attrs.getLocalName(i);
 
 			Attribute attribute;
-			int index = attrName.indexOf('.');
+			int index = attrName.lastIndexOf('.');
 			if (index != -1) {
-				String prefix = normalizeName(attrName.substring(0, attrName.indexOf('.')));
-				String attributeName = (XWT.isXWTNamespace(attrUri) ? normalizeName(attrName.substring(attrName.indexOf('.') + 1)) : attrName);
+				String prefix = normalizeName(attrName.substring(0, index));
+				String attributeName = (XWT.isXWTNamespace(attrUri) ? normalizeName(attrName.substring(index + 1)) : attrName);
 
 				attribute = new Attribute(attrUri, attributeName, id);
-				attribute.setPrefix(prefix);
+				attribute.setNamePrefix(prefix);
 			} else {
 				attribute = new Attribute(attrUri, (XWT.isXWTNamespace(attrUri) ? normalizeName(attrName) : attrName), id);
 			}
@@ -593,12 +593,12 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 				String attrName = attrs.getLocalName(i);
 
 				Attribute attr;
-				int index = attrName.indexOf('.');
+				int index = attrName.lastIndexOf('.');
 				if (index != -1) {
-					String prefix = normalizeName(attrName.substring(0, attrName.indexOf('.')));
-					String aName = (XWT.isXWTNamespace(namespace) ? normalizeName(attrName.substring(attrName.indexOf('.') + 1)) : attrName);
+					String prefix = normalizeName(attrName.substring(0, index));
+					String aName = (XWT.isXWTNamespace(namespace) ? normalizeName(attrName.substring(index + 1)) : attrName);
 					attr = new Attribute(attrUri, aName, elementId);
-					attr.setPrefix(prefix);
+					attr.setNamePrefix(prefix);
 				} else {
 					attr = new Attribute(attrUri, (XWT.isXWTNamespace(namespace) ? normalizeName(attrName) : attrName), elementId);
 				}

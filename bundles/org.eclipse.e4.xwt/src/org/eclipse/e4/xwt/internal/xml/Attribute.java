@@ -17,7 +17,7 @@ import java.util.Collection;
  * @version 1.0
  */
 public class Attribute extends Element {
-	protected String prefix;
+	protected String namePrefix;
 
 	/**
 	 * @param manager
@@ -44,11 +44,11 @@ public class Attribute extends Element {
 		return attribute;
 	}
 
-	public String getPrefix() {
-		return prefix;
+	public String getNamePrefix() {
+		return namePrefix;
 	}
 
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+	public void setNamePrefix(String namePrefix) {
+		this.namePrefix = namePrefix;
 	}
 }

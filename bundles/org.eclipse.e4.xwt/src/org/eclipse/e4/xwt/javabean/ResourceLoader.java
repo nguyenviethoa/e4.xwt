@@ -1202,19 +1202,19 @@ public class ResourceLoader implements IVisualElementLoader {
 		IProperty property = null;
 		boolean isAttached = false;
 		{
-			String prefix = attribute.getPrefix();
-			if (prefix == null) {
+			String namePrefix = attribute.getNamePrefix();
+			if (namePrefix == null) {
 				property = metaclass.findProperty(propertyName);
 			} else {
 				//
-				IMetaclass metaclassAttached = loader.getMetaclass(prefix,
+				IMetaclass metaclassAttached = loader.getMetaclass(namePrefix,
 						attribute.getNamespace());
 				if (metaclassAttached != null) {
 					property = metaclassAttached.findProperty(propertyName);
 					isAttached = true;
 				} else {
 					LoggerManager.log(attribute.getNamespace() + " -> "
-							+ prefix + " is not found.");
+							+ namePrefix + " is not found.");
 					return;
 				}
 			}
