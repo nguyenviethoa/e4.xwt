@@ -15,7 +15,8 @@ import java.beans.PropertyChangeSupport;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.eclipse.e4.core.services.annotations.In;
+import javax.inject.Inject;
+
 import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
@@ -54,7 +55,7 @@ public abstract class XWTAbstractPart implements IContentPart {
 		return context;
 	}
 
-	@In
+	@Inject
 	public void setContext(IEclipseContext context) {
 		if (context == null) {
 			return;
@@ -69,7 +70,7 @@ public abstract class XWTAbstractPart implements IContentPart {
 		return getContext();
 	}
 
-	@In
+	@Inject
 	public void setParent(Composite parent) {
 		if (parent != null && this.parent == null) {
 			this.parent = parent;
