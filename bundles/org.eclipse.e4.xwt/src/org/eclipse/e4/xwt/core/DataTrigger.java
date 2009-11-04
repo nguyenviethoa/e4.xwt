@@ -17,8 +17,13 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.utils.OperatorHelper;
 import org.eclipse.swt.widgets.Widget;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class DataTrigger extends TriggerBase {
 	private Object value;
 	private Operator operator = Operator.EQ;
@@ -104,7 +109,8 @@ public class DataTrigger extends TriggerBase {
 						normalizedValue = converter.convert(normalizedValue);
 					}
 				}
-				if (!currentValue.equals(normalizedValue)) {
+				if (!OperatorHelper.compare(currentValue, operator, normalizedValue)) {
+					restoreValues();
 					return;					
 				}
 				

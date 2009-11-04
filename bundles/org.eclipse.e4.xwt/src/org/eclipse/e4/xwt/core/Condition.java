@@ -15,7 +15,12 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.utils.OperatorHelper;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class Condition {
 	public static final Condition[] EMPTY_ARRAY = new Condition[0];
 
@@ -108,7 +113,7 @@ public class Condition {
 					normalizedValue = converter.convert(normalizedValue);
 				}
 			}
-			return existingValue.equals(normalizedValue);
+			return OperatorHelper.compare(existingValue, operator, normalizedValue);
 		}
 		return false;
 	}

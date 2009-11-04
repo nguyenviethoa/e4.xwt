@@ -20,6 +20,7 @@ import org.eclipse.e4.xwt.databinding.BeanObservableValue;
 import org.eclipse.e4.xwt.databinding.ObservableValueUtil;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.utils.OperatorHelper;
 import org.eclipse.swt.widgets.Widget;
 
 public class Trigger extends TriggerBase {
@@ -98,7 +99,7 @@ public class Trigger extends TriggerBase {
 						realValue = converter.convert(value);						
 					}
 					Object newValue = event.diff.getNewValue();
-					if (!newValue.equals(realValue)) {
+					if (!OperatorHelper.compare(newValue, operator, realValue)) {
 						restoreValues();
 						return;
 					}
