@@ -17,11 +17,10 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.widgets.Event;
 
-
-public class ListViewer {
+public class ListViewer_CollectionViewSource {
 	public static void main(String[] args) {
 		
-		URL url = ListViewer.class.getResource(ListViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ListViewer_CollectionViewSource.class.getResource(ListViewer_CollectionViewSource.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -30,7 +29,7 @@ public class ListViewer {
 	}
 	
 	protected void addPerson(Object sender, Event event) {
-		org.eclipse.jface.viewers.ListViewer listViewer = (org.eclipse.jface.viewers.ListViewer) XWT.findElementByName(event.widget, "ListViewer");
+		org.eclipse.jface.viewers.ListViewer listViewer = (org.eclipse.jface.viewers.ListViewer) XWT.findElementByName(event.widget, "ListViewer1");
 		IObservableCollection collection = (IObservableCollection) listViewer.getInput();
 		Employee employee = new Employee();
 		employee.setName("New hired one");

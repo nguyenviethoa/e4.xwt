@@ -74,11 +74,22 @@ public class InputBeanProperty extends DelegateProperty {
 			else if (target instanceof ColumnViewer){
 				ColumnViewer viewer = (ColumnViewer) target;
 				Object[] properties = viewer.getColumnProperties();
-				String[] propertyNames = new String[properties.length];
-				for (int i = 0; i < properties.length; i++) {
-					propertyNames[i] = properties[i].toString();					
+				String[] propertyNames = null;
+				if (properties != null) {
+					int size = 0;
+					for (int i = 0; i < properties.length; i++) {
+						if (properties[i] != null) {
+							size ++;
+						}
+					}
+
+					propertyNames = new String[size];
+					for (int i = 0, j = 0; i < properties.length; i++) {
+						if (properties[i] != null) {
+							propertyNames[j++] = properties[i].toString();												
+						}
+					}
 				}
-				
 				if (!isArrayProperty()) {
 					if (value instanceof List<?>) {
 						IContentProvider contentProvider = viewer.getContentProvider();
@@ -86,7 +97,7 @@ public class InputBeanProperty extends DelegateProperty {
 							contentProvider = new ObservableListContentProvider();
 							viewer.setContentProvider(contentProvider);
 						}
-						if (contentProvider instanceof ObservableListContentProvider) {
+						if (propertyNames != null && contentProvider instanceof ObservableListContentProvider) {
 							ObservableListContentProvider listContentProvider = (ObservableListContentProvider) contentProvider;
 							viewer.setLabelProvider(new ObservableMapLabelProvider(PojoObservables
 									.observeMaps(listContentProvider.getKnownElements(), Object.class,
@@ -100,7 +111,7 @@ public class InputBeanProperty extends DelegateProperty {
 							contentProvider = new ObservableSetContentProvider();
 							viewer.setContentProvider(contentProvider);
 						}
-						if (contentProvider instanceof ObservableSetContentProvider) {
+						if (propertyNames != null && contentProvider instanceof ObservableSetContentProvider) {
 							ObservableSetContentProvider setContentProvider = (ObservableSetContentProvider) contentProvider;
 							viewer.setLabelProvider(new ObservableMapLabelProvider(PojoObservables
 									.observeMaps(setContentProvider.getKnownElements(), Object.class,

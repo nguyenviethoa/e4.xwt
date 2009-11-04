@@ -18,10 +18,10 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.widgets.Event;
 
 
-public class ListViewer {
+public class ListViewer_Simple {
 	public static void main(String[] args) {
 		
-		URL url = ListViewer.class.getResource(ListViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ListViewer_Simple.class.getResource(ListViewer_Simple.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

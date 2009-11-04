@@ -23,6 +23,7 @@ public class TriggerTestSuite extends TestSuite {
 	}
 
 	public TriggerTestSuite() {
+		addTest(new TestSuite(OperatorHelperTest.class));
 		addTest(new TestSuite(TriggerTests.class));
 		addTest(new TestSuite(MultiTriggerTests.class));
 		addTest(new TestSuite(DataTriggerTests.class));

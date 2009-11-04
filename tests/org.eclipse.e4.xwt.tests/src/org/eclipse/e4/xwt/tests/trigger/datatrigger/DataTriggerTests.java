@@ -54,7 +54,7 @@ public class DataTriggerTests extends XWTTestCase {
 
 			public void checkButton() {
 				Button button = (Button) XWT.findElementByName(root, "Button");
-				assertEquals("Maried", button.getText());
+				assertEquals("", button.getText());
 			}
 		});
 	}

@@ -22,6 +22,7 @@ import org.eclipse.e4.xwt.tests.jface.JFaceTestSuite;
 import org.eclipse.e4.xwt.tests.name.NameTestSuite;
 import org.eclipse.e4.xwt.tests.namespace.handler.NamespacehandlerTestSuite;
 import org.eclipse.e4.xwt.tests.resources.ResourcesTestSuite;
+import org.eclipse.e4.xwt.tests.trigger.TriggerTestSuite;
 
 /**
  * 
@@ -113,7 +114,7 @@ public class XwtTestSuite extends TestSuite {
 	}
 
 	protected void addTriggerTests() {
-		addTest(BindingTestSuite.suite());
+		addTest(TriggerTestSuite.suite());
 	}
 
 	protected void addCustomizationTests() {
