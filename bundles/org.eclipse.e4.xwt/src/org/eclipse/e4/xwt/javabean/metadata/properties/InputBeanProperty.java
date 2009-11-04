@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -49,6 +50,12 @@ public class InputBeanProperty extends DelegateProperty {
 			value = ((CollectionViewSource) value).getView();
 		}
 		else if (!(value instanceof IObservableCollection)) {
+			Class<?> elementType = getElementType();
+			if (value.getClass().isArray()) {
+				Object[] array = (Object[])value;
+				elementType = value.getClass().getComponentType();
+				value = Arrays.asList(array);
+			}
 			if (target instanceof AbstractListViewer){				
 				AbstractListViewer viewer = (AbstractListViewer) target;
 				
@@ -59,7 +66,7 @@ public class InputBeanProperty extends DelegateProperty {
 							contentProvider = new ObservableListContentProvider();
 							viewer.setContentProvider(contentProvider);
 						}
-						value = new WritableList(XWT.getRealm(), (List<?>)value, getElementType());						
+						value = new WritableList(XWT.getRealm(), (List<?>)value, elementType);						
 					}
 					else if (value instanceof Set<?>) {
 						IContentProvider contentProvider = viewer.getContentProvider();
@@ -67,7 +74,7 @@ public class InputBeanProperty extends DelegateProperty {
 							contentProvider = new ObservableSetContentProvider();
 							viewer.setContentProvider(contentProvider);
 						}
-						value = new WritableSet(XWT.getRealm(), (List<?>)value, getElementType());						
+						value = new WritableSet(XWT.getRealm(), (List<?>)value, elementType);						
 					}
 				}
 			}
@@ -103,7 +110,7 @@ public class InputBeanProperty extends DelegateProperty {
 									.observeMaps(listContentProvider.getKnownElements(), Object.class,
 											propertyNames)));					
 						}
-						value = new WritableList(XWT.getRealm(), (List<?>)value, getElementType());						
+						value = new WritableList(XWT.getRealm(), (List<?>)value, elementType);						
 					}
 					else if (value instanceof Set<?>) {
 						IContentProvider contentProvider = viewer.getContentProvider();
@@ -117,7 +124,7 @@ public class InputBeanProperty extends DelegateProperty {
 									.observeMaps(setContentProvider.getKnownElements(), Object.class,
 											propertyNames)));					
 						}
-						value = new WritableSet(XWT.getRealm(), (List<?>)value, getElementType());						
+						value = new WritableSet(XWT.getRealm(), (List<?>)value, elementType);						
 					}
 				}
 			}
@@ -134,7 +141,7 @@ public class InputBeanProperty extends DelegateProperty {
 		return type.isArray();
 	}
 
-	protected Object getElementType() {
+	protected Class<?> getElementType() {
 		IProperty property = getDelegate();
 		Class<?> type = property.getType();
 		if (type == null) {

@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.collection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -68,11 +69,17 @@ public class CollectionViewSource {
 		if (view == null) {
 			Object source = getSource();
 			if (!(source instanceof IObservableCollection)) {
+				Class<?> elementType = getCollectionViewType();
+				if (source.getClass().isArray()) {
+					Object[] array = (Object[])source;
+					elementType = source.getClass().getComponentType();
+					source = Arrays.asList(array);
+				}
 				if (source instanceof List<?>) {
-					view = new WritableList(XWT.getRealm(), (List<?>)source, getCollectionViewType());
+					view = new WritableList(XWT.getRealm(), (List<?>)source, elementType);
 				}
 				else if (source instanceof Set<?>) {
-					view = new WritableSet(XWT.getRealm(), (List<?>)source, getCollectionViewType());
+					view = new WritableSet(XWT.getRealm(), (List<?>)source, elementType);
 				}
 			}
 		}
