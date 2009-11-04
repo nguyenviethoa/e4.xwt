@@ -43,6 +43,7 @@ import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
+import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.core.IRenderingContext;
 import org.eclipse.e4.xwt.core.IVisualElementLoader;
 import org.eclipse.e4.xwt.core.Setter;
@@ -62,7 +63,6 @@ import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.internal.xml.Attribute;
 import org.eclipse.e4.xwt.internal.xml.DocumentObject;
 import org.eclipse.e4.xwt.internal.xml.Element;
-import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
@@ -164,7 +164,7 @@ public class ResourceLoader implements IVisualElementLoader {
 
 		public void updateEvent(IRenderingContext context, Widget control,
 				IEvent event, String handler) {
-			Controller eventController = UserData
+			IEventHandler eventController = UserData
 					.updateEventController(control);
 			Method method = null;
 			Object clrObject = null;

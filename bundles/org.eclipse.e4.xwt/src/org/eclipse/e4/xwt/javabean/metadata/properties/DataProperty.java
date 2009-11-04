@@ -12,6 +12,12 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import org.eclipse.e4.xwt.internal.utils.UserData;
 
+/**
+ * Additional property to store in user data in widget
+ * 
+ * @author yyang
+ *
+ */
 public class DataProperty extends AbstractProperty {
 	protected String key;
 	protected Object defaultValue;

@@ -8,22 +8,19 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.core;
+package org.eclipse.e4.xwt.internal.core;
 
-import org.eclipse.e4.xwt.IEventGroup;
+import org.eclipse.e4.xwt.ILanguageSupport;
+import org.eclipse.e4.xwt.core.IEventHandler;
+import org.eclipse.e4.xwt.javabean.Controller;
 
-/**
- * 
- * @author yyang (yves.yang@soyatec.com)
- */
-public abstract class AbstractEventGroup implements IEventGroup {
-	protected String[] names; 
-	
-	public AbstractEventGroup(String ... names) {
-		this.names = names;
+public class JavaLanguageSupport implements ILanguageSupport {
+
+	public IEventHandler createEventHandler() {
+		return new Controller();
 	}
-	
-	public String[] getEventNames() {
-		return names;
+
+	public String getName() {
+		return "Java";
 	}
 }

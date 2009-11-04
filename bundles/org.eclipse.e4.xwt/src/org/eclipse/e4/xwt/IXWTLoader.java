@@ -505,5 +505,18 @@ public interface IXWTLoader {
 	public abstract ILoadingContext getLoadingContext();
 
 	public abstract void setLoadingContext(ILoadingContext loadingContext);
+	
+	/**
+	 * Change the language support
+	 * 
+	 * @return ILoadingContext
+	 */
+	public abstract void setLanguageSupport(ILanguageSupport languageSupport);
 
+	/**
+	 * Get current language support
+	 * 
+	 * @return ILoadingContext
+	 */
+	public abstract ILanguageSupport getLanguageSupport();
 }

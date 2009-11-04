@@ -11,10 +11,10 @@
 package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.e4.xwt.IObservableValueManager;
+import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObservableValueManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.e4.xwt.javabean.Controller;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IEvent;
 
@@ -24,7 +24,7 @@ public class EventPropertyObservableValue extends XWTObservableValue {
 	public EventPropertyObservableValue(Object observed, EventProperty property) {
 		super(Boolean.class, observed);
 		this.property = property;
-		Controller controller = UserData.findEventController(observed);
+		IEventHandler controller = UserData.findEventController(observed);
 		if (controller == null) {
 			controller = UserData.updateEventController(observed);
 		}

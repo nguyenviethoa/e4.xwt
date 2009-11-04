@@ -15,12 +15,15 @@ import java.lang.reflect.Method;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.e4.xwt.javabean.Controller;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public class EventTrigger extends TriggerBase {
 	protected String sourceName;
 	protected String routedEvent;
@@ -62,7 +65,7 @@ public class EventTrigger extends TriggerBase {
 			}
 			
 			Widget widget = UserData.getWidget(target);
-			Controller eventController = UserData.updateEventController(widget);
+			IEventHandler eventController = UserData.updateEventController(widget);
 			SettersAction runnable = createRunnable(source);
 			try {
 				Method method = runnable.getClass().getDeclaredMethod("run", Object.class, Event.class);

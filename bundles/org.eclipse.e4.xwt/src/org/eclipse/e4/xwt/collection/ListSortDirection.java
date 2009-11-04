@@ -8,22 +8,13 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.core;
-
-import org.eclipse.e4.xwt.IEventGroup;
+package org.eclipse.e4.xwt.collection;
 
 /**
+ * Specifies the direction of a sort operation.
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public abstract class AbstractEventGroup implements IEventGroup {
-	protected String[] names; 
-	
-	public AbstractEventGroup(String ... names) {
-		this.names = names;
-	}
-	
-	public String[] getEventNames() {
-		return names;
-	}
+public enum ListSortDirection {
+	Ascending, Descending;
 }

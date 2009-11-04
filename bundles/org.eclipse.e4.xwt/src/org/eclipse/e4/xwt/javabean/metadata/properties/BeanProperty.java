@@ -34,15 +34,27 @@ public class BeanProperty extends AbstractProperty {
 			// Bug of invoke boolean value.
 			Class<?>[] parameterTypes = writeMethod.getParameterTypes();
 			if (parameterTypes.length == 1) {
-				Class<?> paraType = parameterTypes[0];
-				if (!IBinding.class.isAssignableFrom(getType())) {
-					IConverter convertor = XWT.findConvertor(value == null ? Object.class : value.getClass(), paraType);
+				Class<?> type = parameterTypes[0];
+				Class<?> propertyType = getType();
+				if (propertyType != Object.class) {
+					type = propertyType;
+				}
+				if (!IBinding.class.isAssignableFrom(propertyType)) {
+					IConverter convertor = XWT.findConvertor(value == null ? Object.class : value.getClass(), type);
 					if (convertor != null) {
 						value = convertor.convert(value);
 					}					
 				}
-				writeMethod.invoke(target, value);
-				fireSetPostAction(target, this, value);
+				
+				Object oldValue = null;
+				Method readMethod = descriptor.getReadMethod();
+				if (readMethod != null) {
+					oldValue = readMethod.invoke(target);
+				}
+				if (oldValue != value) {
+					writeMethod.invoke(target, value);
+					fireSetPostAction(target, this, value);
+				}
 			}
 		}
 	}

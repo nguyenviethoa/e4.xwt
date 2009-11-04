@@ -16,7 +16,6 @@ import org.eclipse.e4.xwt.IObservableValueManager;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.e4.xwt.javabean.Controller;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -30,7 +29,7 @@ public class RadioEventGroup extends AbstractEventGroup {
 
 	public void fireEvent(IObservableValueManager manager, IProperty property) {
 		Object host = manager.getHost();
-		Controller controller = UserData.findEventController(host);
+		IEventHandler controller = UserData.findEventController(host);
 		if (controller == null) {
 			controller = UserData.updateEventController(host);
 		}
@@ -55,7 +54,7 @@ public class RadioEventGroup extends AbstractEventGroup {
 	public void registerEvent(IObservableValueManager manager,
 			IProperty property) {
 		Object host = manager.getHost();
-		Controller controller = UserData.findEventController(host);
+		IEventHandler controller = UserData.findEventController(host);
 		if (controller == null) {
 			controller = UserData.updateEventController(host);
 		}

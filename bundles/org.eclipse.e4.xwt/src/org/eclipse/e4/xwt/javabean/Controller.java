@@ -13,13 +13,14 @@ package org.eclipse.e4.xwt.javabean;
 import java.lang.reflect.Method;
 
 import org.eclipse.e4.xwt.IEventConstants;
+import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-public class Controller implements Listener {
+public class Controller implements Listener, IEventHandler {
 	int waterMark = 0;
 	protected int[] eventTypes = null;
 	protected String[] names = null;
@@ -53,6 +54,9 @@ public class Controller implements Listener {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#hasEvent(java.lang.Object, org.eclipse.e4.xwt.metadata.IEvent)
+	 */
 	public boolean hasEvent(Object receiver, IEvent event) {
 		if (receivers == null) {
 			return false;
@@ -66,6 +70,9 @@ public class Controller implements Listener {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#addEvent(int, java.lang.String, org.eclipse.e4.xwt.metadata.IEvent, org.eclipse.swt.widgets.Widget, java.lang.Object, java.lang.Object, java.lang.reflect.Method)
+	 */
 	public void addEvent(int eventType, String name, IEvent event,
 			Widget control, Object receiver, Object arg, Method method) {
 		if (eventTypes == null) {
@@ -111,6 +118,9 @@ public class Controller implements Listener {
 		control.addListener(eventType, this);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#setEvent(org.eclipse.e4.xwt.metadata.IEvent, org.eclipse.swt.widgets.Widget, java.lang.Object, java.lang.Object, java.lang.reflect.Method)
+	 */
 	public void setEvent(IEvent event, Widget control, Object receiver,
 			Object arg, Method method) {
 		String name = event.getName();
@@ -229,6 +239,9 @@ public class Controller implements Listener {
 		return SWT.None;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#handleEvent(org.eclipse.swt.widgets.Event)
+	 */
 	public void handleEvent(Event e) {
 		fireEvent(e);
 	}

@@ -19,6 +19,7 @@ import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IEventGroup;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
@@ -404,7 +405,7 @@ public class AbstractMetaclass implements IMetaclass {
 						value[existingValue.length] = control;
 					}
 					useProperty.setValue(parent, value);
-				} else if (Collection.class.isAssignableFrom(propertyType)) {
+				} else if (Collection.class.isAssignableFrom(propertyType) && !(control instanceof IBinding)) {
 					Collection existingValue = (Collection) useProperty
 							.getValue(parent);
 					if (existingValue == null) {
@@ -563,7 +564,7 @@ public class AbstractMetaclass implements IMetaclass {
 				}
 				if (p.getPropertyType() != null) {
 					IProperty property = (superClass != null ? superClass
-							.findProperty(p.getName()) : null);
+							.findProperty(p.getName().toLowerCase()) : null);
 					if (property != null && !property.isDefault()) {
 						addProperty(property);
 					} else {
