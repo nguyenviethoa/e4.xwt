@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.widgets.Control;
 
 public class JFacesHelper {
@@ -69,5 +70,26 @@ public class JFacesHelper {
 			System.out.println("No JFaces support");
 		}
 		JFACES_SUPPORTED_ELEMENTS = collector.toArray(new Class[collector.size()]);
+	}
+	
+	public static String[] getViewerProperties(ColumnViewer viewer) {
+		Object[] properties = viewer.getColumnProperties();
+		String[] propertyNames = null;
+		if (properties != null) {
+			int size = 0;
+			for (int i = 0; i < properties.length; i++) {
+				if (properties[i] != null) {
+					size ++;
+				}
+			}
+
+			propertyNames = new String[size];
+			for (int i = 0, j = 0; i < properties.length; i++) {
+				if (properties[i] != null) {
+					propertyNames[j++] = properties[i].toString();												
+				}
+			}
+		}
+		return propertyNames;
 	}
 }

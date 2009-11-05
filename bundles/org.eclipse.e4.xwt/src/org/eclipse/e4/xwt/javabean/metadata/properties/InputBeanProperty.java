@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservableCollection;
-import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.collection.CollectionViewSource;
+import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.DelegateProperty;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -66,7 +66,6 @@ public class InputBeanProperty extends DelegateProperty {
 							contentProvider = new ObservableListContentProvider();
 							viewer.setContentProvider(contentProvider);
 						}
-						value = new WritableList(XWT.getRealm(), (List<?>)value, elementType);						
 					}
 					else if (value instanceof Set<?>) {
 						IContentProvider contentProvider = viewer.getContentProvider();
@@ -74,29 +73,16 @@ public class InputBeanProperty extends DelegateProperty {
 							contentProvider = new ObservableSetContentProvider();
 							viewer.setContentProvider(contentProvider);
 						}
-						value = new WritableSet(XWT.getRealm(), (List<?>)value, elementType);						
+					}
+					IConverter converter = XWT.findConvertor(value.getClass(), IObservableCollection.class);
+					if (converter != null) {
+						value = converter.convert(value);												
 					}
 				}
 			}
 			else if (target instanceof ColumnViewer){
 				ColumnViewer viewer = (ColumnViewer) target;
-				Object[] properties = viewer.getColumnProperties();
-				String[] propertyNames = null;
-				if (properties != null) {
-					int size = 0;
-					for (int i = 0; i < properties.length; i++) {
-						if (properties[i] != null) {
-							size ++;
-						}
-					}
-
-					propertyNames = new String[size];
-					for (int i = 0, j = 0; i < properties.length; i++) {
-						if (properties[i] != null) {
-							propertyNames[j++] = properties[i].toString();												
-						}
-					}
-				}
+				String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
 				if (!isArrayProperty()) {
 					if (value instanceof List<?>) {
 						IContentProvider contentProvider = viewer.getContentProvider();
@@ -110,7 +96,6 @@ public class InputBeanProperty extends DelegateProperty {
 									.observeMaps(listContentProvider.getKnownElements(), elementType,
 											propertyNames)));					
 						}
-						value = new WritableList(XWT.getRealm(), (List<?>)value, elementType);						
 					}
 					else if (value instanceof Set<?>) {
 						IContentProvider contentProvider = viewer.getContentProvider();
@@ -124,7 +109,10 @@ public class InputBeanProperty extends DelegateProperty {
 									.observeMaps(setContentProvider.getKnownElements(), elementType,
 											propertyNames)));					
 						}
-						value = new WritableSet(XWT.getRealm(), (List<?>)value, elementType);						
+					}
+					IConverter converter = XWT.findConvertor(value.getClass(), IObservableCollection.class);
+					if (converter != null) {
+						value = converter.convert(value);												
 					}
 				}
 			}
