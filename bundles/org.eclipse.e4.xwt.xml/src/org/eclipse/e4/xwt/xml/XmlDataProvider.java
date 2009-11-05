@@ -180,7 +180,7 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 	public IObservableValue createObservableValue(Object valueType, String path) {
 		Object data = getData(path);
 		if (data != null && data instanceof Node) {
-			return new XmlObservableValue(valueType, (Node) data);
+			return new XmlObservableValue(valueType, (Node) data, path);
 		}
 		return null;
 	}
