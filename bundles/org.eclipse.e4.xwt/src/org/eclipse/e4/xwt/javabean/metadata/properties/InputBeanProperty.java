@@ -107,7 +107,7 @@ public class InputBeanProperty extends DelegateProperty {
 						if (propertyNames != null && contentProvider instanceof ObservableListContentProvider) {
 							ObservableListContentProvider listContentProvider = (ObservableListContentProvider) contentProvider;
 							viewer.setLabelProvider(new ObservableMapLabelProvider(PojoObservables
-									.observeMaps(listContentProvider.getKnownElements(), Object.class,
+									.observeMaps(listContentProvider.getKnownElements(), elementType,
 											propertyNames)));					
 						}
 						value = new WritableList(XWT.getRealm(), (List<?>)value, elementType);						
@@ -121,7 +121,7 @@ public class InputBeanProperty extends DelegateProperty {
 						if (propertyNames != null && contentProvider instanceof ObservableSetContentProvider) {
 							ObservableSetContentProvider setContentProvider = (ObservableSetContentProvider) contentProvider;
 							viewer.setLabelProvider(new ObservableMapLabelProvider(PojoObservables
-									.observeMaps(setContentProvider.getKnownElements(), Object.class,
+									.observeMaps(setContentProvider.getKnownElements(), elementType,
 											propertyNames)));					
 						}
 						value = new WritableSet(XWT.getRealm(), (List<?>)value, elementType);						
