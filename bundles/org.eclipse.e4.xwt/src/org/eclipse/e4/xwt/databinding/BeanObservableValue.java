@@ -33,7 +33,7 @@ public class BeanObservableValue extends XWTObservableValue {
 	 * @param observed
 	 */
 	public BeanObservableValue(Object valueType, Object observed, String propertyName) {
-		super(valueType, observed);
+		super(valueType, observed, propertyName);
 		this.propertyName = propertyName;
 	}
 

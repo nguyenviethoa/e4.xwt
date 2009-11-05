@@ -45,7 +45,7 @@ public class CustomDataProvider extends AbstractDataProvider {
 	public IObservableValue createObservableValue(Object valueType, final String path) {
 		Object target = getObjectInstance();
 		if (target != null) {
-			return new XWTObservableValue(valueType, target) {
+			return new XWTObservableValue(valueType, target, path) {
 				@Override
 				protected void doSetApprovedValue(Object value) {
 					CustomDataProvider.this.getObjectInstance().setProperty(path, value);

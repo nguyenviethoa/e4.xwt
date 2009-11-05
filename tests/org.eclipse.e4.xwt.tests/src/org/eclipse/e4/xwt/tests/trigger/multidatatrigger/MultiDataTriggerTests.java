@@ -15,7 +15,6 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
-import org.eclipse.e4.xwt.tests.trigger.multitrigger.MultiTriggerTests;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Text;
 
@@ -46,7 +45,56 @@ public class MultiDataTriggerTests extends XWTTestCase {
 			}
 		});
 	}
-	
+
+	public void test_MultiDataTrigger_Restore1() {
+		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger_Restore.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button button1 = (Button) XWT.findElementByName(root, "Button");
+				selectButton(button1, false);
+				selectButton(button1, true);
+			}
+		},
+		new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Button button1 = (Button) XWT.findElementByName(root, "Button");
+				
+				assertEquals(button1.getText(), "true");
+			}
+		});
+	}
+
+	public void test_MultiDataTrigger_Restore2() {
+		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger_Restore.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button button1 = (Button) XWT.findElementByName(root, "Button");
+				selectButton(button1, false);
+				selectButton(button1, true);
+				selectButton(button1, false);
+			}
+		},
+		new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Button button1 = (Button) XWT.findElementByName(root, "Button");
+				
+				assertEquals(button1.getText(), "");
+			}
+		});
+	}
+
 	public void test_MultiDataTrigger2() {
 		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger.class
 				.getSimpleName()

@@ -32,16 +32,18 @@ public abstract class XWTObservableValue extends AbstractObservableValue impleme
 
 	private EventManager eventManager;
 	private EventListener eventListener;
+	private String path;
 
 	private boolean updating = false;
 
 	/**
 	 * 
 	 */
-	public XWTObservableValue(Object valueType, Object observed) {
+	public XWTObservableValue(Object valueType, Object observed, String path) {
 		super(XWT.getRealm());
 		this.valueType = valueType;
 		this.observed = observed;
+		this.path = path;
 		init();
 	}
 
@@ -64,8 +66,7 @@ public abstract class XWTObservableValue extends AbstractObservableValue impleme
 			};
 		}
 		eventManager = EventManager.getEventManager(observed, getRealm());
-		eventManager.addEventListener(VALUE_CHANGED_EVENT, eventListener);
-
+		eventManager.addEventListener(path, eventListener);
 	}
 
 	/**
@@ -87,7 +88,7 @@ public abstract class XWTObservableValue extends AbstractObservableValue impleme
 		if (!Util.equals(oldValue, value)) {
 			doSetApprovedValue(value);
 			fireValueChange(Diffs.createValueDiff(oldValue, value));
-			eventManager.dispatchEvent(new Event(observed, oldValue, value, VALUE_CHANGED_EVENT));
+			eventManager.dispatchEvent(new Event(observed, oldValue, value, getPath()));
 		}
 		updating = false;
 	}
@@ -130,6 +131,14 @@ public abstract class XWTObservableValue extends AbstractObservableValue impleme
 	 */
 	public Object getValueType() {
 		return valueType;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }

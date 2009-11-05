@@ -22,7 +22,7 @@ public class EventPropertyObservableValue extends XWTObservableValue {
 	private EventProperty property;
 		
 	public EventPropertyObservableValue(Object observed, EventProperty property) {
-		super(Boolean.class, observed);
+		super(Boolean.class, observed, property.getName());
 		this.property = property;
 		IEventHandler controller = UserData.findEventController(observed);
 		if (controller == null) {
