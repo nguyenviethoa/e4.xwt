@@ -9,31 +9,31 @@
 	
 	<TableViewer x:Name="exifTable" input="{Binding}" x:style="FULL_SELECTION">
 		<TableViewer.columns>
-			<TableViewerColumn width="80" text="Name" image="/icons/demo.gif" bindingPath="name"/>
-			<TableViewerColumn width="80" text="Make" bindingPath="make"/>
-			<TableViewerColumn width="80" text="Model" bindingPath="model"/>
-			<TableViewerColumn width="80" text="Orientation" bindingPath="orientation"/>
-			<TableViewerColumn width="80" text="Software" bindingPath="software"/>
-			<TableViewerColumn width="80" text="Time stamp" bindingPath="timestamp"/>
-			<TableViewerColumn width="80" text="GPS Latitude" bindingPath="gpsLatitude"/>
-			<TableViewerColumn width="80" text="GPS Longitude" bindingPath="gpsLongitude"/>
-			<TableViewerColumn width="80" text="Exposure" bindingPath="exposure"/>
-			<TableViewerColumn width="40" text="ISO" bindingPath="iso"/>
-			<TableViewerColumn width="80" text="Aperture" bindingPath="aperture"/>
-			<TableViewerColumn width="80" text="Exposure Comp" bindingPath="exposureComp"/>
-			<TableViewerColumn width="80" text="Flash" bindingPath="flash"/>
-			<TableViewerColumn width="80" text="Width" bindingPath="width"/>
-			<TableViewerColumn width="80" text="Height" bindingPath="height"/>
-			<TableViewerColumn width="80" text="Focal Length" bindingPath="focalLength"/>
-			<TableViewerColumn width="80" text="White Balance" bindingPath="whiteBalance"/>
-			<TableViewerColumn width="80" text="Light Source" bindingPath="lightSource"/>
-			<TableViewerColumn width="80" text="Exposure Program" bindingPath="exposureProgram"/>
+			<TableViewerColumn width="80" text="Name" image="/icons/demo.gif" displayMemberPath="name"/>
+			<TableViewerColumn width="80" text="Make" displayMemberPath="make"/>
+			<TableViewerColumn width="80" text="Model" displayMemberPath="model"/>
+			<TableViewerColumn width="80" text="Orientation" displayMemberPath="orientation"/>
+			<TableViewerColumn width="80" text="Software" displayMemberPath="software"/>
+			<TableViewerColumn width="80" text="Time stamp" displayMemberPath="timestamp"/>
+			<TableViewerColumn width="80" text="GPS Latitude" displayMemberPath="gpsLatitude"/>
+			<TableViewerColumn width="80" text="GPS Longitude" displayMemberPath="gpsLongitude"/>
+			<TableViewerColumn width="80" text="Exposure" displayMemberPath="exposure"/>
+			<TableViewerColumn width="40" text="ISO" displayMemberPath="iso"/>
+			<TableViewerColumn width="80" text="Aperture" displayMemberPath="aperture"/>
+			<TableViewerColumn width="80" text="Exposure Comp" displayMemberPath="exposureComp"/>
+			<TableViewerColumn width="80" text="Flash" displayMemberPath="flash"/>
+			<TableViewerColumn width="80" text="Width" displayMemberPath="width"/>
+			<TableViewerColumn width="80" text="Height" displayMemberPath="height"/>
+			<TableViewerColumn width="80" text="Focal Length" displayMemberPath="focalLength"/>
+			<TableViewerColumn width="80" text="White Balance" displayMemberPath="whiteBalance"/>
+			<TableViewerColumn width="80" text="Light Source" displayMemberPath="lightSource"/>
+			<TableViewerColumn width="80" text="Exposure Program" displayMemberPath="exposureProgram"/>
 		</TableViewer.columns>
 		<TableViewer.contentProvider>
 			<ObservableListContentProvider />
 		</TableViewer.contentProvider>
 		<TableViewer.labelProvider>
-			<DefaultViewerLabelProvider/>
+			<DefaultColumnViewerLabelProvider/>
 		</TableViewer.labelProvider>
 		<TableViewer.table HeaderVisible="true"/>
 		<TableViewer.control.layoutData>
