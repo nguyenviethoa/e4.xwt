@@ -27,6 +27,7 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.FieldProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IObjectInitializer;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Region;
@@ -41,7 +42,8 @@ import org.eclipse.swt.widgets.Widget;
  * 
  * @author xye (xiaowei.ye@soyatec.com)
  */
-public class AbstractMetaclass implements IMetaclass {
+public abstract class AbstractMetaclass implements IMetaclass {
+	public static IObjectInitializer[] EMPTY_INITIALIZERS = new IObjectInitializer[0];
 
 	public static IProperty[] EMPTY_PROPERTIES = new IProperty[0];
 	public static IEvent[] EMPTY_ROUTED_EVENTS = new IEvent[0];
@@ -59,6 +61,7 @@ public class AbstractMetaclass implements IMetaclass {
 	protected boolean buildTypedEvents;
 
 	private boolean initialize = false;
+	private IObjectInitializer[] initializers = EMPTY_INITIALIZERS;
 
 	protected boolean shouldIgnored(Class<?> type, String propertyName,
 			Class<?> propertyType) {
@@ -115,7 +118,8 @@ public class AbstractMetaclass implements IMetaclass {
 			addTypedEvent(IEventConstants.CLOSE, SWT.Close);
 			addTypedEvent(IEventConstants.COLLAPSE, SWT.Collapse);
 			addTypedEvent(IEventConstants.DEACTIVATE, SWT.Deactivate);
-			addTypedEvent(IEventConstants.DEFAULT_SELECTION, SWT.DefaultSelection);
+			addTypedEvent(IEventConstants.DEFAULT_SELECTION,
+					SWT.DefaultSelection);
 			addTypedEvent(IEventConstants.DEICONIFY, SWT.Deiconify);
 			addTypedEvent(IEventConstants.DISPOSE, SWT.Dispose);
 			addTypedEvent(IEventConstants.DRAG_SELECT, SWT.DragDetect);
@@ -133,7 +137,8 @@ public class AbstractMetaclass implements IMetaclass {
 			addTypedEvent(IEventConstants.MEASURE_ITEM, SWT.MeasureItem);
 			addTypedEvent(IEventConstants.MENU_DETECT, SWT.MenuDetect);
 			addTypedEvent(IEventConstants.MODIFY, SWT.Modify);
-			addTypedEvent(IEventConstants.MOUSE_DOUBLE_CLICK, SWT.MouseDoubleClick);
+			addTypedEvent(IEventConstants.MOUSE_DOUBLE_CLICK,
+					SWT.MouseDoubleClick);
 			addTypedEvent(IEventConstants.MOUSE_DOWN, SWT.MouseDown);
 			addTypedEvent(IEventConstants.MOUSE_ENTER, SWT.MouseEnter);
 			addTypedEvent(IEventConstants.MOUSE_EXIT, SWT.MouseExit);
@@ -162,9 +167,12 @@ public class AbstractMetaclass implements IMetaclass {
 		if (!routedEventCache.containsKey(eventName)) {
 			TypedEvent typedEvent = new TypedEvent(name, eventType);
 			routedEventCache.put(eventName, typedEvent);
-			String eventPropertyName = IEventConstants.getEventPropertyName(name);
-			String eventDataName = IEventConstants.getEventPropertyDataName(name);
-			addProperty(new EventProperty(eventPropertyName, typedEvent, eventDataName));
+			String eventPropertyName = IEventConstants
+					.getEventPropertyName(name);
+			String eventDataName = IEventConstants
+					.getEventPropertyDataName(name);
+			addProperty(new EventProperty(eventPropertyName, typedEvent,
+					eventDataName));
 		}
 	}
 
@@ -342,8 +350,8 @@ public class AbstractMetaclass implements IMetaclass {
 		if (parameters != null && parameters.length > 0) {
 			try {
 				updateContainment(parameters[0], object);
+				initialize(object);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -395,7 +403,7 @@ public class AbstractMetaclass implements IMetaclass {
 					Class<?> dataType = propertyType.getComponentType();
 					Object[] value = null;
 					if (existingValue == null) {
-						value = (Object[]) Array.newInstance(dataType,1);
+						value = (Object[]) Array.newInstance(dataType, 1);
 						value[0] = control;
 					} else {
 						value = (Object[]) Array.newInstance(dataType,
@@ -405,7 +413,8 @@ public class AbstractMetaclass implements IMetaclass {
 						value[existingValue.length] = control;
 					}
 					useProperty.setValue(parent, value);
-				} else if (Collection.class.isAssignableFrom(propertyType) && !(control instanceof IBinding)) {
+				} else if (Collection.class.isAssignableFrom(propertyType)
+						&& !(control instanceof IBinding)) {
 					Collection existingValue = (Collection) useProperty
 							.getValue(parent);
 					if (existingValue == null) {
@@ -414,7 +423,7 @@ public class AbstractMetaclass implements IMetaclass {
 					existingValue.add(control);
 					useProperty.setValue(parent, existingValue);
 				} else if (propertyType.isAssignableFrom(childType)) {
-					useProperty.setValue(parent, control);					
+					useProperty.setValue(parent, control);
 				}
 			}
 		}
@@ -591,19 +600,23 @@ public class AbstractMetaclass implements IMetaclass {
 
 			for (EventSetDescriptor eventSetDescriptor : beanInfo
 					.getEventSetDescriptors()) {
-				String name = IEventConstants.getEventName(eventSetDescriptor.getName());
+				String name = IEventConstants.getEventName(eventSetDescriptor
+						.getName());
 				BeanEvent event = new BeanEvent(eventSetDescriptor.getName(),
 						eventSetDescriptor);
 				routedEventCache.put(name, event);
-				String propertyName = IEventConstants.getEventPropertyName(eventSetDescriptor.getName());
-				String propertyDataName = IEventConstants.getEventPropertyDataName(eventSetDescriptor.getName());
-				addProperty(new EventProperty(propertyName, event, propertyDataName));
+				String propertyName = IEventConstants
+						.getEventPropertyName(eventSetDescriptor.getName());
+				String propertyDataName = IEventConstants
+						.getEventPropertyDataName(eventSetDescriptor.getName());
+				addProperty(new EventProperty(propertyName, event,
+						propertyDataName));
 			}
 			if (isWidgetType(type)) {
-				routedEventCache
-						.put(normalize(IEventConstants.XWT_LOADED), new LoadedEvent(IEventConstants.XWT_LOADED));
+				routedEventCache.put(normalize(IEventConstants.XWT_LOADED),
+						new LoadedEvent(IEventConstants.XWT_LOADED));
 			}
-			
+
 			markInitialized();
 			buildTypedEvents();
 		} catch (Exception e) {
@@ -618,24 +631,25 @@ public class AbstractMetaclass implements IMetaclass {
 	private boolean isInitialize() {
 		return initialize;
 	}
-	
+
 	public void addEventGroup(IEventGroup eventGroup) {
 		if (eventGroupCache == Collections.EMPTY_MAP) {
-			eventGroupCache = new HashMap<String, IEventGroup>();			
+			eventGroupCache = new HashMap<String, IEventGroup>();
 		}
 		for (String string : eventGroup.getEventNames()) {
 			if (eventGroupCache.containsKey(string)) {
-				throw new IllegalArgumentException("Event \"" + string + "\" already existis in a group.");
+				throw new IllegalArgumentException("Event \"" + string
+						+ "\" already existis in a group.");
 			}
 			String key = normalize(string);
 			if ("menudetecteventevent".equals(key)) {
 				System.out.println(string);
 			}
-			
+
 			eventGroupCache.put(key, eventGroup);
 		}
 	}
-	
+
 	public IEventGroup getEventGroup(String event) {
 		IEventGroup eventGroup = eventGroupCache.get(event);
 		if (eventGroup == null && superClass != null) {
@@ -643,5 +657,45 @@ public class AbstractMetaclass implements IMetaclass {
 		}
 		return eventGroup;
 	}
+
+	public void addInitializer(IObjectInitializer initializer) {
+		for (int i = 0; i < initializers.length; i++) {
+			if (initializers[i] == initializer) {
+				return;
+			}
+		}
+		IObjectInitializer[] oldValue = initializers;
+		initializers = new IObjectInitializer[oldValue.length + 1];
+		System.arraycopy(oldValue, 0, initializers, 0, oldValue.length);
+		initializers[oldValue.length] = initializer;
+	}
+
+	public void removeInitializer(IObjectInitializer initializer) {
+		for (int i = 0; i < initializers.length; i++) {
+			if (initializers[i] == initializer) {
+				IObjectInitializer[] oldValue = initializers;
+				initializers = new IObjectInitializer[oldValue.length - 1];
+				System.arraycopy(oldValue, 0, initializers, 0, i);
+				System.arraycopy(oldValue, i + 1, initializers, i,
+						oldValue.length - i - 1);
+				return;
+			}
+		}
+	}
 	
+	public IObjectInitializer[] getInitializers() {
+		return initializers;
+	}
+	
+	public void initialize(Object instance) {
+		if (superClass != null) {
+			superClass.initialize(instance);
+		}
+
+		for (int i = 0; i < initializers.length; i++) {
+			if (initializers[i] != null) {
+				initializers[i].initialize(instance);
+			}
+		}
+	}
 }

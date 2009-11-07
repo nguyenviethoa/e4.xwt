@@ -21,6 +21,10 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class DynamicBeanProperty extends DynamicProperty {
 
+	public DynamicBeanProperty(Class<?> type, Class<?> propertyType, String propertyName) {
+		super(propertyType, createSetter0(type, propertyType, propertyName), null, propertyName);
+	}
+
 	public DynamicBeanProperty(Class<?> type, Class<?> propertyType, String propertyName, String setterName) {
 		super(propertyType, createSetter0(type, propertyType, setterName), null, propertyName);
 	}

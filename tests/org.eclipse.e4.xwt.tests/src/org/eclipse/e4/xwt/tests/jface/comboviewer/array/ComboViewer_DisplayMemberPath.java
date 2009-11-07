@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.jface.listviewer.collection;
+package org.eclipse.e4.xwt.tests.jface.comboviewer.array;
 
 import java.net.URL;
 
@@ -18,10 +18,10 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.widgets.Event;
 
 
-public class ListViewer {
+public class ComboViewer_DisplayMemberPath {
 	public static void main(String[] args) {
 		
-		URL url = ListViewer.class.getResource(ListViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ComboViewer_DisplayMemberPath.class.getResource(ComboViewer_DisplayMemberPath.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -30,7 +30,7 @@ public class ListViewer {
 	}
 	
 	protected void addPerson(Object sender, Event event) {
-		org.eclipse.jface.viewers.Viewer viewer = (org.eclipse.jface.viewers.Viewer) XWT.findElementByName(event.widget, "ListViewer");
+		org.eclipse.jface.viewers.Viewer viewer = (org.eclipse.jface.viewers.Viewer) XWT.findElementByName(event.widget, "ComboViewer");
 		IObservableCollection collection = (IObservableCollection) viewer.getInput();
 		Employee employee = new Employee();
 		employee.setName("New hired one");

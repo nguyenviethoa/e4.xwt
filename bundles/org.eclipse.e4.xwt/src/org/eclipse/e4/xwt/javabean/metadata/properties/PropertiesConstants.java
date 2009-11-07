@@ -14,24 +14,24 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
  * @author jliu
  * 
  */
-public interface PropertiesConstants {
+public final class PropertiesConstants {
 
 	// Properties
-	String PROPERTY_EDITOR = "editor";
-	String PROPERTY_EDITORS = "editors";
-	String PROPERTY_DYNAMIC = "dynamic";
-	String PROPERTY_CELLS = "cells";
-	String PROPERTY_TEXTS = "texts";
-	String PROPERTY_TEXT = "text";
-	String PROPERTY_URL = "url";
-	String PROPERTY_WIDTH = "width";
-	String PROPERTY_BINDING_PATH = "bindingPath";
-	String PROPERTY_IMAGE = "image";
-	String PROPERTY_COLUMNS = "columns";
-	String PROPERTY_COLUMN_PROPERTIES = "columnProperties";
+	public static final String PROPERTY_EDITOR = "editor";
+	public static final String PROPERTY_EDITORS = "editors";
+	public static final String PROPERTY_DYNAMIC = "dynamic";
+	public static final String PROPERTY_CELLS = "cells";
+	public static final String PROPERTY_TEXTS = "texts";
+	public static final String PROPERTY_TEXT = "text";
+	public static final String PROPERTY_URL = "url";
+	public static final String PROPERTY_WIDTH = "width";
+	public static final String PROPERTY_DISPLAY_MEMBER_PATH = "displayMemberPath";
+	public static final String PROPERTY_IMAGE = "image";
+	public static final String PROPERTY_COLUMNS = "columns";
+	public static final String PROPERTY_COLUMN_PROPERTIES = "columnProperties";
 
 	// Data
-	String DATA_DEFINED_EDITOR = "Defined table editors";
-	String DATA_TABLE_UTIL = "tableUtil";
-	String DATA_CONTROLEDITOR_OF_CONTROL = "TableEditor of a control";
+	public static final String DATA_DEFINED_EDITOR = "Defined table editors";
+	public static final String DATA_TABLE_UTIL = "tableUtil";
+	public static final String DATA_CONTROLEDITOR_OF_CONTROL = "TableEditor of a control";
 }

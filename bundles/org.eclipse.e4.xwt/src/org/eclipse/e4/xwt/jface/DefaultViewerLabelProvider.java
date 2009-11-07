@@ -16,7 +16,7 @@ import java.beans.PropertyDescriptor;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -26,7 +26,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class DefaultViewerLabelProvider implements ITableLabelProvider {
+public abstract class DefaultViewerLabelProvider implements ITableLabelProvider, ILabelProvider {
 	protected Viewer viewer;
 
 	public DefaultViewerLabelProvider(Viewer viewer) {
@@ -50,10 +50,18 @@ public class DefaultViewerLabelProvider implements ITableLabelProvider {
 		return null;
 	}
 
+	public Image getImage(Object element) {
+		return getColumnImage(element, 0);
+	}
+	
+	public String getText(Object element) {
+		return getColumnText(element, 0);
+	}
+
 	public String getColumnText(Object element, int columnIndex) {
 		Object[] properties = getPaths();
 		if (properties == null) {
-			throw new XWTException("property is missing in TableViewerColumn or TableViewer.columnProperties is missing.");
+			throw new XWTException("displayPath is missing in TableViewerColumn or TableViewer.columnProperties is missing.");
 		}
 		String propertyName = properties[columnIndex].toString();
 		try {
@@ -82,10 +90,5 @@ public class DefaultViewerLabelProvider implements ITableLabelProvider {
 		return "";
 	}
 	
-	protected Object[] getPaths() {
-		if (viewer instanceof ColumnViewer) {
-			return ((ColumnViewer)viewer).getColumnProperties();
-		}
-		return null;
-	}
+	protected abstract Object[] getPaths();
 }

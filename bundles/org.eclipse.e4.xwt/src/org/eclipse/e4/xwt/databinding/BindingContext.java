@@ -33,32 +33,75 @@ public class BindingContext implements IBindingContext {
 		TwoWay, OneWay, OneTime
 	};
 
+	public void bind(IObservableValue source, IObservableValue target) {
+		bind(source, target, null);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
 	public void bind(IObservableValue source, IObservableValue target, IDataBindingInfo dataBinding) {
+		IValueConverter converter = null;
+		int sourceToTargetPolicy = UpdateValueStrategy.POLICY_UPDATE;
+		int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
+		// Set policy to UpdateValueStrategy.
+		if (dataBinding != null) {
+			switch (dataBinding.getBindingMode()) {
+			case OneWay:
+				targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
+				break;
+			case OneTime:
+				sourceToTargetPolicy = UpdateValueStrategy.POLICY_NEVER;
+				targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
+				break;
+			default:
+				break;
+			}
+			converter = dataBinding.getConverter();
+		}
+		UpdateValueStrategy sourceToTarget = new UpdateValueStrategy(sourceToTargetPolicy);
+		UpdateValueStrategy targetToSource = new UpdateValueStrategy(targetToSourcePolicy);
+		
+		bind(source, target, sourceToTarget, targetToSource, converter);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
+	 */
+	public void bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, IValueConverter converter) {
+		if (converter != null) {
+			bind(source, target, sourceToTarget, targetToSource, converter, new InverseValueConverter(converter));			
+		}
+		else {
+			bind(source, target, sourceToTarget, targetToSource, null, null);						
+		}
+	}
+
+	/**
+	 * 
+	 * @param source
+	 * @param target
+	 * @param sourceToTarget if it is null, the default converter will be update policy
+	 * @param targetToSource if it is null, the default converter will be update policy
+	 * @param sourceToTargetConvertor if it is null, the default converter will be used
+	 * @param targetToSourceConvertor if it is null, the default converter will be used
+	 */
+	public void bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, 
+			IConverter sourceToTargetConvertor, IConverter targetToSourceConvertor) {
 		if (source != null && target != null) {
+			if (sourceToTarget == null) {
+				sourceToTarget = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+			}
+			if (targetToSource == null) {
+				targetToSource = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
+			}
+			
 			this.observeValue = source;
 			this.observeWidget = target;
-			int sourceToTargetPolicy = UpdateValueStrategy.POLICY_UPDATE;
-			int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
-			DataBindingContext core = new DataBindingContext(XWT.getRealm());
-			// Set policy to UpdateValueStrategy.
-			if (dataBinding != null) {
-				switch (dataBinding.getBindingMode()) {
-				case OneWay:
-					targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
-					break;
-				case OneTime:
-					sourceToTargetPolicy = UpdateValueStrategy.POLICY_NEVER;
-					targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
-					break;
-				default:
-					break;
-				}
-			}
 			// Add converter to UpdateValueStrategy.
 			Object sourceValueType = source.getValueType();
 			if (sourceValueType == null) {
@@ -82,10 +125,8 @@ public class BindingContext implements IBindingContext {
 				targetType = XWTLoader.normalizedType(targetType);
 			}
 
-			IValueConverter converter = dataBinding.getConverter();
-			UpdateValueStrategy sourceToTarget = new UpdateValueStrategy(sourceToTargetPolicy);
-			if (converter != null) {
-				sourceToTarget.setConverter(converter);
+			if (sourceToTargetConvertor != null) {
+				sourceToTarget.setConverter(sourceToTargetConvertor);
 			} else if (!targetType.isAssignableFrom(sourceType)) {
 				IConverter m2t = XWT.findConvertor(sourceType, targetType);
 				if (m2t != null) {
@@ -93,9 +134,8 @@ public class BindingContext implements IBindingContext {
 				}
 			}
 
-			UpdateValueStrategy targetToSource = new UpdateValueStrategy(targetToSourcePolicy);
-			if (converter != null) {
-				targetToSource.setConverter(new InverseValueConverter(converter));
+			if (targetToSourceConvertor != null) {
+				targetToSource.setConverter(targetToSourceConvertor);
 			} else if (!sourceType.isAssignableFrom(targetType)) {
 				IConverter t2m = XWT.findConvertor(targetType, sourceType);
 				if (t2m != null) {
@@ -103,6 +143,7 @@ public class BindingContext implements IBindingContext {
 				}
 			}
 
+			DataBindingContext core = new DataBindingContext(XWT.getRealm());
 			core.bindValue(target, source, targetToSource, sourceToTarget);
 		}
 	}

@@ -51,6 +51,7 @@ public class JFacesHelper {
 		try {
 
 			JFACES_VIEWER = Class.forName("org.eclipse.jface.viewers.Viewer");
+			collector.add(Class.forName("org.eclipse.jface.viewers.ComboViewer"));
 			collector.add(Class.forName("org.eclipse.jface.viewers.ListViewer"));
 			collector.add(Class.forName("org.eclipse.jface.viewers.TreeViewer"));
 			collector.add(Class.forName("org.eclipse.jface.viewers.TableViewer"));

@@ -15,9 +15,6 @@
 		</j:Company>
 	</Composite.resources>
 	<ComboViewer name="ComboViewer" input="{Binding Path=employees}">
-		<ComboViewer.contentProvider>
-			<ObservableListContentProvider/>
-		</ComboViewer.contentProvider>
 		<ComboViewer.labelProvider>
 			<j:LabelProvider/>
 		</ComboViewer.labelProvider>

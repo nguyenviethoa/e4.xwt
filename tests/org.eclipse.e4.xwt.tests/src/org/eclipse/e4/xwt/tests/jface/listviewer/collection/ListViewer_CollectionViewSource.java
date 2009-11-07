@@ -29,8 +29,8 @@ public class ListViewer_CollectionViewSource {
 	}
 	
 	protected void addPerson(Object sender, Event event) {
-		org.eclipse.jface.viewers.ListViewer listViewer = (org.eclipse.jface.viewers.ListViewer) XWT.findElementByName(event.widget, "ListViewer1");
-		IObservableCollection collection = (IObservableCollection) listViewer.getInput();
+		org.eclipse.jface.viewers.Viewer viewer = (org.eclipse.jface.viewers.Viewer) XWT.findElementByName(event.widget, "ListViewer1");
+		IObservableCollection collection = (IObservableCollection) viewer.getInput();
 		Employee employee = new Employee();
 		employee.setName("New hired one");
 		collection.add(employee);

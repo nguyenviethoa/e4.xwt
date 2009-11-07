@@ -11,16 +11,17 @@
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservableCollection;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.collection.CollectionViewSource;
-import org.eclipse.e4.xwt.jface.DefaultViewerLabelProvider;
+import org.eclipse.e4.xwt.jface.DefaultColumnViewerLabelProvider;
+import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.DelegateProperty;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -31,7 +32,6 @@ import org.eclipse.jface.viewers.AbstractListViewer;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
 
 /**
  * Handle manually the type conversion. Maybe it can be done using the
@@ -54,24 +54,30 @@ public class InputBeanProperty extends DelegateProperty {
 		if (value.getClass().isArray()) {
 			elementType = value.getClass().getComponentType();
 		}
+		if (value instanceof IObservableList) {
+			IObservableList list = (IObservableList) value;
+			Object listElementType = list.getElementType();
+			if (listElementType instanceof Class<?>){
+				elementType = (Class<?>) listElementType;
+			}
+		}
+		
 		if (target instanceof AbstractListViewer) {
 			AbstractListViewer viewer = (AbstractListViewer) target;
 			IContentProvider contentProvider = viewer.getContentProvider();
 			IBaseLabelProvider labelProvider = viewer.getLabelProvider();
 
-			if (value instanceof List<?> || value.getClass().isArray()) {
-				if (contentProvider == null) {
-					contentProvider = new ObservableListContentProvider();
-					viewer.setContentProvider(contentProvider);
-				}
-			} else if (value instanceof Set<?>) {
-				if (contentProvider == null) {
-					contentProvider = new ObservableSetContentProvider();
-					viewer.setContentProvider(contentProvider);
+			if (contentProvider == null) {
+				if (value instanceof List<?> || value.getClass().isArray()) {
+						contentProvider = new ObservableListContentProvider();
+						viewer.setContentProvider(contentProvider);
+				} else if (value instanceof Set<?>) {
+						contentProvider = new ObservableSetContentProvider();
+						viewer.setContentProvider(contentProvider);
 				}
 			}
 			if (labelProvider == null) {
-				viewer.setLabelProvider(new DefaultViewerLabelProvider(viewer));					
+				viewer.setLabelProvider(new DefaultListViewerLabelProvider(viewer));					
 			}
 		} else if (target instanceof ColumnViewer) {
 			ColumnViewer viewer = (ColumnViewer) target;
@@ -107,7 +113,7 @@ public class InputBeanProperty extends DelegateProperty {
 				}
 			}
 			if (labelProvider == null) {
-				viewer.setLabelProvider(new DefaultViewerLabelProvider(viewer));					
+				viewer.setLabelProvider(new DefaultColumnViewerLabelProvider(viewer));					
 			}
 		}
 		if (value instanceof CollectionViewSource) {

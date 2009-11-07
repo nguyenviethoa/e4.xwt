@@ -45,7 +45,6 @@ public class DataProperty extends AbstractProperty {
 	}
 
 	public void setValue(Object target, Object value) {
-		Object oldValue = UserData.getLocalData(target, key);
 		UserData.setLocalData(target, key, value);
 	}
 }

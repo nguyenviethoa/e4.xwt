@@ -14,14 +14,14 @@
 			</j:Company.employees>
 		</j:Company>
 	</Composite.resources>
-	<ComboViewer name="ListViewer" input="{Binding Path=employees}">
-		<ComboViewer.labelProvider>
-			<j:LabelProvider/>
-		</ComboViewer.labelProvider>
-		<ComboViewer.control.layoutData>
+	<ListViewer name="ListViewer" input="{Binding Path=employees}">
+		<ListViewer.labelProvider>
+			<DefaultListViewerLabelProvider displayMemberPath="name"/>
+		</ListViewer.labelProvider>
+		<ListViewer.control.layoutData>
 			<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
          		grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
-		</ComboViewer.control.layoutData>
-	</ComboViewer>
+		</ListViewer.control.layoutData>
+	</ListViewer>
 	<Button name="Button" text="Add Person" SelectionEvent="addPerson" />
 </Composite>

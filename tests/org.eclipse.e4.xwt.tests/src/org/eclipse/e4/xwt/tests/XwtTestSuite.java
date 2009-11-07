@@ -19,6 +19,7 @@ import org.eclipse.e4.xwt.tests.controls.ControlsTestSuite;
 import org.eclipse.e4.xwt.tests.databinding.BindingTestSuite;
 import org.eclipse.e4.xwt.tests.events.EventsTestSuite;
 import org.eclipse.e4.xwt.tests.jface.JFaceTestSuite;
+import org.eclipse.e4.xwt.tests.metaclass.Metaclass_Tests;
 import org.eclipse.e4.xwt.tests.name.NameTestSuite;
 import org.eclipse.e4.xwt.tests.namespace.handler.NamespacehandlerTestSuite;
 import org.eclipse.e4.xwt.tests.resources.ResourcesTestSuite;
@@ -40,6 +41,9 @@ public class XwtTestSuite extends TestSuite {
 		// XAML
 		addXAMLTests();
 
+		// Metaclass
+		addTest(new TestSuite(Metaclass_Tests.class));
+		
 		// XWT
 		addXWTTests();
 

@@ -10,11 +10,53 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 /**
- * @author jliu jin.liu@soyatec.com
+ * @author jliu (jin.liu@soyatec.com)
  */
 public interface IBindingContext {
-	void bind(IObservableValue source, IObservableValue target, IDataBindingInfo binding);
+	/**
+	 * 
+	 * @param source
+	 * @param target
+	 */
+	void bind(IObservableValue source, IObservableValue target);
+	
+	/**
+	 * 
+	 * @param source
+	 * @param target
+	 * @param binding
+	 */
+	void bind(IObservableValue source, IObservableValue target,
+			IDataBindingInfo binding);
+
+	/**
+	 * 
+	 * @param source
+	 * @param target
+	 * @param sourceToTarget if it is null, the default converter will be update policy
+	 * @param targetToSource if it is null, the default converter will be update policy
+	 * @param converter
+	 */
+	public void bind(IObservableValue source, IObservableValue target,
+			UpdateValueStrategy sourceToTarget,
+			UpdateValueStrategy targetToSource, IValueConverter converter);
+	
+	/**
+	 * Setup the binding
+	 * 
+	 * @param source
+	 * @param target
+	 * @param sourceToTarget if it is null, the default converter will be update policy
+	 * @param targetToSource if it is null, the default converter will be update policy
+	 * @param sourceToTargetConvertor if it is null, the default converter will be used
+	 * @param targetToSourceConvertor if it is null, the default converter will be used
+	 */
+	public void bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, 
+			IConverter sourceToTargetConvertor, IConverter targetToSourceConvertor);
+
 }

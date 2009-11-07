@@ -90,14 +90,16 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.TableEditorDynamicPropert
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemEditorProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnImageProperty;
-import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnBindingPath;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnDisplayMemberPath;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnTextProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnWidthProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnsProperty;
 import org.eclipse.e4.xwt.jface.ComboBoxCellEditor;
 import org.eclipse.e4.xwt.jface.DefaultCellModifier;
-import org.eclipse.e4.xwt.jface.DefaultViewerLabelProvider;
+import org.eclipse.e4.xwt.jface.DefaultColumnViewerLabelProvider;
+import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.DefaultListContentProvider;
+import org.eclipse.e4.xwt.jface.JFaceInitializer;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -1262,15 +1264,26 @@ public class XWTLoader implements IXWTLoader {
 			IProperty property = metaclass.findProperty("Input");
 			metaclass.addProperty(new InputBeanProperty(property));
 		}
-		
+
+		type = org.eclipse.jface.viewers.AbstractListViewer.class;
+		metaclass = (IMetaclass) core.getMetaclass(type,
+				IConstants.XWT_NAMESPACE);
+		if (metaclass != null) {
+			metaclass.addProperty(new DataProperty(PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH, String.class,
+					PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH));
+			
+			metaclass.addInitializer(new JFaceInitializer());
+		}
+
 		type = org.eclipse.jface.viewers.ColumnViewer.class;
 		metaclass = (IMetaclass) core.getMetaclass(type,
 				IConstants.XWT_NAMESPACE);
 		if (metaclass != null) {
 			metaclass.addProperty(new DynamicBeanProperty(type, String[].class,
-					PropertiesConstants.PROPERTY_COLUMN_PROPERTIES,
 					PropertiesConstants.PROPERTY_COLUMN_PROPERTIES));
 			metaclass.addProperty(new TableViewerColumnsProperty());
+			
+			metaclass.addInitializer(new JFaceInitializer());
 		}
 
 		for (Class<?> cls : JFacesHelper.getSupportedElements()) {
@@ -1291,10 +1304,11 @@ public class XWTLoader implements IXWTLoader {
 		metaclass.addProperty(new TableViewerColumnWidthProperty());
 		metaclass.addProperty(new TableViewerColumnTextProperty());
 		metaclass.addProperty(new TableViewerColumnImageProperty());
-		metaclass.addProperty(new TableViewerColumnBindingPath());
+		metaclass.addProperty(new TableViewerColumnDisplayMemberPath());
 
 		registerMetaclass(DefaultCellModifier.class);
-		registerMetaclass(DefaultViewerLabelProvider.class);
+		registerMetaclass(DefaultListViewerLabelProvider.class);
+		registerMetaclass(DefaultColumnViewerLabelProvider.class);
 
 		registerMetaclass(ObjectDataProvider.class);
 

@@ -53,4 +53,12 @@ public interface IMetaclass {
 	public void addEventGroup(IEventGroup eventGroup);
 	
 	public IEventGroup getEventGroup(String event);
+	
+	public void addInitializer(IObjectInitializer initializer);
+	
+	public void removeInitializer(IObjectInitializer initializer);
+	
+	public IObjectInitializer[] getInitializers();
+	
+	public void initialize(Object instance);	
 }

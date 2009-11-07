@@ -17,8 +17,8 @@
 	</Composite.Resources>
 	<TableViewer Name="TableViewer" input="{Binding Path=employees}">
 		<TableViewer.columns>
-			<TableViewerColumn width="150" text="Name" bindingPath="name"/>
-			<TableViewerColumn width="150" text="Age" bindingPath="age"/>
+			<TableViewerColumn width="150" text="Name" displayMemberPath="name"/>
+			<TableViewerColumn width="150" text="Age" displayMemberPath="age"/>
 		</TableViewer.columns>
 		<TableViewer.table HeaderVisible="true">
 		</TableViewer.table>

@@ -384,13 +384,41 @@ public class XWT {
 	static public Object getPropertyValue(Object uiElement, IProperty property) {
 		return XWTLoaderManager.getActive().getPropertyValue(uiElement, property);
 	}
-
+	
+	/**
+	 * Get the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	static public Object getPropertyValue(Object uiElement, String propertyName) {
+		IMetaclass metaclass = XWT.getMetaclass(uiElement);
+		IProperty property = metaclass.findProperty(propertyName);
+		if (property == null) {
+			return null;
+		}
+		return XWTLoaderManager.getActive().getPropertyValue(uiElement, property);
+	}
+	
 	/**
 	 * Set the dynamic property value
 	 * 
 	 * @param javaclass
 	 */
 	static public void setPropertyValue(Object uiElement, IProperty property, Object value) {
+		XWTLoaderManager.getActive().setPropertyValue(uiElement, property, value);
+	}
+
+	/**
+	 * Set the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	static public void setPropertyValue(Object uiElement, String propertyName, Object value) {
+		IMetaclass metaclass = XWT.getMetaclass(uiElement);
+		IProperty property = metaclass.findProperty(propertyName);
+		if (property == null) {
+			throw new XWTException("Property " + propertyName + " not found.");
+		}
 		XWTLoaderManager.getActive().setPropertyValue(uiElement, property, value);
 	}
 

@@ -1,4 +1,4 @@
-package org.eclipse.e4.xwt.tests.jface.listviewer.collection;
+package org.eclipse.e4.xwt.tests.jface.comboviewer.collection;
 
 import java.net.URL;
 
@@ -8,17 +8,17 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
 import org.eclipse.swt.widgets.Button;
 
-public class JFaceListViewer_CollectionTests extends XWTTestCase {
+public class JFaceComboViewer_CollectionTests extends XWTTestCase {
 
-	public void testListViewer() throws Exception {
-		URL url = JFaceListViewer_CollectionTests.class.getResource(ListViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+	public void test_ComboViewer() throws Exception {
+		URL url = JFaceComboViewer_CollectionTests.class.getResource(ComboViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, null, new Runnable() {
 			public void run() {
 				checkListViewer();
 			}
 
 			public void checkListViewer() {
-				Object element = XWT.findElementByName(root, "ListViewer");
+				Object element = XWT.findElementByName(root, "ComboViewer");
 				assertTrue(element instanceof org.eclipse.jface.viewers.ListViewer);
 				org.eclipse.jface.viewers.ListViewer listViewer = (org.eclipse.jface.viewers.ListViewer) element;
 				String[] items = listViewer.getList().getItems();
@@ -29,15 +29,15 @@ public class JFaceListViewer_CollectionTests extends XWTTestCase {
 		});
 	}
 
-	public void testListViewer_Simple() throws Exception {
-		URL url = JFaceListViewer_CollectionTests.class.getResource(ListViewer_Simple.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+	public void test_ComboViewer_Simple() throws Exception {
+		URL url = JFaceComboViewer_CollectionTests.class.getResource(ComboViewer_Simple.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, null, new Runnable() {
 			public void run() {
 				checkListViewer();
 			}
 
 			public void checkListViewer() {
-				Object element = XWT.findElementByName(root, "ListViewer");
+				Object element = XWT.findElementByName(root, "ComboViewer");
 				assertTrue(element instanceof org.eclipse.jface.viewers.ListViewer);
 				org.eclipse.jface.viewers.ListViewer listViewer = (org.eclipse.jface.viewers.ListViewer) element;
 				String[] items = listViewer.getList().getItems();
@@ -48,8 +48,8 @@ public class JFaceListViewer_CollectionTests extends XWTTestCase {
 		});
 	}
 
-	public void test_ListViewer_DataBinding() {
-		URL url = JFaceListViewer_CollectionTests.class.getResource(ListViewer.class
+	public void test_ComboViewer_DataBinding() {
+		URL url = JFaceComboViewer_CollectionTests.class.getResource(ComboViewer.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
@@ -72,8 +72,8 @@ public class JFaceListViewer_CollectionTests extends XWTTestCase {
 		});
 	}
 
-	public void test_ListViewer_DisplayMemberPath() {
-		URL url = JFaceListViewer_CollectionTests.class.getResource(ListViewer_DisplayMemberPath.class
+	public void test_ComboViewer_DisplayMemberPath() {
+		URL url = JFaceComboViewer_CollectionTests.class.getResource(ComboViewer_DisplayMemberPath.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
@@ -96,8 +96,8 @@ public class JFaceListViewer_CollectionTests extends XWTTestCase {
 		});
 	}
 
-	public void test_ListViewer_LabelProvider_DisplayMemberPath() {
-		URL url = JFaceListViewer_CollectionTests.class.getResource(ListViewer_LabelProvider_DisplayMemberPath.class
+	public void test_ComboViewer_LabelProvider_DisplayMemberPath() {
+		URL url = JFaceComboViewer_CollectionTests.class.getResource(ComboViewer_LabelProvider_DisplayMemberPath.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
