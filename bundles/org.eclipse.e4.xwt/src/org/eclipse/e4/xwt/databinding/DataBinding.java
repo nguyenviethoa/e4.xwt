@@ -53,11 +53,7 @@ public class DataBinding extends AbstractDataBinding {
 
 		/* If observableWidget is null, we need only return the data from provider. */
 		if (observableWidget == null) {
-			String sourceProperty = getSourceProperty();
-			Class<?> dataType = dataProvider.getDataType(sourceProperty);
-			observableWidget = dataProvider.createObservableValue(dataType, sourceProperty);
-			bindingContext.bind(observableSource, observableWidget, this);
-			return dataProvider.getData(sourceProperty);
+			return observableSource.getValue();
 		}
 		
 		if (bindingContext != null && observableSource != null) {
