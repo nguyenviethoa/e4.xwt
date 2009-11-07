@@ -23,7 +23,6 @@ import javax.xml.xpath.XPathFactory;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
-import org.eclipse.e4.xwt.dataproviders.IXmlDataProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -35,7 +34,7 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 
 	private URL source;
 
-	private String xPath;
+	private String path;
 
 	private Document document;
 
@@ -81,8 +80,8 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.IXmlDataProvider#getXPath()
 	 */
-	public String getXPath() {
-		return xPath;
+	public String getPath() {
+		return path;
 	}
 
 	/*
@@ -99,8 +98,8 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.IXmlDataProvider#setXPath(java.lang.String)
 	 */
-	public void setXPath(String xPath) {
-		this.xPath = xPath;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	private Object getRoot() {
@@ -108,8 +107,8 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 		if (doc == null) {
 			return null;
 		}
-		if (xPath != null) {
-			return selectSingleNode(doc, xPath);
+		if (path != null) {
+			return selectSingleNode(doc, path);
 		}
 		return doc;
 	}
