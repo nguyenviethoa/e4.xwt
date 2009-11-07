@@ -90,13 +90,13 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.TableEditorDynamicPropert
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemEditorProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnImageProperty;
-import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnPropertyProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnBindingPath;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnTextProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnWidthProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnsProperty;
 import org.eclipse.e4.xwt.jface.ComboBoxCellEditor;
 import org.eclipse.e4.xwt.jface.DefaultCellModifier;
-import org.eclipse.e4.xwt.jface.DefaultLabelProvider;
+import org.eclipse.e4.xwt.jface.DefaultViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.DefaultListContentProvider;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -1291,10 +1291,10 @@ public class XWTLoader implements IXWTLoader {
 		metaclass.addProperty(new TableViewerColumnWidthProperty());
 		metaclass.addProperty(new TableViewerColumnTextProperty());
 		metaclass.addProperty(new TableViewerColumnImageProperty());
-		metaclass.addProperty(new TableViewerColumnPropertyProperty());
+		metaclass.addProperty(new TableViewerColumnBindingPath());
 
 		registerMetaclass(DefaultCellModifier.class);
-		registerMetaclass(DefaultLabelProvider.class);
+		registerMetaclass(DefaultViewerLabelProvider.class);
 
 		registerMetaclass(ObjectDataProvider.class);
 

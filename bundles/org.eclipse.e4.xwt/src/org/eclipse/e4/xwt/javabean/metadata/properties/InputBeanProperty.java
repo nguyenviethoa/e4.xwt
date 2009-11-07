@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservableCollection;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.collection.CollectionViewSource;
+import org.eclipse.e4.xwt.jface.DefaultViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.DelegateProperty;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -28,7 +29,9 @@ import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
 import org.eclipse.jface.viewers.AbstractListViewer;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 
 /**
  * Handle manually the type conversion. Maybe it can be done using the
@@ -53,25 +56,30 @@ public class InputBeanProperty extends DelegateProperty {
 		}
 		if (target instanceof AbstractListViewer) {
 			AbstractListViewer viewer = (AbstractListViewer) target;
+			IContentProvider contentProvider = viewer.getContentProvider();
+			IBaseLabelProvider labelProvider = viewer.getLabelProvider();
 
 			if (value instanceof List<?> || value.getClass().isArray()) {
-				IContentProvider contentProvider = viewer.getContentProvider();
 				if (contentProvider == null) {
 					contentProvider = new ObservableListContentProvider();
 					viewer.setContentProvider(contentProvider);
 				}
 			} else if (value instanceof Set<?>) {
-				IContentProvider contentProvider = viewer.getContentProvider();
 				if (contentProvider == null) {
 					contentProvider = new ObservableSetContentProvider();
 					viewer.setContentProvider(contentProvider);
 				}
 			}
+			if (labelProvider == null) {
+				viewer.setLabelProvider(new DefaultViewerLabelProvider(viewer));					
+			}
 		} else if (target instanceof ColumnViewer) {
 			ColumnViewer viewer = (ColumnViewer) target;
+			IContentProvider contentProvider = viewer.getContentProvider();
+			IBaseLabelProvider labelProvider = viewer.getLabelProvider();
+
 			String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
 			if (value instanceof List<?> || value.getClass().isArray()) {
-				IContentProvider contentProvider = viewer.getContentProvider();
 				if (contentProvider == null) {
 					contentProvider = new ObservableListContentProvider();
 					viewer.setContentProvider(contentProvider);
@@ -85,7 +93,6 @@ public class InputBeanProperty extends DelegateProperty {
 									propertyNames)));
 				}
 			} else if (value instanceof Set<?>) {
-				IContentProvider contentProvider = viewer.getContentProvider();
 				if (contentProvider == null) {
 					contentProvider = new ObservableSetContentProvider();
 					viewer.setContentProvider(contentProvider);
@@ -98,6 +105,9 @@ public class InputBeanProperty extends DelegateProperty {
 									.getKnownElements(), elementType,
 									propertyNames)));
 				}
+			}
+			if (labelProvider == null) {
+				viewer.setLabelProvider(new DefaultViewerLabelProvider(viewer));					
 			}
 		}
 		if (value instanceof CollectionViewSource) {

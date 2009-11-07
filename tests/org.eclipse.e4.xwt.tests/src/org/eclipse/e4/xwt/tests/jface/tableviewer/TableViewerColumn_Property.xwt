@@ -17,14 +17,14 @@
 	</Composite.Resources>
 	<TableViewer Name="TableViewer" input="{Binding Path=employees}">
 		<TableViewer.columns>
-			<TableViewerColumn width="150" text="Name" property="name"/>
-			<TableViewerColumn width="150" text="Age" property="age"/>
+			<TableViewerColumn width="150" text="Name" bindingPath="name"/>
+			<TableViewerColumn width="150" text="Age" bindingPath="age"/>
 		</TableViewer.columns>
 		<TableViewer.contentProvider>
 			<DefaultListContentProvider/>
 		</TableViewer.contentProvider>
 		<TableViewer.labelProvider>
-			<DefaultLabelProvider/>
+			<DefaultViewerLabelProvider/>
 		</TableViewer.labelProvider>
 		<TableViewer.control.layoutData>
 			<GridData horizontalAlignment="FILL"

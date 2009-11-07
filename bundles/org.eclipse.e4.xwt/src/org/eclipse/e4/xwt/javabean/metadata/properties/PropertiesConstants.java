@@ -25,7 +25,7 @@ public interface PropertiesConstants {
 	String PROPERTY_TEXT = "text";
 	String PROPERTY_URL = "url";
 	String PROPERTY_WIDTH = "width";
-	String PROPERTY_PROPERTY = "property";
+	String PROPERTY_BINDING_PATH = "bindingPath";
 	String PROPERTY_IMAGE = "image";
 	String PROPERTY_COLUMNS = "columns";
 	String PROPERTY_COLUMN_PROPERTIES = "columnProperties";

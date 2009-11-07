@@ -22,7 +22,7 @@
 			<j:ContentProvider/>
 		</TableViewer.contentProvider>
 		<TableViewer.labelProvider>
-			<DefaultLabelProvider/>
+			<DefaultViewerLabelProvider/>
 		</TableViewer.labelProvider>
 		<TableViewer.table HeaderVisible="true" LinesVisible="true">
 			<TableColumn width="150" text="Name"/>

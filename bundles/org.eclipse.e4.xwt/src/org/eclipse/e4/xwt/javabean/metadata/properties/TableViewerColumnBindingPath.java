@@ -19,11 +19,11 @@ import org.eclipse.swt.widgets.TableColumn;
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class TableViewerColumnPropertyProperty extends AbstractProperty {
-	public static final String PROEPRTY_DATA_KEY = "_XWT.TableViewerColumnPropertyProperty";
+public class TableViewerColumnBindingPath extends AbstractProperty {
+	public static final String PROEPRTY_DATA_KEY = "_XWT.TableViewerColumnDsiplayPath";
 
-	public TableViewerColumnPropertyProperty() {
-		super(PropertiesConstants.PROPERTY_PROPERTY, String.class);
+	public TableViewerColumnBindingPath() {
+		super(PropertiesConstants.PROPERTY_BINDING_PATH, String.class);
 	}
 
 	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
