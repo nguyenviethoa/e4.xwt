@@ -41,7 +41,7 @@ public class ListToArrayObservableValue extends AbstractObservableValue {
 
 		source.addChangeListener(new IChangeListener() {
 			public void handleChange(ChangeEvent event) {
-				ListToArrayObservableValue.this.syncData();
+				ListToArrayObservableValue.this.handleChange();
 			}
 		});
 
@@ -73,7 +73,7 @@ public class ListToArrayObservableValue extends AbstractObservableValue {
 		target = null;
 	}
 
-	protected void syncData() {
+	protected void handleChange() {
 		try {
 			Object elements = Array.newInstance((Class<?>) getValueType(),
 					source.size());
