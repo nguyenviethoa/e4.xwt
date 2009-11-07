@@ -22,7 +22,6 @@ import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.internal.core.NameScope;
-import org.eclipse.e4.xwt.javabean.Controller;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.Viewer;
@@ -97,7 +96,11 @@ public class UserData {
 		return dictionary.keySet();
 	}
 	
-	public static void bindNameContext(Widget widget, NameScope nameContext) {
+	public static void bindNameContext(Object element, NameScope nameContext) {
+		Widget widget = getWidget(element);
+		if (widget == null) {
+			return;
+		}
 		UserData dataDictionary = updateDataDictionary(widget);
 		if (dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY) != null) {
 			throw new IllegalStateException("Name context is already set");
@@ -107,6 +110,9 @@ public class UserData {
 	
 	protected static UserData updateDataDictionary(Object target) {
 		Widget widget = getWidget(target);
+		if (widget == null) {
+			return null;
+		}
 		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary == null) {
 			dataDictionary = new UserData();
@@ -115,7 +121,11 @@ public class UserData {
 		return dataDictionary;
 	}
 
-	public static Shell findShell(Widget widget) {
+	public static Shell findShell(Object element) {
+		Widget widget = getWidget(element);
+		if (widget == null) {
+			return null;
+		}
 		Control control = getParent(widget);
 		if (control != null) {
 			return control.getShell();
@@ -123,7 +133,11 @@ public class UserData {
 		return null;
 	}
 
-	public static Composite findCompositeParent(Widget widget) {
+	public static Composite findCompositeParent(Object element) {
+		Widget widget = getWidget(element);
+		if (widget == null) {
+			return null;
+		}
 		Control control = getParent(widget);
 		while (control != null && !(control instanceof Composite)) {
 			control = getParent(control);
@@ -139,7 +153,11 @@ public class UserData {
 		return control;
 	}
 
-	public static NameScope findNameContext(Widget widget) {
+	public static NameScope findNameContext(Object element) {
+		Widget widget = getWidget(element);
+		if (widget == null) {
+			return null;
+		}
 		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
 			Object data = dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
@@ -154,7 +172,11 @@ public class UserData {
 		return null;
 	}
 
-	public static Object findElementByName(Widget widget, String name) {
+	public static Object findElementByName(Object context, String name) {
+		Widget widget = getWidget(context);
+		if (widget == null) {
+			return null;
+		}
 		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
 			NameScope nameContext = (NameScope) dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
@@ -187,11 +209,15 @@ public class UserData {
 		return null;
 	}
 
-	public static void setCLR(Widget widget, Object type) {
+	public static void setCLR(Object widget, Object type) {
 		setLocalData(widget, IUserDataConstants.XWT_CLR_KEY, type);
 	}
 
-	public static Object getCLR(Widget widget) {
+	public static Object getCLR(Object element) {
+		Widget widget = getWidget(element);
+		if (widget == null) {
+			return null;
+		}
 		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
 			Object data = dataDictionary.getData(IUserDataConstants.XWT_CLR_KEY);
@@ -206,7 +232,11 @@ public class UserData {
 		return null;
 	}
 
-	public static Widget getTreeParent(Widget widget) {
+	public static Widget getTreeParent(Object element) {
+		Widget widget = getWidget(element);
+		if (widget == null) {
+			return null;
+		}
 		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
 			return (Widget) dataDictionary.getData(IUserDataConstants.XWT_PARENT_KEY);
@@ -214,7 +244,8 @@ public class UserData {
 		return null;
 	}
 
-	public static Control getParent(Widget widget) {
+	public static Control getParent(Object element) {
+		Widget widget = getWidget(element);
 		if (widget instanceof Control) {
 			Control control = (Control) widget;
 			return control.getParent();
@@ -279,7 +310,11 @@ public class UserData {
 		return findData(widget, IUserDataConstants.XWT_DATACONTEXT_KEY);
 	}
 
-	public static TriggerBase[] getTriggers(Widget widget) {
+	public static TriggerBase[] getTriggers(Object element) {
+		Widget widget = getWidget(element);
+		if (widget == null) {
+			return TriggerBase.EMPTY_ARRAY;		
+		}
 		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
 			TriggerBase[] triggers =  (TriggerBase[]) dataDictionary.getData(IUserDataConstants.XWT_TRIGGERS_KEY);
@@ -294,7 +329,11 @@ public class UserData {
 		setLocalData(widget, IUserDataConstants.XWT_TRIGGERS_KEY, triggers);
 	}
 
-	public static Widget getDataContextHost(Widget widget) {
+	public static Widget getDataContextHost(Object element) {
+		Widget widget = getWidget(element);
+		if (widget == null) {
+			return null;
+		}
 		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		Object host = null;
 		if (dataDictionary != null) {

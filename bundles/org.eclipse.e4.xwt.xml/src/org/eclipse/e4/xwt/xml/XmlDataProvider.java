@@ -177,10 +177,11 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.impl.AbstractDataProvider#createObservableValue(java.lang.String)
 	 */
-	public IObservableValue createObservableValue(Object valueType, String path) {
+	public IObservableValue createObservableValue(Class<?> valueType, String path) {
 		Object data = getData(path);
 		if (data != null && data instanceof Node) {
-			return new XmlObservableValue(valueType, (Node) data, path);
+			XmlObservableValue observableValue = new XmlObservableValue(valueType, (Node) data, path);
+			return checkWrapArrayValue(valueType, path, observableValue);
 		}
 		return null;
 	}

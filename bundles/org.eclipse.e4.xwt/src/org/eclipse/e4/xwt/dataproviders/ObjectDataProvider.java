@@ -241,7 +241,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.impl.AbstractDataProvider#createObservableValue(java.lang.String)
 	 */
-	public IObservableValue createObservableValue(Object valueType, String fullPath) {
+	public IObservableValue createObservableValue(Class<?> valueType, String fullPath) {
 		Object dataContext = getTarget();
 		String propertyName = null;
 		String[] paths = fullPath.trim().split("\\.");
@@ -257,7 +257,8 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		} else if (paths.length == 1) {
 			propertyName = fullPath;
 		}
-		return BeanObservableValueUtil.observeValue(dataContext, propertyName);
+		IObservableValue observableValue = BeanObservableValueUtil.observeValue(dataContext, propertyName);
+		return checkWrapArrayValue(valueType, fullPath, observableValue);
 	}
 
 	/*

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
-import org.eclipse.swt.widgets.Widget;
-
 /**
  * 
  * @author yyang (yves.yang@soyatec.com)
@@ -19,9 +17,9 @@ import org.eclipse.swt.widgets.Widget;
 public interface IDynamicBinding extends IBinding {
 	Object createBoundSource();
 
-	void setControl(Widget control);
+	void setControl(Object control);
 
-	Widget getControl();
+	Object getControl();
 
 	void setType(String type);
 

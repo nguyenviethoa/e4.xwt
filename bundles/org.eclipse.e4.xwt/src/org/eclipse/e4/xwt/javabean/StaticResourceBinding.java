@@ -18,16 +18,16 @@ import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Widget;
 
 public class StaticResourceBinding implements IBinding {
-	protected Widget widget;
+	protected Object widget;
 	protected String key;
 
-	public StaticResourceBinding(Widget widget, String key) {
+	public StaticResourceBinding(Object widget, String key) {
 		this.widget = widget;
 		this.key = key;
 	}
 
 	public Object getValue() {
-		Widget parent = widget;		
+		Widget parent = UserData.getWidget(widget);
 		while (parent != null) {
 			Map<String, Object> dico = UserData.getLocalResources(parent);
 			if (dico != null && dico.containsKey(key)) {

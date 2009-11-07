@@ -22,6 +22,7 @@ import org.eclipse.core.databinding.beans.IBeanObservable;
 import org.eclipse.core.databinding.observable.IObserving;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataBindingInfo;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 
@@ -55,7 +56,7 @@ public class ObjectBindingContext extends BindingContext {
 			observed = newValue;
 			bindingContext.put(observed, this);
 			if (observeWidget != null) {
-				DataBindingContext bindingContext = new DataBindingContext();
+				DataBindingContext bindingContext = new DataBindingContext(XWT.getRealm());
 				bindingContext.bindValue(observeWidget, observeValue, null, null);
 			}
 		}

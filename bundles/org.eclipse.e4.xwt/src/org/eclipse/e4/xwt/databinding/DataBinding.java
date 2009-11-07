@@ -14,6 +14,12 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * The default implementation of the dataBinding object.
@@ -41,39 +47,46 @@ public class DataBinding extends AbstractDataBinding {
 	public Object getValue() {
 		IObservableValue observableWidget = getObservableWidget();
 		IDataProvider dataProvider = getDataProvider();
-		/* If observableWidget is null, we need only return the data from provider. */
-		if (observableWidget == null) {
-			return dataProvider.getData(getSourceProperty());
-		}
+		
 		IObservableValue observableSource = getObservableSource();
 		IBindingContext bindingContext = dataProvider.getBindingContext();
+
+		/* If observableWidget is null, we need only return the data from provider. */
+		if (observableWidget == null) {
+			String sourceProperty = getSourceProperty();
+			Class<?> dataType = dataProvider.getDataType(sourceProperty);
+			observableWidget = dataProvider.createObservableValue(dataType, sourceProperty);
+			bindingContext.bind(observableSource, observableWidget, this);
+			return dataProvider.getData(sourceProperty);
+		}
+		
 		if (bindingContext != null && observableSource != null) {
-//			Object target = getTarget();
-//			if (target instanceof Text && getTargetProperty().equalsIgnoreCase("text")) {
-//				String sourceProperty = getSourceProperty();
-//				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
-//					Text text = (Text) target;
-//					text.setEditable(false);
-//				}
-//			} else if (target instanceof Button && getTargetProperty().equalsIgnoreCase("selection")) {
-//				String sourceProperty = getSourceProperty();
-//				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
-//					Button button = (Button) target;
-//					button.setEnabled(false);
-//				}
-//			} else if ((target instanceof Combo || target instanceof CCombo) && getTargetProperty().equalsIgnoreCase("text")) {
-//				String sourceProperty = getSourceProperty();
-//				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
-//					Control control = (Control) target;
-//					control.setEnabled(false);
-//				}
-//			} else if (target instanceof MenuItem && getTargetProperty().equalsIgnoreCase("selection")) {
-//				String sourceProperty = getSourceProperty();
-//				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
-//					MenuItem menuItem = (MenuItem) target;
-//					menuItem.setEnabled(false);
-//				}
-//			}
+			Object target = getTarget();
+			if (target instanceof Text && getTargetProperty().equalsIgnoreCase("text")) {
+				String sourceProperty = getSourceProperty();
+				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+					Text text = (Text) target;
+					text.setEditable(false);
+				}
+			} else if (target instanceof Button && getTargetProperty().equalsIgnoreCase("selection")) {
+				String sourceProperty = getSourceProperty();
+				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+					Button button = (Button) target;
+					button.setEnabled(false);
+				}
+			} else if ((target instanceof Combo || target instanceof CCombo) && getTargetProperty().equalsIgnoreCase("text")) {
+				String sourceProperty = getSourceProperty();
+				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+					Control control = (Control) target;
+					control.setEnabled(false);
+				}
+			} else if (target instanceof MenuItem && getTargetProperty().equalsIgnoreCase("selection")) {
+				String sourceProperty = getSourceProperty();
+				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+					MenuItem menuItem = (MenuItem) target;
+					menuItem.setEnabled(false);
+				}
+			}
 			bindingContext.bind(observableSource, observableWidget, this);
 		}
 		if (observableSource != null) {
@@ -86,7 +99,7 @@ public class DataBinding extends AbstractDataBinding {
 		if (observableSource == null) {
 			IDataProvider dataProvider = getDataProvider();
 			String sourceProperty = getSourceProperty();
-			Object valueType = dataProvider.getDataType(sourceProperty);
+			Class<?> valueType = dataProvider.getDataType(sourceProperty);
 			observableSource = dataProvider.createObservableValue(valueType, sourceProperty);
 		}
 		return observableSource;

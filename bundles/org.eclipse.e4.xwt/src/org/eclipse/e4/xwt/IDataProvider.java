@@ -70,10 +70,11 @@ public interface IDataProvider {
 	/**
 	 * Create a databinding data with given path.
 	 * 
+	 * @param valueType
 	 * @param path
 	 * @return
 	 */
-	IObservableValue createObservableValue(Object valueType, String path);
+	IObservableValue createObservableValue(Class<?> valueType, String path);
 
 	/**
 	 * Process context of databindings.

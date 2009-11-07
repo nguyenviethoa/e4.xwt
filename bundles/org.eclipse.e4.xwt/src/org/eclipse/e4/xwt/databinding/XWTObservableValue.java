@@ -28,7 +28,7 @@ public abstract class XWTObservableValue extends AbstractObservableValue impleme
 	public static final String VALUE_CHANGED_EVENT = "EVENT_NODE_VALUE_CHANGED";
 
 	private Object observed;
-	private Object valueType;
+	private Class<?> valueType;
 
 	private EventManager eventManager;
 	private EventListener eventListener;
@@ -39,7 +39,7 @@ public abstract class XWTObservableValue extends AbstractObservableValue impleme
 	/**
 	 * 
 	 */
-	public XWTObservableValue(Object valueType, Object observed, String path) {
+	public XWTObservableValue(Class<?> valueType, Object observed, String path) {
 		super(XWT.getRealm());
 		this.valueType = valueType;
 		this.observed = observed;
@@ -129,7 +129,7 @@ public abstract class XWTObservableValue extends AbstractObservableValue impleme
 	 * 
 	 * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
 	 */
-	public Object getValueType() {
+	public Class<?> getValueType() {
 		return valueType;
 	}
 

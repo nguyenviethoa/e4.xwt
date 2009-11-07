@@ -110,7 +110,7 @@ public class XWT {
 	 * @param name
 	 * @return
 	 */
-	public static Object findElementByName(Widget context, String name) {
+	public static Object findElementByName(Object context, String name) {
 		return XWTLoaderManager.getActive().findElementByName(context, name);
 	}
 
@@ -120,7 +120,7 @@ public class XWT {
 	 * @param context
 	 * @return
 	 */
-	public static Object getDataContext(Widget element, boolean resolved) {
+	public static Object getDataContext(Object element, boolean resolved) {
 		Object value = XWTLoaderManager.getActive().getDataContext(element);
 		if (resolved && value instanceof IBinding) {
 			return ((IBinding) value).getValue();
@@ -134,7 +134,7 @@ public class XWT {
 	 * @param context
 	 * @return
 	 */
-	public static Object getDataContext(Widget element) {
+	public static Object getDataContext(Object element) {
 		return getDataContext(element, true);
 	}
 

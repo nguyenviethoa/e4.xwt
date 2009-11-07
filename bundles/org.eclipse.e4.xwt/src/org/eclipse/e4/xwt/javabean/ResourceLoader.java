@@ -119,13 +119,13 @@ public class ResourceLoader implements IVisualElementLoader {
 		private Object loadedObject = null;
 		private Method loadedMethod = null;
 		private Widget hostWidget = null;
-		private Widget currentWidget = null;
+		private Object currentWidget = null;
 
-		public Widget getCurrentWidget() {
+		public Object getCurrentWidget() {
 			return currentWidget;
 		}
 
-		public void setCurrentWidget(Widget currentWidget) {
+		public void setCurrentWidget(Object currentWidget) {
 			this.currentWidget = currentWidget;
 		}
 
@@ -471,7 +471,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		Widget widget = UserData.getWidget(targetObject);
 		if (widget != null) {
-			loadData.setCurrentWidget(widget);
+			loadData.setCurrentWidget(targetObject);
 		}
 		if (scopedObject == null && widget != null) {
 			scopedObject = widget;
@@ -585,28 +585,29 @@ public class ResourceLoader implements IVisualElementLoader {
 			ResourceDictionary dico, Object dataContext)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
-		Widget widget = null;
+		Object control = null;
 		IMetaclass widgetMetaclass = metaclass;
 		if (JFacesHelper.isViewer(targetObject)) {
-			widget = JFacesHelper.getControl(targetObject);
+			Widget widget = JFacesHelper.getControl(targetObject);
 			widgetMetaclass = loader.getMetaclass(widget.getClass());
+			control = targetObject;
 		} else if (targetObject instanceof Widget) {
-			widget = (Widget) targetObject;
+			control = (Widget) targetObject;
 		} else {
-			widget = loadData.getCurrentWidget();
+			control = loadData.getCurrentWidget();
 		}
-		if (widget != null) {
+		if (control != null) {
 			if (targetObject instanceof IDynamicBinding) {
-				((IDynamicBinding) targetObject).setControl(widget);
+				((IDynamicBinding) targetObject).setControl(control);
 			}
 			if (dico != null) {
-				UserData.setResources(widget, dico);
+				UserData.setResources(control, dico);
 			}
 			if (dataContext != null) {
 				IProperty property = widgetMetaclass
 						.findProperty(IConstants.XAML_DATACONTEXT);
 				if (property != null) {
-					property.setValue(widget, dataContext);
+					property.setValue(UserData.getWidget(control), dataContext);
 				} else {
 					throw new XWTException("DataContext is missing in "
 							+ widgetMetaclass.getType().getName());
@@ -928,8 +929,9 @@ public class ResourceLoader implements IVisualElementLoader {
 				for (String attrName : element.attributeNames(namespace)) {
 					Attribute attribute = element.getAttribute(namespace,
 							attrName);
-					namespaceHandler.handleAttribute(loadData
-							.getCurrentWidget(), targetObject, attrName,
+					Widget widget = UserData.getWidget(loadData
+							.getCurrentWidget());
+					namespaceHandler.handleAttribute(widget, targetObject, attrName,
 							attribute.getContent());
 				}
 			}

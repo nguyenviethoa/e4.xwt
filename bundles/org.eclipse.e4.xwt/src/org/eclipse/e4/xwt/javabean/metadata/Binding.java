@@ -41,7 +41,7 @@ public class Binding implements IDynamicBinding {
 
 	private String elementName;
 
-	private Widget control;
+	private Object control;
 
 	private IXWTLoader xwtLoader;
 
@@ -69,11 +69,11 @@ public class Binding implements IDynamicBinding {
 		return path;
 	}
 
-	public void setControl(Widget control) {
+	public void setControl(Object control) {
 		this.control = control;
 	}
 
-	public Widget getControl() {
+	public Object getControl() {
 		return this.control;
 	}
 
@@ -121,7 +121,7 @@ public class Binding implements IDynamicBinding {
 		return null;
 	}
 
-	protected Widget getDataContextHost() {
+	protected Object getDataContextHost() {
 		if (control == null) {
 			return null;
 		}
@@ -153,7 +153,8 @@ public class Binding implements IDynamicBinding {
 				}
 				else {
 					IDataProvider dataProvider = getDataProvider(source);
-					return dataProvider.createObservableValue(source, path);
+					Class<?> dataType = dataProvider.getDataType(path);
+					return dataProvider.createObservableValue(dataType, path);
 				}
 			}
 		}
@@ -164,7 +165,7 @@ public class Binding implements IDynamicBinding {
 			}
 			else {
 				IDataProvider dataProvider = getDataProvider(source);
-				Object dataType = dataProvider.getDataType(path);
+				Class<?> dataType = dataProvider.getDataType(path);
 				return dataProvider.createObservableValue(dataType, path);
 			}
 		}
@@ -174,7 +175,7 @@ public class Binding implements IDynamicBinding {
 	public boolean isControlSource() {
 		Object source = getSourceObject();
 		if (source == null) {
-			Widget dataContextHost = getDataContextHost();
+			Object dataContextHost = getDataContextHost();
 			if (dataContextHost != null) {
 				source = UserData.getLocalDataContext(dataContextHost);
 			}
@@ -190,7 +191,7 @@ public class Binding implements IDynamicBinding {
 	public Object getValue() {
 		Object dataContext = getSourceObject();
 		if (dataContext == null) {
-			Widget dataContextHost = getDataContextHost();
+			Object dataContextHost = getDataContextHost();
 			if (dataContextHost != null) {
 				dataContext = UserData.getLocalDataContext(dataContextHost);
 				if (dataContext instanceof IDynamicBinding) {

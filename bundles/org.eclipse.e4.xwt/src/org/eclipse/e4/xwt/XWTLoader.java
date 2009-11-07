@@ -117,7 +117,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.widgets.Widget;
 
 /**
  * Default XWT loader
@@ -275,7 +274,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#findNameContext(org.eclipse.swt.widgets
 	 * .Widget)
 	 */
-	public NameScope findNameContext(Widget widget) {
+	public NameScope findNameContext(Object widget) {
 		return UserData.findNameContext(widget);
 	}
 
@@ -286,7 +285,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#findElementByName(org.eclipse.swt.widgets
 	 * .Widget, java.lang.String)
 	 */
-	public Object findElementByName(Widget context, String name) {
+	public Object findElementByName(Object context, String name) {
 		return UserData.findElementByName(context, name);
 	}
 
@@ -297,7 +296,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#getDataContext(org.eclipse.swt.widgets.
 	 * Widget)
 	 */
-	public Object getDataContext(Widget element) {
+	public Object getDataContext(Object element) {
 		return UserData.getDataContext(element);
 	}
 
@@ -308,7 +307,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#getDataContext(org.eclipse.swt.widgets.
 	 * Widget)
 	 */
-	public TriggerBase[] getTriggers(Widget element) {
+	public TriggerBase[] getTriggers(Object element) {
 		return UserData.getTriggers(element);
 	}
 
@@ -319,7 +318,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#setDataContext(org.eclipse.swt.widgets.
 	 * Widget, java.lang.Object)
 	 */
-	public void setDataContext(Widget widget, Object dataContext) {
+	public void setDataContext(Object widget, Object dataContext) {
 		UserData.setDataContext(widget, dataContext);
 	}
 
@@ -329,7 +328,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @param context
 	 * @return
 	 */
-	public void setTriggers(Widget element, TriggerBase[] triggers) {
+	public void setTriggers(Object element, TriggerBase[] triggers) {
 		UserData.setTriggers(element, triggers);
 	}
 
@@ -338,7 +337,7 @@ public class XWTLoader implements IXWTLoader {
 	 * 
 	 * @see org.eclipse.e4.xwt.IXWTLoader#getCLR(org.eclipse.swt.widgets.Widget)
 	 */
-	public Object getCLR(Widget widget) {
+	public Object getCLR(Object widget) {
 		return UserData.getCLR(widget);
 	}
 
@@ -348,7 +347,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see
 	 * org.eclipse.e4.xwt.IXWTLoader#findShell(org.eclipse.swt.widgets.Widget)
 	 */
-	public Shell findShell(Widget context) {
+	public Shell findShell(Object context) {
 		return UserData.findShell(context);
 	}
 
@@ -359,7 +358,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#findCompositeParent(org.eclipse.swt.widgets
 	 * .Widget)
 	 */
-	public Composite findCompositeParent(Widget context) {
+	public Composite findCompositeParent(Object context) {
 		return UserData.findCompositeParent(context);
 	}
 

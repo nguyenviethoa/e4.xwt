@@ -27,7 +27,6 @@ import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Widget;
 
 /**
  * XWT loader interface
@@ -138,7 +137,7 @@ public interface IXWTLoader {
 	 * @param widget
 	 * @return
 	 */
-	public abstract NameScope findNameContext(Widget widget);
+	public abstract NameScope findNameContext(Object widget);
 
 	/**
 	 * Find a named UI element.
@@ -148,7 +147,7 @@ public interface IXWTLoader {
 	 * @param name
 	 * @return
 	 */
-	public abstract Object findElementByName(Widget context, String name);
+	public abstract Object findElementByName(Object context, String name);
 
 	/**
 	 * Get the DataContext of given element
@@ -156,7 +155,7 @@ public interface IXWTLoader {
 	 * @param context
 	 * @return
 	 */
-	public abstract Object getDataContext(Widget element);
+	public abstract Object getDataContext(Object element);
 
 	/**
 	 * Get the Triggers of given element
@@ -164,7 +163,7 @@ public interface IXWTLoader {
 	 * @param context
 	 * @return
 	 */
-	public abstract TriggerBase[] getTriggers(Widget element);
+	public abstract TriggerBase[] getTriggers(Object element);
 
 	/**
 	 * Change the DataContext of given element
@@ -172,7 +171,7 @@ public interface IXWTLoader {
 	 * @param context
 	 * @return
 	 */
-	public abstract void setDataContext(Widget widget, Object dataContext);
+	public abstract void setDataContext(Object widget, Object dataContext);
 
 	/**
 	 * Change the Triggers of given element
@@ -180,7 +179,7 @@ public interface IXWTLoader {
 	 * @param context
 	 * @return
 	 */
-	public abstract void setTriggers(Widget widget, TriggerBase[] triggers);
+	public abstract void setTriggers(Object widget, TriggerBase[] triggers);
 
 	/**
 	 * Get the CLR (Common Language Runtime) object. If no CLR object is found in this element, the research will be propagated in it parent.
@@ -188,7 +187,7 @@ public interface IXWTLoader {
 	 * @param widget
 	 * @return
 	 */
-	public abstract Object getCLR(Widget widget);
+	public abstract Object getCLR(Object widget);
 
 	/**
 	 * Find the root shell
@@ -196,7 +195,7 @@ public interface IXWTLoader {
 	 * @param context
 	 * @return
 	 */
-	public abstract Shell findShell(Widget context);
+	public abstract Shell findShell(Object context);
 
 	/**
 	 * Find the closet parent of type Composite
@@ -204,7 +203,7 @@ public interface IXWTLoader {
 	 * @param context
 	 * @return
 	 */
-	public abstract Composite findCompositeParent(Widget context);
+	public abstract Composite findCompositeParent(Object context);
 
 	/**
 	 * Get the Metaclass of the given object

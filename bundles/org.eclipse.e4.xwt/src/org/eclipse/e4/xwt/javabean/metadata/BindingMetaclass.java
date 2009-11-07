@@ -30,7 +30,7 @@ public class BindingMetaclass extends Metaclass {
 	public Object newInstance(Object[] parameters) {
 		Binding newInstance = (Binding) super.newInstance(parameters);
 		if (JFacesHelper.isViewer(parameters[0]))
-			newInstance.setControl(JFacesHelper.getControl(parameters[0]));
+			newInstance.setControl(parameters[0]);
 		else if (parameters[0] instanceof Control)
 			newInstance.setControl((Control) parameters[0]);
 		else if (parameters[0] instanceof TableItemProperty.Cell)
@@ -38,7 +38,7 @@ public class BindingMetaclass extends Metaclass {
 		else if (parameters[0] instanceof Item)
 			newInstance.setControl((Item) parameters[0]);
 		else if (parameters[0] instanceof ViewerColumn) {
-			newInstance.setControl(((ViewerColumn) parameters[0]).getViewer().getControl());
+			newInstance.setControl(((ViewerColumn) parameters[0]).getViewer());
 		}
 		newInstance.setXWTLoader(xwtLoader);
 		return newInstance;

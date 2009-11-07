@@ -42,10 +42,10 @@ public class CustomDataProvider extends AbstractDataProvider {
 		((DynamicObject) object).setProperty(path, value);
 	}
 
-	public IObservableValue createObservableValue(Object valueType, final String path) {
+	public IObservableValue createObservableValue(Class<?> valueType, final String path) {
 		Object target = getObjectInstance();
 		if (target != null) {
-			return new XWTObservableValue(valueType, target, path) {
+			XWTObservableValue observableValue = new XWTObservableValue(valueType, target, path) {
 				@Override
 				protected void doSetApprovedValue(Object value) {
 					CustomDataProvider.this.getObjectInstance().setProperty(path, value);
@@ -56,6 +56,8 @@ public class CustomDataProvider extends AbstractDataProvider {
 					return CustomDataProvider.this.getData(path);
 				}
 			};
+			
+			return checkWrapArrayValue(valueType, path, observableValue);
 		}
 		return null;
 	}

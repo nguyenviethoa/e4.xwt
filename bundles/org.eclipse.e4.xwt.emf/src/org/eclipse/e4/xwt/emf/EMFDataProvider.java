@@ -33,7 +33,7 @@ public class EMFDataProvider extends AbstractDataProvider {
 	private String featureName;
 	private EObject objectInstance;
 
-	public IObservableValue createObservableValue(Object valueType, String path) {
+	public IObservableValue createObservableValue(Class<?> valueType, String path) {
 		EObject eObj = getTarget();
 		if (eObj != null && path != null) {
 			String featureName = path;
@@ -45,7 +45,8 @@ public class EMFDataProvider extends AbstractDataProvider {
 			}
 			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
 			if (feature != null) {
-				return EMFObservables.observeValue(XWT.getRealm(), eObj, feature);
+				IObservableValue observableValue = EMFObservables.observeValue(XWT.getRealm(), eObj, feature);
+				return checkWrapArrayValue(valueType, path, observableValue);
 			}
 		}
 		return null;

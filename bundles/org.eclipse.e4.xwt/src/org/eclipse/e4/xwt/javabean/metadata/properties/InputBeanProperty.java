@@ -31,10 +31,11 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.IContentProvider;
 
 /**
- * Handle manually the type conversion. Maybe it can be done using the IConverter. Only the type of IProperty should be IObservableCollection
+ * Handle manually the type conversion. Maybe it can be done using the
+ * IConverter. Only the type of IProperty should be IObservableCollection
  * 
  * @author yyang
- *
+ * 
  */
 public class InputBeanProperty extends DelegateProperty {
 
@@ -46,87 +47,69 @@ public class InputBeanProperty extends DelegateProperty {
 	public void setValue(Object target, Object value)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException, SecurityException, NoSuchFieldException {
+		Class<?> elementType = getElementType();
+		if (value.getClass().isArray()) {
+			elementType = value.getClass().getComponentType();
+		}
+		if (target instanceof AbstractListViewer) {
+			AbstractListViewer viewer = (AbstractListViewer) target;
+
+			if (value instanceof List<?> || value.getClass().isArray()) {
+				IContentProvider contentProvider = viewer.getContentProvider();
+				if (contentProvider == null) {
+					contentProvider = new ObservableListContentProvider();
+					viewer.setContentProvider(contentProvider);
+				}
+			} else if (value instanceof Set<?>) {
+				IContentProvider contentProvider = viewer.getContentProvider();
+				if (contentProvider == null) {
+					contentProvider = new ObservableSetContentProvider();
+					viewer.setContentProvider(contentProvider);
+				}
+			}
+		} else if (target instanceof ColumnViewer) {
+			ColumnViewer viewer = (ColumnViewer) target;
+			String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
+			if (value instanceof List<?> || value.getClass().isArray()) {
+				IContentProvider contentProvider = viewer.getContentProvider();
+				if (contentProvider == null) {
+					contentProvider = new ObservableListContentProvider();
+					viewer.setContentProvider(contentProvider);
+				}
+				if (propertyNames != null
+						&& contentProvider instanceof ObservableListContentProvider) {
+					ObservableListContentProvider listContentProvider = (ObservableListContentProvider) contentProvider;
+					viewer.setLabelProvider(new ObservableMapLabelProvider(
+							PojoObservables.observeMaps(listContentProvider
+									.getKnownElements(), elementType,
+									propertyNames)));
+				}
+			} else if (value instanceof Set<?>) {
+				IContentProvider contentProvider = viewer.getContentProvider();
+				if (contentProvider == null) {
+					contentProvider = new ObservableSetContentProvider();
+					viewer.setContentProvider(contentProvider);
+				}
+				if (propertyNames != null
+						&& contentProvider instanceof ObservableSetContentProvider) {
+					ObservableSetContentProvider setContentProvider = (ObservableSetContentProvider) contentProvider;
+					viewer.setLabelProvider(new ObservableMapLabelProvider(
+							PojoObservables.observeMaps(setContentProvider
+									.getKnownElements(), elementType,
+									propertyNames)));
+				}
+			}
+		}
 		if (value instanceof CollectionViewSource) {
 			value = ((CollectionViewSource) value).getView();
-		}
-		else if (!(value instanceof IObservableCollection)) {
-			Class<?> elementType = getElementType();
-			if (value.getClass().isArray()) {
-				Object[] array = (Object[])value;
-				elementType = value.getClass().getComponentType();
-				value = Arrays.asList(array);
-			}
-			if (target instanceof AbstractListViewer){				
-				AbstractListViewer viewer = (AbstractListViewer) target;
-				
-				if (!isArrayProperty()) {	
-					if (value instanceof List<?>) {
-						IContentProvider contentProvider = viewer.getContentProvider();
-						if (contentProvider == null) {
-							contentProvider = new ObservableListContentProvider();
-							viewer.setContentProvider(contentProvider);
-						}
-					}
-					else if (value instanceof Set<?>) {
-						IContentProvider contentProvider = viewer.getContentProvider();
-						if (contentProvider == null) {
-							contentProvider = new ObservableSetContentProvider();
-							viewer.setContentProvider(contentProvider);
-						}
-					}
-					IConverter converter = XWT.findConvertor(value.getClass(), IObservableCollection.class);
-					if (converter != null) {
-						value = converter.convert(value);												
-					}
-				}
-			}
-			else if (target instanceof ColumnViewer){
-				ColumnViewer viewer = (ColumnViewer) target;
-				String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
-				if (!isArrayProperty()) {
-					if (value instanceof List<?>) {
-						IContentProvider contentProvider = viewer.getContentProvider();
-						if (contentProvider == null) {
-							contentProvider = new ObservableListContentProvider();
-							viewer.setContentProvider(contentProvider);
-						}
-						if (propertyNames != null && contentProvider instanceof ObservableListContentProvider) {
-							ObservableListContentProvider listContentProvider = (ObservableListContentProvider) contentProvider;
-							viewer.setLabelProvider(new ObservableMapLabelProvider(PojoObservables
-									.observeMaps(listContentProvider.getKnownElements(), elementType,
-											propertyNames)));					
-						}
-					}
-					else if (value instanceof Set<?>) {
-						IContentProvider contentProvider = viewer.getContentProvider();
-						if (contentProvider == null) {
-							contentProvider = new ObservableSetContentProvider();
-							viewer.setContentProvider(contentProvider);
-						}
-						if (propertyNames != null && contentProvider instanceof ObservableSetContentProvider) {
-							ObservableSetContentProvider setContentProvider = (ObservableSetContentProvider) contentProvider;
-							viewer.setLabelProvider(new ObservableMapLabelProvider(PojoObservables
-									.observeMaps(setContentProvider.getKnownElements(), elementType,
-											propertyNames)));					
-						}
-					}
-					IConverter converter = XWT.findConvertor(value.getClass(), IObservableCollection.class);
-					if (converter != null) {
-						value = converter.convert(value);												
-					}
-				}
+		} else if (!(value instanceof IObservableCollection)) {
+			IConverter converter = XWT.findConvertor(value.getClass(),
+					IObservableCollection.class);
+			if (converter != null) {
+				value = converter.convert(value);
 			}
 		}
 		super.setValue(target, value);
-	}
-
-	protected boolean isArrayProperty() {
-		IProperty property = getDelegate();
-		Class<?> type = property.getType();
-		if (type == null) {
-			return false;
-		}
-		return type.isArray();
 	}
 
 	protected Class<?> getElementType() {

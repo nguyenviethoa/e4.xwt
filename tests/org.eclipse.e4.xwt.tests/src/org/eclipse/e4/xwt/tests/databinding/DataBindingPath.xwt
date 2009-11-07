@@ -14,7 +14,7 @@
 	</Shell.Resources>
 	
 	<Label text="Name"/>
-	<Text x:style="BORDER" text="{Binding Path=manager.address.city}">
+	<Text Name="ManagerCity" x:style="BORDER" text="{Binding Path=manager.address.city}">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
@@ -44,5 +44,5 @@
          		grabExcessHorizontalSpace="true"/>
 		</Combo.layoutData>
 	</Combo>
-	<Button Text="New Manager" SelectionEvent="onNew"/>
+	<Button Name="Button" Text="New Manager" SelectionEvent="onNew"/>
 </Shell>

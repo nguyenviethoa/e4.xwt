@@ -12,8 +12,10 @@ package org.eclipse.e4.xwt.tests.jface.listviewer.array;
 
 import java.net.URL;
 
+import org.eclipse.core.databinding.observable.IObservableCollection;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.swt.widgets.Event;
 
 
 public class ListViewer {
@@ -25,5 +27,13 @@ public class ListViewer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void addPerson(Object sender, Event event) {
+		org.eclipse.jface.viewers.ListViewer listViewer = (org.eclipse.jface.viewers.ListViewer) XWT.findElementByName(event.widget, "ListViewer");
+		IObservableCollection collection = (IObservableCollection) listViewer.getInput();
+		Employee employee = new Employee();
+		employee.setName("New hired one");
+		collection.add(employee);
 	}
 }

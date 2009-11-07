@@ -18,7 +18,7 @@ import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.e4.xwt.XWT;
 
 /**
- * String to Boolean converter
+ * Set to IObservableCollection converter
  * 
  * @author yyang
  */

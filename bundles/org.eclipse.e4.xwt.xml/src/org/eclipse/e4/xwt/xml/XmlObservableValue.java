@@ -18,7 +18,7 @@ import org.w3c.dom.Node;
  */
 public class XmlObservableValue extends XWTObservableValue {
 
-	public XmlObservableValue(Object valueType, Node node, String path) {
+	public XmlObservableValue(Class<?> valueType, Node node, String path) {
 		super(valueType, node, path);
 	}
 
