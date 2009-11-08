@@ -1266,7 +1266,10 @@ public class XWTLoader implements IXWTLoader {
 				IConstants.XWT_NAMESPACE);
 		if (metaclass != null) {
 			IProperty property = metaclass.findProperty("Input");
+			
 			metaclass.addProperty(new InputBeanProperty(property));
+			metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT,
+					IUserDataConstants.XWT_DATACONTEXT_KEY));
 		}
 
 		type = org.eclipse.jface.viewers.AbstractListViewer.class;
