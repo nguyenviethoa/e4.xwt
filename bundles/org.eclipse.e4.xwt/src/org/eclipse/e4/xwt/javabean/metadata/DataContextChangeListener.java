@@ -98,7 +98,7 @@ public class DataContextChangeListener implements PropertyChangeListener {
 			try {
 				Method getMethod1 = ObjectUtil.findGetter(object.getClass(), path1, null);
 				if (getMethod1 != null) {
-					object = getMethod1.invoke(object, new Object[] {});
+					object = getMethod1.invoke(object);
 					break;
 				}
 			} catch (Exception e) {

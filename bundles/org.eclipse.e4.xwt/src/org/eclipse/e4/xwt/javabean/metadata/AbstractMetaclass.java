@@ -20,6 +20,7 @@ import org.eclipse.e4.xwt.IEventGroup;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.core.IBinding;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
@@ -29,6 +30,7 @@ import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IObjectInitializer;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Composite;
@@ -446,16 +448,15 @@ public abstract class AbstractMetaclass implements IMetaclass {
 		}
 
 		try {
-
 			Object swtObject = null;
 			Object parent = parameters[0];
-			Widget directParent = null;
-			if (parent instanceof Widget) {
-				directParent = (Widget) parent;
-			} else if (JFacesHelper.isViewer(parent)) {
-				directParent = JFacesHelper.getControl(parent);
-			} else
+			Widget directParent = UserData.getWidget(parent);
+			if (directParent == null) {
+				directParent = UserData.getTreeParent(parent);
+			}
+			if (directParent == null) {
 				throw new IllegalStateException();
+			}
 			if (Control.class.isAssignableFrom(getType())
 					&& !(directParent instanceof Composite)) {
 				directParent = getXWTLoader().findCompositeParent(directParent);
@@ -470,7 +471,6 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			}
 
 			Constructor<?> defaultConstructor = null;
-
 			for (Constructor<?> constructor : getType().getConstructors()) {
 				Class<?>[] parameterTypes = constructor.getParameterTypes();
 				if (parameterTypes.length > 2 || parameterTypes.length == 0) {
@@ -482,13 +482,15 @@ public abstract class AbstractMetaclass implements IMetaclass {
 
 				if (parameterTypes[0].isAssignableFrom(parent.getClass())) {
 					if (parameterTypes.length == 1) {
-						swtObject = constructor
-								.newInstance(new Object[] { parent });
-						break;
+						if (styleValue == null) {
+							swtObject = constructor.newInstance(new Object[] {
+									parent});
+							break;
+						}
 					} else if (parameterTypes[1].isAssignableFrom(int.class)) {
 						if (styleValue == null)
 							swtObject = constructor.newInstance(new Object[] {
-									parent, 0 });
+									parent, 0});
 						else
 							swtObject = constructor.newInstance(new Object[] {
 									parent, styleValue });

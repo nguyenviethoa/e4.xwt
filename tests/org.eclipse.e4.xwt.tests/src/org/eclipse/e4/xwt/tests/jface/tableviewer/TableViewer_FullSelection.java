@@ -8,24 +8,25 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.core;
+package org.eclipse.e4.xwt.tests.jface.tableviewer;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+import java.net.URL;
+
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
+
 
 /**
- * 
- * @author yyang (yves.yang@soyatec.com)
+ * @author jliu
  */
-public interface IDynamicBinding extends IBinding {
-	Object createBoundSource();
-
-	void setControl(Object control);
-
-	Object getControl();
-
-	void setType(String type);
-
-	String getType();
-
-	IObservableValue createControlValue();
+public class TableViewer_FullSelection {
+	public static void main(String[] args) {
+		
+		URL url = TableViewer_FullSelection.class.getResource(TableViewer_FullSelection.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

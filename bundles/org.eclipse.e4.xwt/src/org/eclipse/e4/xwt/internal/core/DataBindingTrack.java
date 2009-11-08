@@ -183,7 +183,7 @@ public class DataBindingTrack {
 			Class<?> dataContextClass = dataContext.getClass();
 			Method getMethod = ObjectUtil.findGetter(dataContextClass, path, null);
 			if (getMethod != null) {
-				return getMethod.invoke(dataContext, new Object[] {});
+				return getMethod.invoke(dataContext);
 			}
 		} catch (SecurityException e) {
 			LoggerManager.log(e);

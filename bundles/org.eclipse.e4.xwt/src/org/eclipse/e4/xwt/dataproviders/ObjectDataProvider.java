@@ -20,6 +20,7 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.databinding.BeanObservableValue;
 import org.eclipse.e4.xwt.databinding.BeanObservableValueUtil;
 import org.eclipse.e4.xwt.databinding.ObjectBindingContext;
+import org.eclipse.e4.xwt.internal.core.Core;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -134,7 +135,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 			try {
 				if (paras.isEmpty()) {
 					method = targetType.getDeclaredMethod(methodName);
-					return method.invoke(target, new Object[0]);
+					return method.invoke(target);
 				} else {
 					method = targetType.getDeclaredMethod(methodName, paras.toArray(new Class<?>[paras.size()]));
 					return method.invoke(target, methodParameters.toArray(new Object[methodParameters.size()]));

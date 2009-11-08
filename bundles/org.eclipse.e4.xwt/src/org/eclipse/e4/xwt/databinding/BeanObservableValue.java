@@ -18,6 +18,7 @@ import java.lang.reflect.Modifier;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -62,7 +63,7 @@ public class BeanObservableValue extends XWTObservableValue {
 				if (propertyName.equalsIgnoreCase(pd.getName())) {
 					Method readMethod = pd.getReadMethod();
 					if (readMethod != null) {
-						return readMethod.invoke(target, null);
+						return readMethod.invoke(target);
 					}
 				}
 			}
@@ -75,6 +76,7 @@ public class BeanObservableValue extends XWTObservableValue {
 			}
 			return UserData.getLocalData(target, propertyName);
 		} catch (Exception e) {
+			LoggerManager.log(e);
 		}
 		return null;
 	}
@@ -102,8 +104,8 @@ public class BeanObservableValue extends XWTObservableValue {
 			if (property != null) {
 				return property.getType();
 			}
-			
 		} catch (Exception e) {
+			LoggerManager.log(e);
 		}
 		return null;
 	}
@@ -127,6 +129,7 @@ public class BeanObservableValue extends XWTObservableValue {
 				}
 			}
 		} catch (Exception e) {
+			LoggerManager.log(e);
 		}
 		return true;
 	}

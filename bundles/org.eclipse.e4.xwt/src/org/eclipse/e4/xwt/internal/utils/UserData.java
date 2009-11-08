@@ -26,6 +26,7 @@ import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.Caret;
 import org.eclipse.swt.widgets.Composite;
@@ -368,6 +369,8 @@ public class UserData {
 			return JFacesHelper.getControl(target);
 		} else if (target instanceof Widget) {
 			return (Widget) target;
+		} else if (target instanceof ControlEditor) {
+			return ((ControlEditor) target).getEditor();
 		}
 		return null;
 	}

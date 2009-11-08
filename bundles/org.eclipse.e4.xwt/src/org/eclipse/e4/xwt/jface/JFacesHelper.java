@@ -26,7 +26,7 @@ public class JFacesHelper {
 	}
 
 	public static boolean isViewer(Object obj) {
-		if (JFACES_VIEWER == null)
+		if (JFACES_VIEWER == null || obj == null)
 			return false;
 		return JFACES_VIEWER.isAssignableFrom(obj.getClass());
 	}

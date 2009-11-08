@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.core.IBinding;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 
 public class BeanProperty extends AbstractProperty {
 	protected PropertyDescriptor descriptor;
@@ -40,7 +41,7 @@ public class BeanProperty extends AbstractProperty {
 					type = propertyType;
 				}
 				if (!IBinding.class.isAssignableFrom(propertyType)) {
-					IConverter convertor = XWT.findConvertor(value == null ? Object.class : value.getClass(), type);
+					IConverter convertor = value == null ? null : XWT.findConvertor(value.getClass(), type);
 					if (convertor != null) {
 						value = convertor.convert(value);
 					}					
@@ -51,6 +52,13 @@ public class BeanProperty extends AbstractProperty {
 				if (readMethod != null) {
 					oldValue = readMethod.invoke(target);
 				}
+				
+				if (value == null && type != null && UserData.getWidget(target) != null) {
+					if (type == String.class) {
+						value = "";
+					}
+				}
+				
 				if (oldValue != value) {
 					writeMethod.invoke(target, value);
 					fireSetPostAction(target, this, value);

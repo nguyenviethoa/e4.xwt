@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.jface;
 
+import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
 import org.eclipse.jface.viewers.AbstractListViewer;
@@ -39,6 +40,9 @@ public class DefaultListViewerLabelProvider extends DefaultViewerLabelProvider {
 		String path = displayMemberPath;
 		if (path == null) {
 			path = (String) UserData.getLocalData(viewer, PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH);
+		}
+		if (path == null) {
+			return Core.EMPTY_ARRAY;
 		}
 		return new String[] {path};
 	}

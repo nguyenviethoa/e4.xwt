@@ -11,6 +11,9 @@
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -50,6 +53,9 @@ public class InputBeanProperty extends DelegateProperty {
 	public void setValue(Object target, Object value)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException, SecurityException, NoSuchFieldException {
+		if (value == null) {
+			return;
+		}
 		Class<?> elementType = getElementType();
 		if (value.getClass().isArray()) {
 			elementType = value.getClass().getComponentType();
@@ -61,11 +67,20 @@ public class InputBeanProperty extends DelegateProperty {
 				elementType = (Class<?>) listElementType;
 			}
 		}
+		else if (elementType == Object.class && value instanceof Collection<?>) {
+			Collection<?> collection = (Collection<?>) value;
+			for (Iterator<?> iterator = collection.iterator(); iterator.hasNext();) {
+				Object object = (Object) iterator.next();
+				if (object != null) {
+					elementType = object.getClass();
+					break;
+				}
+			}
+		}
 		
 		if (target instanceof AbstractListViewer) {
 			AbstractListViewer viewer = (AbstractListViewer) target;
 			IContentProvider contentProvider = viewer.getContentProvider();
-			IBaseLabelProvider labelProvider = viewer.getLabelProvider();
 
 			if (contentProvider == null) {
 				if (value instanceof List<?> || value.getClass().isArray()) {
@@ -76,13 +91,9 @@ public class InputBeanProperty extends DelegateProperty {
 						viewer.setContentProvider(contentProvider);
 				}
 			}
-			if (labelProvider == null) {
-				viewer.setLabelProvider(new DefaultListViewerLabelProvider(viewer));					
-			}
 		} else if (target instanceof ColumnViewer) {
 			ColumnViewer viewer = (ColumnViewer) target;
 			IContentProvider contentProvider = viewer.getContentProvider();
-			IBaseLabelProvider labelProvider = viewer.getLabelProvider();
 
 			String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
 			if (value instanceof List<?> || value.getClass().isArray()) {
@@ -111,9 +122,6 @@ public class InputBeanProperty extends DelegateProperty {
 									.getKnownElements(), elementType,
 									propertyNames)));
 				}
-			}
-			if (labelProvider == null) {
-				viewer.setLabelProvider(new DefaultColumnViewerLabelProvider(viewer));					
 			}
 		}
 		if (value instanceof CollectionViewSource) {

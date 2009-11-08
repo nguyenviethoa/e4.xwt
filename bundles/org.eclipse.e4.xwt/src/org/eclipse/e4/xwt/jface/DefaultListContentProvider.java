@@ -12,12 +12,11 @@ package org.eclipse.e4.xwt.jface;
 
 import java.util.Collection;
 
+import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 public class DefaultListContentProvider implements IStructuredContentProvider {
-	static Object[] EMPTY = new Object[] {};
-
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof Collection<?>) {
 			Collection<?> collection = (Collection<?>) inputElement;
@@ -26,7 +25,7 @@ public class DefaultListContentProvider implements IStructuredContentProvider {
 		if (inputElement instanceof Object[]) {
 			return (Object[]) inputElement;
 		}
-		return EMPTY;
+		return Core.EMPTY_ARRAY;
 	}
 
 	public void dispose() {

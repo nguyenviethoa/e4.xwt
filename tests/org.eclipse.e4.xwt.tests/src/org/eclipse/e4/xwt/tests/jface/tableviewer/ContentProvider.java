@@ -22,8 +22,8 @@ public class ContentProvider implements IStructuredContentProvider {
 	}
 
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof Collection) {
-			Collection collection = (Collection) inputElement;
+		if (inputElement instanceof Collection<?>) {
+			Collection<?> collection = (Collection<?>) inputElement;
 			return collection.toArray();
 		} else if (inputElement instanceof Object[]) {
 			return (Object[]) inputElement;

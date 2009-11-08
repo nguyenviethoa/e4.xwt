@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.e4.xwt.databinding.ObservableValueUtil;
+import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
 
 public class MultiTrigger extends TriggerBase {
 	protected Condition[] conditions;
@@ -74,8 +74,8 @@ public class MultiTrigger extends TriggerBase {
 
 			Object source = getElementByName(target, sourceName);
 
-			IObservableValue observableValue = ObservableValueUtil
-					.createWidget(source, propertyName);
+			IObservableValue observableValue = ObservableValueFactory
+					.createWidgetValue(source, propertyName);
 			observableValue.addValueChangeListener(changeListener);
 		}
 	}

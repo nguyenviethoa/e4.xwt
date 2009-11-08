@@ -53,6 +53,10 @@ public class DataBinding extends AbstractDataBinding {
 
 		/* If observableWidget is null, we need only return the data from provider. */
 		if (observableWidget == null) {
+			if (observableSource == null) {
+				// TODO should raise an exception
+				return null;
+			}
 			return observableSource.getValue();
 		}
 		
@@ -103,7 +107,7 @@ public class DataBinding extends AbstractDataBinding {
 
 	public IObservableValue getObservableWidget() {
 		if (observableWidget == null) {
-			observableWidget = ObservableValueUtil.createWidget(getTarget(), getTargetProperty());
+			observableWidget = ObservableValueFactory.createWidgetValue(getTarget(), getTargetProperty());
 		}
 		return observableWidget;
 	}

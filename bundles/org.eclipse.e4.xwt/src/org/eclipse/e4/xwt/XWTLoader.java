@@ -36,12 +36,13 @@ import org.eclipse.e4.xwt.converters.BindingToObject;
 import org.eclipse.e4.xwt.converters.CollectionToBoolean;
 import org.eclipse.e4.xwt.converters.DateToString;
 import org.eclipse.e4.xwt.converters.EnumToString;
-import org.eclipse.e4.xwt.converters.ListToObservableCollection;
+import org.eclipse.e4.xwt.converters.ListToIObservableCollection;
 import org.eclipse.e4.xwt.converters.ObjectToBoolean;
+import org.eclipse.e4.xwt.converters.ObjectToISelection;
 import org.eclipse.e4.xwt.converters.ObjectToObject;
 import org.eclipse.e4.xwt.converters.ObjectToString;
 import org.eclipse.e4.xwt.converters.SelectionToBoolean;
-import org.eclipse.e4.xwt.converters.SetToObservableCollection;
+import org.eclipse.e4.xwt.converters.SetToIObservableCollection;
 import org.eclipse.e4.xwt.converters.StringToBoolean;
 import org.eclipse.e4.xwt.converters.StringToColor;
 import org.eclipse.e4.xwt.converters.StringToEnum;
@@ -1085,8 +1086,9 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(StringToURL.instance);
 		registerConvertor(StringToType.instance);
 		registerConvertor(StringToFormAttachment.instance);
-		registerConvertor(ListToObservableCollection.instance);
-		registerConvertor(SetToObservableCollection.instance);
+		registerConvertor(ListToIObservableCollection.instance);
+		registerConvertor(SetToIObservableCollection.instance);
+		registerConvertor(ObjectToISelection.instance);
 
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core
 				.getService(ValueConvertorRegister.class);

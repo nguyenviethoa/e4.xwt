@@ -17,7 +17,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.databinding.BeanObservableValue;
-import org.eclipse.e4.xwt.databinding.ObservableValueUtil;
+import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.utils.OperatorHelper;
@@ -76,7 +76,7 @@ public class Trigger extends TriggerBase {
 	public void on(Object target) {
 		if (property != null) {
 			final Object source = getElementByName(target, sourceName);
-			IObservableValue observableValue = ObservableValueUtil.createWidget(source, property);			
+			IObservableValue observableValue = ObservableValueFactory.createWidgetValue(source, property);			
 			observableValue.addValueChangeListener(new AbstractValueChangeListener(target) {
 				public void handleValueChange(ValueChangeEvent event) {
 					Class<?> valueType = BeanObservableValue.getValueType(source.getClass(), property);

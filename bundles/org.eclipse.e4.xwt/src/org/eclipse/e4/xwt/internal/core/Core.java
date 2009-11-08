@@ -40,6 +40,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 public class Core {
+	static public final Object[] EMPTY_ARRAY = new Object[0];
+	
 	static public final String DEFAULT_STYLES_KEY = "XWT.DefaultStyles";
 
 	static public boolean TRACE_BENCH = false;

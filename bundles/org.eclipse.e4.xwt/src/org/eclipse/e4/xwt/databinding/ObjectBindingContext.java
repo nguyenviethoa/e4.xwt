@@ -23,6 +23,7 @@ import org.eclipse.core.databinding.observable.IObserving;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 
@@ -66,7 +67,7 @@ public class ObjectBindingContext extends BindingContext {
 		try {
 			Method getMethod1 = ObjectUtil.findGetter(object.getClass(), propertyName, null);
 			if (getMethod1 != null) {
-				return getMethod1.invoke(object, new Object[] {});
+				return getMethod1.invoke(object, Core.EMPTY_ARRAY);
 			}
 		} catch (Exception e) {
 		}

@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class ObservableValueUtil {
+public class ObservableValueFactory {
 	static final String ENABLED = "enabled";
 	static final String SELECTION = "selection";
 
@@ -44,36 +44,15 @@ public class ObservableValueUtil {
 	public static final Class<?>[] CONTROL_ARGUMENT_TYPES = new Class[] { Control.class };
 	public static final Class<?>[] VIEWER_ARGUMENT_TYPES = new Class[] { Viewer.class };
 
-	public static IObservableValue createWidget(Object object, String propertyName) {
-		if (object instanceof Control) {
-			try {
-				IObservableValue observableValue = observePropertyValue((Control) object, propertyName);
-				if (observableValue != null) {
-					return observableValue;
-				}
-			} catch (XWTException e) {
+	public static IObservableValue createWidgetValue(Object object, String propertyName) {
+		try {
+			IObservableValue observableValue = observePropertyValue(object, propertyName);
+			if (observableValue != null) {
+				return observableValue;
 			}
+		} catch (XWTException e) {
 		}
-		if (object instanceof MenuItem) {
-			//
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
-			// testcase: org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
-			//
-			if (ENABLED.equalsIgnoreCase(propertyName)) {
-				return new MenuItemEnabledObservableValue((MenuItem) object);
-			} else if (SELECTION.equalsIgnoreCase(propertyName)) {
-				return new MenuItemSelectionObservableValue((MenuItem) object);
-			}
-		}
-		if (object instanceof Viewer) {
-			try {
-				IObservableValue observableValue = observePropertyValue((Viewer) object, propertyName);
-				if (observableValue != null) {
-					return observableValue;
-				}
-			} catch (XWTException e) {
-			}
-		}
+
 		IMetaclass mateclass = XWT.getMetaclass(object);
 		IProperty property = mateclass.findProperty(propertyName);
 		if (property instanceof EventProperty) {
@@ -91,7 +70,28 @@ public class ObservableValueUtil {
 		return null;
 	}
 
-	public static IObservableValue observePropertyValue(Control control, String propertyName) {
+	protected static IObservableValue observePropertyValue(Object object, String propertyName) {
+		if (object instanceof Control) {
+			return observePropertyValue((Control)object, propertyName);
+		}
+		else if (object instanceof Viewer) {
+			return observePropertyValue((Viewer)object, propertyName);			
+		}
+		else if (object instanceof MenuItem) {
+			//
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
+			// testcase: org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
+			//
+			if (ENABLED.equalsIgnoreCase(propertyName)) {
+				return new MenuItemEnabledObservableValue((MenuItem) object);
+			} else if (SELECTION.equalsIgnoreCase(propertyName)) {
+				return new MenuItemSelectionObservableValue((MenuItem) object);
+			}
+		}
+		return null;
+	}
+	
+	protected static IObservableValue observePropertyValue(Control control, String propertyName) {
 		if (TEXT.equalsIgnoreCase(propertyName)) {
 			if (control instanceof Text) {
 				IObservableValue observableValue = SWTObservables.observeText(control, SWT.Modify);
@@ -148,7 +148,7 @@ public class ObservableValueUtil {
 		return null;
 	}
 
-	public static IObservableValue observePropertyValue(Viewer viewer, String property) {
+	protected static IObservableValue observePropertyValue(Viewer viewer, String property) {
 		if (property == null) {
 			return null;
 		}

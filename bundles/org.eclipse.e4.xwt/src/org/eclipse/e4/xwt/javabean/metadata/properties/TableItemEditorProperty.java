@@ -37,8 +37,10 @@ public class TableItemEditorProperty extends AbstractProperty {
 		Collection<TableEditor> tableEditors = (Collection<TableEditor>) value;
 
 		for (TableEditor tableEditor : tableEditors) {
-			disposeOldEditor(tableEditor.getColumn(), tableItem);
-			tableEditor.setItem(tableItem);
+			if (tableEditor != null) {
+				disposeOldEditor(tableEditor.getColumn(), tableItem);
+				tableEditor.setItem(tableItem);
+			}
 		}
 	}
 

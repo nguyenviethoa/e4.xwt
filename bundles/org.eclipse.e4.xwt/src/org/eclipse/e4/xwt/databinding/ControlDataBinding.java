@@ -58,10 +58,10 @@ public class ControlDataBinding extends AbstractDataBinding {
 				}
 			});
 		} else {
-			sourceWidget = ObservableValueUtil.createWidget(source, getSourceProperty());
+			sourceWidget = ObservableValueFactory.createWidgetValue(source, getSourceProperty());
 		}
 
-		IObservableValue targetWidget = ObservableValueUtil.createWidget(getTarget(), getTargetProperty());
+		IObservableValue targetWidget = ObservableValueFactory.createWidgetValue(getTarget(), getTargetProperty());
 		if (targetWidget == null) {
 			if (sourceWidget != null) {
 				return sourceWidget.getValue();
