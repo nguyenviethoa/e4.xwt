@@ -805,7 +805,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (dataContextAttribute != null) {
 				IProperty property = metaclass
 						.findProperty(IConstants.XAML_DATACONTEXT);
-				Widget composite = (Widget) targetObject;
+				Widget composite = (Widget) UserData.getWidget(targetObject);
 				DocumentObject documentObject = dataContextAttribute
 						.getChildren()[0];
 				if (IConstants.XAML_STATICRESOURCES.equals(documentObject
