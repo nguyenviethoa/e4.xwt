@@ -14,6 +14,7 @@ package org.eclipse.e4.xwt.converters;
 import java.util.Collection;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 /**
@@ -60,7 +61,7 @@ public class ObjectToISelection implements IConverter {
 	 * @see org.eclipse.core.databinding.conversion.IConverter#getToType()
 	 */
 	public Object getToType() {
-		return String.class;
+		return ISelection.class;
 	}
 
 }
