@@ -52,7 +52,7 @@ public class ObjectBindingContext extends BindingContext {
 				}
 			}
 
-			observeValue = BeanObservableValueUtil.observeValue(newValue, propertyName);
+			observeValue = ObservableValueFactory.observeValue(newValue, propertyName);
 			addListener(newValue);
 			observed = newValue;
 			bindingContext.put(observed, this);

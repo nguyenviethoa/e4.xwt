@@ -18,9 +18,8 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.databinding.BeanObservableValue;
-import org.eclipse.e4.xwt.databinding.BeanObservableValueUtil;
 import org.eclipse.e4.xwt.databinding.ObjectBindingContext;
-import org.eclipse.e4.xwt.internal.core.Core;
+import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -206,11 +205,14 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		}
 		int index = path.indexOf(".");
 		while (index != -1 && target != null) {
-			type = BeanObservableValue.getValueType(type, path.substring(0, index));
+			type = ObservableValueFactory.getValueType(type, path.substring(0, index));
+			if (type == null) {
+				type = Object.class;
+			}
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
-		return BeanObservableValue.getValueType(type, path);
+		return ObservableValueFactory.getValueType(type, path);
 	}
 
 	/**
@@ -230,7 +232,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		}
 		int index = path.indexOf(".");
 		while (index != -1 && target != null) {
-			type = BeanObservableValue.getValueType(type, path.substring(0, index));
+			type = ObservableValueFactory.getValueType(type, path.substring(0, index));
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
@@ -251,14 +253,18 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 				String path = paths[i];
 				if (dataContext != null) {
 					bindingContext.addObservable(dataContext);
-					dataContext = BeanObservableValue.getValue(dataContext, path);
+					Object pathDataContext = ObservableValueFactory.createWidgetValue(dataContext, path);
+					if (pathDataContext == null) {
+						pathDataContext = BeanObservableValue.getValue(dataContext, path);
+					}
+					dataContext = pathDataContext;
 				}
 			}
 			propertyName = paths[paths.length - 1];
 		} else if (paths.length == 1) {
 			propertyName = fullPath;
 		}
-		IObservableValue observableValue = BeanObservableValueUtil.observeValue(dataContext, propertyName);
+		IObservableValue observableValue = ObservableValueFactory.observeValue(dataContext, propertyName);
 		return checkWrapArrayValue(valueType, fullPath, observableValue);
 	}
 

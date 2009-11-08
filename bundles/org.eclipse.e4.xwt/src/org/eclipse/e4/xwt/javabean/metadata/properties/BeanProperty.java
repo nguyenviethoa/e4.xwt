@@ -79,4 +79,8 @@ public class BeanProperty extends AbstractProperty {
 	public boolean isDefault() {
 		return true;
 	}
+	
+	public boolean isReadOnly() {
+		return descriptor.getWriteMethod() == null;
+	}
 }

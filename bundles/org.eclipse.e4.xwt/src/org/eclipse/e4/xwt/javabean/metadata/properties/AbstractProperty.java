@@ -50,6 +50,10 @@ public abstract class AbstractProperty extends Behavior implements IProperty {
 		return false;
 	}
 
+	public boolean isReadOnly() {
+		return true;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

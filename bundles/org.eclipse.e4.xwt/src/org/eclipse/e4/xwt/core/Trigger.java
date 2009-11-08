@@ -79,7 +79,7 @@ public class Trigger extends TriggerBase {
 			IObservableValue observableValue = ObservableValueFactory.createWidgetValue(source, property);			
 			observableValue.addValueChangeListener(new AbstractValueChangeListener(target) {
 				public void handleValueChange(ValueChangeEvent event) {
-					Class<?> valueType = BeanObservableValue.getValueType(source.getClass(), property);
+					Class<?> valueType = ObservableValueFactory.getValueType(source.getClass(), property);
 					if (valueType == null) {
 						LoggerManager.log("Type of the property " + property + " is not found in " + source
 								.getClass().getName());

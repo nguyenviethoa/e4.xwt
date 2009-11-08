@@ -8,22 +8,30 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.core;
+package org.eclipse.e4.xwt.converters;
+
+import java.util.Collection;
+
+import org.eclipse.core.databinding.conversion.IConverter;
 
 /**
+ * String to Boolean converter
  * 
- * @author yyang (yves.yang@soyatec.com)
+ * @author yyang
  */
-public interface IDynamicBinding extends IBinding {
-	Object createBoundSource();
+public class CollectionToInteger implements IConverter {
+	public static CollectionToInteger instance = new CollectionToInteger();
 
-	void setControl(Object control);
+	public Object convert(Object fromObject) {
+		Collection<?> collection = (Collection<?>) fromObject;
+		return collection.size();
+	}
 
-	Object getControl();
+	public Object getFromType() {
+		return Collection.class;
+	}
 
-	void setType(String type);
-
-	String getType();
-
-	boolean isSourceControl();
+	public Object getToType() {
+		return Integer.class;
+	}
 }

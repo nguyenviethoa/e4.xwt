@@ -174,7 +174,7 @@ public class Binding implements IDynamicBinding {
 		return source;
 	}
 
-	public IObservableValue createControlValue() {
+	public boolean isSourceControl() {
 		Object source = getSourceObject();
 		if (source == null) {
 			Object dataContextHost = getDataContextHost();
@@ -184,14 +184,28 @@ public class Binding implements IDynamicBinding {
 		}
 
 		if (source instanceof IDynamicBinding) {
-			return ((IDynamicBinding) source).createControlValue();
+			return ((IDynamicBinding) source).isSourceControl();
 		}
-
-		if (path == null || !(source instanceof Control || source instanceof Viewer)) {
-			return null;
+		if (source instanceof IBinding) {
+			source = ((IBinding) source).getValue();
 		}
 		
-		return ObservableValueFactory.createWidgetValue(source, path);
+		if (path == null) {
+			return false;
+		}
+		int index = path.lastIndexOf('.');
+		if (index == -1) {
+			return (source instanceof Control || source instanceof Viewer);
+		}
+		String parentPath = path.substring(0, index);
+		IObservableValue observableValue = ObservableValueFactory.createWidgetValue(source, parentPath);
+		if (observableValue != null) {
+			Object type = observableValue.getValueType();
+			if (type != null) {
+				return UserData.isUIElementType(type);
+			}
+		}
+		return false;
 	}
 
 	public Object getValue() {
@@ -213,8 +227,7 @@ public class Binding implements IDynamicBinding {
 
 		IDataProvider dataProvider = getDataProvider(dataContext);
 
-		IObservableValue observableControlValue = createControlValue();
-		if (observableControlValue != null) {
+		if (isSourceControl()) {
 			try {
 				ControlDataBinding controlDataBinding = new ControlDataBinding(dataContext, control, path, type, mode, converter, dataProvider);
 				return controlDataBinding.getValue();

@@ -22,6 +22,7 @@ import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -81,52 +82,15 @@ public class BeanObservableValue extends XWTObservableValue {
 		return null;
 	}
 
-	public static Class<?> getValueType(Class<?> type, String propertyName) {
-		if (type == null || propertyName == null || propertyName.indexOf(".") != -1) {
-			return null;
-		}
-		try {
-			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
-			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-			for (PropertyDescriptor pd : propertyDescriptors) {
-				if (propertyName.equalsIgnoreCase(pd.getName())) {
-					return pd.getPropertyType();
-				}
-			}
-			Field[] fields = type.getDeclaredFields();
-			for (Field field : fields) {
-				if (propertyName.equalsIgnoreCase(field.getName())) {
-					return field.getType();
-				}
-			}
-			IMetaclass metaclass = XWT.getMetaclass(type);
-			IProperty property = metaclass.findProperty(propertyName);
-			if (property != null) {
-				return property.getType();
-			}
-		} catch (Exception e) {
-			LoggerManager.log(e);
-		}
-		return null;
-	}
-
 	public static boolean isPropertyReadOnly(Class<?> type, String propertyName) {
 		if (type == null || propertyName == null || propertyName.indexOf(".") != -1) {
 			return true;
 		}
-		try {
-			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
-			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-			for (PropertyDescriptor pd : propertyDescriptors) {
-				if (propertyName.equals(pd.getName())) {
-					return pd.getWriteMethod() == null;
-				}
-			}
-			Field[] fields = type.getDeclaredFields();
-			for (Field field : fields) {
-				if (propertyName.equals(field.getName())) {
-					return !Modifier.isPublic(field.getModifiers());
-				}
+		try {			
+			IMetaclass metaclass = XWT.getMetaclass(type);
+			IProperty property = metaclass.findProperty(propertyName);
+			if (property != null) {
+				return property.isReadOnly();
 			}
 		} catch (Exception e) {
 			LoggerManager.log(e);
@@ -196,7 +160,14 @@ public class BeanObservableValue extends XWTObservableValue {
 						value = c.convert(value);
 					}
 					field.set(target, value);
+					return;
 				}
+			}
+			
+			IMetaclass metaclass = XWT.getMetaclass(type);
+			IProperty property = metaclass.findProperty(propertyName);
+			if (property != null) {
+				property.setValue(target, value);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

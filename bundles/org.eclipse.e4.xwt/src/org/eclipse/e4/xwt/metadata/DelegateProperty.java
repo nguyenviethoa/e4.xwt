@@ -45,6 +45,10 @@ public class DelegateProperty implements IProperty {
 	public void removeSetPostAction(ISetPostAction setPostAction) {
 		this.delegate.removeSetPostAction(setPostAction);
 	}
+	
+	public boolean isReadOnly() {
+		return this.delegate.isReadOnly();
+	}
 
 	public void setType(Class<?> type) {
 		this.delegate.setType(type);

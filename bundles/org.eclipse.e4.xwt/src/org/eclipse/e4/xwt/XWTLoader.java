@@ -34,6 +34,7 @@ import org.eclipse.e4.xwt.animation.Storyboard;
 import org.eclipse.e4.xwt.collection.CollectionViewSource;
 import org.eclipse.e4.xwt.converters.BindingToObject;
 import org.eclipse.e4.xwt.converters.CollectionToBoolean;
+import org.eclipse.e4.xwt.converters.CollectionToInteger;
 import org.eclipse.e4.xwt.converters.DateToString;
 import org.eclipse.e4.xwt.converters.EnumToString;
 import org.eclipse.e4.xwt.converters.ListToIObservableCollection;
@@ -1076,6 +1077,7 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(ObjectToBoolean.instance);
 		registerConvertor(SelectionToBoolean.instance);
 		registerConvertor(CollectionToBoolean.instance);
+		registerConvertor(CollectionToInteger.instance);
 		registerConvertor(StringToIntArray.instance);
 		registerConvertor(BindingToObject.instance);
 		registerConvertor(StringToColor.instance);

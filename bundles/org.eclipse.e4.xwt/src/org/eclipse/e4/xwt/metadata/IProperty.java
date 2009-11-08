@@ -36,4 +36,6 @@ public interface IProperty extends IBehavior {
 	public void removeSetPostAction(ISetPostAction setPostAction);
 
 	public boolean isDefault();
+	
+	public boolean isReadOnly();
 }

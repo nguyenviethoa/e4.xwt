@@ -96,7 +96,15 @@ public class UserData {
 		}
 		return dictionary.keySet();
 	}
-	
+
+	public static boolean isUIElementType(Object element) {
+		if (element instanceof Class<?>) {
+			Class<?> elementType = (Class<?>) element;
+			return Widget.class.isAssignableFrom(elementType) || Viewer.class.isAssignableFrom(elementType) || ControlEditor.class.isAssignableFrom(elementType);
+		}
+		return false;
+	}
+
 	public static void bindNameContext(Object element, NameScope nameContext) {
 		Widget widget = getWidget(element);
 		if (widget == null) {

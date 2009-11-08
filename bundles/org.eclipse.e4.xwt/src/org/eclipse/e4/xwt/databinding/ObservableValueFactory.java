@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 
+import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IObservableValueManager;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemEnabledObservableValue;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemSelectionObservableValue;
+import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObservableValueManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
@@ -44,9 +47,81 @@ public class ObservableValueFactory {
 	public static final Class<?>[] CONTROL_ARGUMENT_TYPES = new Class[] { Control.class };
 	public static final Class<?>[] VIEWER_ARGUMENT_TYPES = new Class[] { Viewer.class };
 
-	public static IObservableValue createWidgetValue(Object object, String propertyName) {
+	public static Class<?> getValueType(Class<?> type, String propertyName) {
+		if (type == null || propertyName == null || propertyName.indexOf(".") != -1) {
+			return null;
+		}
 		try {
-			IObservableValue observableValue = observePropertyValue(object, propertyName);
+			IMetaclass metaclass = XWT.getMetaclass(type);
+			IProperty property = metaclass.findProperty(propertyName);
+			if (property != null) {
+				return property.getType();
+			}
+		} catch (Exception e) {
+			LoggerManager.log(e);
+		}
+		return null;
+	}
+	
+	public static boolean isBeanSupport(Object target) {
+		Method method = null;
+		try {
+			try {
+				method = target.getClass().getMethod("addPropertyChangeListener", new Class[] { String.class, PropertyChangeListener.class });
+			} catch (NoSuchMethodException e) {
+				method = target.getClass().getMethod("addPropertyChangeListener", new Class[] { PropertyChangeListener.class });
+			}
+		} catch (SecurityException e) {
+		} catch (NoSuchMethodException e) {
+		}
+		return method != null;
+	}
+
+	public static IObservableValue observeValue(Object observed, String propertyName) {
+		if (observed == null || propertyName == null) {
+			return null;
+		}
+		if (isBeanSupport(observed)) {
+			return BeansObservables.observeValue(XWT.getRealm(), observed, propertyName);
+		}
+		Class<?> valueType = getValueType(observed.getClass(), propertyName);
+		return new BeanObservableValue(valueType, observed, propertyName);
+	}
+	
+	public static boolean isValueProperty(Class<?> object, String propertyName) {
+		if (propertyName == null) {
+			return false;
+		}
+
+		if (Viewer.class.isAssignableFrom(object)) {
+			return isViewerValueProperty(object, propertyName);
+		} else if (MenuItem.class.isAssignableFrom(object)) {
+			//
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
+			// testcase:
+			// org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
+			//
+			if (ENABLED.equalsIgnoreCase(propertyName)) {
+				return true;
+			} else if (SELECTION.equalsIgnoreCase(propertyName)) {
+				return true;
+			}
+		}
+		boolean isProperty = isControlValueProperty(object, propertyName);
+		if (isProperty) {
+			return true;
+		}
+		return false;
+	}
+
+	public static IObservableValue createWidgetValue(Object object,
+			String propertyName) {
+		if (propertyName == null) {
+			return null;
+		}
+		try {
+			IObservableValue observableValue = observePropertyValue(object,
+					propertyName);
 			if (observableValue != null) {
 				return observableValue;
 			}
@@ -56,45 +131,88 @@ public class ObservableValueFactory {
 		IMetaclass mateclass = XWT.getMetaclass(object);
 		IProperty property = mateclass.findProperty(propertyName);
 		if (property instanceof EventProperty) {
-			IObservableValueManager eventManager = UserData.getObservableValueManager(object);
+			IObservableValueManager eventManager = UserData
+					.getObservableValueManager(object);
 			if (eventManager == null) {
 				eventManager = new ObservableValueManager(object);
 				UserData.setObservableValueManager(object, eventManager);
 			}
 			IObservableValue observableValue = eventManager.getValue(property);
 			if (observableValue == null) {
-				observableValue = new EventPropertyObservableValue(object, (EventProperty)property);
+				observableValue = new EventPropertyObservableValue(object,
+						(EventProperty) property);
 			}
 			return observableValue;
 		}
 		return null;
 	}
 
-	protected static IObservableValue observePropertyValue(Object object, String propertyName) {
-		if (object instanceof Control) {
-			return observePropertyValue((Control)object, propertyName);
-		}
-		else if (object instanceof Viewer) {
-			return observePropertyValue((Viewer)object, propertyName);			
-		}
-		else if (object instanceof MenuItem) {
+	protected static IObservableValue observePropertyValue(Object object,
+			String propertyName) {
+		if (object instanceof Viewer) {
+			return observePropertyValue((Viewer) object, propertyName);
+		} else if (object instanceof MenuItem) {
 			//
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
-			// testcase: org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
+			// TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
+			// testcase:
+			// org.eclipse.e4.xwt.tests.databinding.bindcontrol.BindMenuItem
 			//
 			if (ENABLED.equalsIgnoreCase(propertyName)) {
 				return new MenuItemEnabledObservableValue((MenuItem) object);
 			} else if (SELECTION.equalsIgnoreCase(propertyName)) {
 				return new MenuItemSelectionObservableValue((MenuItem) object);
 			}
+		} else if (object instanceof Control) {
+			return observePropertyValue((Control) object, propertyName);
 		}
 		return null;
 	}
-	
-	protected static IObservableValue observePropertyValue(Control control, String propertyName) {
+
+	protected static boolean isControlValueProperty(Class<?> type,
+			String propertyName) {
+		if (TEXT.equalsIgnoreCase(propertyName)) {
+			if (Text.class.isAssignableFrom(type)) {
+				return true;
+			}
+			// widget button is not supported at 3.4 version.
+			if (SWT.getVersion() == 3449 && Button.class.isAssignableFrom(type)) {
+				return false;
+			}
+		}
+		String getterName = "observe"
+				+ propertyName.substring(0, 1).toUpperCase()
+				+ propertyName.substring(1);
+		Method method;
+		try {
+			method = SWTObservables.class.getMethod(getterName,
+					CONTROL_ARGUMENT_TYPES);
+			if (method == null) {
+				for (Method element : SWTObservables.class.getMethods()) {
+					if (element.getParameterTypes().length != 0) {
+						continue;
+					}
+					if (element.getName().equalsIgnoreCase(getterName)) {
+						return true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new XWTException(e);
+		}
+		IMetaclass mateclass = XWT.getMetaclass(type);
+		IProperty property = mateclass.findProperty(propertyName);
+		if (property instanceof EventProperty) {
+			return true;
+		}
+		return false;
+	}
+
+	protected static IObservableValue observePropertyValue(Control control,
+			String propertyName) {
 		if (TEXT.equalsIgnoreCase(propertyName)) {
 			if (control instanceof Text) {
-				IObservableValue observableValue = SWTObservables.observeText(control, SWT.Modify);
+				IObservableValue observableValue = SWTObservables.observeText(
+						control, SWT.Modify);
 				if (observableValue != null) {
 					return observableValue;
 				}
@@ -104,7 +222,8 @@ public class ObservableValueFactory {
 				return null;
 			}
 			try {
-				IObservableValue observableValue = SWTObservables.observeText(control);
+				IObservableValue observableValue = SWTObservables
+						.observeText(control);
 				if (observableValue != null) {
 					return observableValue;
 				}
@@ -115,10 +234,13 @@ public class ObservableValueFactory {
 			if (propertyName == null) {
 				return null;
 			}
-			String getterName = "observe" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+			String getterName = "observe"
+					+ propertyName.substring(0, 1).toUpperCase()
+					+ propertyName.substring(1);
 			Method method;
 			try {
-				method = SWTObservables.class.getMethod(getterName, CONTROL_ARGUMENT_TYPES);
+				method = SWTObservables.class.getMethod(getterName,
+						CONTROL_ARGUMENT_TYPES);
 				if (method == null) {
 					for (Method element : SWTObservables.class.getMethods()) {
 						if (element.getParameterTypes().length != 0) {
@@ -131,7 +253,8 @@ public class ObservableValueFactory {
 					}
 				}
 				if (method != null) {
-					IObservableValue observableValue = (IObservableValue) method.invoke(null, control);
+					IObservableValue observableValue = (IObservableValue) method
+							.invoke(null, control);
 					if (observableValue != null) {
 						return observableValue;
 					}
@@ -143,19 +266,43 @@ public class ObservableValueFactory {
 		IMetaclass mateclass = XWT.getMetaclass(control);
 		IProperty property = mateclass.findProperty(propertyName);
 		if (property instanceof EventProperty) {
-			return new EventPropertyObservableValue(control, (EventProperty)property);
+			return new EventPropertyObservableValue(control,
+					(EventProperty) property);
 		}
 		return null;
 	}
 
-	protected static IObservableValue observePropertyValue(Viewer viewer, String property) {
-		if (property == null) {
-			return null;
+	protected static boolean isViewerValueProperty(Class<?> viewerType,
+			String property) {
+		String getterName = "observe" + property.substring(0, 1).toUpperCase()
+				+ property.substring(1);
+		try {
+			Method method = ViewersObservables.class.getMethod(getterName,
+					VIEWER_ARGUMENT_TYPES);
+			if (method == null) {
+				for (Method element : ViewersObservables.class.getMethods()) {
+					if (element.getParameterTypes().length != 0) {
+						continue;
+					}
+					if (element.getName().equalsIgnoreCase(getterName)) {
+						return true;
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new XWTException(e);
 		}
-		String getterName = "observe" + property.substring(0, 1).toUpperCase() + property.substring(1);
+		return false;
+	}
+
+	protected static IObservableValue observePropertyValue(Viewer viewer,
+			String property) {
+		String getterName = "observe" + property.substring(0, 1).toUpperCase()
+				+ property.substring(1);
 		Method method;
 		try {
-			method = ViewersObservables.class.getMethod(getterName, VIEWER_ARGUMENT_TYPES);
+			method = ViewersObservables.class.getMethod(getterName,
+					VIEWER_ARGUMENT_TYPES);
 			if (method == null) {
 				for (Method element : ViewersObservables.class.getMethods()) {
 					if (element.getParameterTypes().length != 0) {
@@ -168,7 +315,8 @@ public class ObservableValueFactory {
 				}
 			}
 			if (method != null) {
-				IObservableValue observableValue = (IObservableValue) method.invoke(null, viewer);
+				IObservableValue observableValue = (IObservableValue) method
+						.invoke(null, viewer);
 				if (observableValue != null) {
 					return observableValue;
 				}

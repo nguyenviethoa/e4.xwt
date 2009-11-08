@@ -11,10 +11,9 @@
 
 package org.eclipse.e4.xwt.databinding;
 
+import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.e4.xwt.IBindingContext;
-import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 
@@ -35,33 +34,41 @@ public class ControlDataBinding extends AbstractDataBinding {
 	 */
 	public Object getValue() {
 		IObservableValue sourceWidget;
+		IObservableValue targetWidget = ObservableValueFactory.createWidgetValue(getTarget(), getTargetProperty());
+		Class<?> type = Object.class;
+		if (targetWidget != null) {
+			Object valueType = targetWidget.getValueType();
+			if (valueType instanceof Class<?>) {
+				type = (Class<?>) valueType;
+			}
+		}
+		
 		if (source instanceof IObservableValue) {
-			IBindingContext bindingContext = new BindingContext();
-			sourceWidget = new WritableValue() {
-				@Override
-				public Object doGetValue() {
-					return getDataProvider().getData(super.doGetValue(), getSourceProperty());
-				}
-			};
-
-			bindingContext.bind((IObservableValue) source, sourceWidget, new IDataBindingInfo() {
-				public IDataProvider getDataProvider() {
-					return ControlDataBinding.this.getDataProvider();
-				}
-
-				public IValueConverter getConverter() {
-					return ControlDataBinding.this.getConverter();
-				}
-
-				public BindingMode getBindingMode() {
-					return BindingMode.TwoWay;
-				}
-			});
+//			IBindingContext bindingContext = new BindingContext();
+//			sourceWidget = new WritableValue() {
+//				@Override
+//				public Object doGetValue() {
+//					return getDataProvider().getData(getSourceProperty());
+//				}
+//			};			
+//			bindingContext.bind((IObservableValue) source, sourceWidget, new IDataBindingInfo() {
+//				public IDataProvider getDataProvider() {
+//					return ControlDataBinding.this.getDataProvider();
+//				}
+//
+//				public IValueConverter getConverter() {
+//					return ControlDataBinding.this.getConverter();
+//				}
+//
+//				public BindingMode getBindingMode() {
+//					return BindingMode.TwoWay;
+//				}
+//			});
+			sourceWidget = BeansObservables.observeDetailValue((IObservableValue)source, getSourceProperty(), type);			
 		} else {
 			sourceWidget = ObservableValueFactory.createWidgetValue(source, getSourceProperty());
 		}
 
-		IObservableValue targetWidget = ObservableValueFactory.createWidgetValue(getTarget(), getTargetProperty());
 		if (targetWidget == null) {
 			if (sourceWidget != null) {
 				return sourceWidget.getValue();
