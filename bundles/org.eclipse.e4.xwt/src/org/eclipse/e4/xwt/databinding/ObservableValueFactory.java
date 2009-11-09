@@ -31,6 +31,7 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.MenuItem;
@@ -211,7 +212,7 @@ public class ObservableValueFactory {
 	protected static IObservableValue observePropertyValue(Control control,
 			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
 		if (TEXT.equalsIgnoreCase(propertyName)) {
-			if (control instanceof Text) {
+			if (control instanceof Text || control instanceof StyledText) {
 				int event = SWT.None;
 				switch (updateSourceTrigger) {
 				case Default:
