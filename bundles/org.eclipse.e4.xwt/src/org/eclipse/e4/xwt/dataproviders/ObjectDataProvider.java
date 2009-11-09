@@ -20,6 +20,7 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.databinding.BeanObservableValue;
 import org.eclipse.e4.xwt.databinding.ObjectBindingContext;
 import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
+import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -253,7 +254,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 				String path = paths[i];
 				if (dataContext != null) {
 					bindingContext.addObservable(dataContext);
-					Object pathDataContext = ObservableValueFactory.createWidgetValue(dataContext, path);
+					Object pathDataContext = ObservableValueFactory.createWidgetValue(dataContext, path, UpdateSourceTrigger.Default);
 					if (pathDataContext == null) {
 						pathDataContext = BeanObservableValue.getValue(dataContext, path);
 					}

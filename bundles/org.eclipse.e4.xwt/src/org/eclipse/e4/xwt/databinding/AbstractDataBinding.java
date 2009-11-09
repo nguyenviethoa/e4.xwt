@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.databinding;
 import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 /**
  * 
@@ -28,8 +29,9 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	private String targetProperty;
 
 	private BindingMode mode = BindingMode.TwoWay;
-
-	public AbstractDataBinding(String sourceProperty, String targetProperty, Object target, BindingMode mode, IValueConverter converter, IDataProvider dataProvider) {
+	private UpdateSourceTrigger updateSourceTrigger; 
+	
+	public AbstractDataBinding(String sourceProperty, String targetProperty, Object target, BindingMode mode, IValueConverter converter, IDataProvider dataProvider, UpdateSourceTrigger updateSourceTrigger) {
 		assert target != null : "Binding widget is null";
 		this.mode = mode;
 		this.sourceProperty = sourceProperty;
@@ -37,6 +39,7 @@ public abstract class AbstractDataBinding implements IDataBinding {
 		this.converter = converter;
 		this.target = target;
 		this.dataProvider = dataProvider;
+		this.updateSourceTrigger = updateSourceTrigger;
 	}
 
 	/**
@@ -137,5 +140,13 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	 */
 	protected void setTargetProperty(String targetProperty) {
 		this.targetProperty = targetProperty;
+	}
+	
+	public UpdateSourceTrigger getUpdateSourceTrigger() {
+		return updateSourceTrigger;
+	}
+
+	public void setUpdateSourceTrigger(UpdateSourceTrigger updateSourceTrigger) {
+		this.updateSourceTrigger = updateSourceTrigger;
 	}
 }

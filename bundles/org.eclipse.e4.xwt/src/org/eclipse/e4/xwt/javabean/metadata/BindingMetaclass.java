@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.IXWTLoader;
+import org.eclipse.e4.xwt.internal.core.Binding;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.jface.viewers.ViewerColumn;

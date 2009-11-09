@@ -36,4 +36,66 @@ public class DataBindingTests extends XWTTestCase {
 			}
 		});
 	}
+
+
+	public void testDataBindingPath_UpdateSourceTrigger() throws Exception {
+		URL url = DataBindingTests.class.getResource(DataBinding_UpdateSourceTrigger.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Object input = XWT.findElementByName(root, "inputText");
+				Object target = XWT.findElementByName(root, "targetText");
+				assertTrue(input instanceof Text);
+				Text inputText = (Text) input;
+				assertTrue(target instanceof Text);
+				Text targetText = (Text) target;
+				inputText.setText("new value");
+				targetText.setFocus();
+			}
+		}, new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Object target = XWT.findElementByName(root, "targetText");
+				assertTrue(target instanceof Text);
+				Text targetText = (Text) target;
+				assertEquals(targetText.getText(), "new value");
+			}
+		});
+	}
+
+	public void testDataBindingPath_UpdateSourceTrigger_2() throws Exception {
+		URL url = DataBindingTests.class.getResource(DataBinding_UpdateSourceTrigger.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Object input = XWT.findElementByName(root, "inputText");
+				Object target = XWT.findElementByName(root, "targetText");
+				assertTrue(input instanceof Text);
+				Text inputText = (Text) input;
+				assertTrue(target instanceof Text);
+				Text targetText = (Text) target;
+				inputText.setText("new value");
+			}
+		}, new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Object target = XWT.findElementByName(root, "targetText");
+				assertTrue(target instanceof Text);
+				Text targetText = (Text) target;
+				assertEquals(targetText.getText(), "toto");
+			}
+		});
+	}
 }

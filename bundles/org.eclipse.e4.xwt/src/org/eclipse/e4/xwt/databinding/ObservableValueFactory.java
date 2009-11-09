@@ -18,6 +18,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IObservableValueManager;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemEnabledObservableValue;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemSelectionObservableValue;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
@@ -115,13 +116,13 @@ public class ObservableValueFactory {
 	}
 
 	public static IObservableValue createWidgetValue(Object object,
-			String propertyName) {
+			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
 		if (propertyName == null) {
 			return null;
 		}
 		try {
 			IObservableValue observableValue = observePropertyValue(object,
-					propertyName);
+					propertyName, updateSourceTrigger);
 			if (observableValue != null) {
 				return observableValue;
 			}
@@ -148,9 +149,9 @@ public class ObservableValueFactory {
 	}
 
 	protected static IObservableValue observePropertyValue(Object object,
-			String propertyName) {
+			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
 		if (object instanceof Viewer) {
-			return observePropertyValue((Viewer) object, propertyName);
+			return observePropertyValue((Viewer) object, propertyName, updateSourceTrigger);
 		} else if (object instanceof MenuItem) {
 			//
 			// TODO https://bugs.eclipse.org/bugs/show_bug.cgi?id=280157
@@ -163,7 +164,7 @@ public class ObservableValueFactory {
 				return new MenuItemSelectionObservableValue((MenuItem) object);
 			}
 		} else if (object instanceof Control) {
-			return observePropertyValue((Control) object, propertyName);
+			return observePropertyValue((Control) object, propertyName, updateSourceTrigger);
 		}
 		return null;
 	}
@@ -208,11 +209,25 @@ public class ObservableValueFactory {
 	}
 
 	protected static IObservableValue observePropertyValue(Control control,
-			String propertyName) {
+			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
 		if (TEXT.equalsIgnoreCase(propertyName)) {
 			if (control instanceof Text) {
+				int event = SWT.None;
+				switch (updateSourceTrigger) {
+				case Default:
+					event = SWT.FocusOut;
+					break;
+				case LostFocus:
+					event = SWT.FocusOut;
+					break;
+				case PropertyChanged:					
+					event = SWT.Modify;
+					break;
+				default:
+					throw new IllegalStateException("UpdateSourceTrigger of value " + updateSourceTrigger.name());
+				}
 				IObservableValue observableValue = SWTObservables.observeText(
-						control, SWT.Modify);
+						control, event);
 				if (observableValue != null) {
 					return observableValue;
 				}
@@ -296,7 +311,7 @@ public class ObservableValueFactory {
 	}
 
 	protected static IObservableValue observePropertyValue(Viewer viewer,
-			String property) {
+			String property, UpdateSourceTrigger updateSourceTrigger) {
 		String getterName = "observe" + property.substring(0, 1).toUpperCase()
 				+ property.substring(1);
 		Method method;

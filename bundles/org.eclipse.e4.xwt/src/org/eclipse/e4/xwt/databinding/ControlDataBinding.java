@@ -16,6 +16,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 /**
  * 
@@ -24,8 +25,8 @@ import org.eclipse.e4.xwt.IValueConverter;
 public class ControlDataBinding extends AbstractDataBinding {
 	private Object source;
 
-	public ControlDataBinding(Object source, Object target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter, IDataProvider dataProvider) {
-		super(sourceProperty, targetProperty, target, mode, converter, dataProvider);
+	public ControlDataBinding(Object source, Object target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter, IDataProvider dataProvider, UpdateSourceTrigger updateSourceTrigger) {
+		super(sourceProperty, targetProperty, target, mode, converter, dataProvider, updateSourceTrigger);
 		this.source = source;
 	}
 
@@ -34,7 +35,7 @@ public class ControlDataBinding extends AbstractDataBinding {
 	 */
 	public Object getValue() {
 		IObservableValue sourceWidget;
-		IObservableValue targetWidget = ObservableValueFactory.createWidgetValue(getTarget(), getTargetProperty());
+		IObservableValue targetWidget = ObservableValueFactory.createWidgetValue(getTarget(), getTargetProperty(), getUpdateSourceTrigger());
 		Class<?> type = Object.class;
 		if (targetWidget != null) {
 			Object valueType = targetWidget.getValueType();
@@ -66,7 +67,7 @@ public class ControlDataBinding extends AbstractDataBinding {
 //			});
 			sourceWidget = BeansObservables.observeDetailValue((IObservableValue)source, getSourceProperty(), type);			
 		} else {
-			sourceWidget = ObservableValueFactory.createWidgetValue(source, getSourceProperty());
+			sourceWidget = ObservableValueFactory.createWidgetValue(source, getSourceProperty(), getUpdateSourceTrigger());
 		}
 
 		if (targetWidget == null) {

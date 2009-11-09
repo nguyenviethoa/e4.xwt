@@ -14,6 +14,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -34,8 +35,8 @@ public class DataBinding extends AbstractDataBinding {
 	/**
 	 * Constructor for dataProvider.
 	 */
-	public DataBinding(Object target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter, IDataProvider dataProvider) {
-		super(sourceProperty, targetProperty, target, mode, converter, dataProvider);
+	public DataBinding(Object target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter, IDataProvider dataProvider, UpdateSourceTrigger updateSourceTrigger) {
+		super(sourceProperty, targetProperty, target, mode, converter, dataProvider, updateSourceTrigger);
 		assert dataProvider != null : "DataProvider is null";
 		assert sourceProperty != null : "Binding path is null";
 		setDataProvider(dataProvider);
@@ -107,7 +108,7 @@ public class DataBinding extends AbstractDataBinding {
 
 	public IObservableValue getObservableWidget() {
 		if (observableWidget == null) {
-			observableWidget = ObservableValueFactory.createWidgetValue(getTarget(), getTargetProperty());
+			observableWidget = ObservableValueFactory.createWidgetValue(getTarget(), getTargetProperty(), getUpdateSourceTrigger());
 		}
 		return observableWidget;
 	}

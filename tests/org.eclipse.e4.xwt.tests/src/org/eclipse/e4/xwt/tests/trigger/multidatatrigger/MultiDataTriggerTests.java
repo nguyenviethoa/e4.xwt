@@ -141,4 +141,28 @@ public class MultiDataTriggerTests extends XWTTestCase {
 			}
 		});
 	}
+
+	public void test_MultiDataTrigger4() {
+		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger_Default.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button button1 = (Button) XWT.findElementByName(root, "Button");
+				selectButton(button1, false);
+				Text text = (Text) XWT.findElementByName(root, "Text");
+				text.setText("15");
+				selectButton(button1, true);
+			}
+		},
+		new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				assertTrue(root.isVisible());
+			}
+		});
+	}
 }

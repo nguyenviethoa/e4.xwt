@@ -28,7 +28,6 @@ import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.xml.Attribute;
 import org.eclipse.e4.xwt.internal.xml.Element;
-import org.eclipse.e4.xwt.javabean.metadata.Binding;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.swt.widgets.Widget;
 

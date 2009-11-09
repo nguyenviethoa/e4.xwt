@@ -17,7 +17,7 @@
 		</Label.layoutData>
 	</Label>
 	<Label text="Name"/>
-	<Text name="Text" x:style="BORDER" text="{Binding Path=age,UpdateSourceTrigger=PropertyChanged}">
+	<Text name="Text" x:style="BORDER" text="{Binding Path=age}">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
