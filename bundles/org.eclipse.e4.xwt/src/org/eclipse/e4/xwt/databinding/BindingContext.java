@@ -27,9 +27,6 @@ import org.eclipse.e4.xwt.XWTLoader;
  */
 public class BindingContext implements IBindingContext {
 
-	public IObservableValue observeValue;
-	public IObservableValue observeWidget;
-
 	public Binding bind(IObservableValue source, IObservableValue target) {
 		return bind(source, target, null);
 	}
@@ -97,8 +94,8 @@ public class BindingContext implements IBindingContext {
 				targetToSource = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
 			}
 			
-			this.observeValue = source;
-			this.observeWidget = target;
+			IObservableValue observeValue = source;
+			IObservableValue observeWidget = target;
 			// Add converter to UpdateValueStrategy.
 			Object sourceValueType = source.getValueType();
 			if (sourceValueType == null) {
