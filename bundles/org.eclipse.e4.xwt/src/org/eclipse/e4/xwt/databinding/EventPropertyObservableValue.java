@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
-import org.eclipse.e4.xwt.IObservableValueManager;
+import org.eclipse.e4.xwt.IObservableValueListener;
 import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObservableValueManager;
@@ -30,13 +30,13 @@ public class EventPropertyObservableValue extends XWTObservableValue {
 		}
 		IEvent event = property.getEvent();
 
-		IObservableValueManager manager = UserData.getObservableValueManager(observed);
+		IObservableValueListener manager = UserData.getObservableValueManager(observed);
 		if (manager == null) {
 			manager = new ObservableValueManager(observed);
 			UserData.setObservableValueManager(observed, manager);
 		}
 		try {
-			controller.setEvent(event, UserData.getWidget(observed), manager, property, IObservableValueManager.class.getDeclaredMethod("changeValueHandle", Object.class, org.eclipse.swt.widgets.Event.class));
+			controller.setEvent(event, UserData.getWidget(observed), manager, property, IObservableValueListener.class.getDeclaredMethod("changeValueHandle", Object.class, org.eclipse.swt.widgets.Event.class));
 			manager.registerValue(property, this);
 		} catch (Exception e) {
 			LoggerManager.log(e);

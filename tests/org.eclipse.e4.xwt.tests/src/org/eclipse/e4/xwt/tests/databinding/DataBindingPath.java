@@ -12,10 +12,8 @@ package org.eclipse.e4.xwt.tests.databinding;
 
 import java.net.URL;
 
-import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 

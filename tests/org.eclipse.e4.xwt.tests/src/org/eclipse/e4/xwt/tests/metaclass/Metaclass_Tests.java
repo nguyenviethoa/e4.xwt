@@ -1,9 +1,9 @@
 package org.eclipse.e4.xwt.tests.metaclass;
 
+import junit.framework.TestCase;
+
 import org.eclipse.e4.xwt.javabean.metadata.AbstractMetaclass;
 import org.eclipse.e4.xwt.metadata.IObjectInitializer;
-
-import junit.framework.TestCase;
 
 public class Metaclass_Tests extends TestCase {
 

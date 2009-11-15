@@ -10,22 +10,19 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.dataproviders;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
+import org.eclipse.e4.xwt.IDataObservableValueBridge;
 import org.eclipse.e4.xwt.IDataProvider;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.databinding.BindingContext;
-import org.eclipse.e4.xwt.databinding.ListToArrayObservableValue;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public abstract class AbstractDataProvider implements IDataProvider {
-
+	private IDataObservableValueBridge dataObservableValueFactory;
+	
 	private HashMap<String, Object> properties = new HashMap<String, Object>();
 
 	/*
@@ -57,24 +54,12 @@ public abstract class AbstractDataProvider implements IDataProvider {
 		return false;
 	}
 	
-	protected IObservableValue checkWrapArrayValue(Class<?> valueType,
-			String fullPath, IObservableValue observableValue) {
-		if (valueType != null) {
-			valueType = getDataType(fullPath);
+	public IDataObservableValueBridge observableValueBridge() {
+		if (dataObservableValueFactory == null) {
+			dataObservableValueFactory = createObservableValueFactory();
 		}
-		if (valueType != null && valueType.isArray()) {
-			//
-			// Create a IObserableValue to handle the connection between Array and List 
-			//
-			Object value = getData(fullPath);
-			ArrayList<Object> array = new ArrayList<Object>();
-			for (Object object : (Object[])value) {
-				array.add(object);
-			}
- 			WritableList writableList = new WritableList(XWT.getRealm(), array, valueType.getComponentType());			
- 			observableValue = new ListToArrayObservableValue(writableList, observableValue);
-		}
-		return observableValue;
+		return dataObservableValueFactory;
 	}
-
+	
+	abstract protected IDataObservableValueBridge createObservableValueFactory();
 }

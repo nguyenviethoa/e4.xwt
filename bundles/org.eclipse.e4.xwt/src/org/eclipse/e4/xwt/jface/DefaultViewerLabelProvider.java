@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.jface;
 
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
-
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -65,23 +64,20 @@ public abstract class DefaultViewerLabelProvider implements ITableLabelProvider,
 		}
 		String propertyName = properties[columnIndex].toString();
 		try {
-			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(element.getClass());
-			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-			for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-				if (propertyDescriptor.getName().equalsIgnoreCase(propertyName)) {
-					Object value = propertyDescriptor.getReadMethod().invoke(element);
-					if (value != null) {
-						Class<?> type = value.getClass();
-						if (type != String.class) {
-							IConverter converter = XWT.findConvertor(type, String.class);
-							if (converter != null) {
-								value = converter.convert(value);
-							}
+			IMetaclass metaclass = XWT.getMetaclass(element);
+			IProperty property = metaclass.findProperty(propertyName.toLowerCase());
+			if (property != null) {
+				Object value = property.getValue(element);
+				if (value != null) {		
+					Class<?> type = value.getClass();
+					if (type != String.class) {
+						IConverter converter = XWT.findConvertor(type, String.class);
+						if (converter != null) {
+							value = converter.convert(value);
 						}
-						return value.toString();
 					}
-					return null;
-				}
+					return value.toString();
+				}				
 			}
 		} catch (Exception e) {
 			throw new XWTException(e);

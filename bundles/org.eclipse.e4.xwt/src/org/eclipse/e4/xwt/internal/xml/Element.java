@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.core.IUserDataConstants;
+import org.eclipse.e4.xwt.internal.core.Core;
 
 /**
  * @since 1.0
@@ -26,7 +26,6 @@ import org.eclipse.e4.xwt.core.IUserDataConstants;
 public class Element extends DocumentObject {
 
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
-	static String[] EMPTY = new String[] {};
 	private Map<String, Attribute> originalAttributes;
 
 	private Map<String, Map<String, Attribute>> externalAttributes;
@@ -128,7 +127,7 @@ public class Element extends DocumentObject {
 		if (externalAttribute != null) {
 			return externalAttribute.keySet().toArray(EMPTY_STRING_ARRAY);
 		} else {
-			return EMPTY;
+			return Core.EMPTY_STRING_ARRAY;
 		}
 	}
 
@@ -205,7 +204,7 @@ public class Element extends DocumentObject {
 		notifyObservers(attributes);
 	}
 
-	protected boolean isXWTNamespace(String namespace) {
+	private boolean isXWTNamespace(String namespace) {
 		String scopeNamespace = getNamespace();
 		if (namespace == null || "".equals(namespace)) {
 			return true;

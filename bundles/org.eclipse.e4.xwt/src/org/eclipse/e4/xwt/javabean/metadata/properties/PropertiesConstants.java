@@ -29,6 +29,8 @@ public final class PropertiesConstants {
 	public static final String PROPERTY_IMAGE = "image";
 	public static final String PROPERTY_COLUMNS = "columns";
 	public static final String PROPERTY_COLUMN_PROPERTIES = "columnProperties";
+	public static final String PROPERTY_SINGLE_SELECTION = "singleSelection";
+	public static final String PROPERTY_MULTI_SELECTION = "multiSelection";
 
 	// Data
 	public static final String DATA_DEFINED_EDITOR = "Defined table editors";

@@ -10,19 +10,20 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
+import java.beans.BeanInfo;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.IObservableValueManager;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemEnabledObservableValue;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemSelectionObservableValue;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
-import org.eclipse.e4.xwt.internal.utils.ObservableValueManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -65,13 +66,127 @@ public class ObservableValueFactory {
 		return null;
 	}
 	
+	public static Object getValue(Object target, String propertyName) {
+		if (target == null || propertyName == null || propertyName.indexOf(".") != -1) {
+			return target;
+		}
+		Class<?> type = target.getClass();
+		try {
+			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
+			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+			for (PropertyDescriptor pd : propertyDescriptors) {
+				if (propertyName.equalsIgnoreCase(pd.getName())) {
+					Method readMethod = pd.getReadMethod();
+					if (readMethod != null) {
+						return readMethod.invoke(target);
+					}
+				}
+			}
+			Field[] fields = type.getDeclaredFields();
+			for (Field field : fields) {
+				if (propertyName.equalsIgnoreCase(field.getName())) {
+					Object object = field.get(target);
+					return object;
+				}
+			}
+			return UserData.getLocalData(target, propertyName);
+		} catch (Exception e) {
+			LoggerManager.log(e);
+		}
+		return null;
+	}
+	
+	public static void setValue(Object target, String propertyName, Object value) {
+		Class<?> type = target.getClass();
+		try {
+			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
+			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+			for (PropertyDescriptor pd : propertyDescriptors) {
+				if (propertyName.equals(pd.getName())) {
+					Method writeMethod = pd.getWriteMethod();
+					if (writeMethod == null) {
+						return;
+					}
+					if (!writeMethod.isAccessible()) {
+						writeMethod.setAccessible(true);
+					}
+					Class<?>[] parameterTypes = writeMethod.getParameterTypes();
+					Class targetType = parameterTypes[0];
+					if (targetType != value.getClass()) {
+						if (targetType.isEnum() && value instanceof String) {
+							try {
+								writeMethod.invoke(target, new Object[] { Enum.valueOf(targetType, (String) value) });
+								return;
+							} catch (Exception e) {
+							}
+						}
+						IConverter c = XWT.findConvertor(value.getClass(), targetType);
+						if (c != null) {
+							value = c.convert(value);
+						}
+					}
+					writeMethod.invoke(target, new Object[] { value });
+					return;
+				}
+			}
+			Field[] fields = type.getDeclaredFields();
+			for (Field field : fields) {
+				if (propertyName.equals(field.getName())) {
+					if (!field.isAccessible()) {
+						field.setAccessible(true);
+					}
+					Class fieldType = field.getType();
+					if (fieldType.isEnum() && value instanceof String) {
+						try {
+							field.set(target, Enum.valueOf(fieldType, (String) value));
+							return;
+						} catch (Exception e) {
+						}
+					}
+					IConverter c = XWT.findConvertor(value.getClass(), fieldType);
+					if (c != null) {
+						value = c.convert(value);
+					}
+					field.set(target, value);
+					return;
+				}
+			}
+			
+			IMetaclass metaclass = XWT.getMetaclass(type);
+			IProperty property = metaclass.findProperty(propertyName);
+			if (property != null) {
+				property.setValue(target, value);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static boolean isPropertyReadOnly(Class<?> type, String propertyName) {
+		if (type == null || propertyName == null || propertyName.indexOf(".") != -1) {
+			return true;
+		}
+		try {			
+			IMetaclass metaclass = XWT.getMetaclass(type);
+			IProperty property = metaclass.findProperty(propertyName);
+			if (property != null) {
+				return property.isReadOnly();
+			}
+		} catch (Exception e) {
+			LoggerManager.log(e);
+		}
+		return true;
+	}
+
+	
 	public static boolean isBeanSupport(Object target) {
+		Class<?> type = toType(target);
 		Method method = null;
 		try {
 			try {
-				method = target.getClass().getMethod("addPropertyChangeListener", new Class[] { String.class, PropertyChangeListener.class });
+				method = type.getMethod("addPropertyChangeListener", new Class[] { String.class, PropertyChangeListener.class });
 			} catch (NoSuchMethodException e) {
-				method = target.getClass().getMethod("addPropertyChangeListener", new Class[] { PropertyChangeListener.class });
+				method = type.getMethod("addPropertyChangeListener", new Class[] { PropertyChangeListener.class });
 			}
 		} catch (SecurityException e) {
 		} catch (NoSuchMethodException e) {
@@ -79,17 +194,21 @@ public class ObservableValueFactory {
 		return method != null;
 	}
 
-	public static IObservableValue observeValue(Object observed, String propertyName) {
-		if (observed == null || propertyName == null) {
-			return null;
+	public static Class<?> toType(Object target) {
+		Class<?> type = null;
+		if (target instanceof IObservableValue) {
+			IObservableValue value = (IObservableValue) target;
+			type = (Class<?>) value.getValueType();
 		}
-		if (isBeanSupport(observed)) {
-			return BeansObservables.observeValue(XWT.getRealm(), observed, propertyName);
+		else if (target instanceof Class<?>) {
+			type = (Class<?>)target;			
 		}
-		Class<?> valueType = getValueType(observed.getClass(), propertyName);
-		return new BeanObservableValue(valueType, observed, propertyName);
+		else {
+			type = target.getClass();
+		}
+		return type;
 	}
-	
+
 	public static boolean isValueProperty(Class<?> object, String propertyName) {
 		if (propertyName == null) {
 			return false;
@@ -128,23 +247,6 @@ public class ObservableValueFactory {
 				return observableValue;
 			}
 		} catch (XWTException e) {
-		}
-
-		IMetaclass mateclass = XWT.getMetaclass(object);
-		IProperty property = mateclass.findProperty(propertyName);
-		if (property instanceof EventProperty) {
-			IObservableValueManager eventManager = UserData
-					.getObservableValueManager(object);
-			if (eventManager == null) {
-				eventManager = new ObservableValueManager(object);
-				UserData.setObservableValueManager(object, eventManager);
-			}
-			IObservableValue observableValue = eventManager.getValue(property);
-			if (observableValue == null) {
-				observableValue = new EventPropertyObservableValue(object,
-						(EventProperty) property);
-			}
-			return observableValue;
 		}
 		return null;
 	}

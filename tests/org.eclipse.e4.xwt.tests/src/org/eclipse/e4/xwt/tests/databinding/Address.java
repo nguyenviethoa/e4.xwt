@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.databinding;
 
-public class Address {
+public class Address extends BeanObject {
 	private String city = "Paris";
 
-	public void setCity(String value) {
-		this.city = value;
+	public void setCity(String city) {
+		String oldValue = this.city;
+		this.city = city;
+		changeSupport.firePropertyChange("city", oldValue, city);
 	}
 
 	public String getCity() {

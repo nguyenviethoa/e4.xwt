@@ -10,15 +10,17 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
-public class LoadingContext implements ILoadingContext {
-	public static final LoadingContext defaultLoadingContext = new LoadingContext();
+import java.net.URL;
+
+public class DefaultLoadingContext implements ILoadingContext {
+	public static final DefaultLoadingContext defaultLoadingContext = new DefaultLoadingContext();
 
 	protected ClassLoader classLoader;
 
-	public LoadingContext() {
+	public DefaultLoadingContext() {
 	}
 
-	public LoadingContext(ClassLoader classLoader) {
+	public DefaultLoadingContext(ClassLoader classLoader) {
 		this.classLoader = classLoader;
 	}
 
@@ -35,5 +37,34 @@ public class LoadingContext implements ILoadingContext {
 
 	public String getNamespace() {
 		return IConstants.XWT_NAMESPACE;
+	}
+	
+	public Class<?> loadClass(String name) {
+		Class<?> type = doLoadClass(name);
+		if (type != null) {
+			return type;
+		}
+		int index = name.lastIndexOf('.');
+		while(index != -1) {
+			name = name.substring(0, index) + "$" + name.substring(index + 1);
+			type = doLoadClass(name);
+			if (type != null) {
+				return type;
+			}
+			index = name.lastIndexOf('.');
+		}
+		return null;
+	}
+
+	protected Class<?> doLoadClass(String name) {
+		try {
+			return getClassLoader().loadClass(name);
+		} catch (ClassNotFoundException e) {
+		}
+		return null;
+	}
+
+	public URL getResource(String name) {
+		return getClassLoader().getResource(name);
 	}
 }

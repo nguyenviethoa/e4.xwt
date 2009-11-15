@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.databinding;
 
-public class Person {
+public class Person extends BeanObject{
 	private String name = "toto";
 	private int age = 10;
 	private boolean maried = true;
@@ -18,7 +18,9 @@ public class Person {
 	private Address address;
 
 	public void setMaried(boolean maried) {
+		boolean oldValue = this.maried;
 		this.maried = maried;
+		changeSupport.firePropertyChange("maried", oldValue, maried);
 	}
 
 	public Country getNationality() {
@@ -34,15 +36,19 @@ public class Person {
 	}
 
 	public void setAge(int age) {
+		int oldValue = this.age;
 		this.age = age;
+		changeSupport.firePropertyChange("age", oldValue, age);
 	}
 
 	public Person() {
 		address = new Address();
 	}
 
-	public void setName(String value) {
-		this.name = value;
+	public void setName(String name) {
+		String oldValue = this.name;
+		this.name = name;
+		changeSupport.firePropertyChange("name", oldValue, name);
 	}
 
 	public String getName() {
@@ -53,7 +59,9 @@ public class Person {
 	}
 
 	public void setAddress(Address address) {
+		Address oldValue = this.address;
 		this.address = address;
+		changeSupport.firePropertyChange("address", oldValue, address);
 	}
 
 }

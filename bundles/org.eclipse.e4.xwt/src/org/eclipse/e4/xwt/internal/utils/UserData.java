@@ -16,12 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.IObservableValueManager;
+import org.eclipse.e4.xwt.IObservableValueListener;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.TriggerBase;
-import org.eclipse.e4.xwt.internal.core.NameScope;
+import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
+import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.Viewer;
@@ -48,13 +49,13 @@ import org.eclipse.swt.widgets.Widget;
 
 public class UserData {
 	private HashMap<Object, Object> dictionary = null;
-	private IObservableValueManager observableValueManager;
+	private IObservableValueListener observableValueManager;
 	
-	protected IObservableValueManager getObservableValueManager() {
+	protected IObservableValueListener getObservableValueManager() {
 		return observableValueManager;
 	}
 
-	protected void setObservableValueManager(IObservableValueManager observableValueManager) {
+	protected void setObservableValueManager(IObservableValueListener observableValueManager) {
 		this.observableValueManager = observableValueManager;
 	}
 
@@ -105,7 +106,7 @@ public class UserData {
 		return false;
 	}
 
-	public static void bindNameContext(Object element, NameScope nameContext) {
+	public static void bindNameContext(Object element, ScopeKeeper nameContext) {
 		Widget widget = getWidget(element);
 		if (widget == null) {
 			return;
@@ -162,7 +163,7 @@ public class UserData {
 		return control;
 	}
 
-	public static NameScope findNameContext(Object element) {
+	public static ScopeKeeper findScopeKeeper(Object element) {
 		Widget widget = getWidget(element);
 		if (widget == null) {
 			return null;
@@ -171,12 +172,12 @@ public class UserData {
 		if (dataDictionary != null) {
 			Object data = dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
 			if (data != null) {
-				return (NameScope) data;
+				return (ScopeKeeper) data;
 			}
 		}
 		Widget parent = getTreeParent(widget);
 		if (parent != null) {
-			return findNameContext(parent);
+			return findScopeKeeper(parent);
 		}
 		return null;
 	}
@@ -188,9 +189,9 @@ public class UserData {
 		}
 		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
-			NameScope nameContext = (NameScope) dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
+			ScopeKeeper nameContext = (ScopeKeeper) dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
 			if (nameContext != null) {
-				Object element = nameContext.get(name);
+				Object element = nameContext.getNamedObject(name);
 				if (element != null) {
 					return element;
 				}
@@ -492,7 +493,7 @@ public class UserData {
 		dataDictionary.setData(property, value);
 	}
 
-	public static IObservableValueManager getObservableValueManager(Object object) {
+	public static IObservableValueListener getObservableValueManager(Object object) {
 		Widget widget = getWidget(object);
 		if (widget == null) {
 			return null;
@@ -505,7 +506,7 @@ public class UserData {
 		return null;
 	}
 	
-	public static void setObservableValueManager(Object object, IObservableValueManager eventManager) {
+	public static void setObservableValueManager(Object object, IObservableValueListener eventManager) {
 		Widget widget = getWidget(object);
 		if (widget == null) {
 			throw new IllegalStateException("Not SWT Widget");
@@ -552,7 +553,7 @@ public class UserData {
 	
 	public static void setObjectName(Object object, String name) {
 		Widget widget = getWidget(object);
-		NameScope nameScoped;
+		ScopeKeeper nameScoped;
 		if (UserData.findElementByName(widget, name) != null) {
 			// throw an exception or log a message?
 			return;
@@ -561,13 +562,13 @@ public class UserData {
 		UserData dataDictionary = (UserData)parent.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
 			if (dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY) != null) {
-				nameScoped = (NameScope) dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
+				nameScoped = (ScopeKeeper) dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
 			} else {
-				NameScope parentNameScope = parent == null ? null : findNameContext(parent);
-				nameScoped = new NameScope(parentNameScope);
+				ScopeKeeper parentNameScope = parent == null ? null : findScopeKeeper(parent);
+				nameScoped = new ScopeKeeper(parentNameScope, widget);
 				bindNameContext(parent, nameScoped);
 			}
-			nameScoped.put(name, widget);
+			nameScoped.addNamedObject(name, widget);
 		}
 		// throw an exception or log a message?
 	}

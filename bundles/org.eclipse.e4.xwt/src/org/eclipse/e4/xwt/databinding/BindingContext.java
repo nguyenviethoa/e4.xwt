@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -29,12 +30,8 @@ public class BindingContext implements IBindingContext {
 	public IObservableValue observeValue;
 	public IObservableValue observeWidget;
 
-	public enum Mode {
-		TwoWay, OneWay, OneTime
-	};
-
-	public void bind(IObservableValue source, IObservableValue target) {
-		bind(source, target, null);
+	public Binding bind(IObservableValue source, IObservableValue target) {
+		return bind(source, target, null);
 	}
 	
 	/*
@@ -42,7 +39,7 @@ public class BindingContext implements IBindingContext {
 	 * 
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
-	public void bind(IObservableValue source, IObservableValue target, IDataBindingInfo dataBinding) {
+	public Binding bind(IObservableValue source, IObservableValue target, IDataBindingInfo dataBinding) {
 		IValueConverter converter = null;
 		int sourceToTargetPolicy = UpdateValueStrategy.POLICY_UPDATE;
 		int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
@@ -64,7 +61,7 @@ public class BindingContext implements IBindingContext {
 		UpdateValueStrategy sourceToTarget = new UpdateValueStrategy(sourceToTargetPolicy);
 		UpdateValueStrategy targetToSource = new UpdateValueStrategy(targetToSourcePolicy);
 		
-		bind(source, target, sourceToTarget, targetToSource, converter);
+		return bind(source, target, sourceToTarget, targetToSource, converter);
 	}
 
 	/*
@@ -72,12 +69,12 @@ public class BindingContext implements IBindingContext {
 	 * 
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
-	public void bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, IValueConverter converter) {
+	public Binding bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, IValueConverter converter) {
 		if (converter != null) {
-			bind(source, target, sourceToTarget, targetToSource, converter, new InverseValueConverter(converter));			
+			return bind(source, target, sourceToTarget, targetToSource, converter, new InverseValueConverter(converter));			
 		}
 		else {
-			bind(source, target, sourceToTarget, targetToSource, null, null);						
+			return bind(source, target, sourceToTarget, targetToSource, null, null);						
 		}
 	}
 
@@ -90,7 +87,7 @@ public class BindingContext implements IBindingContext {
 	 * @param sourceToTargetConvertor if it is null, the default converter will be used
 	 * @param targetToSourceConvertor if it is null, the default converter will be used
 	 */
-	public void bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, 
+	public Binding bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, 
 			IConverter sourceToTargetConvertor, IConverter targetToSourceConvertor) {
 		if (source != null && target != null) {
 			if (sourceToTarget == null) {
@@ -144,7 +141,8 @@ public class BindingContext implements IBindingContext {
 			}
 
 			DataBindingContext core = new DataBindingContext(XWT.getRealm());
-			core.bindValue(target, source, targetToSource, sourceToTarget);
+			return core.bindValue(target, source, targetToSource, sourceToTarget);
 		}
+		return null;
 	}
 }

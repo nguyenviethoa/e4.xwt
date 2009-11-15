@@ -20,10 +20,13 @@ import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
-import org.eclipse.e4.xwt.internal.core.NameScope;
+import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
+import org.eclipse.e4.xwt.internal.core.ScopeManager;
+import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -74,6 +77,36 @@ public class XWT {
 	}
 
 	/**
+	 * Find an existing IObservableValue
+	 * 
+	 * @param nsmapace
+	 * @return null if it doesn't exist.
+	 */
+	public static IObservableValue findObservableValue(Object context, Object data, String propertyName) {
+		return XWTLoaderManager.getActive().findObservableValue(context, data, propertyName);
+	}
+
+	/**
+	 * get or create a IObservableValue
+	 * 
+	 * @param nsmapace
+	 * @return return null or raises an exception XWTException if fails
+	 */
+	public static IObservableValue observableValue(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger) {
+		return XWTLoaderManager.getActive().observableValue(context, data, propertyName, updateSourceTrigger);
+	}
+
+	/**
+	 * get or create a IObservableValue
+	 * 
+	 * @param nsmapace
+	 * @return return null or raises an exception XWTException if fails
+	 */
+	public static IObservableValue observableValue(Object context, Object data, String propertyName) {
+		return XWTLoaderManager.getActive().observableValue(context, data, propertyName, UpdateSourceTrigger.Default);
+	}
+
+	/**
 	 * Change the system logger
 	 * 
 	 * @param logger
@@ -90,16 +123,6 @@ public class XWT {
 	 */
 	public static String getElementName(Object object) {
 		return XWTLoaderManager.getActive().getElementName(object);
-	}
-
-	/**
-	 * A NameContext is a manager of UI element's name in a scope. A name in a NameContext must be unique.
-	 * 
-	 * @param widget
-	 * @return
-	 */
-	public static NameScope findNameContext(Widget widget) {
-		return XWTLoaderManager.getActive().findNameContext(widget);
 	}
 
 	/**

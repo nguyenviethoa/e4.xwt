@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -23,7 +24,7 @@ public interface IBindingContext {
 	 * @param source
 	 * @param target
 	 */
-	void bind(IObservableValue source, IObservableValue target);
+	Binding bind(IObservableValue source, IObservableValue target);
 	
 	/**
 	 * 
@@ -31,7 +32,7 @@ public interface IBindingContext {
 	 * @param target
 	 * @param binding
 	 */
-	void bind(IObservableValue source, IObservableValue target,
+	Binding bind(IObservableValue source, IObservableValue target,
 			IDataBindingInfo binding);
 
 	/**
@@ -42,7 +43,7 @@ public interface IBindingContext {
 	 * @param targetToSource if it is null, the default converter will be update policy
 	 * @param converter
 	 */
-	public void bind(IObservableValue source, IObservableValue target,
+	Binding bind(IObservableValue source, IObservableValue target,
 			UpdateValueStrategy sourceToTarget,
 			UpdateValueStrategy targetToSource, IValueConverter converter);
 	
@@ -56,7 +57,7 @@ public interface IBindingContext {
 	 * @param sourceToTargetConvertor if it is null, the default converter will be used
 	 * @param targetToSourceConvertor if it is null, the default converter will be used
 	 */
-	public void bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, 
+	Binding bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, 
 			IConverter sourceToTargetConvertor, IConverter targetToSourceConvertor);
 
 }

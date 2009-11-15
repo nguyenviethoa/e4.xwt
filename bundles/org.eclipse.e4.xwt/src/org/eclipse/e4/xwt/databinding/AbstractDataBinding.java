@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.databinding;
 import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.internal.core.Binding;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 /**
@@ -20,26 +21,15 @@ import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class AbstractDataBinding implements IDataBinding {
-	private Object target;
-
-	private IValueConverter converter;
 	private IDataProvider dataProvider;
 
-	private String sourceProperty;
-	private String targetProperty;
-
 	private BindingMode mode = BindingMode.TwoWay;
-	private UpdateSourceTrigger updateSourceTrigger; 
 	
-	public AbstractDataBinding(String sourceProperty, String targetProperty, Object target, BindingMode mode, IValueConverter converter, IDataProvider dataProvider, UpdateSourceTrigger updateSourceTrigger) {
-		assert target != null : "Binding widget is null";
-		this.mode = mode;
-		this.sourceProperty = sourceProperty;
-		this.targetProperty = targetProperty;
-		this.converter = converter;
-		this.target = target;
+	private Binding binding;
+	
+	public AbstractDataBinding(Binding binding, IDataProvider dataProvider) {
+		this.binding = binding;
 		this.dataProvider = dataProvider;
-		this.updateSourceTrigger = updateSourceTrigger;
 	}
 
 	/**
@@ -68,22 +58,21 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	 * 
 	 */
 	public IValueConverter getConverter() {
-		return converter;
-	}
-
-	/**
-	 * @param target
-	 *            the target to set
-	 */
-	public void setTarget(Object target) {
-		this.target = target;
+		return binding.getConverter();
 	}
 
 	/**
 	 * @return the target
 	 */
-	public Object getTarget() {
-		return target;
+	public Object getControl() {
+		return binding.getControl();
+	}
+
+	/**
+	 * @return the target
+	 */
+	public Object getHost() {
+		return binding.getHost();
 	}
 
 	/**
@@ -104,26 +93,10 @@ public abstract class AbstractDataBinding implements IDataBinding {
 
 	/**
 	 * 
-	 * @param converter
-	 */
-	public void setConverter(IValueConverter converter) {
-		this.converter = converter;
-	}
-
-	/**
-	 * 
 	 * @return
 	 */
 	protected String getSourceProperty() {
-		return sourceProperty;
-	}
-
-	/**
-	 * 
-	 * @param sourceProperty
-	 */
-	protected void setSourceProperty(String sourceProperty) {
-		this.sourceProperty = sourceProperty;
+		return binding.getPath();
 	}
 
 	/**
@@ -131,22 +104,10 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	 * @return
 	 */
 	protected String getTargetProperty() {
-		return targetProperty;
+		return binding.getType();
 	}
 
-	/**
-	 * 
-	 * @param targetProperty
-	 */
-	protected void setTargetProperty(String targetProperty) {
-		this.targetProperty = targetProperty;
-	}
-	
 	public UpdateSourceTrigger getUpdateSourceTrigger() {
-		return updateSourceTrigger;
-	}
-
-	public void setUpdateSourceTrigger(UpdateSourceTrigger updateSourceTrigger) {
-		this.updateSourceTrigger = updateSourceTrigger;
+		return binding.getUpdateSourceTrigger();
 	}
 }

@@ -23,7 +23,9 @@ import org.eclipse.e4.xwt.tests.metaclass.Metaclass_Tests;
 import org.eclipse.e4.xwt.tests.name.NameTestSuite;
 import org.eclipse.e4.xwt.tests.namespace.handler.NamespacehandlerTestSuite;
 import org.eclipse.e4.xwt.tests.resources.ResourcesTestSuite;
+import org.eclipse.e4.xwt.tests.snippet017.Snippet017TestSuite;
 import org.eclipse.e4.xwt.tests.trigger.TriggerTestSuite;
+import org.eclipse.e4.xwt.tests.xaml.BindingExpressionTestSuite;
 
 /**
  * 
@@ -74,11 +76,15 @@ public class XwtTestSuite extends TestSuite {
 
 		// triggers
 		addTriggerTests();
-	}
 
+		// triggers
+		addSnippetTests();
+	}
+	
 	protected void addXAMLTests() {
 		addTest(NameTestSuite.suite());
 		addTest(ResourcesTestSuite.suite());
+		addTest(BindingExpressionTestSuite.suite());
 	}
 
 	protected void addXWTTests() {
@@ -115,6 +121,10 @@ public class XwtTestSuite extends TestSuite {
 	}
 
 	protected void addStyleTests() {
+	}
+
+	protected void addSnippetTests() {
+		addTest(Snippet017TestSuite.suite());
 	}
 
 	protected void addTriggerTests() {

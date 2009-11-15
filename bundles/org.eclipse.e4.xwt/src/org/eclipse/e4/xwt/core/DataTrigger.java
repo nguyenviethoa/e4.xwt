@@ -13,11 +13,10 @@ package org.eclipse.e4.xwt.core;
 import java.util.HashMap;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.e4.xwt.utils.OperatorHelper;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -90,8 +89,8 @@ public class DataTrigger extends TriggerBase {
 			return;
 		}
 		IObservableValue observableValue = (IObservableValue) bindingTarget;
-		observableValue.addValueChangeListener(new AbstractValueChangeListener(target) {
-			public void handleValueChange(ValueChangeEvent event) {
+		observableValue.addChangeListener(new AbstractChangeListener(target) {
+			public void handleChange(ChangeEvent event) {
 				Widget widget = UserData.getWidget(element);
 				if (widget == null) {
 					return;
@@ -109,7 +108,7 @@ public class DataTrigger extends TriggerBase {
 						normalizedValue = converter.convert(normalizedValue);
 					}
 				}
-				if (!OperatorHelper.compare(currentValue, operator, normalizedValue)) {
+				if (!Operator.compare(currentValue, operator, normalizedValue)) {
 					restoreValues();
 					return;					
 				}

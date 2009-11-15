@@ -14,7 +14,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.widgets.Event;
 
-public interface IObservableValueManager {	
+public interface IObservableValueListener {	
 	void registerValue(IProperty property, IObservableValue observableValue);
 	
 	IObservableValue getValue(IProperty property);

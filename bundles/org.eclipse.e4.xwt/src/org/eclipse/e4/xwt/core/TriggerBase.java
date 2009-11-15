@@ -12,7 +12,7 @@ package org.eclipse.e4.xwt.core;
 
 import java.util.HashMap;
 
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
@@ -47,11 +47,11 @@ public abstract class TriggerBase {
 	
 	public abstract void on(Object target);
 	
-	abstract class AbstractValueChangeListener implements IValueChangeListener {
+	abstract class AbstractChangeListener implements IChangeListener {
 		protected HashMap<SetterBase, Object> oldvalues = null;
 		protected Object element;
 
-		public AbstractValueChangeListener(Object element) {
+		public AbstractChangeListener(Object element) {
 			this.element = element;
 		}
 		

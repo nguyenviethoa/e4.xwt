@@ -26,6 +26,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.animation.BeginStoryboard;
 import org.eclipse.e4.xwt.animation.DoubleAnimation;
 import org.eclipse.e4.xwt.animation.PauseStoryboard;
@@ -72,7 +73,8 @@ import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.JavaLanguageSupport;
 import org.eclipse.e4.xwt.internal.core.MetaclassManager;
-import org.eclipse.e4.xwt.internal.core.NameScope;
+import org.eclipse.e4.xwt.internal.core.ScopeManager;
+import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.ResourceLoaderFactory;
 import org.eclipse.e4.xwt.javabean.ValueConvertorRegister;
@@ -85,24 +87,27 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.DataProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicBeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.InputBeanProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.MultiSelectionBeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
+import org.eclipse.e4.xwt.javabean.metadata.properties.SingleSelectionBeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.StyleProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableColumnEditorProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableEditorDynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemEditorProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
-import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnImageProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnDisplayMemberPath;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnImageProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnTextProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnWidthProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnsProperty;
 import org.eclipse.e4.xwt.jface.ComboBoxCellEditor;
 import org.eclipse.e4.xwt.jface.DefaultCellModifier;
 import org.eclipse.e4.xwt.jface.DefaultColumnViewerLabelProvider;
-import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.DefaultListContentProvider;
+import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.JFaceInitializer;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
+import org.eclipse.e4.xwt.jface.ViewerFilter;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.utils.ResourceManager;
@@ -218,6 +223,25 @@ public class XWTLoader implements IXWTLoader {
 		return UserData.hasLocalData(uiElement, property);
 	}
 
+	
+	/**
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	public IObservableValue observableValue(Object control, Object data, String fullPath, UpdateSourceTrigger updateSourceTrigger) {
+		return ScopeManager.observableValue(control, data, fullPath, updateSourceTrigger);
+	}
+
+	/**
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	public IObservableValue findObservableValue(Object control, Object data, String fullPath) {
+		return ScopeManager.findObservableValue(control, data, fullPath);
+	}
+
 	/**
 	 * 
 	 * @param nsmapace
@@ -269,17 +293,6 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public String getElementName(Object object) {
 		return UserData.getElementName(object);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.IXWTLoader#findNameContext(org.eclipse.swt.widgets
-	 * .Widget)
-	 */
-	public NameScope findNameContext(Object widget) {
-		return UserData.findNameContext(widget);
 	}
 
 	/*
@@ -505,7 +518,7 @@ public class XWTLoader implements IXWTLoader {
 			Map<String, Object> options) throws Exception {
 		ILoadingContext context = getLoadingContext();
 		try {
-			setLoadingContext(new LoadingContext(viewType.getClassLoader()));
+			setLoadingContext(new DefaultLoadingContext(viewType.getClassLoader()));
 			options = prepareOptions(options);
 			return loadWithOptions(viewType.getResource(viewType
 					.getSimpleName()
@@ -1270,6 +1283,11 @@ public class XWTLoader implements IXWTLoader {
 			metaclass.addProperty(new InputBeanProperty(property));
 			metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT,
 					IUserDataConstants.XWT_DATACONTEXT_KEY));
+			
+			metaclass.removeProperty("selection");
+			
+			metaclass.addProperty(new SingleSelectionBeanProperty(PropertiesConstants.PROPERTY_SINGLE_SELECTION));
+			metaclass.addProperty(new MultiSelectionBeanProperty(PropertiesConstants.PROPERTY_MULTI_SELECTION));
 		}
 
 		type = org.eclipse.jface.viewers.AbstractListViewer.class;
@@ -1316,7 +1334,8 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(DefaultCellModifier.class);
 		registerMetaclass(DefaultListViewerLabelProvider.class);
 		registerMetaclass(DefaultColumnViewerLabelProvider.class);
-
+		registerMetaclass(ViewerFilter.class);
+		
 		registerMetaclass(ObjectDataProvider.class);
 
 		registerMetaclass(Style.class);
@@ -1375,7 +1394,7 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public ILoadingContext getLoadingContext() {
 		if (_loadingContext == null) {
-			return LoadingContext.defaultLoadingContext;
+			return DefaultLoadingContext.defaultLoadingContext;
 		}
 		return _loadingContext;
 	}

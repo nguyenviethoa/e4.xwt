@@ -14,18 +14,28 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.IBindingContext;
+import org.eclipse.e4.xwt.IDataObservableValueBridge;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.databinding.BeanObservableValue;
+import org.eclipse.e4.xwt.core.AbstractObservableValueBridge;
 import org.eclipse.e4.xwt.databinding.ObjectBindingContext;
 import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
-import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public class ObjectDataProvider extends AbstractDataProvider implements IObjectDataProvider {
+public class ObjectDataProvider extends AbstractDataProvider implements
+		IObjectDataProvider {
 
 	private Object objectInstance;
 	private Class<?> objectType;
@@ -48,7 +58,9 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#getMethodParameters()
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#getMethodParameters
+	 * ()
 	 */
 	public List<Object> getMethodParameters() {
 		return methodParameters;
@@ -57,7 +69,8 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#getObjectInstance()
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#getObjectInstance()
 	 */
 	public Object getObjectInstance() {
 		if (objectInstance == null && objectType != null) {
@@ -85,7 +98,9 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#setMethodName(java.lang.String)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#setMethodName(java
+	 * .lang.String)
 	 */
 	public void setMethodName(String methodName) {
 		this.methodName = methodName;
@@ -94,7 +109,9 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#setMethodParameters(java.util.List)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#setMethodParameters
+	 * (java.util.List)
 	 */
 	public void setMethodParameters(List<Object> parameters) {
 		this.methodParameters = parameters;
@@ -103,7 +120,9 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#setObjectInstance(java.lang.Object)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#setObjectInstance
+	 * (java.lang.Object)
 	 */
 	public void setObjectInstance(Object objectImstance) {
 		this.objectInstance = objectImstance;
@@ -112,7 +131,9 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#setObjectType(java.lang.Class)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IObjectDataProvider#setObjectType(java
+	 * .lang.Class)
 	 */
 	public void setObjectType(Class<?> objectType) {
 		this.objectType = objectType;
@@ -137,8 +158,10 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 					method = targetType.getDeclaredMethod(methodName);
 					return method.invoke(target);
 				} else {
-					method = targetType.getDeclaredMethod(methodName, paras.toArray(new Class<?>[paras.size()]));
-					return method.invoke(target, methodParameters.toArray(new Object[methodParameters.size()]));
+					method = targetType.getDeclaredMethod(methodName, paras
+							.toArray(new Class<?>[paras.size()]));
+					return method.invoke(target, methodParameters
+							.toArray(new Object[methodParameters.size()]));
 				}
 			} catch (Exception e) {
 			}
@@ -149,7 +172,8 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getData(java.lang.String)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IDataProvider#getData(java.lang.String)
 	 */
 	public Object getData(String path) {
 		return getData(getTarget(), path);
@@ -158,19 +182,24 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getData(java.lang.String)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IDataProvider#getData(java.lang.String)
 	 */
 	public Object getData(Object object, String path) {
 		if (object instanceof IObservableValue) {
 			object = ((IObservableValue) object).getValue();
 		}
+		if (path == null || path.trim().length() == 0) {
+			return ObservableValueFactory.getValue(object, null);			
+		}
 		int index = path.indexOf(".");
 		while (index != -1 && object != null) {
-			object = BeanObservableValue.getValue(object, path.substring(0, index));
+			object = ObservableValueFactory.getValue(object, path.substring(0,
+					index));
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
-		return BeanObservableValue.getValue(object, path);
+		return ObservableValueFactory.getValue(object, path);
 	}
 
 	public void setData(Object object, String path, Object value) {
@@ -179,11 +208,12 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		}
 		int index = path.indexOf(".");
 		while (index != -1 && object != null) {
-			object = BeanObservableValue.getValue(object, path.substring(0, index));
+			object = ObservableValueFactory.getValue(object, path.substring(0,
+					index));
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
-		BeanObservableValue.setValue(object, path, value);
+		ObservableValueFactory.setValue(object, path, value);
 	}
 
 	public void setData(String path, Object value) {
@@ -193,7 +223,9 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getDataType(java.lang.String)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IDataProvider#getDataType(java.lang.
+	 * String)
 	 */
 	public Class<?> getDataType(String path) {
 		Object target = getTarget();
@@ -206,7 +238,8 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		}
 		int index = path.indexOf(".");
 		while (index != -1 && target != null) {
-			type = ObservableValueFactory.getValueType(type, path.substring(0, index));
+			type = ObservableValueFactory.getValueType(type, path.substring(0,
+					index));
 			if (type == null) {
 				type = Object.class;
 			}
@@ -233,40 +266,45 @@ public class ObjectDataProvider extends AbstractDataProvider implements IObjectD
 		}
 		int index = path.indexOf(".");
 		while (index != -1 && target != null) {
-			type = ObservableValueFactory.getValueType(type, path.substring(0, index));
+			type = ObservableValueFactory.getValueType(type, path.substring(0,
+					index));
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
-		return BeanObservableValue.isPropertyReadOnly(type, path);
+		return ObservableValueFactory.isPropertyReadOnly(type, path);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.impl.AbstractDataProvider#createObservableValue(java.lang.String)
-	 */
-	public IObservableValue createObservableValue(Class<?> valueType, String fullPath) {
-		Object dataContext = getTarget();
-		String propertyName = null;
-		String[] paths = fullPath.trim().split("\\.");
-		if (paths.length > 1) {
-			for (int i = 0; i < paths.length - 1; i++) {
-				String path = paths[i];
-				if (dataContext != null) {
-					bindingContext.addObservable(dataContext);
-					Object pathDataContext = ObservableValueFactory.createWidgetValue(dataContext, path, UpdateSourceTrigger.Default);
-					if (pathDataContext == null) {
-						pathDataContext = BeanObservableValue.getValue(dataContext, path);
-					}
-					dataContext = pathDataContext;
-				}
+	protected IDataObservableValueBridge createObservableValueFactory() {
+		return new AbstractObservableValueBridge() {
+			@Override
+			protected IObservableValue observeValue(Object bean, String propertyName) {
+				if (ObservableValueFactory.isBeanSupport(bean)) {
+					return BeansObservables.observeValue(XWT.getRealm(), bean, propertyName);
+				}		
+				return PojoObservables.observeValue(XWT.getRealm(), bean, propertyName);
 			}
-			propertyName = paths[paths.length - 1];
-		} else if (paths.length == 1) {
-			propertyName = fullPath;
-		}
-		IObservableValue observableValue = ObservableValueFactory.observeValue(dataContext, propertyName);
-		return checkWrapArrayValue(valueType, fullPath, observableValue);
+						
+			@Override
+			protected IObservableValue observeDetailValue(IObservableValue master, Class<?> elementType,
+					String propertyName, Class<?> propertyType) {
+				Class beanClass = elementType;
+				if (beanClass == null && master.getValueType() instanceof Class) {
+					beanClass = (Class) master.getValueType();
+				}
+				if (ObservableValueFactory.isBeanSupport(elementType)) {
+					return BeanProperties.value(beanClass, propertyName, propertyType).observeDetail(master);
+				}
+				return PojoProperties.value(beanClass, propertyName, propertyType)
+						.observeDetail(master);
+			}
+			
+			public IValueProperty createValueProperty(Object type, String propertyName) {
+				if (ObservableValueFactory.isBeanSupport(type)) {
+					return BeanProperties.value(ObservableValueFactory.toType(type), propertyName);
+				}		
+				return PojoProperties.value(ObservableValueFactory.toType(type), propertyName);
+			}
+		};
 	}
 
 	/*

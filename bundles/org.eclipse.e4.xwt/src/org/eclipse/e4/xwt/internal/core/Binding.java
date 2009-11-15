@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.core;
 
+import java.util.ArrayList;
+
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
@@ -21,7 +24,6 @@ import org.eclipse.e4.xwt.core.IDynamicBinding;
 import org.eclipse.e4.xwt.databinding.BindingMode;
 import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
-import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
@@ -44,6 +46,8 @@ public class Binding implements IDynamicBinding {
 
 	private Object control;
 
+	private Object host;
+
 	private IXWTLoader xwtLoader;
 
 	private BindingMode mode = BindingMode.TwoWay;
@@ -59,7 +63,7 @@ public class Binding implements IDynamicBinding {
 	public UpdateSourceTrigger getUpdateSourceTrigger() {
 		return updateSourceTrigger;
 	}
-
+	
 	public void setUpdateSourceTrigger(UpdateSourceTrigger updateSourceTrigger) {
 		this.updateSourceTrigger = updateSourceTrigger;
 	}
@@ -78,6 +82,14 @@ public class Binding implements IDynamicBinding {
 
 	public void setSource(Object source) {
 		this.source = source;
+	}
+
+	public Object getHost() {
+		return host;
+	}
+
+	public void setHost(Object host) {
+		this.host = host;
 	}
 
 	public String getPath() {
@@ -163,26 +175,18 @@ public class Binding implements IDynamicBinding {
 			Object value = ((IDynamicBinding) source).createBoundSource();
 			if (value != null && path != null) {
 				Widget widget = UserData.getWidget(value);
-				if (widget != null) {
-					return ObservableValueFactory.createWidgetValue(value, path, getUpdateSourceTrigger());
+				if (widget == null) {
+					widget = UserData.getWidget(control);
 				}
-				else {
-					IDataProvider dataProvider = getDataProvider(source);
-					Class<?> dataType = dataProvider.getDataType(path);
-					return dataProvider.createObservableValue(dataType, path);
-				}
+				return ScopeManager.observeValue(widget, value, path, getUpdateSourceTrigger());
 			}
 		}
 		if (source != null && path != null) {
 			Widget widget = UserData.getWidget(source);
-			if (widget != null) {
-				return ObservableValueFactory.createWidgetValue(source, path, getUpdateSourceTrigger());
-			}
-			else {
-				IDataProvider dataProvider = getDataProvider(source);
-				Class<?> dataType = dataProvider.getDataType(path);
-				return dataProvider.createObservableValue(dataType, path);
-			}
+			if (widget == null) {
+				widget = UserData.getWidget(control);
+			}			
+			return ScopeManager.observeValue(widget, source, path, getUpdateSourceTrigger());
 		}
 		return source;
 	}
@@ -206,13 +210,15 @@ public class Binding implements IDynamicBinding {
 		if (path == null) {
 			return false;
 		}
-		int index = path.lastIndexOf('.');
+		
+		int index = BindingExpressionParser.lastIndexOf(path);
 		if (index == -1) {
 			return (source instanceof Control || source instanceof Viewer);
 		}
 		String parentPath = path.substring(0, index);
-		IObservableValue observableValue = ObservableValueFactory.createWidgetValue(source, parentPath, getUpdateSourceTrigger());
-		if (observableValue != null) {
+		IObservable observable = ScopeManager.observeValue(control, source, parentPath, getUpdateSourceTrigger());
+		if (observable instanceof IObservableValue) {
+			IObservableValue observableValue = (IObservableValue) observable;
 			Object type = observableValue.getValueType();
 			if (type != null) {
 				return UserData.isUIElementType(type);
@@ -242,7 +248,7 @@ public class Binding implements IDynamicBinding {
 
 		if (isSourceControl()) {
 			try {
-				ControlDataBinding controlDataBinding = new ControlDataBinding(dataContext, control, path, type, mode, converter, dataProvider, getUpdateSourceTrigger());
+				ControlDataBinding controlDataBinding = new ControlDataBinding(dataContext, this, dataProvider);
 				return controlDataBinding.getValue();
 			} catch (XWTException e) {
 				// in case the property cannot be bound. return value
@@ -251,7 +257,7 @@ public class Binding implements IDynamicBinding {
 
 		DataBinding dataBinding = null;
 		if (dataProvider != null && (path != null)) {
-			dataBinding = new DataBinding(control, path, type, mode, converter, dataProvider, getUpdateSourceTrigger());
+			dataBinding = new DataBinding(this, dataProvider);
 		}
 		if (dataBinding != null) {
 			return dataBinding.getValue();

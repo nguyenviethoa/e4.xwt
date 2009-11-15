@@ -31,6 +31,15 @@ public class TableViewerColumnMetaClass extends Metaclass {
 	 */
 	@Override
 	public Object newInstance(Object[] parameters) {
+		Object object = doNewInstance(parameters);
+		if (object != null) {
+			initialize(object);
+		}
+		return object;
+	}
+	
+	@Override
+	public Object doNewInstance(Object[] parameters) {
 		try {
 			if (parameters.length == 1 && parameters[0] instanceof TableViewer) {
 				Constructor<?> constructor = getType().getConstructor(TableViewer.class, int.class);

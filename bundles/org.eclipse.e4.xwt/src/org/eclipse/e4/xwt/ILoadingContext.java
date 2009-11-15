@@ -10,8 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
+import java.net.URL;
+
 public interface ILoadingContext {
-	ClassLoader getClassLoader();
+	URL getResource(String name);
 
 	String getNamespace();
+	
+	Class<?> loadClass(String name);
 }

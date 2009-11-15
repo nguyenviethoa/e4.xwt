@@ -30,7 +30,6 @@ import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IObjectInitializer;
 import org.eclipse.e4.xwt.metadata.IProperty;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Composite;
@@ -109,6 +108,12 @@ public abstract class AbstractMetaclass implements IMetaclass {
 		String name = normalize(property.getName());
 		return propertyCache.put(name, property);
 	}
+	
+	public void removeProperty(String propertyName) {
+		String name = normalize(propertyName);
+		propertyCache.remove(name);
+	}
+
 
 	private void buildTypedEvents() {
 		if (buildTypedEvents) {

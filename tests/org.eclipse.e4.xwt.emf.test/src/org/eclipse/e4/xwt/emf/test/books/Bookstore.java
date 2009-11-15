@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface Bookstore extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Books</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.e4.xwt.emf.test.books.Book}.
+	 * The list nameMap are of type {@link org.eclipse.e4.xwt.emf.test.books.Book}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Books</em>' containment reference list isn't clear,

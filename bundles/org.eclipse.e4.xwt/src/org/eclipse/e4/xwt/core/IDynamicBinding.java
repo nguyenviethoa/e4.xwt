@@ -21,6 +21,11 @@ public interface IDynamicBinding extends IBinding {
 
 	Object getControl();
 
+	void setHost(Object control);
+
+	Object getHost();
+
+
 	void setType(String type);
 
 	String getType();

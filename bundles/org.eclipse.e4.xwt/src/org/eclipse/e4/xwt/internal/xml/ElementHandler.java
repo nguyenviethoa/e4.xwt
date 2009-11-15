@@ -59,7 +59,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 
 	private ExtensionParser extensionParser = new ExtensionParser();
 
-	protected HashMap<String, String> namespaceMapping = new HashMap<String, String>();
+	private HashMap<String, String> namespaceMapping = new HashMap<String, String>();
 
 	private boolean needNormalizeName = true;
 
@@ -69,7 +69,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	 * @author yyang
 	 * 
 	 */
-	class ExtensionParser {
+	private class ExtensionParser {
 		private Element root;
 		private DocumentObject current;
 
@@ -195,6 +195,9 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 						if (attributeName != null) {
 							if (attributeValue != null) {
 								Attribute attribute = new Attribute(normalizeAttrNamespace(current.getNamespace()), attributeName, elementManager.generateID(current.getName()));
+								if ("path".equalsIgnoreCase(attributeName) && "Binding".equalsIgnoreCase(element.getName())) {
+									attributeValue = expendNamespaces(element, attributeValue);
+								}
 								handleContent(attribute, attributeValue);
 								element.setAttribute(attribute);
 								current = attribute;
@@ -238,6 +241,10 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 
 			if (equals) {
 				Attribute attribute = new Attribute(normalizeAttrNamespace(current.getNamespace()), attributeName, elementManager.generateID(current.getName()));
+				if ("path".equalsIgnoreCase(attributeName) && "Binding".equalsIgnoreCase(element.getName())) {
+					attributeValue = expendNamespaces(element, attributeValue);
+				}
+				
 				if (attributeValue != null) {
 					handleContent(attribute, attributeValue);
 					element.setAttribute(attribute);
@@ -257,6 +264,21 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		}
 	};
 
+	protected String expendNamespaces(Element element, String value) {
+		if (value.indexOf(':') == -1) {
+			return value;
+		}
+		int length = IConstants.XAML_CLR_NAMESPACE_PROTO.length();
+		for (String prefix : namespaceMapping.keySet()) {
+			String namespace = namespaceMapping.get(prefix);
+			if (namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
+				String packageName = namespace.substring(length);
+				value = value.replace(prefix + ":", packageName + '.');
+			}
+		}
+		return value;
+	}
+	
 	/**
 	 * Default constructor.
 	 * 

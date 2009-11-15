@@ -7,7 +7,6 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -20,11 +19,6 @@ public abstract class AbstractDialog extends Dialog {
 		super(parentShell);
 		this.dataContext = dataContext;
 		this.title = title;
-	}
-
-	public AbstractDialog(IShellProvider parentShell, Object dataContext) {
-		super(parentShell);
-		this.dataContext = dataContext;
 	}
 
 	@Override

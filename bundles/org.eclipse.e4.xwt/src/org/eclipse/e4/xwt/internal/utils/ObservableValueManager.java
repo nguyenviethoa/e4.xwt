@@ -5,14 +5,14 @@ import java.util.HashMap;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IEventGroup;
-import org.eclipse.e4.xwt.IObservableValueManager;
+import org.eclipse.e4.xwt.IObservableValueListener;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.widgets.Event;
 
-public class ObservableValueManager implements IObservableValueManager {
+public class ObservableValueManager implements IObservableValueListener {
 	protected HashMap<String, IObservableValue> map;
 	protected Object host;
 	

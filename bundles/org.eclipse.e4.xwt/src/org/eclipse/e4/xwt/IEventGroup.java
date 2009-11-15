@@ -26,7 +26,7 @@ public interface IEventGroup {
 	 * @param object
 	 * @param property
 	 */
-	void fireEvent(IObservableValueManager manager, IProperty property);
+	void fireEvent(IObservableValueListener manager, IProperty property);
 
 	/**
 	 * Register the event
@@ -34,5 +34,5 @@ public interface IEventGroup {
 	 * @param manager
 	 * @param property
 	 */
-	void registerEvent(IObservableValueManager manager, IProperty property);
+	void registerEvent(IObservableValueListener manager, IProperty property);
 }

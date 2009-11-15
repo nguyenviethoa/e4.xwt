@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-
 /**
  * A Data Binding provider defines the nature of Data Binding such as Bean Object Binding, EMF Object Binding, XML data Binding or Data Base binding
  * 
@@ -72,9 +70,10 @@ public interface IDataProvider {
 	 * 
 	 * @param valueType
 	 * @param path
+	 * @param updateSourceTrigger
 	 * @return
 	 */
-	IObservableValue createObservableValue(Class<?> valueType, String path);
+	IDataObservableValueBridge observableValueBridge();
 
 	/**
 	 * Process context of databindings.

@@ -11,13 +11,11 @@
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservableCollection;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -26,13 +24,12 @@ import org.eclipse.e4.xwt.collection.CollectionViewSource;
 import org.eclipse.e4.xwt.jface.DefaultColumnViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
+import org.eclipse.e4.xwt.jface.ObservableMapLabelProvider;
 import org.eclipse.e4.xwt.metadata.DelegateProperty;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableMapLabelProvider;
 import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
-import org.eclipse.jface.viewers.AbstractListViewer;
-import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 
@@ -63,13 +60,14 @@ public class InputBeanProperty extends DelegateProperty {
 		if (value instanceof IObservableList) {
 			IObservableList list = (IObservableList) value;
 			Object listElementType = list.getElementType();
-			if (listElementType instanceof Class<?>){
+			if (listElementType instanceof Class<?>) {
 				elementType = (Class<?>) listElementType;
 			}
-		}
-		else if (elementType == Object.class && value instanceof Collection<?>) {
+		} else if (elementType == Object.class
+				&& value instanceof Collection<?>) {
 			Collection<?> collection = (Collection<?>) value;
-			for (Iterator<?> iterator = collection.iterator(); iterator.hasNext();) {
+			for (Iterator<?> iterator = collection.iterator(); iterator
+					.hasNext();) {
 				Object object = (Object) iterator.next();
 				if (object != null) {
 					elementType = object.getClass();
@@ -77,22 +75,9 @@ public class InputBeanProperty extends DelegateProperty {
 				}
 			}
 		}
-		
-		if (target instanceof AbstractListViewer) {
-			AbstractListViewer viewer = (AbstractListViewer) target;
-			IContentProvider contentProvider = viewer.getContentProvider();
 
-			if (contentProvider == null) {
-				if (value instanceof List<?> || value.getClass().isArray()) {
-						contentProvider = new ObservableListContentProvider();
-						viewer.setContentProvider(contentProvider);
-				} else if (value instanceof Set<?>) {
-						contentProvider = new ObservableSetContentProvider();
-						viewer.setContentProvider(contentProvider);
-				}
-			}
-		} else if (target instanceof ColumnViewer) {
-			ColumnViewer viewer = (ColumnViewer) target;
+		if (target instanceof ContentViewer) {
+			ContentViewer viewer = (ContentViewer) target;
 			IContentProvider contentProvider = viewer.getContentProvider();
 
 			String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
@@ -101,26 +86,23 @@ public class InputBeanProperty extends DelegateProperty {
 					contentProvider = new ObservableListContentProvider();
 					viewer.setContentProvider(contentProvider);
 				}
-				if (propertyNames != null
+				if (propertyNames != null && propertyNames.length > 0 && hasDefaultLabelProvider(viewer) 
 						&& contentProvider instanceof ObservableListContentProvider) {
 					ObservableListContentProvider listContentProvider = (ObservableListContentProvider) contentProvider;
 					viewer.setLabelProvider(new ObservableMapLabelProvider(
-							PojoObservables.observeMaps(listContentProvider
-									.getKnownElements(), elementType,
-									propertyNames)));
+							viewer, listContentProvider.getKnownElements(),
+							propertyNames));
 				}
 			} else if (value instanceof Set<?>) {
 				if (contentProvider == null) {
 					contentProvider = new ObservableSetContentProvider();
 					viewer.setContentProvider(contentProvider);
 				}
-				if (propertyNames != null
+				if (propertyNames != null && propertyNames.length > 0 && hasDefaultLabelProvider(viewer)
 						&& contentProvider instanceof ObservableSetContentProvider) {
 					ObservableSetContentProvider setContentProvider = (ObservableSetContentProvider) contentProvider;
 					viewer.setLabelProvider(new ObservableMapLabelProvider(
-							PojoObservables.observeMaps(setContentProvider
-									.getKnownElements(), elementType,
-									propertyNames)));
+							viewer, setContentProvider.getKnownElements(), propertyNames));
 				}
 			}
 		}
@@ -134,6 +116,12 @@ public class InputBeanProperty extends DelegateProperty {
 			}
 		}
 		super.setValue(target, value);
+	}
+	
+	protected boolean hasDefaultLabelProvider(ContentViewer viewer ) {
+		IBaseLabelProvider labelProvider = viewer.getLabelProvider();
+		return (labelProvider == null || labelProvider.getClass() == DefaultColumnViewerLabelProvider.class ||
+				labelProvider.getClass() == DefaultListViewerLabelProvider.class);
 	}
 
 	protected Class<?> getElementType() {

@@ -10,11 +10,19 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.emf;
 
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.XWT;
+import org.eclipse.core.databinding.property.value.IValueProperty;
+import org.eclipse.e4.xwt.IDataObservableValueBridge;
+import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.core.AbstractObservableValueBridge;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
+import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -33,23 +41,52 @@ public class EMFDataProvider extends AbstractDataProvider {
 	private String featureName;
 	private EObject objectInstance;
 
-	public IObservableValue createObservableValue(Class<?> valueType, String path) {
-		EObject eObj = getTarget();
-		if (eObj != null && path != null) {
-			String featureName = path;
-			int index = path.lastIndexOf(".");
-			if (index != -1) {
-				String parent = path.substring(0, index);
-				eObj = EMFBinding.getEObject(eObj, parent);
-				featureName = path.substring(index + 1);
+	@Override
+	protected IDataObservableValueBridge createObservableValueFactory() {
+		return new AbstractObservableValueBridge() {
+			
+			@Override
+			protected IObservableValue observeDetailValue(
+					IObservableValue bean, Class<?> ownerType, String propertyName,
+					Class<?> propertyType) {
+				EClass type = EMFHelper.toType(bean);
+				EStructuralFeature feature = type.getEStructuralFeature(propertyName);
+				if (feature == null) {
+					throw new XWTException(propertyName + " feature is not found in " + EMFHelper.getQualifiedName(type));
+				}
+				return EMFObservables.observeDetailValue(bean.getRealm(), bean, feature);
 			}
-			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
-			if (feature != null) {
-				IObservableValue observableValue = EMFObservables.observeValue(XWT.getRealm(), eObj, feature);
-				return checkWrapArrayValue(valueType, path, observableValue);
-			}
+			
+			@Override
+			protected IObservableValue observeValue(Object bean, String propertyName) {
+				EClass type = EMFHelper.toType(bean);
+				EStructuralFeature feature = type.getEStructuralFeature(propertyName);
+				if (feature == null) {
+					throw new XWTException(propertyName + " feature is not found in " + EMFHelper.getQualifiedName(type));
+				}
+				return EMFObservables.observeValue((EObject)bean, feature);
+			}			
+		};
+	}
+	
+	public IValueProperty observeValueProperty(Object valueType, String path,
+			UpdateSourceTrigger updateSourceTrigger) {
+		EClass type = null;
+		if (valueType instanceof EClass) {
+			type = (EClass) valueType;
 		}
-		return null;
+		else if (valueType instanceof EObject) {
+			EObject object = (EObject) valueType;
+			type = object.eClass();
+		}
+		else {
+			throw new IllegalStateException();
+		}
+		EStructuralFeature feature = type.getEStructuralFeature(path);
+		if (feature == null) {
+			throw new XWTException(path + " feature is not found in " + EMFHelper.getQualifiedName(type));
+		}
+		return EMFProperties.value(feature);
 	}
 
 	public URI getObjectURI() {

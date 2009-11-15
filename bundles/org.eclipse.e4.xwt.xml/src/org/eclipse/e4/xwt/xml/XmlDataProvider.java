@@ -21,8 +21,14 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.property.value.IValueProperty;
+import org.eclipse.e4.xwt.core.AbstractObservableValueBridge;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
+import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -171,20 +177,34 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 		return data.getClass();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.impl.AbstractDataProvider#createObservableValue(java.lang.String)
-	 */
-	public IObservableValue createObservableValue(Class<?> valueType, String path) {
-		Object data = getData(path);
-		if (data != null && data instanceof Node) {
-			XmlObservableValue observableValue = new XmlObservableValue(valueType, (Node) data, path);
-			return checkWrapArrayValue(valueType, path, observableValue);
-		}
-		return null;
+	
+	public IValueProperty observeValueProperty(Object valueType, String path,
+			UpdateSourceTrigger updateSourceTrigger) {
+		return null; // TODOD
 	}
-
+	
+	protected org.eclipse.e4.xwt.IDataObservableValueBridge createObservableValueFactory() {
+		return new AbstractObservableValueBridge() {
+			
+			@Override
+			protected IObservableValue observeValue(Object bean, String propertyName) {
+				Object data = getData(propertyName);
+				if (data != null && data instanceof Node) {
+					Class<?> valueType = data.getClass();
+					return new XmlObservableValue(valueType, (Node) data, path);
+				}
+				return null;
+			}
+						
+			@Override
+			protected IObservableValue observeDetailValue(IObservableValue bean, Class<?> ownerType, 
+					String propertyName, Class<?> propertyType) {
+				return null;
+			}
+		};
+	};
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 

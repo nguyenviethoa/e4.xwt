@@ -11,12 +11,13 @@
 
 package org.eclipse.e4.xwt.databinding;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
-import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
+import org.eclipse.e4.xwt.internal.core.Binding;
+import org.eclipse.e4.xwt.internal.core.ScopeManager;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 
 /**
  * 
@@ -25,8 +26,8 @@ import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 public class ControlDataBinding extends AbstractDataBinding {
 	private Object source;
 
-	public ControlDataBinding(Object source, Object target, String sourceProperty, String targetProperty, BindingMode mode, IValueConverter converter, IDataProvider dataProvider, UpdateSourceTrigger updateSourceTrigger) {
-		super(sourceProperty, targetProperty, target, mode, converter, dataProvider, updateSourceTrigger);
+	public ControlDataBinding(Object source, Binding binding, IDataProvider dataProvider) {
+		super(binding, dataProvider);
 		this.source = source;
 	}
 
@@ -34,40 +35,27 @@ public class ControlDataBinding extends AbstractDataBinding {
 	 * Get bind value of two bindings.
 	 */
 	public Object getValue() {
-		IObservableValue sourceWidget;
-		IObservableValue targetWidget = ObservableValueFactory.createWidgetValue(getTarget(), getTargetProperty(), getUpdateSourceTrigger());
-		Class<?> type = Object.class;
-		if (targetWidget != null) {
-			Object valueType = targetWidget.getValueType();
-			if (valueType instanceof Class<?>) {
-				type = (Class<?>) valueType;
+		IObservableValue sourceWidget = null;
+		IObservableValue targetWidget = null;
+		Object target = getControl();
+		if (target != null) {
+			IObservable observable = ScopeManager.observeValue(target, target, getTargetProperty(), getUpdateSourceTrigger());
+			if (observable instanceof IObservableValue) {
+				targetWidget = (IObservableValue) observable;
 			}
 		}
+		if (source == null) {
+			return null;
+		}
+
+		Object control = UserData.getWidget(source);
+		if (control == null) {
+			control = getControl();
+		}
 		
-		if (source instanceof IObservableValue) {
-//			IBindingContext bindingContext = new BindingContext();
-//			sourceWidget = new WritableValue() {
-//				@Override
-//				public Object doGetValue() {
-//					return getDataProvider().getData(getSourceProperty());
-//				}
-//			};			
-//			bindingContext.bind((IObservableValue) source, sourceWidget, new IDataBindingInfo() {
-//				public IDataProvider getDataProvider() {
-//					return ControlDataBinding.this.getDataProvider();
-//				}
-//
-//				public IValueConverter getConverter() {
-//					return ControlDataBinding.this.getConverter();
-//				}
-//
-//				public BindingMode getBindingMode() {
-//					return BindingMode.TwoWay;
-//				}
-//			});
-			sourceWidget = BeansObservables.observeDetailValue((IObservableValue)source, getSourceProperty(), type);			
-		} else {
-			sourceWidget = ObservableValueFactory.createWidgetValue(source, getSourceProperty(), getUpdateSourceTrigger());
+		IObservable observable = ScopeManager.observeValue(control, source, getSourceProperty(), getUpdateSourceTrigger());
+		if (observable instanceof IObservableValue) {
+			sourceWidget = (IObservableValue) observable;
 		}
 
 		if (targetWidget == null) {
@@ -90,13 +78,5 @@ public class ControlDataBinding extends AbstractDataBinding {
 	 */
 	protected Object getSource() {
 		return source;
-	}
-
-	/**
-	 * 
-	 * @param source
-	 */
-	protected void setSource(Object source) {
-		this.source = source;
 	}
 }

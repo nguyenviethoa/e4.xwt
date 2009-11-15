@@ -1,10 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Soyatec - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.e4.xwt.pde.ui.views;
 
 import java.io.InputStream;
 import java.net.URL;
 
+import org.eclipse.e4.xwt.DefaultLoadingContext;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.pde.LoadingContext;
 import org.eclipse.e4.xwt.pde.PDEPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -50,7 +60,7 @@ public abstract class XWTViewPart extends ViewPart {
 	abstract protected void updateContent();
 
 	public void setContent(URL file) {
-		XWT.setLoadingContext(new LoadingContext(this.getClass().getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass().getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();
@@ -65,7 +75,7 @@ public abstract class XWTViewPart extends ViewPart {
 	}
 
 	public void setContent(InputStream inputStream, URL base) {
-		XWT.setLoadingContext(new LoadingContext(this.getClass().getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass().getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();

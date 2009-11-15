@@ -63,6 +63,8 @@ public abstract class XWTTestCase extends TestCase {
 			}
 			while (display.readAndDispatch())
 				;
+			while (display.readAndDispatch())
+				;
 			if (checkAction != null) {
 				display.syncExec(checkAction);
 				while (display.readAndDispatch())

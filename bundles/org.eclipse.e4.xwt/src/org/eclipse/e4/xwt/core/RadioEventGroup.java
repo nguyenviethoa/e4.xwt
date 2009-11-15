@@ -12,7 +12,7 @@ package org.eclipse.e4.xwt.core;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IEventConstants;
-import org.eclipse.e4.xwt.IObservableValueManager;
+import org.eclipse.e4.xwt.IObservableValueListener;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
@@ -27,7 +27,7 @@ public class RadioEventGroup extends AbstractEventGroup {
 		super(names);
 	}
 
-	public void fireEvent(IObservableValueManager manager, IProperty property) {
+	public void fireEvent(IObservableValueListener manager, IProperty property) {
 		Object host = manager.getHost();
 		IEventHandler controller = UserData.findEventController(host);
 		if (controller == null) {
@@ -51,7 +51,7 @@ public class RadioEventGroup extends AbstractEventGroup {
 		}
 	}
 
-	public void registerEvent(IObservableValueManager manager,
+	public void registerEvent(IObservableValueListener manager,
 			IProperty property) {
 		Object host = manager.getHost();
 		IEventHandler controller = UserData.findEventController(host);
@@ -72,7 +72,7 @@ public class RadioEventGroup extends AbstractEventGroup {
 			IProperty eventProperty = metaclass.findProperty(eventPropertyName);
 			
 			try {
-				controller.setEvent(event, UserData.getWidget(host), manager, eventProperty, IObservableValueManager.class.getDeclaredMethod("changeValueHandle", Object.class, org.eclipse.swt.widgets.Event.class));
+				controller.setEvent(event, UserData.getWidget(host), manager, eventProperty, IObservableValueListener.class.getDeclaredMethod("changeValueHandle", Object.class, org.eclipse.swt.widgets.Event.class));
 			} catch (Exception e) {
 				LoggerManager.log(e);
 				return;

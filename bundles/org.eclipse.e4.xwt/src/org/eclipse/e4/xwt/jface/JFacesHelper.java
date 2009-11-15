@@ -15,8 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.internal.core.Core;
+import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
+import org.eclipse.jface.viewers.AbstractListViewer;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 
 public class JFacesHelper {
@@ -73,24 +78,34 @@ public class JFacesHelper {
 		JFACES_SUPPORTED_ELEMENTS = collector.toArray(new Class[collector.size()]);
 	}
 	
-	public static String[] getViewerProperties(ColumnViewer viewer) {
-		Object[] properties = viewer.getColumnProperties();
-		String[] propertyNames = null;
-		if (properties != null) {
-			int size = 0;
-			for (int i = 0; i < properties.length; i++) {
-				if (properties[i] != null) {
-					size ++;
+	public static String[] getViewerProperties(Viewer viewer) {
+		if (viewer instanceof ColumnViewer) {
+			ColumnViewer columnViewer = (ColumnViewer) viewer;
+			Object[] properties = columnViewer.getColumnProperties();
+			String[] propertyNames = null;
+			if (properties != null) {
+				int size = 0;
+				for (int i = 0; i < properties.length; i++) {
+					if (properties[i] != null) {
+						size ++;
+					}
+				}
+	
+				propertyNames = new String[size];
+				for (int i = 0, j = 0; i < properties.length; i++) {
+					if (properties[i] != null) {
+						propertyNames[j++] = properties[i].toString();												
+					}
 				}
 			}
-
-			propertyNames = new String[size];
-			for (int i = 0, j = 0; i < properties.length; i++) {
-				if (properties[i] != null) {
-					propertyNames[j++] = properties[i].toString();												
-				}
+			return propertyNames;
+		}
+		else if (viewer instanceof AbstractListViewer) {
+			String path = (String)UserData.getLocalData(viewer, PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH);
+			if (path != null) {
+				return new String [] {path};
 			}
 		}
-		return propertyNames;
+		return Core.EMPTY_STRING_ARRAY;
 	}
 }

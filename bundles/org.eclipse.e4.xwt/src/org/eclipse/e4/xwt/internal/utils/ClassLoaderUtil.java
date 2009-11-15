@@ -43,13 +43,13 @@ public class ClassLoaderUtil {
 	}
 
 	private static Class<?> doLoadClass(ILoadingContext loadingContext, String className) {
+		Class<?> type = loadingContext.loadClass(className);
+		if (type != null) {
+			return type;
+		}
 		try {
-			return loadingContext.getClassLoader().loadClass(className);
-		} catch (ClassNotFoundException e) {
-			try {
-				return Class.forName(className);
-			} catch (ClassNotFoundException e1) {
-			}
+			return Class.forName(className);
+		} catch (ClassNotFoundException e1) {
 		}
 		return null;
 	}

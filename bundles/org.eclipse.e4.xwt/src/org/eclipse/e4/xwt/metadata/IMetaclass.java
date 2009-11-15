@@ -28,6 +28,8 @@ public interface IMetaclass {
 
 	public IProperty findProperty(String name);
 
+	public void removeProperty(String name);
+
 	public IProperty findDefaultProperty();
 
 	public IEvent findEvent(String name);

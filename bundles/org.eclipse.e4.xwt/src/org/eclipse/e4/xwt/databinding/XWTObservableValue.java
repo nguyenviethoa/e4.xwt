@@ -25,8 +25,6 @@ import org.eclipse.jface.util.Util;
  */
 public abstract class XWTObservableValue extends AbstractObservableValue implements IObserving {
 
-	public static final String VALUE_CHANGED_EVENT = "EVENT_NODE_VALUE_CHANGED";
-
 	private Object observed;
 	private Class<?> valueType;
 

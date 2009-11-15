@@ -12,15 +12,15 @@ package org.eclipse.e4.xwt.core;
 
 import java.util.HashMap;
 
+import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Widget;
 
 public class MultiDataTrigger extends TriggerBase {
-	protected Condition[] conditions;
-	protected Setter[] setters;
+	private Condition[] conditions = Condition.EMPTY_ARRAY;
+	private Setter[] setters;
 
 	public Condition[] getConditions() {
 		return conditions;
@@ -38,12 +38,12 @@ public class MultiDataTrigger extends TriggerBase {
 		this.setters = setters;
 	}
 
-	class ValueChangeListener extends AbstractValueChangeListener {
+	class ValueChangeListener extends AbstractChangeListener {
 		public ValueChangeListener(Object element) {
 			super(element);
 		}
 
-		public void handleValueChange(ValueChangeEvent event) {
+		public void handleChange(ChangeEvent event) {
 			for (Condition condition : getConditions()) {
 				if (!condition.evaluate(element)) {
 					restoreValues();
@@ -100,7 +100,7 @@ public class MultiDataTrigger extends TriggerBase {
 				return;
 			}
 			IObservableValue observableValue = (IObservableValue) bindingTarget;
-			observableValue.addValueChangeListener(changeListener);
+			observableValue.addChangeListener(changeListener);
 		}
 	}
 }

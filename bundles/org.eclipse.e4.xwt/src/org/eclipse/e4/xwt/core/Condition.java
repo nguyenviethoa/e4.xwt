@@ -15,7 +15,6 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
-import org.eclipse.e4.xwt.utils.OperatorHelper;
 
 /**
  * 
@@ -30,6 +29,13 @@ public class Condition {
 
 	private String sourceName;
 	private Object value;
+	
+	private CacheData cacheData;
+	
+	static class CacheData {
+		protected Object value;
+		protected IProperty property;
+	}
 
 	public Operator getOperator() {
 		return operator;
@@ -83,18 +89,30 @@ public class Condition {
 		Object dataObject = TriggerBase.getElementByName(element, sourceName);
 
 		if (propertyName != null) {
+			if (cacheData != null) {
+				try {
+					Object existingValue = cacheData.property.getValue(dataObject);
+					return Operator.compare(existingValue, operator, cacheData.value);
+				} catch (Exception e) {
+					LoggerManager.log(e);
+				}
+			}
+			cacheData = new CacheData();
+			
 			IMetaclass metaclass = XWT.getMetaclass(dataObject);
 			IProperty prop = metaclass.findProperty(propertyName);
 			if (prop != null && value != null) {
+				cacheData.property = prop;
 				IConverter converter = XWT.findConvertor(value.getClass(), prop
 						.getType());
 				Object trueValue = value;
 				if (converter != null) {
 					trueValue = converter.convert(trueValue);
 				}
+				cacheData.value = trueValue;
 				try {
 					Object existingValue = prop.getValue(dataObject);
-					return trueValue.equals(existingValue);
+					return Operator.compare(existingValue, operator, trueValue);
 				} catch (Exception e) {
 					LoggerManager.log(e);
 				}
@@ -113,7 +131,7 @@ public class Condition {
 					normalizedValue = converter.convert(normalizedValue);
 				}
 			}
-			return OperatorHelper.compare(existingValue, operator, normalizedValue);
+			return Operator.compare(existingValue, operator, normalizedValue);
 		}
 		return false;
 	}

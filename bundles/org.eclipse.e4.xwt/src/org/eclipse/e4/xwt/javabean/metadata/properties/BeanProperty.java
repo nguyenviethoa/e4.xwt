@@ -60,6 +60,7 @@ public class BeanProperty extends AbstractProperty {
 				}
 				
 				if (oldValue != value) {
+					writeMethod.setAccessible(true);
 					writeMethod.invoke(target, value);
 					fireSetPostAction(target, this, value);
 				}
@@ -70,6 +71,7 @@ public class BeanProperty extends AbstractProperty {
 	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		if (descriptor != null && descriptor.getReadMethod() != null) {
 			Method writeMethod = descriptor.getReadMethod();
+			writeMethod.setAccessible(true);
 			return writeMethod.invoke(target);
 		}
 		return null;

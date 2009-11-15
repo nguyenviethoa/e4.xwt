@@ -5,5 +5,5 @@ public interface IDataBinding extends IDataBindingInfo {
 
 	public Object getValue();
 
-	public Object getTarget();
+	public Object getControl();
 }

@@ -12,14 +12,15 @@ package org.eclipse.e4.xwt.core;
 
 import java.util.HashMap;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 public class MultiTrigger extends TriggerBase {
-	protected Condition[] conditions;
-	protected SetterBase[] setters;
+	private Condition[] conditions = Condition.EMPTY_ARRAY;
+	private SetterBase[] setters;
 
 	public Condition[] getConditions() {
 		return conditions;
@@ -37,12 +38,12 @@ public class MultiTrigger extends TriggerBase {
 		this.setters = setters;
 	}
 
-	class ValueChangeListener extends AbstractValueChangeListener {
+	class ValueChangeListener extends AbstractChangeListener {
 		public ValueChangeListener(Object element) {
 			super(element);
 		}
 
-		public void handleValueChange(ValueChangeEvent event) {
+		public void handleChange(ChangeEvent event) {
 			for (Condition condition : getConditions()) {
 				if (!condition.evaluate(element)) {
 					restoreValues();
@@ -74,10 +75,11 @@ public class MultiTrigger extends TriggerBase {
 			String sourceName = condition.getSourceName();
 
 			Object source = getElementByName(target, sourceName);
-
-			IObservableValue observableValue = ObservableValueFactory
-					.createWidgetValue(source, propertyName, UpdateSourceTrigger.PropertyChanged);
-			observableValue.addValueChangeListener(changeListener);
+			if (source == null) {
+				throw new XWTException("No element is found with the name = " + sourceName);
+			}
+			IObservable observableValue = ScopeManager.observeValue(source, source, propertyName, UpdateSourceTrigger.PropertyChanged);
+			observableValue.addChangeListener(changeListener);
 		}
 	}
 }

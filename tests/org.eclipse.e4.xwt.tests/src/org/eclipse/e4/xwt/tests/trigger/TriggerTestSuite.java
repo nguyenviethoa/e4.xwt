@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.trigger;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.eclipse.e4.xwt.tests.trigger.datatrigger.DataTriggerTests;
 import org.eclipse.e4.xwt.tests.trigger.multidatatrigger.MultiDataTriggerTests;
 import org.eclipse.e4.xwt.tests.trigger.multitrigger.MultiTriggerTests;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 public class TriggerTestSuite extends TestSuite {
 	public static final Test suite() {

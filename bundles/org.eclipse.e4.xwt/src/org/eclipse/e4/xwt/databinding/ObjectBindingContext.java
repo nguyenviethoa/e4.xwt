@@ -17,12 +17,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.beans.IBeanObservable;
 import org.eclipse.core.databinding.observable.IObserving;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataBindingInfo;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
@@ -38,29 +37,29 @@ public class ObjectBindingContext extends BindingContext {
 	private Object observed;
 
 	public void setNewValue(Object newValue) {
-		if (newValue != null && newValue.getClass() == observed.getClass() && observeValue != null && propertyName != null && observeWidget != null) {
-
-			Field[] fields = observed.getClass().getDeclaredFields();
-			for (Field field : fields) {
-				Object oldPropertyValue = getPropertyValue(observed, field.getName());
-				Object newPropertyValue = getPropertyValue(newValue, field.getName());
-				if (oldPropertyValue != null && oldPropertyValue != newPropertyValue) {
-					ObjectBindingContext bc = bindingContext.get(oldPropertyValue);
-					if (bc != null) {
-						bc.setNewValue(newPropertyValue);
-					}
-				}
-			}
-
-			observeValue = ObservableValueFactory.observeValue(newValue, propertyName);
-			addListener(newValue);
-			observed = newValue;
-			bindingContext.put(observed, this);
-			if (observeWidget != null) {
-				DataBindingContext bindingContext = new DataBindingContext(XWT.getRealm());
-				bindingContext.bindValue(observeWidget, observeValue, null, null);
-			}
-		}
+//		if (newValue != null && newValue.getClass() == observed.getClass() && observeValue != null && propertyName != null && observeWidget != null) {
+//
+//			Field[] fields = observed.getClass().getDeclaredFields();
+//			for (Field field : fields) {
+//				Object oldPropertyValue = getPropertyValue(observed, field.getName());
+//				Object newPropertyValue = getPropertyValue(newValue, field.getName());
+//				if (oldPropertyValue != null && oldPropertyValue != newPropertyValue) {
+//					ObjectBindingContext bc = bindingContext.get(oldPropertyValue);
+//					if (bc != null) {
+//						bc.setNewValue(newPropertyValue);
+//					}
+//				}
+//			}
+//
+//			observeValue = ObservableValueFactory.observeValue(newValue, propertyName);
+//			addListener(newValue);
+//			observed = newValue;
+//			bindingContext.put(observed, this);
+//			if (observeWidget != null) {
+//				DataBindingContext bindingContext = new DataBindingContext(XWT.getRealm());
+//				bindingContext.bindValue(observeWidget, observeValue, null, null);
+//			}
+//		}
 	}
 
 	private Object getPropertyValue(Object object, String propertyName) {
@@ -137,12 +136,9 @@ public class ObjectBindingContext extends BindingContext {
 	 * 
 	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider.BindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
-	public void bind(IObservableValue source, IObservableValue target, IDataBindingInfo dataBinding) {
-		super.bind(source, target, dataBinding);
-		if (source instanceof BeanObservableValue) {
-			BeanObservableValue beanValue = (BeanObservableValue) source;
-			propertyName = beanValue.getPropertyName();
-		} else if (source instanceof IBeanObservable) {
+	public Binding bind(IObservableValue source, IObservableValue target, IDataBindingInfo dataBinding) {
+		Binding binding = super.bind(source, target, dataBinding);
+		if (source instanceof IBeanObservable) {
 			IBeanObservable beanValue = (IBeanObservable) source;
 			propertyName = beanValue.getPropertyDescriptor().getName();
 		}
@@ -151,5 +147,6 @@ public class ObjectBindingContext extends BindingContext {
 			bindingContext.put(observed, this);
 			addListener(observed);
 		}
+		return binding;
 	}
 }

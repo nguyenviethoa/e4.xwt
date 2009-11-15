@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id$
+ * $Id: Company.java,v 1.1 2009/01/07 00:18:46 yvyang Exp $
  */
 package demo_model;
 
@@ -56,7 +56,7 @@ public interface Company extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Employees</b></em>' containment reference list.
-	 * The list contents are of type {@link demo_model.Employee}.
+	 * The list nameMap are of type {@link demo_model.Employee}.
 	 * It is bidirectional and its opposite is '{@link demo_model.Employee#getCompany <em>Company</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>

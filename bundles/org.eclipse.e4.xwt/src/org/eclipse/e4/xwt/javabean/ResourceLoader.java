@@ -52,7 +52,8 @@ import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.DataBindingTrack;
-import org.eclipse.e4.xwt.internal.core.NameScope;
+import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
+import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.utils.ClassLoaderUtil;
 import org.eclipse.e4.xwt.internal.utils.DocumentObjectSorter;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
@@ -70,7 +71,6 @@ import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.utils.PathHelper;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -110,7 +110,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	protected IXWTLoader loader;
 
 	protected Object scopedObject;
-	protected NameScope nameScoped;
+	protected ScopeKeeper nameScoped;
 	protected LoadingData loadData = new LoadingData();
 
 	class LoadingData {
@@ -119,8 +119,13 @@ public class ResourceLoader implements IVisualElementLoader {
 		protected Collection<IStyle> styles = Collections.EMPTY_LIST;
 		private Object loadedObject = null;
 		private Method loadedMethod = null;
-		private Widget hostWidget = null;
+		private Widget hostCLRWidget = null;
 		private Object currentWidget = null;
+		private Object host = null;
+
+		public Object getHost() {
+			return host;
+		}
 
 		public Object getCurrentWidget() {
 			return currentWidget;
@@ -137,14 +142,15 @@ public class ResourceLoader implements IVisualElementLoader {
 		public LoadingData() {
 		}
 
-		public LoadingData(LoadingData loadingData) {
+		public LoadingData(LoadingData loadingData, Object host) {
 			this.loadedObject = loadingData.loadedObject;
 			this.loadedMethod = null;
-			this.hostWidget = loadingData.hostWidget;
+			this.hostCLRWidget = loadingData.hostCLRWidget;
 			this.parent = loadingData;
 			this.styles = loadingData.styles;
 			this.clr = loadingData.clr;
 			this.currentWidget = loadingData.currentWidget;
+			this.host = host;
 		}
 
 		public Collection<IStyle> getStyles() {
@@ -195,7 +201,7 @@ public class ResourceLoader implements IVisualElementLoader {
 							method.setAccessible(true);
 							this.loadedObject = receiver;
 							this.loadedMethod = method;
-							this.hostWidget = control;
+							this.hostCLRWidget = control;
 						}
 						eventController.setEvent(event, control, clrObject,
 								control, method);
@@ -233,10 +239,10 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 			// Try to invoke loaded event every time?
 			if (loadedObject != null && loadedMethod != null
-					&& hostWidget != null) {
+					&& hostCLRWidget != null) {
 				Event event = new Event();
 				event.doit = true;
-				event.widget = hostWidget;
+				event.widget = hostCLRWidget;
 				try {
 					loadedMethod.invoke(loadedObject, new Object[] { event });
 				} catch (Exception e) {
@@ -244,7 +250,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 				loadedObject = null;
 				loadedMethod = null;
-				hostWidget = null;
+				hostCLRWidget = null;
 			}
 		}
 
@@ -286,6 +292,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			options.remove(RESOURCE_LOADER_PROPERTY);
 			ResourceDictionary resourceDictionary = (ResourceDictionary) options
 					.get(IXWTLoader.RESOURCE_DICTIONARY_PROPERTY);
+			
 			if (resourceDictionary != null) {
 				Object styles = resourceDictionary.get(Core.DEFAULT_STYLES_KEY);
 				if (styles != null) {
@@ -295,6 +302,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 
 			Object control = doCreate(parent, element, null, options);
+						
 			// get databinding messages and print into console view
 			if (dataBindingTrack != null) {
 				String dataBindingMessage = dataBindingTrack
@@ -382,7 +390,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			} else if (dataContext != null) {
 				setDataContext(metaclass, targetObject, dico, dataContext);
 			}
-			pushStack();
+			pushStack(parent);
 
 			// for Shell
 			Attribute classAttribute = element.getAttribute(
@@ -393,7 +401,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 
 		} else {
-			pushStack();
+			pushStack(parent);
 
 			//
 			// load the content in case of UserControl
@@ -476,8 +484,8 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		if (scopedObject == null && widget != null) {
 			scopedObject = widget;
-			nameScoped = new NameScope((parent == null ? null : loader
-					.findNameContext((Widget) parent)));
+			nameScoped = new ScopeKeeper((parent == null ? null : UserData
+					.findScopeKeeper((Widget) parent)), widget);
 			UserData.bindNameContext((Widget) widget, nameScoped);
 		}
 
@@ -599,7 +607,9 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		if (control != null) {
 			if (targetObject instanceof IDynamicBinding) {
-				((IDynamicBinding) targetObject).setControl(control);
+				IDynamicBinding dynamicBinding = (IDynamicBinding) targetObject;
+				dynamicBinding.setControl(control);
+				dynamicBinding.setHost(loadData.getHost());				
 			}
 			if (dico != null) {
 				UserData.setResources(control, dico);
@@ -762,8 +772,8 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	private void pushStack() {
-		loadData = new LoadingData(loadData);
+	private void pushStack(Object host) {
+		loadData = new LoadingData(loadData, host);
 	}
 
 	private void popStack() {
@@ -835,7 +845,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					IConstants.XAML_X_NAME);
 		}
 		if (nameAttr != null && UserData.getWidget(targetObject) != null) {
-			nameScoped.addObject(nameAttr.getContent(), targetObject);
+			nameScoped.addNamedObject(nameAttr.getContent(), targetObject);
 			done.add(IConstants.XAML_X_NAME);
 		}
 
@@ -864,7 +874,7 @@ public class ResourceLoader implements IVisualElementLoader {
 						continue; // done before
 					} else if (IConstants.XAML_X_NAME
 							.equalsIgnoreCase(attrName)) {
-						nameScoped.addObject(element.getAttribute(namespace,
+						nameScoped.addNamedObject(element.getAttribute(namespace,
 								attrName).getContent(), targetObject);
 						done.add(attrName);
 					} else if (IConstants.XAML_DATACONTEXT
@@ -1429,7 +1439,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				contentValue = "/" + contentValue;
 			}
 			ILoadingContext loadingContext = context.getLoadingContext();
-			URL resource = loadingContext.getClassLoader().getResource(
+			URL resource = loadingContext.getResource(
 					contentValue);
 			if (resource == null) {
 				try {
@@ -1494,7 +1504,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				contentValue = "/" + contentValue;
 			}
 			ILoadingContext loadingContext = context.getLoadingContext();
-			URL resource = loadingContext.getClassLoader().getResource(
+			URL resource = loadingContext.getResource(
 					contentValue);
 			if (resource == null) {
 				URL resourcePath = context.getResourcePath();

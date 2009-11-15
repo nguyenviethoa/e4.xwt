@@ -3,8 +3,8 @@ package org.eclipse.e4.xwt.pde.ui.views;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.eclipse.e4.xwt.DefaultLoadingContext;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.pde.LoadingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -39,7 +39,7 @@ public abstract class XWTEditorPart extends EditorPart {
 	}
 
 	public void setContent(URL file) {
-		XWT.setLoadingContext(new LoadingContext(this.getClass().getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass().getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();
@@ -54,7 +54,7 @@ public abstract class XWTEditorPart extends EditorPart {
 	}
 
 	public void setContent(InputStream inputStream, URL base) {
-		XWT.setLoadingContext(new LoadingContext(this.getClass().getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass().getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();

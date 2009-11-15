@@ -13,15 +13,16 @@ package org.eclipse.e4.xwt.core;
 import java.util.HashMap;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.databinding.BeanObservableValue;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
+import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.e4.xwt.utils.OperatorHelper;
 import org.eclipse.swt.widgets.Widget;
 
 public class Trigger extends TriggerBase {
@@ -77,9 +78,12 @@ public class Trigger extends TriggerBase {
 	public void on(Object target) {
 		if (property != null) {
 			final Object source = getElementByName(target, sourceName);
-			IObservableValue observableValue = ObservableValueFactory.createWidgetValue(source, property, UpdateSourceTrigger.PropertyChanged);			
-			observableValue.addValueChangeListener(new AbstractValueChangeListener(target) {
-				public void handleValueChange(ValueChangeEvent event) {
+			if (source == null) {
+				throw new XWTException("No element is found with the name = " + sourceName);
+			}
+			IObservable observableValue = ScopeManager.observeValue(source, source, property, UpdateSourceTrigger.PropertyChanged);
+			observableValue.addChangeListener(new AbstractChangeListener(target) {
+				public void handleChange(ChangeEvent event) {
 					Class<?> valueType = ObservableValueFactory.getValueType(source.getClass(), property);
 					if (valueType == null) {
 						LoggerManager.log("Type of the property " + property + " is not found in " + source
@@ -99,8 +103,17 @@ public class Trigger extends TriggerBase {
 					if (converter != null) {
 						realValue = converter.convert(value);						
 					}
-					Object newValue = event.diff.getNewValue();
-					if (!OperatorHelper.compare(newValue, operator, realValue)) {
+					Object newValue = event.getSource();
+					if (newValue instanceof IObservableValue) {
+						IObservableValue observableValue = (IObservableValue) newValue;
+						newValue = observableValue.getValue();
+					}
+					IConverter newConverter = XWT.findConvertor(newValue.getClass(), valueType);
+					if (newConverter != null) {
+						newValue = newConverter.convert(newValue);						
+					}
+
+					if (!Operator.compare(newValue, operator, realValue)) {
 						restoreValues();
 						return;
 					}
