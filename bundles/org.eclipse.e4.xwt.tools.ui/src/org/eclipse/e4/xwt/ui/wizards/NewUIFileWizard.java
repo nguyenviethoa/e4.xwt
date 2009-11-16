@@ -93,7 +93,7 @@ public class NewUIFileWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * The worker method. It will find the container, create the file if missing or just replace its contents, and open the editor on the newly created file.
+	 * The worker method. It will find the container, create the file if missing or just replace its nameMap, and open the editor on the newly created file.
 	 */
 
 	private void doFinish(String containerName, String fileName, IProgressMonitor monitor) throws CoreException {
@@ -131,7 +131,7 @@ public class NewUIFileWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * We will initialize file contents with a sample text.
+	 * We will initialize file nameMap with a sample text.
 	 */
 
 	private InputStream openContentStream(IFile file) {

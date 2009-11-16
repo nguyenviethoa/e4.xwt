@@ -184,7 +184,7 @@ public class ASTHelper {
 			final String content = CodeGeneration.getMethodBodyContent(type.getCompilationUnit(), type.getTypeQualifiedName('.'), methodName, false, "", lineDelimiter); //$NON-NLS-1$ //$NON-NLS-2$
 			if (content != null && content.length() != 0)
 				contents.append("\t" + content);
-			// contents.append("\n");
+			// nameMap.append("\n");
 			if (returnType != null) {
 				contents.append("\treturn " + contentReturnValue + ";");
 				contents.append(lineDelimiter);

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 import org.eclipse.e4.xwt.IConstants;
 
-public class LoadingContext extends org.eclipse.e4.xwt.LoadingContext {
+public class LoadingContext extends org.eclipse.e4.xwt.DefaultLoadingContext {
 	String namespace = IConstants.XWT_NAMESPACE;
 	protected ArrayList<WeakReference<PropertyChangeListener>> changeSupport = new ArrayList<WeakReference<PropertyChangeListener>>();
 
