@@ -15,7 +15,7 @@ public class AttachedPropertyTests extends XWTTestCase {
 		URL url = AttachedPropertyTests.class
 				.getResource(Button_AttachedProperty.class.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				Button button = (Button) XWT.findElementByName(root, "button");
 				IProperty property = XWT.findProperty(Composite.class, "visible"); 

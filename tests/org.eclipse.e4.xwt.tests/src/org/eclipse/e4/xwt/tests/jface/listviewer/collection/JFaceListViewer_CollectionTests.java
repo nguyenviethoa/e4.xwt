@@ -12,7 +12,7 @@ public class JFaceListViewer_CollectionTests extends XWTTestCase {
 
 	public void testListViewer() throws Exception {
 		URL url = JFaceListViewer_CollectionTests.class.getResource(ListViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
 			}
@@ -31,7 +31,7 @@ public class JFaceListViewer_CollectionTests extends XWTTestCase {
 
 	public void testListViewer_Simple() throws Exception {
 		URL url = JFaceListViewer_CollectionTests.class.getResource(ListViewer_Simple.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
 			}

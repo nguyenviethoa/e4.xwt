@@ -1,7 +1,7 @@
 <Composite xmlns="http://www.eclipse.org/xwt/presentation"
     xmlns:x="http://www.eclipse.org/xwt"
     xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail"
-    x:Class="org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.TableViewer_MasterDetail_List"
+    x:Class="org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.TableViewer_MasterDetail_NestedTable_AddPath"
     DataContext="{StaticResource MyDomain}">
 	<Composite.layout>
 		<GridLayout numColumns="2"/>
@@ -31,13 +31,13 @@
          		grabExcessHorizontalSpace="true"/>
 		</TableViewer.control.layoutData>
 	</TableViewer>
-	<!-- Label text="{Binding ElementName=IndustryViewer,path=singleSelection.(j:Company.name)}">
+	<Label text="{Binding ElementName=IndustryViewer,path=singleSelection.(j:Company.name)}">
 		<Label.layoutData>
-			<GridData horizontalAlignment="FILL"
+			<GridData horizontalAlignment="FILL" horizontalSpan="2"
          		grabExcessHorizontalSpace="true"/>
 		</Label.layoutData>
-	</Label -->
-	<TableViewer Name="CompanyViewer" input="{Binding ElementName=IndustryViewer,Path=singleSelection.(j:Company.employees)}">
+	</Label>
+	<TableViewer Name="CompanyViewer1" input="{Binding ElementName=IndustryViewer,Path=singleSelection.(j:Company.employees)}">
 		<TableViewer.columns>
 			<TableViewerColumn width="150" text="Name" displayMemberPath="name"/>
 			<TableViewerColumn width="150" text="Age" displayMemberPath="age"/>
@@ -49,7 +49,7 @@
          		grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 		</TableViewer.control.layoutData>
 	</TableViewer>
-	<TableViewer Name="CompanyViewer" input="{Binding ElementName=IndustryViewer,Path=singleSelection.(j:Company.employees)}">
+	<TableViewer Name="CompanyViewer2" input="{Binding ElementName=IndustryViewer,Path=singleSelection.(j:Company.employees)}">
 		<TableViewer.columns>
 			<TableViewerColumn width="150" text="Name" displayMemberPath="name"/>
 			<TableViewerColumn width="150" text="Age" displayMemberPath="age"/>
@@ -61,5 +61,5 @@
          		grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 		</TableViewer.control.layoutData>
 	</TableViewer>
-	<Button text="Add Employee" SelectionEvent="addEmployee" enabled="{Binding elementName=IndustryViewer,path=singleSelection }" />
+	<Button name="AddButton" text="Add Employee" SelectionEvent="addEmployee" enabled="{Binding elementName=IndustryViewer,path=singleSelection }" />
 </Composite>

@@ -12,7 +12,7 @@ public class JFaceComboViewer_CollectionTests extends XWTTestCase {
 
 	public void test_ComboViewer() throws Exception {
 		URL url = JFaceComboViewer_CollectionTests.class.getResource(ComboViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
 			}
@@ -31,7 +31,7 @@ public class JFaceComboViewer_CollectionTests extends XWTTestCase {
 
 	public void test_ComboViewer_Simple() throws Exception {
 		URL url = JFaceComboViewer_CollectionTests.class.getResource(ComboViewer_Simple.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
 			}

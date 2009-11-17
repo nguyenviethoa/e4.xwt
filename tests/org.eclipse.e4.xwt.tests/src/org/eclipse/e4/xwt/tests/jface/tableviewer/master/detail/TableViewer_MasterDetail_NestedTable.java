@@ -12,32 +12,21 @@ package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail;
 
 import java.net.URL;
 
-import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.widgets.Event;
 
 
 /**
  * @author jliu
  */
-public class TableViewer_MasterDetail_List_Add {
+public class TableViewer_MasterDetail_NestedTable {
 	public static void main(String[] args) {
 		
-		URL url = TableViewer_MasterDetail_List_Add.class.getResource(TableViewer_MasterDetail_List_Add.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = TableViewer_MasterDetail_NestedTable.class.getResource(TableViewer_MasterDetail_NestedTable.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	
-	protected void addEmployee(Object sender, Event event){
-		TableViewer tableViewer = (TableViewer) XWT.findElementByName(event.widget, "CompanyViewer");
-		IObservableList observableList = XWT.findObservableList(tableViewer, tableViewer, "singleSelection");
-		Object input = tableViewer.getInput();
-		
 	}
 }

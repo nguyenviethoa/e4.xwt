@@ -11,7 +11,7 @@ public class EventsLoadedTests extends XWTTestCase {
 
 	public void testLoaded() throws Exception {
 		URL url = org.eclipse.e4.xwt.tests.events.loaded.Button.class.getResource(org.eclipse.e4.xwt.tests.events.loaded.Button.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
 			}

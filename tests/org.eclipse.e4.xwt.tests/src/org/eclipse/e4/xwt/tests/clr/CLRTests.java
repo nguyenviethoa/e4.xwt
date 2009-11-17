@@ -12,7 +12,7 @@ public class CLRTests extends XWTTestCase {
 
 	public void testCLR() throws Exception {
 		URL url = CLR.class.getResource(CLR.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				Object element = XWT.getCLR(root);
 				assertTrue(element instanceof CLR);
@@ -22,7 +22,7 @@ public class CLRTests extends XWTTestCase {
 
 	public void testCLRComposite() throws Exception {
 		URL url = CLR.class.getResource(CLRComposite.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				Object element = XWT.getCLR(root);
 				assertTrue(element instanceof CLRComposite);

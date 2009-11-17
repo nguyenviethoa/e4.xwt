@@ -11,7 +11,7 @@ public class MultipleClassLoadedTests extends XWTTestCase {
 
 	public void testLoaded() throws Exception {
 		URL url = org.eclipse.e4.xwt.tests.events.loaded.multipleClass.Button.class.getResource(org.eclipse.e4.xwt.tests.events.loaded.multipleClass.Button.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkButton("RootButton1", "1");
 				checkButton("RootButton2", "2");

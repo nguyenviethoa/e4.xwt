@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Button;
 public class ButtonTests extends XWTTestCase {
 	public void testButtonVisible() throws Exception {
 		URL url = ButtonTests.class.getResource(Button_Visible.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkButtonVisible();
 				checkButtonNonVisible();
@@ -35,7 +35,7 @@ public class ButtonTests extends XWTTestCase {
 
 	public void testButtonAlignment() throws Exception {
 		URL url = ButtonTests.class.getResource(Button_Alignment.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkButtonLeft();
 				checkButtonRight();
@@ -67,7 +67,7 @@ public class ButtonTests extends XWTTestCase {
 
 	public void testButtonEnabled() throws Exception {
 		URL url = ButtonTests.class.getResource(Button_Enabled.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkButtonEnabled();
 				checkButtonNotEnabled();
@@ -91,7 +91,7 @@ public class ButtonTests extends XWTTestCase {
 
 	public void testButtonStyles() throws Exception {
 		URL url = ButtonTests.class.getResource(Button_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkPushButton();
 				checkCheckButton();

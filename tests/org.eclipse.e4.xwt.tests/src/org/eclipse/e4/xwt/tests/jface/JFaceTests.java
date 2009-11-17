@@ -11,7 +11,7 @@ public class JFaceTests extends XWTTestCase {
 
 	public void testListViewer() throws Exception {
 		URL url = JFaceTests.class.getResource(ListViewer_Name.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
 			}

@@ -40,29 +40,6 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 		}
 	};
 	
-	static class ViewerResher implements IChangeListener {
-		protected Viewer viewer;
-		public ViewerResher(Viewer viewer) {
-			this.viewer = viewer;
-		}
-		
-		public void handleChange(ChangeEvent event) {
-			try {
-				if (viewer instanceof ColumnViewer) {
-					ColumnViewer columnViewer = (ColumnViewer) viewer;
-					if (!columnViewer.isBusy()) {
-						columnViewer.refresh();
-					}
-				}
-				else if (viewer instanceof AbstractListViewer) {
-					AbstractListViewer listViewer = (AbstractListViewer) viewer;
-					listViewer.refresh();
-				}
-			} catch (Exception e) {
-			}
-		}
-	}; 
-
 	/**
 	 * @param attributeMaps
 	 */
@@ -74,7 +51,6 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 			attributeMaps[i] = new XWTObservableWrapper(domain, columnViewer, propertyNames[i]);
 			attributeMaps[i].addMapChangeListener(mapChangeListener);
 		}
-		domain.addChangeListener(new ViewerResher(columnViewer));
 	}
 
 	public void dispose() {

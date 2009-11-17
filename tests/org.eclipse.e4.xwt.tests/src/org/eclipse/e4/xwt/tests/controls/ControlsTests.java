@@ -33,7 +33,7 @@ public class ControlsTests extends XWTTestCase {
 
 	public void testControlSize() throws Exception {
 		URL url = ControlsTests.class.getResource(Control_Size.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkLabel();
 				checkButton();
@@ -59,7 +59,7 @@ public class ControlsTests extends XWTTestCase {
 
 	public void testControlSizeGridData() throws Exception {
 		URL url = ControlsTests.class.getResource(Control_Size_GridData.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkLabel();
 				checkButton();

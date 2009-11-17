@@ -12,7 +12,7 @@ public class JFaceTableViewer_Filters_Tests extends XWTTestCase {
 
 	public void testTableViewer() throws Exception {
 		URL url = JFaceTableViewer_Filters_Tests.class.getResource(TableViewer_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
 			}

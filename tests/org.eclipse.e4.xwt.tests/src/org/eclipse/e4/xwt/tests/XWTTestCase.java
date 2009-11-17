@@ -35,21 +35,17 @@ import org.eclipse.swt.widgets.Text;
 public abstract class XWTTestCase extends TestCase {
 	protected Control root;
 
-	protected void runTest(URL url) {
-		runTest(url, null, null);
+	protected void runTest(URL url, Runnable ... checkActions) {
+		runTest(url, Collections.EMPTY_MAP, checkActions);
 	}
 
-	protected void runTest(URL url, Runnable prepareAction, Runnable checkAction) {
-		runTest(url, Collections.EMPTY_MAP, prepareAction, checkAction);
-	}
-
-	protected void runTest(URL url, Object dataContext, Runnable prepareAction, Runnable checkAction) {
+	protected void runTest(URL url, Object dataContext, Runnable ... checkActions) {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
-		runTest(url, options, prepareAction, checkAction);
+		runTest(url, options, checkActions);
 	}
 
-	protected void runTest(final URL url, Map<String, Object> options, Runnable prepareAction, Runnable checkAction) {
+	protected void runTest(final URL url, Map<String, Object> options, Runnable ... checkActions) {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		try {
 			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
@@ -58,17 +54,13 @@ public abstract class XWTTestCase extends TestCase {
 			Shell shell = root.getShell();
 			shell.open();
 			Display display = shell.getDisplay();
-			if (prepareAction != null) {
-				display.asyncExec(prepareAction);
-			}
-			while (display.readAndDispatch())
-				;
-			while (display.readAndDispatch())
-				;
-			if (checkAction != null) {
-				display.syncExec(checkAction);
+			
+			for (Runnable runnable : checkActions) {
 				while (display.readAndDispatch())
 					;
+				display.syncExec(runnable);
+				while (display.readAndDispatch())
+					;				
 			}
 			assertFalse(root.isDisposed());
 			shell.close();

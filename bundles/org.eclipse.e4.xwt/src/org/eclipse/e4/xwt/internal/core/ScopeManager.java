@@ -75,6 +75,9 @@ public class ScopeManager {
 	 */
 	public static IObservableValue findObservableValue(Object context, Object control, Object data, String propertyName) {
 		ScopeKeeper scope = UserData.findScopeKeeper(context);
+		if (control == null) {
+			control = context;
+		}
 		return scope.getObservableValue(UserData.getWidget(control), data, propertyName);
 	}
 
@@ -88,6 +91,9 @@ public class ScopeManager {
 	 */
 	public static IObservableSet findObservableSet(Object context, Object control, Object data, String propertyName) {
 		ScopeKeeper scope = UserData.findScopeKeeper(context);
+		if (control == null) {
+			control = context;
+		}
 		return scope.getObservableSet(UserData.getWidget(control), data, propertyName);
 	}
 	
@@ -101,6 +107,9 @@ public class ScopeManager {
 	 */
 	public static IObservableList findObservableList(Object context, Object control, Object data, String propertyName) {
 		ScopeKeeper scope = UserData.findScopeKeeper(context);
+		if (control == null) {
+			control = context;
+		}
 		return scope.getObservableList(UserData.getWidget(control), data, propertyName);
 	}
 

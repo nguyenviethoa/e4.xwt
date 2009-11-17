@@ -11,7 +11,7 @@ public class EventsInitTests extends XWTTestCase {
 
 	public void testInitializeComponent() throws Exception {
 		URL url = UserControl.class.getResource(UserControl.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
 			}

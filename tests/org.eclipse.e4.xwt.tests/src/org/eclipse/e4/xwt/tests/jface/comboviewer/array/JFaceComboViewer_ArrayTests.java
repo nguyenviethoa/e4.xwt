@@ -12,7 +12,7 @@ public class JFaceComboViewer_ArrayTests extends XWTTestCase {
 
 	public void testListViewer() throws Exception {
 		URL url = JFaceComboViewer_ArrayTests.class.getResource(ComboViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, null, new Runnable() {
+		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
 			}
