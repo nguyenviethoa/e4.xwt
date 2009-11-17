@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 /**
@@ -32,7 +33,7 @@ public interface IBindingContext {
 	 * @param target
 	 * @param binding
 	 */
-	Binding bind(IObservableValue source, IObservableValue target,
+	Binding bind(IObservable source, IObservable target,
 			IDataBindingInfo binding);
 
 	/**

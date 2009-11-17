@@ -47,15 +47,18 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 		}
 		
 		public void handleChange(ChangeEvent event) {
-			if (viewer instanceof ColumnViewer) {
-				ColumnViewer columnViewer = (ColumnViewer) viewer;
-				if (!columnViewer.isBusy()) {
-					columnViewer.refresh();
+			try {
+				if (viewer instanceof ColumnViewer) {
+					ColumnViewer columnViewer = (ColumnViewer) viewer;
+					if (!columnViewer.isBusy()) {
+						columnViewer.refresh();
+					}
 				}
-			}
-			else if (viewer instanceof AbstractListViewer) {
-				AbstractListViewer listViewer = (AbstractListViewer) viewer;
-				listViewer.refresh();
+				else if (viewer instanceof AbstractListViewer) {
+					AbstractListViewer listViewer = (AbstractListViewer) viewer;
+					listViewer.refresh();
+				}
+			} catch (Exception e) {
 			}
 		}
 	}; 

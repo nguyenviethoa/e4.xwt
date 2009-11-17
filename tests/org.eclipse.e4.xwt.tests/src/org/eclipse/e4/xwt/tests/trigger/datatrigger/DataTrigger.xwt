@@ -20,7 +20,7 @@
 	
 	<Button name="Button" x:style="SWT.CHECK" selection="{Binding Path=maried}">
 		<Button.triggers>
-			<DataTrigger binding="{Binding Path=maried}" Value="false" >
+			<DataTrigger binding="{Binding Path=maried}" value="false" >
 				<Setter property="text" value="Alone"/>
 			</DataTrigger>
 		</Button.triggers>

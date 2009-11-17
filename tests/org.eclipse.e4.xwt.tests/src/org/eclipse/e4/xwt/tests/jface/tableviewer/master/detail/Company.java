@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail;
 
+import java.util.Collection;
+
 /**
  * 
  * @author yyang
@@ -17,16 +19,16 @@ package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail;
 public class Company {
 	protected String name;
 
-	protected Employee[] employees;
+	protected Collection<Employee> employees;
 
 	public Company() {
 	}
 
-	public Employee[] getEmployees() {
+	public Collection<Employee> getEmployees() {
 		return employees;
 	}
 
-	public void setEmployees(Employee[] employees) {
+	public void setEmployees(Collection<Employee> employees) {
 		this.employees = employees;
 	}
 	

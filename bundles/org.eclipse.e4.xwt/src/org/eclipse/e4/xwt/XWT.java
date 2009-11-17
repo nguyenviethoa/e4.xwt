@@ -19,13 +19,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
-import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
-import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -87,6 +88,26 @@ public class XWT {
 	}
 
 	/**
+	 * Find an existing IObservableValue
+	 * 
+	 * @param nsmapace
+	 * @return null if it doesn't exist.
+	 */
+	public static IObservableList findObservableList(Object context, Object data, String propertyName) {
+		return XWTLoaderManager.getActive().findObservableList(context, data, propertyName);
+	}
+
+	/**
+	 * Find an existing IObservableValue
+	 * 
+	 * @param nsmapace
+	 * @return null if it doesn't exist.
+	 */
+	public static IObservableSet findObservableSet(Object context, Object data, String propertyName) {
+		return XWTLoaderManager.getActive().findObservableSet(context, data, propertyName);
+	}
+	
+	/**
 	 * get or create a IObservableValue
 	 * 
 	 * @param nsmapace
@@ -95,6 +116,17 @@ public class XWT {
 	public static IObservableValue observableValue(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger) {
 		return XWTLoaderManager.getActive().observableValue(context, data, propertyName, updateSourceTrigger);
 	}
+
+	/**
+	 * get or create a IObservableValue
+	 * 
+	 * @param nsmapace
+	 * @return return null or raises an exception XWTException if fails
+	 */
+	public static IObservable observe(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger) {
+		return XWTLoaderManager.getActive().observe(context, data, propertyName, updateSourceTrigger);
+	}
+
 
 	/**
 	 * get or create a IObservableValue

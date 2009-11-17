@@ -22,7 +22,6 @@ import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
-import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.Viewer;

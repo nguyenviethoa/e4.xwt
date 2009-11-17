@@ -53,7 +53,6 @@ import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.DataBindingTrack;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
-import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.utils.ClassLoaderUtil;
 import org.eclipse.e4.xwt.internal.utils.DocumentObjectSorter;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;

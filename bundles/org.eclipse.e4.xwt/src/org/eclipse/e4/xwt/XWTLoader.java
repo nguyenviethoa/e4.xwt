@@ -25,7 +25,10 @@ import java.util.Set;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.animation.BeginStoryboard;
 import org.eclipse.e4.xwt.animation.DoubleAnimation;
@@ -70,6 +73,7 @@ import org.eclipse.e4.xwt.core.Trigger;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.input.ICommand;
+import org.eclipse.e4.xwt.internal.core.BindingExpressionParser;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.JavaLanguageSupport;
 import org.eclipse.e4.xwt.internal.core.MetaclassManager;
@@ -223,7 +227,34 @@ public class XWTLoader implements IXWTLoader {
 		return UserData.hasLocalData(uiElement, property);
 	}
 
-	
+	/**
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	public IObservable observe(Object control, Object data, String fullPath, UpdateSourceTrigger updateSourceTrigger) {
+		return ScopeManager.observe(control, data, fullPath, BindingExpressionParser.splitRoots(fullPath), updateSourceTrigger);
+	}
+
+
+	/**
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	public IObservableList findObservableList(Object context, Object data, String fullPath) {
+		return ScopeManager.findObservableList(context, null, data, fullPath);
+	}
+
+	/**
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	public IObservableSet findObservableSet(Object context, Object data, String fullPath) {
+		return ScopeManager.findObservableSet(context, null, data, fullPath);
+	}
+
 	/**
 	 * 
 	 * @param nsmapace
@@ -238,8 +269,8 @@ public class XWTLoader implements IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	public IObservableValue findObservableValue(Object control, Object data, String fullPath) {
-		return ScopeManager.findObservableValue(control, data, fullPath);
+	public IObservableValue findObservableValue(Object context, Object data, String fullPath) {
+		return ScopeManager.findObservableValue(context, null, data, fullPath);
 	}
 
 	/**

@@ -10,19 +10,21 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail;
 
+import java.util.Collection;
+
 /**
  * 
  * @author yyang
  */
 public class Industry {
 	protected String name;
-	protected Company[] members;
+	protected Collection<Company> members;
 
-	public Company[] getMembers() {
+	public Collection<Company> getMembers() {
 		return members;
 	}
 
-	public void setMembers(Company[] members) {
+	public void setMembers(Collection<Company> members) {
 		this.members = members;
 	}
 

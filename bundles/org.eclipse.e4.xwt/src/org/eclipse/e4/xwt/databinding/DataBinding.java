@@ -11,11 +11,16 @@
 package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.core.Binding;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
+import org.eclipse.e4.xwt.metadata.ModelUtils;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -30,8 +35,8 @@ import org.eclipse.swt.widgets.Text;
  */
 public class DataBinding extends AbstractDataBinding {
 
-	private IObservableValue observableSource;
-	private IObservableValue observableWidget;
+	private IObservable observableSource;
+	private IObservable observableWidget;
 
 	/**
 	 * Constructor for dataProvider.
@@ -45,11 +50,8 @@ public class DataBinding extends AbstractDataBinding {
 	 * Get bind value of two bindings.
 	 */
 	public Object getValue() {
-		IObservableValue observableWidget = getObservableWidget();
-		IDataProvider dataProvider = getDataProvider();
-		
-		IObservableValue observableSource = getObservableSource();
-		IBindingContext bindingContext = dataProvider.getBindingContext();
+		IObservable observableWidget = getObservableWidget();
+		IObservable observableSource = getObservableSource(ScopeManager.VALUE);
 
 		/* If observableWidget is null, we need only return the data from provider. */
 		if (observableWidget == null) {
@@ -57,58 +59,87 @@ public class DataBinding extends AbstractDataBinding {
 				// TODO should raise an exception
 				return null;
 			}
-			return observableSource.getValue();
+			if (observableSource instanceof IObservableValue) {
+				return ((IObservableValue)observableSource).getValue();				
+			}
+			return observableSource;
 		}
 		
+		IDataProvider dataProvider = getDataProvider();		
+		IBindingContext bindingContext = dataProvider.getBindingContext();
 		if (bindingContext != null && observableSource != null) {
 			Object target = getControl();
 			if (target instanceof Text && getTargetProperty().equalsIgnoreCase("text")) {
-				String sourceProperty = getSourceProperty();
-				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+				if (isSourceProeprtyReadOnly()) {
 					Text text = (Text) target;
 					text.setEditable(false);
 				}
 			} else if (target instanceof Button && getTargetProperty().equalsIgnoreCase("selection")) {
-				String sourceProperty = getSourceProperty();
-				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+				if (isSourceProeprtyReadOnly()) {
 					Button button = (Button) target;
 					button.setEnabled(false);
 				}
 			} else if ((target instanceof Combo || target instanceof CCombo) && getTargetProperty().equalsIgnoreCase("text")) {
-				String sourceProperty = getSourceProperty();
-				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+				if (isSourceProeprtyReadOnly()) {
 					Control control = (Control) target;
 					control.setEnabled(false);
 				}
 			} else if (target instanceof MenuItem && getTargetProperty().equalsIgnoreCase("selection")) {
-				String sourceProperty = getSourceProperty();
-				if (dataProvider.isPropertyReadOnly(sourceProperty)) {
+				if (isSourceProeprtyReadOnly()) {
 					MenuItem menuItem = (MenuItem) target;
 					menuItem.setEnabled(false);
 				}
 			}
 			bindingContext.bind(observableSource, observableWidget, this);
 		}
-		if (observableSource != null) {
-			return observableSource.getValue();
-		}
-		return null;
-	}
-
-	public IObservableValue getObservableSource() {
-		if (observableSource == null) {
-			IDataProvider dataProvider = getDataProvider();
-			String sourceProperty = getSourceProperty();
-			observableSource = ScopeManager.observeValue(getControl(), dataProvider.getData(null), sourceProperty, getUpdateSourceTrigger());
+		
+		if (observableSource instanceof IObservableValue) {
+			return ((IObservableValue)observableSource).getValue();				
 		}
 		return observableSource;
 	}
 
-	public IObservableValue getObservableWidget() {
+	public boolean isSourceProeprtyReadOnly() {
+		IDataProvider dataProvider = getDataProvider();
+		String sourceProperty = getSourceProperty();
+		try {
+			return ScopeManager.isProeprtyReadOnly(dataProvider, sourceProperty, getSourcePropertySegments());
+		} catch (XWTException e) {
+		}
+		return false;
+	}
+
+	
+	public IObservable getObservableSource(int observeKind) {
+		if (observableSource == null) {
+			IDataProvider dataProvider = getDataProvider();
+			String sourceProperty = getSourceProperty();
+			try {
+				observableSource = ScopeManager.observe(getControl(), dataProvider.getData(null), sourceProperty, getSourcePropertySegments(), getUpdateSourceTrigger(), observeKind);
+			} catch (XWTException e) {
+			}
+		}
+		return observableSource;
+	}
+
+	public IObservable getObservableWidget() {
 		if (observableWidget == null) {
 			Object target = getControl();
 			Object host = getHost();
-			observableWidget = ScopeManager.observableValue(target, host, getTargetProperty(), getUpdateSourceTrigger());
+			String targetProperty = getTargetProperty();
+			targetProperty = ModelUtils.normalizePropertyName(targetProperty);
+			int observeKind = ScopeManager.AUTO;
+			if (host instanceof Viewer && "input".equals(targetProperty)) {
+				// It is possible to use List
+				getObservableSource(ScopeManager.LIST);
+				if (observableSource instanceof IObservableList) {
+					return null;
+				}
+			}
+			try {
+				observableWidget = ScopeManager.observe(target, host, targetProperty, getTargetPropertySegments(), getUpdateSourceTrigger(), observeKind);
+			} catch (XWTException e) {
+			}
 		}
 		return observableWidget;
 	}

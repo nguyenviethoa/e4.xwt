@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.core;
 
-import java.util.ArrayList;
-
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataProvider;
@@ -239,13 +237,14 @@ public class Binding implements IDynamicBinding {
 				}
 			}
 		}
+		
 		// direct binding
 		if (dataContext instanceof IBinding) {
 			dataContext = ((IBinding) dataContext).getValue();
 		}
 
 		IDataProvider dataProvider = getDataProvider(dataContext);
-
+		
 		if (isSourceControl()) {
 			try {
 				ControlDataBinding controlDataBinding = new ControlDataBinding(dataContext, this, dataProvider);

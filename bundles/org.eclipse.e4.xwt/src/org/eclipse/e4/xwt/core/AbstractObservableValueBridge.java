@@ -10,25 +10,28 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
+import java.util.List;
+
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.IDataObservableValueBridge;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
+import org.eclipse.e4.xwt.databinding.JFaceXWTDataBinding;
+import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 
 public abstract class AbstractObservableValueBridge implements
 		IDataObservableValueBridge {
 
-	final public IObservableValue observe(Object data, String path, Class<?> elementType) {
+	final public IObservable observe(Object data, String path, Class<?> elementType, int observeKind) {
 		Class<?> type = null;
 		if (elementType == null) {
-			type = ObservableValueFactory.toType(data);
+			type = JFaceXWTDataBinding.toType(data);
 		}
 		else {
 			type = elementType;
@@ -40,16 +43,66 @@ public abstract class AbstractObservableValueBridge implements
 		}
 		Class<?> propertyType = property.getType();
 		
-		if (data instanceof IObservableValue) {
-			IObservableValue observableValue = (IObservableValue) data;
-			return observeDetailValue(observableValue, type, path, propertyType);
+		if (IBinding.class.isAssignableFrom(propertyType)) {
+			return null;
 		}
-		
-		return observeValue(data, path);
+
+		switch (observeKind) {
+		case ScopeManager.AUTO:
+			if (propertyType.isArray() || List.class.isAssignableFrom(propertyType)) {
+				if (data instanceof IObservableValue) {
+					IObservableValue observable = (IObservableValue) data;
+					return observeDetailList(observable, type, path, propertyType);
+				}
+				return observeList(data, path);				
+			}
+			else {
+				if (data instanceof IObservableValue) {
+					IObservableValue observable = (IObservableValue) data;
+					return observeDetailValue(observable, type, path, propertyType);
+				}
+				return observeValue(data, path);				
+			}
+		case ScopeManager.VALUE:
+			if (data instanceof IObservableValue) {
+				IObservableValue observable = (IObservableValue) data;
+				return observeDetailValue(observable, type, path, propertyType);
+			}
+			return observeValue(data, path);
+		case ScopeManager.SET:
+			if (data instanceof IObservableValue) {
+				IObservableValue observable = (IObservableValue) data;
+				return observeDetailSet(observable, type, path, propertyType);
+			}
+			return observeSet(data, path);
+		case ScopeManager.LIST:
+			if (data instanceof IObservableValue) {
+				IObservableValue observable = (IObservableValue) data;
+				return observeDetailList(observable, type, path, propertyType);
+			}
+			return observeList(data, path);
+		}
+		return null;
 	}
 	
 	protected abstract IObservableValue observeValue(Object bean, String propertyName);
-	
+
+	protected IObservableList observeList(Object bean, String propertyName) {
+		return null;
+	}
+
+	protected IObservableSet observeSet(Object bean, String propertyName) {
+		return null;
+	}
+
+	protected IObservableList observeDetailList(IObservableValue bean, Class<?> elementType, String propertyName, Class<?> propertyType) {
+		return null;
+	}
+
+	protected IObservableSet observeDetailSet(IObservableValue bean, Class<?> elementType, String propertyName, Class<?> propertyType) {
+		return null;
+	}
+
 	protected abstract IObservableValue observeDetailValue(IObservableValue bean, Class<?> elementType, String propertyName, Class<?> propertyType);
 
 	// TODO to remove

@@ -18,6 +18,7 @@ import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.IBindingContext;
@@ -26,7 +27,7 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.AbstractObservableValueBridge;
 import org.eclipse.e4.xwt.databinding.BindingContext;
-import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
+import org.eclipse.e4.xwt.databinding.JFaceXWTDataBinding;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -187,16 +188,16 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 			object = ((IObservableValue) object).getValue();
 		}
 		if (path == null || path.trim().length() == 0) {
-			return ObservableValueFactory.getValue(object, null);			
+			return JFaceXWTDataBinding.getValue(object, null);			
 		}
 		int index = path.indexOf(".");
 		while (index != -1 && object != null) {
-			object = ObservableValueFactory.getValue(object, path.substring(0,
+			object = JFaceXWTDataBinding.getValue(object, path.substring(0,
 					index));
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
-		return ObservableValueFactory.getValue(object, path);
+		return JFaceXWTDataBinding.getValue(object, path);
 	}
 
 	public void setData(Object object, String path, Object value) {
@@ -205,12 +206,12 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 		}
 		int index = path.indexOf(".");
 		while (index != -1 && object != null) {
-			object = ObservableValueFactory.getValue(object, path.substring(0,
+			object = JFaceXWTDataBinding.getValue(object, path.substring(0,
 					index));
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
-		ObservableValueFactory.setValue(object, path, value);
+		JFaceXWTDataBinding.setValue(object, path, value);
 	}
 
 	public void setData(String path, Object value) {
@@ -229,21 +230,11 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 		if (target == null) {
 			return null;
 		}
-		Class<?> type = target.getClass();
+		Class<?> type = JFaceXWTDataBinding.toType(target);
 		if (path == null) {
 			return type;
 		}
-		int index = path.indexOf(".");
-		while (index != -1 && target != null) {
-			type = ObservableValueFactory.getValueType(type, path.substring(0,
-					index));
-			if (type == null) {
-				type = Object.class;
-			}
-			path = path.substring(index + 1);
-			index = path.indexOf(".");
-		}
-		return ObservableValueFactory.getValueType(type, path);
+		return JFaceXWTDataBinding.getValueType(type, path);
 	}
 
 	/**
@@ -254,33 +245,44 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 	 */
 	public boolean isPropertyReadOnly(String path) {
 		Object target = getTarget();
-		if (target == null) {
+		if (target == null || path == null) {
 			return true;
 		}
-		Class<?> type = target.getClass();
-		if (path == null) {
-			return true;
-		}
+		Class<?> type = JFaceXWTDataBinding.toType(target);
 		int index = path.indexOf(".");
 		while (index != -1 && target != null) {
-			type = ObservableValueFactory.getValueType(type, path.substring(0,
+			type = JFaceXWTDataBinding.getValueType(type, path.substring(0,
 					index));
 			path = path.substring(index + 1);
 			index = path.indexOf(".");
 		}
-		return ObservableValueFactory.isPropertyReadOnly(type, path);
+		return JFaceXWTDataBinding.isPropertyReadOnly(type, path);
 	}
 
 	protected IDataObservableValueBridge createObservableValueFactory() {
 		return new AbstractObservableValueBridge() {
 			@Override
 			protected IObservableValue observeValue(Object bean, String propertyName) {
-				if (ObservableValueFactory.isBeanSupport(bean)) {
+				if (JFaceXWTDataBinding.isBeanSupport(bean)) {
 					return BeansObservables.observeValue(XWT.getRealm(), bean, propertyName);
 				}		
 				return PojoObservables.observeValue(XWT.getRealm(), bean, propertyName);
 			}
-						
+			
+			protected IObservableList observeList(Object bean, String propertyName) {
+				if (JFaceXWTDataBinding.isBeanSupport(bean)) {
+					return BeansObservables.observeList(XWT.getRealm(), bean, propertyName);
+				}
+				return PojoObservables.observeList(XWT.getRealm(), bean, propertyName);				
+			}
+		
+			protected IObservableList observeDetailList(IObservableValue bean, Class<?> elementType, String propertyName, Class<?> propertyType) {
+				if (JFaceXWTDataBinding.isBeanSupport(bean)) {
+					return BeansObservables.observeDetailList(bean, propertyName, propertyType);
+				}
+				return PojoObservables.observeDetailList(bean, propertyName, propertyType);				
+			}
+			
 			@Override
 			protected IObservableValue observeDetailValue(IObservableValue master, Class<?> elementType,
 					String propertyName, Class<?> propertyType) {
@@ -288,7 +290,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 				if (beanClass == null && master.getValueType() instanceof Class) {
 					beanClass = (Class) master.getValueType();
 				}
-				if (ObservableValueFactory.isBeanSupport(elementType)) {
+				if (JFaceXWTDataBinding.isBeanSupport(elementType)) {
 					return BeanProperties.value(beanClass, propertyName, propertyType).observeDetail(master);
 				}
 				return PojoProperties.value(beanClass, propertyName, propertyType)
@@ -296,10 +298,10 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 			}
 			
 			public IValueProperty createValueProperty(Object type, String propertyName) {
-				if (ObservableValueFactory.isBeanSupport(type)) {
-					return BeanProperties.value(ObservableValueFactory.toType(type), propertyName);
+				if (JFaceXWTDataBinding.isBeanSupport(type)) {
+					return BeanProperties.value(JFaceXWTDataBinding.toType(type), propertyName);
 				}		
-				return PojoProperties.value(ObservableValueFactory.toType(type), propertyName);
+				return PojoProperties.value(JFaceXWTDataBinding.toType(type), propertyName);
 			}
 		};
 	}

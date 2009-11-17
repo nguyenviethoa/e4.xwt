@@ -25,10 +25,10 @@
          		grabExcessHorizontalSpace="true"/>
 		</TableViewer.control.layoutData>
 	</TableViewer>
-	<Label text="{Binding ElementName=TableViewer,path=singleSelection.(j:Employee.name)}">
-		<Label.layoutData>
+	<Text text="{Binding ElementName=TableViewer,path=singleSelection.(j:Employee.name)}">
+		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
-		</Label.layoutData>
-	</Label>
+		</Text.layoutData>
+	</Text>
 </Composite>

@@ -1,6 +1,6 @@
 <Composite xmlns="http://www.eclipse.org/xwt/presentation"
     xmlns:x="http://www.eclipse.org/xwt"
-    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail"
+    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array"
     DataContext="{StaticResource MyDomain}">
 	<Composite.layout>
 		<GridLayout numColumns="1"/>
@@ -10,12 +10,13 @@
 			<j:Industry.members>
 				<j:Company Name="Soyatec" >
 					<j:Company.employees>
-						<j:Employee Name="Thomas" Age="32"/>
-						<j:Employee Name="Jin" Age="27"/>
+						<x:Array Type="j:Employee">
+							<j:Employee Name="Thomas" Age="32"/>
+							<j:Employee Name="Jin" Age="27"/>
+						</x:Array>
 					</j:Company.employees>
 				</j:Company>
-				<j:Company Name="Thales">
-				</j:Company>
+				<j:Company Name="Thales"/>
 			</j:Industry.members>
 		</j:Industry>
 	</Composite.Resources>
@@ -26,16 +27,16 @@
 		<TableViewer.table HeaderVisible="true">
 		</TableViewer.table>
 		<TableViewer.control.layoutData>
-			<GridData horizontalAlignment="FILL" horizontalSpan="2"
+			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
 		</TableViewer.control.layoutData>
 	</TableViewer>
-	<!-- Label text="{Binding ElementName=IndustryViewer,path=singleSelection.(j:Company.name)}">
+	<Label text="{Binding ElementName=IndustryViewer,path=singleSelection.(j:Company.name)}">
 		<Label.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
 		</Label.layoutData>
-	</Label -->
+	</Label>
 	<TableViewer Name="CompanyViewer" input="{Binding ElementName=IndustryViewer,Path=singleSelection.(j:Company.employees)}">
 		<TableViewer.columns>
 			<TableViewerColumn width="150" text="Name" displayMemberPath="name"/>
@@ -44,7 +45,7 @@
 		<TableViewer.table HeaderVisible="true">
 		</TableViewer.table>
 		<TableViewer.control.layoutData>
-			<GridData horizontalAlignment="FILL" verticalAlignment="FILL" heightHint="200" 
+			<GridData horizontalAlignment="FILL" verticalAlignment="FILL" heightHint="200"
          		grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 		</TableViewer.control.layoutData>
 	</TableViewer>

@@ -8,13 +8,23 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.metadata;
 
-import org.eclipse.core.databinding.observable.IObservable;
-import org.eclipse.core.databinding.property.value.IValueProperty;
+/**
+ * 
+ * @author yyang
+ *
+ */
+public class ModelUtils {
 
-public interface IDataObservableValueBridge {
-	IObservable observe(Object data, String path, Class<?> targetType, int observeKind);
-	
-	IValueProperty createValueProperty(Object type, String fullPath);
+	public static String normalizePropertyName(String name) {
+		if (name == null || name.length() == 0) {
+			return name;
+		}
+		char c = name.charAt(0);
+		if (Character.isLowerCase(c)) {
+			return name;
+		}
+		return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+	}
 }

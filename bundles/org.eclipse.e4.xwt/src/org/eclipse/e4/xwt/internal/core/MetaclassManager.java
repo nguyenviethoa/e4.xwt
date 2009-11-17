@@ -82,10 +82,6 @@ public class MetaclassManager {
 		return new Metaclass(javaClass, superMetaclass, lazyLoading,xwtLoader);
 	}
 
-	public static String normalizePropertyName(String name) {
-		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-	}
-
 	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
 		IMetaclass metaclass = nameRegister.get(name);
 		if (metaclass != null) {

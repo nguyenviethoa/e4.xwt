@@ -17,9 +17,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemEnabledObservableValue;
 import org.eclipse.e4.xwt.internal.databinding.menuitem.MenuItemSelectionObservableValue;
@@ -29,6 +31,7 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -42,13 +45,31 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class ObservableValueFactory {
+public class JFaceXWTDataBinding {
 	static final String ENABLED = "enabled";
 	static final String SELECTION = "selection";
 
 	static final String TEXT = "text";
 	public static final Class<?>[] CONTROL_ARGUMENT_TYPES = new Class[] { Control.class };
 	public static final Class<?>[] VIEWER_ARGUMENT_TYPES = new Class[] { Viewer.class };
+	
+	static String[] VIEWERS_PROPERTIES;
+
+	public static boolean isViewerPorperty(String propertyName) {
+		if (VIEWERS_PROPERTIES == null) {
+			Method[] methods = ViewerProperties.class.getDeclaredMethods();
+			VIEWERS_PROPERTIES = new String[methods.length];
+			for (int i = 0; i < methods.length; i++) {
+				VIEWERS_PROPERTIES[i] =  methods[i].getName();
+			}
+		}
+		for (String name : VIEWERS_PROPERTIES) {
+			if (name.equals(propertyName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static Class<?> getValueType(Class<?> type, String propertyName) {
 		if (type == null || propertyName == null || propertyName.indexOf(".") != -1) {
@@ -206,6 +227,9 @@ public class ObservableValueFactory {
 		else {
 			type = target.getClass();
 		}
+		if (type == null) {
+			return Object.class;
+		}
 		return type;
 	}
 
@@ -235,23 +259,32 @@ public class ObservableValueFactory {
 		return false;
 	}
 
-	public static IObservableValue createWidgetValue(Object object,
-			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
+	public static IObservable observeWidget(Object object,
+			String propertyName, UpdateSourceTrigger updateSourceTrigger, int observedKind) {
 		if (propertyName == null) {
 			return null;
 		}
 		try {
-			IObservableValue observableValue = observePropertyValue(object,
-					propertyName, updateSourceTrigger);
-			if (observableValue != null) {
-				return observableValue;
+			switch (observedKind) {
+			case ScopeManager.AUTO:
+				return observePropertyValue(object,
+						propertyName, updateSourceTrigger);
+			case ScopeManager.SET:
+				break;				
+			case ScopeManager.LIST:
+				break;
+			case ScopeManager.VALUE:
+				return observePropertyValue(object,
+						propertyName, updateSourceTrigger);
+			default:
+				break;
 			}
 		} catch (XWTException e) {
 		}
 		return null;
 	}
 
-	protected static IObservableValue observePropertyValue(Object object,
+	protected static IObservable observePropertyValue(Object object,
 			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
 		if (object instanceof Viewer) {
 			return observePropertyValue((Viewer) object, propertyName, updateSourceTrigger);
@@ -413,7 +446,7 @@ public class ObservableValueFactory {
 		return false;
 	}
 
-	protected static IObservableValue observePropertyValue(Viewer viewer,
+	protected static IObservable observePropertyValue(Viewer viewer,
 			String property, UpdateSourceTrigger updateSourceTrigger) {
 		String getterName = "observe" + property.substring(0, 1).toUpperCase()
 				+ property.substring(1);
@@ -433,7 +466,7 @@ public class ObservableValueFactory {
 				}
 			}
 			if (method != null) {
-				IObservableValue observableValue = (IObservableValue) method
+				IObservable observableValue = (IObservable) method
 						.invoke(null, viewer);
 				if (observableValue != null) {
 					return observableValue;

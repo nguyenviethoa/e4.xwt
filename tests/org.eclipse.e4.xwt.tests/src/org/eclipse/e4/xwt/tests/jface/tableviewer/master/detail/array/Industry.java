@@ -8,13 +8,30 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array;
 
-import org.eclipse.core.databinding.observable.IObservable;
-import org.eclipse.core.databinding.property.value.IValueProperty;
+/**
+ * 
+ * @author yyang
+ */
+public class Industry {
+	protected String name;
+	protected Company[] members;
 
-public interface IDataObservableValueBridge {
-	IObservable observe(Object data, String path, Class<?> targetType, int observeKind);
-	
-	IValueProperty createValueProperty(Object type, String fullPath);
+	public Company[] getMembers() {
+		return members;
+	}
+
+	public void setMembers(Company[] members) {
+		this.members = members;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 }

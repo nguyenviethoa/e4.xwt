@@ -57,6 +57,9 @@ public class BeanProperty extends AbstractProperty {
 					if (type == String.class) {
 						value = "";
 					}
+					else if (type == Boolean.class) {
+						value = false;
+					}
 				}
 				
 				if (oldValue != value) {

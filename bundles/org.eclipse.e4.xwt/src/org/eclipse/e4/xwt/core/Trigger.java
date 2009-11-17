@@ -18,7 +18,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.databinding.ObservableValueFactory;
+import org.eclipse.e4.xwt.databinding.JFaceXWTDataBinding;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
@@ -84,7 +84,7 @@ public class Trigger extends TriggerBase {
 			IObservable observableValue = ScopeManager.observeValue(source, source, property, UpdateSourceTrigger.PropertyChanged);
 			observableValue.addChangeListener(new AbstractChangeListener(target) {
 				public void handleChange(ChangeEvent event) {
-					Class<?> valueType = ObservableValueFactory.getValueType(source.getClass(), property);
+					Class<?> valueType = JFaceXWTDataBinding.getValueType(source.getClass(), property);
 					if (valueType == null) {
 						LoggerManager.log("Type of the property " + property + " is not found in " + source
 								.getClass().getName());

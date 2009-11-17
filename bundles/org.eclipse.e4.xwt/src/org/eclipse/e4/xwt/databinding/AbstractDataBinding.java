@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
+import java.util.List;
+
 import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.internal.core.Binding;
+import org.eclipse.e4.xwt.internal.core.BindingExpressionParser;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 /**
@@ -27,9 +30,24 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	
 	private Binding binding;
 	
+	private List<String> sourcePropertySegments;
+	private List<String> targetPropertySegments;
+	
+	public List<String> getSourcePropertySegments() {
+		return sourcePropertySegments;
+	}
+
+	public List<String> getTargetPropertySegments() {
+		return targetPropertySegments;
+	}
+
+	
 	public AbstractDataBinding(Binding binding, IDataProvider dataProvider) {
 		this.binding = binding;
 		this.dataProvider = dataProvider;
+		
+		sourcePropertySegments = BindingExpressionParser.splitRoots(getSourceProperty());
+		targetPropertySegments = BindingExpressionParser.splitRoots(getTargetProperty());
 	}
 
 	/**

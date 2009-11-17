@@ -1,9 +1,10 @@
 <Composite xmlns="http://www.eclipse.org/xwt/presentation"
     xmlns:x="http://www.eclipse.org/xwt"
     xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail"
+    x:Class="org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.TableViewer_MasterDetail_List"
     DataContext="{StaticResource MyDomain}">
 	<Composite.layout>
-		<GridLayout numColumns="1"/>
+		<GridLayout numColumns="2"/>
 	</Composite.layout>
 	<Composite.Resources>
 		<j:Industry x:Key="MyDomain">
@@ -48,4 +49,17 @@
          		grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
 		</TableViewer.control.layoutData>
 	</TableViewer>
+	<TableViewer Name="CompanyViewer" input="{Binding ElementName=IndustryViewer,Path=singleSelection.(j:Company.employees)}">
+		<TableViewer.columns>
+			<TableViewerColumn width="150" text="Name" displayMemberPath="name"/>
+			<TableViewerColumn width="150" text="Age" displayMemberPath="age"/>
+		</TableViewer.columns>
+		<TableViewer.table HeaderVisible="true">
+		</TableViewer.table>
+		<TableViewer.control.layoutData>
+			<GridData horizontalAlignment="FILL" verticalAlignment="FILL" heightHint="200" 
+         		grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" />
+		</TableViewer.control.layoutData>
+	</TableViewer>
+	<Button text="Add Employee" SelectionEvent="addEmployee" enabled="{Binding elementName=IndustryViewer,path=singleSelection }" />
 </Composite>

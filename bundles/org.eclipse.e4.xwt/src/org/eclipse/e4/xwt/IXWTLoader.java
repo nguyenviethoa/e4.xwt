@@ -17,12 +17,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.XWTLoader.ConverterService;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
-import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -77,7 +79,15 @@ public interface IXWTLoader {
 	 */
 	String RESOURCE_DICTIONARY_PROPERTY = "XWT.Resources";
 
-	
+
+	/**
+	 * Find the used IObservable value for given data.
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	IObservable observe(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger);
+
 	/**
 	 * Find the used IObservableValue value for given data.
 	 * 
@@ -85,6 +95,22 @@ public interface IXWTLoader {
 	 * @return
 	 */
 	IObservableValue observableValue(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger);
+
+	/**
+	 * Find the used IObservableList value for given data.
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	IObservableList findObservableList(Object context, Object data, String propertyName);
+
+	/**
+	 * Find the used IObservableList value for given data.
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	IObservableSet findObservableSet(Object context, Object data, String propertyName);
 
 	/**
 	 * Find the used IObservableValue value for given data.

@@ -8,8 +8,10 @@
 	<Composite.Resources>
 		<j:Company x:Key="myCompany">
 			<j:Company.employees>
-				<j:Employee Name="Thomas" Age="32"/>
-				<j:Employee Name="Jin" Age="27"/>
+				<x:Array Type="j:Employee">
+					<j:Employee Name="Thomas" Age="32"/>
+					<j:Employee Name="Jin" Age="27"/>
+				</x:Array>
 			</j:Company.employees>
 		</j:Company>
 	</Composite.Resources>

@@ -8,13 +8,25 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array;
 
-import org.eclipse.core.databinding.observable.IObservable;
-import org.eclipse.core.databinding.property.value.IValueProperty;
+public class Employee {
+	protected String name;
+	protected int age;
 
-public interface IDataObservableValueBridge {
-	IObservable observe(Object data, String path, Class<?> targetType, int observeKind);
-	
-	IValueProperty createValueProperty(Object type, String fullPath);
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

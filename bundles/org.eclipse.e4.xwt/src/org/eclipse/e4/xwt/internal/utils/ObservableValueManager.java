@@ -3,13 +3,13 @@ package org.eclipse.e4.xwt.internal.utils;
 import java.util.HashMap;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IEventGroup;
 import org.eclipse.e4.xwt.IObservableValueListener;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.metadata.ModelUtils;
 import org.eclipse.swt.widgets.Event;
 
 public class ObservableValueManager implements IObservableValueListener {
@@ -39,7 +39,7 @@ public class ObservableValueManager implements IObservableValueListener {
 		IMetaclass metaclass = XWT.getMetaclass(host);
 		
 		// TODO this conversion should be simplied
-		String eventName = IEventConstants.normalize(property.getEvent().getName());
+		String eventName = ModelUtils.normalizePropertyName(property.getEvent().getName());
 		IEventGroup eventGroup = metaclass.getEventGroup(eventName);
 		if (eventGroup != null) {
 			eventGroup.fireEvent(this, property);
@@ -57,7 +57,7 @@ public class ObservableValueManager implements IObservableValueListener {
 		EventProperty eventProperty  = (EventProperty) property;
 		
 		// TODO this conversion should be simplied
-		String eventName = IEventConstants.normalize(eventProperty.getEvent().getName());		
+		String eventName = ModelUtils.normalizePropertyName(eventProperty.getEvent().getName());		
 		IEventGroup eventGroup = metaclass.getEventGroup(eventName);
 		if (eventGroup != null) {
 			eventGroup.registerEvent(this, property);

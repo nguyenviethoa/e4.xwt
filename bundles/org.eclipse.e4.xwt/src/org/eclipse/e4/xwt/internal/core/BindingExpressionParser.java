@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.metadata.ModelUtils;
 
 public class BindingExpressionParser {
 	
@@ -72,6 +73,9 @@ public class BindingExpressionParser {
 
 	
 	public static ArrayList<String> splitRoots(String value) {
+		if (value == null) {
+			return null;
+		}
 		int level = 0;
 		Stack<Character> separators = new Stack<Character>();
 		ArrayList<String> collector = new ArrayList<String>();
@@ -114,7 +118,9 @@ public class BindingExpressionParser {
 				break;
 			case '.':
 				if (level == 0) {
-					collector.add(value.substring(start, i));
+					String element = value.substring(start, i);
+					element = ModelUtils.normalizePropertyName(element);
+					collector.add(element);
 					start = i + 1;
 				}
 				break;

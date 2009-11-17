@@ -8,36 +8,36 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.databinding.pojo;
+package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail;
 
 import java.net.URL;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 
-public class DataBindingPath {
+
+/**
+ * @author jliu
+ */
+public class TableViewer_MasterDetail_List_Add {
 	public static void main(String[] args) {
 		
-		URL url = DataBindingPath.class.getResource(DataBindingPath.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = TableViewer_MasterDetail_List_Add.class.getResource(TableViewer_MasterDetail_List_Add.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	protected void onNew(Event event) {
-		Shell shell = (Shell) XWT.findElementByName(event.widget, "Root");
-		Company company = (Company) XWT.getDataContext(shell);
-		Person person = new Person();
-		person.setName("New Manager1");
-		person.getAddress().setCity("ShenZhen");
-
-		// company.setManager(person);
-		IObservableValue managerValue = XWT.findObservableValue(shell, company, "manager");
-		managerValue.setValue(person);
+	
+	
+	protected void addEmployee(Object sender, Event event){
+		TableViewer tableViewer = (TableViewer) XWT.findElementByName(event.widget, "CompanyViewer");
+		IObservableList observableList = XWT.findObservableList(tableViewer, tableViewer, "singleSelection");
+		Object input = tableViewer.getInput();
+		
 	}
 }
