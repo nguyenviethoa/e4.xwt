@@ -334,7 +334,7 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 				Class<?> propertyType = pd.getPropertyType();
 				if (propertyType.isPrimitive() || propertyType == String.class) {
 					printStream.println("\t <Label text=\"" + pd.getDisplayName() + "\"/>");
-					printStream.println("\t <Text text=\"{Binding path=" + pd.getName() + "}\">");
+					printStream.println("\t <Text x:Style=\"Border\" text=\"{Binding path=" + pd.getName() + "}\">");
 					printStream.println("\t\t <Text.layoutData>");
 					printStream.println("\t\t\t <GridData grabExcessHorizontalSpace=\"true\"");
 					printStream.println("\t\t\t\t horizontalAlignment=\"GridData.FILL\" widthHint=\"100\"/>");
