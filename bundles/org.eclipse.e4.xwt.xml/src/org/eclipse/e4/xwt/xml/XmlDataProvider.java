@@ -26,7 +26,6 @@ import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.e4.xwt.core.AbstractObservableValueBridge;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.w3c.dom.Document;
@@ -35,7 +34,8 @@ import org.w3c.dom.Node;
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public class XmlDataProvider extends AbstractDataProvider implements IXmlDataProvider {
+public class XmlDataProvider extends AbstractDataProvider implements
+		IXmlDataProvider {
 	static final String XDATA = "XData";
 
 	private URL source;
@@ -52,7 +52,8 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 	public Document getDocument() {
 		if (document == null) {
 			try {
-				DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilderFactory domFactory = DocumentBuilderFactory
+						.newInstance();
 				domFactory.setNamespaceAware(true); // never forget this!
 				DocumentBuilder builder = domFactory.newDocumentBuilder();
 				if (source != null) {
@@ -61,7 +62,8 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 				String xdata = getXDataContent();
 				if (xdata != null) {
 					try {
-						document = builder.parse(new ByteArrayInputStream(xdata.getBytes()));
+						document = builder.parse(new ByteArrayInputStream(xdata
+								.getBytes()));
 					} catch (Exception e) {
 					}
 				}
@@ -93,7 +95,8 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IXmlDataProvider#setSource(java.io.InputStream)
+	 * @seeorg.eclipse.e4.xwt.dataproviders.IXmlDataProvider#setSource(java.io.
+	 * InputStream)
 	 */
 	public void setSource(URL xmlSource) {
 		this.source = xmlSource;
@@ -102,7 +105,9 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IXmlDataProvider#setXPath(java.lang.String)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IXmlDataProvider#setXPath(java.lang.
+	 * String)
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -177,34 +182,27 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 		return data.getClass();
 	}
 
-	
 	public IValueProperty observeValueProperty(Object valueType, String path,
 			UpdateSourceTrigger updateSourceTrigger) {
 		return null; // TODOD
 	}
-	
-	protected org.eclipse.e4.xwt.IDataObservableValueBridge createObservableValueFactory() {
-		return new AbstractObservableValueBridge() {
-			
-			@Override
-			protected IObservableValue observeValue(Object bean, String propertyName) {
-				Object data = getData(propertyName);
-				if (data != null && data instanceof Node) {
-					Class<?> valueType = data.getClass();
-					return new XmlObservableValue(valueType, (Node) data, path);
-				}
-				return null;
-			}
-						
-			@Override
-			protected IObservableValue observeDetailValue(IObservableValue bean, Class<?> ownerType, 
-					String propertyName, Class<?> propertyType) {
-				return null;
-			}
-		};
-	};
-	
-	
+
+	@Override
+	protected IObservableValue observeValue(Object bean, String propertyName) {
+		Object data = getData(propertyName);
+		if (data != null && data instanceof Node) {
+			Class<?> valueType = data.getClass();
+			return new XmlObservableValue(valueType, (Node) data, path);
+		}
+		return null;
+	}
+
+	@Override
+	protected IObservableValue observeDetailValue(IObservableValue bean,
+			Class<?> ownerType, String propertyName, Class<?> propertyType) {
+		return null;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -221,7 +219,9 @@ public class XmlDataProvider extends AbstractDataProvider implements IXmlDataPro
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IXmlDataProvider#setXDataContent(java.lang.String)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.IXmlDataProvider#setXDataContent(java
+	 * .lang.String)
 	 */
 	protected void setXDataContent(Object content) {
 		setProperty(XDATA, content);
