@@ -1,4 +1,4 @@
-package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail;
+package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array;
 
 import java.net.URL;
 
@@ -12,14 +12,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-public class JFaceTableViewer_MasterDetail_Tests extends XWTTestCase {
+public class JFaceTableViewer_Array_MasterDetail_Tests extends XWTTestCase {
 
 	public void testTableViewer_MasterDetail() throws Exception {
-		URL url = JFaceTableViewer_MasterDetail_Tests.class
-				.getResource(TableViewer_MasterDetail.class.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class.getResource(TableViewer_MasterDetail.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
+				checkListViewer();
+			}
+
+			public void checkListViewer() {
 				Object element = XWT.findElementByName(root, "TableViewer");
 				assertTrue(element instanceof TableViewer);
 				TableViewer tableViewer = (TableViewer) element;
@@ -32,9 +34,9 @@ public class JFaceTableViewer_MasterDetail_Tests extends XWTTestCase {
 			}
 		});
 	}
-
+	
 	public void testTableViewer_MasterDetail_DetailDisplay() throws Exception {
-		URL url = JFaceTableViewer_MasterDetail_Tests.class
+		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class
 				.getResource(TableViewer_MasterDetail.class.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
@@ -47,7 +49,7 @@ public class JFaceTableViewer_MasterDetail_Tests extends XWTTestCase {
 						root, tableViewer, "singleSelection");
 
 				Company company = (Company) XWT.getDataContext(element);
-				Employee employee = company.getEmployees().iterator().next();
+				Employee employee = company.getEmployees()[0];
 				observableValue.setValue(employee);
 			}
 		}, new Runnable() {
@@ -77,7 +79,7 @@ public class JFaceTableViewer_MasterDetail_Tests extends XWTTestCase {
 
 	public void testTableViewer_MasterDetail_DetailEdit() throws Exception {
 		final String newName = "Employee new name";
-		URL url = JFaceTableViewer_MasterDetail_Tests.class
+		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class
 				.getResource(TableViewer_MasterDetail_Edit.class
 						.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
@@ -91,7 +93,7 @@ public class JFaceTableViewer_MasterDetail_Tests extends XWTTestCase {
 						root, tableViewer, "singleSelection");
 
 				Company company = (Company) XWT.getDataContext(element);
-				Employee employee = company.getEmployees().iterator().next();
+				Employee employee = company.getEmployees()[0];
 				observableValue.setValue(employee);
 			}
 		}, new Runnable() {
@@ -131,7 +133,7 @@ public class JFaceTableViewer_MasterDetail_Tests extends XWTTestCase {
 	}
 
 	public void testTableViewer_MasterDetail_NestedTable() throws Exception {
-		URL url = JFaceTableViewer_MasterDetail_Tests.class
+		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class
 				.getResource(TableViewer_MasterDetail_NestedTable.class
 						.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
@@ -172,7 +174,7 @@ public class JFaceTableViewer_MasterDetail_Tests extends XWTTestCase {
 	}
 
 	public void testTableViewer_MasterDetail_NestedTable_AddInput() throws Exception {
-		URL url = JFaceTableViewer_MasterDetail_Tests.class
+		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class
 				.getResource(TableViewer_MasterDetail_NestedTable_AddInput.class
 						.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
@@ -195,7 +197,7 @@ public class JFaceTableViewer_MasterDetail_Tests extends XWTTestCase {
 	}
 
 	public void testTableViewer_MasterDetail_NestedTable_AddPath() throws Exception {
-		URL url = JFaceTableViewer_MasterDetail_Tests.class
+		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class
 				.getResource(TableViewer_MasterDetail_NestedTable_AddPath.class
 						.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);

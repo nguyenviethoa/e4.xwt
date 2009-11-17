@@ -73,7 +73,7 @@ import org.eclipse.e4.xwt.core.Trigger;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.input.ICommand;
-import org.eclipse.e4.xwt.internal.core.BindingExpressionParser;
+import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.JavaLanguageSupport;
 import org.eclipse.e4.xwt.internal.core.MetaclassManager;
@@ -233,7 +233,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @return
 	 */
 	public IObservable observe(Object control, Object data, String fullPath, UpdateSourceTrigger updateSourceTrigger) {
-		return ScopeManager.observe(control, data, fullPath, BindingExpressionParser.splitRoots(fullPath), updateSourceTrigger);
+		return ScopeManager.observe(control, data, new BindingExpressionPath(fullPath), updateSourceTrigger);
 	}
 
 

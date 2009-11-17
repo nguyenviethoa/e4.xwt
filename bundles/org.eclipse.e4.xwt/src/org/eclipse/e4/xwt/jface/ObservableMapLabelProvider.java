@@ -2,13 +2,9 @@ package org.eclipse.e4.xwt.jface;
 
 import java.util.Set;
 
-import org.eclipse.core.databinding.observable.ChangeEvent;
-import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.map.IMapChangeListener;
 import org.eclipse.core.databinding.observable.map.MapChangeEvent;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
-import org.eclipse.jface.viewers.AbstractListViewer;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;

@@ -8,13 +8,25 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array;
 
-import org.eclipse.core.databinding.observable.IObservable;
-import org.eclipse.core.databinding.property.value.IValueProperty;
+import java.net.URL;
 
-public interface IDataObservableValueBridge {
-	IObservable observe(Object data, String path, Class<?> targetType, int observeKind);
-	
-	IValueProperty createValueProperty(Object type, String fullPath);
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
+
+
+/**
+ * @author jliu
+ */
+public class TableViewer_MasterDetail_Edit {
+	public static void main(String[] args) {
+		
+		URL url = TableViewer_MasterDetail_Edit.class.getResource(TableViewer_MasterDetail_Edit.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

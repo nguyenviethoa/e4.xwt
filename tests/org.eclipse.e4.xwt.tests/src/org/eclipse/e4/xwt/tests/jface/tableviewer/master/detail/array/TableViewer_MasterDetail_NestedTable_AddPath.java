@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail;
+package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array;
 
 import java.net.URL;
 

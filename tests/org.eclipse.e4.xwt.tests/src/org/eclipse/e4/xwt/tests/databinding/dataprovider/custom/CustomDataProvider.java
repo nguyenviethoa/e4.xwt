@@ -12,9 +12,7 @@ package org.eclipse.e4.xwt.tests.databinding.dataprovider.custom;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.e4.xwt.IDataObservableValueBridge;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.core.AbstractObservableValueBridge;
 import org.eclipse.e4.xwt.databinding.XWTObservableValue;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
@@ -45,42 +43,40 @@ public class CustomDataProvider extends AbstractDataProvider {
 		assert object instanceof DynamicObject;
 		((DynamicObject) object).setProperty(path, value);
 	}
-	
+
 	public IValueProperty observeValueProperty(Object valueType, String path,
 			UpdateSourceTrigger updateSourceTrigger) {
 		return new MyValueProperty();
 	}
 
 	@Override
-	protected IDataObservableValueBridge createObservableValueFactory() {
-		return new AbstractObservableValueBridge() {
-			@Override
-			protected IObservableValue observeValue(Object bean, final String propertyName) {
-				Object target = getObjectInstance();
-				if (target != null) {
-					return new XWTObservableValue(target.getClass(), target, propertyName) {
-							@Override
-							protected void doSetApprovedValue(Object value) {
-								CustomDataProvider.this.getObjectInstance().setProperty(propertyName, value);
-							}
-
-							@Override
-							protected Object doGetValue() {
-								return CustomDataProvider.this.getData(propertyName);
-							}
-						};
+	protected IObservableValue observeValue(Object bean,
+			final String propertyName) {
+		Object target = getObjectInstance();
+		if (target != null) {
+			return new XWTObservableValue(target.getClass(), target,
+					propertyName) {
+				@Override
+				protected void doSetApprovedValue(Object value) {
+					CustomDataProvider.this.getObjectInstance().setProperty(
+							propertyName, value);
 				}
-				return null;
-			}
-			
-			@Override
-			protected IObservableValue observeDetailValue(IObservableValue bean, Class<?> ownerType, 
-					String propertyName, Class<?> propertyType) {
-				return null;
-			}
-		};
+
+				@Override
+				protected Object doGetValue() {
+					return CustomDataProvider.this.getData(propertyName);
+				}
+			};
+		}
+		return null;
 	}
-	
+
+	@Override
+	protected IObservableValue observeDetailValue(IObservableValue bean,
+			Class<?> ownerType, String propertyName, Class<?> propertyType) {
+		return null;
+	}
+
 	public Class<?> getDataType(String path) {
 		return String.class;
 	}

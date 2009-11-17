@@ -10,13 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
-import java.util.List;
-
 import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.internal.core.Binding;
-import org.eclipse.e4.xwt.internal.core.BindingExpressionParser;
+import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 /**
@@ -30,14 +28,14 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	
 	private Binding binding;
 	
-	private List<String> sourcePropertySegments;
-	private List<String> targetPropertySegments;
+	private BindingExpressionPath sourcePropertySegments;
+	private BindingExpressionPath targetPropertySegments;
 	
-	public List<String> getSourcePropertySegments() {
+	public BindingExpressionPath getSourcePropertyExpression() {
 		return sourcePropertySegments;
 	}
 
-	public List<String> getTargetPropertySegments() {
+	public BindingExpressionPath getTargetPropertyExpression() {
 		return targetPropertySegments;
 	}
 
@@ -46,8 +44,8 @@ public abstract class AbstractDataBinding implements IDataBinding {
 		this.binding = binding;
 		this.dataProvider = dataProvider;
 		
-		sourcePropertySegments = BindingExpressionParser.splitRoots(getSourceProperty());
-		targetPropertySegments = BindingExpressionParser.splitRoots(getTargetProperty());
+		sourcePropertySegments = new BindingExpressionPath(getSourceProperty());
+		targetPropertySegments = new BindingExpressionPath(getTargetProperty());
 	}
 
 	/**

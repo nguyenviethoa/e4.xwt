@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail;
+package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array;
 
 import java.net.URL;
 
@@ -23,10 +23,10 @@ import org.eclipse.swt.widgets.Event;
 /**
  * @author jliu
  */
-public class TableViewer_MasterDetail_NestedTable_AddPath {
+public class TableViewer_MasterDetail_NestedTable_AddInput {
 	public static void main(String[] args) {
 		
-		URL url = TableViewer_MasterDetail_NestedTable_AddPath.class.getResource(TableViewer_MasterDetail_NestedTable_AddPath.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = TableViewer_MasterDetail_NestedTable_AddInput.class.getResource(TableViewer_MasterDetail_NestedTable_AddInput.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -49,12 +49,13 @@ public class TableViewer_MasterDetail_NestedTable_AddPath {
 				event.widget, tableViewer, "singleSelection");
 		observableValue.setValue(company);
 		
-		IObservableList members = XWT.findObservableList(
-				event.widget, tableViewer, "singleSelection.employees");
+		TableViewer companyViewer = (TableViewer) XWT.findElementByName(event.widget, "CompanyViewer1");
+
+		IObservableList employees = (IObservableList) companyViewer.getInput();
 		observableValue.setValue(company);
 		Employee employee = new Employee();
 		employee.setName("Bruno");
 		employee.setAge(24);		
-		members.add(employee);
+		employees.add(employee);
 	}
 }

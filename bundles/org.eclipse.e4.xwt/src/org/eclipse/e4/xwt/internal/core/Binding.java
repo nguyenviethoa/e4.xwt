@@ -209,7 +209,7 @@ public class Binding implements IDynamicBinding {
 			return false;
 		}
 		
-		int index = BindingExpressionParser.lastIndexOf(path);
+		int index = BindingExpressionPath.lastIndexOf(path);
 		if (index == -1) {
 			return (source instanceof Control || source instanceof Viewer);
 		}

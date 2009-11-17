@@ -15,6 +15,7 @@ import org.eclipse.core.databinding.observable.map.IMapChangeListener;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.property.value.IValueProperty;
+import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 
 public class XWTObservableWrapper implements IObservableMap {
@@ -198,7 +199,7 @@ public class XWTObservableWrapper implements IObservableMap {
 
 	protected void checkDelegated() {
 		if (delegate == null) {
-			IValueProperty property = ScopeManager.createValueProperty(control, data, path);
+			IValueProperty property = ScopeManager.createValueProperty(control, data, new BindingExpressionPath(path));
 			delegate = property.observeDetail(domain);				
 			for (IMapChangeListener listener : changeListeners) {
 				delegate.addMapChangeListener(listener);

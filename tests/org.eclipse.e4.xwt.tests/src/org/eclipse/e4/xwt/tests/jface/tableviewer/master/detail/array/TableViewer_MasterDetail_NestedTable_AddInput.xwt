@@ -1,7 +1,7 @@
 <Composite xmlns="http://www.eclipse.org/xwt/presentation"
     xmlns:x="http://www.eclipse.org/xwt"
-    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail"
-    x:Class="org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.TableViewer_MasterDetail_NestedTable_AddInput"
+    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array"
+    x:Class="org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array.TableViewer_MasterDetail_NestedTable_AddInput"
     DataContext="{StaticResource MyDomain}">
 	<Composite.layout>
 		<GridLayout numColumns="2"/>
@@ -11,8 +11,10 @@
 			<j:Industry.members>
 				<j:Company Name="Soyatec" >
 					<j:Company.employees>
-						<j:Employee Name="Thomas" Age="32"/>
-						<j:Employee Name="Jin" Age="27"/>
+						<x:Array Type="j:Employee">
+							<j:Employee Name="Thomas" Age="32"/>
+							<j:Employee Name="Jin" Age="27"/>
+						</x:Array>
 					</j:Company.employees>
 				</j:Company>
 				<j:Company Name="Thales">

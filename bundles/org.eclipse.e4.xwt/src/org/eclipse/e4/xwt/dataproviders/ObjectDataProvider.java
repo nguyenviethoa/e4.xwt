@@ -22,10 +22,8 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.IBindingContext;
-import org.eclipse.e4.xwt.IDataObservableValueBridge;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.core.AbstractObservableValueBridge;
 import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.databinding.JFaceXWTDataBinding;
 
@@ -188,7 +186,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 			object = ((IObservableValue) object).getValue();
 		}
 		if (path == null || path.trim().length() == 0) {
-			return JFaceXWTDataBinding.getValue(object, null);			
+			return JFaceXWTDataBinding.getValue(object, null);
 		}
 		int index = path.indexOf(".");
 		while (index != -1 && object != null) {
@@ -259,51 +257,55 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 		return JFaceXWTDataBinding.isPropertyReadOnly(type, path);
 	}
 
-	protected IDataObservableValueBridge createObservableValueFactory() {
-		return new AbstractObservableValueBridge() {
-			@Override
-			protected IObservableValue observeValue(Object bean, String propertyName) {
-				if (JFaceXWTDataBinding.isBeanSupport(bean)) {
-					return BeansObservables.observeValue(XWT.getRealm(), bean, propertyName);
-				}		
-				return PojoObservables.observeValue(XWT.getRealm(), bean, propertyName);
-			}
-			
-			protected IObservableList observeList(Object bean, String propertyName) {
-				if (JFaceXWTDataBinding.isBeanSupport(bean)) {
-					return BeansObservables.observeList(XWT.getRealm(), bean, propertyName);
-				}
-				return PojoObservables.observeList(XWT.getRealm(), bean, propertyName);				
-			}
-		
-			protected IObservableList observeDetailList(IObservableValue bean, Class<?> elementType, String propertyName, Class<?> propertyType) {
-				if (JFaceXWTDataBinding.isBeanSupport(bean)) {
-					return BeansObservables.observeDetailList(bean, propertyName, propertyType);
-				}
-				return PojoObservables.observeDetailList(bean, propertyName, propertyType);				
-			}
-			
-			@Override
-			protected IObservableValue observeDetailValue(IObservableValue master, Class<?> elementType,
-					String propertyName, Class<?> propertyType) {
-				Class beanClass = elementType;
-				if (beanClass == null && master.getValueType() instanceof Class) {
-					beanClass = (Class) master.getValueType();
-				}
-				if (JFaceXWTDataBinding.isBeanSupport(elementType)) {
-					return BeanProperties.value(beanClass, propertyName, propertyType).observeDetail(master);
-				}
-				return PojoProperties.value(beanClass, propertyName, propertyType)
-						.observeDetail(master);
-			}
-			
-			public IValueProperty createValueProperty(Object type, String propertyName) {
-				if (JFaceXWTDataBinding.isBeanSupport(type)) {
-					return BeanProperties.value(JFaceXWTDataBinding.toType(type), propertyName);
-				}		
-				return PojoProperties.value(JFaceXWTDataBinding.toType(type), propertyName);
-			}
-		};
+	@Override
+	protected IObservableValue observeValue(Object bean, String propertyName) {
+		if (JFaceXWTDataBinding.isBeanSupport(bean)) {
+			return BeansObservables.observeValue(XWT.getRealm(), bean,
+					propertyName);
+		}
+		return PojoObservables.observeValue(XWT.getRealm(), bean, propertyName);
+	}
+
+	protected IObservableList observeList(Object bean, String propertyName) {
+		if (JFaceXWTDataBinding.isBeanSupport(bean)) {
+			return BeansObservables.observeList(XWT.getRealm(), bean,
+					propertyName);
+		}
+		return PojoObservables.observeList(XWT.getRealm(), bean, propertyName);
+	}
+
+	protected IObservableList observeDetailList(IObservableValue bean,
+			Class<?> elementType, String propertyName, Class<?> propertyType) {
+		if (JFaceXWTDataBinding.isBeanSupport(bean)) {
+			return BeansObservables.observeDetailList(bean, propertyName,
+					propertyType);
+		}
+		return PojoObservables.observeDetailList(bean, propertyName,
+				propertyType);
+	}
+
+	@Override
+	protected IObservableValue observeDetailValue(IObservableValue master,
+			Class<?> elementType, String propertyName, Class<?> propertyType) {
+		Class beanClass = elementType;
+		if (beanClass == null && master.getValueType() instanceof Class) {
+			beanClass = (Class) master.getValueType();
+		}
+		if (JFaceXWTDataBinding.isBeanSupport(elementType)) {
+			return BeanProperties.value(beanClass, propertyName, propertyType)
+					.observeDetail(master);
+		}
+		return PojoProperties.value(beanClass, propertyName, propertyType)
+				.observeDetail(master);
+	}
+
+	public IValueProperty createValueProperty(Object type, String propertyName) {
+		if (JFaceXWTDataBinding.isBeanSupport(type)) {
+			return BeanProperties.value(JFaceXWTDataBinding.toType(type),
+					propertyName);
+		}
+		return PojoProperties.value(JFaceXWTDataBinding.toType(type),
+				propertyName);
 	}
 
 	/*

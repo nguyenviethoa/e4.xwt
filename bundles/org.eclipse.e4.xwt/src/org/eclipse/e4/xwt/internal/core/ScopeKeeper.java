@@ -28,12 +28,15 @@ public class ScopeKeeper implements DisposeListener {
 
 	protected HashMap<Widget, HashMap<Object, HashMap<String, IObservable>>> bindingData = new HashMap<Widget, HashMap<Object, HashMap<String, IObservable>>>();
 
+	protected Widget host;
+	
 	private final ScopeKeeper parent;
 
 	public ScopeKeeper(ScopeKeeper parent, Widget host) {
 		super();
 		this.parent = parent;
 		host.addDisposeListener(this);
+		this.host = host;
 	}
 
 	public void widgetDisposed(DisposeEvent e) {
@@ -65,6 +68,13 @@ public class ScopeKeeper implements DisposeListener {
 	
 	void addObservableValue(Widget widget, Object data, String property,
 			IObservable value) {
+		if (widget == null) {
+			widget = host;
+		}
+		else {
+			widget.addDisposeListener(this);
+		}
+			
 		HashMap<Object, HashMap<String, IObservable>> widgetData = bindingData
 				.get(widget);
 		if (widgetData == null) {

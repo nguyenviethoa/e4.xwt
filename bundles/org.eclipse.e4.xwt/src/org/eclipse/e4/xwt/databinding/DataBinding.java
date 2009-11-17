@@ -12,7 +12,6 @@ package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
@@ -103,7 +102,7 @@ public class DataBinding extends AbstractDataBinding {
 		IDataProvider dataProvider = getDataProvider();
 		String sourceProperty = getSourceProperty();
 		try {
-			return ScopeManager.isProeprtyReadOnly(dataProvider, sourceProperty, getSourcePropertySegments());
+			return ScopeManager.isProeprtyReadOnly(dataProvider, getSourcePropertyExpression());
 		} catch (XWTException e) {
 		}
 		return false;
@@ -113,9 +112,8 @@ public class DataBinding extends AbstractDataBinding {
 	public IObservable getObservableSource(int observeKind) {
 		if (observableSource == null) {
 			IDataProvider dataProvider = getDataProvider();
-			String sourceProperty = getSourceProperty();
 			try {
-				observableSource = ScopeManager.observe(getControl(), dataProvider.getData(null), sourceProperty, getSourcePropertySegments(), getUpdateSourceTrigger(), observeKind);
+				observableSource = ScopeManager.observe(getControl(), dataProvider.getData(null), getSourcePropertyExpression(), getUpdateSourceTrigger(), observeKind);
 			} catch (XWTException e) {
 			}
 		}
@@ -137,7 +135,7 @@ public class DataBinding extends AbstractDataBinding {
 				}
 			}
 			try {
-				observableWidget = ScopeManager.observe(target, host, targetProperty, getTargetPropertySegments(), getUpdateSourceTrigger(), observeKind);
+				observableWidget = ScopeManager.observe(target, host, getTargetPropertyExpression(), getUpdateSourceTrigger(), observeKind);
 			} catch (XWTException e) {
 			}
 		}

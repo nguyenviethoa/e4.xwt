@@ -8,6 +8,7 @@ import org.eclipse.e4.xwt.tests.jface.listviewer.collection.JFaceListViewer_Coll
 import org.eclipse.e4.xwt.tests.jface.tableviewer.JFaceTableViewer_Tests;
 import org.eclipse.e4.xwt.tests.jface.tableviewer.filter.JFaceTableViewer_Filters_Tests;
 import org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.JFaceTableViewer_MasterDetail_Tests;
+import org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.array.JFaceTableViewer_Array_MasterDetail_Tests;
 
 public class JFaceTestSuite extends TestSuite {
 	public static final Test suite() {
@@ -21,5 +22,6 @@ public class JFaceTestSuite extends TestSuite {
 		addTest(new TestSuite(JFaceTableViewer_Tests.class));
 		addTest(new TestSuite(JFaceTableViewer_Filters_Tests.class));
 		addTest(new TestSuite(JFaceTableViewer_MasterDetail_Tests.class));
+		addTest(new TestSuite(JFaceTableViewer_Array_MasterDetail_Tests.class));
 	}
 }

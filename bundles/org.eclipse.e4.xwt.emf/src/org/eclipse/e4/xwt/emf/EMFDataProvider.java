@@ -10,14 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.emf;
 
-import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
-import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.e4.xwt.IDataObservableValueBridge;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.core.AbstractObservableValueBridge;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.emf.common.util.URI;
@@ -42,49 +37,44 @@ public class EMFDataProvider extends AbstractDataProvider {
 	private EObject objectInstance;
 
 	@Override
-	protected IDataObservableValueBridge createObservableValueFactory() {
-		return new AbstractObservableValueBridge() {
-			
-			@Override
-			protected IObservableValue observeDetailValue(
-					IObservableValue bean, Class<?> ownerType, String propertyName,
-					Class<?> propertyType) {
-				EClass type = EMFHelper.toType(bean);
-				EStructuralFeature feature = type.getEStructuralFeature(propertyName);
-				if (feature == null) {
-					throw new XWTException(propertyName + " feature is not found in " + EMFHelper.getQualifiedName(type));
-				}
-				return EMFObservables.observeDetailValue(bean.getRealm(), bean, feature);
-			}
-			
-			@Override
-			protected IObservableValue observeValue(Object bean, String propertyName) {
-				EClass type = EMFHelper.toType(bean);
-				EStructuralFeature feature = type.getEStructuralFeature(propertyName);
-				if (feature == null) {
-					throw new XWTException(propertyName + " feature is not found in " + EMFHelper.getQualifiedName(type));
-				}
-				return EMFObservables.observeValue((EObject)bean, feature);
-			}			
-		};
+	protected IObservableValue observeDetailValue(IObservableValue bean,
+			Class<?> ownerType, String propertyName, Class<?> propertyType) {
+		EClass type = EMFHelper.toType(bean);
+		EStructuralFeature feature = type.getEStructuralFeature(propertyName);
+		if (feature == null) {
+			throw new XWTException(propertyName + " feature is not found in "
+					+ EMFHelper.getQualifiedName(type));
+		}
+		return EMFObservables
+				.observeDetailValue(bean.getRealm(), bean, feature);
 	}
-	
+
+	@Override
+	protected IObservableValue observeValue(Object bean, String propertyName) {
+		EClass type = EMFHelper.toType(bean);
+		EStructuralFeature feature = type.getEStructuralFeature(propertyName);
+		if (feature == null) {
+			throw new XWTException(propertyName + " feature is not found in "
+					+ EMFHelper.getQualifiedName(type));
+		}
+		return EMFObservables.observeValue((EObject) bean, feature);
+	}
+
 	public IValueProperty observeValueProperty(Object valueType, String path,
 			UpdateSourceTrigger updateSourceTrigger) {
 		EClass type = null;
 		if (valueType instanceof EClass) {
 			type = (EClass) valueType;
-		}
-		else if (valueType instanceof EObject) {
+		} else if (valueType instanceof EObject) {
 			EObject object = (EObject) valueType;
 			type = object.eClass();
-		}
-		else {
+		} else {
 			throw new IllegalStateException();
 		}
 		EStructuralFeature feature = type.getEStructuralFeature(path);
 		if (feature == null) {
-			throw new XWTException(path + " feature is not found in " + EMFHelper.getQualifiedName(type));
+			throw new XWTException(path + " feature is not found in "
+					+ EMFHelper.getQualifiedName(type));
 		}
 		return EMFProperties.value(feature);
 	}
@@ -110,8 +100,10 @@ public class EMFDataProvider extends AbstractDataProvider {
 			if (objectURI != null) {
 				objectInstance = getResourceSet().getEObject(objectURI, true);
 			} else if (typeURI != null) {
-				EClass eClass = (EClass) getResourceSet().getEObject(typeURI, true);
-				objectInstance = eClass.getEPackage().getEFactoryInstance().create(eClass);
+				EClass eClass = (EClass) getResourceSet().getEObject(typeURI,
+						true);
+				objectInstance = eClass.getEPackage().getEFactoryInstance()
+						.create(eClass);
 			}
 		}
 		return objectInstance;
@@ -155,7 +147,8 @@ public class EMFDataProvider extends AbstractDataProvider {
 				eObj = (EObject) getData(eObj, parent);
 				featureName = path.substring(index + 1);
 			}
-			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
+			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(
+					featureName);
 			if (feature != null) {
 				return eObj.eGet(feature);
 			}
@@ -173,7 +166,8 @@ public class EMFDataProvider extends AbstractDataProvider {
 				eObj = (EObject) getData(eObj, parent);
 				featureName = path.substring(index + 1);
 			}
-			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
+			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(
+					featureName);
 			if (feature != null) {
 				return !feature.isChangeable();
 			}
@@ -196,7 +190,8 @@ public class EMFDataProvider extends AbstractDataProvider {
 				eObj = EMFBinding.getEObject(eObj, parent);
 				featureName = path.substring(index + 1);
 			}
-			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
+			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(
+					featureName);
 			if (feature != null) {
 				return feature.getEType().getInstanceClass();
 			}
@@ -215,7 +210,8 @@ public class EMFDataProvider extends AbstractDataProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.IDataProvider#getData(java.lang.Object, java.lang.String)
+	 * @see org.eclipse.e4.xwt.IDataProvider#getData(java.lang.Object,
+	 * java.lang.String)
 	 */
 	public Object getData(Object target, String path) {
 		if (target instanceof EObject) {
@@ -227,7 +223,8 @@ public class EMFDataProvider extends AbstractDataProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.IDataProvider#setData(java.lang.String, java.lang.Object)
+	 * @see org.eclipse.e4.xwt.IDataProvider#setData(java.lang.String,
+	 * java.lang.Object)
 	 */
 	public void setData(String path, Object value) {
 		setData(getTarget(), path, value);
@@ -236,7 +233,8 @@ public class EMFDataProvider extends AbstractDataProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.IDataProvider#setData(java.lang.Object, java.lang.String, java.lang.Object)
+	 * @see org.eclipse.e4.xwt.IDataProvider#setData(java.lang.Object,
+	 * java.lang.String, java.lang.Object)
 	 */
 	public void setData(Object target, String path, Object value) {
 		if (target instanceof EObject) {
@@ -248,7 +246,8 @@ public class EMFDataProvider extends AbstractDataProvider {
 				eObj = EMFBinding.getEObject(eObj, parent);
 				featureName = path.substring(index + 1);
 			}
-			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(featureName);
+			EStructuralFeature feature = eObj.eClass().getEStructuralFeature(
+					featureName);
 			if (feature != null) {
 				eObj.eSet(feature, value);
 			}

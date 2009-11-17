@@ -18,7 +18,6 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.TableItem;
 
 
 /**
@@ -52,11 +51,11 @@ public class TableViewer_MasterDetail_NestedTable_AddInput {
 		
 		TableViewer companyViewer = (TableViewer) XWT.findElementByName(event.widget, "CompanyViewer1");
 
-		IObservableList members = XWT.findObservableList(event.widget, companyViewer, "input");
+		IObservableList employees = (IObservableList) companyViewer.getInput();
 		observableValue.setValue(company);
 		Employee employee = new Employee();
 		employee.setName("Bruno");
 		employee.setAge(24);		
-		members.add(employee);
+		employees.add(employee);
 	}
 }
