@@ -213,6 +213,10 @@ public class Binding implements IDynamicBinding {
 		if (index == -1) {
 			return (source instanceof Control || source instanceof Viewer);
 		}
+		
+		if (source instanceof IDataProvider) {
+			return false;
+		}
 		String parentPath = path.substring(0, index);
 		IObservable observable = ScopeManager.observeValue(control, source, parentPath, getUpdateSourceTrigger());
 		if (observable instanceof IObservableValue) {

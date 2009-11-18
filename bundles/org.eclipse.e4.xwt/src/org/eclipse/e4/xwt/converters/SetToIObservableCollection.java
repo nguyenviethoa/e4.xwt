@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.converters;
 
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservableCollection;
-import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.e4.xwt.XWT;
 
 /**
@@ -26,12 +26,12 @@ public class SetToIObservableCollection implements IConverter {
 	public static SetToIObservableCollection instance = new SetToIObservableCollection();
 
 	public Object convert(Object fromObject) {
-		List<?> list = (List<?>) fromObject;
-		return new WritableList(XWT.getRealm(), (List<?>)list, Object.class);
+		Set<?> set = (Set<?>) fromObject;
+		return new WritableSet(XWT.getRealm(), (Set<?>)set, Object.class);
 	}
 
 	public Object getFromType() {
-		return List.class;
+		return Set.class;
 	}
 
 	public Object getToType() {

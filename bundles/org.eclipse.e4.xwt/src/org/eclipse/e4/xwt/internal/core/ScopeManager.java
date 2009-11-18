@@ -24,6 +24,7 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.databinding.EventPropertyObservableValue;
 import org.eclipse.e4.xwt.databinding.JFaceXWTDataBinding;
 import org.eclipse.e4.xwt.databinding.ListToArrayObservableValue;
+import org.eclipse.e4.xwt.dataproviders.IObjectDataProvider;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -36,6 +37,7 @@ public class ScopeManager {
 	public static final int VALUE = 1;
 	public static final int SET = 2;
 	public static final int LIST = 3;
+	public static final int COLLECTION = 4;
 
 	public static IObservableValue observableValue(Object control,
 			Object value, String fullPath,
@@ -124,14 +126,14 @@ public class ScopeManager {
 	static class ObservableValueBuilder {
 		private Widget widget;
 		private Object value;
-		private Class<?> elementType;
+		private Object elementType;
 		private BindingExpressionPath expressionPath;
 		private UpdateSourceTrigger updateSourceTrigger;
 		private IDataProvider dataProvider;
 		private String currentPath;
 		private int observeKind = VALUE;
 
-		public ObservableValueBuilder(Object value, Class<?> elementType,
+		public ObservableValueBuilder(Object value, Object elementType,
 				BindingExpressionPath expressionPath,
 				UpdateSourceTrigger updateSourceTrigger, int observeKind) {
 			this.value = value;
@@ -152,7 +154,7 @@ public class ScopeManager {
 			dataProvider = XWT.findDataProvider(value);
 			Object dataValue = value;
 			currentPath = null;
-			Class<?> type = elementType;
+			Object type = elementType;
 			String[] segments = expressionPath.getSegments();
 			if (segments == null || segments.length == 0) {
 				String segment = ModelUtils
@@ -160,9 +162,9 @@ public class ScopeManager {
 				observable = resolveObservablevalue(scopeManager, dataValue,
 						type, segment);
 			} else {
-				if (observeKind == LIST) {
+				if (observeKind == COLLECTION) {
 					// if the first is viewers' property
-					if (!JFaceXWTDataBinding.isViewerPorperty(segments[0])) {
+					if (!JFaceXWTDataBinding.isViewerProperty(segments[0])) {
 						observeKind = VALUE;
 					}
 				}
@@ -177,9 +179,11 @@ public class ScopeManager {
 					observable = resolveObservablevalue(scopeManager,
 							dataValue, type, segment);
 					dataValue = observable;
-					type = JFaceXWTDataBinding.toType(dataValue);
-					if (type != null) {
-						dataProvider = XWT.findDataProvider(type);
+					if (i != size -1) {
+						type = dataProvider.getModelService().toModelType(dataValue);
+						if (type != null) {
+							dataProvider = XWT.findDataProvider(type);
+						}
 					}
 				}
 			}
@@ -187,7 +191,7 @@ public class ScopeManager {
 		}
 
 		private IObservable resolveObservablevalue(ScopeKeeper scopeManager,
-				Object dataValue, Class<?> type, String segment) {
+				Object dataValue, Object type, String segment) {
 			int length = segment.length();
 			if (length > 1 && segment.charAt(0) == '('
 					&& segment.charAt(length - 1) == ')') {
@@ -197,7 +201,7 @@ public class ScopeManager {
 				if (index != -1) {
 					String className = path.substring(0, index);
 					segment = path.substring(index + 1);
-					type = XWT.getLoadingContext().loadClass(className);
+					type = dataProvider.getModelService().loadModelType(className);
 					if (type == null) {
 						throw new XWTException("Class " + className
 								+ " not found");
@@ -241,11 +245,11 @@ public class ScopeManager {
 		}
 
 		protected IObservable createValueProperty(Object object,
-				String propertyName, Class<?> targetType) {
+				String propertyName, Object targetType) {
 			IObservable observable = null;
-			Class<?> type = null;
+			Object type = null;
 			if (targetType == null) {
-				type = JFaceXWTDataBinding.toType(object);
+				type = dataProvider.getModelService().toModelType(object);
 			} else {
 				type = targetType;
 			}
@@ -255,7 +259,7 @@ public class ScopeManager {
 						propertyName, updateSourceTrigger, observeKind);
 			}
 
-			if (observable == null) {
+			if (observable == null && dataProvider instanceof IObjectDataProvider) {
 				IMetaclass mateclass = XWT.getMetaclass(type);
 				IProperty property = mateclass.findProperty(propertyName);
 				if (property instanceof EventProperty) {
@@ -271,23 +275,27 @@ public class ScopeManager {
 			if (observable instanceof IObservableValue) {
 				IObservableValue activeValue = (IObservableValue) observable;
 
-				Class<?> valueType = (Class<?>) activeValue.getValueType();
-				if (valueType != null && valueType.isArray()) {
-					// Create a IObserableValue to handle the connection between
-					// Array and List
-
-					Object values = dataProvider.getData(propertyName);
-					ArrayList<Object> array = new ArrayList<Object>();
-					if (values != null) {
-						for (Object value : (Object[]) values) {
-							array.add(value);
+				Object valueType = activeValue.getValueType();
+				if (valueType instanceof Class<?>) {
+					// TODO maybe need to moved in IDataProvider
+					Class<?> classType = (Class<?>) valueType;
+					if (valueType != null && classType.isArray()) {
+						// Create a IObserableValue to handle the connection between
+						// Array and List
+	
+						Object values = dataProvider.getData(propertyName);
+						ArrayList<Object> array = new ArrayList<Object>();
+						if (values != null) {
+							for (Object value : (Object[]) values) {
+								array.add(value);
+							}
 						}
+						WritableList writableList = new WritableList(
+								XWT.getRealm(), array, classType.getComponentType());
+	
+						return new ListToArrayObservableValue(writableList,
+								activeValue);
 					}
-					WritableList writableList = new WritableList(
-							XWT.getRealm(), array, valueType.getComponentType());
-
-					return new ListToArrayObservableValue(writableList,
-							activeValue);
 				}
 			}
 			return observable;
@@ -389,7 +397,7 @@ public class ScopeManager {
 			String segment = expressionPath.getFullPath();
 			return dataProvider.isPropertyReadOnly(segment);
 		} else {
-			Class<?> type = null;
+			Object type = null;
 
 			int last = segments.length - 1;
 			for (int i = 0; i < last; i++) {
@@ -403,7 +411,7 @@ public class ScopeManager {
 					if (index != -1) {
 						String className = path.substring(0, index);
 						segment = path.substring(index + 1);
-						type = XWT.getLoadingContext().loadClass(className);
+						type = dataProvider.getModelService().loadModelType(className);
 						if (type == null) {
 							throw new XWTException("Class " + className
 									+ " not found");
@@ -418,7 +426,7 @@ public class ScopeManager {
 					if (dataProvider == null) {
 						throw new XWTException(
 								"Data probider is not found for the type "
-										+ type.getName());
+										+ type.toString());
 					}
 				} else {
 					throw new XWTException(
@@ -436,7 +444,7 @@ public class ScopeManager {
 				if (index != -1) {
 					String className = path.substring(0, index);
 					segment = path.substring(index + 1);
-					type = XWT.getLoadingContext().loadClass(className);
+					type = dataProvider.getModelService().loadModelType(className);
 					if (type == null) {
 						throw new XWTException("Class " + className
 								+ " not found");

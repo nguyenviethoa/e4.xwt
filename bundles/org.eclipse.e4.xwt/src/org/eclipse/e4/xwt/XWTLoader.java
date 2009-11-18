@@ -42,6 +42,7 @@ import org.eclipse.e4.xwt.converters.CollectionToInteger;
 import org.eclipse.e4.xwt.converters.DateToString;
 import org.eclipse.e4.xwt.converters.EnumToString;
 import org.eclipse.e4.xwt.converters.ListToIObservableCollection;
+import org.eclipse.e4.xwt.converters.ListToSet;
 import org.eclipse.e4.xwt.converters.ObjectToBoolean;
 import org.eclipse.e4.xwt.converters.ObjectToISelection;
 import org.eclipse.e4.xwt.converters.ObjectToObject;
@@ -1062,6 +1063,9 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#findDataProvider(java.lang.Object)
 	 */
 	public IDataProvider findDataProvider(Object dataContext) {
+		if (dataContext instanceof IDataProvider) {
+			return (IDataProvider) dataContext;
+		}
 		for (IDataProviderFactory factory : dataProviderFactories) {
 			IDataProvider dataProvider = factory.create(dataContext);
 			if (dataProvider != null) {
@@ -1135,6 +1139,7 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(ListToIObservableCollection.instance);
 		registerConvertor(SetToIObservableCollection.instance);
 		registerConvertor(ObjectToISelection.instance);
+		registerConvertor(ListToSet.instance);
 
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core
 				.getService(ValueConvertorRegister.class);

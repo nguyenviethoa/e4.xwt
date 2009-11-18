@@ -58,7 +58,7 @@ public interface IDataProvider {
 	 * @param path
 	 * @return
 	 */
-	Class<?> getDataType(String path);
+	Object getDataType(String path);
 
 	/**
 	 * check if the property is read only.
@@ -83,7 +83,24 @@ public interface IDataProvider {
 
 	void removeProperty(String property);
 	
-	IObservable observe(Object data, String path, Class<?> targetType, int observeKind);
+	IObservable observe(Object data, String path, Object targetType, int observeKind);
 	
 	IValueProperty createValueProperty(Object type, String fullPath);
+	
+	interface DataModelService {
+		/**
+		 * get the type of this object
+		 * 
+		 * @param object
+		 * @return
+		 */
+		Object toModelType(Object object);
+		
+		Object loadModelType(String typeName);	
+		
+		Object toModelPropertyType(Object object, String propertyName);
+	}
+	
+	DataModelService getModelService();
+	
 }

@@ -34,5 +34,4 @@ public interface IObjectDataProvider extends IDataProvider {
 	List<Object> getMethodParameters();
 
 	void setMethodParameters(List<Object> parameters);
-
 }

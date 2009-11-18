@@ -23,6 +23,20 @@ import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
  * @author yyang (yves.yang@soyatec.com)
  */
 public class CustomDataProvider extends AbstractDataProvider {
+	static DataModelService dataModelService = new DataModelService() {
+		public Object toModelType(Object data) {
+			throw new UnsupportedOperationException();
+		}
+		
+		public Object loadModelType(String className) {
+			throw new UnsupportedOperationException();
+		}
+		
+		public Object toModelPropertyType(Object object, String propertyName) {
+			throw new UnsupportedOperationException();
+		}
+	};
+	
 	protected Class<?> objectType;
 	protected DynamicObject object;
 
@@ -73,7 +87,7 @@ public class CustomDataProvider extends AbstractDataProvider {
 
 	@Override
 	protected IObservableValue observeDetailValue(IObservableValue bean,
-			Class<?> ownerType, String propertyName, Class<?> propertyType) {
+			Object ownerType, String propertyName, Object propertyType) {
 		return null;
 	}
 
@@ -102,5 +116,9 @@ public class CustomDataProvider extends AbstractDataProvider {
 			}
 		}
 		return object;
+	}
+	
+	public DataModelService getModelService() {
+		return dataModelService;
 	}
 }

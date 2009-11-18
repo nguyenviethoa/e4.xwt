@@ -19,6 +19,7 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.IBindingContext;
@@ -26,13 +27,35 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.databinding.JFaceXWTDataBinding;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public class ObjectDataProvider extends AbstractDataProvider implements
 		IObjectDataProvider {
-
+	static DataModelService dataModelService = new DataModelService() {
+		
+		public Object toModelType(Object object) {
+			return JFaceXWTDataBinding.toType(object);
+		}
+		
+		public Object loadModelType(String className) {
+			return XWT.getLoadingContext().loadClass(className);
+		}
+		
+		public Object toModelPropertyType(Object type, String propertyName) {
+			IMetaclass metaclass = XWT.getMetaclass(type);
+			IProperty property = metaclass.findProperty(propertyName);
+			
+			if (property == null) {
+				throw new XWTException(" Property \"" + propertyName + "\" is not found in the class " + metaclass.getType().getName());
+			}
+			return property.getType();
+		}
+	};
+	
 	private Object objectInstance;
 	private Class<?> objectType;
 
@@ -90,7 +113,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 		}
 		return objectType;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -185,7 +208,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 		if (object instanceof IObservableValue) {
 			object = ((IObservableValue) object).getValue();
 		}
-		if (path == null || path.trim().length() == 0) {
+		if (path == null || path.trim().length() == 0 || path.equals(".")) {
 			return JFaceXWTDataBinding.getValue(object, null);
 		}
 		int index = path.indexOf(".");
@@ -275,27 +298,37 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 	}
 
 	protected IObservableList observeDetailList(IObservableValue bean,
-			Class<?> elementType, String propertyName, Class<?> propertyType) {
+			Object elementType, String propertyName, Object propertyType) {
 		if (JFaceXWTDataBinding.isBeanSupport(bean)) {
 			return BeansObservables.observeDetailList(bean, propertyName,
-					propertyType);
+					(Class<?>)propertyType);
 		}
 		return PojoObservables.observeDetailList(bean, propertyName,
-				propertyType);
+				(Class<?>)propertyType);
+	}
+
+	protected IObservableSet observeDetailSet(IObservableValue bean,
+			Object elementType, String propertyName, Object propertyType) {
+		if (JFaceXWTDataBinding.isBeanSupport(bean)) {
+			return BeansObservables.observeDetailSet(bean, propertyName,
+					(Class<?>)propertyType);
+		}
+		return PojoObservables.observeDetailSet(bean, propertyName,
+				(Class<?>)propertyType);
 	}
 
 	@Override
 	protected IObservableValue observeDetailValue(IObservableValue master,
-			Class<?> elementType, String propertyName, Class<?> propertyType) {
-		Class beanClass = elementType;
-		if (beanClass == null && master.getValueType() instanceof Class) {
-			beanClass = (Class) master.getValueType();
+			Object elementType, String propertyName, Object propertyType) {
+		Class<?> beanClass = (Class<?>)elementType;
+		if (beanClass == null && master.getValueType() instanceof Class<?>) {
+			beanClass = (Class<?>) master.getValueType();
 		}
 		if (JFaceXWTDataBinding.isBeanSupport(elementType)) {
-			return BeanProperties.value(beanClass, propertyName, propertyType)
+			return BeanProperties.value(beanClass, propertyName, (Class<?>)propertyType)
 					.observeDetail(master);
 		}
-		return PojoProperties.value(beanClass, propertyName, propertyType)
+		return PojoProperties.value(beanClass, propertyName, (Class<?>)propertyType)
 				.observeDetail(master);
 	}
 
@@ -315,5 +348,9 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 	 */
 	public IBindingContext getBindingContext() {
 		return bindingContext;
+	}
+	
+	public DataModelService getModelService() {
+		return dataModelService;
 	}
 }

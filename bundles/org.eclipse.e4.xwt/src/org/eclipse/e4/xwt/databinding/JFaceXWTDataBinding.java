@@ -55,7 +55,7 @@ public class JFaceXWTDataBinding {
 	
 	static String[] VIEWERS_PROPERTIES;
 
-	public static boolean isViewerPorperty(String propertyName) {
+	public static boolean isViewerProperty(String propertyName) {
 		if (VIEWERS_PROPERTIES == null) {
 			Method[] methods = ViewerProperties.class.getDeclaredMethods();
 			VIEWERS_PROPERTIES = new String[methods.length];
@@ -269,10 +269,10 @@ public class JFaceXWTDataBinding {
 			case ScopeManager.AUTO:
 				return observePropertyValue(object,
 						propertyName, updateSourceTrigger);
+			case ScopeManager.COLLECTION:
 			case ScopeManager.SET:
-				break;				
 			case ScopeManager.LIST:
-				break;
+				break;				
 			case ScopeManager.VALUE:
 				return observePropertyValue(object,
 						propertyName, updateSourceTrigger);

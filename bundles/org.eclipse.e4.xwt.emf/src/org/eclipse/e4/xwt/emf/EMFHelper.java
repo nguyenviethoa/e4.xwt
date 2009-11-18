@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.emf;
 
-import org.eclipse.emf.ecore.EClass;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.databinding.EObjectObservableValue;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 public class EMFHelper {
 
@@ -28,18 +31,27 @@ public class EMFHelper {
 		return namedElement.getName();
 	}
 	
-	public static EClass toType(Object object) {
-		EClass type = null;
-		if (object instanceof EClass) {
-			type = (EClass) object;
+	public static Object toType(Object data) {
+		if (data instanceof EClassifier) {
+			return (EClassifier) data;
 		}
-		else if (object instanceof EObject) {
-			EObject ecoreObject = (EObject) object;
-			type = ecoreObject.eClass();
+		if (data instanceof EObjectObservableValue) {
+			EObjectObservableValue observableValue = (EObjectObservableValue) data;
+			Object element = observableValue.getValueType();
+			if (element instanceof EStructuralFeature) {
+				// A bug of EMF databinding
+				return ((EStructuralFeature) element).getEType();
+			}
+			return element;
 		}
-		else {
-			throw new IllegalStateException();
+		if (data instanceof EObject) {
+			EObject object = (EObject) data;
+			return object.eClass();
 		}
-		return type;
+		if (data instanceof EMFDataProvider) {
+			EMFDataProvider dataProvider = (EMFDataProvider) data;
+			return dataProvider.getDataType(null);
+		}
+		throw new IllegalStateException();
 	}
 }

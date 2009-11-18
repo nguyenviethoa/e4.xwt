@@ -10,24 +10,23 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.converters;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.core.databinding.observable.IObservableCollection;
-import org.eclipse.core.databinding.observable.list.WritableList;
-import org.eclipse.e4.xwt.XWT;
 
 /**
- * List to IObservableCollection converter
+ * String to Boolean converter
  * 
  * @author yyang
  */
-public class ListToIObservableCollection implements IConverter {
-	public static ListToIObservableCollection instance = new ListToIObservableCollection();
+public class ListToSet implements IConverter {
+	public static ListToSet instance = new ListToSet();
 
 	public Object convert(Object fromObject) {
 		List<?> list = (List<?>) fromObject;
-		return new WritableList(XWT.getRealm(), (List<?>)list, Object.class);
+		return new HashSet<Object>(list);
 	}
 
 	public Object getFromType() {
@@ -35,6 +34,6 @@ public class ListToIObservableCollection implements IConverter {
 	}
 
 	public Object getToType() {
-		return IObservableCollection.class;
+		return Set.class;
 	}
 }

@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
@@ -129,8 +130,11 @@ public class DataBinding extends AbstractDataBinding {
 			int observeKind = ScopeManager.AUTO;
 			if (host instanceof Viewer && "input".equals(targetProperty)) {
 				// It is possible to use List
-				getObservableSource(ScopeManager.LIST);
+				getObservableSource(ScopeManager.COLLECTION);
 				if (observableSource instanceof IObservableList) {
+					return null;
+				}
+				else if (observableSource instanceof IObservableSet) {
 					return null;
 				}
 			}

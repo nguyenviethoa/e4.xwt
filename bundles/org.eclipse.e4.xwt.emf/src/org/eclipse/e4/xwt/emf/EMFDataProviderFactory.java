@@ -12,7 +12,12 @@ package org.eclipse.e4.xwt.emf;
 
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IDataProviderFactory;
+import org.eclipse.emf.databinding.EObjectObservableList;
+import org.eclipse.emf.databinding.EObjectObservableMap;
+import org.eclipse.emf.databinding.EObjectObservableValue;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author yyang (yves.yang@soyatec.com)
@@ -20,9 +25,24 @@ import org.eclipse.emf.ecore.EObject;
 public class EMFDataProviderFactory implements IDataProviderFactory {
 
 	public IDataProvider create(Object dataContext) {
-		EMFDataProvider dataProvider = new EMFDataProvider();
-		dataProvider.setObjectInstance((EObject) dataContext);
-		return dataProvider;
+		if (dataContext instanceof EObject) {
+			EMFDataProvider dataProvider = new EMFDataProvider();
+			dataProvider.setObjectInstance(dataContext);
+			return dataProvider;
+		}
+		else if (dataContext instanceof EClassifier) {
+			EClassifier classifier = (EClassifier) dataContext;
+			EMFDataProvider dataProvider = new EMFDataProvider();
+			dataProvider.setTypeURI(EcoreUtil.getURI(classifier));
+			return dataProvider;
+		}
+		else if (dataContext instanceof EObjectObservableValue 
+				|| dataContext instanceof EObjectObservableList || dataContext instanceof EObjectObservableMap) {
+			EMFDataProvider dataProvider = new EMFDataProvider();
+			dataProvider.setObjectInstance(dataContext);
+			return dataProvider;
+		}
+		return null;
 	}
 
 	public Class<?> getType() {

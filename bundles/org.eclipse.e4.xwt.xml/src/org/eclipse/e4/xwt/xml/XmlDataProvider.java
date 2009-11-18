@@ -21,9 +21,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.core.databinding.observable.map.IObservableMap;
-import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
@@ -36,6 +33,20 @@ import org.w3c.dom.Node;
  */
 public class XmlDataProvider extends AbstractDataProvider implements
 		IXmlDataProvider {
+	static DataModelService dataModelService = new DataModelService() {
+		public Object toModelType(Object data) {
+			throw new UnsupportedOperationException();
+		}
+		
+		public Object loadModelType(String className) {
+			throw new UnsupportedOperationException();
+		}
+		
+		public Object toModelPropertyType(Object object, String propertyName) {
+			throw new UnsupportedOperationException();
+		}
+	};
+	
 	static final String XDATA = "XData";
 
 	private URL source;
@@ -199,7 +210,7 @@ public class XmlDataProvider extends AbstractDataProvider implements
 
 	@Override
 	protected IObservableValue observeDetailValue(IObservableValue bean,
-			Class<?> ownerType, String propertyName, Class<?> propertyType) {
+			Object ownerType, String propertyName, Object propertyType) {
 		return null;
 	}
 
@@ -227,4 +238,7 @@ public class XmlDataProvider extends AbstractDataProvider implements
 		setProperty(XDATA, content);
 	}
 
+	public DataModelService getModelService() {
+		return dataModelService;
+	}
 }

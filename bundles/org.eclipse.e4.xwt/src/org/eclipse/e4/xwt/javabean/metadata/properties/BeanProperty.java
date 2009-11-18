@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 
@@ -29,7 +30,9 @@ public class BeanProperty extends AbstractProperty {
 		this.descriptor = descriptor;
 	}
 
-	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
+	public void setValue(Object target, Object value)
+			throws IllegalArgumentException, IllegalAccessException,
+			InvocationTargetException, SecurityException, NoSuchFieldException {
 		if (descriptor != null && descriptor.getWriteMethod() != null) {
 			Method writeMethod = descriptor.getWriteMethod();
 			// Bug of invoke boolean value.
@@ -41,37 +44,60 @@ public class BeanProperty extends AbstractProperty {
 					type = propertyType;
 				}
 				if (!IBinding.class.isAssignableFrom(propertyType)) {
-					IConverter convertor = value == null ? null : XWT.findConvertor(value.getClass(), type);
+					IConverter convertor = value == null ? null : XWT
+							.findConvertor(value.getClass(), type);
 					if (convertor != null) {
 						value = convertor.convert(value);
-					}					
+					}
 				}
-				
+
 				Object oldValue = null;
 				Method readMethod = descriptor.getReadMethod();
 				if (readMethod != null) {
 					oldValue = readMethod.invoke(target);
 				}
-				
-				if (value == null && type != null && UserData.getWidget(target) != null) {
+
+				if (value == null && type != null
+						&& UserData.getWidget(target) != null) {
 					if (type == String.class) {
 						value = "";
-					}
-					else if (type == Boolean.class) {
+					} else if (type == Boolean.class) {
 						value = false;
 					}
 				}
-				
+
 				if (oldValue != value) {
 					writeMethod.setAccessible(true);
-					writeMethod.invoke(target, value);
-					fireSetPostAction(target, this, value);
+					try {
+						writeMethod.invoke(target, value);
+						fireSetPostAction(target, this, value);
+					} catch (IllegalArgumentException e) {
+						if (value == null) {
+							throw new XWTException("Property type " + getName()
+									+ " of " + target.getClass().getName()
+									+ " cannot be null.", e);
+						}
+						throw new XWTException("Property type " + getName()
+								+ " of " + target.getClass().getName()
+								+ " is mismatch with "
+								+ value.getClass().getName()
+								+ " expected type is "
+								+ parameterTypes[0].getName(), e);
+					}
+					catch (InvocationTargetException e) {
+						throw new XWTException("Problem of invoke " + getName()
+								+ " of " + target.getClass().getName()
+								+ " with a value of type "
+								+ value.getClass().getName(), e);
+					}
 				}
 			}
 		}
 	}
 
-	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
+	public Object getValue(Object target) throws IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException,
+			SecurityException, NoSuchFieldException {
 		if (descriptor != null && descriptor.getReadMethod() != null) {
 			Method writeMethod = descriptor.getReadMethod();
 			writeMethod.setAccessible(true);
@@ -84,7 +110,7 @@ public class BeanProperty extends AbstractProperty {
 	public boolean isDefault() {
 		return true;
 	}
-	
+
 	public boolean isReadOnly() {
 		return descriptor.getWriteMethod() == null;
 	}
