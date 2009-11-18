@@ -29,7 +29,7 @@ public class Company {
 	public void setEmployees(Employee[] employees) {
 		this.employees = employees;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

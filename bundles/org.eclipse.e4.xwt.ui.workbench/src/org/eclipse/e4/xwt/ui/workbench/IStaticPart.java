@@ -7,14 +7,15 @@
  * 
  * Contributors:
  *     Soyatec - initial API and implementation
- *******************************************************************************/package org.eclipse.e4.xwt.ui.workbench;
+ *******************************************************************************/
+package org.eclipse.e4.xwt.ui.workbench;
 
 import java.net.URL;
 
- /**
-  * 
-  * @author yyang (yves.yang@soyatec.com)
-  */
+/**
+ * 
+ * @author yyang (yves.yang@soyatec.com)
+ */
 public interface IStaticPart extends IContentPart {
 	URL getURL();
 }

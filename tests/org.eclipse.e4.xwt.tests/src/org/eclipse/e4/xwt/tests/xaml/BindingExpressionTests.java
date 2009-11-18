@@ -33,7 +33,8 @@ public class BindingExpressionTests extends TestCase {
 	 * @throws Exception
 	 */
 	public void testBindingExpression() throws Exception {
-		URL url = BindingExpressionTests.class.getResource("BindingExpression" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = BindingExpressionTests.class.getResource("BindingExpression"
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
 			Element element = elementManager.load(url);
@@ -44,7 +45,9 @@ public class BindingExpressionTests extends TestCase {
 	}
 
 	public void testBindingExpression_path() throws Exception {
-		URL url = BindingExpressionTests.class.getResource("BindingExpression_Path" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = BindingExpressionTests.class
+				.getResource("BindingExpression_Path"
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
 			Element element = elementManager.load(url);
@@ -55,7 +58,9 @@ public class BindingExpressionTests extends TestCase {
 	}
 
 	public void testBindingExpression_Attached() throws Exception {
-		URL url = BindingExpressionTests.class.getResource("BindingExpression_Attached" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = BindingExpressionTests.class
+				.getResource("BindingExpression_Attached"
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
 			Element element = elementManager.load(url);
@@ -66,7 +71,9 @@ public class BindingExpressionTests extends TestCase {
 	}
 
 	public void testBindingExpression_Indexer() throws Exception {
-		URL url = BindingExpressionTests.class.getResource("BindingExpression_Indexer" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = BindingExpressionTests.class
+				.getResource("BindingExpression_Indexer"
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
 			Element element = elementManager.load(url);
@@ -77,7 +84,9 @@ public class BindingExpressionTests extends TestCase {
 	}
 
 	public void testBindingExpression_Namespace() throws Exception {
-		URL url = BindingExpressionTests.class.getResource("BindingExpression_Namespace" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = BindingExpressionTests.class
+				.getResource("BindingExpression_Namespace"
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
 			Element element = elementManager.load(url);
@@ -87,8 +96,11 @@ public class BindingExpressionTests extends TestCase {
 		}
 	}
 
-	public void testBindingExpression_NamespaceUpdateSourceTrigger() throws Exception {
-		URL url = BindingExpressionTests.class.getResource("BindingExpression_NamespaceUpdateSourceTrigger" + IConstants.XWT_EXTENSION_SUFFIX);
+	public void testBindingExpression_NamespaceUpdateSourceTrigger()
+			throws Exception {
+		URL url = BindingExpressionTests.class
+				.getResource("BindingExpression_NamespaceUpdateSourceTrigger"
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
 			Element element = elementManager.load(url);
@@ -99,7 +111,9 @@ public class BindingExpressionTests extends TestCase {
 	}
 
 	public void testBindingExpression_UpdateSourceTrigger() throws Exception {
-		URL url = BindingExpressionTests.class.getResource("BindingExpression_UpdateSourceTrigger" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = BindingExpressionTests.class
+				.getResource("BindingExpression_UpdateSourceTrigger"
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
 			Element element = elementManager.load(url);
@@ -109,7 +123,6 @@ public class BindingExpressionTests extends TestCase {
 		}
 	}
 
-
 	protected void checkTextValue(Element element, String name, String value) {
 		Attribute attribute = element.getAttribute("Text");
 		assertEquals(attribute.getName(), "Text");
@@ -117,10 +130,10 @@ public class BindingExpressionTests extends TestCase {
 		DocumentObject child = attribute.getChildren()[0];
 		assertEquals(child.getName(), "Binding");
 		assertTrue(child instanceof Element);
-		
-		Element childElement = (Element)child;
+
+		Element childElement = (Element) child;
 		Attribute pathAttribute = childElement.getAttribute(name);
 		assertTrue(pathAttribute != null);
-		assertEquals(pathAttribute.getContent(), value);			
+		assertEquals(pathAttribute.getContent(), value);
 	}
 }

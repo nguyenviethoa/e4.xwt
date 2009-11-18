@@ -24,9 +24,9 @@ public class MultiDataTriggerTests extends XWTTestCase {
 	}
 
 	public void test_MultiDataTrigger1() {
-		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = MultiDataTriggerTests.class
+				.getResource(MultiDataTrigger.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button1 = (Button) XWT.findElementByName(root, "Button");
@@ -34,8 +34,7 @@ public class MultiDataTriggerTests extends XWTTestCase {
 				Text text = (Text) XWT.findElementByName(root, "Text");
 				text.setText("11");
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -47,33 +46,32 @@ public class MultiDataTriggerTests extends XWTTestCase {
 	}
 
 	public void test_MultiDataTrigger_Restore1() {
-		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger_Restore.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = MultiDataTriggerTests.class
+				.getResource(MultiDataTrigger_Restore.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button1 = (Button) XWT.findElementByName(root, "Button");
 				selectButton(button1, false);
 				selectButton(button1, true);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
 
 			public void checkButton() {
 				Button button1 = (Button) XWT.findElementByName(root, "Button");
-				
+
 				assertEquals(button1.getText(), "true");
 			}
 		});
 	}
 
 	public void test_MultiDataTrigger_Restore2() {
-		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger_Restore.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = MultiDataTriggerTests.class
+				.getResource(MultiDataTrigger_Restore.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button1 = (Button) XWT.findElementByName(root, "Button");
@@ -81,24 +79,23 @@ public class MultiDataTriggerTests extends XWTTestCase {
 				selectButton(button1, true);
 				selectButton(button1, false);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
 
 			public void checkButton() {
 				Button button1 = (Button) XWT.findElementByName(root, "Button");
-				
+
 				assertEquals(button1.getText(), "");
 			}
 		});
 	}
 
 	public void test_MultiDataTrigger2() {
-		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = MultiDataTriggerTests.class
+				.getResource(MultiDataTrigger.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button1 = (Button) XWT.findElementByName(root, "Button");
@@ -106,8 +103,7 @@ public class MultiDataTriggerTests extends XWTTestCase {
 				Text text = (Text) XWT.findElementByName(root, "Text");
 				text.setText("15");
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -119,9 +115,9 @@ public class MultiDataTriggerTests extends XWTTestCase {
 	}
 
 	public void test_MultiDataTrigger3() {
-		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = MultiDataTriggerTests.class
+				.getResource(MultiDataTrigger.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button1 = (Button) XWT.findElementByName(root, "Button");
@@ -130,8 +126,7 @@ public class MultiDataTriggerTests extends XWTTestCase {
 				text.setText("15");
 				selectButton(button1, true);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -143,9 +138,9 @@ public class MultiDataTriggerTests extends XWTTestCase {
 	}
 
 	public void test_MultiDataTrigger4() {
-		URL url = MultiDataTriggerTests.class.getResource(MultiDataTrigger_Default.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = MultiDataTriggerTests.class
+				.getResource(MultiDataTrigger_Default.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button1 = (Button) XWT.findElementByName(root, "Button");
@@ -154,8 +149,7 @@ public class MultiDataTriggerTests extends XWTTestCase {
 				text.setText("15");
 				selectButton(button1, true);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}

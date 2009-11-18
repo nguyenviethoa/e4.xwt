@@ -40,11 +40,13 @@ public class EMFBinding {
 			}
 			index = featureName.indexOf(".");
 			if (eObj != null && index == -1) {
-				EStructuralFeature sf = eObj.eClass().getEStructuralFeature(featureName);
+				EStructuralFeature sf = eObj.eClass().getEStructuralFeature(
+						featureName);
 				if (sf != null) {
 					Object newValue = eObj.eGet(sf);
 					if (newValue == null && sf instanceof EReference) {
-						EObject newEObj = EcoreUtil.create(((EReference) sf).getEReferenceType());
+						EObject newEObj = EcoreUtil.create(((EReference) sf)
+								.getEReferenceType());
 						eObj.eSet(sf, newEObj);
 						eObj = newEObj;
 					} else if (newValue instanceof EObject) {

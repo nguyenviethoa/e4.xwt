@@ -33,7 +33,8 @@ public class GreenStyle implements IStyle {
 			control = (Control) viewer.getControl();
 		}
 		if (control != null) {
-			control.setBackground(control.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+			control.setBackground(control.getDisplay().getSystemColor(
+					SWT.COLOR_DARK_GREEN));
 			control.setData("__MySignature", name);
 		}
 	}

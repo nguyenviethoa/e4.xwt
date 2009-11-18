@@ -33,7 +33,8 @@ import org.eclipse.swt.widgets.Control;
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class XWTAbstractPart implements IContentPart {
-	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(
+			this);
 
 	protected Composite parent;
 
@@ -42,13 +43,14 @@ public abstract class XWTAbstractPart implements IContentPart {
 
 	static {
 		try {
-			XWT.registerNamspaceHandler(CSSHandler.NAMESPACE, CSSHandler.handler);
+			XWT.registerNamspaceHandler(CSSHandler.NAMESPACE,
+					CSSHandler.handler);
 		} catch (Exception e) {
 		}
 	}
 
 	private IEclipseContext context;
-	
+
 	protected Object dataContext;
 
 	public IEclipseContext getContext() {
@@ -77,19 +79,21 @@ public abstract class XWTAbstractPart implements IContentPart {
 			parent.getShell().setBackgroundMode(SWT.INHERIT_DEFAULT);
 		}
 	}
-	
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+
+	public void addPropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
 		changeSupport.addPropertyChangeListener(propertyName, listener);
 	}
 
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+	public void removePropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
 		changeSupport.removePropertyChangeListener(propertyName, listener);
 	}
-		
+
 	public ClassLoader getClassLoader() {
 		return this.getClass().getClassLoader();
 	}
-	
+
 	protected void refresh(URL url, Object dataContext, ClassLoader loader) {
 		if (parent == null) {
 			return;
@@ -98,7 +102,8 @@ public abstract class XWTAbstractPart implements IContentPart {
 		for (Control child : parent.getChildren()) {
 			child.dispose();
 		}
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
 		try {
 			Thread.currentThread().setContextClassLoader(loader);
 			HashMap<String, Object> newOptions = new HashMap<String, Object>();

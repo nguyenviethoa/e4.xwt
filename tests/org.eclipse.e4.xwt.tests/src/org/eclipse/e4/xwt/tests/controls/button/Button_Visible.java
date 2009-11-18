@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class Button_Visible {
 	public static void main(String[] args) {
-		URL url = Button_Visible.class.getResource(Button_Visible.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Button_Visible.class.getResource(Button_Visible.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

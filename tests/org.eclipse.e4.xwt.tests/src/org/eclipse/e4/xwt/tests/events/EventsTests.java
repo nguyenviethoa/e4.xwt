@@ -10,7 +10,10 @@ import org.eclipse.swt.widgets.Button;
 public class EventsTests extends XWTTestCase {
 
 	public void testButtonEvent() throws Exception {
-		URL url = EventsTests.class.getResource(org.eclipse.e4.xwt.tests.events.Button.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = EventsTests.class
+				.getResource(org.eclipse.e4.xwt.tests.events.Button.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Object element = XWT.findElementByName(root, "ButtonEvent");

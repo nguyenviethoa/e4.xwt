@@ -17,21 +17,24 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.widgets.Event;
 
-
 public class ComboViewer {
 	public static void main(String[] args) {
-		
-		URL url = ComboViewer.class.getResource(ComboViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = ComboViewer.class.getResource(ComboViewer.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void addPerson(Object sender, Event event) {
-		org.eclipse.jface.viewers.Viewer viewer = (org.eclipse.jface.viewers.Viewer) XWT.findElementByName(event.widget, "ComboViewer");
-		IObservableCollection collection = (IObservableCollection) viewer.getInput();
+		org.eclipse.jface.viewers.Viewer viewer = (org.eclipse.jface.viewers.Viewer) XWT
+				.findElementByName(event.widget, "ComboViewer");
+		IObservableCollection collection = (IObservableCollection) viewer
+				.getInput();
 		Employee employee = new Employee();
 		employee.setName("New hired one");
 		collection.add(employee);

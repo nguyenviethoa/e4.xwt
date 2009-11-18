@@ -16,28 +16,30 @@ public class UserControlTests extends XWTTestCase {
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
-				Control[] childControls = ((Composite)root).getChildren();
+				Control[] childControls = ((Composite) root).getChildren();
 				assertTrue(childControls.length == 1);
 				assertTrue(childControls[0] instanceof UserControl);
-				Object element = XWT.findElementByName((UserControl)childControls[0], "targetButton");
+				Object element = XWT.findElementByName(
+						(UserControl) childControls[0], "targetButton");
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
 				selectButton(button);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
 
 			public void checkButton() {
-				Control[] childControls = ((Composite)root).getChildren();
+				Control[] childControls = ((Composite) root).getChildren();
 				assertTrue(childControls.length == 1);
 				assertTrue(childControls[0] instanceof UserControl);
-				Object element = XWT.findElementByName((UserControl)childControls[0], "targetButton");
+				Object element = XWT.findElementByName(
+						(UserControl) childControls[0], "targetButton");
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
-				assertTrue(UserControl.SELECTION_MESSAGE.equals(button.getText()));
+				assertTrue(UserControl.SELECTION_MESSAGE.equals(button
+						.getText()));
 			}
 		});
 	}
@@ -48,26 +50,30 @@ public class UserControlTests extends XWTTestCase {
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
-				Object childCOntrol = XWT.findElementByName(root, "childControl");
+				Object childCOntrol = XWT.findElementByName(root,
+						"childControl");
 				assertTrue(childCOntrol instanceof UserControl);
-				Object element = XWT.findElementByName((UserControl)childCOntrol, "targetButton");
+				Object element = XWT.findElementByName(
+						(UserControl) childCOntrol, "targetButton");
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
 				selectButton(button);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
 
 			public void checkButton() {
-				Object childCOntrol = XWT.findElementByName(root, "childControl");
+				Object childCOntrol = XWT.findElementByName(root,
+						"childControl");
 				assertTrue(childCOntrol instanceof UserControl);
-				Object element = XWT.findElementByName((UserControl)childCOntrol, "targetButton");
+				Object element = XWT.findElementByName(
+						(UserControl) childCOntrol, "targetButton");
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
-				assertTrue(UserControl.SELECTION_MESSAGE.equals(button.getText()));
+				assertTrue(UserControl.SELECTION_MESSAGE.equals(button
+						.getText()));
 			}
 		});
 	}

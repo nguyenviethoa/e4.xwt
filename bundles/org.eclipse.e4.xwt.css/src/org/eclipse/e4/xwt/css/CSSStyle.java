@@ -62,8 +62,10 @@ public class CSSStyle extends AbstractCSSStyle {
 	protected CSSEngine createCSSEngine(Display display) {
 		try {
 			Class<?> engineClass = getEngineClass();
-			Constructor<?> ctor = engineClass.getConstructor(new Class[] { Display.class, Boolean.TYPE });
-			return (CSSEngine) ctor.newInstance(new Object[] { display, Boolean.FALSE });
+			Constructor<?> ctor = engineClass.getConstructor(new Class[] {
+					Display.class, Boolean.TYPE });
+			return (CSSEngine) ctor.newInstance(new Object[] { display,
+					Boolean.FALSE });
 		} catch (Throwable e) {
 			throw new CSSEngineNotFoundException(e);
 		}

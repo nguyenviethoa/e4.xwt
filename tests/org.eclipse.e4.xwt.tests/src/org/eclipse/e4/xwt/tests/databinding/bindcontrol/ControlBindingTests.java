@@ -11,7 +11,9 @@ import org.eclipse.swt.widgets.MenuItem;
 public class ControlBindingTests extends XWTTestCase {
 
 	public void testMenuItemEnabled() throws Exception {
-		URL url = ControlBindingTests.class.getResource(BindMenuItem.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ControlBindingTests.class.getResource(BindMenuItem.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
@@ -38,7 +40,9 @@ public class ControlBindingTests extends XWTTestCase {
 	}
 
 	public void testMenuItemSelection() throws Exception {
-		URL url = ControlBindingTests.class.getResource(BindMenuItem.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ControlBindingTests.class.getResource(BindMenuItem.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
@@ -56,7 +60,8 @@ public class ControlBindingTests extends XWTTestCase {
 			}
 
 			public void checkButton() {
-				Object element = XWT.findElementByName(root, "SelectionMenuItem");
+				Object element = XWT.findElementByName(root,
+						"SelectionMenuItem");
 				assertTrue(element instanceof MenuItem);
 				MenuItem menuItem = (MenuItem) element;
 				assertTrue(menuItem.getSelection());
@@ -65,7 +70,9 @@ public class ControlBindingTests extends XWTTestCase {
 	}
 
 	public void testMenuItemUnselection() throws Exception {
-		URL url = ControlBindingTests.class.getResource(BindMenuItem.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ControlBindingTests.class.getResource(BindMenuItem.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
@@ -84,7 +91,8 @@ public class ControlBindingTests extends XWTTestCase {
 			}
 
 			public void checkButton() {
-				Object element = XWT.findElementByName(root, "SelectionMenuItem");
+				Object element = XWT.findElementByName(root,
+						"SelectionMenuItem");
 				assertTrue(element instanceof MenuItem);
 				MenuItem menuItem = (MenuItem) element;
 				assertFalse(menuItem.getSelection());

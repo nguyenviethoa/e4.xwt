@@ -21,8 +21,10 @@ import org.eclipse.e4.xwt.XWT;
 public class MultiTrigger1 {
 
 	public static void main(String[] args) {
-		
-		URL url = MultiTrigger1.class.getResource(MultiTrigger1.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = MultiTrigger1.class.getResource(MultiTrigger1.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

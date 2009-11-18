@@ -24,17 +24,19 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class CustomDataProvider_Default {
 	public static void main(String[] args) {
-		URL url = CustomDataProvider_Default.class.getResource(CustomDataProvider_Default.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = CustomDataProvider_Default.class
+				.getResource(CustomDataProvider_Default.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
-			XWT.addDataProviderFactory(new IDataProviderFactory(){
+			XWT.addDataProviderFactory(new IDataProviderFactory() {
 				public Class<?> getType() {
 					return CustomDataProvider.class;
 				}
-			
+
 				public IDataProvider create(Object dataContext) {
 					if (dataContext instanceof DynamicObject) {
 						CustomDataProvider provider = new CustomDataProvider();
-						provider.setObjectInstance((DynamicObject)dataContext);
+						provider.setObjectInstance((DynamicObject) dataContext);
 						return provider;
 					}
 					return null;

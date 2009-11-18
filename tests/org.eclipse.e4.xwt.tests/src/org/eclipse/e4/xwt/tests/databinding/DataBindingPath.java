@@ -19,8 +19,10 @@ import org.eclipse.swt.widgets.Shell;
 
 public class DataBindingPath {
 	public static void main(String[] args) {
-		
-		URL url = DataBindingPath.class.getResource(DataBindingPath.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = DataBindingPath.class.getResource(DataBindingPath.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

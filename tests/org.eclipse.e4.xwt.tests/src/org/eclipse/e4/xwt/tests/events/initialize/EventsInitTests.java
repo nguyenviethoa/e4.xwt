@@ -10,7 +10,9 @@ import org.eclipse.swt.widgets.Button;
 public class EventsInitTests extends XWTTestCase {
 
 	public void testInitializeComponent() throws Exception {
-		URL url = UserControl.class.getResource(UserControl.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = UserControl.class.getResource(UserControl.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();

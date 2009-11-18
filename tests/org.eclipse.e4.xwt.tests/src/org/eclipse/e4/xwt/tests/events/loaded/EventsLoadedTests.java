@@ -10,7 +10,10 @@ import org.eclipse.swt.widgets.Button;
 public class EventsLoadedTests extends XWTTestCase {
 
 	public void testLoaded() throws Exception {
-		URL url = org.eclipse.e4.xwt.tests.events.loaded.Button.class.getResource(org.eclipse.e4.xwt.tests.events.loaded.Button.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = org.eclipse.e4.xwt.tests.events.loaded.Button.class
+				.getResource(org.eclipse.e4.xwt.tests.events.loaded.Button.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
@@ -20,7 +23,9 @@ public class EventsLoadedTests extends XWTTestCase {
 				Object element = XWT.findElementByName(root, "Button");
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
-				assertEquals(button.getText(), org.eclipse.e4.xwt.tests.events.loaded.ButtonHandler.Message);
+				assertEquals(
+						button.getText(),
+						org.eclipse.e4.xwt.tests.events.loaded.ButtonHandler.Message);
 			}
 		});
 	}

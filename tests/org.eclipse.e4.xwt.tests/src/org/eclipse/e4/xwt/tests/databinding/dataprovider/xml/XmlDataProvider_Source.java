@@ -20,7 +20,9 @@ public class XmlDataProvider_Source {
 	public static void main(String[] args) {
 		XWT.registerMetaclass(XmlDataProvider.class);
 
-		URL url = XmlDataProvider_Source.class.getResource(XmlDataProvider_Source.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = XmlDataProvider_Source.class
+				.getResource(XmlDataProvider_Source.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

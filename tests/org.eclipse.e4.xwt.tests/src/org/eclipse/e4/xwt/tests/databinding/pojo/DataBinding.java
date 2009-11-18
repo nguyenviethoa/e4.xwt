@@ -20,8 +20,10 @@ import org.eclipse.swt.widgets.Shell;
 
 public class DataBinding {
 	public static void main(String[] args) {
-		
-		URL url = DataBinding.class.getResource(DataBinding.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = DataBinding.class.getResource(DataBinding.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -32,7 +34,8 @@ public class DataBinding {
 	protected void onNew(Event event) {
 		Shell shell = (Shell) XWT.findElementByName(event.widget, "Root");
 		Company company = (Company) XWT.getDataContext(shell);
-		IObservableValue managerValue = XWT.observableValue(shell, company, "name");
+		IObservableValue managerValue = XWT.observableValue(shell, company,
+				"name");
 		managerValue.setValue("Eclipse");
 	}
 }

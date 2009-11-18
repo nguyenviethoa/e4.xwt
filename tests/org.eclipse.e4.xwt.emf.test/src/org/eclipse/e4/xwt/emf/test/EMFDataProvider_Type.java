@@ -24,9 +24,12 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 public class EMFDataProvider_Type {
 	public static void main(String[] args) {
 		EMFBinding.initialze();
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("ecore", new XMIResourceFactoryImpl());
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
+				"ecore", new XMIResourceFactoryImpl());
 
-		URL url = EMFDataProvider_Type.class.getResource(EMFDataProvider_Type.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = EMFDataProvider_Type.class
+				.getResource(EMFDataProvider_Type.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

@@ -22,7 +22,9 @@ import org.eclipse.e4.xwt.emf.EMFDataProvider;
 public class EMFDataProvider_FeatureName {
 	public static void main(String[] args) {
 		XWT.registerMetaclass(EMFDataProvider.class);
-		URL url = EMFDataProvider_FeatureName.class.getResource(EMFDataProvider_FeatureName.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = EMFDataProvider_FeatureName.class
+				.getResource(EMFDataProvider_FeatureName.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

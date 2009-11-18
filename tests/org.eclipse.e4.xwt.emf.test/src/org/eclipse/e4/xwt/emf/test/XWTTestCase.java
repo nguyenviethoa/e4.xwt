@@ -43,16 +43,20 @@ public abstract class XWTTestCase extends TestCase {
 		runTest(url, Collections.EMPTY_MAP, prepareAction, checkAction);
 	}
 
-	protected void runTest(URL url, Object dataContext, Runnable prepareAction, Runnable checkAction) {
+	protected void runTest(URL url, Object dataContext, Runnable prepareAction,
+			Runnable checkAction) {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
 		runTest(url, options, prepareAction, checkAction);
 	}
 
-	protected void runTest(final URL url, Map<String, Object> options, Runnable prepareAction, Runnable checkAction) {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+	protected void runTest(final URL url, Map<String, Object> options,
+			Runnable prepareAction, Runnable checkAction) {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
 		try {
-			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+			Thread.currentThread().setContextClassLoader(
+					this.getClass().getClassLoader());
 			root = XWT.loadWithOptions(url, options);
 			assertNotNull(root);
 			Shell shell = root.getShell();
@@ -82,10 +86,13 @@ public abstract class XWTTestCase extends TestCase {
 		}
 	}
 
-	protected void runDebugTest(final URL url, Runnable prepareAction, Runnable checkAction1) {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+	protected void runDebugTest(final URL url, Runnable prepareAction,
+			Runnable checkAction1) {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
 		try {
-			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+			Thread.currentThread().setContextClassLoader(
+					this.getClass().getClassLoader());
 			root = XWT.load(url);
 			assertNotNull(root);
 			Shell shell = root.getShell();
@@ -136,12 +143,11 @@ public abstract class XWTTestCase extends TestCase {
 		Text text = (Text) element;
 		text.setText(value);
 	}
-	
-	
+
 	protected void assertEqualsArray(Object[] source, Object[] target) {
 		assertEquals(source.length, target.length);
-		for(int i = 0; i<source.length; i++) {
-			assertEquals(source[i], target[i]);			
+		for (int i = 0; i < source.length; i++) {
+			assertEquals(source[i], target[i]);
 		}
 	}
 }

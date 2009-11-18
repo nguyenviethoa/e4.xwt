@@ -12,7 +12,8 @@ public abstract class RCPApplication implements IApplication {
 
 	final public Object start(IApplicationContext context) throws Exception {
 		Platform.endSplash();
-		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass().getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass()
+				.getClassLoader()));
 		initialize();
 		try {
 			URL input = getInputURL();

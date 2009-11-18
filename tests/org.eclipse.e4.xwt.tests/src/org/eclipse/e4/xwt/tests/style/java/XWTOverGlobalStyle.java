@@ -22,7 +22,8 @@ public class XWTOverGlobalStyle {
 	 */
 	public static void main(String[] args) {
 
-		URL url = XWTOverGlobalStyle.class.getResource("RedStyle" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = XWTOverGlobalStyle.class.getResource("RedStyle"
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.addDefaultStyle(new GreenStyle());
 			XWT.open(url);

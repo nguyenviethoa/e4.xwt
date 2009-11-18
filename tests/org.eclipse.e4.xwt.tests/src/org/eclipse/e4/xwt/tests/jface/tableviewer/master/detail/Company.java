@@ -31,7 +31,7 @@ public class Company {
 	public void setEmployees(Collection<Employee> employees) {
 		this.employees = employees;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

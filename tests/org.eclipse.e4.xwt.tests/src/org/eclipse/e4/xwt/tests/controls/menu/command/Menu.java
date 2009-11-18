@@ -22,7 +22,8 @@ import org.eclipse.e4.xwt.tests.controls.button.command.MessageCommand;
 public class Menu {
 	public static void main(String[] args) {
 		XWT.registerCommand("Message", new MessageCommand());
-		URL url = Menu.class.getResource(Menu.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Menu.class.getResource(Menu.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

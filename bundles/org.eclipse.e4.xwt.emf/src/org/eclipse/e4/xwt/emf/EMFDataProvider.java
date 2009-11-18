@@ -33,26 +33,28 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  */
 public class EMFDataProvider extends AbstractDataProvider {
 	static DataModelService dataModelService = new DataModelService() {
-		
+
 		public Object toModelType(Object data) {
 			return EMFHelper.toType(data);
 		}
-		
+
 		public Object loadModelType(String className) {
 			throw new UnsupportedOperationException();
 		}
-		
+
 		public Object toModelPropertyType(Object object, String propertyName) {
 			EClass type = (EClass) object;
-			EStructuralFeature structuralFeature = type.getEStructuralFeature(propertyName);
-			
+			EStructuralFeature structuralFeature = type
+					.getEStructuralFeature(propertyName);
+
 			if (structuralFeature == null) {
-				throw new XWTException(" Property \"" + propertyName + "\" is not found in the class " + type.getName());
+				throw new XWTException(" Property \"" + propertyName
+						+ "\" is not found in the class " + type.getName());
 			}
 			return structuralFeature.getEType();
 		}
 	};
-	
+
 	private URI typeURI;
 	private URI objectURI;
 
@@ -82,7 +84,8 @@ public class EMFDataProvider extends AbstractDataProvider {
 			throw new XWTException(propertyName + " feature is not found in "
 					+ EMFHelper.getQualifiedName(type));
 		}
-		return EMFObservables.observeValue(XWT.getRealm(), (EObject) bean, feature);
+		return EMFObservables.observeValue(XWT.getRealm(), (EObject) bean,
+				feature);
 	}
 
 	public IValueProperty observeValueProperty(Object valueType, String path,
@@ -198,30 +201,27 @@ public class EMFDataProvider extends AbstractDataProvider {
 	public boolean isPropertyReadOnly(String path) {
 		EClass classifier = getCurrentType();
 		if (classifier != null && path != null) {
-			EStructuralFeature feature = classifier.getEStructuralFeature(
-					featureName);
+			EStructuralFeature feature = classifier
+					.getEStructuralFeature(featureName);
 			if (feature != null) {
 				return !feature.isChangeable();
 			}
 		}
 		return true;
 	}
-	
+
 	protected EClass getCurrentType() {
 		Object instance = getTarget();
 		EClass eObj = null;
 		if (instance instanceof EObjectObservableValue) {
 			EObjectObservableValue observableValue = (EObjectObservableValue) instance;
 			eObj = (EClass) observableValue.getValueType();
-		}
-		else if (instance instanceof EObject) {
+		} else if (instance instanceof EObject) {
 			EObject object = (EObject) instance;
 			eObj = object.eClass();
-		}	
-		else if (instance instanceof EClass) {
+		} else if (instance instanceof EClass) {
 			eObj = (EClass) instance;
-		}
-		else {
+		} else {
 			if (typeURI != null) {
 				EObject element = getResourceSet().getEObject(typeURI, true);
 				if (element instanceof EClass) {
@@ -248,13 +248,13 @@ public class EMFDataProvider extends AbstractDataProvider {
 		}
 		if (classifier != null) {
 			String featureName = path;
-			EStructuralFeature feature = classifier.getEStructuralFeature(
-					featureName);
+			EStructuralFeature feature = classifier
+					.getEStructuralFeature(featureName);
 			if (feature != null) {
 				return feature.getEType();
 			}
 		}
-		
+
 		return classifier;
 	}
 
@@ -315,7 +315,7 @@ public class EMFDataProvider extends AbstractDataProvider {
 			}
 		}
 	}
-	
+
 	public DataModelService getModelService() {
 		return dataModelService;
 	}

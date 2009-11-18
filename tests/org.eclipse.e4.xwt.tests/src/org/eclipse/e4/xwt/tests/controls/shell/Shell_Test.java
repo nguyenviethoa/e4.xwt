@@ -32,7 +32,8 @@ public class Shell_Test {
 	private static List<Shell> shells = new ArrayList<Shell>();
 
 	public static void main(String[] args) {
-		URL url = Shell_Test.class.getResource(Shell_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Shell_Test.class.getResource(Shell_Test.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -49,7 +50,8 @@ public class Shell_Test {
 			if (control instanceof Group) {
 				Group grp = (Group) control;
 				String text = grp.getText();
-				if ("Decoration Styles".equals(text) || "Modal Styles".equals(text)) {
+				if ("Decoration Styles".equals(text)
+						|| "Modal Styles".equals(text)) {
 					style |= createStyle(grp);
 				}
 			}

@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class Button_AttachedProperty {
 	public static void main(String[] args) {
-		URL url = Button_AttachedProperty.class.getResource(Button_AttachedProperty.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Button_AttachedProperty.class
+				.getResource(Button_AttachedProperty.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

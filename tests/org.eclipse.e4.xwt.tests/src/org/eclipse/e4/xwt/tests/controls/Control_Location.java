@@ -17,7 +17,9 @@ import org.eclipse.e4.xwt.XWT;
 
 public class Control_Location {
 	public static void main(String[] args) {
-		URL url = Control_Location.class.getResource(Control_Location.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Control_Location.class.getResource(Control_Location.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

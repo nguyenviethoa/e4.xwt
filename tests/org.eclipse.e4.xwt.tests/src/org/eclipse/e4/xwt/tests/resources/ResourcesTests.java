@@ -11,7 +11,9 @@ import org.eclipse.swt.widgets.Label;
 public class ResourcesTests extends XWTTestCase {
 
 	public void testImage() throws Exception {
-		URL url = ResourcesTests.class.getResource(Image_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ResourcesTests.class.getResource(Image_Test.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkLabel();

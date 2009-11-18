@@ -15,11 +15,12 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
-
 public class DataBindingConverter_Element {
 	public static void main(String[] args) {
-		
-		URL url = DataBindingConverter_Element.class.getResource(DataBindingConverter_Element.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = DataBindingConverter_Element.class
+				.getResource(DataBindingConverter_Element.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

@@ -19,7 +19,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class Button_Styles {
 	public static void main(String[] args) {
-		URL url = Button_Styles.class.getResource(Button_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Button_Styles.class.getResource(Button_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

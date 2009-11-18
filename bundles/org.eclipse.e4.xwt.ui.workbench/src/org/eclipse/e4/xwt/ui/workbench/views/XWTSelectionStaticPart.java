@@ -22,7 +22,7 @@ public class XWTSelectionStaticPart extends XWTStaticPart {
 
 	public void setSelection(Object selection) {
 		dataContext = selection;
-		
+
 		refresh();
 	}
 }

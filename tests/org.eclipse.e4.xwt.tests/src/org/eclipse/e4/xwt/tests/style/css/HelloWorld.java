@@ -18,10 +18,11 @@ import org.eclipse.e4.xwt.css.CSSStyle;
 
 public class HelloWorld {
 	public static void main(String[] args) {
-		URL url = HelloWorld.class.getResource(HelloWorld.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = HelloWorld.class.getResource(HelloWorld.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
-			URL cssURL = HelloWorld.class.getResource("style.css");			
-			XWT.addDefaultStyle(new CSSStyle(cssURL));			
+			URL cssURL = HelloWorld.class.getResource("style.css");
+			XWT.addDefaultStyle(new CSSStyle(cssURL));
 			XWT.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();

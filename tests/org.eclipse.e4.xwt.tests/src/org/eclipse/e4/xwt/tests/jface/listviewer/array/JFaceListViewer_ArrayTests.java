@@ -13,7 +13,9 @@ import org.eclipse.swt.widgets.Button;
 public class JFaceListViewer_ArrayTests extends XWTTestCase {
 
 	public void testListViewer() throws Exception {
-		URL url = JFaceListViewer_ArrayTests.class.getResource(ListViewer.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceListViewer_ArrayTests.class.getResource(ListViewer.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
@@ -30,31 +32,31 @@ public class JFaceListViewer_ArrayTests extends XWTTestCase {
 			}
 		});
 	}
-	
+
 	public void test_ListViewer_DataBinding() {
-		URL url = JFaceListViewer_CollectionTests.class.getResource(ListViewer.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceListViewer_CollectionTests.class
+				.getResource(ListViewer.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button = (Button) XWT.findElementByName(root, "Button");
 				selectButton(button);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
 
 			public void checkButton() {
-				org.eclipse.jface.viewers.ListViewer listView = (org.eclipse.jface.viewers.ListViewer) XWT.findElementByName(root, "ListViewer");
+				org.eclipse.jface.viewers.ListViewer listView = (org.eclipse.jface.viewers.ListViewer) XWT
+						.findElementByName(root, "ListViewer");
 				assertTrue(listView.getInput() instanceof IObservableCollection);
-				IObservableCollection collection = (IObservableCollection) listView.getInput();
+				IObservableCollection collection = (IObservableCollection) listView
+						.getInput();
 				assertTrue(collection.size() == 3);
 			}
 		});
 	}
-
 
 	// TODO add Font and Color
 }

@@ -11,7 +11,8 @@ import org.eclipse.e4.xwt.tests.XWTTestCase;
 public class CLRTests extends XWTTestCase {
 
 	public void testCLR() throws Exception {
-		URL url = CLR.class.getResource(CLR.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = CLR.class.getResource(CLR.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Object element = XWT.getCLR(root);
@@ -21,7 +22,8 @@ public class CLRTests extends XWTTestCase {
 	}
 
 	public void testCLRComposite() throws Exception {
-		URL url = CLR.class.getResource(CLRComposite.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = CLR.class.getResource(CLRComposite.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Object element = XWT.getCLR(root);
@@ -30,9 +32,9 @@ public class CLRTests extends XWTTestCase {
 		});
 	}
 
-
 	public void testCLRNull() throws Exception {
-		URL url = CLR.class.getResource(CLRNull.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = CLR.class.getResource(CLRNull.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		final CLRNull clr = new CLRNull();
 		options.put(IXWTLoader.CLASS_PROPERTY, clr);

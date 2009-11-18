@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Control;
  */
 public abstract class XWTDynamicPart extends XWTAbstractPart {
 	protected IPartContentProvider contentProvider;
-	
+
 	protected IPartContentProvider getContentProvider() {
 		if (contentProvider == null) {
 			contentProvider = createContentProvider();

@@ -12,38 +12,38 @@ package org.eclipse.e4.xwt.emf.test.books.impl;
 
 import org.eclipse.e4.xwt.emf.test.books.Book;
 import org.eclipse.e4.xwt.emf.test.books.BooksPackage;
-
 import org.eclipse.e4.xwt.emf.test.books.Title;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Book</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Book</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookImpl#getAuthor <em>Author</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookImpl#getPrice <em>Price</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookImpl#getYear <em>Year</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookImpl#getTitle <em>Title</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookImpl#getAuthor <em>
+ * Author</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookImpl#getPrice <em>Price
+ * </em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookImpl#getYear <em>Year
+ * </em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookImpl#getTitle <em>Title
+ * </em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BookImpl extends EObjectImpl implements Book {
 	/**
-	 * The default value of the '{@link #getAuthor() <em>Author</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getAuthor() <em>Author</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getAuthor()
 	 * @generated
 	 * @ordered
@@ -52,8 +52,8 @@ public class BookImpl extends EObjectImpl implements Book {
 
 	/**
 	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getAuthor()
 	 * @generated
 	 * @ordered
@@ -62,8 +62,8 @@ public class BookImpl extends EObjectImpl implements Book {
 
 	/**
 	 * The default value of the '{@link #getPrice() <em>Price</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getPrice()
 	 * @generated
 	 * @ordered
@@ -72,8 +72,8 @@ public class BookImpl extends EObjectImpl implements Book {
 
 	/**
 	 * The cached value of the '{@link #getPrice() <em>Price</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getPrice()
 	 * @generated
 	 * @ordered
@@ -82,8 +82,8 @@ public class BookImpl extends EObjectImpl implements Book {
 
 	/**
 	 * The default value of the '{@link #getYear() <em>Year</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getYear()
 	 * @generated
 	 * @ordered
@@ -92,8 +92,8 @@ public class BookImpl extends EObjectImpl implements Book {
 
 	/**
 	 * The cached value of the '{@link #getYear() <em>Year</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getYear()
 	 * @generated
 	 * @ordered
@@ -101,9 +101,9 @@ public class BookImpl extends EObjectImpl implements Book {
 	protected long year = YEAR_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getTitle() <em>Title</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTitle() <em>Title</em>}' containment
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getTitle()
 	 * @generated
 	 * @ordered
@@ -111,8 +111,8 @@ public class BookImpl extends EObjectImpl implements Book {
 	protected Title title;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected BookImpl() {
@@ -120,8 +120,8 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -130,8 +130,8 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Title getTitle() {
@@ -139,15 +139,18 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public NotificationChain basicSetTitle(Title newTitle, NotificationChain msgs) {
+	public NotificationChain basicSetTitle(Title newTitle,
+			NotificationChain msgs) {
 		Title oldTitle = title;
 		title = newTitle;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, BooksPackage.BOOK__TITLE, oldTitle, newTitle);
+			ENotificationImpl notification = new ENotificationImpl(this,
+					Notification.SET, BooksPackage.BOOK__TITLE, oldTitle,
+					newTitle);
 			if (msgs == null)
 				msgs = notification;
 			else
@@ -157,31 +160,37 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setTitle(Title newTitle) {
 		if (newTitle != title) {
 			NotificationChain msgs = null;
 			if (title != null)
-				msgs = ((InternalEObject) title).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - BooksPackage.BOOK__TITLE, null, msgs);
+				msgs = ((InternalEObject) title).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - BooksPackage.BOOK__TITLE,
+						null, msgs);
 			if (newTitle != null)
-				msgs = ((InternalEObject) newTitle).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - BooksPackage.BOOK__TITLE, null, msgs);
+				msgs = ((InternalEObject) newTitle).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - BooksPackage.BOOK__TITLE,
+						null, msgs);
 			msgs = basicSetTitle(newTitle, msgs);
 			if (msgs != null)
 				msgs.dispatch();
 		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BooksPackage.BOOK__TITLE, newTitle, newTitle));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					BooksPackage.BOOK__TITLE, newTitle, newTitle));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case BooksPackage.BOOK__TITLE:
 			return basicSetTitle(null, msgs);
@@ -190,8 +199,8 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getAuthor() {
@@ -199,20 +208,21 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setAuthor(String newAuthor) {
 		String oldAuthor = author;
 		author = newAuthor;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BooksPackage.BOOK__AUTHOR, oldAuthor, author));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					BooksPackage.BOOK__AUTHOR, oldAuthor, author));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public double getPrice() {
@@ -220,20 +230,21 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setPrice(double newPrice) {
 		double oldPrice = price;
 		price = newPrice;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BooksPackage.BOOK__PRICE, oldPrice, price));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					BooksPackage.BOOK__PRICE, oldPrice, price));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public long getYear() {
@@ -241,20 +252,21 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setYear(long newYear) {
 		long oldYear = year;
 		year = newYear;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BooksPackage.BOOK__YEAR, oldYear, year));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					BooksPackage.BOOK__YEAR, oldYear, year));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -273,8 +285,8 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -297,8 +309,8 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -321,15 +333,16 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 		case BooksPackage.BOOK__AUTHOR:
-			return AUTHOR_EDEFAULT == null ? author != null : !AUTHOR_EDEFAULT.equals(author);
+			return AUTHOR_EDEFAULT == null ? author != null : !AUTHOR_EDEFAULT
+					.equals(author);
 		case BooksPackage.BOOK__PRICE:
 			return price != PRICE_EDEFAULT;
 		case BooksPackage.BOOK__YEAR:
@@ -341,8 +354,8 @@ public class BookImpl extends EObjectImpl implements Book {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -361,4 +374,4 @@ public class BookImpl extends EObjectImpl implements Book {
 		return result.toString();
 	}
 
-} //BookImpl
+} // BookImpl

@@ -18,7 +18,9 @@ import org.eclipse.e4.xwt.XWT;
 public class BindMenuItem {
 	public static void main(String[] args) {
 
-		URL url = BindMenuItem.class.getResource(BindMenuItem.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = BindMenuItem.class.getResource(BindMenuItem.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

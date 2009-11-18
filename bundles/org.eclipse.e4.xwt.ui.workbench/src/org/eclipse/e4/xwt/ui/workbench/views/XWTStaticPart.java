@@ -17,8 +17,9 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ui.workbench.IStaticPart;
 
 /**
- * The default class to handle the connection with e4 workbench.
- * As the value of data context. by default, there are two possibilities: Selection and DataContext 
+ * The default class to handle the connection with e4 workbench. As the value of
+ * data context. by default, there are two possibilities: Selection and
+ * DataContext
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
@@ -27,8 +28,10 @@ public class XWTStaticPart extends XWTAbstractPart implements IStaticPart {
 	protected void refresh() {
 		refresh(getURL(), getDataContext(), getClassLoader());
 	}
-		
+
 	public URL getURL() {
-		return this.getClass().getResource(this.getClass().getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		return this.getClass().getResource(
+				this.getClass().getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 	}
 }

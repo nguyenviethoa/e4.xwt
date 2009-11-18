@@ -10,32 +10,34 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.emf.test.books.impl;
 
-import org.eclipse.e4.xwt.emf.test.books.*;
-
+import org.eclipse.e4.xwt.emf.test.books.Book;
+import org.eclipse.e4.xwt.emf.test.books.BooksFactory;
+import org.eclipse.e4.xwt.emf.test.books.BooksPackage;
+import org.eclipse.e4.xwt.emf.test.books.Bookstore;
+import org.eclipse.e4.xwt.emf.test.books.Title;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Factory</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!--
+ * end-user-doc -->
+ * 
  * @generated
  */
 public class BooksFactoryImpl extends EFactoryImpl implements BooksFactory {
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates the default factory implementation. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static BooksFactory init() {
 		try {
-			BooksFactory theBooksFactory = (BooksFactory) EPackage.Registry.INSTANCE.getEFactory("org.eclipse.e4.xwt.emf/books.ecore");
+			BooksFactory theBooksFactory = (BooksFactory) EPackage.Registry.INSTANCE
+					.getEFactory("org.eclipse.e4.xwt.emf/books.ecore");
 			if (theBooksFactory != null) {
 				return theBooksFactory;
 			}
@@ -46,9 +48,9 @@ public class BooksFactoryImpl extends EFactoryImpl implements BooksFactory {
 	}
 
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BooksFactoryImpl() {
@@ -56,8 +58,8 @@ public class BooksFactoryImpl extends EFactoryImpl implements BooksFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -70,13 +72,14 @@ public class BooksFactoryImpl extends EFactoryImpl implements BooksFactory {
 		case BooksPackage.TITLE:
 			return createTitle();
 		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+			throw new IllegalArgumentException("The class '" + eClass.getName()
+					+ "' is not a valid classifier");
 		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Bookstore createBookstore() {
@@ -85,8 +88,8 @@ public class BooksFactoryImpl extends EFactoryImpl implements BooksFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Book createBook() {
@@ -95,8 +98,8 @@ public class BooksFactoryImpl extends EFactoryImpl implements BooksFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Title createTitle() {
@@ -105,8 +108,8 @@ public class BooksFactoryImpl extends EFactoryImpl implements BooksFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public BooksPackage getBooksPackage() {
@@ -114,8 +117,8 @@ public class BooksFactoryImpl extends EFactoryImpl implements BooksFactory {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -124,4 +127,4 @@ public class BooksFactoryImpl extends EFactoryImpl implements BooksFactory {
 		return BooksPackage.eINSTANCE;
 	}
 
-} //BooksFactoryImpl
+} // BooksFactoryImpl

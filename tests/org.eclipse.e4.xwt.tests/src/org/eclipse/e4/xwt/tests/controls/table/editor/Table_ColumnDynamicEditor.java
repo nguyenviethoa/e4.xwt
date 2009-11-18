@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class Table_ColumnDynamicEditor {
 	public static void main(String[] args) {
-		URL url = Table_ColumnDynamicEditor.class.getResource(Table_ColumnDynamicEditor.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Table_ColumnDynamicEditor.class
+				.getResource(Table_ColumnDynamicEditor.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

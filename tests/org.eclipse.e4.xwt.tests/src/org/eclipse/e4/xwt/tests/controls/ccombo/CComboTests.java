@@ -27,14 +27,16 @@ public class CComboTests extends XWTTestCase {
 				Object element = XWT.findElementByName(root, name);
 				assertTrue(element instanceof CCombo);
 				CCombo combo = (CCombo) element;
-				assertTrue((combo.getStyle() & style) == style);				
+				assertTrue((combo.getStyle() & style) == style);
 			}
 		};
-		
-		URL url = CCombo_Styles.class.getResource(CCombo_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = CCombo_Styles.class.getResource(CCombo_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, prepare, checker);
 	}
-	
+
 	public void testCComboItems() throws Exception {
 		Runnable prepare = new Runnable() {
 			public void run() {
@@ -43,7 +45,8 @@ public class CComboTests extends XWTTestCase {
 
 		Runnable checker = new Runnable() {
 			public void run() {
-				checkComboItems("combo1", new String[] {"Item1", "Item2", "Item3", "Item4"});
+				checkComboItems("combo1", new String[] { "Item1", "Item2",
+						"Item3", "Item4" });
 			}
 
 			public void checkComboItems(String name, String[] items) {
@@ -53,8 +56,10 @@ public class CComboTests extends XWTTestCase {
 				assertEqualsArray(combo.getItems(), items);
 			}
 		};
-		
-		URL url = CCombo_Styles.class.getResource(CCombo_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = CCombo_Styles.class.getResource(CCombo_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, prepare, checker);
 	}
 
@@ -76,8 +81,10 @@ public class CComboTests extends XWTTestCase {
 				assertEquals(combo.getText(), item);
 			}
 		};
-		
-		URL url = CCombo_Styles.class.getResource(CCombo_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = CCombo_Styles.class.getResource(CCombo_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, prepare, checker);
 	}
 }

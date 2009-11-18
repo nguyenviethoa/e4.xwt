@@ -7,7 +7,8 @@ public class CSSHandler implements INamespaceHandler {
 	public static final String NAMESPACE = "http://www.eclipse.org/css";
 	public static final CSSHandler handler = new CSSHandler();
 
-	public void handleAttribute(Widget widget, Object target, String name, String value) {
+	public void handleAttribute(Widget widget, Object target, String name,
+			String value) {
 		widget.setData("org.eclipse.e4.ui.css." + name, value);
 	}
 }

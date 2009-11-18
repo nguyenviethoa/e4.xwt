@@ -21,13 +21,9 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
-import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
-import org.eclipse.e4.xwt.metadata.IMetaclass;
-import org.eclipse.e4.xwt.metadata.IProperty;
 
 /**
  * @author jliu (jin.liu@soyatec.com)

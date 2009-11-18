@@ -27,14 +27,16 @@ public class ComboTests extends XWTTestCase {
 				Object element = XWT.findElementByName(root, name);
 				assertTrue(element instanceof Combo);
 				Combo combo = (Combo) element;
-				assertTrue((combo.getStyle() & style) == style);				
+				assertTrue((combo.getStyle() & style) == style);
 			}
 		};
-		
-		URL url = Combo_Styles.class.getResource(Combo_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = Combo_Styles.class.getResource(Combo_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, prepare, checker);
 	}
-	
+
 	public void testComboItems() throws Exception {
 		Runnable prepare = new Runnable() {
 			public void run() {
@@ -43,7 +45,8 @@ public class ComboTests extends XWTTestCase {
 
 		Runnable checker = new Runnable() {
 			public void run() {
-				checkComboItems("combo1", new String[] {"Item1", "Item2", "Item3", "Item4"});
+				checkComboItems("combo1", new String[] { "Item1", "Item2",
+						"Item3", "Item4" });
 			}
 
 			public void checkComboItems(String name, String[] items) {
@@ -53,8 +56,10 @@ public class ComboTests extends XWTTestCase {
 				assertEqualsArray(combo.getItems(), items);
 			}
 		};
-		
-		URL url = Combo_Styles.class.getResource(Combo_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = Combo_Styles.class.getResource(Combo_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, prepare, checker);
 	}
 
@@ -76,8 +81,10 @@ public class ComboTests extends XWTTestCase {
 				assertEquals(combo.getText(), item);
 			}
 		};
-		
-		URL url = Combo_Styles.class.getResource(Combo_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = Combo_Styles.class.getResource(Combo_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, prepare, checker);
 	}
 }

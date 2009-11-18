@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.databinding;
 
-public class Person extends BeanObject{
+public class Person extends BeanObject {
 	private String name = "toto";
 	private int age = 10;
 	private boolean maried = true;
@@ -54,6 +54,7 @@ public class Person extends BeanObject{
 	public String getName() {
 		return name;
 	}
+
 	public Address getAddress() {
 		return address;
 	}

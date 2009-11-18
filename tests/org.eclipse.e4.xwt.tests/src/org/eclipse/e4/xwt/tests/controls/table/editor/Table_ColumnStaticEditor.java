@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class Table_ColumnStaticEditor {
 	public static void main(String[] args) {
-		URL url = Table_ColumnStaticEditor.class.getResource(Table_ColumnStaticEditor.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Table_ColumnStaticEditor.class
+				.getResource(Table_ColumnStaticEditor.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

@@ -11,7 +11,7 @@ public class TriggerTests extends XWTTestCase {
 
 	public TriggerTests() {
 	}
-	
+
 	public void test_Button_Trigger() {
 		URL url = TriggerTests.class.getResource(Button_Click_Trigger.class
 				.getSimpleName()
@@ -21,8 +21,7 @@ public class TriggerTests extends XWTTestCase {
 				Button button = (Button) XWT.findElementByName(root, "Button");
 				selectButton(button);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -33,18 +32,18 @@ public class TriggerTests extends XWTTestCase {
 			}
 		});
 	}
-	
+
 	public void test_Button_Trigger_SourceName() {
-		URL url = TriggerTests.class.getResource(Button_Click_Trigger_SourceName.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = TriggerTests.class
+				.getResource(Button_Click_Trigger_SourceName.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button = (Button) XWT.findElementByName(root, "Button");
 				selectButton(button);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -58,16 +57,16 @@ public class TriggerTests extends XWTTestCase {
 	}
 
 	public void test_Button_Trigger_Setter_TargetName() {
-		URL url = TriggerTests.class.getResource(Button_Click_Trigger_Setter_TargetName.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = TriggerTests.class
+				.getResource(Button_Click_Trigger_Setter_TargetName.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button = (Button) XWT.findElementByName(root, "Button");
 				selectButton(button);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -80,17 +79,17 @@ public class TriggerTests extends XWTTestCase {
 	}
 
 	public void test_Button_Trigger_Setter_TargetName2() {
-		URL url = TriggerTests.class.getResource(Button_Click_Trigger_Setter_TargetName.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = TriggerTests.class
+				.getResource(Button_Click_Trigger_Setter_TargetName.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button = (Button) XWT.findElementByName(root, "Button");
 				selectButton(button, true);
 				selectButton(button, false);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -103,16 +102,16 @@ public class TriggerTests extends XWTTestCase {
 	}
 
 	public void test_Button_Trigger_SourceName_Setter_TargetName() {
-		URL url = TriggerTests.class.getResource(Button_Click_Trigger_SourceName_Setter_TargetName.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = TriggerTests.class
+				.getResource(Button_Click_Trigger_SourceName_Setter_TargetName.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button = (Button) XWT.findElementByName(root, "source");
 				selectButton(button);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -125,16 +124,16 @@ public class TriggerTests extends XWTTestCase {
 	}
 
 	public void test_Button_Click_Trigger_EventProperty() {
-		URL url = TriggerTests.class.getResource(Button_Click_Trigger_EventProperty.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = TriggerTests.class
+				.getResource(Button_Click_Trigger_EventProperty.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button = (Button) XWT.findElementByName(root, "source");
 				selectButton(button);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -147,17 +146,17 @@ public class TriggerTests extends XWTTestCase {
 	}
 
 	public void test_Button_Click_Trigger_EventProperty2() {
-		URL url = TriggerTests.class.getResource(Button_Click_Trigger_EventProperty.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = TriggerTests.class
+				.getResource(Button_Click_Trigger_EventProperty.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button = (Button) XWT.findElementByName(root, "source");
 				selectButton(button, true);
 				selectButton(button, false);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}

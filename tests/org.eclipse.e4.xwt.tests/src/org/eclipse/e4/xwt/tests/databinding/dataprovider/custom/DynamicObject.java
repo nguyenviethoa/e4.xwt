@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class DynamicObject {
 	protected Map<String, Object> properties = new HashMap<String, Object>();
-	
+
 	public Object getProperty(String name) {
 		return getProperty(name, null);
 	}
@@ -31,7 +31,7 @@ public class DynamicObject {
 		}
 		return value;
 	}
-	
+
 	public void setProperty(String name, Object value) {
 		properties.put(name, value);
 	}

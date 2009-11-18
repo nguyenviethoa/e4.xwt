@@ -27,7 +27,8 @@ public class EventHandler {
 		if (widget.getSelection()) {
 			Shell shell = (Shell) XWT.findElementByName(widget, "Root");
 			DataFactory dataFactory = (DataFactory) XWT.getDataContext(shell);
-			dataFactory.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW));
+			dataFactory.setBackground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_YELLOW));
 		}
 	}
 
@@ -36,7 +37,8 @@ public class EventHandler {
 		if (widget.getSelection()) {
 			Shell shell = (Shell) XWT.findElementByName(event.widget, "Root");
 			DataFactory dataFactory = (DataFactory) XWT.getDataContext(shell);
-			dataFactory.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
+			dataFactory.setBackground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_GRAY));
 		}
 
 	}

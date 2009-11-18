@@ -10,7 +10,9 @@ import org.eclipse.jface.viewers.ListViewer;
 public class JFaceTests extends XWTTestCase {
 
 	public void testListViewer() throws Exception {
-		URL url = JFaceTests.class.getResource(ListViewer_Name.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTests.class.getResource(ListViewer_Name.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();

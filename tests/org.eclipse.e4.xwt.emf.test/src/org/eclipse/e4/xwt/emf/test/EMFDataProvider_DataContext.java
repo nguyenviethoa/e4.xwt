@@ -28,7 +28,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class EMFDataProvider_DataContext {
 	public static void main(String[] args) {
 		EMFBinding.initialze();
-		URL url = EMFDataProvider_DataContext.class.getResource(EMFDataProvider_DataContext.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = EMFDataProvider_DataContext.class
+				.getResource(EMFDataProvider_DataContext.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url, createBook());
 		} catch (Exception e) {

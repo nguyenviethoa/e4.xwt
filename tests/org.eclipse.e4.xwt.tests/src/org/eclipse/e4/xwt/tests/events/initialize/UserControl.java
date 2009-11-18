@@ -31,7 +31,9 @@ public class UserControl extends Composite {
 
 	public static void main(String[] args) {
 
-		URL url = UserControl.class.getResource(UserControl.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = UserControl.class.getResource(UserControl.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

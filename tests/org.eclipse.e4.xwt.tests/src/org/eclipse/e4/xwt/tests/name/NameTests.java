@@ -11,7 +11,8 @@ import org.eclipse.swt.widgets.MenuItem;
 public class NameTests extends XWTTestCase {
 
 	public void testName() throws Exception {
-		URL url = NameTests.class.getResource(Name.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = NameTests.class.getResource(Name.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Object element = XWT.findElementByName(root, "Message");
@@ -21,7 +22,8 @@ public class NameTests extends XWTTestCase {
 	}
 
 	public void testNameX() throws Exception {
-		URL url = NameTests.class.getResource(Name_x.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = NameTests.class.getResource(Name_x.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Object element = XWT.findElementByName(root, "Message");
@@ -31,7 +33,8 @@ public class NameTests extends XWTTestCase {
 	}
 
 	public void testNameMenu() throws Exception {
-		URL url = NameTests.class.getResource(Name_Menu.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = NameTests.class.getResource(Name_Menu.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				Object element = XWT.findElementByName(root, "Message");

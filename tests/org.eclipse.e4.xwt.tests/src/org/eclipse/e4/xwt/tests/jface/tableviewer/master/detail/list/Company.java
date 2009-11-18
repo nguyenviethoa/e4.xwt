@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.list;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ public class Company {
 	public void setEmployees(List<Employee> employees) {
 		this.employees = employees;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

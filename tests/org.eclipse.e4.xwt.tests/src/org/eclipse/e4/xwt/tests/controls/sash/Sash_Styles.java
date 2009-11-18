@@ -27,7 +27,9 @@ import org.eclipse.swt.widgets.Text;
  */
 public class Sash_Styles {
 	public static void main(String[] args) {
-		URL url = Sash_Styles.class.getResource(Sash_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Sash_Styles.class.getResource(Sash_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -48,7 +50,8 @@ public class Sash_Styles {
 	protected void handleVerticalMove(Event event) {
 		checkInit(event);
 		Rectangle rect = vSash.getParent().getClientArea();
-		event.x = Math.min(Math.max(event.x, SASH_LIMIT), rect.width - SASH_LIMIT);
+		event.x = Math.min(Math.max(event.x, SASH_LIMIT), rect.width
+				- SASH_LIMIT);
 		if (event.detail != SWT.DRAG) {
 			vSash.setBounds(event.x, event.y, event.width, event.height);
 			layout();
@@ -66,7 +69,8 @@ public class Sash_Styles {
 			hSash = (Sash) XWT.findElementByName(event.widget, "hSash");
 		}
 		if (sashComp == null) {
-			sashComp = (Composite) XWT.findElementByName(event.widget, "sashComp");
+			sashComp = (Composite) XWT.findElementByName(event.widget,
+					"sashComp");
 		}
 		if (list1 == null) {
 			list1 = (List) XWT.findElementByName(event.widget, "list1");
@@ -86,11 +90,14 @@ public class Sash_Styles {
 		Rectangle vSashBounds = vSash.getBounds();
 
 		list1.setBounds(0, 0, vSashBounds.x, hSashBounds.y);
-		list2.setBounds(vSashBounds.x + vSashBounds.width, 0, clientArea.width - (vSashBounds.x + vSashBounds.width), hSashBounds.y);
-		text.setBounds(0, hSashBounds.y + hSashBounds.height, clientArea.width, clientArea.height - (hSashBounds.y + hSashBounds.height));
+		list2.setBounds(vSashBounds.x + vSashBounds.width, 0, clientArea.width
+				- (vSashBounds.x + vSashBounds.width), hSashBounds.y);
+		text.setBounds(0, hSashBounds.y + hSashBounds.height, clientArea.width,
+				clientArea.height - (hSashBounds.y + hSashBounds.height));
 
 		/**
-		 * If the horizontal sash has been moved then the vertical sash is either too long or too short and its size must be adjusted.
+		 * If the horizontal sash has been moved then the vertical sash is
+		 * either too long or too short and its size must be adjusted.
 		 */
 		vSashBounds.height = hSashBounds.y;
 		vSash.setBounds(vSashBounds);
@@ -99,7 +106,8 @@ public class Sash_Styles {
 	protected void handleHorizontalMove(Event event) {
 		checkInit(event);
 		Rectangle rect = vSash.getParent().getClientArea();
-		event.y = Math.min(Math.max(event.y, SASH_LIMIT), rect.height - SASH_LIMIT);
+		event.y = Math.min(Math.max(event.y, SASH_LIMIT), rect.height
+				- SASH_LIMIT);
 		if (event.detail != SWT.DRAG) {
 			hSash.setBounds(event.x, event.y, event.width, event.height);
 			layout();
@@ -112,20 +120,28 @@ public class Sash_Styles {
 		Rectangle clientArea = sashComp.getClientArea();
 
 		/*
-		 * Make list 1 half the width and half the height of the tab leaving room for the sash. Place list 1 in the top left quadrant of the tab.
+		 * Make list 1 half the width and half the height of the tab leaving
+		 * room for the sash. Place list 1 in the top left quadrant of the tab.
 		 */
-		Rectangle list1Bounds = new Rectangle(0, 0, (clientArea.width - SASH_WIDTH) / 2, (clientArea.height - SASH_WIDTH) / 2);
+		Rectangle list1Bounds = new Rectangle(0, 0,
+				(clientArea.width - SASH_WIDTH) / 2,
+				(clientArea.height - SASH_WIDTH) / 2);
 		list1.setBounds(list1Bounds);
 
 		/*
-		 * Make list 2 half the width and half the height of the tab leaving room for the sash. Place list 2 in the top right quadrant of the tab.
+		 * Make list 2 half the width and half the height of the tab leaving
+		 * room for the sash. Place list 2 in the top right quadrant of the tab.
 		 */
-		list2.setBounds(list1Bounds.width + SASH_WIDTH, 0, clientArea.width - (list1Bounds.width + SASH_WIDTH), list1Bounds.height);
+		list2.setBounds(list1Bounds.width + SASH_WIDTH, 0, clientArea.width
+				- (list1Bounds.width + SASH_WIDTH), list1Bounds.height);
 
 		/*
-		 * Make the text area the full width and half the height of the tab leaving room for the sash. Place the text area in the bottom half of the tab.
+		 * Make the text area the full width and half the height of the tab
+		 * leaving room for the sash. Place the text area in the bottom half of
+		 * the tab.
 		 */
-		text.setBounds(0, list1Bounds.height + SASH_WIDTH, clientArea.width, clientArea.height - (list1Bounds.height + SASH_WIDTH));
+		text.setBounds(0, list1Bounds.height + SASH_WIDTH, clientArea.width,
+				clientArea.height - (list1Bounds.height + SASH_WIDTH));
 
 		/* Position the sashes */
 		vSash.setBounds(list1Bounds.width, 0, SASH_WIDTH, list1Bounds.height);

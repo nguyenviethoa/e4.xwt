@@ -23,8 +23,9 @@ import org.eclipse.swt.widgets.Label;
  */
 public class Name_x {
 	public static void main(String[] args) {
-		
-		URL url = Name_x.class.getResource(Name_x.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = Name_x.class.getResource(Name_x.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -35,9 +36,11 @@ public class Name_x {
 	protected void handleButton(Event event) {
 		Label message = (Label) XWT.findElementByName(event.widget, "Message");
 		if (message == null) {
-			MessageDialog.openError(XWT.findShell(event.widget), "Test Name", "Label message is not found");
+			MessageDialog.openError(XWT.findShell(event.widget), "Test Name",
+					"Label message is not found");
 		} else {
-			MessageDialog.openInformation(XWT.findShell(event.widget), "Test Name", "Name works.");
+			MessageDialog.openInformation(XWT.findShell(event.widget),
+					"Test Name", "Name works.");
 		}
 	}
 }

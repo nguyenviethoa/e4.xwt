@@ -21,7 +21,9 @@ import org.eclipse.e4.xwt.XWT;
 public class ObjectDataProvider_Method {
 	public static void main(String[] args) {
 
-		URL url = ObjectDataProvider_Method.class.getResource(ObjectDataProvider_Method.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ObjectDataProvider_Method.class
+				.getResource(ObjectDataProvider_Method.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

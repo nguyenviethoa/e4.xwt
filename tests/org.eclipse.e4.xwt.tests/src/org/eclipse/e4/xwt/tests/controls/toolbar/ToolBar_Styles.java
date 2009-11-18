@@ -28,8 +28,10 @@ import org.eclipse.swt.widgets.ToolItem;
  */
 public class ToolBar_Styles {
 	public static void main(String[] args) {
-		
-		URL url = ToolBar_Styles.class.getResource(ToolBar_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = ToolBar_Styles.class.getResource(ToolBar_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -46,7 +48,8 @@ public class ToolBar_Styles {
 		if (menu == null) {
 			// Lazy create the menu.
 			ToolBar toolbar = ((ToolItem) toolItem).getParent();
-			int style = toolbar.getStyle() & (SWT.RIGHT_TO_LEFT | SWT.LEFT_TO_RIGHT);
+			int style = toolbar.getStyle()
+					& (SWT.RIGHT_TO_LEFT | SWT.LEFT_TO_RIGHT);
 			menu = new Menu(shell, style | SWT.POP_UP);
 			for (int i = 0; i < 9; ++i) {
 				final String text = "Drop Down " + i;
@@ -60,13 +63,16 @@ public class ToolBar_Styles {
 		}
 
 		/**
-		 * A selection event will be fired when a drop down tool item is selected in the main area and in the drop down arrow. Examine the event detail to determine where the widget was selected.
+		 * A selection event will be fired when a drop down tool item is
+		 * selected in the main area and in the drop down arrow. Examine the
+		 * event detail to determine where the widget was selected.
 		 */
 		if (event.detail == SWT.ARROW) {
 			/*
 			 * The drop down arrow was selected.
 			 */
-			// Position the menu below and vertically aligned with the the drop down tool button.
+			// Position the menu below and vertically aligned with the the drop
+			// down tool button.
 			final ToolBar toolBar = toolItem.getParent();
 
 			Point point = toolBar.toDisplay(new Point(event.x, event.y));

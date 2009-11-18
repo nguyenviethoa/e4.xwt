@@ -11,7 +11,9 @@ import org.eclipse.swt.widgets.Text;
 public class PojoDataBindingTests extends XWTTestCase {
 
 	public void testDataBinding() throws Exception {
-		URL url = PojoDataBindingTests.class.getResource(DataBinding.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = PojoDataBindingTests.class.getResource(DataBinding.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
@@ -36,7 +38,9 @@ public class PojoDataBindingTests extends XWTTestCase {
 	}
 
 	public void testDataBindingPath() throws Exception {
-		URL url = PojoDataBindingTests.class.getResource(DataBindingPath.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = PojoDataBindingTests.class.getResource(DataBindingPath.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();

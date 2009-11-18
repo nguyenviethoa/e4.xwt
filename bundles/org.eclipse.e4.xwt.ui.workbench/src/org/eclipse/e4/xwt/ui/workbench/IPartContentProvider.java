@@ -18,21 +18,21 @@ import java.net.URL;
  * @author yyang (yves.yang@soyatec.com)
  */
 public interface IPartContentProvider {
-	
+
 	/**
-	 * Content stream 
+	 * Content stream
 	 * 
 	 * @return
 	 */
 	InputStream getContent();
-	
+
 	/**
-	 * Resource location, used to resolve relative resources 
+	 * Resource location, used to resolve relative resources
 	 * 
 	 * @return
 	 */
 	URL getBase();
-	
+
 	/**
 	 * Resource loader
 	 * 

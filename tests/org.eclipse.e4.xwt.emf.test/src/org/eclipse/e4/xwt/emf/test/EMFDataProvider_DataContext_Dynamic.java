@@ -30,7 +30,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class EMFDataProvider_DataContext_Dynamic {
 	public static void main(String[] args) {
 		EMFBinding.initialze();
-		URL url = EMFDataProvider_DataContext_Dynamic.class.getResource(EMFDataProvider_DataContext_Dynamic.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = EMFDataProvider_DataContext_Dynamic.class
+				.getResource(EMFDataProvider_DataContext_Dynamic.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url, createBook());
 		} catch (Exception e) {

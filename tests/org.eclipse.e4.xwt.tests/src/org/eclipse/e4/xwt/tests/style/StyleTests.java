@@ -28,8 +28,7 @@ public class StyleTests extends XWTTestCase {
 				Button button = (Button) XWT.findElementByName(root, "Button");
 				selectButton(button);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}

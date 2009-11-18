@@ -22,8 +22,10 @@ public class DataFactory {
 	private boolean visible = true;
 	private boolean enabled = true;
 	private String text = "text";
-	private Color background = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY);
-	private Color foreground = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED);
+	private Color background = Display.getCurrent().getSystemColor(
+			SWT.COLOR_DARK_GRAY);
+	private Color foreground = Display.getCurrent().getSystemColor(
+			SWT.COLOR_DARK_RED);
 
 	/**
 	 * @param visible

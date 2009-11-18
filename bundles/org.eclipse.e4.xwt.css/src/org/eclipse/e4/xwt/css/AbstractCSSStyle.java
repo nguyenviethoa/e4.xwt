@@ -66,7 +66,8 @@ public abstract class AbstractCSSStyle implements IStyle, CSSErrorHandler {
 		try {
 			// FIXME : Yves, jfaceViewerClass and getControl, can be cached, or
 			// is it OSGI constraint?
-			jfaceViewerClass = Class.forName("org.eclipse.jface.viewers.Viewer"); //$NON-NLS-1$
+			jfaceViewerClass = Class
+					.forName("org.eclipse.jface.viewers.Viewer"); //$NON-NLS-1$
 			getControl = jfaceViewerClass.getMethod("getControl");
 		} catch (Throwable e) {
 		}
@@ -104,14 +105,16 @@ public abstract class AbstractCSSStyle implements IStyle, CSSErrorHandler {
 				Method urlResolver = null;
 				try {
 					Class<?> fileLocatorClass = loadClass("org.eclipse.core.runtime.FileLocator"); //$NON-NLS-1$
-					urlResolver = fileLocatorClass.getMethod("resolve", new Class[] { URL.class }); //$NON-NLS-1$
+					urlResolver = fileLocatorClass.getMethod(
+							"resolve", new Class[] { URL.class }); //$NON-NLS-1$
 				} catch (Throwable e) {
 				}
 
 				URL contentURL = url;
 				if (urlResolver != null) {
 					try {
-						contentURL = (URL) urlResolver.invoke(null, new Object[] { contentURL });
+						contentURL = (URL) urlResolver.invoke(null,
+								new Object[] { contentURL });
 					} catch (Throwable e) {
 
 					}
@@ -123,7 +126,8 @@ public abstract class AbstractCSSStyle implements IStyle, CSSErrorHandler {
 				stream.close();
 			}
 		} catch (Throwable e) {
-			System.err.println("Warning - could not initialize CSS styling : " + e.toString()); //$NON-NLS-1$
+			System.err
+					.println("Warning - could not initialize CSS styling : " + e.toString()); //$NON-NLS-1$
 		}
 	}
 
@@ -144,7 +148,8 @@ public abstract class AbstractCSSStyle implements IStyle, CSSErrorHandler {
 	}
 
 	public void setContent(String content) {
-		if (this.content == content || (this.content != null && this.content.equals(content))) {
+		if (this.content == content
+				|| (this.content != null && this.content.equals(content))) {
 			return;
 		}
 		this.content = content;
@@ -196,11 +201,13 @@ public abstract class AbstractCSSStyle implements IStyle, CSSErrorHandler {
 		throw new XWTException(e);
 	}
 
-	protected Class<?> loadClass(String className) throws ClassNotFoundException {
+	protected Class<?> loadClass(String className)
+			throws ClassNotFoundException {
 		try {
 			return Class.forName(className); //$NON-NLS-1$
 		} catch (ClassNotFoundException e) {
-			return Thread.currentThread().getContextClassLoader().loadClass(className);
+			return Thread.currentThread().getContextClassLoader().loadClass(
+					className);
 		}
 	}
 

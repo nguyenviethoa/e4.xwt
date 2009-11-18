@@ -11,7 +11,9 @@ import org.eclipse.swt.widgets.Text;
 public class DataBindingTests extends XWTTestCase {
 
 	public void testDataBindingPath() throws Exception {
-		URL url = DataBindingTests.class.getResource(DataBindingPath.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = DataBindingTests.class.getResource(DataBindingPath.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
@@ -37,9 +39,11 @@ public class DataBindingTests extends XWTTestCase {
 		});
 	}
 
-
 	public void testDataBindingPath_UpdateSourceTrigger() throws Exception {
-		URL url = DataBindingTests.class.getResource(DataBinding_UpdateSourceTrigger.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = DataBindingTests.class
+				.getResource(DataBinding_UpdateSourceTrigger.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
@@ -70,7 +74,10 @@ public class DataBindingTests extends XWTTestCase {
 	}
 
 	public void testDataBindingPath_UpdateSourceTrigger_2() throws Exception {
-		URL url = DataBindingTests.class.getResource(DataBinding_UpdateSourceTrigger.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = DataBindingTests.class
+				.getResource(DataBinding_UpdateSourceTrigger.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();

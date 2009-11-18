@@ -23,8 +23,9 @@ import org.eclipse.swt.widgets.Event;
 public class Name {
 
 	public static void main(String[] args) {
-		
-		URL url = Name.class.getResource(Name.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = Name.class.getResource(Name.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -34,9 +35,11 @@ public class Name {
 
 	protected void findElement(Event event) {
 		if (XWT.findElementByName(event.widget, "target") != null) {
-			MessageDialog.openInformation(XWT.findShell(event.widget), "Message", "Element is Found");
+			MessageDialog.openInformation(XWT.findShell(event.widget),
+					"Message", "Element is Found");
 		} else {
-			MessageDialog.openError(XWT.findShell(event.widget), "Message", "No Found");
+			MessageDialog.openError(XWT.findShell(event.widget), "Message",
+					"No Found");
 		}
 	}
 }

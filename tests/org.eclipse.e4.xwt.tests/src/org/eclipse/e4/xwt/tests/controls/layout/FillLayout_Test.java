@@ -26,8 +26,10 @@ import org.eclipse.swt.widgets.Widget;
 
 public class FillLayout_Test {
 	public static void main(String[] args) {
-		
-		URL url = FillLayout_Test.class.getResource(FillLayout_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = FillLayout_Test.class.getResource(FillLayout_Test.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -40,7 +42,8 @@ public class FillLayout_Test {
 			Control control = (Control) widget;
 			Composite parent = control.getParent();
 			for (Control child : parent.getChildren()) {
-				if (child instanceof Group && (("layout".equals(((Group) child).getText())))) {
+				if (child instanceof Group
+						&& (("layout".equals(((Group) child).getText())))) {
 					return ((Group) child);
 				}
 			}

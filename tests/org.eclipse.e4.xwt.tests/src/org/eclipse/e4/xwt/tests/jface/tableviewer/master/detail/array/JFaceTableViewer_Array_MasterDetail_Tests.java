@@ -15,7 +15,9 @@ import org.eclipse.swt.widgets.Text;
 public class JFaceTableViewer_Array_MasterDetail_Tests extends XWTTestCase {
 
 	public void testTableViewer_MasterDetail() throws Exception {
-		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class.getResource(TableViewer_MasterDetail.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class
+				.getResource(TableViewer_MasterDetail.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
@@ -34,7 +36,7 @@ public class JFaceTableViewer_Array_MasterDetail_Tests extends XWTTestCase {
 			}
 		});
 	}
-	
+
 	public void testTableViewer_MasterDetail_DetailDisplay() throws Exception {
 		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class
 				.getResource(TableViewer_MasterDetail.class.getSimpleName()
@@ -145,7 +147,7 @@ public class JFaceTableViewer_Array_MasterDetail_Tests extends XWTTestCase {
 				TableViewer tableViewer = (TableViewer) element;
 				TableItem[] items = tableViewer.getTable().getItems();
 				assertTrue(items.length == 2);
-				
+
 				Industry industry = (Industry) XWT.getDataContext(element);
 				Company company = null;
 				for (Company memeber : industry.getMembers()) {
@@ -173,7 +175,8 @@ public class JFaceTableViewer_Array_MasterDetail_Tests extends XWTTestCase {
 		});
 	}
 
-	public void testTableViewer_MasterDetail_NestedTable_AddInput() throws Exception {
+	public void testTableViewer_MasterDetail_NestedTable_AddInput()
+			throws Exception {
 		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class
 				.getResource(TableViewer_MasterDetail_NestedTable_AddInput.class
 						.getSimpleName()
@@ -183,7 +186,7 @@ public class JFaceTableViewer_Array_MasterDetail_Tests extends XWTTestCase {
 				// select a table company
 				Object element = XWT.findElementByName(root, "AddButton");
 				assertTrue(element instanceof Button);
-				selectButton((Button)element);
+				selectButton((Button) element);
 			}
 		}, new Runnable() {
 			public void run() {
@@ -196,7 +199,8 @@ public class JFaceTableViewer_Array_MasterDetail_Tests extends XWTTestCase {
 		});
 	}
 
-	public void testTableViewer_MasterDetail_NestedTable_AddPath() throws Exception {
+	public void testTableViewer_MasterDetail_NestedTable_AddPath()
+			throws Exception {
 		URL url = JFaceTableViewer_Array_MasterDetail_Tests.class
 				.getResource(TableViewer_MasterDetail_NestedTable_AddPath.class
 						.getSimpleName()
@@ -206,7 +210,7 @@ public class JFaceTableViewer_Array_MasterDetail_Tests extends XWTTestCase {
 				// select a table company
 				Object element = XWT.findElementByName(root, "AddButton");
 				assertTrue(element instanceof Button);
-				selectButton((Button)element);
+				selectButton((Button) element);
 			}
 		}, new Runnable() {
 			public void run() {

@@ -21,8 +21,9 @@ import org.eclipse.e4.xwt.XWT;
 public class Trigger2 {
 
 	public static void main(String[] args) {
-		
-		URL url = Trigger2.class.getResource(Trigger2.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = Trigger2.class.getResource(Trigger2.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

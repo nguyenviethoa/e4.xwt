@@ -10,8 +10,11 @@ import org.eclipse.swt.widgets.Label;
 public class NamespaceHandlerTests extends XWTTestCase {
 
 	public void testLabelExt() throws Exception {
-		XWT.registerNamspaceHandler("http://www.eclipse.org/ext", new ExtHandler());
-		URL url = NamespaceHandlerTests.class.getResource(LabelExt.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		XWT.registerNamspaceHandler("http://www.eclipse.org/ext",
+				new ExtHandler());
+		URL url = NamespaceHandlerTests.class.getResource(LabelExt.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkLabel();

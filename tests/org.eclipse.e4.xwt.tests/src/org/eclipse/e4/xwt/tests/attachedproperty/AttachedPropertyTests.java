@@ -18,7 +18,8 @@ public class AttachedPropertyTests extends XWTTestCase {
 		runTest(url, new Runnable() {
 			public void run() {
 				Button button = (Button) XWT.findElementByName(root, "button");
-				IProperty property = XWT.findProperty(Composite.class, "visible"); 
+				IProperty property = XWT.findProperty(Composite.class,
+						"visible");
 				Object value = XWT.getPropertyValue(button, property);
 				assertEquals(true, value);
 			}

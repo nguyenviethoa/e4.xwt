@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Event;
 
 public class UserControl extends Composite {
 	static public final String SELECTION_MESSAGE = "OK";
-	
+
 	public UserControl(Composite parent, int style) {
 		super(parent, style);
 	}

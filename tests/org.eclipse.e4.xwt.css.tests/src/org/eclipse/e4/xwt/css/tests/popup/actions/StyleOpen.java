@@ -31,10 +31,13 @@ public class StyleOpen implements IObjectActionDelegate {
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
 		try {
-			Thread.currentThread().setContextClassLoader(StyleOpen.class.getClassLoader());
-			XWT.addDefaultStyle(new CSSStyle(StyleOpen.class.getResource("style.css")));
+			Thread.currentThread().setContextClassLoader(
+					StyleOpen.class.getClassLoader());
+			XWT.addDefaultStyle(new CSSStyle(StyleOpen.class
+					.getResource("style.css")));
 			if (file != null) {
 				DisplayUtil.open(file);
 			}

@@ -27,7 +27,8 @@ public class LoadingStyle {
 	 */
 	public static void main(String[] args) {
 
-		URL url = LoadingStyle.class.getResource("Style" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = LoadingStyle.class.getResource("Style"
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			Map<String, Object> options = new HashMap<String, Object>();
 			options.put(IXWTLoader.DEFAULT_STYLES_PROPERTY, new GreenStyle());

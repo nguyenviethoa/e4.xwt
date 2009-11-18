@@ -13,7 +13,9 @@ import org.eclipse.swt.widgets.TableItem;
 public class JFaceTableViewer_Tests extends XWTTestCase {
 
 	public void testTableViewer() throws Exception {
-		URL url = JFaceTableViewer_Tests.class.getResource(TableViewer_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTableViewer_Tests.class
+				.getResource(TableViewer_Test.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
@@ -34,7 +36,9 @@ public class JFaceTableViewer_Tests extends XWTTestCase {
 	}
 
 	public void testTableViewer_FullSelection() throws Exception {
-		URL url = JFaceTableViewer_Tests.class.getResource(TableViewer_FullSelection.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTableViewer_Tests.class
+				.getResource(TableViewer_FullSelection.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
@@ -44,13 +48,16 @@ public class JFaceTableViewer_Tests extends XWTTestCase {
 				Object element = XWT.findElementByName(root, "TableViewer");
 				assertTrue(element instanceof TableViewer);
 				TableViewer tableViewer = (TableViewer) element;
-				assertEquals(tableViewer.getTable().getStyle() & SWT.FULL_SELECTION,  SWT.FULL_SELECTION);
+				assertEquals(tableViewer.getTable().getStyle()
+						& SWT.FULL_SELECTION, SWT.FULL_SELECTION);
 			}
 		});
 	}
 
 	public void testTableViewer_DataBinding() throws Exception {
-		URL url = JFaceTableViewer_Tests.class.getResource(TableViewer_DataBinding.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTableViewer_Tests.class
+				.getResource(TableViewer_DataBinding.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
@@ -69,9 +76,11 @@ public class JFaceTableViewer_Tests extends XWTTestCase {
 			}
 		});
 	}
-	
+
 	public void testTableViewerColumns() throws Exception {
-		URL url = JFaceTableViewer_Tests.class.getResource(TableViewerColumns_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTableViewer_Tests.class
+				.getResource(TableViewerColumns_Test.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
@@ -92,7 +101,9 @@ public class JFaceTableViewer_Tests extends XWTTestCase {
 	}
 
 	public void testTableViewerColumnsPath() throws Exception {
-		URL url = JFaceTableViewer_Tests.class.getResource(TableViewerColumn_Property.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTableViewer_Tests.class
+				.getResource(TableViewerColumn_Property.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
@@ -113,7 +124,9 @@ public class JFaceTableViewer_Tests extends XWTTestCase {
 	}
 
 	public void testTableViewerColumnProperties() throws Exception {
-		URL url = JFaceTableViewer_Tests.class.getResource(TableViewer_ColumnProperties.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTableViewer_Tests.class
+				.getResource(TableViewer_ColumnProperties.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();
@@ -133,7 +146,9 @@ public class JFaceTableViewer_Tests extends XWTTestCase {
 	}
 
 	public void testTableViewerColumn_text() throws Exception {
-		URL url = JFaceTableViewer_Tests.class.getResource(TableViewerColumn_text.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JFaceTableViewer_Tests.class
+				.getResource(TableViewerColumn_text.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkListViewer();

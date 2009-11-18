@@ -18,7 +18,8 @@ import org.eclipse.e4.xwt.XWT;
 public class BindMode {
 	public static void main(String[] args) {
 
-		URL url = BindMode.class.getResource(BindMode.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = BindMode.class.getResource(BindMode.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

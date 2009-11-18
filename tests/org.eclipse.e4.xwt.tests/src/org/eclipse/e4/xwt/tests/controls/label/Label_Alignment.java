@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class Label_Alignment {
 	public static void main(String[] args) {
-		URL url = Label_Alignment.class.getResource(Label_Alignment.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Label_Alignment.class.getResource(Label_Alignment.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

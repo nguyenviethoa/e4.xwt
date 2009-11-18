@@ -37,16 +37,16 @@ public class XmlDataProvider extends AbstractDataProvider implements
 		public Object toModelType(Object data) {
 			throw new UnsupportedOperationException();
 		}
-		
+
 		public Object loadModelType(String className) {
 			throw new UnsupportedOperationException();
 		}
-		
+
 		public Object toModelPropertyType(Object object, String propertyName) {
 			throw new UnsupportedOperationException();
 		}
 	};
-	
+
 	static final String XDATA = "XData";
 
 	private URL source;

@@ -10,7 +10,9 @@ import org.eclipse.swt.widgets.Button;
 
 public class ButtonTests extends XWTTestCase {
 	public void testButtonVisible() throws Exception {
-		URL url = ButtonTests.class.getResource(Button_Visible.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ButtonTests.class.getResource(Button_Visible.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButtonVisible();
@@ -25,7 +27,8 @@ public class ButtonTests extends XWTTestCase {
 			}
 
 			public void checkButtonNonVisible() {
-				Object element = XWT.findElementByName(root, "buttonNonVisible");
+				Object element = XWT
+						.findElementByName(root, "buttonNonVisible");
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
 				assertFalse(button.getVisible());
@@ -34,7 +37,9 @@ public class ButtonTests extends XWTTestCase {
 	}
 
 	public void testButtonAlignment() throws Exception {
-		URL url = ButtonTests.class.getResource(Button_Alignment.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ButtonTests.class.getResource(Button_Alignment.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButtonLeft();
@@ -66,7 +71,9 @@ public class ButtonTests extends XWTTestCase {
 	}
 
 	public void testButtonEnabled() throws Exception {
-		URL url = ButtonTests.class.getResource(Button_Enabled.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ButtonTests.class.getResource(Button_Enabled.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButtonEnabled();
@@ -81,7 +88,8 @@ public class ButtonTests extends XWTTestCase {
 			}
 
 			public void checkButtonNotEnabled() {
-				Object element = XWT.findElementByName(root, "NotEnabledButton");
+				Object element = XWT
+						.findElementByName(root, "NotEnabledButton");
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
 				assertFalse(button.isEnabled());
@@ -90,7 +98,9 @@ public class ButtonTests extends XWTTestCase {
 	}
 
 	public void testButtonStyles() throws Exception {
-		URL url = ButtonTests.class.getResource(Button_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ButtonTests.class.getResource(Button_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkPushButton();

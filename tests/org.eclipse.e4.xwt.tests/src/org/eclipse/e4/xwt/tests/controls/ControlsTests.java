@@ -12,27 +12,37 @@ import org.eclipse.swt.widgets.Label;
 
 public class ControlsTests extends XWTTestCase {
 	public void testControlLocation() throws Exception {
-		URL url = ControlsTests.class.getResource(Control_Location.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ControlsTests.class.getResource(Control_Location.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url);
 	}
 
 	public void testControlBackground() throws Exception {
-		URL url = ControlsTests.class.getResource(Control_Background.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ControlsTests.class.getResource(Control_Background.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url);
 	}
 
 	public void testControlBounds() throws Exception {
-		URL url = ControlsTests.class.getResource(Control_Bounds.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ControlsTests.class.getResource(Control_Bounds.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url);
 	}
 
 	public void testControlOrientation() throws Exception {
-		URL url = ControlsTests.class.getResource(Control_Orientation.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ControlsTests.class.getResource(Control_Orientation.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url);
 	}
 
 	public void testControlSize() throws Exception {
-		URL url = ControlsTests.class.getResource(Control_Size.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ControlsTests.class.getResource(Control_Size.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkLabel();
@@ -58,7 +68,9 @@ public class ControlsTests extends XWTTestCase {
 	}
 
 	public void testControlSizeGridData() throws Exception {
-		URL url = ControlsTests.class.getResource(Control_Size_GridData.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = ControlsTests.class.getResource(Control_Size_GridData.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkLabel();
@@ -72,7 +84,8 @@ public class ControlsTests extends XWTTestCase {
 				Object data = label.getLayoutData();
 				assertTrue(data instanceof GridData);
 				GridData gridData = (GridData) data;
-				assertTrue(gridData.widthHint == 100 && gridData.heightHint == 40);
+				assertTrue(gridData.widthHint == 100
+						&& gridData.heightHint == 40);
 			}
 
 			public void checkButton() {
@@ -82,7 +95,8 @@ public class ControlsTests extends XWTTestCase {
 				Object data = button.getLayoutData();
 				assertTrue(data instanceof GridData);
 				GridData gridData = (GridData) data;
-				assertTrue(gridData.widthHint == 200 && gridData.heightHint == 200);
+				assertTrue(gridData.widthHint == 200
+						&& gridData.heightHint == 200);
 			}
 		});
 	}

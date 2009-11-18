@@ -19,8 +19,9 @@ import org.eclipse.swt.widgets.Event;
 
 public class keybinding {
 	public static void main(String[] args) {
-		
-		URL url = keybinding.class.getResource(keybinding.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = keybinding.class.getResource(keybinding.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -29,6 +30,7 @@ public class keybinding {
 	}
 
 	protected void helloWorld(Event event) {
-		MessageDialog.openInformation(XWT.findShell(event.widget), "Message", "Hello World!");
+		MessageDialog.openInformation(XWT.findShell(event.widget), "Message",
+				"Hello World!");
 	}
 }

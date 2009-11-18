@@ -15,37 +15,32 @@ import java.util.Collection;
 import org.eclipse.e4.xwt.emf.test.books.Book;
 import org.eclipse.e4.xwt.emf.test.books.BooksPackage;
 import org.eclipse.e4.xwt.emf.test.books.Bookstore;
-
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Bookstore</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Bookstore</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookstoreImpl#getBooks <em>Books</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.BookstoreImpl#getBooks <em>
+ * Books</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BookstoreImpl extends EObjectImpl implements Bookstore {
 	/**
-	 * The cached value of the '{@link #getBooks() <em>Books</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBooks() <em>Books</em>}' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getBooks()
 	 * @generated
 	 * @ordered
@@ -53,8 +48,8 @@ public class BookstoreImpl extends EObjectImpl implements Bookstore {
 	protected EList<Book> books;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected BookstoreImpl() {
@@ -62,8 +57,8 @@ public class BookstoreImpl extends EObjectImpl implements Bookstore {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -72,24 +67,26 @@ public class BookstoreImpl extends EObjectImpl implements Bookstore {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<Book> getBooks() {
 		if (books == null) {
-			books = new EObjectContainmentEList<Book>(Book.class, this, BooksPackage.BOOKSTORE__BOOKS);
+			books = new EObjectContainmentEList<Book>(Book.class, this,
+					BooksPackage.BOOKSTORE__BOOKS);
 		}
 		return books;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case BooksPackage.BOOKSTORE__BOOKS:
 			return ((InternalEList<?>) getBooks()).basicRemove(otherEnd, msgs);
@@ -98,8 +95,8 @@ public class BookstoreImpl extends EObjectImpl implements Bookstore {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -112,8 +109,8 @@ public class BookstoreImpl extends EObjectImpl implements Bookstore {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -129,8 +126,8 @@ public class BookstoreImpl extends EObjectImpl implements Bookstore {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -144,8 +141,8 @@ public class BookstoreImpl extends EObjectImpl implements Bookstore {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -157,4 +154,4 @@ public class BookstoreImpl extends EObjectImpl implements Bookstore {
 		return super.eIsSet(featureID);
 	}
 
-} //BookstoreImpl
+} // BookstoreImpl

@@ -25,11 +25,11 @@ public class Metaclass_Tests extends TestCase {
 			public void initialize(Object object) {
 			}
 		};
-		
+
 		metaclass.addInitializer(initializer1);
-		
+
 		assertEquals(metaclass.getInitializers().length, 1);
-		
+
 		metaclass.addInitializer(initializer1);
 		assertEquals(metaclass.getInitializers().length, 1);
 
@@ -43,7 +43,7 @@ public class Metaclass_Tests extends TestCase {
 		assertEquals(metaclass.getInitializers()[0], initializer1);
 		assertEquals(metaclass.getInitializers()[1], initializer2);
 		assertEquals(metaclass.getInitializers()[2], initializer3);
-		
+
 		metaclass.removeInitializer(initializer2);
 		assertEquals(metaclass.getInitializers().length, 2);
 		assertEquals(metaclass.getInitializers()[0], initializer1);
@@ -52,7 +52,7 @@ public class Metaclass_Tests extends TestCase {
 		metaclass.removeInitializer(initializer1);
 		assertEquals(metaclass.getInitializers().length, 1);
 		assertEquals(metaclass.getInitializers()[0], initializer3);
-		
+
 		metaclass.removeInitializer(initializer3);
 		assertEquals(metaclass.getInitializers().length, 0);
 	}

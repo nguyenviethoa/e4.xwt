@@ -22,7 +22,8 @@ public class EMFHelper {
 	public static String getQualifiedName(ENamedElement namedElement) {
 		EObject object = namedElement.eContainer();
 		if (object instanceof ENamedElement) {
-			String parentQN = getQualifiedName((ENamedElement) namedElement.eContainer());
+			String parentQN = getQualifiedName((ENamedElement) namedElement
+					.eContainer());
 
 			if (parentQN != null && !parentQN.equals("")) {
 				return parentQN + "." + namedElement.getName();
@@ -30,7 +31,7 @@ public class EMFHelper {
 		}
 		return namedElement.getName();
 	}
-	
+
 	public static Object toType(Object data) {
 		if (data instanceof EClassifier) {
 			return (EClassifier) data;

@@ -29,15 +29,14 @@ public class EMFDataProviderFactory implements IDataProviderFactory {
 			EMFDataProvider dataProvider = new EMFDataProvider();
 			dataProvider.setObjectInstance(dataContext);
 			return dataProvider;
-		}
-		else if (dataContext instanceof EClassifier) {
+		} else if (dataContext instanceof EClassifier) {
 			EClassifier classifier = (EClassifier) dataContext;
 			EMFDataProvider dataProvider = new EMFDataProvider();
 			dataProvider.setTypeURI(EcoreUtil.getURI(classifier));
 			return dataProvider;
-		}
-		else if (dataContext instanceof EObjectObservableValue 
-				|| dataContext instanceof EObjectObservableList || dataContext instanceof EObjectObservableMap) {
+		} else if (dataContext instanceof EObjectObservableValue
+				|| dataContext instanceof EObjectObservableList
+				|| dataContext instanceof EObjectObservableMap) {
 			EMFDataProvider dataProvider = new EMFDataProvider();
 			dataProvider.setObjectInstance(dataContext);
 			return dataProvider;

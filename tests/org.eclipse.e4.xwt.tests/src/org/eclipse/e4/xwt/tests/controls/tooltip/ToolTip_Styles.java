@@ -35,8 +35,10 @@ public class ToolTip_Styles {
 	private static TrayItem trayItem;
 
 	public static void main(String[] args) {
-		
-		URL url = ToolTip_Styles.class.getResource(ToolTip_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = ToolTip_Styles.class.getResource(ToolTip_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

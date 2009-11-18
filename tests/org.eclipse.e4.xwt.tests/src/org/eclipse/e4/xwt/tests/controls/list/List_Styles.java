@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class List_Styles {
 	public static void main(String[] args) {
-		URL url = List_Styles.class.getResource(List_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = List_Styles.class.getResource(List_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

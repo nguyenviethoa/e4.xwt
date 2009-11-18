@@ -16,6 +16,6 @@ package org.eclipse.e4.xwt.ui.workbench;
  */
 public interface IContentPart {
 	Object getDataContext();
-	
+
 	ClassLoader getClassLoader();
 }

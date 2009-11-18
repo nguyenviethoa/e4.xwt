@@ -12,8 +12,8 @@ public class BindingTestSuite extends TestSuite {
 	}
 
 	public BindingTestSuite() {
-		addTest(new TestSuite(DataBindingTests.class));		
-		addTest(new TestSuite(PojoDataBindingTests.class));		
+		addTest(new TestSuite(DataBindingTests.class));
+		addTest(new TestSuite(PojoDataBindingTests.class));
 		addTest(new TestSuite(ControlBindingTests.class));
 	}
 }

@@ -19,8 +19,9 @@ import org.eclipse.swt.widgets.Event;
 
 public class Container {
 	public static void main(String[] args) {
-		
-		URL url = Container.class.getResource(Container.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = Container.class.getResource(Container.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

@@ -25,8 +25,10 @@ import org.eclipse.swt.widgets.Widget;
 
 public class GridLayout_Test {
 	public static void main(String[] args) {
-		
-		URL url = GridLayout_Test.class.getResource(GridLayout_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = GridLayout_Test.class.getResource(GridLayout_Test.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -39,7 +41,8 @@ public class GridLayout_Test {
 			Control control = (Control) widget;
 			Composite parent = control.getParent();
 			for (Control child : parent.getChildren()) {
-				if (child instanceof Group && (("layout".equals(((Group) child).getText())))) {
+				if (child instanceof Group
+						&& (("layout".equals(((Group) child).getText())))) {
 					return ((Group) child);
 				}
 			}

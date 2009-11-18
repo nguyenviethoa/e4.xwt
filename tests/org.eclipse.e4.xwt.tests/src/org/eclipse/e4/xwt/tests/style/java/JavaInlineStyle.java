@@ -24,7 +24,9 @@ public class JavaInlineStyle {
 	 */
 	public static void main(String[] args) {
 
-		URL url = JavaInlineStyle.class.getResource(JavaInlineStyle.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JavaInlineStyle.class.getResource(JavaInlineStyle.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

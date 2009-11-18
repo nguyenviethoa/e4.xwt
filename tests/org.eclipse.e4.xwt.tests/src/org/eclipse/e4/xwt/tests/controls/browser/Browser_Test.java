@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class Browser_Test {
 	public static void main(String[] args) {
-		URL url = Browser_Test.class.getResource(Browser_Test.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Browser_Test.class.getResource(Browser_Test.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

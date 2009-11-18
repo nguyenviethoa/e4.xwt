@@ -25,7 +25,9 @@ public class XmlObservableValue extends XWTObservableValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.xml.XWTObservableValue#doSetApprovedValue(java.lang.Object)
+	 * @see
+	 * org.eclipse.e4.xwt.dataproviders.xml.XWTObservableValue#doSetApprovedValue
+	 * (java.lang.Object)
 	 */
 	protected void doSetApprovedValue(Object value) {
 		String newValue = value == null ? "" : value.toString();

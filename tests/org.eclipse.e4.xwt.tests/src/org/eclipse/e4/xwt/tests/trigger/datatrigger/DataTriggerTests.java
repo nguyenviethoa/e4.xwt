@@ -21,8 +21,7 @@ public class DataTriggerTests extends XWTTestCase {
 				Button button = (Button) XWT.findElementByName(root, "Button");
 				selectButton(button, false);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}
@@ -33,7 +32,7 @@ public class DataTriggerTests extends XWTTestCase {
 			}
 		});
 	}
-	
+
 	public void test_DataTrigger2() {
 		URL url = DataTriggerTests.class.getResource(DataTrigger.class
 				.getSimpleName()
@@ -44,8 +43,7 @@ public class DataTriggerTests extends XWTTestCase {
 				selectButton(button, false);
 				selectButton(button, true);
 			}
-		},
-		new Runnable() {
+		}, new Runnable() {
 			public void run() {
 				checkButton();
 			}

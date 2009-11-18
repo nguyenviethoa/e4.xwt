@@ -24,7 +24,8 @@ public abstract class XWTEditorPart extends EditorPart {
 	protected Object dataContext;
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
 		setInput(input);
 		setSite(site);
 	}
@@ -39,7 +40,8 @@ public abstract class XWTEditorPart extends EditorPart {
 	}
 
 	public void setContent(URL file) {
-		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass().getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass()
+				.getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();
@@ -54,7 +56,8 @@ public abstract class XWTEditorPart extends EditorPart {
 	}
 
 	public void setContent(InputStream inputStream, URL base) {
-		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass().getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass()
+				.getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();

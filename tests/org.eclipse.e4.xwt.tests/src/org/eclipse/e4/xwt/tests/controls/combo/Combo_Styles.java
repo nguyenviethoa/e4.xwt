@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class Combo_Styles {
 	public static void main(String[] args) {
-		URL url = Combo_Styles.class.getResource(Combo_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Combo_Styles.class.getResource(Combo_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

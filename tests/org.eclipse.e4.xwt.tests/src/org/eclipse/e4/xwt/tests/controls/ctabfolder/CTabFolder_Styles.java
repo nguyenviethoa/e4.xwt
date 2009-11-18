@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class CTabFolder_Styles {
 	public static void main(String[] args) {
-		URL url = CTabFolder_Styles.class.getResource(CTabFolder_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = CTabFolder_Styles.class.getResource(CTabFolder_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

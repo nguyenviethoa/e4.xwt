@@ -25,7 +25,10 @@ import org.eclipse.e4.xwt.emf.test.books.Title;
 public class EMFDataProvider_DataContext_Nested {
 	public static void main(String[] args) {
 		EMFBinding.initialze();
-		URL url = EMFDataProvider_DataContext_Nested.class.getResource(EMFDataProvider_DataContext_Nested.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = EMFDataProvider_DataContext_Nested.class
+				.getResource(EMFDataProvider_DataContext_Nested.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url, createBook());
 		} catch (Exception e) {

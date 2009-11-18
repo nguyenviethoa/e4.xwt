@@ -15,11 +15,12 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
-
 public class DataBinding_Visible {
 	public static void main(String[] args) {
-		
-		URL url = DataBinding_Visible.class.getResource(DataBinding_Visible.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = DataBinding_Visible.class
+				.getResource(DataBinding_Visible.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

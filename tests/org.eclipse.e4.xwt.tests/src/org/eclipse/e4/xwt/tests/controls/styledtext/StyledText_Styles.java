@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class StyledText_Styles {
 	public static void main(String[] args) {
-		URL url = StyledText_Styles.class.getResource(StyledText_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = StyledText_Styles.class.getResource(StyledText_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

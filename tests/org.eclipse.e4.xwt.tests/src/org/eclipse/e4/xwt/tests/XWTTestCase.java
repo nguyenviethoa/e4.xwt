@@ -35,32 +35,36 @@ import org.eclipse.swt.widgets.Text;
 public abstract class XWTTestCase extends TestCase {
 	protected Control root;
 
-	protected void runTest(URL url, Runnable ... checkActions) {
+	protected void runTest(URL url, Runnable... checkActions) {
 		runTest(url, Collections.EMPTY_MAP, checkActions);
 	}
 
-	protected void runTest(URL url, Object dataContext, Runnable ... checkActions) {
+	protected void runTest(URL url, Object dataContext,
+			Runnable... checkActions) {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
 		runTest(url, options, checkActions);
 	}
 
-	protected void runTest(final URL url, Map<String, Object> options, Runnable ... checkActions) {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+	protected void runTest(final URL url, Map<String, Object> options,
+			Runnable... checkActions) {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
 		try {
-			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+			Thread.currentThread().setContextClassLoader(
+					this.getClass().getClassLoader());
 			root = XWT.loadWithOptions(url, options);
 			assertNotNull(root);
 			Shell shell = root.getShell();
 			shell.open();
 			Display display = shell.getDisplay();
-			
+
 			for (Runnable runnable : checkActions) {
 				while (display.readAndDispatch())
 					;
 				display.syncExec(runnable);
 				while (display.readAndDispatch())
-					;				
+					;
 			}
 			assertFalse(root.isDisposed());
 			shell.close();
@@ -74,10 +78,13 @@ public abstract class XWTTestCase extends TestCase {
 		}
 	}
 
-	protected void runDebugTest(final URL url, Runnable prepareAction, Runnable checkAction1) {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+	protected void runDebugTest(final URL url, Runnable prepareAction,
+			Runnable checkAction1) {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
 		try {
-			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+			Thread.currentThread().setContextClassLoader(
+					this.getClass().getClassLoader());
 			root = XWT.load(url);
 			assertNotNull(root);
 			Shell shell = root.getShell();
@@ -128,12 +135,11 @@ public abstract class XWTTestCase extends TestCase {
 		Text text = (Text) element;
 		text.setText(value);
 	}
-	
-	
+
 	protected void assertEqualsArray(Object[] source, Object[] target) {
 		assertEquals(source.length, target.length);
-		for(int i = 0; i<source.length; i++) {
-			assertEquals(source[i], target[i]);			
+		for (int i = 0; i < source.length; i++) {
+			assertEquals(source[i], target[i]);
 		}
 	}
 }

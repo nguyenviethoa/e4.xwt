@@ -17,15 +17,15 @@ import org.eclipse.e4.xwt.ui.workbench.IStaticPart;
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class XWTPartSwitcher extends XWTStaticPart {
-	
+
 	protected void refresh() {
 		IStaticPart switcher = getCurrentPart();
 		switchPart(switcher);
 	}
 
 	protected abstract IStaticPart getCurrentPart();
-	
+
 	public void switchPart(IStaticPart part) {
-		refresh(part.getURL(), part.getDataContext(), part.getClassLoader());		
+		refresh(part.getURL(), part.getDataContext(), part.getClassLoader());
 	}
 }

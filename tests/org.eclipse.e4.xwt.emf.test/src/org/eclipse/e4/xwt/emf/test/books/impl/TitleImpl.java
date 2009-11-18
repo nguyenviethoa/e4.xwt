@@ -12,33 +12,31 @@ package org.eclipse.e4.xwt.emf.test.books.impl;
 
 import org.eclipse.e4.xwt.emf.test.books.BooksPackage;
 import org.eclipse.e4.xwt.emf.test.books.Title;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Title</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Title</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.TitleImpl#getLan <em>Lan</em>}</li>
- *   <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.TitleImpl#getText <em>Text</em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.TitleImpl#getLan <em>Lan
+ * </em>}</li>
+ * <li>{@link org.eclipse.e4.xwt.emf.test.books.impl.TitleImpl#getText <em>Text
+ * </em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TitleImpl extends EObjectImpl implements Title {
 	/**
-	 * The default value of the '{@link #getLan() <em>Lan</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getLan() <em>Lan</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLan()
 	 * @generated
 	 * @ordered
@@ -46,9 +44,9 @@ public class TitleImpl extends EObjectImpl implements Title {
 	protected static final String LAN_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLan() <em>Lan</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLan() <em>Lan</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLan()
 	 * @generated
 	 * @ordered
@@ -57,8 +55,8 @@ public class TitleImpl extends EObjectImpl implements Title {
 
 	/**
 	 * The default value of the '{@link #getText() <em>Text</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getText()
 	 * @generated
 	 * @ordered
@@ -67,8 +65,8 @@ public class TitleImpl extends EObjectImpl implements Title {
 
 	/**
 	 * The cached value of the '{@link #getText() <em>Text</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getText()
 	 * @generated
 	 * @ordered
@@ -76,8 +74,8 @@ public class TitleImpl extends EObjectImpl implements Title {
 	protected String text = TEXT_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected TitleImpl() {
@@ -85,8 +83,8 @@ public class TitleImpl extends EObjectImpl implements Title {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -95,8 +93,8 @@ public class TitleImpl extends EObjectImpl implements Title {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getLan() {
@@ -104,20 +102,21 @@ public class TitleImpl extends EObjectImpl implements Title {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLan(String newLan) {
 		String oldLan = lan;
 		lan = newLan;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BooksPackage.TITLE__LAN, oldLan, lan));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					BooksPackage.TITLE__LAN, oldLan, lan));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getText() {
@@ -125,20 +124,21 @@ public class TitleImpl extends EObjectImpl implements Title {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setText(String newText) {
 		String oldText = text;
 		text = newText;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BooksPackage.TITLE__TEXT, oldText, text));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					BooksPackage.TITLE__TEXT, oldText, text));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -153,8 +153,8 @@ public class TitleImpl extends EObjectImpl implements Title {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -171,8 +171,8 @@ public class TitleImpl extends EObjectImpl implements Title {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -189,24 +189,26 @@ public class TitleImpl extends EObjectImpl implements Title {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 		case BooksPackage.TITLE__LAN:
-			return LAN_EDEFAULT == null ? lan != null : !LAN_EDEFAULT.equals(lan);
+			return LAN_EDEFAULT == null ? lan != null : !LAN_EDEFAULT
+					.equals(lan);
 		case BooksPackage.TITLE__TEXT:
-			return TEXT_EDEFAULT == null ? text != null : !TEXT_EDEFAULT.equals(text);
+			return TEXT_EDEFAULT == null ? text != null : !TEXT_EDEFAULT
+					.equals(text);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -223,4 +225,4 @@ public class TitleImpl extends EObjectImpl implements Title {
 		return result.toString();
 	}
 
-} //TitleImpl
+} // TitleImpl

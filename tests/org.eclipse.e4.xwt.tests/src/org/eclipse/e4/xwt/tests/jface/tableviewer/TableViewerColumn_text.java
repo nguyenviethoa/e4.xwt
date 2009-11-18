@@ -15,14 +15,15 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
-
 /**
  * @author jliu
  */
 public class TableViewerColumn_text {
 	public static void main(String[] args) {
-		
-		URL url = TableViewerColumn_text.class.getResource(TableViewerColumn_text.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = TableViewerColumn_text.class
+				.getResource(TableViewerColumn_text.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

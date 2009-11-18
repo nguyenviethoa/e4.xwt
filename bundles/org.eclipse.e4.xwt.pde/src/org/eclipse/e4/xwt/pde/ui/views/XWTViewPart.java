@@ -24,9 +24,17 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.ViewPart;
 
 /**
- * This sample class demonstrates how to plug-in a new workbench view. The view shows data obtained from the model. The sample creates a dummy model on the fly, but a real implementation would connect to the model available either in this or another plug-in (e.g. the workspace). The view is connected to the model using a content provider.
+ * This sample class demonstrates how to plug-in a new workbench view. The view
+ * shows data obtained from the model. The sample creates a dummy model on the
+ * fly, but a real implementation would connect to the model available either in
+ * this or another plug-in (e.g. the workspace). The view is connected to the
+ * model using a content provider.
  * <p>
- * The view uses a label provider to define how model objects should be presented in the view. Each view can present the same model objects using different labels and icons, if needed. Alternatively, a single label provider can be shared between views in order to ensure that objects of the same type are presented in the same way everywhere.
+ * The view uses a label provider to define how model objects should be
+ * presented in the view. Each view can present the same model objects using
+ * different labels and icons, if needed. Alternatively, a single label provider
+ * can be shared between views in order to ensure that objects of the same type
+ * are presented in the same way everywhere.
  * <p>
  * 
  * @author yyang
@@ -46,7 +54,8 @@ public abstract class XWTViewPart extends ViewPart {
 	}
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize it.
+	 * This is a callback that will allow us to create the viewer and initialize
+	 * it.
 	 */
 	public void createPartControl(Composite parent) {
 		container = new Composite(parent, SWT.NONE);
@@ -60,7 +69,8 @@ public abstract class XWTViewPart extends ViewPart {
 	abstract protected void updateContent();
 
 	public void setContent(URL file) {
-		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass().getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass()
+				.getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();
@@ -75,7 +85,8 @@ public abstract class XWTViewPart extends ViewPart {
 	}
 
 	public void setContent(InputStream inputStream, URL base) {
-		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass().getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass()
+				.getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();

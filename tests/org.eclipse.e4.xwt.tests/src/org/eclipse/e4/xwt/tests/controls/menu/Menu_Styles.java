@@ -20,7 +20,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class Menu_Styles {
 	public static void main(String[] args) {
-		URL url = Menu_Styles.class.getResource(Menu_Styles.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Menu_Styles.class.getResource(Menu_Styles.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

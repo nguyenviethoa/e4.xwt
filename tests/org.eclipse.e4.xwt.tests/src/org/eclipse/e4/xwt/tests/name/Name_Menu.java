@@ -24,7 +24,8 @@ import org.eclipse.swt.widgets.MenuItem;
 public class Name_Menu {
 	public static void main(String[] args) {
 
-		URL url = Name_Menu.class.getResource(Name_Menu.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = Name_Menu.class.getResource(Name_Menu.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
@@ -33,11 +34,14 @@ public class Name_Menu {
 	}
 
 	protected void handleButton(Event event) {
-		MenuItem message = (MenuItem) XWT.findElementByName(event.widget, "Message");
+		MenuItem message = (MenuItem) XWT.findElementByName(event.widget,
+				"Message");
 		if (message == null) {
-			MessageDialog.openError(XWT.findShell(event.widget), "Test Name", "MenuItem message is not found");
+			MessageDialog.openError(XWT.findShell(event.widget), "Test Name",
+					"MenuItem message is not found");
 		} else {
-			MessageDialog.openInformation(XWT.findShell(event.widget), "Test Name", "Name works.");
+			MessageDialog.openInformation(XWT.findShell(event.widget),
+					"Test Name", "Name works.");
 		}
 	}
 }

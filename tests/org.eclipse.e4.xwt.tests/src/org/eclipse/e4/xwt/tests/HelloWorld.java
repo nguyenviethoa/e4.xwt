@@ -17,7 +17,8 @@ import org.eclipse.e4.xwt.XWT;
 
 public class HelloWorld {
 	public static void main(String[] args) {
-		URL url = HelloWorld.class.getResource(HelloWorld.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = HelloWorld.class.getResource(HelloWorld.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {

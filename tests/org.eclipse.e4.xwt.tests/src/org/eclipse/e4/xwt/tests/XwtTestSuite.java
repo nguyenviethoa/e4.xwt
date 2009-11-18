@@ -37,7 +37,8 @@ public class XwtTestSuite extends TestSuite {
 	}
 
 	/**
-	 * The execution of the tests must be started from simple to complex in order.
+	 * The execution of the tests must be started from simple to complex in
+	 * order.
 	 */
 	public XwtTestSuite() {
 		// XAML
@@ -45,7 +46,7 @@ public class XwtTestSuite extends TestSuite {
 
 		// Metaclass
 		addTest(new TestSuite(Metaclass_Tests.class));
-		
+
 		// XWT
 		addXWTTests();
 
@@ -80,7 +81,7 @@ public class XwtTestSuite extends TestSuite {
 		// triggers
 		addSnippetTests();
 	}
-	
+
 	protected void addXAMLTests() {
 		addTest(NameTestSuite.suite());
 		addTest(ResourcesTestSuite.suite());

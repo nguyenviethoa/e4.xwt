@@ -23,7 +23,8 @@ public class EMFTestSuite extends TestSuite {
 	}
 
 	/**
-	 * The execution of the tests must be started from simple to complex in order.
+	 * The execution of the tests must be started from simple to complex in
+	 * order.
 	 */
 	public EMFTestSuite() {
 		addTest(new TestSuite(EMFTestCase.class));

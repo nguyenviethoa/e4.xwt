@@ -19,18 +19,23 @@ import org.eclipse.swt.widgets.Event;
 
 public class ListViewer_CollectionViewSource {
 	public static void main(String[] args) {
-		
-		URL url = ListViewer_CollectionViewSource.class.getResource(ListViewer_CollectionViewSource.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+
+		URL url = ListViewer_CollectionViewSource.class
+				.getResource(ListViewer_CollectionViewSource.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void addPerson(Object sender, Event event) {
-		org.eclipse.jface.viewers.Viewer viewer = (org.eclipse.jface.viewers.Viewer) XWT.findElementByName(event.widget, "ListViewer1");
-		IObservableCollection collection = (IObservableCollection) viewer.getInput();
+		org.eclipse.jface.viewers.Viewer viewer = (org.eclipse.jface.viewers.Viewer) XWT
+				.findElementByName(event.widget, "ListViewer1");
+		IObservableCollection collection = (IObservableCollection) viewer
+				.getInput();
 		Employee employee = new Employee();
 		employee.setName("New hired one");
 		collection.add(employee);

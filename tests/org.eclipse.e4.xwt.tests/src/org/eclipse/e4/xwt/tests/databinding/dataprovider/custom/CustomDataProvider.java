@@ -27,16 +27,16 @@ public class CustomDataProvider extends AbstractDataProvider {
 		public Object toModelType(Object data) {
 			throw new UnsupportedOperationException();
 		}
-		
+
 		public Object loadModelType(String className) {
 			throw new UnsupportedOperationException();
 		}
-		
+
 		public Object toModelPropertyType(Object object, String propertyName) {
 			throw new UnsupportedOperationException();
 		}
 	};
-	
+
 	protected Class<?> objectType;
 	protected DynamicObject object;
 
@@ -117,7 +117,7 @@ public class CustomDataProvider extends AbstractDataProvider {
 		}
 		return object;
 	}
-	
+
 	public DataModelService getModelService() {
 		return dataModelService;
 	}

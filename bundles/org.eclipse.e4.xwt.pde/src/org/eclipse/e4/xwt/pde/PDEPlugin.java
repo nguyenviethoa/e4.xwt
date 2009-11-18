@@ -44,7 +44,9 @@ public class PDEPlugin extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -57,7 +59,9 @@ public class PDEPlugin extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
@@ -90,25 +94,38 @@ public class PDEPlugin extends AbstractUIPlugin {
 
 	static public Shell getShell() {
 		IWorkbench workbench = PlatformUI.getWorkbench();
-		IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+		IWorkbenchWindow activeWorkbenchWindow = workbench
+				.getActiveWorkbenchWindow();
 		if (activeWorkbenchWindow == null)
 			return null;
 		return activeWorkbenchWindow.getShell();
 	}
 
-	public static void log(int severity, int code, String message, Throwable exception) {
-		getDefault().getLog().log(new Status(severity, getDefault().getBundle().getSymbolicName(), code, message, exception));
+	public static void log(int severity, int code, String message,
+			Throwable exception) {
+		getDefault().getLog().log(
+				new Status(severity,
+						getDefault().getBundle().getSymbolicName(), code,
+						message, exception));
 	}
 
 	public static void log(int severity, int code, String message) {
-		getDefault().getLog().log(new Status(severity, getDefault().getBundle().getSymbolicName(), code, message, null));
+		getDefault().getLog().log(
+				new Status(severity,
+						getDefault().getBundle().getSymbolicName(), code,
+						message, null));
 	}
 
 	public static void log(int severity, String message) {
-		getDefault().getLog().log(new Status(severity, getDefault().getBundle().getSymbolicName(), -1, message, null));
+		getDefault().getLog().log(
+				new Status(severity,
+						getDefault().getBundle().getSymbolicName(), -1,
+						message, null));
 	}
 
 	public static void log(Throwable exception) {
-		getDefault().getLog().log(new Status(IStatus.ERROR, getDefault().getBundle().getSymbolicName(), -1, "", exception));
+		getDefault().getLog().log(
+				new Status(IStatus.ERROR, getDefault().getBundle()
+						.getSymbolicName(), -1, "", exception));
 	}
 }

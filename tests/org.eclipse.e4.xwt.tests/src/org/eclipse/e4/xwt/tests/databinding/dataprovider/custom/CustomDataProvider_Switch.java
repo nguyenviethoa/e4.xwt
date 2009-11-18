@@ -22,7 +22,9 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class CustomDataProvider_Switch {
 	public static void main(String[] args) {
-		URL url = CustomDataProvider_Switch.class.getResource(CustomDataProvider_Switch.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = CustomDataProvider_Switch.class
+				.getResource(CustomDataProvider_Switch.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url, new DynamicObject());
 		} catch (Exception e) {

@@ -24,7 +24,8 @@ public class JavaDefaultStyle {
 	 */
 	public static void main(String[] args) {
 
-		URL url = JavaDefaultStyle.class.getResource("Style" + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = JavaDefaultStyle.class.getResource("Style"
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.addDefaultStyle(new GreenStyle());
 			XWT.open(url);

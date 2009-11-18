@@ -20,9 +20,11 @@ import org.eclipse.e4.xwt.XWT;
  */
 public class LabelExt {
 	public static void main(String[] args) {
-		URL url = LabelExt.class.getResource(LabelExt.class.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = LabelExt.class.getResource(LabelExt.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
-			XWT.registerNamspaceHandler("http://www.eclipse.org/ext", new ExtHandler());
+			XWT.registerNamspaceHandler("http://www.eclipse.org/ext",
+					new ExtHandler());
 			XWT.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();
