@@ -410,8 +410,12 @@ public class XWT {
 		XWTLoaderManager.getActive().addDefaultStyle(style);
 	}
 
-	public static void addDataProviderFactory(IDataProviderFactory dataProviderFactory) {
-		XWTLoaderManager.getActive().addDataProviderFactory(dataProviderFactory);
+	public static void addDataProviderFactory(String name, IDataProviderFactory dataProviderFactory) {
+		XWTLoaderManager.getActive().addDataProviderFactory(name, dataProviderFactory);
+	}
+
+	public static void removeDataProviderFactory(String name) {
+		XWTLoaderManager.getActive().removeDataProviderFactory(name);
 	}
 
 	public static void removeDataProviderFactory(IDataProviderFactory dataProviderFactory) {

@@ -18,6 +18,7 @@ import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.core.Binding;
+import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.metadata.ModelUtils;
 import org.eclipse.jface.viewers.Viewer;
@@ -101,7 +102,6 @@ public class DataBinding extends AbstractDataBinding {
 
 	public boolean isSourceProeprtyReadOnly() {
 		IDataProvider dataProvider = getDataProvider();
-		String sourceProperty = getSourceProperty();
 		try {
 			return ScopeManager.isProeprtyReadOnly(dataProvider, getSourcePropertyExpression());
 		} catch (XWTException e) {
@@ -139,7 +139,11 @@ public class DataBinding extends AbstractDataBinding {
 				}
 			}
 			try {
-				observableWidget = ScopeManager.observe(target, host, getTargetPropertyExpression(), getUpdateSourceTrigger(), observeKind);
+				BindingExpressionPath path = getTargetPropertyExpression();
+				if (path.isEmptyPath()) {
+					return null;
+				}
+				observableWidget = ScopeManager.observe(target, host, path, getUpdateSourceTrigger(), observeKind);
 			} catch (XWTException e) {
 			}
 		}

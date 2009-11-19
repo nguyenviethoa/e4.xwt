@@ -526,8 +526,10 @@ public interface IXWTLoader {
 
 	Collection<IStyle> getDefaultStyles();
 
-	void addDataProviderFactory(IDataProviderFactory dataProviderFactory);
+	void addDataProviderFactory(String name, IDataProviderFactory dataProviderFactory);
 
+	void removeDataProviderFactory(String name);
+	
 	void removeDataProviderFactory(IDataProviderFactory dataProvider);
 
 	Collection<IDataProviderFactory> getDataProviderFactories();

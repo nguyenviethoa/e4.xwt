@@ -23,7 +23,7 @@ public class EMFBinding {
 	public static void initialze() {
 		XWT.registerMetaclass(EMFDataProvider.class);
 		XWT.registerConvertor(StringToURI.instance);
-		XWT.addDataProviderFactory(new EMFDataProviderFactory());
+		XWT.addDataProviderFactory(EMFDataProviderFactory.EMF_DATA_PROVIDER_FACTORY, new EMFDataProviderFactory());
 	}
 
 	public static EObject getEObject(EObject eObj, String featureName) {

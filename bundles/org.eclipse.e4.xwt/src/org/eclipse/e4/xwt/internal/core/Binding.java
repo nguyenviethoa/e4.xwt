@@ -163,11 +163,23 @@ public class Binding implements IDynamicBinding {
 		}
 		return UserData.getDataContextHost(control);
 	}
+	
+	protected boolean isSelfBinding(Object data) {
+		if (data != this) {
+			return false;
+		}
+		Binding binding = (Binding)data;
+		return BindingExpressionPath.isEmptyPath(binding.getPath());
+	}
 
 	public Object createBoundSource() {
 		Object source = getSourceObject();
 		if (source == null) {
 			source = XWT.getDataContext(control);
+			Object localDataContext = UserData.getLocalDataContext(control);
+			if (localDataContext == this) {
+				return source;
+			}
 		}
 		if (source instanceof IDynamicBinding) {
 			Object value = ((IDynamicBinding) source).createBoundSource();
@@ -179,7 +191,7 @@ public class Binding implements IDynamicBinding {
 				return ScopeManager.observeValue(widget, value, path, getUpdateSourceTrigger());
 			}
 		}
-		if (source != null && path != null) {
+		if (source != null && !BindingExpressionPath.isEmptyPath(path)) {
 			Widget widget = UserData.getWidget(source);
 			if (widget == null) {
 				widget = UserData.getWidget(control);
@@ -237,7 +249,10 @@ public class Binding implements IDynamicBinding {
 				dataContext = UserData.getLocalDataContext(dataContextHost);
 				if (dataContext instanceof IDynamicBinding) {
 					IDynamicBinding dynamicBinding = (IDynamicBinding) dataContext;
-					dataContext = dynamicBinding.createBoundSource();
+					Object boundSource = dynamicBinding.createBoundSource();
+					if (boundSource != null) {
+						dataContext = boundSource;
+					}
 				}
 			}
 		}

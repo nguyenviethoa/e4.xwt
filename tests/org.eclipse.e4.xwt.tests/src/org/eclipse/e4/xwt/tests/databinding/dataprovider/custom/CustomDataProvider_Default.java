@@ -28,7 +28,7 @@ public class CustomDataProvider_Default {
 				.getResource(CustomDataProvider_Default.class.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
-			XWT.addDataProviderFactory(new IDataProviderFactory() {
+			XWT.addDataProviderFactory("MyDataProviderfactory", new IDataProviderFactory() {
 				public Class<?> getType() {
 					return CustomDataProvider.class;
 				}

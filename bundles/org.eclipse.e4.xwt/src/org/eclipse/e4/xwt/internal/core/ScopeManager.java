@@ -192,21 +192,23 @@ public class ScopeManager {
 
 		private IObservable resolveObservablevalue(ScopeKeeper scopeManager,
 				Object dataValue, Object type, String segment) {
-			int length = segment.length();
-			if (length > 1 && segment.charAt(0) == '('
-					&& segment.charAt(length - 1) == ')') {
-				// It is class
-				String path = segment.substring(1, segment.length() - 1);
-				int index = path.lastIndexOf('.');
-				if (index != -1) {
-					String className = path.substring(0, index);
-					segment = path.substring(index + 1);
-					type = dataProvider.getModelService().loadModelType(className);
-					if (type == null) {
-						throw new XWTException("Class " + className
-								+ " not found");
+			if (!BindingExpressionPath.isEmptyPath(segment)) {
+				int length = segment.length();
+				if (length > 1 && segment.charAt(0) == '('
+						&& segment.charAt(length - 1) == ')') {
+					// It is class
+					String path = segment.substring(1, segment.length() - 1);
+					int index = path.lastIndexOf('.');
+					if (index != -1) {
+						String className = path.substring(0, index);
+						segment = path.substring(index + 1);
+						type = dataProvider.getModelService().loadModelType(className);
+						if (type == null) {
+							throw new XWTException("Class " + className
+									+ " not found");
+						}
+						dataProvider = XWT.findDataProvider(type);
 					}
-					dataProvider = XWT.findDataProvider(type);
 				}
 			}
 			if (currentPath == null) {
@@ -421,6 +423,7 @@ public class ScopeManager {
 				}
 
 				type = dataProvider.getDataType(segment);
+				
 				if (type != null) {
 					dataProvider = XWT.findDataProvider(type);
 					if (dataProvider == null) {

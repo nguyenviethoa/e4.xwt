@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -149,7 +150,7 @@ public class XWTLoader implements IXWTLoader {
 	private Collection<IStyle> defaultStyles = new ArrayList<IStyle>();
 	private ILanguageSupport languageSupport;
 	
-	private static Collection<IDataProviderFactory> dataProviderFactories = new ArrayList<IDataProviderFactory>();
+	private static LinkedHashMap<String, IDataProviderFactory> dataProviderFactories = new LinkedHashMap<String, IDataProviderFactory>();
 
 	public Display display;
 	public Realm realm;
@@ -1022,14 +1023,12 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#addDataProviderFactory(org.eclipse.e4.xwt
 	 * .IDataProviderFactory)
 	 */
-	public void addDataProviderFactory(IDataProviderFactory dataProviderFactory) {
+	public void addDataProviderFactory(String name, IDataProviderFactory dataProviderFactory) {
 		if (dataProviderFactory == null) {
 			return;
 		}
-		if (!dataProviderFactories.contains(dataProviderFactory)) {
-			dataProviderFactories.add(dataProviderFactory);
-			registerMetaclass(dataProviderFactory.getType());
-		}
+		dataProviderFactories.put(name, dataProviderFactory);
+		registerMetaclass(dataProviderFactory.getType());
 	}
 
 	/*
@@ -1039,12 +1038,29 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#removeDataProviderFactory(org.eclipse.e4
 	 * .xwt.IDataProviderFactory)
 	 */
-	public void removeDataProviderFactory(IDataProviderFactory dataProvider) {
-		if (dataProvider == null) {
+	public void removeDataProviderFactory(String name) {
+		if (name == null) {
 			return;
 		}
-		if (dataProviderFactories.contains(dataProvider)) {
-			dataProviderFactories.remove(dataProvider);
+		dataProviderFactories.remove(name);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.IXWTLoader#removeDataProviderFactory(org.eclipse.e4
+	 * .xwt.IDataProviderFactory)
+	 */
+	public void removeDataProviderFactory(IDataProviderFactory dataProviderFactory) {
+		if (dataProviderFactory == null) {
+			return;
+		}
+		for (String name : dataProviderFactories.keySet()) {
+			IDataProviderFactory value = dataProviderFactories.get(name);
+			if (dataProviderFactory == value) {
+				dataProviderFactories.remove(name);
+			}
 		}
 	}
 
@@ -1054,7 +1070,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#getDataProviderFactories()
 	 */
 	public Collection<IDataProviderFactory> getDataProviderFactories() {
-		return dataProviderFactories;
+		return dataProviderFactories.values();
 	}
 
 	/*
@@ -1066,7 +1082,7 @@ public class XWTLoader implements IXWTLoader {
 		if (dataContext instanceof IDataProvider) {
 			return (IDataProvider) dataContext;
 		}
-		for (IDataProviderFactory factory : dataProviderFactories) {
+		for (IDataProviderFactory factory : dataProviderFactories.values()) {
 			IDataProvider dataProvider = factory.create(dataContext);
 			if (dataProvider != null) {
 				return dataProvider;

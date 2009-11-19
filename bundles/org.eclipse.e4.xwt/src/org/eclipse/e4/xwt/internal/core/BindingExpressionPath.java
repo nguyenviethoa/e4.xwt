@@ -23,6 +23,9 @@ public class BindingExpressionPath {
 	protected String[] segments;
 	
 	public BindingExpressionPath(String value) {
+		if (value == null) {
+			return;
+		}
 		this.fullPath = value;
 		this.stripedPath = null;
 		
@@ -126,6 +129,13 @@ public class BindingExpressionPath {
 		return segments;
 	}
 
+	public boolean isEmptyPath() {
+		return isEmptyPath(getFullPath());
+	}
+	
+	public static boolean isEmptyPath(String value) {
+		return value == null || value.trim().length() == 0 || ".".equals(value.trim());
+	}
 	
 	public static int lastIndexOf(String value) {
 		int level = 0;

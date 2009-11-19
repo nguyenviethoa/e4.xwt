@@ -36,8 +36,8 @@ public class EMFHelper {
 		if (data instanceof EClassifier) {
 			return (EClassifier) data;
 		}
-		if (data instanceof EObjectObservableValue) {
-			EObjectObservableValue observableValue = (EObjectObservableValue) data;
+		if (data instanceof IObservableValue) {
+			IObservableValue observableValue = (IObservableValue) data;
 			Object element = observableValue.getValueType();
 			if (element instanceof EStructuralFeature) {
 				// A bug of EMF databinding
@@ -49,10 +49,10 @@ public class EMFHelper {
 			EObject object = (EObject) data;
 			return object.eClass();
 		}
-		if (data instanceof EMFDataProvider) {
+		else if (data instanceof EMFDataProvider) {
 			EMFDataProvider dataProvider = (EMFDataProvider) data;
 			return dataProvider.getDataType(null);
 		}
-		throw new IllegalStateException();
+		return null;
 	}
 }

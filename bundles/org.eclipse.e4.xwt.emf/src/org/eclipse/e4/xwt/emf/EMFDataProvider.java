@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.databinding.EObjectObservableValue;
-import org.eclipse.emf.databinding.internal.EMFObservableValueDecorator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -32,29 +31,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  * @author jliu (jin.liu@soyatec.com)
  */
 public class EMFDataProvider extends AbstractDataProvider {
-	static DataModelService dataModelService = new DataModelService() {
-
-		public Object toModelType(Object data) {
-			return EMFHelper.toType(data);
-		}
-
-		public Object loadModelType(String className) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Object toModelPropertyType(Object object, String propertyName) {
-			EClass type = (EClass) object;
-			EStructuralFeature structuralFeature = type
-					.getEStructuralFeature(propertyName);
-
-			if (structuralFeature == null) {
-				throw new XWTException(" Property \"" + propertyName
-						+ "\" is not found in the class " + type.getName());
-			}
-			return structuralFeature.getEType();
-		}
-	};
-
+	private DataModelService dataModelService;
+	
 	private URI typeURI;
 	private URI objectURI;
 
@@ -63,10 +41,23 @@ public class EMFDataProvider extends AbstractDataProvider {
 	private String featureName;
 	private Object objectInstance;
 
+	public EMFDataProvider(DataModelService dataModelService) {
+		this.dataModelService = dataModelService;
+	}
+	
+	public EMFDataProvider() {
+	}
+	
 	@Override
 	protected IObservableValue observeDetailValue(IObservableValue bean,
 			Object ownerType, String propertyName, Object propertyType) {
-		EClass type = (EClass) getModelService().toModelType(bean);
+		EClass type = null;
+		if (ownerType instanceof EClass) {
+			type = (EClass) ownerType;
+		}
+		if (type == null) {
+			type = (EClass) getModelService().toModelType(bean);
+		}
 		EStructuralFeature feature = type.getEStructuralFeature(propertyName);
 		if (feature == null) {
 			throw new XWTException(propertyName + " feature is not found in "
@@ -202,7 +193,7 @@ public class EMFDataProvider extends AbstractDataProvider {
 		EClass classifier = getCurrentType();
 		if (classifier != null && path != null) {
 			EStructuralFeature feature = classifier
-					.getEStructuralFeature(featureName);
+					.getEStructuralFeature(path);
 			if (feature != null) {
 				return !feature.isChangeable();
 			}
@@ -216,11 +207,11 @@ public class EMFDataProvider extends AbstractDataProvider {
 		if (instance instanceof EObjectObservableValue) {
 			EObjectObservableValue observableValue = (EObjectObservableValue) instance;
 			eObj = (EClass) observableValue.getValueType();
+		} else if (instance instanceof EClass) {
+			eObj = (EClass) instance;
 		} else if (instance instanceof EObject) {
 			EObject object = (EObject) instance;
 			eObj = object.eClass();
-		} else if (instance instanceof EClass) {
-			eObj = (EClass) instance;
 		} else {
 			if (typeURI != null) {
 				EObject element = getResourceSet().getEObject(typeURI, true);
@@ -316,7 +307,14 @@ public class EMFDataProvider extends AbstractDataProvider {
 		}
 	}
 
+	protected DataModelService createDataModelService() {
+		return new EMFDataModelService();
+	}
+	
 	public DataModelService getModelService() {
+		if (dataModelService == null) {
+			dataModelService = createDataModelService();
+		}
 		return dataModelService;
 	}
 }
