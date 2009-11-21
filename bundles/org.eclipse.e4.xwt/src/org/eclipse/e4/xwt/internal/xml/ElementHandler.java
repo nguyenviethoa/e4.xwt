@@ -264,7 +264,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		}
 	};
 
-	protected String expendNamespaces(Element element, String value) {
+	protected String expendNamespaces(DocumentObject element, String value) {
 		if (value.indexOf(':') == -1) {
 			return value;
 		}
@@ -565,6 +565,12 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 					}
 				}
 			}
+		}
+		if (element instanceof Attribute
+				&& IConstants.XWT_X_NAMESPACE.equals(element.getNamespace())
+				&& IConstants.XAML_STYLE.equalsIgnoreCase(element.getName())) {
+			// handle the expansion of x:Style = "j:class.variable"
+			text = expendNamespaces(element, text);
 		}
 		element.setContent(text);
 	}
