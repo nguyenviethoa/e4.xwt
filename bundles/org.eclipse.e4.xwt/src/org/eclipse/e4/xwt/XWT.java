@@ -52,6 +52,35 @@ public class XWT {
 	}
 
 	/**
+	 * Create a UI Profile with the provide data and apply it immediately. 
+	 * 
+	 * @param profileData
+	 * @return
+	 */
+	public static Object createUIProfile() {
+		return XWTLoaderManager.getActive().createUIProfile();
+	}
+
+	/**
+	 * Put the Profile in place
+	 * 
+	 * @param profile
+	 * @return
+	 */
+	public static boolean applyProfile(Object profile) {
+		return XWTLoaderManager.getActive().applyProfile(profile);
+	}
+	
+	/**
+	 * Restore the previous profile
+	 * 
+	 * @return
+	 */
+	public static Object restoreProfile() {
+		return XWTLoaderManager.getActive().restoreProfile();
+	}
+	
+	/**
 	 * 
 	 * @param nsmapace
 	 * @param handler
@@ -433,6 +462,15 @@ public class XWT {
 	 */
 	static public IMetaclass registerMetaclass(Class<?> type) {
 		return XWTLoaderManager.getActive().registerMetaclass(type);
+	}
+
+	/**
+	 * Register UI type
+	 * 
+	 * @param javaclass
+	 */
+	static public void registerMetaclass(IMetaclass type) {
+		XWTLoaderManager.getActive().registerMetaclass(type);
 	}
 
 	/**

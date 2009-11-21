@@ -22,9 +22,9 @@ import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.XWTLoader.ConverterService;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
+import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -380,6 +380,12 @@ public interface IXWTLoader {
 	 */
 	IMetaclass registerMetaclass(Class<?> type);
 
+	/**
+	 * Register UI type
+	 * 
+	 * @param javaclass
+	 */
+	void registerMetaclass(IMetaclass type);
 	
 	/**
 	 * Get the dynamic property value
@@ -415,15 +421,6 @@ public interface IXWTLoader {
 	 * @param javaclass
 	 */
 	void registerMetaclassFactory(IMetaclassFactory metaclassFactory);
-
-	/**
-	 * Register UI type
-	 * 
-	 * @param javaclass
-	 */
-	IMetaclass register(Class<?> javaclass, String namespace);
-
-	ConverterService getConverterService();
 
 	/**
 	 * Find a Data converter
@@ -557,4 +554,27 @@ public interface IXWTLoader {
 	 * @return ILoadingContext
 	 */
 	ILanguageSupport getLanguageSupport();
+
+	/**
+	 * Create a UI Profile with the provide data and apply it immediately. 
+	 * 
+	 * @param profileData
+	 * @return
+	 */
+	public Object createUIProfile();
+
+	/**
+	 * Put the Profile in place
+	 * 
+	 * @param profile
+	 * @return
+	 */
+	public boolean applyProfile(Object profile);
+	
+	/**
+	 * Restore the previous profile
+	 * 
+	 * @return
+	 */
+	public Object restoreProfile();
 }

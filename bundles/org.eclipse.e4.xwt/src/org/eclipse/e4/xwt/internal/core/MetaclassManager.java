@@ -75,7 +75,7 @@ public class MetaclassManager {
 		if (service != null) {
 			IMetaclassFactory factory = service.findFactory(javaClass);
 			if (factory != null) {
-				return factory.create(javaClass, superMetaclass,xwtLoader);
+				return factory.create(javaClass, superMetaclass, xwtLoader);
 			}
 		}
 		boolean lazyLoading = false; // TODO Get value from preference
@@ -88,7 +88,7 @@ public class MetaclassManager {
 			return metaclass;
 		}
 		if (namespace == null || !namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
-			LoggerManager.log(new IllegalArgumentException("Wrong namespace: " + namespace + " for " + name));
+			return null;
 		}
 		String packageName = namespace.substring(IConstants.XAML_CLR_NAMESPACE_PROTO.length());
 		int index = packageName.indexOf('=');
