@@ -1253,6 +1253,8 @@ public class ResourceLoader implements IVisualElementLoader {
 					.getContent());
 			return;
 		}
+		
+		HashSet<DocumentObject> doneChild = new HashSet<DocumentObject>();
 		try {
 			String contentValue = attribute.getContent();
 			if ("MenuItem".equalsIgnoreCase(element.getName())
@@ -1260,7 +1262,6 @@ public class ResourceLoader implements IVisualElementLoader {
 				Attribute attributeAccelerator = element
 						.getAttribute("Accelerator");
 				if (attributeAccelerator != null) {
-
 					contentValue = contentValue
 							+ '\t'
 							+ getContentValue(attributeAccelerator.getContent());
@@ -1311,6 +1312,9 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					
 					for (DocumentObject child : children) {
+						if (doneChild.contains(child)) {
+							continue;
+						}
 						String name = child.getName();
 						String ns = child.getNamespace();
 						if (name.equalsIgnoreCase(IConstants.XAML_X_STATIC)
@@ -1340,6 +1344,9 @@ public class ResourceLoader implements IVisualElementLoader {
 						} else {
 							value = doCreate(directTarget, (Element) child, type,
 									EMPTY_MAP);
+							if (value != null) {
+								doneChild.add(child);
+							}
 							if (value instanceof IDynamicBinding) {
 								((IDynamicBinding) value).setType(attrName);
 							}
@@ -1404,6 +1411,9 @@ public class ResourceLoader implements IVisualElementLoader {
 				if (value != null) {
 					// create children.
 					for (DocumentObject child : children) {
+						if (doneChild.contains(child)) {
+							continue;
+						}
 						String name = child.getName();
 						String ns = child.getNamespace();
 						if (!IConstants.XWT_X_NAMESPACE.equals(ns)
