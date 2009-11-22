@@ -569,7 +569,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		if (element instanceof Attribute
 				&& IConstants.XWT_X_NAMESPACE.equals(element.getNamespace())
 				&& IConstants.XAML_STYLE.equalsIgnoreCase(element.getName())) {
-			// handle the expansion of x:Style = "j:class.variable"
+			// handle the expansion of x:Style = "(j:class).variable"
 			text = expendNamespaces(element, text);
 		}
 		element.setContent(text);

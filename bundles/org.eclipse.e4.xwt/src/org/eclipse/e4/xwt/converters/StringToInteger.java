@@ -10,13 +10,18 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.converters;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTMaps;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.swt.layout.GridData;
 
 /**
@@ -40,30 +45,63 @@ public class StringToInteger implements IConverter {
 			}
 			int result = 0;
 			for (String value : values) {
-				result |= convertInt(value);
+				result |= convertInt(value.trim());
 			}
 			return result;
 		}
 		return convertInt(str);
 	}
 
-	private int convertInt(String str) {
+	protected int convertInt(String str) {
 		if (str == null || str.equals("")) {
 			return 0;
 		}
 		try {
 			// Quick solution for numbers.			
-			return (Integer) toNumberConverter.convert(str.trim());
+			return (Integer) toNumberConverter.convert(str);
 		} catch (Exception e) {
-			str = str.toUpperCase().trim();
-			if (str.startsWith(GRIDDATA_PREFIX)) {
-				return convertGridDataInt(str);
+			String normalizedStr = str.toUpperCase().trim();
+			if (normalizedStr.startsWith(GRIDDATA_PREFIX)) {
+				return convertGridDataInt(normalizedStr);
+			}
+			try {
+				int index = str.lastIndexOf('.');
+				if (str.indexOf('.') != -1) {
+					String className = str.substring(0, index);
+					if (className.startsWith("(") && className.endsWith("")) {
+						className = className.substring(1, className.length()-1);
+						Class<?> type = XWT.getLoadingContext().loadClass(className);
+						if (type != null) {
+							String memberName = str.substring(index+1);
+							Field field = type.getDeclaredField(memberName);
+							if (Modifier.isStatic(field.getModifiers())) {
+								field.setAccessible(true);
+								return field.getInt(null);
+							}
+						}
+					}
+					else {
+						IMetaclass metaclass = XWT.getMetaclass(className, IConstants.XWT_NAMESPACE);
+						if (metaclass != null) {
+							Class<?> type = metaclass.getType();
+							if (type != null) {
+								String memberName = str.substring(index+1);
+								Field field = type.getDeclaredField(memberName);
+								if (Modifier.isStatic(field.getModifiers())) {
+									field.setAccessible(true);
+									return field.getInt(null);
+								}
+							}							
+						}
+					}
+				}
+			} catch (Exception e1) {
 			}
 			return defaultConvertInt(str);
 		}
 	}
-
-	private int convertGridDataInt(String str) {
+	
+	protected int convertGridDataInt(String str) {
 		if ("GridData.BEGINNING".equalsIgnoreCase(str)) {
 			return GridData.BEGINNING;
 		} else if ("GridData.CENTER".equalsIgnoreCase(str)) {
@@ -100,7 +138,7 @@ public class StringToInteger implements IConverter {
 		return 0;
 	}
 
-	private int defaultConvertInt(String str) {
+	protected int defaultConvertInt(String str) {
 		return XWTMaps.getValue(str);
 	}
 
