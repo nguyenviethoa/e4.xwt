@@ -353,6 +353,7 @@ public abstract class AbstractMetaclass implements IMetaclass {
 	 * @see com.soyatec.xaswt.core.metadata.IMetaclass#newInstance()
 	 */
 	public Object newInstance(Object[] parameters) {
+		assertInitialize();
 		Object object = doNewInstance(parameters);
 		if (parameters != null && parameters.length > 0) {
 			try {

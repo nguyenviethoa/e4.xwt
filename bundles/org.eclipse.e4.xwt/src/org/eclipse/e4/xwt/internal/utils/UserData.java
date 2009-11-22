@@ -250,7 +250,7 @@ public class UserData {
 		if (dataDictionary != null) {
 			return (Widget) dataDictionary.getData(IUserDataConstants.XWT_PARENT_KEY);
 		}
-		return null;
+		return getParent(element);
 	}
 
 	public static Control getParent(Object element) {
@@ -362,7 +362,7 @@ public class UserData {
 				parent = (Widget) dataDictionary.getData(IUserDataConstants.XWT_PARENT_KEY);
 			}
 			else {
-				break;
+				parent = getParent(parent);
 			}
 		}
 		return null;

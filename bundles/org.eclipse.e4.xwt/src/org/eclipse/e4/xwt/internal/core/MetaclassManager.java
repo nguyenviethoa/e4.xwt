@@ -56,16 +56,21 @@ public class MetaclassManager {
 	}
 
 	public IMetaclass register(Class<?> javaClass) {
+		return register(javaClass, null);
+	}
+	
+	public IMetaclass register(Class<?> javaClass, IMetaclass superMetaclass) {
 		IMetaclass metaclass = getMetaclass(javaClass);
 		if (metaclass != null) {
 			return metaclass;
 		}
-		Class<?> superclass = javaClass.getSuperclass();
-		if (superclass != null && superclass != Object.class) {
-			register(superclass);
+		if (superMetaclass == null) {
+			Class<?> superclass = javaClass.getSuperclass();
+			if (superclass != null && superclass != Object.class) {
+				register(superclass, null);
+			}
+			superMetaclass = getMetaclass(superclass);
 		}
-		IMetaclass superMetaclass = getMetaclass(superclass);
-
 		IMetaclass thisMetaclass = createMetaclass(javaClass, superMetaclass);
 		register(thisMetaclass);
 		return thisMetaclass;
@@ -102,7 +107,7 @@ public class MetaclassManager {
 		if (type == null) {
 			LoggerManager.log(new IllegalStateException("Cannot load " + className));
 		}
-		metaclass = register(type);
+		metaclass = register(type, null);
 		// There is no need to mapping a CLR class, since the ClassLoader will be changed.
 		nameRegister.remove(type.getSimpleName());
 		return metaclass;

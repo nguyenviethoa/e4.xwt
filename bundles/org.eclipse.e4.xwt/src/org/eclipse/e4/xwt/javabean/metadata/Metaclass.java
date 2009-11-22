@@ -53,7 +53,7 @@ public class Metaclass extends AbstractMetaclass {
 	 * @param superClass
 	 */
 	public Metaclass(Class<?> type, IMetaclass superClass) {
-		this(type, superClass, true, XWTLoaderManager.getDefault());
+		this(type, superClass, false, XWTLoaderManager.getDefault());
 	}
 
 	/**
@@ -63,6 +63,6 @@ public class Metaclass extends AbstractMetaclass {
 	 * @param superClass
 	 */
 	public Metaclass(Class<?> type, IMetaclass superClass, IXWTLoader xwtLoader) {
-		this(type, superClass, true, xwtLoader);
+		this(type, superClass, false, xwtLoader);
 	}
 }

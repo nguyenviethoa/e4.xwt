@@ -43,6 +43,14 @@ public class MetaclassService {
 		return manager.getMetaclass(context, name, namespace);
 	}
 
+	public IMetaclass findMetaclass(Class<?> type) {
+		MetaclassManager manager = map.get(IConstants.XWT_NAMESPACE);
+		if (manager == null) {
+			return null;
+		}
+		return manager.getMetaclass(type);
+	}
+	
 	public IMetaclass getMetaclass(Class<?> type) {
 		MetaclassManager manager = map.get(IConstants.XWT_NAMESPACE);
 		if (manager == null) {
@@ -93,6 +101,14 @@ public class MetaclassService {
 			throw new IllegalStateException();
 		}
 		return manager.register(metaclass);
+	}
+
+	public IMetaclass register(Class<?> metaclass, String namespace, IMetaclass superMetaclass) {
+		MetaclassManager manager = map.get(namespace);
+		if (manager == null) {
+			throw new IllegalStateException();
+		}
+		return manager.register(metaclass, superMetaclass);
 	}
 
 	public void register(IMetaclass metaclass, String namespace) {

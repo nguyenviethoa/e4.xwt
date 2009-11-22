@@ -544,8 +544,15 @@ public class Core {
 		return getMetaclassService().getMetaclass(context, name, namespace);
 	}
 
+	public IMetaclass findMetaclass(Object object) {
+		if (object instanceof Class<?>) {
+			return getMetaclassService().findMetaclass((Class<?>) object);
+		}
+		return getMetaclassService().findMetaclass(object.getClass());
+	}
+
 	public IMetaclass getMetaclass(Object object) {
-		if (object instanceof Class) {
+		if (object instanceof Class<?>) {
 			return getMetaclassService().getMetaclass((Class<?>) object);
 		}
 		return getMetaclassService().getMetaclass(object.getClass());
@@ -572,6 +579,10 @@ public class Core {
 
 	public IMetaclass registerMetaclass(Class<?> metaclass, String namespace) {
 		return getMetaclassService().register(metaclass, namespace);
+	}
+
+	public IMetaclass registerMetaclass(Class<?> metaclass, String namespace, IMetaclass superMetaclass) {
+		return getMetaclassService().register(metaclass, namespace, superMetaclass);
 	}
 
 	public void registerMetaclassManager(String namespace, MetaclassManager manager) {

@@ -449,12 +449,24 @@ public class XWTLoader implements IXWTLoader {
 	public IMetaclass getMetaclass(Object object) {
 		for (int i = cores.size()-1; i >= 0; i--) {
 			Core core = cores.get(i);
-			IMetaclass metaclass = core.getMetaclass(object);
+			IMetaclass metaclass = core.findMetaclass(object);
 			if (metaclass != null) {
 				return metaclass;
 			}
 		}
-		return null;
+		Class<?> javaClass = null;
+		if (object instanceof Class<?>) {
+			javaClass = (Class<?>) object;
+		}
+		else {
+			javaClass = object.getClass();
+		}
+		Class<?> superclass = javaClass.getSuperclass();
+		IMetaclass superMetaclass = null;
+		if (superclass != null) {
+			superMetaclass = getMetaclass(superclass);
+		}
+		return getCurrentCore().registerMetaclass(javaClass, IConstants.XWT_NAMESPACE, superMetaclass);
 	}
 
 	/*
