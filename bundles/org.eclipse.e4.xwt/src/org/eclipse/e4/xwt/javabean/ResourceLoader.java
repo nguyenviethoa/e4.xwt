@@ -1254,7 +1254,6 @@ public class ResourceLoader implements IVisualElementLoader {
 			return;
 		}
 		
-		HashSet<DocumentObject> doneChild = new HashSet<DocumentObject>();
 		try {
 			String contentValue = attribute.getContent();
 			if ("MenuItem".equalsIgnoreCase(element.getName())
@@ -1285,6 +1284,10 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 			Object value = null;
 			DocumentObject[] children = attribute.getChildren();
+			HashSet<DocumentObject> doneChild = null;
+			if (children.length > 0) {
+				doneChild = new HashSet<DocumentObject>();
+			}
 			if (contentValue == null) {
 				Class<?> type = property.getType();
 				if (Collection.class.isAssignableFrom(type)) {
