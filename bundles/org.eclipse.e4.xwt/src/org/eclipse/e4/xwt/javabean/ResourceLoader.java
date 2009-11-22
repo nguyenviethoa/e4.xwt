@@ -1290,13 +1290,26 @@ public class ResourceLoader implements IVisualElementLoader {
 					value = getCollectionProperty(type, target, attribute,
 							attrName);
 				} else {
+					Object directTarget = null;
 					if (TableViewerColumn.class.isAssignableFrom(type)
 							&& attrName.equalsIgnoreCase("columns")) {
 						children = DocumentObjectSorter.sortWithAttr(children,
 								"Index").toArray(
 								new DocumentObject[children.length]);
 					}
-
+					else {
+						try {
+							Object propertyValue = property.getValue(target);
+							if (UserData.getWidget(propertyValue) != null) {
+								directTarget = propertyValue;
+							}
+						} catch (Exception e) {
+						}
+					}
+					if (directTarget == null) {
+						directTarget = target;
+					}
+					
 					for (DocumentObject child : children) {
 						String name = child.getName();
 						String ns = child.getNamespace();
@@ -1312,10 +1325,10 @@ public class ResourceLoader implements IVisualElementLoader {
 						} else if ((IConstants.XWT_X_NAMESPACE.equals(ns) && IConstants.XAML_X_ARRAY
 								.equalsIgnoreCase(name))) {
 							value = getArrayProperty(property.getType(),
-									target, child, name);
+									directTarget, child, name);
 						} else if (property.getType().isArray()) {
 							value = getArrayProperty(property.getType(),
-									target, attribute, name);
+									directTarget, attribute, name);
 							break;
 						} else if (isAssignableFrom(element, TableColumn.class)
 								&& isAssignableFrom(child, TableEditor.class)) {
@@ -1325,7 +1338,7 @@ public class ResourceLoader implements IVisualElementLoader {
 								&& attribute.getContent() != null) {
 							value = attribute.getContent();
 						} else {
-							value = doCreate(target, (Element) child, type,
+							value = doCreate(directTarget, (Element) child, type,
 									EMPTY_MAP);
 							if (value instanceof IDynamicBinding) {
 								((IDynamicBinding) value).setType(attrName);
