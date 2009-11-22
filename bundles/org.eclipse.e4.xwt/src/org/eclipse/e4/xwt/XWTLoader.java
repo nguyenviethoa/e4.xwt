@@ -771,7 +771,6 @@ public class XWTLoader implements IXWTLoader {
 				return metaclass;
 			}
 		}
-		LoggerManager.log(new IllegalArgumentException("Wrong namespace: " + ns + " for " + tagName));
 		return null;
 	}
 

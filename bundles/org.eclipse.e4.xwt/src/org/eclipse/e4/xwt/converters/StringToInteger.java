@@ -73,9 +73,8 @@ public class StringToInteger implements IConverter {
 						Class<?> type = XWT.getLoadingContext().loadClass(className);
 						if (type != null) {
 							String memberName = str.substring(index+1);
-							Field field = type.getDeclaredField(memberName);
+							Field field = type.getField(memberName);
 							if (Modifier.isStatic(field.getModifiers())) {
-								field.setAccessible(true);
 								return field.getInt(null);
 							}
 						}
@@ -86,9 +85,8 @@ public class StringToInteger implements IConverter {
 							Class<?> type = metaclass.getType();
 							if (type != null) {
 								String memberName = str.substring(index+1);
-								Field field = type.getDeclaredField(memberName);
+								Field field = type.getField(memberName);
 								if (Modifier.isStatic(field.getModifiers())) {
-									field.setAccessible(true);
 									return field.getInt(null);
 								}
 							}							
