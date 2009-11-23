@@ -3,9 +3,12 @@ package org.eclipse.e4.xwt.tests.forms;
 import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -91,7 +94,6 @@ public class FormsTests extends FormTestCase {
 			}
 		});
 	}
-	
 
 	public void testScrolledForm() throws Exception {
 		URL url = FormsTests.class
@@ -114,4 +116,23 @@ public class FormsTests extends FormTestCase {
 			}
 		});
 	}
+	
+	public void testForm_Group_Adapt() throws Exception {
+		URL url = FormsTests.class
+				.getResource(Form_Group.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				checkVisibility("Form.Group", Group.class);
+				Group group = (Group) XWT.findElementByName(root, "Form.Group");
+				Color color = group.getBackground();
+				assertEquals(color.getBlue(), 255);
+				assertEquals(color.getRed(), 255);
+				assertEquals(color.getGreen(), 255);
+			}
+		});
+	}
+
+
 }
