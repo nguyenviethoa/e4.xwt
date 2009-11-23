@@ -13,6 +13,8 @@ package org.eclipse.e4.xwt.forms.metaclass;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoaderManager;
+import org.eclipse.e4.xwt.forms.ToolKitUtil;
+import org.eclipse.e4.xwt.forms.XWTForms;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.swt.SWT;
@@ -47,12 +49,14 @@ public abstract class AbstractFormMetaclass extends Metaclass {
 	public Object doNewInstance(Object[] parameters) {
 		if (parameters.length > 0 && parameters[0] instanceof Composite) {
 			Composite parent = (Composite) parameters[0];
-			FormToolkit tk = getToolkit(parent);
+			FormToolkit tk = ToolKitUtil.getToolkit(parent);
 			int style = SWT.None;
 			if (parameters.length > 1 && parameters[1] instanceof Integer) {
 				style |= (Integer)parameters[1];
 			}
-			return doCreateControl(tk, parent, style);
+			Control control = doCreateControl(tk, parent, style);
+			ToolKitUtil.tagForm(control);
+			return control;
 		}
 
 		return super.newInstance(parameters);
@@ -60,16 +64,4 @@ public abstract class AbstractFormMetaclass extends Metaclass {
 
 	protected abstract Control doCreateControl(FormToolkit tk,
 			Composite parent, int style);
-
-	protected synchronized FormToolkit getToolkit(Composite c) {
-		FormToolkit tk = (FormToolkit) c.getDisplay().getData(
-				FormMetaclass.class.getName());
-
-		if (tk == null) {
-			tk = new FormToolkit(c.getDisplay());
-			c.getDisplay().setData(FormMetaclass.class.getName(), tk);
-		}
-
-		return tk;
-	}
 }

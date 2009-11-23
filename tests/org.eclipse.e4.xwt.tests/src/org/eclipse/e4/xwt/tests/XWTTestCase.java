@@ -10,10 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +37,7 @@ public abstract class XWTTestCase extends TestCase {
 	protected Control root;
 
 	protected void runTest(URL url, Runnable... checkActions) {
-		runTest(url, Collections.EMPTY_MAP, checkActions);
+		runTest(url, new HashMap<String, Object>(), checkActions);
 	}
 
 	protected void runTest(URL url, Object dataContext,

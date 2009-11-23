@@ -12,11 +12,13 @@ package org.eclipse.e4.xwt.forms;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.ILoadedAction;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.XWTLoaderManager;
 import org.eclipse.e4.xwt.forms.metaclass.ButtonMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.CompositeMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.ExpandableCompositeMetaclass;
@@ -30,8 +32,11 @@ import org.eclipse.e4.xwt.forms.metaclass.ScrolledPageBookMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.SectionMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.TableMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.TextMetaclass;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * 
@@ -40,6 +45,16 @@ import org.eclipse.swt.widgets.Control;
 public class XWTForms {
 	private static Object FormsProfile;
 	
+	private static ILoadedAction LoadedAction = new ILoadedAction() {
+		
+		public void onLoaded(Object sender) {
+			Widget widget = UserData.getWidget(sender);
+			if (widget instanceof Control) {
+				ToolKitUtil.adapt((Control)widget, null);
+			}
+		}
+	};
+			
 	private static boolean applyFormsProfile () {
 		if (FormsProfile == null) {
 			FormsProfile = XWT.createUIProfile();
@@ -59,21 +74,14 @@ public class XWTForms {
 		}
 		return XWT.applyProfile(FormsProfile);
 	}
-	
+			
 	/**
 	 * Load the file content. All widget will be created but they are showed. This method return the root element.
 	 * 
 	 */
 	static public synchronized Control load(URL file) throws Exception {
-		boolean applied = applyFormsProfile();
-		try {
-			return XWTLoaderManager.getActive().load(file);
-		} 
-		finally {
-			if (applied) {
-				XWT.restoreProfile();
-			}
-		}
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		return loadWithOptions(file, options);
 	}
 
 	/**
@@ -81,90 +89,54 @@ public class XWTForms {
 	 * 
 	 */
 	static public synchronized Control load(URL file, Object dataContext) throws Exception {
-		boolean applied = applyFormsProfile();
-		try {
-			return XWTLoaderManager.getActive().load(file, dataContext);
-		} 
-		finally {
-			if (applied) {
-				XWT.restoreProfile();
-			}
-		}
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
+		return loadWithOptions(file, options);
 	}
 
 	/**
 	 * Load the file content under a Composite. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
 	static public synchronized Control load(Composite parent, URL file) throws Exception {
-		boolean applied = applyFormsProfile();
-		try {
-			return XWTLoaderManager.getActive().load(parent, file);
-		} 
-		finally {
-			if (applied) {
-				XWT.restoreProfile();
-			}
-		}
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(IXWTLoader.CONTAINER_PROPERTY, parent);
+		return loadWithOptions(file, options);
 	}
 
 	/**
 	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
 	static public synchronized Control load(Composite parent, URL file, Object dataContext) throws Exception {
-		boolean applied = applyFormsProfile();
-		try {
-			return XWTLoaderManager.getActive().load(parent, file, dataContext);
-		} 
-		finally {
-			if (applied) {
-				XWT.restoreProfile();
-			}
-		}
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(IXWTLoader.CONTAINER_PROPERTY, parent);
+		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
+		return loadWithOptions(file, options);
 	}
 
 	/**
 	 * Open and show the file content in a new Shell.
 	 */
-	static public synchronized void open(final URL url) throws Exception {
-		boolean applied = applyFormsProfile();
-		try {
-			XWTLoaderManager.getActive().open(url);
-		} 
-		finally {
-			if (applied) {
-				XWT.restoreProfile();
-			}
-		}
+	static public synchronized void open(URL url) throws Exception {
+		open(url, new HashMap<String, Object>());
 	}
 
 	/**
 	 * load the content from a stream with a style, a DataContext and a ResourceDictionary. The root elements will be hold by Composite parent
 	 */
 	static public synchronized Control load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception {
-		boolean applied = applyFormsProfile();
-		try {
-			return XWT.load(parent, stream, file, dataContext);
-		} 
-		finally {
-			if (applied) {
-				XWT.restoreProfile();
-			}
-		}
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(IXWTLoader.CONTAINER_PROPERTY, parent);
+		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
+		return loadWithOptions(stream, file, options);
 	}
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
 	static public synchronized void open(URL url, Object dataContext) throws Exception {
-		boolean applied = applyFormsProfile();
-		try {
-			XWT.open(url, dataContext);
-		} 
-		finally {
-			if (applied) {
-				XWT.restoreProfile();
-			}
-		}
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
+		open(url, options);
 	}
 
 	/**
@@ -180,6 +152,7 @@ public class XWTForms {
 	static public synchronized void open(URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
+			options.put(IXWTLoader.LOADED_ACTION, LoadedAction);
 			XWT.open(url, options);
 		} 
 		finally {
@@ -192,6 +165,7 @@ public class XWTForms {
 	static public synchronized Control loadWithOptions(URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
+			options.put(IXWTLoader.LOADED_ACTION, LoadedAction);
 			return XWT.loadWithOptions(url, options);
 		} 
 		finally {
@@ -210,15 +184,7 @@ public class XWTForms {
 	 * @throws Exception
 	 */
 	static public synchronized Control load(InputStream stream, URL url) throws Exception {
-		boolean applied = applyFormsProfile();
-		try {
-			return XWT.load(stream, url);
-		} 
-		finally {
-			if (applied) {
-				XWT.restoreProfile();
-			}
-		}
+		return loadWithOptions(stream, url, new HashMap<String, Object>());
 	}
 
 	/**
@@ -232,6 +198,7 @@ public class XWTForms {
 	static public synchronized Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
+			options.put(IXWTLoader.LOADED_ACTION, LoadedAction);
 			return XWT.loadWithOptions(stream, url, options);
 		} 
 		finally {
