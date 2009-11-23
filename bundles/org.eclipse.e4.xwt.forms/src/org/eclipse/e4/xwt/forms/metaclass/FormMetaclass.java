@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.forms.metaclass;
 
+import org.eclipse.e4.xwt.forms.metaclass.properties.DecoratingHeading;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
@@ -23,6 +24,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 public class FormMetaclass extends AbstractFormMetaclass {
 	public FormMetaclass() {
 		super(Form.class);
+		addProperty(new DecoratingHeading());
 	}
 
 	@Override

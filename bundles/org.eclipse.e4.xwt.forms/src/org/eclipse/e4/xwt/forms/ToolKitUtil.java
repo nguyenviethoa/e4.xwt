@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.forms;
 import org.eclipse.e4.xwt.forms.metaclass.FormMetaclass;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -56,8 +57,17 @@ public class ToolKitUtil {
 			toolkit = getToolkit(control);
 		}
 		if (composite != null) {
-			for (Control child : composite.getChildren()) {
-				adapt(child, toolkit);
+			if (composite instanceof ExpandableComposite) {
+				// it seems a bug of Section, the background of the title becomes opaque
+				Control [] controls = composite.getChildren();
+				for (int i = 1; i < controls.length; i++) {
+					adapt(controls[i], toolkit);					
+				}
+			}
+			else {
+				for (Control child : composite.getChildren()) {
+					adapt(child, toolkit);
+				}				
 			}
 		}
 	}

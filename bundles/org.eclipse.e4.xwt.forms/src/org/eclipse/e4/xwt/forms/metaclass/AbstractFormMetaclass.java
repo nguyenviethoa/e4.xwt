@@ -14,7 +14,6 @@ import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoaderManager;
 import org.eclipse.e4.xwt.forms.ToolKitUtil;
-import org.eclipse.e4.xwt.forms.XWTForms;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.swt.SWT;
@@ -28,15 +27,17 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @author yves.yang (yves.yang@soyatec.com)
  */
 public abstract class AbstractFormMetaclass extends Metaclass {
+
 	public AbstractFormMetaclass(Class<?> formFeatureClass) {
-		this(formFeatureClass, toSuperMetaclass(formFeatureClass), XWTLoaderManager.getActive());
+		this(formFeatureClass, toSuperMetaclass(formFeatureClass),
+				XWTLoaderManager.getActive());
 	}
 
 	public AbstractFormMetaclass(Class<?> formFeatureClass,
 			IMetaclass parentMetaclass, IXWTLoader loader) {
 		super(formFeatureClass, parentMetaclass, loader);
 	}
-	
+
 	static private IMetaclass toSuperMetaclass(Class<?> type) {
 		Class<?> superType = type.getSuperclass();
 		if (superType == null || superType == Object.class) {

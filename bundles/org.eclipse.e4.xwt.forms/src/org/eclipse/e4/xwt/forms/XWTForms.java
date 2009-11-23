@@ -36,7 +36,6 @@ import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * 
