@@ -18,6 +18,7 @@ import org.eclipse.e4.xwt.tests.clr.XWTTestSuite;
 import org.eclipse.e4.xwt.tests.controls.ControlsTestSuite;
 import org.eclipse.e4.xwt.tests.databinding.BindingTestSuite;
 import org.eclipse.e4.xwt.tests.events.EventsTestSuite;
+import org.eclipse.e4.xwt.tests.forms.FormsTestSuite;
 import org.eclipse.e4.xwt.tests.jface.JFaceTestSuite;
 import org.eclipse.e4.xwt.tests.metaclass.Metaclass_Tests;
 import org.eclipse.e4.xwt.tests.name.NameTestSuite;
@@ -81,6 +82,9 @@ public class XwtTestSuite extends TestSuite {
 
 		// triggers
 		addSnippetTests();
+
+		// triggers
+		addFormsTests();
 	}
 
 	protected void addXAMLTests() {
@@ -128,6 +132,10 @@ public class XwtTestSuite extends TestSuite {
 
 	protected void addSnippetTests() {
 		addTest(Snippet017TestSuite.suite());
+	}
+
+	protected void addFormsTests() {
+		addTest(FormsTestSuite.suite());
 	}
 
 	protected void addTriggerTests() {

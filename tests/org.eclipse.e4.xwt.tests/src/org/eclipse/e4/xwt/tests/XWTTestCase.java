@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -106,7 +109,41 @@ public abstract class XWTTestCase extends TestCase {
 	protected void selectButton(Button button) {
 		selectButton(button, true);
 	}
+	
+	protected void checkVisibility(String name, Class<? extends Control> type){
+		Object element = XWT.findElementByName(root, name);
+		if (element == null) {
+			fail(name + " is not found.");
+		}
+		assertTrue(type.isInstance(element));
+		Control section = (Control) element;
+		assertTrue(section.getVisible());
+	}
 
+	protected void checkChildren(String name, String path, int number){
+		Object element = XWT.findElementByName(root, name);
+		if (path != null) {
+			try {
+				Method method = element.getClass().getMethod("get" + path);
+				if (method == null) {
+					fail("Property " + path + " is not found in " + element.getClass().getName());
+				}
+				element = method.invoke(element);
+				assertTrue(Composite.class.isInstance(element));
+			} catch (Exception e) {
+				e.printStackTrace();
+				fail(e.getMessage());
+			}			
+		}
+		assertTrue(Composite.class.isInstance(element));
+		Composite composite = (Composite) element;
+		assertEquals(composite.getChildren().length, number);			
+	}
+
+	protected void checkChildren(String name, int number){
+		checkChildren(name, null, number);
+	}
+	
 	protected void selectButton(Button button, boolean selection) {
 		Point size = button.getSize();
 		Display display = button.getDisplay();
