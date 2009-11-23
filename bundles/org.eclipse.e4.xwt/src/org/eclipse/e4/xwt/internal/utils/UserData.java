@@ -540,7 +540,7 @@ public class UserData {
 				parent = (Widget) dataDictionary.getData(IUserDataConstants.XWT_PARENT_KEY);
 			}
 			else {
-				break;
+				parent = getParent(parent);
 			}
 		}
 		return null;

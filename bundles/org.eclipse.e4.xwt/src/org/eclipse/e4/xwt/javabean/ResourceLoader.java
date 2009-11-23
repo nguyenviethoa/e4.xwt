@@ -363,8 +363,9 @@ public class ResourceLoader implements IVisualElementLoader {
 				&& (!constraintType.isAssignableFrom(metaclass.getType()))) {
 			if (!constraintType.isArray()
 					|| !constraintType.getComponentType().isAssignableFrom(
-							metaclass.getType()))
+							metaclass.getType())) {
 				return null;
+			}
 		}
 		Object targetObject = null;
 		Integer styleValue = getStyleValue(element, styles);
@@ -1284,10 +1285,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 			Object value = null;
 			DocumentObject[] children = attribute.getChildren();
-			HashSet<DocumentObject> doneChild = null;
-			if (children.length > 0) {
-				doneChild = new HashSet<DocumentObject>();
-			}
+			boolean usingExistingValue = false;
 			if (contentValue == null) {
 				Class<?> type = property.getType();
 				if (Collection.class.isAssignableFrom(type)) {
@@ -1306,6 +1304,11 @@ public class ResourceLoader implements IVisualElementLoader {
 							Object propertyValue = property.getValue(target);
 							if (UserData.getWidget(propertyValue) != null) {
 								directTarget = propertyValue;
+								// use the existing property value as parent, not need to add the constraint
+								if (type != Table.class) {
+									type = null;
+									usingExistingValue = true;
+								}
 							}
 						} catch (Exception e) {
 						}
@@ -1315,9 +1318,6 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					
 					for (DocumentObject child : children) {
-						if (doneChild.contains(child)) {
-							continue;
-						}
 						String name = child.getName();
 						String ns = child.getNamespace();
 						if (name.equalsIgnoreCase(IConstants.XAML_X_STATIC)
@@ -1347,8 +1347,8 @@ public class ResourceLoader implements IVisualElementLoader {
 						} else {
 							value = doCreate(directTarget, (Element) child, type,
 									EMPTY_MAP);
-							if (value != null) {
-								doneChild.add(child);
+							if (value == null && type != null && !(type == Table.class && "TableColumn".equals(child.getName()) && Table.class.isInstance(directTarget))) {
+								throw new XWTException(child.getName() + " cannot be a content of " + type.getName() + " " + target.getClass().getName() + "." + property.getName());
 							}
 							if (value instanceof IDynamicBinding) {
 								((IDynamicBinding) value).setType(attrName);
@@ -1369,63 +1369,62 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 				value = loader.convertFrom(property.getType(), contentValue);
 			}
-			if (value != null) {
-				Class<?> propertyType = property.getType();
-				if (!propertyType.isAssignableFrom(value.getClass())
-						|| (value instanceof IBinding && !(IBinding.class
-								.isAssignableFrom(propertyType)))) {
-					Object orginalValue = value;
-					IConverter converter = loader.findConvertor(value
-							.getClass(), propertyType);
-					if (converter != null) {
-						value = converter.convert(value);
-						if (value != null
-								&& orginalValue instanceof IBinding
-								&& !propertyType.isAssignableFrom(value
-										.getClass())) {
-							converter = loader.findConvertor(value.getClass(),
-									propertyType);
-							if (converter != null) {
-								value = converter.convert(value);
-							} else {
-								LoggerManager.log(new XWTException("Convertor "
-										+ value.getClass().getSimpleName()
-										+ "->" + propertyType.getSimpleName()
-										+ " is not found"));
-							}
-						}
-					} else {
-						LoggerManager.log(new XWTException("Convertor "
-								+ value.getClass().getSimpleName() + "->"
-								+ propertyType.getSimpleName()
-								+ " is not found"));
-					}
-				}
-				if (isAttached) {
-					UserData.setLocalData(target, property, value);
-				}
-				else {
-					property.setValue(target, value);
-				}
-			} else {
-				if (value == null) {
-					value = property.getValue(target);
-				}
+			if (!usingExistingValue) {
 				if (value != null) {
-					// create children.
-					for (DocumentObject child : children) {
-						if (doneChild.contains(child)) {
-							continue;
+					Class<?> propertyType = property.getType();
+					if (!propertyType.isAssignableFrom(value.getClass())
+							|| (value instanceof IBinding && !(IBinding.class
+									.isAssignableFrom(propertyType)))) {
+						Object orginalValue = value;
+						IConverter converter = loader.findConvertor(value
+								.getClass(), propertyType);
+						if (converter != null) {
+							value = converter.convert(value);
+							if (value != null
+									&& orginalValue instanceof IBinding
+									&& !propertyType.isAssignableFrom(value
+											.getClass())) {
+								converter = loader.findConvertor(value.getClass(),
+										propertyType);
+								if (converter != null) {
+									value = converter.convert(value);
+								} else {
+									LoggerManager.log(new XWTException("Convertor "
+											+ value.getClass().getSimpleName()
+											+ "->" + propertyType.getSimpleName()
+											+ " is not found"));
+								}
+							}
+						} else {
+							LoggerManager.log(new XWTException("Convertor "
+									+ value.getClass().getSimpleName() + "->"
+									+ propertyType.getSimpleName()
+									+ " is not found"));
 						}
-						String name = child.getName();
-						String ns = child.getNamespace();
-						if (!IConstants.XWT_X_NAMESPACE.equals(ns)
-								|| !IConstants.XAML_X_ARRAY
-										.equalsIgnoreCase(name)) {
-							Class<?> type = property.getType();
-							if (!Collection.class.isAssignableFrom(type)) {
-								doCreate(value, (Element) child, null,
-										EMPTY_MAP);
+					}
+					if (isAttached) {
+						UserData.setLocalData(target, property, value);
+					}
+					else {
+						property.setValue(target, value);
+					}
+				} else {
+					if (value == null) {
+						value = property.getValue(target);
+					}
+					if (value != null) {
+						// create children.
+						for (DocumentObject child : children) {
+							String name = child.getName();
+							String ns = child.getNamespace();
+							if (!IConstants.XWT_X_NAMESPACE.equals(ns)
+									|| !IConstants.XAML_X_ARRAY
+											.equalsIgnoreCase(name)) {
+								Class<?> type = property.getType();
+								if (!Collection.class.isAssignableFrom(type)) {
+									doCreate(value, (Element) child, null,
+											EMPTY_MAP);
+								}
 							}
 						}
 					}
