@@ -24,7 +24,6 @@ import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
-import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -79,6 +78,11 @@ public interface IXWTLoader {
 	 */
 	String RESOURCE_DICTIONARY_PROPERTY = "XWT.Resources";
 
+	/**
+	 * Resources to associate to root element
+	 * 
+	 */
+	String LOADED_ACTION = "XWT.onLoaded";
 
 	/**
 	 * Find the used IObservable value for given data.

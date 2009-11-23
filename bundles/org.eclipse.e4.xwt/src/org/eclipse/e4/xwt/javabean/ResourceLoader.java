@@ -31,6 +31,7 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IIndexedElement;
+import org.eclipse.e4.xwt.ILoadedAction;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.INamespaceHandler;
 import org.eclipse.e4.xwt.IStyle;
@@ -314,6 +315,10 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (control instanceof Composite) {
 				((Composite) control).layout();
 			}
+			ILoadedAction loadedAction = (ILoadedAction) options.get(IXWTLoader.LOADED_ACTION);
+			if (loadedAction != null) {
+				loadedAction.onLoaded(control);
+			}
 			return control;
 		} catch (Exception e) {
 			LoggerManager.log(e);
@@ -518,6 +523,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					|| IXWTLoader.RESOURCE_DICTIONARY_PROPERTY
 							.equalsIgnoreCase(key)
 					|| IXWTLoader.CLASS_PROPERTY.equalsIgnoreCase(key)
+					|| IXWTLoader.LOADED_ACTION.equalsIgnoreCase(key)
 					|| IXWTLoader.DESIGN_MODE_ROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
