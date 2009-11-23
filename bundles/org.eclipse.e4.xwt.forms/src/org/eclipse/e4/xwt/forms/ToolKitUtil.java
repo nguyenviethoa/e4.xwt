@@ -46,14 +46,13 @@ public class ToolKitUtil {
 		if (control instanceof Composite) {
 			composite = (Composite) control;
 		}
-		if (value != null) {
-			if (toolkit != null) {
-				if (composite != null) {
-					toolkit.adapt(composite);					
-				}
-				toolkit.adapt(control, true, true);
+		if (toolkit != null) {
+			if (composite != null) {
+				toolkit.adapt(composite);					
 			}
-			
+			toolkit.adapt(control, true, true);
+		}
+		if (value != null) {			
 			toolkit = getToolkit(control);
 		}
 		if (composite != null) {
