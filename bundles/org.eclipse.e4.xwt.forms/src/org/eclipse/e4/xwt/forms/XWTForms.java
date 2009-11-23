@@ -28,7 +28,6 @@ import org.eclipse.e4.xwt.forms.metaclass.LabelMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.ScrolledFormMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.ScrolledPageBookMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.SectionMetaclass;
-import org.eclipse.e4.xwt.forms.metaclass.SeparatorMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.TableMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.TextMetaclass;
 import org.eclipse.swt.widgets.Composite;
@@ -45,19 +44,18 @@ public class XWTForms {
 		if (FormsProfile == null) {
 			FormsProfile = XWT.createUIProfile();
 			XWT.registerMetaclass(new FormMetaclass());
-			XWT.registerMetaclass(new SectionMetaclass());
 			XWT.registerMetaclass(new ButtonMetaclass());
 			XWT.registerMetaclass(new LabelMetaclass());
 			XWT.registerMetaclass(new TextMetaclass());
+			XWT.registerMetaclass(new TableMetaclass());
+			XWT.registerMetaclass(new CompositeMetaclass());
 			XWT.registerMetaclass(new FormTextMetaclass());
 			XWT.registerMetaclass(new HyperlinkMetaclass());
 			XWT.registerMetaclass(new ImageHyperlinkMetaclass());
+			XWT.registerMetaclass(new ExpandableCompositeMetaclass());
+			XWT.registerMetaclass(new SectionMetaclass());
 			XWT.registerMetaclass(new ScrolledPageBookMetaclass());
 			XWT.registerMetaclass(new ScrolledFormMetaclass());
-			XWT.registerMetaclass(new SeparatorMetaclass());
-			XWT.registerMetaclass(new TableMetaclass());
-			XWT.registerMetaclass(new CompositeMetaclass());
-			XWT.registerMetaclass(new ExpandableCompositeMetaclass());
 		}
 		return XWT.applyProfile(FormsProfile);
 	}
@@ -242,5 +240,4 @@ public class XWTForms {
 			}
 		}
 	}
-
 }

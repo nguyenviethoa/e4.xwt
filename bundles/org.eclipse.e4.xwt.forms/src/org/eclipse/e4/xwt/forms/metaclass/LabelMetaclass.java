@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.forms.metaclass;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -28,6 +29,10 @@ public class LabelMetaclass extends AbstractFormMetaclass {
 	@Override
 	protected Control doCreateControl(FormToolkit tk, Composite parent,
 			int style) {
-		return tk.createLabel(parent, "", style);
+		if ( (style & SWT.SEPARATOR) != 0 ) {
+			return tk.createSeparator( parent, style );
+		} else {
+			return tk.createLabel( parent, "", style );
+		}
 	}
 }
