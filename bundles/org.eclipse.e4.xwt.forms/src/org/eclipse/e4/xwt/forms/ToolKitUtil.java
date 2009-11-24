@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Twistie;
 
 /**
  * 
@@ -70,6 +69,8 @@ public class ToolKitUtil {
 				boolean firstLabel = true;
 				for (int i = 0; i < children.length; i++) {
 					Control child = children[i];
+					// it seems a bug of Section, the background of the title
+					// becomes opaque, so we have to ignore to adapt it
 					if (firstLabel) {
 						if (child instanceof Label) {
 							firstLabel = false;
@@ -89,15 +90,5 @@ public class ToolKitUtil {
 				tk.adapt(root, true, true);
 			}
 		}
-	}
-
-	/**
-	 * This will check if the provided control is not to be adapted to the form
-	 * toolkit's colors.
-	 */
-	private static boolean notAdapt(Control root) {
-		// it seems a bug of Section, the background of the title
-		// becomes opaque, so we have to ignore to adapt it
-		return root instanceof Twistie || (root instanceof Label);
 	}
 }
