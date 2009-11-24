@@ -67,9 +67,13 @@ public class ToolKitUtil {
 			
 			Control[] children = ((Composite) root).getChildren();
 			if (root instanceof ExpandableComposite) {
+				boolean firstLabel = true;
 				for (int i = 0; i < children.length; i++) {
 					Control child = children[i];
-					if (i == 0 && notAdapt(child)) {
+					if (firstLabel) {
+						if (child instanceof Label) {
+							firstLabel = false;
+						}
 						continue;
 					}
 					adaptRecursive(child, tk);
