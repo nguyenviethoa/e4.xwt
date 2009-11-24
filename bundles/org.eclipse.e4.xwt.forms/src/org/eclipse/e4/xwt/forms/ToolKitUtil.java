@@ -13,8 +13,10 @@ package org.eclipse.e4.xwt.forms;
 import org.eclipse.e4.xwt.forms.metaclass.FormMetaclass;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Twistie;
 
 /**
  * 
@@ -36,39 +38,54 @@ public class ToolKitUtil {
 		return (FormToolkit) c.getDisplay().getData(
 				FormMetaclass.class.getName());
 	}
-	
+
 	public static void tagForm(Control control) {
-		control.setData(FORM_SIGNATURE_KEY, true);
+		control.setData(FORM_SIGNATURE_KEY, Boolean.TRUE);
 	}
-	
-	static public void adapt(Control control, FormToolkit toolkit) {
-		Object value = control.getData(FORM_SIGNATURE_KEY);
-		Composite composite = null;
-		if (control instanceof Composite) {
-			composite = (Composite) control;
-		}
-		if (toolkit != null) {
-			if (composite != null) {
-				toolkit.adapt(composite);					
+
+	/**
+	 * Adapts the form toolkit colors to non-form controls
+	 * 
+	 * @param root
+	 *            widget hierarchy
+	 */
+	public static void adapt(Control root) {
+		adaptRecursive(root, null);
+	}
+
+	/**
+	 * depth-first adaptation of form toolkit colors
+	 */
+	private static void adaptRecursive(Control root, FormToolkit tk) {
+		if (root instanceof Composite) {
+			if (root.getData(FORM_SIGNATURE_KEY) == Boolean.TRUE) {
+				tk = getToolkit(root);
 			}
-			toolkit.adapt(control, true, true);
-		}
-		if (value != null) {			
-			toolkit = getToolkit(control);
-		}
-		if (composite != null) {
-			if (composite instanceof ExpandableComposite) {
-				// it seems a bug of Section, the background of the title becomes opaque
-				Control [] controls = composite.getChildren();
-				for (int i = 1; i < controls.length; i++) {
-					adapt(controls[i], toolkit);					
-				}
+			else if (tk != null && canAdapt(root)) {
+				tk.adapt((Composite) root);
 			}
-			else {
-				for (Control child : composite.getChildren()) {
-					adapt(child, toolkit);
-				}				
+			
+			for (Control child : ((Composite) root).getChildren()) {
+				adaptRecursive(child, tk);
+			}
+		} else {
+			if (root.getData(FORM_SIGNATURE_KEY) != Boolean.TRUE
+					&& canAdapt(root)) {
+				tk.adapt(root, true, true);
 			}
 		}
+	}
+
+	/**
+	 * This will check if the provided control is not to be adapted to the form
+	 * toolkit's colors.
+	 */
+	private static boolean canAdapt(Control root) {
+		// it seems a bug of Section, the background of the title
+		// becomes opaque, so we have to ignore to adapt it
+		boolean notAdaptable = root instanceof Twistie
+				|| (root instanceof Label && ((Label) root).getParent() instanceof ExpandableComposite);
+
+		return !notAdaptable;
 	}
 }

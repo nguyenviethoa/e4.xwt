@@ -49,7 +49,7 @@ public class XWTForms {
 		public void onLoaded(Object sender) {
 			Widget widget = UserData.getWidget(sender);
 			if (widget instanceof Control) {
-				ToolKitUtil.adapt((Control)widget, null);
+				ToolKitUtil.adapt((Control)widget);
 			}
 		}
 	};
