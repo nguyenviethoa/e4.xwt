@@ -18,6 +18,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 
 public class BeanProperty extends AbstractProperty {
@@ -43,11 +44,13 @@ public class BeanProperty extends AbstractProperty {
 				if (propertyType != Object.class) {
 					type = propertyType;
 				}
-				if (!IBinding.class.isAssignableFrom(propertyType)) {
-					IConverter convertor = value == null ? null : XWT
-							.findConvertor(value.getClass(), type);
-					if (convertor != null) {
-						value = convertor.convert(value);
+				if (!ObjectUtil.isAssignableFrom(IBinding.class, propertyType)) {
+					if (value != null && type != value.getClass()) {
+						IConverter convertor = value == null ? null : XWT
+								.findConvertor(value.getClass(), type);
+						if (convertor != null) {
+							value = convertor.convert(value);
+						}
 					}
 				}
 

@@ -62,6 +62,8 @@ public abstract class TriggerBase {
 			for (SetterBase setter : oldvalues.keySet()) {
 				setter.undo(element, oldvalues.get(setter));
 			}
+			
+			oldvalues = null;
 		}
 	}
 	

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
@@ -122,9 +123,10 @@ public class ScopeManager {
 		return scope.getObservableList(UserData.getWidget(control), data,
 				propertyName);
 	}
-
+	
 	static class ObservableValueBuilder {
 		private Widget widget;
+		private Object control;
 		private Object value;
 		private Object elementType;
 		private BindingExpressionPath expressionPath;
@@ -133,17 +135,18 @@ public class ScopeManager {
 		private String currentPath;
 		private int observeKind = VALUE;
 
-		public ObservableValueBuilder(Object value, Object elementType,
+		public ObservableValueBuilder(Object control, Object elementType,
 				BindingExpressionPath expressionPath,
 				UpdateSourceTrigger updateSourceTrigger, int observeKind) {
-			this.value = value;
+			this.control = control;
 			this.expressionPath = expressionPath;
 			this.elementType = elementType;
 			this.updateSourceTrigger = updateSourceTrigger;
 			this.observeKind = observeKind;
 		}
 
-		public IObservable observe(Object control) {
+		public IObservable observe(Object targevalue) {
+			this.value = targevalue;
 			widget = UserData.getWidget(control);
 			ScopeKeeper scopeManager = UserData.findScopeKeeper(widget);
 			IObservable observable = scopeManager.getObservable(widget,
@@ -303,6 +306,19 @@ public class ScopeManager {
 			return observable;
 		}
 	}
+	
+	
+	static class ObservableFactory extends ObservableValueBuilder implements IObservableFactory {
+
+		public ObservableFactory(Object control, BindingExpressionPath expressionPath, 
+				UpdateSourceTrigger updateSourceTrigger) {
+			super(control, null, expressionPath, updateSourceTrigger, AUTO);
+		}
+				
+		public IObservable createObservable(Object target) {
+			return observe(target);
+		}
+	}
 
 	public static IObservableValue observeValue(Object control, Object value,
 			String fullPath, UpdateSourceTrigger updateSourceTrigger) {
@@ -315,9 +331,9 @@ public class ScopeManager {
 		if (value == null) {
 			value = control;
 		}
-		ObservableValueBuilder builder = new ObservableValueBuilder(value,
+		ObservableValueBuilder builder = new ObservableValueBuilder(control,
 				null, expressionPath, updateSourceTrigger, ScopeManager.VALUE);
-		return (IObservableValue) builder.observe(control);
+		return (IObservableValue) builder.observe(value);
 	}
 
 	public static IObservable observe(Object control, Object value,
@@ -327,6 +343,13 @@ public class ScopeManager {
 				AUTO);
 	}
 
+	public static IObservableFactory observableFactory(Object control,
+			BindingExpressionPath expressionPath,
+			UpdateSourceTrigger updateSourceTrigger) {
+		return new ObservableFactory(control, expressionPath, updateSourceTrigger);
+	}
+
+	
 	public static IObservable observe(Object control, Object value,
 			String fullPath, UpdateSourceTrigger updateSourceTrigger,
 			int observeKind) {
@@ -340,17 +363,17 @@ public class ScopeManager {
 		if (value == null) {
 			value = control;
 		}
-		ObservableValueBuilder builder = new ObservableValueBuilder(value,
+		ObservableValueBuilder builder = new ObservableValueBuilder(control,
 				null, expressionPath, updateSourceTrigger, observeKind);
-		return builder.observe(control);
+		return builder.observe(value);
 	}
 
 	public static IObservableValue observeValue(Object control, Object value,
 			Class<?> type, BindingExpressionPath expressionPath,
 			UpdateSourceTrigger updateSourceTrigger) {
-		ObservableValueBuilder builder = new ObservableValueBuilder(value,
+		ObservableValueBuilder builder = new ObservableValueBuilder(control,
 				type, expressionPath, updateSourceTrigger, ScopeManager.VALUE);
-		return (IObservableValue) builder.observe(control);
+		return (IObservableValue) builder.observe(value);
 	}
 
 	public static IValueProperty createValueProperty(Object control,

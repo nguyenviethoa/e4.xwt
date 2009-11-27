@@ -98,19 +98,23 @@ public class Trigger extends TriggerBase {
 					//
 					// test value ==
 					//
-					IConverter converter = XWT.findConvertor(value.getClass(), valueType);
 					Object realValue = value;
-					if (converter != null) {
-						realValue = converter.convert(value);						
+					if (value != null) {
+						IConverter converter = XWT.findConvertor(value.getClass(), valueType);
+						if (converter != null) {
+							realValue = converter.convert(value);						
+						}
 					}
 					Object newValue = event.getSource();
 					if (newValue instanceof IObservableValue) {
 						IObservableValue observableValue = (IObservableValue) newValue;
 						newValue = observableValue.getValue();
 					}
-					IConverter newConverter = XWT.findConvertor(newValue.getClass(), valueType);
-					if (newConverter != null) {
-						newValue = newConverter.convert(newValue);						
+					if (newValue != null) {
+						IConverter newConverter = XWT.findConvertor(newValue.getClass(), valueType);
+						if (newConverter != null) {
+							newValue = newConverter.convert(newValue);						
+						}
 					}
 
 					if (!Operator.compare(newValue, operator, realValue)) {
@@ -118,6 +122,9 @@ public class Trigger extends TriggerBase {
 						return;
 					}
 					
+					if (oldvalues != null) {
+						return;
+					}
 					for (SetterBase setter : getSetters()) {
 						try {
 							Object oldValue = setter.applyTo(element);

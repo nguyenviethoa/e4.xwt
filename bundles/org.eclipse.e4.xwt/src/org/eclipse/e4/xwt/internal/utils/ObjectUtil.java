@@ -29,7 +29,30 @@ public class ObjectUtil {
 
 	private ObjectUtil() {
 	}
+	
+	public static Class<?> normalizedType(Class<?> type) {
+		if (type == int.class) {
+			return Integer.class;
+		}
+		if (type == double.class) {
+			return Double.class;
+		}
+		if (type == float.class) {
+			return Float.class;
+		}
+		if (type == boolean.class) {
+			return Boolean.class;
+		}
+		return type;
+	}
 
+	public static boolean isAssignableFrom(Class<?> source, Class<?> target) {
+		if (normalizedType(source) == normalizedType(target)) {
+			return true;
+		}
+		return source.isAssignableFrom(target);
+	}
+	
 	/**
 	 * Find the compatible class. This includes superclasses, interfaces and so on.
 	 * 

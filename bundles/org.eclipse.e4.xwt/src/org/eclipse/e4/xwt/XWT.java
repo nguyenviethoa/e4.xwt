@@ -22,6 +22,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.core.IBinding;
@@ -147,7 +148,7 @@ public class XWT {
 	}
 
 	/**
-	 * get or create a IObservableValue
+	 * get or create a IObservable
 	 * 
 	 * @param nsmapace
 	 * @return return null or raises an exception XWTException if fails
@@ -156,6 +157,15 @@ public class XWT {
 		return XWTLoaderManager.getActive().observe(context, data, propertyName, updateSourceTrigger);
 	}
 
+	/**
+	 * get or create a IObservable
+	 * 
+	 * @param nsmapace
+	 * @return return null or raises an exception XWTException if fails
+	 */
+	public static IObservableFactory observableFactory(Object context, String propertyName, UpdateSourceTrigger updateSourceTrigger) {
+		return XWTLoaderManager.getActive().observableFactory(context, propertyName, updateSourceTrigger);
+	}
 
 	/**
 	 * get or create a IObservableValue

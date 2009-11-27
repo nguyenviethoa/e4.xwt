@@ -88,6 +88,13 @@ public abstract class AbstractDataProvider implements IDataProvider {
 				}
 				return observeList(data, path);				
 			}
+			else if (propertyTypeClass != null && (Set.class.isAssignableFrom(propertyTypeClass))) {
+				if (data instanceof IObservableValue) {
+					IObservableValue observable = (IObservableValue) data;
+					return observeDetailSet(observable, type, path, propertyType);
+				}
+				return observeSet(data, path);				
+			}
 			else {
 				if (data instanceof IObservableValue) {
 					IObservableValue observable = (IObservableValue) data;

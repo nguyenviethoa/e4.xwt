@@ -25,7 +25,7 @@ import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.InverseValueConverter;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.XWTLoader;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -304,13 +304,13 @@ public class BindingContext implements IBindingContext {
 			if (sourceType == null) {
 				sourceType = Object.class;
 			} else {
-				sourceType = XWTLoader.normalizedType(sourceType);
+				sourceType = ObjectUtil.normalizedType(sourceType);
 			}
 
 			if (targetType == null) {
 				targetType = Object.class;
 			} else {
-				targetType = XWTLoader.normalizedType(targetType);
+				targetType = ObjectUtil.normalizedType(targetType);
 			}
 
 			if (sourceToTargetConvertor != null) {

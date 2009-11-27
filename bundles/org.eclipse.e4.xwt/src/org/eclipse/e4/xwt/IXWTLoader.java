@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.core.TriggerBase;
@@ -91,6 +92,14 @@ public interface IXWTLoader {
 	 * @return
 	 */
 	IObservable observe(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger);
+
+	/**
+	 * Find the used IObservableFactory value for given data.
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	IObservableFactory observableFactory(Object context, String propertyName, UpdateSourceTrigger updateSourceTrigger);
 
 	/**
 	 * Find the used IObservableValue value for given data.

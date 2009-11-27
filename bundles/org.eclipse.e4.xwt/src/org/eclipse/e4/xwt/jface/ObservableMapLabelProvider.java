@@ -40,7 +40,7 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 	 * @param attributeMaps
 	 */
 	public ObservableMapLabelProvider(Viewer columnViewer, IObservableSet domain,
-			String[] propertyNames) {		
+			String[] propertyNames) {
 		attributeMaps = new XWTObservableWrapper[propertyNames.length];
 		
 		for (int i = 0; i < attributeMaps.length; i++) {

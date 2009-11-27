@@ -592,7 +592,9 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		TriggerBase[] triggers = UserData.getTriggers(widget);
 		for (TriggerBase triggerBase : triggers) {
-			triggerBase.on(target);
+			if (triggerBase != null) {
+				triggerBase.on(target);
+			}
 		}
 	}
 
@@ -1057,6 +1059,9 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (type == null) {
 				if (metaclass != null)
 					type = metaclass.getType();
+			}
+			if (metaclass == null) {
+				throw new XWTException("Class for " + name + " is not found.");
 			}
 			// type = expected type;
 			// Need to support the

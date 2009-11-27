@@ -18,7 +18,6 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
-import org.eclipse.jface.viewers.AbstractListViewer;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -82,7 +81,7 @@ public class JFacesHelper {
 		if (viewer instanceof ColumnViewer) {
 			ColumnViewer columnViewer = (ColumnViewer) viewer;
 			Object[] properties = columnViewer.getColumnProperties();
-			String[] propertyNames = null;
+			String[] propertyNames = Core.EMPTY_STRING_ARRAY;
 			if (properties != null) {
 				int size = 0;
 				for (int i = 0; i < properties.length; i++) {
@@ -98,13 +97,13 @@ public class JFacesHelper {
 					}
 				}
 			}
-			return propertyNames;
-		}
-		else if (viewer instanceof AbstractListViewer) {
-			String path = (String)UserData.getLocalData(viewer, PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH);
-			if (path != null) {
-				return new String [] {path};
+			if (propertyNames.length != 0) {				
+				return propertyNames;
 			}
+		}
+		String path = (String)UserData.getLocalData(viewer, PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH);
+		if (path != null) {
+			return new String [] {path};
 		}
 		return Core.EMPTY_STRING_ARRAY;
 	}

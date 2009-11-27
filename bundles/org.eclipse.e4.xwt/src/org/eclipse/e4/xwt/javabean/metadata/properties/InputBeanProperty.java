@@ -25,10 +25,12 @@ import org.eclipse.e4.xwt.jface.DefaultColumnViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.jface.ObservableMapLabelProvider;
+import org.eclipse.e4.xwt.jface.ObservableTreeContentProvider;
 import org.eclipse.e4.xwt.metadata.DelegateProperty;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -78,37 +80,52 @@ public class InputBeanProperty extends DelegateProperty {
 
 		if (target instanceof ContentViewer) {
 			ContentViewer viewer = (ContentViewer) target;
-			IContentProvider contentProvider = viewer.getContentProvider();
 
 			String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
-			if (value instanceof List<?> || value.getClass().isArray()) {
-				if (contentProvider == null) {
-					contentProvider = new ObservableListContentProvider();
-					viewer.setContentProvider(contentProvider);
+			if (target instanceof AbstractTreeViewer) {
+				IContentProvider contentProvider = (IContentProvider) viewer.getContentProvider();
+				if (contentProvider instanceof ObservableTreeContentProvider) {
+					ObservableTreeContentProvider xwtContentProvider = (ObservableTreeContentProvider) contentProvider;
+					xwtContentProvider.updateContext(viewer, value);
 				}
-				if (propertyNames != null && propertyNames.length > 0 && hasDefaultLabelProvider(viewer) 
-						&& contentProvider instanceof ObservableListContentProvider) {
-					ObservableListContentProvider listContentProvider = (ObservableListContentProvider) contentProvider;
+				if (contentProvider instanceof ObservableTreeContentProvider) {
+					ObservableTreeContentProvider listContentProvider = (ObservableTreeContentProvider) contentProvider;
 					viewer.setLabelProvider(new ObservableMapLabelProvider(
 							viewer, listContentProvider.getKnownElements(),
 							propertyNames));
 				}
-			} else if (value instanceof Set<?>) {
-				if (contentProvider == null) {
-					contentProvider = new ObservableSetContentProvider();
-					viewer.setContentProvider(contentProvider);
-				}
-				if (propertyNames != null && propertyNames.length > 0 && hasDefaultLabelProvider(viewer)
-						&& contentProvider instanceof ObservableSetContentProvider) {
-					ObservableSetContentProvider setContentProvider = (ObservableSetContentProvider) contentProvider;
-					viewer.setLabelProvider(new ObservableMapLabelProvider(
-							viewer, setContentProvider.getKnownElements(), propertyNames));
+			}
+			else {
+				IContentProvider contentProvider = viewer.getContentProvider();
+				if (value instanceof List<?> || value.getClass().isArray()) {
+					if (contentProvider == null) {
+						contentProvider = new ObservableListContentProvider();
+						viewer.setContentProvider(contentProvider);
+					}
+					if (propertyNames != null && propertyNames.length > 0 && hasDefaultLabelProvider(viewer) 
+							&& contentProvider instanceof ObservableListContentProvider) {
+						ObservableListContentProvider listContentProvider = (ObservableListContentProvider) contentProvider;
+						viewer.setLabelProvider(new ObservableMapLabelProvider(
+								viewer, listContentProvider.getKnownElements(),
+								propertyNames));
+					}
+				} else if (value instanceof Set<?>) {
+					if (contentProvider == null) {
+						contentProvider = new ObservableSetContentProvider();
+						viewer.setContentProvider(contentProvider);
+					}
+					if (propertyNames != null && propertyNames.length > 0 && hasDefaultLabelProvider(viewer)
+							&& contentProvider instanceof ObservableSetContentProvider) {
+						ObservableSetContentProvider setContentProvider = (ObservableSetContentProvider) contentProvider;
+						viewer.setLabelProvider(new ObservableMapLabelProvider(
+								viewer, setContentProvider.getKnownElements(), propertyNames));
+					}
 				}
 			}
 		}
 		if (value instanceof CollectionViewSource) {
 			value = ((CollectionViewSource) value).getView();
-		} else if (!(value instanceof IObservableCollection)) {
+		} else if ((value instanceof Collection<?>) && !(value instanceof IObservableCollection)) {
 			IConverter converter = XWT.findConvertor(value.getClass(),
 					IObservableCollection.class);
 			if (converter != null) {

@@ -51,6 +51,10 @@ public class MultiDataTrigger extends TriggerBase {
 				}
 			}
 			
+			if (oldvalues != null) {
+				return;
+			}
+
 			for (SetterBase setter : getSetters()) {
 				try {
 					Object oldValue = setter.applyTo(element);

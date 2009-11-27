@@ -297,6 +297,14 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 		return PojoObservables.observeList(XWT.getRealm(), bean, propertyName);
 	}
 
+	protected IObservableSet observeSet(Object bean, String propertyName) {
+		if (JFaceXWTDataBinding.isBeanSupport(bean)) {
+			return BeansObservables.observeSet(XWT.getRealm(), bean,
+					propertyName);
+		}
+		return PojoObservables.observeSet(XWT.getRealm(), bean, propertyName);
+	}
+
 	protected IObservableList observeDetailList(IObservableValue bean,
 			Object elementType, String propertyName, Object propertyType) {
 		if (JFaceXWTDataBinding.isBeanSupport(bean)) {

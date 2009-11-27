@@ -27,6 +27,7 @@ import org.eclipse.core.databinding.conversion.StringToNumberConverter;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.animation.BeginStoryboard;
@@ -76,7 +77,7 @@ import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.MetaclassManager;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
-import org.eclipse.e4.xwt.internal.utils.LoggerManager;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.ResourceLoaderFactory;
 import org.eclipse.e4.xwt.javabean.ValueConvertorRegister;
@@ -109,15 +110,14 @@ import org.eclipse.e4.xwt.jface.DefaultListContentProvider;
 import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.JFaceInitializer;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
+import org.eclipse.e4.xwt.jface.ObservableTreeContentProvider;
 import org.eclipse.e4.xwt.jface.ViewerFilter;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableListTreeContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
-import org.eclipse.jface.databinding.viewers.ObservableSetTreeContentProvider;
 import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.DisposeEvent;
@@ -258,6 +258,15 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public IObservable observe(Object control, Object data, String fullPath, UpdateSourceTrigger updateSourceTrigger) {
 		return ScopeManager.observe(control, data, new BindingExpressionPath(fullPath), updateSourceTrigger);
+	}
+
+	/**
+	 * 
+	 * @param nsmapace
+	 * @return
+	 */
+	public IObservableFactory observableFactory(Object control, String fullPath, UpdateSourceTrigger updateSourceTrigger) {
+		return ScopeManager.observableFactory(control, new BindingExpressionPath(fullPath), updateSourceTrigger);
 	}
 
 
@@ -815,22 +824,6 @@ public class XWTLoader implements IXWTLoader {
 		getCurrentCore().registerMetaclassFactory(metaclassFactory);
 	}
 
-	public static Class<?> normalizedType(Class<?> type) {
-		if (type == int.class) {
-			return Integer.class;
-		}
-		if (type == double.class) {
-			return Double.class;
-		}
-		if (type == float.class) {
-			return Float.class;
-		}
-		if (type == boolean.class) {
-			return Boolean.class;
-		}
-		return type;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -838,8 +831,8 @@ public class XWTLoader implements IXWTLoader {
 	 * java.lang.Class)
 	 */
 	public IConverter findConvertor(Class<?> source, Class<?> target) {
-		source = normalizedType(source);
-		target = normalizedType(target);
+		source = ObjectUtil.normalizedType(source);
+		target = ObjectUtil.normalizedType(target);
 		for (int i = cores.size()-1; i >= 0; i--) {
 			Core core = cores.get(i);
 			IConverter converter = core.findConvertor(source, target);
@@ -1327,6 +1320,8 @@ public class XWTLoader implements IXWTLoader {
 			
 			metaclass.removeProperty("selection");
 			
+			metaclass.addProperty(new DataProperty(PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH, String.class,
+					PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH));
 			metaclass.addProperty(new SingleSelectionBeanProperty(PropertiesConstants.PROPERTY_SINGLE_SELECTION));
 			metaclass.addProperty(new MultiSelectionBeanProperty(PropertiesConstants.PROPERTY_MULTI_SELECTION));
 		}
@@ -1334,10 +1329,7 @@ public class XWTLoader implements IXWTLoader {
 		type = org.eclipse.jface.viewers.AbstractListViewer.class;
 		metaclass = (IMetaclass) core.getMetaclass(type,
 				IConstants.XWT_NAMESPACE);
-		if (metaclass != null) {
-			metaclass.addProperty(new DataProperty(PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH, String.class,
-					PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH));
-			
+		if (metaclass != null) {			
 			metaclass.addInitializer(new JFaceInitializer());
 		}
 
@@ -1401,11 +1393,8 @@ public class XWTLoader implements IXWTLoader {
 
 		registerMetaclass(DefaultListContentProvider.class);
 		registerMetaclass(ObservableListContentProvider.class);
-		registerMetaclass(ObservableListTreeContentProvider.class);
 		registerMetaclass(ObservableSetContentProvider.class);
-		registerMetaclass(ObservableListTreeContentProvider.class);
-		registerMetaclass(ObservableSetTreeContentProvider.class);
-
+		registerMetaclass(ObservableTreeContentProvider.class);
 	}
 
 	/*

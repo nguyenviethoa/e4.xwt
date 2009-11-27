@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.swt.widgets.Event;
 
 /**
  * Demonstrates binding a TableViewer to a collection.

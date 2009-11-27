@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 
 /**
  * @author jliu
@@ -51,7 +52,7 @@ public class FieldProperty extends AbstractProperty {
 		if (value != null) {
 			Class<?> fieldType = field.getType();
 			Class<?> valueType = value.getClass();
-			if (!fieldType.isAssignableFrom(value.getClass())) {
+			if (!ObjectUtil.isAssignableFrom(fieldType, value.getClass())) {
 				IConverter converter = XWT.findConvertor(valueType, fieldType);
 				if (converter != null) {
 					value = converter.convert(value);

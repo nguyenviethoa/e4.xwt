@@ -113,6 +113,10 @@ public class DataTrigger extends TriggerBase {
 					return;					
 				}
 				
+				if (oldvalues != null) {
+					return;
+				}
+
 				for (SetterBase setter : getSetters()) {
 					try {
 						Object oldValue = setter.applyTo(element);

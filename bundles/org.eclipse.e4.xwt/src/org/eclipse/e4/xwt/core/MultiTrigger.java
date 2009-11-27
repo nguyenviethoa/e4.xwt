@@ -50,6 +50,11 @@ public class MultiTrigger extends TriggerBase {
 					return;
 				}
 			}
+			
+			if (oldvalues != null) {
+				return;
+			}
+
 			for (SetterBase setter : getSetters()) {
 				try {
 					Object oldValue = setter.applyTo(element);
