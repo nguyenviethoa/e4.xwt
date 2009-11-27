@@ -66,6 +66,8 @@ public abstract class XWTTestCase extends TestCase {
 				display.syncExec(runnable);
 				while (display.readAndDispatch())
 					;
+				while (display.readAndDispatch())
+					;
 			}
 			assertFalse(root.isDisposed());
 			shell.close();
