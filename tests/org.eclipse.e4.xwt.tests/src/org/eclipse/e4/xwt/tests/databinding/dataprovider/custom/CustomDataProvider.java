@@ -64,7 +64,7 @@ public class CustomDataProvider extends AbstractDataProvider {
 	}
 
 	@Override
-	protected IObservableValue observeValue(Object bean,
+	public IObservableValue observeValue(Object bean,
 			final String propertyName) {
 		Object target = getObjectInstance();
 		if (target != null) {
@@ -86,7 +86,7 @@ public class CustomDataProvider extends AbstractDataProvider {
 	}
 
 	@Override
-	protected IObservableValue observeDetailValue(IObservableValue bean,
+	public IObservableValue observeDetailValue(IObservableValue bean,
 			Object ownerType, String propertyName, Object propertyType) {
 		return null;
 	}
