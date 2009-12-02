@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.3 $  $Date: 2009/05/03 13:32:15 $ 
+ *  $Revision: 1.4 $  $Date: 2009/05/03 13:44:46 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.macosx;
 
@@ -46,7 +46,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 			shellHandleField = Shell.class.getDeclaredField("shellHandle"); //$NON-NLS-1$
 			shellHandleField.setAccessible(true);
 
-			Class osClass = Class.forName("org.eclipse.swt.internal.carbon.OS"); //$NON-NLS-1$
+			Class<?> osClass = Class.forName("org.eclipse.swt.internal.carbon.OS"); //$NON-NLS-1$
 			HIViewGetRootMethod = osClass.getMethod("HIViewGetRoot", new Class[] { int.class }); //$NON-NLS-1$
 
 			carbon_newMethod = Image.class.getMethod("carbon_new", new Class[] { Device.class, int.class, int.class, int.class }); //$NON-NLS-1$
@@ -57,11 +57,6 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 	}
 
 	private native int captureImage(int controlHandle, int shellHandle);
-
-	public Image captureImage(Control control) {
-		Rectangle rectangle = control.getBounds();
-		return getImage(control, rectangle.width, rectangle.height, true);
-	}
 
 	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
 

@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.4 $  $Date: 2009/05/03 13:32:15 $ 
+ *  $Revision: 1.5 $  $Date: 2009/05/03 13:44:46 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.e4.xwt.vex.ResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.GC;
@@ -44,16 +43,23 @@ import org.eclipse.swt.widgets.Widget;
  * @since 1.0.0
  */
 public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
-	protected int border = 4;
-	protected int titleHeight = 25;
+	static Field Menu_handler;
+	static Field Control_handler;
 
+	
 	static {
 		try {
+			Menu_handler = Menu.class.getField("handle");			
+			Control_handler = Control.class.getField("handle");
+			
 			System.loadLibrary("swt-gtk-print"); //$NON-NLS-1$
+		} catch (Exception error) {
+			error.printStackTrace();
 		} catch (UnsatisfiedLinkError error) {
 			error.printStackTrace();
 		}
 	}
+
 	static final int OBSCURED = 1 << 6; // Must be the same value as Widget.OBSCURED
 	static final String FIELD_STATE_NAME = "state"; //$NON-NLS-1$
 
@@ -61,74 +67,22 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 
 	protected Point getTopLeftOfClientarea(Decorations decorations) {
 		Point trim = decorations.toControl(decorations.getLocation());
-		trim.x = -trim.x + border;
-		trim.y = -trim.y + titleHeight;
+		trim.x = -trim.x;
+		trim.y = -trim.y;
 		if (decorations.getMenuBar() != null) {
 			Menu menu = decorations.getMenuBar();
-			if (menu != null) {
-				try {
-					Class osClass = Class.forName("org.eclipse.swt.internal.gtk.OS"); //$NON-NLS-1$
-					Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[] { int.class }); //$NON-NLS-1$
-					Field handleField = menu.getClass().getField("handle");
-					Integer menuHandle = (Integer) handleField.get(menu);
-					Object ret = method.invoke(menu, new Object[] { new Integer(menuHandle) });
-					if (ret != null) {
-						int menuBarHeight = ((Integer) ret).intValue();
-						trim.y -= menuBarHeight;
-					}
-				} catch (Throwable t) {
+			try {
+				Class<?> osClass = Class.forName("org.eclipse.swt.internal.gtk.OS"); //$NON-NLS-1$
+				Method method = osClass.getMethod("GTK_WIDGET_HEIGHT", new Class[] { int.class }); //$NON-NLS-1$
+				Object ret = method.invoke(menu, new Object[] { Menu_handler.getInt(menu)});
+				if (ret != null) {
+					int menuBarHeight = ((Integer) ret).intValue();
+					trim.y -= menuBarHeight;
 				}
+			} catch (Throwable t) {
 			}
 		}
 		return new Point(trim.x, trim.y);
-	}
-
-	@Override
-	public Image captureImage(Control control) {
-		Rectangle rectangle = getBounds(control);
-		Display display = control.getDisplay();
-		Image image = null;
-		if (control instanceof Shell) {
-			Shell shell = (Shell) control;
-			shell.layout();
-			Point parentLocation = control.toDisplay(0, 0);
-			image = getImage(control, rectangle.width, rectangle.height, false);
-
-			rectangle.x = parentLocation.x;
-			rectangle.y = parentLocation.y;
-
-			GC myImageGC = new GC(image);
-			try {
-				for (Control child : shell.getChildren()) {
-					Rectangle childBounds = child.getBounds();
-					// bug of SWT on Win32, child bounds is not correct in the Window is not in the ToolBar
-					int x = (rectangle.width - childBounds.width) / 2;
-					int y = (rectangle.height - childBounds.height) - x;
-					childBounds.x = rectangle.x + x;
-					childBounds.y = rectangle.y + y;
-					if (!rectangle.intersects(childBounds))
-						continue; // Child is completely outside parent.
-
-					Image childImage = new Image(display, child.getBounds());
-					GC gc = new GC(childImage);
-					child.print(gc);
-					gc.dispose();
-					try {
-						myImageGC.drawImage(childImage, x, y);
-					} finally {
-						childImage.dispose();
-					}
-				}
-			} finally {
-				myImageGC.dispose();
-			}
-		} else {
-			image = new Image(display, rectangle);
-			GC gc = new GC(image);
-			control.print(gc);
-			gc.dispose();
-		}
-		return image;
 	}
 
 	protected Image getImageOfControl(Control control, int includeChildren, int maxWidth, int maxHeight) {
@@ -140,49 +94,30 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 				image = getImageOfHandle(handle, shell.getDisplay(), includeChildren, maxWidth, maxHeight);
 			}
 		}
-		if (image == null) {
-			int handle = getIntHandle(control);
-			image = getImageOfHandle(handle, control.getDisplay(), includeChildren, maxWidth, maxHeight);
-		}
-		if (control instanceof Decorations) {
-			Decorations decorations = (Decorations) control;
-			Rectangle shellBounds = getBounds(decorations);
-			Point topLeft = getTopLeftOfClientarea(decorations);
-			Image realShellImage = new Image(decorations.getDisplay(), shellBounds.width, shellBounds.height);
-			Image origImage = image;
-			try {
-				simulateDecoration(decorations, realShellImage, shellBounds, getClientArea(decorations), topLeft);
-				GC gc = new GC(realShellImage);
-				gc.drawImage(image, topLeft.x, topLeft.y);
-				gc.dispose();
-				image = realShellImage;
-			} finally {
-				origImage.dispose();
+		try {
+			if (image == null) {
+				image = getImageOfHandle(Control_handler.getInt(control), control.getDisplay(), includeChildren, maxWidth, maxHeight);
 			}
+			if (control instanceof Decorations) {
+				Decorations decorations = (Decorations) control;
+				Rectangle shellBounds = decorations.getBounds();
+				Point topLeft = getTopLeftOfClientarea(decorations);
+				Image realShellImage = new Image(decorations.getDisplay(), shellBounds.width, shellBounds.height);
+				Image origImage = image;
+				try {
+					simulateDecoration(decorations, realShellImage, decorations.getBounds(), decorations.getClientArea(), topLeft);
+					GC gc = new GC(realShellImage);
+					gc.drawImage(image, topLeft.x, topLeft.y);
+					gc.dispose();
+					image = realShellImage;
+				} finally {
+					origImage.dispose();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return image;
-	}
-
-	protected Rectangle getBounds(Control control) {
-		Rectangle bounds = control.getBounds();
-		if (control instanceof Decorations) {
-			Decorations decorations = (Decorations) control;
-			bounds.x -= border;
-			bounds.y -= titleHeight;
-			bounds.width += border * 2;
-			bounds.height += (border + titleHeight);
-		}
-		return bounds;
-	}
-
-	protected Rectangle getClientArea(Composite control) {
-		Rectangle bounds = control.getClientArea();
-		if (control instanceof Decorations) {
-			Decorations decorations = (Decorations) control;
-			bounds.x += border;
-			bounds.y += titleHeight;
-		}
-		return bounds;
 	}
 
 	protected Image getImageOfHandle(int handle, Display display, int includeChildren, int maxWidth, int maxHeight) {
@@ -257,11 +192,8 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 			gc.fillRectangle(0, bounds.height - topLeft.y, topLeft.y, bounds.height);
 			gc.fillRectangle(bounds.width - topLeft.y, bounds.height - topLeft.y, bounds.width, bounds.height);
 
-			Object designModeStyle = decoration.getData("DesignMode.style");
-			int style = (designModeStyle != null ? Integer.parseInt(designModeStyle.toString()) : decoration.getStyle());
-
 			// title bar
-			if ((style & (SWT.TITLE | SWT.CLOSE | SWT.MAX | SWT.MIN)) != 0 && topLeft.y > 2) {
+			if ((decoration.getStyle() & (SWT.TITLE | SWT.CLOSE | SWT.MAX | SWT.MIN)) != 0 && topLeft.y > 2) {
 				int barHeight = topLeft.y - 2;
 				// There will be a title bar - draw the text
 				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND));
@@ -269,14 +201,12 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 				gc.fillGradientRectangle(0, 0, bounds.width, barHeight, false);
 				gc.setForeground(decoration.getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
 				gc.drawText(decoration.getText(), topLeft.y, 2, true);
-				Image image = (decoration.getImage() != null && !decoration.getImage().isDisposed() ? decoration.getImage() : ResourceManager.getImage(ResourceManager.IMG_OBJ_ECLIPSE_ICON));
-				if (image != null && !image.isDisposed()) {
-					Rectangle imageBounds = image.getBounds();
+				if (decoration.getImage() != null && !decoration.getImage().isDisposed()) {
+					Rectangle imageBounds = decoration.getImage().getBounds();
 					if (imageBounds.height <= barHeight) {
-						int offset = (barHeight - imageBounds.height) / 2;
-						gc.drawImage(image, offset, offset);
+						gc.drawImage(decoration.getImage(), 0, 0);
 					} else {
-						ImageData imageData = image.getImageData();
+						ImageData imageData = decoration.getImage().getImageData();
 						double factor = (double) barHeight / (double) imageBounds.height;
 						int newWidth = (int) (imageBounds.width * factor);
 						imageData = imageData.scaledTo(newWidth, barHeight);
@@ -289,7 +219,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 				int rightx = bounds.width - topLeft.y;
 
 				// title bar buttons
-				if ((style & SWT.CLOSE) != 0) {
+				if ((decoration.getStyle() & SWT.CLOSE) != 0) {
 					gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 					gc.fillRectangle(rightx, 0, topLeft.y, topLeft.y);
 					gc.setLineWidth(1);
@@ -305,7 +235,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 					gc.drawLine(rightx + lineWidth, topLeft.y - lineWidth, rightx + topLeft.y - lineWidth, lineWidth);
 					rightx -= topLeft.y;
 				}
-				if ((style & SWT.MAX) != 0) {
+				if ((decoration.getStyle() & SWT.MAX) != 0) {
 					gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 					gc.fillRectangle(rightx, 0, topLeft.y, topLeft.y);
 					gc.setLineWidth(1);
@@ -320,7 +250,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 					gc.drawRectangle(rightx + lineWidth, lineWidth, topLeft.y - (2 * lineWidth), topLeft.y - (2 * lineWidth));
 					rightx -= topLeft.y;
 				}
-				if ((style & SWT.MIN) != 0) {
+				if ((decoration.getStyle() & SWT.MIN) != 0) {
 					gc.setLineWidth(1);
 					gc.setBackground(decoration.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 					gc.fillRectangle(rightx, 0, topLeft.y - 1, topLeft.y - 1);
@@ -345,7 +275,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 		}
 	}
 
-	protected Map fieldAccessors = new HashMap(); // Map of Class->fieldName->field reflect
+	protected Map<Class<?>, Map<String, Object>> fieldAccessors = new HashMap<Class<?>, Map<String, Object>>(); // Map of Class->fieldName->field reflect
 
 	/**
 	 * @param object
@@ -354,7 +284,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 	 * 
 	 * @since 1.0.0
 	 */
-	private int readIntFieldValue(Class klass, Object object, String fieldName) {
+	private int readIntFieldValue(Class<?> klass, Object object, String fieldName) {
 		try {
 			Field field = getField(klass, fieldName);
 			return field != null ? field.getInt(object) : 0;
@@ -366,10 +296,10 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 
 	private static final Object NO_FIELD = new Object();
 
-	private Field getField(Class klass, String fieldName) {
-		Map nameToField = (Map) fieldAccessors.get(klass);
+	private Field getField(Class<?> klass, String fieldName) {
+		Map<String, Object> nameToField = fieldAccessors.get(klass);
 		if (nameToField == null) {
-			fieldAccessors.put(klass, nameToField = new HashMap());
+			fieldAccessors.put(klass, nameToField = new HashMap<String, Object>());
 		}
 		Object field = nameToField.get(fieldName);
 		if (field == null) {
@@ -383,7 +313,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 				field = NO_FIELD;
 				e.printStackTrace();
 			}
-			nameToField.put(klass, field);
+			nameToField.put(fieldName, field);
 		}
 		return (Field) (field != NO_FIELD ? field : null);
 	}
@@ -395,7 +325,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 	 * 
 	 * @since 1.0.0
 	 */
-	private void writeIntFieldValue(Class klass, Object object, String fieldName, int newInt) {
+	private void writeIntFieldValue(Class<?> klass, Object object, String fieldName, int newInt) {
 		try {
 			Field field = getField(klass, fieldName);
 			field.setInt(object, newInt);
@@ -406,7 +336,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 
 	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
 		int ic = includeChildren ? 1 : 0;
-		Map map = new HashMap();
+		Map<Control, Integer> map = new HashMap<Control, Integer>();
 		changeObscured(control, map, false);
 		Image image = null;
 		try {
@@ -423,7 +353,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 	 * 
 	 * @since 1.0.0
 	 */
-	private void changeObscured(Control control, Map map, boolean on) {
+	private void changeObscured(Control control, Map<Control, Integer> map, boolean on) {
 		if (on) {
 			// restoring the obscured flags
 			if (map.containsKey(control)) {
@@ -465,7 +395,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 	 * 
 	 * @since 1.1.0.1
 	 */
-	private Object readObjectFieldValue(Class klass, Object object, String fieldName) {
+	private Object readObjectFieldValue(Class<?> klass, Object object, String fieldName) {
 		try {
 			Field field = klass.getDeclaredField(fieldName);
 			field.setAccessible(true);
