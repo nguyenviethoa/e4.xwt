@@ -283,7 +283,6 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 			root.add(dynamicPaletteGroup);
 			RootEditPart rootEditPart = dynamicPaletteViewer.getRootEditPart();
 			refreshAllEditParts(rootEditPart);
-			System.out.println();
 		}
 	}
 
@@ -305,7 +304,6 @@ public abstract class VEXEditor extends XMLMultiPageEditorPart {
 				}
 				if (entry != null) {
 					result.add(entry);
-
 				}
 			}
 		}
