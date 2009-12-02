@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.4 $  $Date: 2009/06/01 00:05:01 $ 
+ *  $Revision: 1.5 $  $Date: 2009/12/02 16:13:35 $ 
  */
 package org.eclipse.e4.xwt.vex.swt;
 
@@ -109,7 +109,7 @@ public abstract class ImageCapture {
 					instance = new org.eclipse.ve.internal.swt.targetvm.macosx.cocoa.ImageCapture();
 				}
 				else if (Platform.WS_CARBON.equals(Platform.getWS())) {
-//					instance = new org.eclipse.ve.internal.swt.targetvm.macosx.ImageCapture();
+					instance = new org.eclipse.ve.internal.swt.targetvm.macosx.ImageCapture();
 				}
 				else { 
 					throw new UnsupportedOperationException(Platform.getOS());
