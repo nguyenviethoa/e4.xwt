@@ -37,7 +37,7 @@ public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.macosx.Im
 	static Method NSGraphicsContext_setCurrentContext;
 	
 	static Method NSAffineTransform_transform;
-
+	
 	static Method NSAffineTransform_translateXBy;
 	static Method NSAffineTransform_scaleXBy;
 	static Method NSAffineTransform_concat;
