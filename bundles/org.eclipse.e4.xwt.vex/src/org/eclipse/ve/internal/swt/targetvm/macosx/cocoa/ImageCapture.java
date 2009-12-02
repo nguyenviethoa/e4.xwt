@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 /**
+ * Support of Mac Cocoa API
  * 
  * @author yyang <yves.yang@soyatec.com>
  * @author Kevin Barnes <krbarnes@ca.ibm.com>
