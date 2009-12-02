@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author yyang <yves.yang@soyatec.com>
  * @author Kevin Barnes <krbarnes@ca.ibm.com>
  */
-public class ImageCapture extends org.eclipse.ve.internal.swt.targetvm.macosx.ImageCapture {
+public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 	static Field GC_handle;
 	static Field Control_view;
 	static Method NSView_superview;
