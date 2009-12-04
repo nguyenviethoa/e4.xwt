@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.policies;
 
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
@@ -35,6 +38,12 @@ public class ElementDirectEditPolicy extends DirectEditPolicy {
 		return new ApplyAttributeSettingCommand(element, "text", IConstants.XWT_NAMESPACE, value);
 	}
 
+	@Override
+	protected void eraseDirectEditFeedback(DirectEditRequest request) {
+		super.eraseDirectEditFeedback(request);
+		setting = false;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -46,13 +55,19 @@ public class ElementDirectEditPolicy extends DirectEditPolicy {
 	@Override
 	protected void showDirectEditFeedback(DirectEditRequest request) {
 		if (!setting) {
+			GraphicalEditPart graphicalEditPart = (GraphicalEditPart) getHost();
+			IFigure figure = graphicalEditPart.getFigure();
+			
 			XamlElement element = (XamlElement) (getHost().getModel());
 			XamlAttribute attribute = element.getAttribute("text", IConstants.XWT_NAMESPACE);
 			String value = attribute.getValue();
 			request.getCellEditor().setValue(value);
 			Control control = request.getCellEditor().getControl();
 			if (control instanceof Text) {
+				Rectangle rectangle = figure.getBounds();
 				Text text = (Text) control;
+				text.setText(value);
+				text.setLocation(rectangle.x, rectangle.y);
 				text.setSelection(0, value.length());
 			}
 		}
