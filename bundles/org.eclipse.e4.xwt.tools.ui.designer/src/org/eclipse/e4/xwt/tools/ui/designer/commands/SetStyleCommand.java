@@ -31,16 +31,32 @@ public class SetStyleCommand extends Command {
 	private XamlNode parent;
 	private String newStyle;
 	private StyleGroup group;
-	private boolean forRemove;
+	private boolean remove;
 	private Command delegate;
 
-	// TODO:
-	public SetStyleCommand(XamlNode parent, String newStyle, StyleGroup group) {
+	public SetStyleCommand(XamlNode parent, String newStyle) {
 		this.parent = parent;
-		this.group = group;
 		this.newStyle = newStyle;
 	}
 
+	public SetStyleCommand(XamlNode parent, String newStyle, StyleGroup group) {
+		this(parent, newStyle);
+		this.group = group;
+	}
+
+	public SetStyleCommand(XamlNode parent, String newStyle, boolean remove) {
+		this(parent, newStyle);
+		this.remove = remove;
+	}
+
+	public void setGroup(StyleGroup group) {
+		this.group = group;
+	}
+
+	public void setRemove(boolean remove) {
+		this.remove = remove;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -59,14 +75,14 @@ public class SetStyleCommand extends Command {
 		return delegate != null && delegate.canUndo();
 	}
 
-	private Command createDelegate(String newStyle) {
+	private Command createCommand(String newStyle) {
 		return new ApplyAttributeSettingCommand(parent, "style", IConstants.XWT_X_NAMESPACE, newStyle);
 	}
 
 	private Command createDelegate() {
 		XamlAttribute attribute = parent.getAttribute("style", IConstants.XWT_X_NAMESPACE);
 		if (attribute == null || attribute.getValue() == null) {
-			return createDelegate(newStyle);
+			return createCommand(newStyle);
 		} else {
 			String value = attribute.getValue();
 			List<String> oldValues = new ArrayList<String>();
@@ -79,7 +95,7 @@ public class SetStyleCommand extends Command {
 			if (oldValues.isEmpty()) {
 				int style = StyleHelper.getStyle(parent);
 				int newStyleValue = (Integer) StringToInteger.instance.convert(newStyle);
-				return createDelegate(Integer.toString(style | newStyleValue));
+				return createCommand(Integer.toString(style | newStyleValue));
 			}
 			// 2. String style.
 			if (group != null && !"default".equals(group.getGroupName())) {
@@ -94,16 +110,9 @@ public class SetStyleCommand extends Command {
 				}
 				oldValues.add(newStyle);
 				String newStyleValue = StringUtil.format(oldValues.toArray(new String[oldValues.size()]), "|");
-				return createDelegate(newStyleValue);
+				return createCommand(newStyleValue);
 			} else {
-				if (forRemove) {
-					// new add.
-					if (oldValues.contains(newStyle) || oldValues.contains("SWT." + newStyle)) {
-						return null;
-					}
-					String styleValue = value + "|" + newStyle;
-					return createDelegate(styleValue);
-				} else {
+				if (remove) {
 					// remove
 					if (oldValues.contains(newStyle)) {
 						oldValues.remove(newStyle);
@@ -112,7 +121,14 @@ public class SetStyleCommand extends Command {
 						oldValues.remove("SWT." + newStyle);
 					}
 					String newStyleValue = StringUtil.format(oldValues.toArray(new String[oldValues.size()]), "|");
-					return createDelegate(newStyleValue);
+					return createCommand(newStyleValue);
+				} else {
+					// new add.
+					if (oldValues.contains(newStyle) || oldValues.contains("SWT." + newStyle)) {
+						return null;
+					}
+					String styleValue = value + "|" + newStyle;
+					return createCommand(styleValue);
 				}
 			}
 		}
@@ -124,6 +140,9 @@ public class SetStyleCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
 	public void execute() {
-
+		delegate = createDelegate();
+		if (delegate != null && delegate.canExecute()) {
+			delegate.execute();
+		}
 	}
 }

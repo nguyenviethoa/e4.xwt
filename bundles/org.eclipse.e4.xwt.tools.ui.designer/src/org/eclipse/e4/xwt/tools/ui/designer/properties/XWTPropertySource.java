@@ -17,12 +17,10 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTModelUtil;
-import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
@@ -59,7 +57,7 @@ public class XWTPropertySource implements IPropertySource {
 	 * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
 	 */
 	public Object getEditableValue() {
-		return fContext.getSource();
+		return fContext.getComponent();
 	}
 
 	/*
@@ -76,10 +74,7 @@ public class XWTPropertySource implements IPropertySource {
 
 	private IPropertyDescriptor[] createPropertyDescriptors() {
 		List<IPropertyDescriptor> result = new ArrayList<IPropertyDescriptor>();
-		IMetaclass metaclass = XWT.getMetaclass(fContext.getSource());
-		if (metaclass == null) {
-			metaclass = XWTUtility.getMetaclass(fContext.getNode());
-		}
+		IMetaclass metaclass = fContext.getMetaclass();
 		if (metaclass == null) {
 			return null;
 		}
@@ -96,7 +91,7 @@ public class XWTPropertySource implements IPropertySource {
 		if (!done.contains("style")) {
 			Object editableValue = getEditableValue();
 			if (editableValue instanceof Widget) {
-				styleHelper = new StylePropertyHelper((Widget) editableValue);
+				styleHelper = new StylePropertyHelper(fContext.getNode());
 				styleHelper.setEditDomain(fContext.getEditDomain());
 			}
 			if (styleHelper != null) {
@@ -133,14 +128,13 @@ public class XWTPropertySource implements IPropertySource {
 		}
 		try {
 			Field field = classType.getField(name);
-			if (field != null && field.getType() == propertyType && (field.getModifiers() & Modifier.PUBLIC) != 0) {
+			if (field != null && /*field.getType().equals(propertyType) && */(field.getModifiers() & Modifier.PUBLIC) != 0) {
 				return true;
 			}
 		} catch (Exception e) {
 		}
 		return false;
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -153,21 +147,22 @@ public class XWTPropertySource implements IPropertySource {
 			try {
 				Class<?> type = p.getType();
 				XamlAttribute attribute = XWTModelUtil.getAdaptableAttribute(fContext.getNode(), p.getName(), IConstants.XWT_NAMESPACE);
+				Object component = fContext.getComponent();
 				if (fContext.isDirectEditType(type)) {
 					if (attribute != null && attribute.getValue() != null) {
 						value = attribute.getValue();
 					} else {
-						value = p.getValue(fContext.getSource());
+						value = p.getValue(component);
 					}
 				} else if (type.isArray()) {
-					value = p.getValue(fContext.getSource());
+					value = p.getValue(component);
 				} else {
 					boolean isAtrrNew = false;
 					if (attribute == null) {
 						attribute = XamlFactory.eINSTANCE.createAttribute(p.getName(), IConstants.XWT_NAMESPACE);
 						isAtrrNew = true;
 					}
-					Object childSource = p.getValue(fContext.getSource());
+					Object childSource = p.getValue(component);
 					if (childSource != null) {
 						Class<? extends Object> childSourceType = childSource.getClass();
 						XamlNode child = null;
@@ -184,7 +179,7 @@ public class XWTPropertySource implements IPropertySource {
 							}
 						}
 						if (child != null && childSource != null) {
-							value = new PropertyContext(child, childSource, fContext);
+							value = new PropertyContext(child, fContext);
 						}
 					}
 				}

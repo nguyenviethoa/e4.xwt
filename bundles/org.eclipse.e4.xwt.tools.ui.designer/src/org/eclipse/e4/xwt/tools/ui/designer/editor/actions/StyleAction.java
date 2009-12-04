@@ -10,20 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.editor.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.converters.StringToInteger;
-import org.eclipse.e4.xwt.tools.ui.designer.commands.ApplyAttributeSettingCommand;
+import org.eclipse.e4.xwt.tools.ui.designer.commands.SetStyleCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.swt.SWTStyles;
 import org.eclipse.e4.xwt.tools.ui.designer.swt.StyleGroup;
-import org.eclipse.e4.xwt.tools.ui.designer.utils.StringUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.StyleHelper;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -142,69 +134,16 @@ public class StyleAction extends Action implements IMenuCreator {
 			this.newStyle = newStyle;
 		}
 
-		void execute(String newStyle) {
-			EditDomain.getEditDomain(editPart).getCommandStack().execute(new ApplyAttributeSettingCommand(node, "style", IConstants.XWT_X_NAMESPACE, newStyle));
-		}
-
 		public void run() {
 			// fail fast
 			if (getStyle() == AS_RADIO_BUTTON && !isChecked()) {
 				return;
 			}
-
-			XamlAttribute attribute = node.getAttribute("style", IConstants.XWT_X_NAMESPACE);
-			if (attribute == null || attribute.getValue() == null) {
-				execute(newStyle);
-			} else {
-				String value = attribute.getValue();
-				List<String> oldValues = new ArrayList<String>();
-				StringTokenizer stk = new StringTokenizer(value, "|");
-				while (stk.hasMoreTokens()) {
-					oldValues.add(stk.nextToken().trim());
-				}
-
-				// 1. Maybe not a string.
-				if (oldValues.isEmpty()) {
-					int style = StyleHelper.getStyle(node);
-					int newStyleValue = (Integer) StringToInteger.instance.convert(newStyle);
-					execute(Integer.toString(style | newStyleValue));
-					return;
-				}
-				// 2. String style.
-				if (getStyle() == AS_RADIO_BUTTON) {
-					String[] styles = group.getStyles();
-					for (String str : styles) {
-						if (oldValues.contains(str)) {
-							oldValues.remove(str);
-						}
-						if (oldValues.contains("SWT." + str)) {
-							oldValues.remove("SWT." + str);
-						}
-					}
-					oldValues.add(newStyle);
-					String newStyleValue = StringUtil.format(oldValues.toArray(new String[oldValues.size()]), "|");
-					execute(newStyleValue);
-				} else {
-					if (isChecked()) {
-						// new add.
-						if (oldValues.contains(newStyle) || oldValues.contains("SWT." + newStyle)) {
-							return;
-						}
-						String styleValue = value + "|" + newStyle;
-						execute(styleValue);
-					} else {
-						// remove
-						if (oldValues.contains(newStyle)) {
-							oldValues.remove(newStyle);
-						}
-						if (oldValues.contains("SWT." + newStyle)) {
-							oldValues.remove("SWT." + newStyle);
-						}
-						String newStyleValue = StringUtil.format(oldValues.toArray(new String[oldValues.size()]), "|");
-						execute(newStyleValue);
-					}
-				}
+			SetStyleCommand command = new SetStyleCommand(node, newStyle, group);
+			if (getStyle() == AS_CHECK_BOX) {
+				command.setRemove(!isChecked());
 			}
+			EditDomain.getEditDomain(editPart).getCommandStack().execute(command);
 		}
 	}
 

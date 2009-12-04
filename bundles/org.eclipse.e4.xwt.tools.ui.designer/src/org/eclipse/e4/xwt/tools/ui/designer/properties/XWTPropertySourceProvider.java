@@ -18,8 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
-import org.eclipse.e4.xwt.tools.ui.designer.parts.ViewerEditPart;
-import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -86,22 +84,8 @@ public class XWTPropertySourceProvider implements IPropertySourceProvider {
 	private IPropertySource createPropertySource(Object object) {
 		PropertyContext context = null;
 		if (object instanceof EditPart) {
-			Object source = null;
-			XamlNode node = null;
 			EditPart editPart = (EditPart) object;
-			Object model = editPart.getModel();
-			if (model instanceof XamlNode) {
-				node = (XamlNode) model;
-			}
-			if (editPart instanceof ViewerEditPart) {
-				source = ((ViewerEditPart) editPart).getJfaceViewer();
-			} else if (editPart instanceof WidgetEditPart) {
-				source = ((WidgetEditPart) editPart).getWidget();
-			}
-			if (source == null || node == null) {
-				return null;
-			}
-			context = new PropertyContext(node, source, null);
+			context = new PropertyContext(editPart, null);
 			if (editDomain == null) {
 				editDomain = (EditDomain) ((EditPart) object).getViewer().getEditDomain();
 			}

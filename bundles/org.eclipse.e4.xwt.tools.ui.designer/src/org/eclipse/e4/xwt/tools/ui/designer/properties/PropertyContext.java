@@ -12,15 +12,19 @@ package org.eclipse.e4.xwt.tools.ui.designer.properties;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddItemsCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.ChangeLayoutCommand;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutsHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.ViewerEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.providers.LabelProviderFactory;
+import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
@@ -38,25 +42,65 @@ import org.eclipse.swt.widgets.Layout;
  * @author jliu (jin.liu@soyatec.com)
  */
 public class PropertyContext {
-	private Object source;
+	// private Object source;
+	private EditPart editPart;
 	private XamlNode node;
 	private EditDomain editDomain;
 	private String category = "Attributes";
 	private PropertyContext parent;
 
-	public PropertyContext(XamlNode node, Object source, PropertyContext parent) {
-		Assert.isNotNull(node);
-		Assert.isNotNull(source);
+	public PropertyContext(EditPart editPart, PropertyContext parent) {
+		this((XamlNode) null, parent);
+		Assert.isNotNull(editPart);
+		this.editPart = editPart;
+	}
+
+	public PropertyContext(XamlNode node, PropertyContext parent) {
 		this.node = node;
-		this.source = source;
 		this.parent = parent;
 	}
 
-	public Object getSource() {
-		return source;
+	public Object getComponent() {
+		if (editPart == null) {
+			return null;
+		}
+		if (editPart instanceof WidgetEditPart) {
+			return ((WidgetEditPart) editPart).getWidget();
+		} else if (editPart instanceof ViewerEditPart) {
+			return ((ViewerEditPart) editPart).getViewer();
+		}
+		return null;
+	}
+
+	public Class<?> getType() {
+		IMetaclass metaclass = getMetaclass();
+		if (metaclass != null) {
+			return metaclass.getType();
+		}
+		throw new NullPointerException("Unknown object type");
+	}
+
+	public IMetaclass getMetaclass() {
+		IMetaclass metaclass = null;
+		if (node != null) {
+			metaclass = XWTUtility.getMetaclass(node);
+		}
+		if (metaclass == null) {
+			Object component = getComponent();
+			if (component != null) {
+				metaclass = XWT.getMetaclass(component);
+			}
+		}
+		return metaclass;
 	}
 
 	public XamlNode getNode() {
+		if (node == null && editPart != null) {
+			Object model = editPart.getModel();
+			if (model instanceof XamlNode) {
+				node = (XamlNode) model;
+			}
+		}
 		return node;
 	}
 
@@ -101,7 +145,7 @@ public class PropertyContext {
 	}
 
 	public boolean isDirectEditType(Class<?> type) {
-		return type.isPrimitive() || String.class == type || Color.class == type || Font.class == type || Rectangle.class == type || Point.class == type || Image.class == type;
+		return type.isPrimitive() || String.class == type || Color.class == type || Font.class == type || Rectangle.class == type || Point.class == type || Image.class == type || Boolean.class == type || Character.class == type || Integer.class == type || Long.class == type || Double.class == type || Float.class == type || Byte.class == type;
 	}
 
 	public void setPropertyValue(Object id, Object value) {
@@ -129,17 +173,12 @@ public class PropertyContext {
 					cmd.add(new AddNewChildCommand(container, current));
 				}
 			}
-		} else if (Layout.class == type) {
-			cmd.add(new ChangeLayoutCommand(getEditPart(), LayoutsHelper.getLayoutType(value)));
+		} else if (Layout.class == type && editPart != null) {
+			cmd.add(new ChangeLayoutCommand(editPart, LayoutsHelper.getLayoutType(value)));
 		} else if (type.isArray() && type.getComponentType() == String.class && value.getClass() == String[].class) {
 			cmd.add(new AddItemsCommand((XamlElement) node, (String[]) value));
 		}
-		return cmd;
-	}
-
-	private EditPart getEditPart() {
-		Designer designer = (Designer) getEditDomain().getEditorPart();
-		return (EditPart) designer.getGraphicalViewer().getEditPartRegistry().get(getNode());
+		return cmd.unwrap();
 	}
 
 	private void execute(Command command) {
