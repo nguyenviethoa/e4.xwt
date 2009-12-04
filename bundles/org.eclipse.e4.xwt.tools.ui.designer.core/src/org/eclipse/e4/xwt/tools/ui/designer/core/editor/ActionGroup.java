@@ -32,7 +32,7 @@ import org.eclipse.ui.IWorkbenchPart;
 public class ActionGroup {
 
 	public static final int SELECTION_GRP = 0;
-	public static final int PRPPERTY_GRP = 1;
+	public static final int PROPERTY_GRP = 1;
 	public static final int STACK_GRP = 2;
 
 	private IEditorPart editor;
@@ -59,13 +59,12 @@ public class ActionGroup {
 		IAction action;
 
 		action = new UndoAction(editor);
-		action.setText("&Undo @CTRL+Z");
-		action.setAccelerator(SWT.CTRL + 'Z');
+		action.setText("&Undo \tCTRL+Z");
 		getActionRegistry().registerAction(action);
 		getStackActions().add(action.getId());
 
 		action = new RedoAction(editor);
-		action.setText("&Redo @CTRL+Y");
+		action.setText("&Redo \tCTRL+Y");
 		getActionRegistry().registerAction(action);
 		getStackActions().add(action.getId());
 
@@ -111,7 +110,7 @@ public class ActionGroup {
 		case SELECTION_GRP:
 			updateActions(selectionActions);
 			break;
-		case PRPPERTY_GRP:
+		case PROPERTY_GRP:
 			updateActions(propertyActions);
 			break;
 		case STACK_GRP:
@@ -132,6 +131,26 @@ public class ActionGroup {
 			IAction action = registry.getAction(actionId);
 			if (action instanceof UpdateAction) {
 				((UpdateAction) action).update();
+				if (action instanceof RedoAction) {
+					RedoAction redoAction = (RedoAction) action;
+					String text = redoAction.getText();
+					if (!text.endsWith("\tCtrl+Y")) {
+						if (text.endsWith("Ctrl+Y")) {
+							text = text.substring(0, text.length() - 6);
+						}
+						redoAction.setText(text + "\tCtrl+Y");					
+					}
+				}
+				else if (action instanceof UndoAction) {
+					UndoAction undoAction = (UndoAction) action;
+					String text = undoAction.getText();
+					if (!text.endsWith("\tCtrl+Z")) {
+						if (text.endsWith("Ctrl+Z")) {
+							text = text.substring(0, text.length() - 6);
+						}
+						undoAction.setText(text + "\tCtrl+Z");					
+					}
+				}
 			}
 		}
 	}

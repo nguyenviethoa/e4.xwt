@@ -171,7 +171,7 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	}
 
 	protected void configureActions() {
-		actionGroup.updateActions(ActionGroup.PRPPERTY_GRP);
+		actionGroup.updateActions(ActionGroup.PROPERTY_GRP);
 		actionGroup.updateActions(ActionGroup.STACK_GRP);
 
 		if (graphicalViewer != null) {
