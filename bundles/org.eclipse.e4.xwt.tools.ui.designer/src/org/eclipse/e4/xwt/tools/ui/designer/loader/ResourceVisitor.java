@@ -330,6 +330,9 @@ public class ResourceVisitor {
 			return null;
 		}
 		IMetaclass metaclass = loader.getMetaclass(name, namespace);
+		if (metaclass == null) {
+			return null;
+		}
 		if (constraintType != null && !(IBinding.class.isAssignableFrom(metaclass.getType())) && (!constraintType.isAssignableFrom(metaclass.getType()))) {
 			if (!constraintType.isArray() || !constraintType.getComponentType().isAssignableFrom(metaclass.getType()))
 				return null;

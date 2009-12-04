@@ -11,7 +11,6 @@
 package org.eclipse.e4.xwt.tools.ui.designer.editor.palette;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +19,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutType;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutsHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.preference.Preferences;
@@ -36,7 +37,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -54,11 +54,15 @@ public class EntryHelper {
 		}
 		XamlNode node = nodes.get(entry);
 		if (node == null || node.eContainer() != null) {
-			node = new EntryHelper().createNode(entry);
-			if (node.getName().equals("Composite")) {
-				initLayoutAttribute(node);
+			try {
+				node = new EntryHelper().createNode(entry);
+				if ("Composite".equals(node.getName())) {
+					initLayoutAttribute(node);
+				}
+				nodes.put(entry, node);
+			} catch (Exception e) {
+				LoggerManager.log(e);
 			}
-			nodes.put(entry, node);
 		}
 		return (XamlNode) EcoreUtil.copy(node);
 	}
@@ -115,14 +119,12 @@ public class EntryHelper {
 					createModel(node, element);
 					return node;
 				}
-			} catch (SAXException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				throw new XWTException(e);
 			}
 
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			throw new XWTException(e);
 		}
 
 		return null;
