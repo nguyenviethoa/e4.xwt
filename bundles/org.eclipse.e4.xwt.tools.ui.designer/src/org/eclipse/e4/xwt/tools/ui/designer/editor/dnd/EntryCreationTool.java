@@ -77,8 +77,13 @@ public class EntryCreationTool extends CreationTool {
 			shell.setLayout(new RowLayout());
 		}
 		XWTProxy proxy = new XWTProxy(null);
-		Object widget = proxy.createWidget(shell, (XamlElement) node);
-		if (widget == null || !(widget instanceof Control)) {
+		Object widget;
+		try {
+			widget = proxy.createWidget(shell, (XamlElement) node);
+			if (widget == null || !(widget instanceof Control)) {
+				return null;
+			}
+		} catch (Exception e) {
 			return null;
 		}
 		shell.layout();
