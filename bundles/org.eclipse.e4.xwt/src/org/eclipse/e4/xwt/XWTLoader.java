@@ -1285,6 +1285,7 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(org.eclipse.swt.custom.CTabItem.class);
 		registerMetaclass(org.eclipse.swt.custom.SashForm.class);
 		registerMetaclass(org.eclipse.swt.custom.StyledText.class);
+		registerMetaclass(org.eclipse.swt.custom.ScrolledComposite.class);
 
 		type = org.eclipse.swt.widgets.Widget.class;
 		metaclass = (IMetaclass) registerMetaclass(type);
