@@ -6,7 +6,6 @@
       <editor
             class="org.eclipse.e4.xwt.ui.editor.XWTEditor"
             contributorClass="org.eclipse.e4.xwt.ui.editor.XWTEditorContributor"
-            default="true"
             extensions="xwt"
             icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui/icons/full/obj16/xaml.png"
             id="org.eclipse.e4.xwt.tools.ui.editor"
