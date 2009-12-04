@@ -14,6 +14,7 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.DirectEditRequest;
@@ -56,5 +57,17 @@ public class ElementDirectEditPolicy extends DirectEditPolicy {
 			}
 		}
 		setting = true;
+	}
+	
+	@Override
+	public boolean understandsRequest(Request request) {
+		if (request instanceof DirectEditRequest) {
+			XamlElement element = (XamlElement) (getHost().getModel());
+			XamlAttribute attribute = element.getAttribute("text", IConstants.XWT_NAMESPACE);
+			if (attribute == null) {
+				return false;
+			}
+		}
+		return super.understandsRequest(request);
 	}
 }
