@@ -1457,7 +1457,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 			}
 		} catch (Exception e) {
-			LoggerManager.log(e);
+			throw new XWTException(e);
 		}
 	}
 

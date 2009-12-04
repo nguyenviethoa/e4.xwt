@@ -19,6 +19,7 @@ import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IEventGroup;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
@@ -360,7 +361,7 @@ public abstract class AbstractMetaclass implements IMetaclass {
 				updateContainment(parameters[0], object);
 				initialize(object);
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new XWTException(e); 
 			}
 		}
 		return object;
@@ -541,8 +542,7 @@ public abstract class AbstractMetaclass implements IMetaclass {
 					try {
 						swtObject = getType().newInstance();
 					} catch (Exception e) {
-						e.printStackTrace();
-						throw new UnsupportedOperationException("Constructor "
+						throw new XWTException("Constructor "
 								+ getType().getName() + " no found.");
 					}
 				}
@@ -550,9 +550,8 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			}
 			return swtObject;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new XWTException(e);
 		}
-		return null;
 	}
 
 	public Class<?> getDataContextType() {

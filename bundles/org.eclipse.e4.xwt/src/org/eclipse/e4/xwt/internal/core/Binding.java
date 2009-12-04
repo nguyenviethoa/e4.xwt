@@ -264,13 +264,13 @@ public class Binding implements IDynamicBinding {
 
 		IDataProvider dataProvider = getDataProvider(dataContext);
 		
-		if (isSourceControl()) {
-			try {
+		try {
+			if (isSourceControl()) {
 				ControlDataBinding controlDataBinding = new ControlDataBinding(dataContext, this, dataProvider);
 				return controlDataBinding.getValue();
-			} catch (XWTException e) {
-				// in case the property cannot be bound. return value
 			}
+		} catch (XWTException e) {
+			// in case the property cannot be bound. return value
 		}
 
 		DataBinding dataBinding = null;

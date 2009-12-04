@@ -293,9 +293,8 @@ public class ResourceVisitor {
 			}
 			return control;
 		} catch (Exception e) {
-			LoggerManager.log(e);
+			throw new XWTException(e);
 		}
-		return null;
 	}
 
 	public Object doCreate(Object parent, XamlElement element, Class<?> constraintType, Map<String, Object> options) throws Exception {
