@@ -24,18 +24,22 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.CreationTool;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public class EntryCreationTool extends CreationTool {
+	static int shadow = 2;
+
 	private Shell shell;
 	private Cursor cursor;
 	private Dimension initSize;
@@ -92,14 +96,27 @@ public class EntryCreationTool extends CreationTool {
 		Image image = null;
 		Control control = (Control) widget;
 		Rectangle bounds = control.getBounds();
-		initSize = new Dimension(bounds.width, bounds.height);
+		initSize = new Dimension(bounds.width + (shadow * 2), bounds.height + (shadow * 2));
 		if (control instanceof Shell) {
 			image = ImageCapture.getInstance().capture(control);
 		} else {
-			image = new Image(control.getDisplay(), bounds.width, bounds.height);
+			image = new Image(control.getDisplay(), initSize.width, initSize.height);
 			GC gc = new GC(image);
 			control.print(gc);
-			gc.dispose();
+			gc.copyArea(0, 0, bounds.width, bounds.height, shadow, shadow);
+			int width = initSize.width - 1;
+			int height = initSize.height - 1;
+			
+			gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
+			for (int i = 0; i < shadow; i++) {
+				gc.drawLine(i, i, width, i);
+				gc.drawLine(width, i, width, height);
+				gc.drawLine(width, height, i, height);
+				gc.drawLine(i, height, i, i);
+				width -= 1;
+				height -= 1;
+			}
+			gc.dispose(); 
 		}
 		return image;
 	}
