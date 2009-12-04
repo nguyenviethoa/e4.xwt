@@ -103,12 +103,4 @@
     <entries content="{Binding Source={DynamicResource $(cursor)}, Path=Property}" name="Dynamic Resource" context="xml_attribute_value" scope=""/>
     <entries content="&lt;ObjectDataProvider x:Key=&quot;$(cursor)&quot;&#xD;&#xA;&#x9;&#x9;&#x9;ObjectType=&quot;{x:Type local:Tasks}&quot; />" name="Object Data Provider"/>
   </entries>
-  <entries name="Shape">
-    <entries toolTip="Draws an ellipse." content="&lt;CEllipse ${cursor}/>" name="Ellipse" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.designer/icons/full/obj16/Ellipse.png" />
-    <entries toolTip="Draws a straight line between two points." content="&lt;CLine ${cursor}/>" name="Line" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.designer/icons/full/obj16/Line.png" />
-    <entries toolTip="Draws a polygon, which is a connected series of lines that form a closed shape." content="&lt;CPolygon ${cursor}/>" name="Polygon" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.designer/icons/full/obj16/Polygon.png" />
-    <entries toolTip="Draws a series of connected straight lines." content="&lt;CPloyLine ${cursor}/>" name="Polyline" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.designer/icons/full/obj16/Polyline.png" />
-    <entries toolTip="Draws a rectangle shape, which can have a stroke and a fill." content="&lt;CRectangle ${cursor}/>" name="Rectangle" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.designer/icons/full/obj16/Rectangle.png" />
-    <entries toolTip="Draws a series of connected lines and curves." content="&lt;CPath ${cursor}/>" name="Path" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.designer/icons/full/obj16/Path.png" />
-  </entries>
 </palette:Palette>
