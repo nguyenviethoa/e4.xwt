@@ -48,8 +48,8 @@ public class XWTPerspectiveFactory implements IPerspectiveFactory {
 
 		// Bottom
 		IFolderLayout bottom = factory.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea); //$NON-NLS-1$
-		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView(IPageLayout.ID_PROP_SHEET);
+		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView(XWTView.ID);
 	}
 
