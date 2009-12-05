@@ -56,7 +56,7 @@ public abstract class MoveCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
 	public boolean canExecute() {
-		boolean state = source != null && target != null && target instanceof XamlNode && getTarget().getParent() != null;
+		boolean state = source != null && target != null && target instanceof XamlNode;
 		if (!state) {
 			return false;
 		}

@@ -30,6 +30,11 @@ public class MoveBeforeCommand extends MoveCommand {
 		super(source, target, operation);
 	}
 
+	@Override
+	public boolean canExecute() {
+		return super.canExecute() && getTarget().getParent() != null;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

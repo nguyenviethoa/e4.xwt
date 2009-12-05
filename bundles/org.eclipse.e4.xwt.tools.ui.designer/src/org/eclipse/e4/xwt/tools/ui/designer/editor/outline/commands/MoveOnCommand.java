@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public class MoveOnCommand extends MoveAfterCommand {
+public class MoveOnCommand extends MoveCommand {
 
 	public MoveOnCommand(IStructuredSelection source, Object target, int operation) {
 		super(source, target, operation);
