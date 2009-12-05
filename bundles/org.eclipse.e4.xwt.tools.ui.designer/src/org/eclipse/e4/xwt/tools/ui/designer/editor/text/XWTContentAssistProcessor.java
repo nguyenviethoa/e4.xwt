@@ -333,7 +333,7 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 					continue;
 				}
 
-				eventName = Character.toUpperCase(eventName.charAt(0)) + eventName.substring(1) + "Event";
+				eventName = Character.toUpperCase(eventName.charAt(0)) + eventName.substring(1) + IEventConstants.SUFFIX;
 				if (event.getName() != null && event.getName().equals(IEventConstants.XWT_LOADED)) {
 					eventName = IEventConstants.XWT_LOADED;
 				}

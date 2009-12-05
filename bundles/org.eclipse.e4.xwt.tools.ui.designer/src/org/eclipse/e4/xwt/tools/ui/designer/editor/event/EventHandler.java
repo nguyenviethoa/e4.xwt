@@ -13,6 +13,9 @@ package org.eclipse.e4.xwt.tools.ui.designer.editor.event;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.IEventConstants;
+import org.eclipse.e4.xwt.metadata.ModelUtils;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.jdt.ASTHelper;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
@@ -22,6 +25,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.NamingConventions;
+import org.eclipse.jdt.internal.ui.compare.JavaTokenComparator;
 import org.eclipse.swt.widgets.Event;
 
 /**
@@ -51,11 +56,34 @@ public class EventHandler {
 		return false;
 	}
 
-	public String suggestDefaultName(String value) {
-		int i = 0;
+	public String suggestDefaultName(XamlElement element, String value) {
 		String name = value;
+		if (!exist(name)) {
+			return name; 
+		}
+
+		int i = 0;
+		String elementName = "";
+		XamlAttribute attribute = element.getAttribute("name", IConstants.XWT_X_NAMESPACE); 
+		if (attribute == null) {
+			attribute = element.getAttribute("name", IConstants.XWT_NAMESPACE); 
+		}
+		if (attribute != null) {
+			elementName = attribute.getValue().trim();
+		}
+		if (elementName == null || elementName.length() == 0) {
+			elementName = element.getName();
+		}
+		if (elementName == null) {
+			elementName = "";
+		}
+		if (elementName.length() > 1) {
+			elementName = Character.toUpperCase(elementName.charAt(0)) + elementName.substring(1);
+		}
+		
+		name = value + elementName;
 		while (exist(name)) {
-			name = value + (++i);
+			name = value + elementName + (++i);
 		}
 		return name;
 	}
@@ -103,7 +131,7 @@ public class EventHandler {
 	private void retrieveHandlerAttrs(XamlElement element, List<XamlAttribute> handlers) {
 		EList<String> attributeNames = element.attributeNames();
 		for (String attrName : attributeNames) {
-			if (attrName.endsWith("Event")) {
+			if (attrName.endsWith(IEventConstants.SUFFIX)) {
 				XamlAttribute attribute = element.getAttribute(attrName);
 				if (attribute != null && attribute.getValue() != null) {
 					handlers.add(attribute);

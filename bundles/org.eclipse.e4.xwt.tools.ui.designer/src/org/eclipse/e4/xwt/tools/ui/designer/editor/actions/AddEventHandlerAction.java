@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.tools.ui.designer.editor.actions;
 
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.metadata.ModelUtils;
 import org.eclipse.e4.xwt.tools.ui.designer.dialogs.NewHandlerDialog;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
@@ -49,8 +50,8 @@ public class AddEventHandlerAction extends Action {
 		
 		String attributeName = ModelUtils.normalizePropertyName(getText());
 		String initialValue = "on" + getText();
-		String eventName = attributeName + "Event";
-		initialValue = eventHandler.suggestDefaultName(initialValue);
+		String eventName = attributeName + IEventConstants.SUFFIX;
+		initialValue = eventHandler.suggestDefaultName(child, initialValue);
 		XamlAttribute handlerAttr = XamlFactory.eINSTANCE.createAttribute(eventName, IConstants.XWT_NAMESPACE);
 		NewHandlerDialog dialog = new NewHandlerDialog(eventHandler, initialValue);
 		if (dialog.open() == Window.OK) {
