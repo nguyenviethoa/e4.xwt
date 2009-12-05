@@ -30,6 +30,35 @@ public class MoveOnCommand extends MoveCommand {
 	public MoveOnCommand(IStructuredSelection source, Object target, int operation) {
 		super(source, target, operation);
 	}
+	
+	@Override
+	public boolean canExecute() {
+		boolean canExecute = super.canExecute();
+		if (!canExecute) {
+			return false;
+		}
+		
+		IStructuredSelection sourceNodes = getSource();
+		for (Iterator iterator = sourceNodes.iterator(); iterator.hasNext();) {
+			Object element = iterator.next();
+			XamlNode sourceNode = null;
+			if (element instanceof Entry) {
+				continue;
+			}
+			else if (!(element instanceof XamlNode)) {
+				return false;
+			}
+			else {
+				sourceNode = (XamlNode) element;
+				XamlNode sourceParent = sourceNode.getParent();
+				if (sourceParent == getTarget()) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
 
 	/*
 	 * (non-Javadoc)
