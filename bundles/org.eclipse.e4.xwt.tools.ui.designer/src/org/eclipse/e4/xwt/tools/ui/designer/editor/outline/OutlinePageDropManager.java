@@ -80,24 +80,4 @@ public class OutlinePageDropManager implements OutlineDropManager {
 	public Command getMoveOn(IStructuredSelection source, Object target, int operation) {
 		return new MoveOnCommand(source, target, operation);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.soyatec.tools.designer.editor.outline.dnd.OutlineDropManager#getSource(org.eclipse.jface.viewers.ISelection)
-	 */
-	public XamlNode getSource(ISelection selection) {
-		if (selection == null || selection.isEmpty()) {
-			return null;
-		}
-		if (selection instanceof IStructuredSelection) {
-			Object firstElement = ((IStructuredSelection) selection).getFirstElement();
-			// drag from palette.
-			if (firstElement instanceof Entry) {
-				return EntryHelper.getNode((Entry) firstElement);
-			}
-		}
-		return null;
-	}
-
 }

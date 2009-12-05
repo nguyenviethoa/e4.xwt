@@ -14,6 +14,8 @@ import java.util.Iterator;
 
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DeleteCommand;
+import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.EntryHelper;
+import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -42,7 +44,15 @@ public class MoveAfterCommand extends MoveCommand {
 		XamlNode newNode = null;
 		
 		for (Iterator iterator = sourceNodes.iterator(); iterator.hasNext();) {
-			XamlNode sourceNode = (XamlNode) iterator.next();
+			Object element = iterator.next();
+			XamlNode sourceNode = null;
+			if (element instanceof Entry) {
+				sourceNode = EntryHelper.getNode((Entry) element);
+			}
+			else {
+				sourceNode = (XamlNode) element;
+			}
+			
 			if (sourceNode.eContainer() != null) {
 				newNode = (XamlNode) EcoreUtil.copy(sourceNode);
 			} else {

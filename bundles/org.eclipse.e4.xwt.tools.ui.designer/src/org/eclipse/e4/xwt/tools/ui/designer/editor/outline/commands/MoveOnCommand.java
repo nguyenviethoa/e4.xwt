@@ -15,6 +15,8 @@ import java.util.Iterator;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.CreateReqHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.EntryHelper;
+import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -38,7 +40,14 @@ public class MoveOnCommand extends MoveAfterCommand {
 		IStructuredSelection sourceNodes = getSource();
 		XamlNode target = getTarget();
 		for (Iterator iterator = sourceNodes.iterator(); iterator.hasNext();) {
-			XamlNode sourceNode = (XamlNode) iterator.next();
+			Object element = iterator.next();
+			XamlNode sourceNode = null;
+			if (element instanceof Entry) {
+				sourceNode = EntryHelper.getNode((Entry) element);
+			}
+			else {
+				sourceNode = (XamlNode) element;
+			}
 			if (CreateReqHelper.canCreate(target, sourceNode)) {
 				XamlNode newChild = null;
 				if (sourceNode.eContainer() != null) {

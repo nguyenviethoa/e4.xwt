@@ -12,6 +12,8 @@ package org.eclipse.e4.xwt.tools.ui.designer.editor.outline.commands;
 
 import java.util.Iterator;
 
+import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.EntryHelper;
+import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -61,14 +63,28 @@ public abstract class MoveCommand extends Command {
 		IStructuredSelection sourceNodes = getSource();
 		XamlNode parent = null;
 		for (Iterator iterator = sourceNodes.iterator(); iterator.hasNext();) {
-			XamlNode sourceNode = (XamlNode) iterator.next();
-			XamlNode sourceParent = sourceNode.getParent();
-			if (parent == null) {
-				parent = sourceParent;
+			Object element = iterator.next();
+			XamlNode sourceNode = null;
+			if (element instanceof Entry) {
+				continue;
 			}
-			else if (parent != sourceParent) {
+			else if (!(element instanceof XamlNode)) {
 				return false;
 			}
+			else {
+				sourceNode = (XamlNode) element;
+				XamlNode sourceParent = sourceNode.getParent();
+				if (parent == null) {
+					parent = sourceParent;
+				}
+				else if (parent != sourceParent) {
+					return false;
+				}
+			}
+		}
+		
+		if (isMove() && sourceNodes.size() == 1 && sourceNodes.getFirstElement() == target) {
+			return false;
 		}
 		return true;
 	}

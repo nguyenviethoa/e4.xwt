@@ -947,6 +947,9 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	public void selectEditPartsInCodeEditor(IStructuredSelection selection) {
 		// 1. highlight TextEditor.
 		StyledText styledText = getTextWidget();
+		if (Display.getDefault().getFocusControl() == styledText) {
+			return;
+		}
 		String content = styledText.getText();
 		int startOffset = -1;
 		int endOffset = 0;
