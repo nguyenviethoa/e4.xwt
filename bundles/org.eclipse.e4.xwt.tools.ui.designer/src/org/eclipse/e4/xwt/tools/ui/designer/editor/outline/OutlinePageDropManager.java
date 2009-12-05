@@ -59,8 +59,8 @@ public class OutlinePageDropManager implements OutlineDropManager {
 	 * 
 	 * @see org.soyatec.tools.designer.editor.outline.dnd.OutlineDropManager#getMoveAfter(java.lang.Object, java.lang.Object)
 	 */
-	public Command getMoveAfter(Object source, Object target) {
-		return new MoveAfterCommand(source, target);
+	public Command getMoveAfter(IStructuredSelection source, Object target, int operation) {
+		return new MoveAfterCommand(source, target, operation);
 	}
 
 	/*
@@ -68,8 +68,8 @@ public class OutlinePageDropManager implements OutlineDropManager {
 	 * 
 	 * @see org.soyatec.tools.designer.editor.outline.dnd.OutlineDropManager#getMoveBefore(java.lang.Object, java.lang.Object)
 	 */
-	public Command getMoveBefore(Object source, Object target) {
-		return new MoveBeforeCommand(source, target);
+	public Command getMoveBefore(IStructuredSelection source, Object target, int operation) {
+		return new MoveBeforeCommand(source, target, operation);
 	}
 
 	/*
@@ -77,8 +77,8 @@ public class OutlinePageDropManager implements OutlineDropManager {
 	 * 
 	 * @see org.soyatec.tools.designer.editor.outline.dnd.OutlineDropManager#getMoveOn(java.lang.Object, java.lang.Object)
 	 */
-	public Command getMoveOn(Object source, Object target) {
-		return new MoveOnCommand(source, target);
+	public Command getMoveOn(IStructuredSelection source, Object target, int operation) {
+		return new MoveOnCommand(source, target, operation);
 	}
 
 	/*

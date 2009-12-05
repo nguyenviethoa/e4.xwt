@@ -13,9 +13,10 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.dnd;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
 
@@ -64,29 +65,22 @@ public class OutlineDropListener extends ViewerDropAdapter {
 			return false;
 		}
 		OutlineNodeTransfer transfer = OutlineNodeTransfer.getTransfer();
-		XamlNode source = transfer.getNode();
-		ISelection selection = transfer.getSelection();
-		if (source == null && selection != null) {
-			source = dropManager.getSource(selection);
-		}
-		if (source == null) {
-			return false;
-		}
-		if (source == target) {
+		IStructuredSelection selection = transfer.getSelection();
+		if (selection == null) {
 			return false;
 		}
 		int currentLocation = getCurrentLocation();
 		switch (currentLocation) {
 		case LOCATION_AFTER: {
-			dropCommand = dropManager.getMoveAfter(source, target);
+			dropCommand = dropManager.getMoveAfter(selection, target, getCurrentOperation());
 			break;
 		}
 		case LOCATION_BEFORE: {
-			dropCommand = dropManager.getMoveBefore(source, target);
+			dropCommand = dropManager.getMoveBefore(selection, target, getCurrentOperation());
 			break;
 		}
 		case LOCATION_ON: {
-			dropCommand = dropManager.getMoveOn(source, target);
+			dropCommand = dropManager.getMoveOn(selection, target, getCurrentOperation());
 			break;
 		}
 		}

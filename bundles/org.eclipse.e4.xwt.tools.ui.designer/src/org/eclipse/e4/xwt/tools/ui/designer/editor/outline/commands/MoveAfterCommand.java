@@ -10,43 +10,23 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.editor.outline.commands;
 
+import java.util.Iterator;
+
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DeleteCommand;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public class MoveAfterCommand extends MoveCommand {
 
-	public MoveAfterCommand(Object source, Object target) {
-		super(source, target);
+	public MoveAfterCommand(IStructuredSelection source, Object target, int operation) {
+		super(source, target, operation);
 		setLabel("Move After");
-	}
-
-	public boolean canExecute() {
-		boolean canExecute = super.canExecute();
-		if (canExecute) {
-			if (isSibling()) {
-				EList<XamlElement> childNodes = ((XamlNode) getSource()).getParent().getChildNodes();
-				if (childNodes.indexOf(getSource()) == childNodes.indexOf(getTarget())) {
-					return false;
-				}
-			}
-		}
-		return canExecute;
-	}
-
-	protected boolean isSibling() {
-		XamlNode sourceNode = (XamlNode) getSource();
-		XamlNode targetNode = (XamlNode) getTarget();
-		XamlNode targetParent = targetNode.getParent();
-		XamlNode sourceParent = sourceNode.getParent();
-		return targetParent == sourceParent;
 	}
 
 	/*
@@ -55,21 +35,23 @@ public class MoveAfterCommand extends MoveCommand {
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.editor.outline.commands.MoveCommand#collectCommands(org.eclipse.gef.commands.CompoundCommand)
 	 */
 	protected void collectCommands(CompoundCommand command) {
-		XamlNode sourceNode = (XamlNode) getSource();
-		XamlNode targetNode = (XamlNode) getTarget();
+		IStructuredSelection sourceNodes = getSource();
+		XamlNode targetNode = getTarget();
 		XamlNode parent = targetNode.getParent();
 		int index = parent.getChildNodes().indexOf(targetNode);
 		XamlNode newNode = null;
-		if (sourceNode.eContainer() != null) {
-			newNode = (XamlNode) EcoreUtil.copy(sourceNode);
-		} else {
-			newNode = getSource();
-		}
-
-		command.add(new AddNewChildCommand(parent, newNode, index + 1));
-		if (sourceNode.eContainer() != null) {
-			command.add(new DeleteCommand(sourceNode));
+		
+		for (Iterator iterator = sourceNodes.iterator(); iterator.hasNext();) {
+			XamlNode sourceNode = (XamlNode) iterator.next();
+			if (sourceNode.eContainer() != null) {
+				newNode = (XamlNode) EcoreUtil.copy(sourceNode);
+			} else {
+				newNode = sourceNode;
+			}
+			command.add(new AddNewChildCommand(parent, newNode, ++index));
+			if (isMove() && sourceNode.eContainer() != null) {
+				command.add(new DeleteCommand(sourceNode));
+			}
 		}
 	}
-
 }

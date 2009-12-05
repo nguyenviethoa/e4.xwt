@@ -10,47 +10,82 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.editor.outline.commands;
 
+import java.util.Iterator;
+
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.dnd.DND;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public abstract class MoveCommand extends Command {
 
-	private Object source;
+	private IStructuredSelection source;
 	private Object target;
 
 	private Command command;
+	
+	private int operation;
 
-	public MoveCommand(Object source, Object target) {
+	public MoveCommand(IStructuredSelection source, Object target, int operation) {
 		this.setSource(source);
 		this.setTarget(target);
+		this.setOperation(operation);		
 	}
 
+	public int getOperation() {
+		return operation;
+	}
+
+	public void setOperation(int operation) {
+		this.operation = operation;
+	}
+
+	protected boolean isMove() {
+		return operation == DND.DROP_MOVE;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
 	public boolean canExecute() {
-		return source != null && target != null && source instanceof XamlNode && target instanceof XamlNode && getTarget().getParent() != null;
+		boolean state = source != null && target != null && target instanceof XamlNode && getTarget().getParent() != null;
+		if (!state) {
+			return false;
+		}
+		IStructuredSelection sourceNodes = getSource();
+		XamlNode parent = null;
+		for (Iterator iterator = sourceNodes.iterator(); iterator.hasNext();) {
+			XamlNode sourceNode = (XamlNode) iterator.next();
+			XamlNode sourceParent = sourceNode.getParent();
+			if (parent == null) {
+				parent = sourceParent;
+			}
+			else if (parent != sourceParent) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
 	 * @param source
 	 *            the source to set
 	 */
-	public void setSource(Object source) {
+	public void setSource(IStructuredSelection source) {
 		this.source = source;
 	}
 
 	/**
 	 * @return the source
 	 */
-	public XamlNode getSource() {
-		return (XamlNode) source;
+	public IStructuredSelection getSource() {
+		return source;
 	}
 
 	/**

@@ -10,20 +10,23 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.editor.outline.commands;
 
+import java.util.Iterator;
+
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.CreateReqHelper;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public class MoveOnCommand extends MoveAfterCommand {
 
-	public MoveOnCommand(Object source, Object target) {
-		super(source, target);
+	public MoveOnCommand(IStructuredSelection source, Object target, int operation) {
+		super(source, target, operation);
 	}
 
 	/*
@@ -32,22 +35,22 @@ public class MoveOnCommand extends MoveAfterCommand {
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.editor.outline.commands.MoveAfterCommand#collectCommands(org.eclipse.gef.commands.CompoundCommand)
 	 */
 	protected void collectCommands(CompoundCommand command) {
-		XamlNode source = getSource();
+		IStructuredSelection sourceNodes = getSource();
 		XamlNode target = getTarget();
-		if (CreateReqHelper.canCreate(target, source)) {
-			XamlNode newChild = null;
-			if (source.eContainer() != null) {
-				newChild = (XamlNode) EcoreUtil.copy(source);
-			} else {
-				newChild = source;
-			}
-			command.add(new AddNewChildCommand(target, newChild));
-			if (source.eContainer() != null) {
-				command.add(new DeleteCommand(source));
-			}
-		} else {
-			super.collectCommands(command);
+		for (Iterator iterator = sourceNodes.iterator(); iterator.hasNext();) {
+			XamlNode sourceNode = (XamlNode) iterator.next();
+			if (CreateReqHelper.canCreate(target, sourceNode)) {
+				XamlNode newChild = null;
+				if (sourceNode.eContainer() != null) {
+					newChild = (XamlNode) EcoreUtil.copy(sourceNode);
+				} else {
+					newChild = sourceNode;
+				}
+				command.add(new AddNewChildCommand(target, newChild));
+				if (isMove() && sourceNode.eContainer() != null) {
+					command.add(new DeleteCommand(sourceNode));
+				}
+			} 
 		}
 	}
-
 }

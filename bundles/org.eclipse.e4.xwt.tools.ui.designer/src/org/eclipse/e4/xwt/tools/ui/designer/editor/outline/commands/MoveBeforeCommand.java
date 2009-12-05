@@ -10,19 +10,22 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.editor.outline.commands;
 
+import java.util.Iterator;
+
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public class MoveBeforeCommand extends MoveCommand {
 
-	public MoveBeforeCommand(Object source, Object target) {
-		super(source, target);
+	public MoveBeforeCommand(IStructuredSelection source, Object target, int operation) {
+		super(source, target, operation);
 	}
 
 	/*
@@ -31,22 +34,25 @@ public class MoveBeforeCommand extends MoveCommand {
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.editor.outline.commands.MoveCommand#collectCommands(org.eclipse.gef.commands.CompoundCommand)
 	 */
 	protected void collectCommands(CompoundCommand command) {
-		XamlNode sourceNode = (XamlNode) getSource();
+		IStructuredSelection sourceNodes = getSource();
 		XamlNode targetNode = (XamlNode) getTarget();
 		XamlNode parent = targetNode.getParent();
 		int index = parent.getChildNodes().indexOf(targetNode);
 
 		XamlNode newNode = null;
-		if (sourceNode.eContainer() != null) {
-			newNode = (XamlNode) EcoreUtil.copy(sourceNode);
-		} else {
-			newNode = sourceNode;
-		}
-
-		command.add(new AddNewChildCommand(parent, newNode, index));
-
-		if (sourceNode.eContainer() != null) {
-			command.add(new DeleteCommand(sourceNode));
+		for (Iterator iterator = sourceNodes.iterator(); iterator.hasNext();) {
+			XamlNode sourceNode = (XamlNode) iterator.next();	
+			if (sourceNode.eContainer() != null) {
+				newNode = (XamlNode) EcoreUtil.copy(sourceNode);
+			} else {
+				newNode = sourceNode;
+			}
+	
+			command.add(new AddNewChildCommand(parent, newNode, index++));
+	
+			if (isMove() && sourceNode.eContainer() != null) {
+				command.add(new DeleteCommand(sourceNode));
+			}
 		}
 	}
 

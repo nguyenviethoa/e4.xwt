@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.dnd;
 
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.TransferData;
 
 /**
@@ -25,8 +23,6 @@ public class OutlineNodeTransfer extends LocalSelectionTransfer {
 
 	private LocalSelectionTransfer jfaceTransfer = LocalSelectionTransfer.getTransfer();
 
-	private XamlNode node;
-
 	private OutlineNodeTransfer() {
 	}
 
@@ -34,29 +30,8 @@ public class OutlineNodeTransfer extends LocalSelectionTransfer {
 		return INSTANCE;
 	}
 
-	public void setNode(XamlNode node) {
-		this.node = node;
-		if (node != null) {
-			StructuredSelection selection = new StructuredSelection(node);
-			jfaceTransfer.setSelection(selection);
-		} else {
-			jfaceTransfer.setSelection(null);
-		}
-	}
-
-	public XamlNode getNode() {
-		if (node != null) {
-			return node;
-		}
-		IStructuredSelection selection = (IStructuredSelection) jfaceTransfer.getSelection();
-		if (selection == null) {
-			return null;
-		}
-		Object firstElement = selection.getFirstElement();
-		if (firstElement instanceof XamlNode) {
-			return node = (XamlNode) firstElement;
-		}
-		return null;
+	public void setSelection(IStructuredSelection selection) {
+		jfaceTransfer.setSelection(selection);
 	}
 
 	/*
@@ -64,12 +39,12 @@ public class OutlineNodeTransfer extends LocalSelectionTransfer {
 	 * 
 	 * @see org.eclipse.jface.util.LocalSelectionTransfer#getSelection()
 	 */
-	public ISelection getSelection() {
+	public IStructuredSelection getSelection() {
 		ISelection selection = super.getSelection();
 		if (selection == null) {
 			selection = jfaceTransfer.getSelection();
 		}
-		return selection;
+		return (IStructuredSelection)selection;
 	}
 
 	/*

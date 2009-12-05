@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.dnd;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
@@ -29,19 +33,24 @@ public class OutlineDragListener implements DragSourceListener {
 		this.treeViewer = treeViewer;
 	}
 
-	private XamlNode getSelection() {
+	private ISelection getSelection() {
 		if (treeViewer == null) {
 			return null;
 		}
+		
 		ISelection selection = treeViewer.getSelection();
 		if (selection == null || selection.isEmpty()) {
 			return null;
 		}
-		Object firstElement = ((IStructuredSelection) selection).getFirstElement();
-		if (firstElement instanceof EditPart) {
-			return (XamlNode) ((EditPart) firstElement).getModel();
+		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		ArrayList<XamlNode> collector = new ArrayList<XamlNode>();
+		for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
+			Object element = iterator.next();
+			if (element instanceof EditPart) {
+				collector.add((XamlNode) ((EditPart) element).getModel());
+			}
 		}
-		return null;
+		return new StructuredSelection(collector.toArray());
 	}
 
 	/*
@@ -50,7 +59,7 @@ public class OutlineDragListener implements DragSourceListener {
 	 * @see org.eclipse.swt.dnd.DragSourceListener#dragFinished(org.eclipse.swt.dnd.DragSourceEvent)
 	 */
 	public void dragFinished(DragSourceEvent event) {
-		OutlineNodeTransfer.getTransfer().setNode(null);
+		OutlineNodeTransfer.getTransfer().setSelection(null);
 	}
 
 	/*
@@ -68,11 +77,11 @@ public class OutlineDragListener implements DragSourceListener {
 	 * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(org.eclipse.swt.dnd.DragSourceEvent)
 	 */
 	public void dragStart(DragSourceEvent event) {
-		XamlNode selection = getSelection();
+		ISelection selection = getSelection();
 		if (selection == null) {
 			event.doit = false;
 		}
-		OutlineNodeTransfer.getTransfer().setNode(selection);
+		OutlineNodeTransfer.getTransfer().setSelection(selection);
 	}
 
 }

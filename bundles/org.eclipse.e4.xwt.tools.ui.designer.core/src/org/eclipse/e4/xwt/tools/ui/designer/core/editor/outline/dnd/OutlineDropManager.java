@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.dnd;
 
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -24,27 +23,30 @@ public interface OutlineDropManager {
 	 * 
 	 * @param source
 	 * @param target
+	 * @param operation  DND.DROP_COPY, DND#DROP_MOVE or DND#DROP_LINK
 	 * @return command of dragging from outline.
 	 */
-	Command getMoveAfter(Object source, Object target);
+	Command getMoveAfter(IStructuredSelection source, Object target, int operation);
 
 	/**
 	 * Create a command for moving 'source' object before 'target' object.
 	 * 
 	 * @param source
 	 * @param target
+	 * @param operation  DND.DROP_COPY, DND#DROP_MOVE or DND#DROP_LINK
 	 * @return command of dragging from outline.
 	 */
-	Command getMoveBefore(Object source, Object target);
+	Command getMoveBefore(IStructuredSelection source, Object target, int operation);
 
 	/**
 	 * Create a command for moving 'source' object on 'target' object.
 	 * 
 	 * @param source
 	 * @param target
+	 * @param operation  DND.DROP_COPY, DND#DROP_MOVE or DND#DROP_LINK
 	 * @return command of dragging from outline.
 	 */
-	Command getMoveOn(Object source, Object target);
+	Command getMoveOn(IStructuredSelection source, Object target, int operation);
 
 	/**
 	 * Execute given command with commandStack or not.
@@ -52,12 +54,4 @@ public interface OutlineDropManager {
 	 * @param command
 	 */
 	boolean execute(Command command);
-
-	/**
-	 * Create source from the selection of Drag Transfer.
-	 * 
-	 * @param selection
-	 * @return
-	 */
-	XamlNode getSource(ISelection selection);
 }
