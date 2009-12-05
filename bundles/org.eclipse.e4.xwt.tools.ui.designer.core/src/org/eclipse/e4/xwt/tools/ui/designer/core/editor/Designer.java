@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.core.component.CustomSashForm;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider.ActionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.builder.DesignerModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.builder.IModelBuilder;
@@ -51,10 +52,15 @@ import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.KeyHandler;
+import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.actions.DeleteAction;
+import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.SelectionAction;
+import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.gef.ui.views.palette.PalettePage;
@@ -86,6 +92,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageEditorSite;
@@ -150,6 +157,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	private LoadingFigureController loadingFigureController;
 
 	private EditPartFactory editPartFactory;
+
+	private KeyHandler fSharedKeyHandler;
 
 	/*
 	 * (non-Javadoc)
@@ -438,6 +447,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		DesignerRootEditPart rootEditPart = new DesignerRootEditPart();
 		graphicalViewer.setRootEditPart(rootEditPart);
 
+		graphicalViewer.setKeyHandler(new GraphicalViewerKeyHandler(graphicalViewer).setParent(getCommonKeyHandler()));
+
 		Iterator<?> actions = getActionRegistry().getActions();
 		while (actions.hasNext()) {
 			Object object = (Object) actions.next();
@@ -445,8 +456,23 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 				((SelectionAction) object).setSelectionProvider(graphicalViewer);
 			}
 		}
-
 	}
+	
+	/**
+	 * Returns the KeyHandler with common bindings for both the Outline and
+	 * Graphical Views. For example, delete is a common action.
+	 */
+	protected KeyHandler getCommonKeyHandler()
+	{
+		if (fSharedKeyHandler == null)
+		{
+			fSharedKeyHandler = new KeyHandler();
+			fSharedKeyHandler.put(KeyStroke.getPressed(SWT.DEL, SWT.DEL, 0), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
+			fSharedKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0), getActionRegistry().getAction(GEFActionConstants.DIRECT_EDIT));
+		}
+		return fSharedKeyHandler;
+	}
+
 
 	/**
 	 * MenuProvider of the editor
@@ -727,6 +753,7 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		if (visualsRender != null) {
 			visualsRender.dispose();
 		}
+		fSharedKeyHandler = null;
 		getActionRegistry().dispose();
 		getProblemHandler().clear();
 		super.dispose();
