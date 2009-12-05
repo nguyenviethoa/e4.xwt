@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.core.component.CustomSashForm;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider.ActionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.builder.DesignerModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.builder.IModelBuilder;
@@ -57,7 +56,6 @@ import org.eclipse.gef.KeyStroke;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.ui.actions.ActionRegistry;
-import org.eclipse.gef.ui.actions.DeleteAction;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
@@ -877,7 +875,7 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		Iterator<EditPart> iter = ((IStructuredSelection) selection).iterator();
 		while (iter.hasNext()) {
 			EditPart part = convert(viewer, iter.next());
-			if (part != null && part.getSelected() == EditPart.SELECTED_NONE) {
+			if (part != null) {
 				result.add(part);
 			}
 		}
@@ -922,19 +920,18 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		if (selection.isEmpty()) {
 			return;
 		}
-		Object[] array = selection.toArray();
-		for (Object object : array) {
-			if (object instanceof EditPart) {
-				editPartSelected((EditPart) object);
-			}
+		
+		if (!isProcessHighlighting) {
+			selectEditPartsInCodeEditor(selection);
 		}
+		
 		// if (propertyPage != null) {
 		// propertyPage.selectionChanged(this, selection);
 		// }
 		if (actionGroup != null) {
 			actionGroup.updateActions(ActionGroup.SELECTION_GRP);
 		}
-		if (outlinePage != null) {
+		if (outlinePage != null && !isDispatching) {
 			outlinePage.setSelection(selection);
 		}
 		ActionRegistry actionRegistry = getActionRegistry();
@@ -947,22 +944,71 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		}
 	}
 
-	public void editPartSelected(EditPart editPart) {
+	public void selectEditPartsInCodeEditor(IStructuredSelection selection) {
 		// 1. highlight TextEditor.
-		// 1. highlight TextEditor.
-		if (!isProcessHighlighting) {
-			gotoDefinition(editPart);
+		StyledText styledText = getTextWidget();
+		String content = styledText.getText();
+		int startOffset = -1;
+		int endOffset = 0;
+		
+		Object[] array = selection.toArray();
+		for (Object object : array) {
+			if (object instanceof EditPart) {
+				EditPart editPart = (EditPart) object;
+				Object model = editPart.getModel();
+				if (model instanceof XamlNode) {
+					XamlNode node = (XamlNode) model;
+					IDOMNode textNode = getModelBuilder().getTextNode(node);
+					if (textNode != null) {
+						int nodeStartOffset = textNode.getStartOffset();
+						int nodeEndOffset = textNode.getEndOffset();
+						if (startOffset == -1) {
+							startOffset = nodeStartOffset;
+							endOffset = nodeEndOffset;
+						}
+						else {
+							if (nodeStartOffset > startOffset) {
+								if (nodeStartOffset < endOffset) {
+									continue;
+								}
+								String segment = content.substring(endOffset, nodeStartOffset).trim();
+								if (segment.length() == 0 ) {
+									endOffset = nodeEndOffset;
+								}
+								else {
+									startOffset = 0;
+									endOffset = 0;
+									break;
+								}
+							}
+							else {
+								if (nodeEndOffset > startOffset) {
+									continue;
+								}
+								String segment = content.substring(nodeEndOffset, startOffset).trim();
+								if (segment.length() == 0 ) {
+									startOffset = nodeStartOffset;
+								}
+								else {
+									startOffset = 0;
+									endOffset = 0;
+									break;
+								}
+								
+							}
+						}
+					}
+				}
+			}
 		}
-	}
+		if (startOffset == -1) {
+			startOffset = 0;
+		}
+		int length = endOffset - startOffset;
 
-	public void gotoDefinition(EditPart editPart) {
-		if (editPart == null) {
-			return;
-		}
-		Object model = editPart.getModel();
-		if (model instanceof XamlNode) {
-			gotoDefinition((XamlNode) model);
-		}
+		getTextViewer().setRangeIndication(startOffset, length, false);
+		StructuredTextEditor textEditor = getTextEditor();
+		textEditor.selectAndReveal(startOffset, length);
 	}
 
 	public void gotoDefinition(XamlNode node) {
