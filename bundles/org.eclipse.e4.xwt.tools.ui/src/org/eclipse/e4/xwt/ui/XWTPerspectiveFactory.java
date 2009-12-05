@@ -33,15 +33,19 @@ public class XWTPerspectiveFactory implements IPerspectiveFactory {
 	private void addViews() {
 		factory.setFixed(false);
 		String editorArea = factory.getEditorArea();
-		// Left
-		IFolderLayout left = factory.createFolder("left", IPageLayout.LEFT, (float) 0.25, editorArea); //$NON-NLS-1$
-		left.addPlaceholder(IPageLayout.ID_RES_NAV);
-		left.addView(JavaUI.ID_PACKAGES);
+		// Left Top
+		IFolderLayout leftTop = factory.createFolder("leftTop", IPageLayout.LEFT, (float) 0.25, editorArea); //$NON-NLS-1$
+		leftTop.addPlaceholder(IPageLayout.ID_RES_NAV);
+		leftTop.addView(JavaUI.ID_PACKAGES);
+
+		// Left Top
+		IFolderLayout leftButtom = factory.createFolder("leftBottom", IPageLayout.BOTTOM, (float) 0.50, "leftTop"); //$NON-NLS-1$
+		leftButtom.addView(IPageLayout.ID_OUTLINE);
 
 		// Right
 		IFolderLayout right = factory.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea);
 		right.addView("org.eclipse.gef.ui.palette_view");
-		right.addView(IPageLayout.ID_OUTLINE);
+
 		// Bottom
 		IFolderLayout bottom = factory.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea); //$NON-NLS-1$
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
