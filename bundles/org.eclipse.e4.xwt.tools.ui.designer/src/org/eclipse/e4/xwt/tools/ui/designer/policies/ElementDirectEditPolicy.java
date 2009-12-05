@@ -66,9 +66,8 @@ public class ElementDirectEditPolicy extends DirectEditPolicy {
 			if (control instanceof Text) {
 				Rectangle rectangle = figure.getBounds();
 				Text text = (Text) control;
-				text.setText(value);
 				text.setLocation(rectangle.x, rectangle.y);
-				text.setSelection(0, value.length());
+				text.selectAll();
 			}
 		}
 		setting = true;
