@@ -173,10 +173,10 @@ public class ASTHelper {
 			contents.append("public " + (returnType == null ? "void " : returnType.getSimpleName() + " ") + methodName + "("); //$NON-NLS-1$
 			for (int i = 0; i < paraNames.size(); i++) {
 				String arg = paraNames.get(i);
-				contents.append(arg + " " + Character.toLowerCase(arg.charAt(0)) + arg.substring(1));
-				if (i < paraNames.size()) {
-					contents.append(" ");
+				if (i != 0) {
+					contents.append(", ");
 				}
+				contents.append(arg + " " + Character.toLowerCase(arg.charAt(0)) + arg.substring(1));
 			}
 			contents.append(") {"); //$NON-NLS-1$
 			contents.append(lineDelimiter);

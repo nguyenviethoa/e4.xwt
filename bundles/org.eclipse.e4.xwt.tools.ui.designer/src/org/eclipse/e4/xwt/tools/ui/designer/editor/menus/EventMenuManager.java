@@ -11,11 +11,14 @@
 package org.eclipse.e4.xwt.tools.ui.designer.editor.menus;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.javabean.metadata.BeanEvent;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -23,15 +26,20 @@ import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.AddEventHandlerAction;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
+import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 public class EventMenuManager extends MenuManager {
+	private EditPart editpart;
+	private XWTDesigner designer;
 
-	private static Map<String, List<String>> eventsMap = new HashMap<String, List<String>>();
-	static {
+	static Map<String, List<String>> createEventMap() {
+		Map<String, List<String>> eventsMap = new HashMap<String, List<String>>();
+		
 		ArrayList<String> events = new ArrayList<String>();
 		events.add("Active");
 		events.add("Close");
@@ -145,10 +153,10 @@ public class EventMenuManager extends MenuManager {
 		events = new ArrayList<String>();
 		events.add("MenuDetect");
 		eventsMap.put("menuDetect", events);
+		
+		return eventsMap;
 	}
-	private EditPart editpart;
-	private XWTDesigner designer;
-
+	
 	public EventMenuManager(EditPart editpart, XWTDesigner designer) {
 		super("Add event handler");
 		this.editpart = editpart;
@@ -156,11 +164,25 @@ public class EventMenuManager extends MenuManager {
 		createMenus(this);
 	}
 
+	protected void updateMap(Map<String, List<String>> eventsMap, Collection<String> existingEvents) {
+		for (String key : eventsMap.keySet()) {
+			List<String> value = eventsMap.get(key);
+			for (String string : value.toArray(new String[value.size()])) {
+				String eventKey = string.toLowerCase();
+				if (existingEvents.contains(eventKey)) {
+					value.remove(string);
+				}
+			}
+		}
+	}
+
 	/**
 	 * @param editpart
 	 * @param editor
 	 */
 	private void createMenus(MenuManager parent) {
+		Map<String, List<String>> eventsMap = createEventMap();
+	
 		List<String> eventNames = new ArrayList<String>();
 		IEvent[] beanEvents = getBeanEvents(editpart);
 		if (beanEvents.length != 0) {
@@ -172,18 +194,31 @@ public class EventMenuManager extends MenuManager {
 					System.err.println(name + " Not Defined...");
 				}
 			}
+			
+			Collection<String> existingEvents = getEventKeys(editpart);
+			// filter existing events
+			updateMap(eventsMap, existingEvents);
+			// Remove empty entry
+			for (Object key : eventsMap.keySet().toArray()) {
+				List<String> events = eventsMap.get(key);
+				if (events.isEmpty()) {
+					eventsMap.remove(key);
+				}
+			}
 		}
-
+		
 		Collections.sort(eventNames);
 
 		for (String type : eventNames) {
 			ImageDescriptor image = ImageShop.getImageDescriptor(ImageShop.IMG_EVENT);
 			MenuManager menu = new MenuManager(type, image, null);
 			List<String> events = eventsMap.get(type);
-			for (String event : events) {
-				menu.add(new AddEventHandlerAction(editpart, designer, event));
+			if (events != null) {
+				for (String event : events) {
+					menu.add(new AddEventHandlerAction(editpart, designer, event));
+				}
+				parent.add(menu);
 			}
-			parent.add(menu);
 		}
 	}
 
@@ -207,5 +242,39 @@ public class EventMenuManager extends MenuManager {
 		}
 		return new IEvent[0];
 	}
+	
+	private Collection<String> getEventKeys(EditPart editpart) {
+		if (editpart == null) {
+			return Collections.EMPTY_LIST;
+		}
+		Object model = editpart.getModel();
+		if (model instanceof XamlNode) {
+			XamlNode xamlNode = (XamlNode) model;
+			IMetaclass metaclass = XWTUtility.getMetaclass(xamlNode);
+			if (metaclass != null) {
+				IEvent[] events = metaclass.getEvents();
+				HashSet<String> result = new HashSet<String>();
+				for (IEvent event : events) {
+					String name = event.getName();
+					if (hasEvent(xamlNode, name)) {
+						result.add(name.toLowerCase());
+					}
+				}
+				return result;
+			}
+		}
+		return Collections.EMPTY_LIST;
+	}
 
+	protected boolean hasEvent(XamlNode xamlNode, String name) {
+		String eventName = name + IEventConstants.SUFFIX;
+		EList<XamlAttribute> attributes = xamlNode.getAttributes();
+		for (XamlAttribute attribute : attributes) {
+			String attributeName = attribute.getName();
+			if (eventName.equalsIgnoreCase(attributeName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

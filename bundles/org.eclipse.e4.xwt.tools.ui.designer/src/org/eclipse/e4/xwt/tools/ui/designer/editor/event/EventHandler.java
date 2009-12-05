@@ -51,6 +51,15 @@ public class EventHandler {
 		return false;
 	}
 
+	public String suggestDefaultName(String value) {
+		int i = 0;
+		String name = value;
+		while (exist(name)) {
+			name = value + (++i);
+		}
+		return name;
+	}
+	
 	private IMethod findMethod(IMethod[] methods, String methodName) {
 		for (int i = 0; i < methods.length; i++) {
 			IMethod method = methods[i];
@@ -65,6 +74,7 @@ public class EventHandler {
 			return;
 		}
 		List<Class<?>> argus = new ArrayList<Class<?>>();
+		argus.add(Object.class);
 		argus.add(Event.class);
 		createHandler(handlerName, null, null, argus);
 	}

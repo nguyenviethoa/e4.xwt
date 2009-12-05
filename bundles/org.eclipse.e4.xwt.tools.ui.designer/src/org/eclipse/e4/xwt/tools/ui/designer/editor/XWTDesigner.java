@@ -138,6 +138,9 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 		action = new OpenBindingDialogAction(this);
 		registry.registerAction(action);
 
+		action = new BindingLayerAction(this);
+		registry.registerAction(action);
+
 		// add by xrchen 2009/9/22
 		action = new OpenExternalizeStringsAction(this);
 		registry.registerAction(action);

@@ -27,9 +27,10 @@ public class NewHandlerDialog extends TitleAreaDialog {
 	private EventHandler eventHandler;
 	private String handlerName;
 
-	public NewHandlerDialog(EventHandler eventHandler) {
+	public NewHandlerDialog(EventHandler eventHandler, String initialValue) {
 		super(new Shell());
 		this.eventHandler = eventHandler;
+		this.handlerName = initialValue;
 	}
 
 	/*
@@ -56,6 +57,7 @@ public class NewHandlerDialog extends TitleAreaDialog {
 		label.setText("Handler:");
 
 		final Text text = new Text(control, SWT.BORDER);
+		text.setText(this.handlerName);
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				handlerName = text.getText();

@@ -214,7 +214,12 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 			if (event.isTouch()) {
 				return;
 			}
-			Result result = getVisualsRender().refreshVisuals(event);
+			Result result;
+			try {
+				result = getVisualsRender().refreshVisuals(event);
+			} catch (Exception e) {
+				return;
+			}
 			if (result == null || !result.refreshed) {
 				return;
 			}

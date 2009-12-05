@@ -68,7 +68,7 @@ public class XWTDesignerMenuProvider extends DesignerMenuProvider {
 	public void buildContextMenu(IMenuManager menu) {
 		super.buildContextMenu(menu);
 		ActionRegistry actionRegistry = getActionRegistry();
-		menu.appendToGroup(BINDINGS, actionRegistry.getAction(BindingLayerAction.ID));
+		// menu.appendToGroup(BINDINGS, actionRegistry.getAction(BindingLayerAction.ID));
 		List selectedEditParts = getViewer().getSelectedEditParts();
 		if (selectedEditParts == null || selectedEditParts.isEmpty()) {
 			// Diagram directly...
@@ -88,7 +88,7 @@ public class XWTDesignerMenuProvider extends DesignerMenuProvider {
 
 				menu.add(actionRegistry.getAction(LayoutAssistantAction.ID));
 
-				menu.appendToGroup(BINDINGS, new BindingsMenuManager(editPart));
+				// menu.appendToGroup(BINDINGS, new BindingsMenuManager(editPart));
 				menu.appendToGroup(BINDINGS, actionRegistry.getAction(OpenBindingDialogAction.ID));
 
 				if (editPart instanceof WidgetEditPart) {
