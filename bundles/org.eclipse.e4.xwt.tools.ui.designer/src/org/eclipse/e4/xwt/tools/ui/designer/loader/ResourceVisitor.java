@@ -209,7 +209,7 @@ public class ResourceVisitor {
 				}
 			}
 			if (method == null) {
-				LoggerManager.log(new XWTException("Event handler \"" + handler + "\" is not found."));
+				throw new XWTException("Event handler \"" + handler + "\" is not found.");
 			}
 		}
 
