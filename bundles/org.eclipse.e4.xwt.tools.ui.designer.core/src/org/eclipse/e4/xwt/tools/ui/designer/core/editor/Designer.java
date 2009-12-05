@@ -250,11 +250,14 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		if (editPart == null) {
 			return;
 		}
-		editPart.refresh();
-		getOutlinePage().refresh(editPart);
-		List children = editPart.getChildren();
-		for (Object object : children) {
-			refresh((EditPart) object);
+		try {
+			editPart.refresh();
+			getOutlinePage().refresh(editPart);
+			List children = editPart.getChildren();
+			for (Object object : children) {
+				refresh((EditPart) object);
+			}
+		} catch (Exception e) {
 		}
 	}
 

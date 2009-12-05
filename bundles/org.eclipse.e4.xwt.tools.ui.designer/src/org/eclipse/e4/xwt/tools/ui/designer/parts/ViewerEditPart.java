@@ -120,19 +120,6 @@ public class ViewerEditPart extends VisualEditPart {
 	 */
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		// installEditPolicy(EditPolicy.LAYOUT_ROLE, new FlowLayoutEditPolicy() {
-		// protected Command getCreateCommand(CreateRequest request) {
-		// return null;
-		// }
-		//
-		// protected Command createMoveChildCommand(EditPart child, EditPart after) {
-		// return null;
-		// }
-		//
-		// protected Command createAddCommand(EditPart child, EditPart after) {
-		// return null;
-		// }
-		// });
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new ConstrainedLayoutEditPolicy() {
 			protected Command createChangeConstraintCommand(EditPart child, Object constraint) {
 				return null;
