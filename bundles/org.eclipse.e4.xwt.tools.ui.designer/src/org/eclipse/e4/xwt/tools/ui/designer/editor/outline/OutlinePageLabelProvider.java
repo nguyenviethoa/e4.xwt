@@ -15,6 +15,7 @@ import java.text.MessageFormat;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineLableProvider;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.DiagramEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.ViewerEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.grid.GridLayoutPolicyHelper;
@@ -46,6 +47,9 @@ public class OutlinePageLabelProvider extends OutlineLableProvider {
 			Object model = ((EditPart) element).getModel();
 			if (model instanceof XamlNode) {
 				return getText((XamlNode) model);
+			}
+			if (element instanceof DiagramEditPart) {
+				return " ";
 			}
 		}
 		return super.getText(element);
@@ -97,6 +101,8 @@ public class OutlinePageLabelProvider extends OutlineLableProvider {
 				String name = viewer.getClass().getSimpleName().toLowerCase();
 				return ImageShop.getObj16(name);
 			}
+		} else if (element instanceof DiagramEditPart) {
+			return ImageShop.get(ImageShop.IMG_XWT);
 		}
 		return super.getImage(element);
 	}

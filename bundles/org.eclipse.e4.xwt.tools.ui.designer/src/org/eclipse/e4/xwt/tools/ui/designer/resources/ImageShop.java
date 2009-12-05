@@ -73,6 +73,7 @@ public class ImageShop {
 	public static final String IMAGE_OBSERVE_WIDGETS = TOOLS + "observe/widgets.gif";
 	public static final String IMAGE_OBSERVE_XML = TOOLS + "observe/xml.gif";
 	public static final String IMAGE_OBSERVE_CUSTOM = TOOLS + "observe/custom.png";
+	public static final String IMG_XWT = TOOLS + "xaml.png";
 
 	public static final String IMG_GOTO_DEFINITION = TOOLS + "goto_definition.gif";
 

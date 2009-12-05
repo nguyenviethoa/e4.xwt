@@ -31,4 +31,8 @@ public class DiagramEditPart extends AbstractDiagramEditPart {
 		removeEditPolicy(EditPolicy.LAYOUT_ROLE);
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, LayoutEditPolicyFactory.NULL_LAYOUT);
 	}
+	
+	public String toString() {
+		return "";
+	}
 }
