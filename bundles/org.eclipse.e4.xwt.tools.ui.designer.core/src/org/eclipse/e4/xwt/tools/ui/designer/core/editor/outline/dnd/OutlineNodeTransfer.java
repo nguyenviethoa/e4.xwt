@@ -40,11 +40,7 @@ public class OutlineNodeTransfer extends LocalSelectionTransfer {
 	 * @see org.eclipse.jface.util.LocalSelectionTransfer#getSelection()
 	 */
 	public IStructuredSelection getSelection() {
-		ISelection selection = super.getSelection();
-		if (selection == null) {
-			selection = jfaceTransfer.getSelection();
-		}
-		return (IStructuredSelection)selection;
+		return (IStructuredSelection)jfaceTransfer.getSelection();
 	}
 
 	/*
