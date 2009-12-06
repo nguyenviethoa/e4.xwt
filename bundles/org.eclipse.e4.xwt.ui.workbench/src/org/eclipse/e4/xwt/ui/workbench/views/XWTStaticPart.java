@@ -44,6 +44,9 @@ public class XWTStaticPart extends XWTAbstractPart implements IStaticPart {
 	@Override
 	public void setDataContext(Object dataContext) {
 		super.setDataContext(dataContext);
-		refresh();
+		try {
+			refresh();
+		} catch (Exception e) {
+		}
 	}
 }

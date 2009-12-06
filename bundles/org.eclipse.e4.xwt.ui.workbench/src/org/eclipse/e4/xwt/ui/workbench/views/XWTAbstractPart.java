@@ -25,6 +25,7 @@ import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.css.CSSHandler;
+import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.ui.workbench.IContentPart;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -150,7 +151,7 @@ public abstract class XWTAbstractPart implements IContentPart {
 			GridLayoutFactory.fillDefaults().generateLayout(parent);
 			parent.layout(true, true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerManager.log(e);
 		} finally {
 			Thread.currentThread().setContextClassLoader(classLoader);
 			parent.setVisible(true);
