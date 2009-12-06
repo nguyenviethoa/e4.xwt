@@ -93,16 +93,16 @@
                afterTab="LayoutTab"
                category="xwt property"
                id="LayoutDataTab"
-               label="LayoutData">
+               label="Layout Data">
          </propertyTab>
          <propertyTab
-               afterTab="LayoutData"
+               afterTab="Layout Data"
                category="xwt property"
                id="DataBindingTab"
-               label="DataBinding">
+               label="Data Binding">
          </propertyTab>
          <propertyTab
-               afterTab="DataBinding"
+               afterTab="Data Binding"
                category="xwt property"
                id="AdvancedTab"
                label="Advanced">
