@@ -34,5 +34,6 @@ public class ContactViewerComparator extends ViewerComparator {
 		} else {
 			throw new IllegalArgumentException("Can only compare two Contacts.");
 		}
+
 	}
 }

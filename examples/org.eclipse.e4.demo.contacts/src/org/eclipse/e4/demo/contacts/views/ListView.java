@@ -8,31 +8,43 @@
  * 
  * Contributors:
  *     Kai Tödter - initial implementation
- *     Soyatec - porting on XWT
  ******************************************************************************/
 
 package org.eclipse.e4.demo.contacts.views;
 
+import org.eclipse.e4.core.services.annotations.PreDestroy;
+import org.eclipse.e4.demo.contacts.model.Contact;
 import org.eclipse.e4.demo.contacts.model.ContactsRepositoryFactory;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Event;
 
-public class ListView extends XWTStaticPart {
+public class ListView extends XWTStaticPart{
+
 	@Override
 	public Object getDataContext() {
 		return ContactsRepositoryFactory.getContactsRepository().getAllContacts();
 	}
-	
-	public void dispose() {
-	}
-	
+
 	protected void selection(Event event) {
 		TableViewer contactsViewer = (TableViewer) XWT.findElementByName(event.widget, "TableViewer");
 		StructuredSelection selection = (StructuredSelection) contactsViewer.getSelection();
-		getContext().set(IServiceConstants.SELECTION, selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
+		getContext().modify(IServiceConstants.SELECTION, selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
+	}
+
+	@PreDestroy
+	void preDestroy() {
+		for (Object object : ContactsRepositoryFactory
+				.getContactsRepository().getAllContacts()) {
+			Contact contact = (Contact) object;
+			Image image = contact.getImage();
+			if (image != null) {
+				image.dispose();
+			}
+		}
 	}
 }

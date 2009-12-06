@@ -29,7 +29,13 @@
 			<GridData horizontalIndent="10" />
 		</Label.layoutData>
 	</Label>
-	<Text text="{Binding path=fullName}">
+	<Text>
+	    <Text.text>
+	        <MultiBinding updateSourceTrigger="PropertyChanged">
+	            <Binding path="firstName"/>
+	            <Binding path="lastName"/>
+	        </MultiBinding>
+	    </Text.text>	
 		<Text.layoutData>
 			<GridData grabExcessHorizontalSpace="true"
 				horizontalAlignment="GridData.FILL" />

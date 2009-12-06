@@ -69,6 +69,12 @@ public class FadeAnimation {
 			psRect.x = position.x;
 			psRect.y = position.y;
 		}
+		if (psRect.width == 0) {
+			psRect.width = 1;
+		}
+		if (psRect.height == 0) {
+			psRect.height = 1;
+		}
 
 		animationShell = new Shell(baseShell, SWT.NO_TRIM | SWT.ON_TOP);
 		animationShell.setBounds(psRect);
