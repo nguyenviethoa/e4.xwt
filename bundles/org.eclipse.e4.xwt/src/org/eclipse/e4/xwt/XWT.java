@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -50,8 +51,8 @@ public class XWT {
 	 */
 	public static ILogger getLogger() {
 		return XWTLoaderManager.getActive().getLogger();
-	}
-
+	}	
+	
 	/**
 	 * Create a UI Profile with the provide data and apply it immediately. 
 	 * 
@@ -105,6 +106,28 @@ public class XWT {
 	 */
 	public static INamespaceHandler getNamspaceHandler(String nsmapace) {
 		return XWTLoaderManager.getActive().getNamespaceHandler(nsmapace);
+	}
+
+	/**
+	 * Register an Observable IChangeListener for a given UI element. The second 
+	 * registration of the same listener on the same UI Element has no effect. 
+	 * 
+	 * @param context
+	 * @param listener
+	 * @return
+	 */
+	public static boolean addObservableChangeListener(Object context, IChangeListener listener) {
+		return XWTLoaderManager.getActive().addObservableChangeListener(context, listener);		
+	}
+
+	/**
+	 * Undo the registration of the Observable IChangeListener for a given UI element. 
+	 * 
+	 * @param context
+	 * @param listener
+	 */
+	public static void removeObservableChangeListener(Object context, IChangeListener listener) {
+		XWTLoaderManager.getActive().removeObservableChangeListener(context, listener);		
 	}
 
 	/**

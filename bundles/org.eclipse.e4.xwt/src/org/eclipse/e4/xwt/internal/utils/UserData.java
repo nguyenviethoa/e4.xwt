@@ -142,6 +142,26 @@ public class UserData {
 		return null;
 	}
 
+	/**
+	 * Find the root widget used by XWT. In fact, it tries to find the root ScopeKeeper  
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public static Widget findRootWidget(Object element) {
+		Widget root = null;
+		Widget current = getWidget(element);
+		while (current != null) {
+			ScopeKeeper scopeKeeper = findScopeKeeper(current);
+			if (scopeKeeper != null) {
+				root = current;
+			}
+			current = getTreeParent(current);
+		}
+		
+		return root;
+	}
+
 	public static Composite findCompositeParent(Object element) {
 		Widget widget = getWidget(element);
 		if (widget == null) {
@@ -163,6 +183,18 @@ public class UserData {
 	}
 
 	public static ScopeKeeper findScopeKeeper(Object element) {
+		ScopeKeeper scopeKeeper = getLocalScopeKeeper(element);
+		if (scopeKeeper != null) {
+			return scopeKeeper;
+		}
+		Widget parent = getTreeParent(element);
+		if (parent != null) {
+			return findScopeKeeper(parent);
+		}
+		return null;
+	}
+
+	public static ScopeKeeper getLocalScopeKeeper(Object element) {
 		Widget widget = getWidget(element);
 		if (widget == null) {
 			return null;
@@ -173,10 +205,6 @@ public class UserData {
 			if (data != null) {
 				return (ScopeKeeper) data;
 			}
-		}
-		Widget parent = getTreeParent(widget);
-		if (parent != null) {
-			return findScopeKeeper(parent);
 		}
 		return null;
 	}

@@ -149,6 +149,9 @@ public class ScopeManager {
 			this.value = targevalue;
 			widget = UserData.getWidget(control);
 			ScopeKeeper scopeManager = UserData.findScopeKeeper(widget);
+			if (scopeManager == null) {
+				return null;
+			}
 			IObservable observable = scopeManager.getObservable(widget,
 					value, expressionPath.getStripedPath());
 			if (observable != null) {

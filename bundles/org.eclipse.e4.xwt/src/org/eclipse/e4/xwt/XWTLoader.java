@@ -24,6 +24,7 @@ import java.util.Stack;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -75,6 +76,7 @@ import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.MetaclassManager;
+import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
@@ -249,6 +251,35 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public boolean hasPropertyValue(Object uiElement, IProperty property) {
 		return UserData.hasLocalData(uiElement, property);
+	}
+
+	/**
+	 * Register an Observable IChangeListener for a given UI element. The second 
+	 * registration of the same listener on the same UI Element has no effect. 
+	 * 
+	 * @param context
+	 * @param listener
+	 * @return <code>true</code> the listener is added, <code>false</code> if the listener already exists
+	 */
+	public boolean addObservableChangeListener(Object control, IChangeListener listener) {
+		ScopeKeeper scope = UserData.findScopeKeeper(control);
+		if (scope != null) {
+			return scope.addChangeListener(listener);
+		}
+		return false;
+	}
+
+	/**
+	 * Undo the registration of the Observable IChangeListener for a given UI element. 
+	 * 
+	 * @param context
+	 * @param listener
+	 */
+	public void removeObservableChangeListener(Object control, IChangeListener listener) {
+		ScopeKeeper scope = UserData.findScopeKeeper(control);
+		if (scope == null) {
+			scope.removeChangeListener(listener);
+		}
 	}
 
 	/**

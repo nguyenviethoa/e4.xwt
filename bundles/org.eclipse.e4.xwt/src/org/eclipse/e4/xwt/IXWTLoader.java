@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -85,6 +86,25 @@ public interface IXWTLoader {
 	 */
 	String LOADED_ACTION = "XWT.onLoaded";
 
+	
+	/**
+	 * Register an Observable IChangeListener for a given UI element. The second 
+	 * registration of the same listener on the same UI Element has no effect. 
+	 * 
+	 * @param control
+	 * @param listener
+	 * @return
+	 */
+	boolean addObservableChangeListener(Object control, IChangeListener listener);
+
+	/**
+	 * Undo the registration of the Observable IChangeListener for a given UI element. 
+	 * 
+	 * @param context
+	 * @param listener
+	 */
+	void removeObservableChangeListener(Object context, IChangeListener listener);
+	
 	/**
 	 * Find the used IObservable value for given data.
 	 * 
