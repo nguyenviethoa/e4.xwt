@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.workbench.views;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.services.annotations.Optional;
+import org.eclipse.e4.ui.services.IServiceConstants;
+
 /**
  * This part uses the Selection variable as data context
  * 
@@ -20,9 +26,9 @@ public class XWTSelectionStaticPart extends XWTStaticPart {
 	public XWTSelectionStaticPart() {
 	}
 
-	public void setSelection(Object selection) {
+	@Inject
+	public void setSelection(@Optional @Named(IServiceConstants.SELECTION) Object selection) {
 		dataContext = selection;
-
 		refresh();
 	}
 }

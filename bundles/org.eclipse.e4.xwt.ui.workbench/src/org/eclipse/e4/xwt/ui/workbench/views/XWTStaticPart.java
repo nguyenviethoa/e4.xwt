@@ -24,7 +24,12 @@ import org.eclipse.e4.xwt.ui.workbench.IStaticPart;
  * @author yyang (yves.yang@soyatec.com)
  */
 public class XWTStaticPart extends XWTAbstractPart implements IStaticPart {
+	
 	@PostConstruct
+	protected void postInit() {
+		refresh();
+	}
+
 	protected void refresh() {
 		refresh(getURL(), getDataContext(), getClassLoader());
 	}
@@ -33,5 +38,12 @@ public class XWTStaticPart extends XWTAbstractPart implements IStaticPart {
 		return this.getClass().getResource(
 				this.getClass().getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
+	}
+	
+	
+	@Override
+	public void setDataContext(Object dataContext) {
+		super.setDataContext(dataContext);
+		refresh();
 	}
 }

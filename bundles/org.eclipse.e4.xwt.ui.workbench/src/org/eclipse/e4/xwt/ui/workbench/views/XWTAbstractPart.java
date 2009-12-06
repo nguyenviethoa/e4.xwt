@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.workbench.views;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.URL;
@@ -17,7 +18,10 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.services.context.IEclipseContext;
+import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.css.CSSHandler;
@@ -26,6 +30,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * The default class to handle the connection with e4 workbench.
@@ -36,10 +41,21 @@ public abstract class XWTAbstractPart implements IContentPart {
 	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(
 			this);
 
-	protected Composite parent;
+	@Inject
+	private Composite parent;
 
-	public XWTAbstractPart() {
-	}
+	@Inject
+	private IStylingEngine engine;
+
+	@Inject
+	private EHandlerService handlerService;
+
+	@Inject
+	private ECommandService commandService;
+
+	private IEclipseContext context;
+
+	protected Object dataContext;
 
 	static {
 		try {
@@ -48,10 +64,6 @@ public abstract class XWTAbstractPart implements IContentPart {
 		} catch (Exception e) {
 		}
 	}
-
-	private IEclipseContext context;
-
-	protected Object dataContext;
 
 	public IEclipseContext getContext() {
 		return context;
@@ -64,12 +76,32 @@ public abstract class XWTAbstractPart implements IContentPart {
 		}
 		this.context = context;
 	}
+	
+	public IStylingEngine getStyleEngine() {
+		return engine;
+	}
+
+	public EHandlerService getHandlerService() {
+		return handlerService;
+	}
+
+	public ECommandService getCommandService() {
+		return commandService;
+	}
 
 	public Object getDataContext() {
 		if (dataContext != null) {
 			return dataContext;
 		}
 		return getContext();
+	}
+	
+	public void setDataContext(Object dataContext) {
+		this.dataContext = dataContext;
+	}
+
+	public Composite getParent() {
+		return parent;
 	}
 
 	@Inject
@@ -90,6 +122,10 @@ public abstract class XWTAbstractPart implements IContentPart {
 		changeSupport.removePropertyChangeListener(propertyName, listener);
 	}
 
+	public void firePropertyChange(PropertyChangeEvent evt) {
+		changeSupport.firePropertyChange(evt);
+	}
+	
 	public ClassLoader getClassLoader() {
 		return this.getClass().getClassLoader();
 	}
@@ -119,5 +155,9 @@ public abstract class XWTAbstractPart implements IContentPart {
 			Thread.currentThread().setContextClassLoader(classLoader);
 			parent.setVisible(true);
 		}
+	}
+	
+	public Shell getShell() {
+		return parent.getShell();
 	}
 }

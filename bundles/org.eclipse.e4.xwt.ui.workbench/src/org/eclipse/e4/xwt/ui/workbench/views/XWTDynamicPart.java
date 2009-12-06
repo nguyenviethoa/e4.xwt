@@ -17,6 +17,7 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.ui.workbench.IPartContentProvider;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
@@ -41,6 +42,7 @@ public abstract class XWTDynamicPart extends XWTAbstractPart {
 	}
 
 	public void refresh(Object dataContext) {
+		Composite parent = getParent();
 		parent.setVisible(false);
 		for (Control child : parent.getChildren()) {
 			child.dispose();
