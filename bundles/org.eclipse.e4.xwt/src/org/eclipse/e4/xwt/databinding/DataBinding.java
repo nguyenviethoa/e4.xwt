@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Text;
  */
 public class DataBinding extends AbstractDataBinding {
 
-	private IObservable observableSource;
 	private IObservable observableWidget;
 
 	/**
@@ -108,14 +107,17 @@ public class DataBinding extends AbstractDataBinding {
 		}
 		return false;
 	}
-
 	
 	public IObservable getObservableSource(int observeKind) {
+		IObservable observableSource = getObservableSource();
 		if (observableSource == null) {
 			IDataProvider dataProvider = getDataProvider();
 			try {
 				observableSource = ScopeManager.observe(getControl(), dataProvider.getData(null), getSourcePropertyExpression(), getUpdateSourceTrigger(), observeKind);
 			} catch (XWTException e) {
+			}
+			if (observableSource != null) {
+				setObservableSource(observableSource);
 			}
 		}
 		return observableSource;
@@ -131,6 +133,7 @@ public class DataBinding extends AbstractDataBinding {
 			if (host instanceof Viewer && "input".equals(targetProperty)) {
 				// It is possible to use List
 				getObservableSource(ScopeManager.COLLECTION);
+				IObservable observableSource = getObservableSource();
 				if (observableSource instanceof IObservableList) {
 					return null;
 				}

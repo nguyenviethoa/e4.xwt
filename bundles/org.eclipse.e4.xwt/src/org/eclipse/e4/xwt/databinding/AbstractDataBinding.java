@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
+import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
@@ -28,11 +29,10 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	
 	private Binding binding;
 	
-	private BindingExpressionPath sourcePropertySegments;
 	private BindingExpressionPath targetPropertySegments;
 	
 	public BindingExpressionPath getSourcePropertyExpression() {
-		return sourcePropertySegments;
+		return binding.getPathPropertySegments();
 	}
 
 	public BindingExpressionPath getTargetPropertyExpression() {
@@ -44,7 +44,6 @@ public abstract class AbstractDataBinding implements IDataBinding {
 		this.binding = binding;
 		this.dataProvider = dataProvider;
 		
-		sourcePropertySegments = new BindingExpressionPath(getSourceProperty());
 		targetPropertySegments = new BindingExpressionPath(getTargetProperty());
 	}
 
@@ -125,5 +124,13 @@ public abstract class AbstractDataBinding implements IDataBinding {
 
 	public UpdateSourceTrigger getUpdateSourceTrigger() {
 		return binding.getUpdateSourceTrigger();
+	}
+	
+	protected IObservable getObservableSource() {
+		return binding.getObservableSource();
+	}
+
+	protected void setObservableSource(IObservable observableSource) {
+		binding.setObservableSource(observableSource);
 	}
 }

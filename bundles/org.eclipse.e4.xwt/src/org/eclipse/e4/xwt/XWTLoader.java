@@ -76,6 +76,7 @@ import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.MetaclassManager;
+import org.eclipse.e4.xwt.internal.core.MultiBinding;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
@@ -823,7 +824,7 @@ public class XWTLoader implements IXWTLoader {
 				return metaclass;
 			}
 		}
-		return null;
+		throw new XWTException("Type " + tagName + " is not found.");
 	}
 
 	/*
@@ -1115,6 +1116,8 @@ public class XWTLoader implements IXWTLoader {
 		core.registerMetaclassManager(IConstants.XWT_NAMESPACE,
 				new MetaclassManager(null, null, this));
 		core.registerMetaclass(new BindingMetaclass(this),
+				IConstants.XWT_NAMESPACE);
+		core.registerMetaclass(new BindingMetaclass(MultiBinding.class, this),
 				IConstants.XWT_NAMESPACE);
 		core.registerMetaclass(new TableEditorMetaclass(core.getMetaclass(
 				ControlEditor.class, IConstants.XWT_NAMESPACE), this),

@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.internal.core.Binding;
+import org.eclipse.e4.xwt.internal.core.DynamicBinding;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.jface.viewers.ViewerColumn;
@@ -24,12 +25,16 @@ import org.eclipse.swt.widgets.Item;
  */
 public class BindingMetaclass extends Metaclass {
 	public BindingMetaclass(IXWTLoader xwtLoader) {
-		super(Binding.class, null, xwtLoader);
+		this(Binding.class, xwtLoader);
+	}
+
+	public BindingMetaclass(Class<?> type, IXWTLoader xwtLoader) {
+		super(type, null, xwtLoader);
 	}
 
 	@Override
 	public Object newInstance(Object[] parameters) {
-		Binding newInstance = (Binding) super.newInstance(parameters);
+		DynamicBinding newInstance = (DynamicBinding) super.newInstance(parameters);
 		if (JFacesHelper.isViewer(parameters[0]))
 			newInstance.setControl(parameters[0]);
 		else if (parameters[0] instanceof Control)

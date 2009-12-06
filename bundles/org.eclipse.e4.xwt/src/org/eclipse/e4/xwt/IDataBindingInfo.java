@@ -5,7 +5,7 @@ import org.eclipse.e4.xwt.databinding.BindingMode;
 public interface IDataBindingInfo {
 	public IDataProvider getDataProvider();
 
-	BindingMode getBindingMode();
+	BindingMode getMode();
 
 	IValueConverter getConverter();
 }

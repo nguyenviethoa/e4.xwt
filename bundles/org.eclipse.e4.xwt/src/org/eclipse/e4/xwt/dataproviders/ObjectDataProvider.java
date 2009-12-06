@@ -25,6 +25,7 @@ import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.databinding.JFaceXWTDataBinding;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -268,6 +269,9 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 		Object target = getTarget();
 		if (target == null || path == null) {
 			return true;
+		}
+		if (target instanceof IBinding) {
+			target = ((IBinding)target).getValue();
 		}
 		Class<?> type = JFaceXWTDataBinding.toType(target);
 		int index = path.indexOf(".");

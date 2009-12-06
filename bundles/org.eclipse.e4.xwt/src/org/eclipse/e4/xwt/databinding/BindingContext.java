@@ -53,7 +53,7 @@ public class BindingContext implements IBindingContext {
 			int targetToSourcePolicy = UpdateSetStrategy.POLICY_UPDATE;
 			// Set policy to UpdateValueStrategy.
 			if (dataBinding != null) {
-				switch (dataBinding.getBindingMode()) {
+				switch (dataBinding.getMode()) {
 				case OneWay:
 					targetToSourcePolicy = UpdateSetStrategy.POLICY_NEVER;
 					break;
@@ -76,7 +76,7 @@ public class BindingContext implements IBindingContext {
 			int targetToSourcePolicy = UpdateListStrategy.POLICY_UPDATE;
 			// Set policy to UpdateValueStrategy.
 			if (dataBinding != null) {
-				switch (dataBinding.getBindingMode()) {
+				switch (dataBinding.getMode()) {
 				case OneWay:
 					targetToSourcePolicy = UpdateListStrategy.POLICY_NEVER;
 					break;
@@ -238,7 +238,7 @@ public class BindingContext implements IBindingContext {
 		int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
 		// Set policy to UpdateValueStrategy.
 		if (dataBinding != null) {
-			switch (dataBinding.getBindingMode()) {
+			switch (dataBinding.getMode()) {
 			case OneWay:
 				targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
 				break;

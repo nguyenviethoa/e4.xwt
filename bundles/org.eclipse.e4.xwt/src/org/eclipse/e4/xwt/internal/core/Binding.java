@@ -14,12 +14,10 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
-import org.eclipse.e4.xwt.databinding.BindingMode;
 import org.eclipse.e4.xwt.databinding.ControlDataBinding;
 import org.eclipse.e4.xwt.databinding.DataBinding;
 import org.eclipse.e4.xwt.internal.utils.UserData;
@@ -32,31 +30,32 @@ import org.eclipse.swt.widgets.Widget;
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class Binding implements IDynamicBinding {
-	/**
-	 * which used to decide binding type, not only text.
-	 */
-	private String type;
+public class Binding extends DynamicBinding {
+	public static Binding[] EMPTY_ARRAY = new Binding[0];
+
 	private String path;
 	private Object source;
 
 	private String elementName;
 
-	private Object control;
-
-	private Object host;
-
-	private IXWTLoader xwtLoader;
-
-	private BindingMode mode = BindingMode.TwoWay;
-
 	private IValueConverter converter;
 	
+	private IObservable observableSource;
+
 	/**
 	 * <p>Default</p>
 	 * 
 	 */
 	private UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.Default;
+
+	private BindingExpressionPath pathSegments;
+	
+	public BindingExpressionPath getPathPropertySegments() {
+		if (pathSegments == null) {
+			pathSegments = new BindingExpressionPath(getPath());
+		}
+		return pathSegments;
+	}
 
 	public UpdateSourceTrigger getUpdateSourceTrigger() {
 		return updateSourceTrigger;
@@ -74,32 +73,16 @@ public class Binding implements IDynamicBinding {
 		this.converter = converter;
 	}
 
+	public String getPath() {
+		return path;
+	}
+
 	public Object getSource() {
 		return source;
 	}
 
 	public void setSource(Object source) {
 		this.source = source;
-	}
-
-	public Object getHost() {
-		return host;
-	}
-
-	public void setHost(Object host) {
-		this.host = host;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setControl(Object control) {
-		this.control = control;
-	}
-
-	public Object getControl() {
-		return this.control;
 	}
 
 	public void setPath(String path) {
@@ -114,54 +97,13 @@ public class Binding implements IDynamicBinding {
 		this.elementName = elementName;
 	}
 
-	/**
-	 * @param type
-	 *            the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
-
-	public BindingMode getMode() {
-		return mode;
-	}
-
-	public void setMode(BindingMode mode) {
-		this.mode = mode;
-	}
-
 	protected Object getSourceObject() {
 		if (source != null) {
 			return source;
 		} else if (elementName != null) {
-			return XWT.findElementByName(control, elementName);
+			return XWT.findElementByName(getControl(), elementName);
 		}
 		return null;
-	}
-
-	protected Object getDataContextHost() {
-		if (control == null) {
-			return null;
-		}
-		Object data = UserData.getLocalDataContext(control);
-		if (data == null || data == this) {
-			Widget parent = UserData.getParent(control);
-			if (parent != null) {
-				return UserData.getDataContextHost(parent);
-			}
-			return null;
-		}
-		if (data != null) {
-			return control;
-		}
-		return UserData.getDataContextHost(control);
 	}
 	
 	protected boolean isSelfBinding(Object data) {
@@ -173,6 +115,7 @@ public class Binding implements IDynamicBinding {
 	}
 
 	public Object createBoundSource() {
+		Object control = getControl();
 		Object source = getSourceObject();
 		if (source == null) {
 			source = XWT.getDataContext(control);
@@ -188,7 +131,7 @@ public class Binding implements IDynamicBinding {
 				if (widget == null) {
 					widget = UserData.getWidget(control);
 				}
-				return ScopeManager.observeValue(widget, value, path, getUpdateSourceTrigger());
+				return ScopeManager.observeValue(widget, value, getPathPropertySegments(), getUpdateSourceTrigger());
 			}
 		}
 		if (source != null && !BindingExpressionPath.isEmptyPath(path)) {
@@ -196,7 +139,7 @@ public class Binding implements IDynamicBinding {
 			if (widget == null) {
 				widget = UserData.getWidget(control);
 			}			
-			return ScopeManager.observeValue(widget, source, path, getUpdateSourceTrigger());
+			return ScopeManager.observeValue(widget, source, getPathPropertySegments(), getUpdateSourceTrigger());
 		}
 		return source;
 	}
@@ -230,7 +173,7 @@ public class Binding implements IDynamicBinding {
 			return false;
 		}
 		String parentPath = path.substring(0, index);
-		IObservable observable = ScopeManager.observeValue(control, source, parentPath, getUpdateSourceTrigger());
+		IObservable observable = ScopeManager.observeValue(getControl(), source, parentPath, getUpdateSourceTrigger());
 		if (observable instanceof IObservableValue) {
 			IObservableValue observableValue = (IObservableValue) observable;
 			Object type = observableValue.getValueType();
@@ -282,19 +225,21 @@ public class Binding implements IDynamicBinding {
 		}
 		return dataContext;
 	}
-
-	protected IDataProvider getDataProvider(Object dataContext) {
-		if (dataContext != null) {
-			if (dataContext instanceof IDataProvider) {
-				return (IDataProvider) dataContext;
-			} else {
-				return xwtLoader.findDataProvider(dataContext);
-			}
+	
+	public boolean isSourceProeprtyReadOnly() {
+		IDataProvider dataProvider = getDataProvider();
+		try {
+			return ScopeManager.isProeprtyReadOnly(dataProvider, getPathPropertySegments());
+		} catch (XWTException e) {
 		}
-		return null;
+		return false;
+	}
+	
+	public IObservable getObservableSource() {
+		return observableSource;
 	}
 
-	public void setXWTLoader(IXWTLoader xwtLoader) {
-		this.xwtLoader = xwtLoader;
+	public void setObservableSource(IObservable observableSource) {
+		this.observableSource = observableSource;
 	}
 }

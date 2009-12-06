@@ -72,6 +72,10 @@ public class ScopeKeeper implements DisposeListener {
 		public void removeChangeListener(IChangeListener listener) {
 			changeListeners.remove(listener);
 		}
+		
+		public void dispose() {
+			changeListeners = null;
+		}
 	}
 
 	public ScopeKeeper(ScopeKeeper parent, Widget host) {
@@ -83,7 +87,25 @@ public class ScopeKeeper implements DisposeListener {
 
 	public void widgetDisposed(DisposeEvent e) {
 		Widget source = e.widget;
-		bindingData.remove(source);
+		if (source == host) {
+			for (HashMap<Object, HashMap<String, IObservable>> hashMap : bindingData.values()) {
+				for (HashMap<String, IObservable> map: hashMap.values()) {
+					for (IObservable observable : map.values()) {
+						observable.removeChangeListener(changeListenerSupport);
+					}
+				}
+			}
+			changeListenerSupport.dispose();
+		}
+		HashMap<Object, HashMap<String, IObservable>> hashMap = bindingData.get(source);
+		if (hashMap != null) {
+			for (HashMap<String, IObservable> map: hashMap.values()) {
+				for (IObservable observable : map.values()) {
+					observable.removeChangeListener(changeListenerSupport);
+				}
+			}
+			bindingData.remove(source);
+		}
 	}
 
 	public void addNamedObject(String name, Object object) {
