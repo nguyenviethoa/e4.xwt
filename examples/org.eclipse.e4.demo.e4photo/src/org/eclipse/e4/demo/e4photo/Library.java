@@ -10,12 +10,26 @@
  *******************************************************************************/
 package org.eclipse.e4.demo.e4photo;
 
-import java.util.*;
-import org.eclipse.core.databinding.observable.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.observable.Observables;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.set.WritableSet;
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -26,7 +40,12 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableSetTreeContentProvider;
 import org.eclipse.jface.databinding.viewers.TreeStructureAdvisor;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.osgi.service.prefs.BackingStoreException;
@@ -34,6 +53,8 @@ import org.osgi.service.prefs.BackingStoreException;
 public class Library implements IDisposable {
 
 	Map<IContainer, IObservableSet> observableSets = new HashMap<IContainer, IObservableSet>();
+	
+	private IEclipseContext context;
 
 	private IResourceChangeListener listener = new IResourceChangeListener() {
 		public void resourceChanged(IResourceChangeEvent event) {
@@ -82,7 +103,8 @@ public class Library implements IDisposable {
 
 	static int counter;
 
-	public Library(Composite parent, final IWorkspace workspace, final IEclipseContext outputContext) {
+	@Inject
+	public Library(Composite parent, final IWorkspace workspace) {
 		final Realm realm = SWTObservables.getRealm(parent.getDisplay());
 		this.workspace = workspace;
 		initializeWorkspace();
@@ -92,7 +114,7 @@ public class Library implements IDisposable {
 		viewer.addSelectionChangedListener(new ISelectionChangedListener(){
 			public void selectionChanged(SelectionChangedEvent event) {
 				StructuredSelection selection = (StructuredSelection)event.getSelection();
-				outputContext.set(IServiceConstants.SELECTION, selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
+				context.modify(IServiceConstants.SELECTION, selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
 			}
 		});
 		IObservableFactory setFactory = new IObservableFactory() {
@@ -175,6 +197,10 @@ public class Library implements IDisposable {
 		}
 	}
 	
+	public void contextSet(IEclipseContext context) {
+		this.context = context;
+	}
+
 	public void dispose() {
 		workspace.removeResourceChangeListener(listener);
 	}

@@ -11,8 +11,12 @@
  *******************************************************************************/
 package org.eclipse.e4.demo.e4photo;
 
+import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.resources.IContainer;
@@ -20,10 +24,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.services.Logger;
-import org.eclipse.e4.core.services.annotations.In;
-import org.eclipse.e4.core.services.annotations.Out;
+import org.eclipse.e4.core.services.annotations.Optional;
 import org.eclipse.e4.demo.e4photo.xwt.EditDialog;
-import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.e4.ui.services.events.IEventBroker;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
 import org.eclipse.jface.dialogs.Dialog;
@@ -35,37 +38,36 @@ import org.eclipse.swt.widgets.Event;
 public class ExifTable extends XWTStaticPart {
 	private WritableList inputList = new WritableList();
 	private IContainer input;
-	private Exif selection;
+	private String persistedState;
 
+	static public String EVENT_NAME = "org/eclipse/e4/demo/e4photo/exif"; 
+
+	@Inject
 	private Logger logger;
+
+	@Inject
+	private IEventBroker eventBroker;
 
 	public ExifTable() {
 		super();
 	}
 
-	@In
 	public void setLogger(Logger logger) {
 		this.logger = logger;
 	}
 
-	@Out
-	public Exif getSelection() {
-		return selection;
-	}
-
-	@In
-	public void setInput(Object input) {
-		if (selection == null && !(input instanceof IResource))
+	@Inject @Optional
+	void setSelection(@Named("selection") IResource selection) {
+		if (selection == null)
 			return;
-		IResource selection = (IResource) input;
 		IContainer newInput;
 		if (selection instanceof IContainer)
 			newInput = (IContainer) selection;
 		else
 			newInput = selection.getParent();
-		if (newInput == this.input)
+		if (newInput == input)
 			return;
-		this.input = newInput;
+		input = newInput;
 
 		inputList.clear();
 		try {
@@ -93,8 +95,10 @@ public class ExifTable extends XWTStaticPart {
 		}
 	}
 
-	public Class<?> getInputType() {
-		return IResource.class;
+	@Inject @Optional
+	void setPersistedState(@Named("persistedState") String persistedState) {
+		firePropertyChange(new PropertyChangeEvent(this, "persistedState", 
+				this.persistedState, this.persistedState = persistedState));
 	}
 
 	@Override
@@ -108,8 +112,9 @@ public class ExifTable extends XWTStaticPart {
 		if (selection.isEmpty()) {
 			return;
 		}
-		Object target = ((IStructuredSelection) selection).getFirstElement();
-		getContext().set(IServiceConstants.SELECTION, target);
+		Object selected = ((IStructuredSelection) selection).getFirstElement();
+		if (eventBroker != null)
+			eventBroker.post(EVENT_NAME, selected);
 	}
 
 	public void editExif(Event event) {

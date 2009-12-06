@@ -19,8 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class NewProjectHandler {
 
-	public NewProjectHandler() {
-	}
 	private int counter;
 
 	public void execute(IWorkspace workspace, IProgressMonitor monitor) {

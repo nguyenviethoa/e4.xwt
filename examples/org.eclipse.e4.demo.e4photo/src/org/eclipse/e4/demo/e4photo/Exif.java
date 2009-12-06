@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Soyatec - add missing getter/setter for XWT porting
  *******************************************************************************/
 package org.eclipse.e4.demo.e4photo;
 
@@ -38,83 +37,6 @@ public class Exif {
 	private String model;
 	private Integer orientation;
 	private String software;
-
-	public void setMake(String make) {
-		this.make = make;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	public void setOrientation(Integer orientation) {
-		this.orientation = orientation;
-	}
-
-	public void setSoftware(String software) {
-		this.software = software;
-	}
-
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public void setExposure(String exposure) {
-		this.exposure = exposure;
-	}
-
-	public void setIso(Integer iso) {
-		this.iso = iso;
-	}
-
-	public void setAperture(Double aperture) {
-		this.aperture = aperture;
-	}
-
-	public void setExposureComp(String exposureComp) {
-		this.exposureComp = exposureComp;
-	}
-
-	public void setFlash(Boolean flash) {
-		this.flash = flash;
-	}
-
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
-
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
-
-	public void setFocalLength(Double focalLength) {
-		this.focalLength = focalLength;
-	}
-
-	public void setWhiteBalance(Integer whiteBalance) {
-		this.whiteBalance = whiteBalance;
-	}
-
-	public void setLightSource(String lightSource) {
-		this.lightSource = lightSource;
-	}
-
-	public void setExposureProgram(String exposureProgram) {
-		this.exposureProgram = exposureProgram;
-	}
-
-	public void setGpsLatitude(String gpsLatitude) {
-		this.gpsLatitude = gpsLatitude;
-	}
-
-	public void setGpsLongitude(String gpsLongitude) {
-		this.gpsLongitude = gpsLongitude;
-	}
-
-	public void setUri(URI uri) {
-		this.uri = uri;
-	}
-
 	private String timestamp;
 	private String exposure;
 	private Integer iso;
@@ -214,16 +136,16 @@ public class Exif {
 		if (gpsLatitude == null) {
 			return null;
 		}
-		return ("S".equals(gpsLatitudeRef) ? "-" : "") + gpsLatitude;
+		return ("S".equals(gpsLatitudeRef) ? "-" : "" ) + gpsLatitude;
 	}
 
 	public String getGpsLongitude() {
 		if (gpsLongitude == null) {
 			return null;
 		}
-		return ("W".equals(gpsLongitudeRef) ? "-" : "") + gpsLongitude;
+		return ("W".equals(gpsLongitudeRef) ? "-" : "" ) + gpsLongitude;
 	}
-
+	
 	static class IFD {
 		Entry[] entries;
 	}
@@ -248,13 +170,13 @@ public class Exif {
 				break;
 			case 2:
 				if (gpsInfo) {
-					double degrees = ((Fraction) data[0]).toDouble();
-					double minutes = ((Fraction) data[1]).toDouble();
-					double seconds = ((Fraction) data[2]).toDouble();
+					double degrees = ((Fraction)data[0]).toDouble();
+					double minutes = ((Fraction)data[1]).toDouble();
+					double seconds = ((Fraction)data[2]).toDouble();
 					if (seconds == 0.0) {
 						exif.gpsLatitude = ((int) degrees) + "\u00B0" + minutes + "'";
 					} else {
-						exif.gpsLatitude = ((int) degrees) + "\u00B0" + ((int) minutes) + "'" + ((int) seconds) + "\"";
+						exif.gpsLatitude = ((int) degrees) + "\u00B0" + ((int)minutes) + "'" + ((int)seconds) + "\"";
 					}
 				}
 				break;
@@ -265,13 +187,13 @@ public class Exif {
 				break;
 			case 4:
 				if (gpsInfo) {
-					double degrees = ((Fraction) data[0]).toDouble();
-					double minutes = ((Fraction) data[1]).toDouble();
-					double seconds = ((Fraction) data[2]).toDouble();
+					double degrees = ((Fraction)data[0]).toDouble();
+					double minutes = ((Fraction)data[1]).toDouble();
+					double seconds = ((Fraction)data[2]).toDouble();
 					if (seconds == 0.0) {
 						exif.gpsLongitude = ((int) degrees) + "\u00B0" + minutes + "'";
 					} else {
-						exif.gpsLongitude = ((int) degrees) + "\u00B0" + ((int) minutes) + "'" + ((int) seconds) + "\"";
+						exif.gpsLongitude = ((int) degrees) + "\u00B0" + ((int)minutes) + "'" + ((int)seconds) + "\"";
 					}
 				}
 				break;
@@ -334,7 +256,8 @@ public class Exif {
 				exif.exposureComp = ((Fraction) data[0]).toFraction();
 				break;
 			case 0x9209:
-				exif.flash = new Boolean((((Integer) data[0]).intValue() & 1) != 0);
+				exif.flash = new Boolean(
+						(((Integer) data[0]).intValue() & 1) != 0);
 				break;
 			case 0x920A:
 				exif.focalLength = ((Fraction) data[0]).toDouble();
@@ -768,7 +691,7 @@ public class Exif {
 	public Exif(URI uri, InputStream is) throws IOException {
 		this.uri = uri;
 		this.name = getName(uri);
-
+		
 		read(is, false);
 	}
 
@@ -785,8 +708,9 @@ public class Exif {
 		this.name = name;
 		read(is, false);
 	}
-
-	public Exif(String name, InputStream is, boolean storeIFDs) throws IOException {
+	
+	public Exif(String name, InputStream is, boolean storeIFDs)
+			throws IOException {
 		this.name = name;
 		read(is, storeIFDs);
 	}
@@ -881,7 +805,8 @@ public class Exif {
 		int format = readInt(data, offset + 2, 2, endian);
 		int numComponents = readInt(data, offset + 4, 4, endian);
 		Object[] values = new Object[numComponents];
-		int bytesPerComponent = new int[] { -1, 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8 }[format];
+		int bytesPerComponent = new int[] { -1, 1, 1, 2, 4, 8, 1, 1, 2, 4, 8,
+				4, 8 }[format];
 		if (numComponents * bytesPerComponent > 4) {
 			offset = readInt(data, offset + 8, 4, endian);
 		} else {
@@ -904,7 +829,8 @@ public class Exif {
 					values[i] = new Integer(readInt(data, offset, 4, endian));
 					break;
 				case 5:
-					values[i] = new Fraction(readInt(data, offset, 4, endian), readInt(data, offset + 4, 4, endian));
+					values[i] = new Fraction(readInt(data, offset, 4, endian),
+							readInt(data, offset + 4, 4, endian));
 					break;
 				case 6:
 					values[i] = new Byte(data[offset]);
@@ -919,13 +845,16 @@ public class Exif {
 					values[i] = new Integer(readInt(data, offset, 4, endian));
 					break;
 				case 10:
-					values[i] = new Fraction(readInt(data, offset, 4, endian), readInt(data, offset + 4, 4, endian));
+					values[i] = new Fraction(readInt(data, offset, 4, endian),
+							readInt(data, offset + 4, 4, endian));
 					break;
 				case 11:
-					values[i] = new Float(Float.intBitsToFloat(readInt(data, offset, 4, endian)));
+					values[i] = new Float(Float.intBitsToFloat(readInt(data,
+							offset, 4, endian)));
 					break;
 				case 12:
-					values[i] = new Float(Float.intBitsToFloat(readInt(data, offset, 8, endian)));
+					values[i] = new Float(Float.intBitsToFloat(readInt(data,
+							offset, 8, endian)));
 					break;
 				default:
 					throw new RuntimeException("unexpected case");
@@ -963,12 +892,16 @@ public class Exif {
 			index += read;
 		}
 		if (n > 0) {
-			throw new IOException("Could only read " + read + " bytes but expected " + n + " more.");
+			throw new IOException("Could only read " + read
+					+ " bytes but expected " + n + " more.");
 		}
 		return result;
 	}
 
-	public static void main(String... args) throws FileNotFoundException, IOException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public static void main(String... args) throws FileNotFoundException,
+			IOException, SecurityException, NoSuchMethodException,
+			IllegalArgumentException, IllegalAccessException,
+			InvocationTargetException {
 		String filename = args[0];
 		File file = new File(filename);
 		if (file.isDirectory()) {
@@ -976,7 +909,8 @@ public class Exif {
 			List<Exif> exifs = new ArrayList<Exif>();
 			for (int i = 0; i < files.length; i++) {
 				try {
-					exifs.add(new Exif(files[i].getName(), new FileInputStream(files[i])));
+					exifs.add(new Exif(files[i].getName(), new FileInputStream(
+							files[i])));
 				} catch (IllegalArgumentException ex) {
 					System.out.println("skipping " + files[i].getName());
 				}
@@ -988,7 +922,9 @@ public class Exif {
 		exif.printStuff();
 	}
 
-	private static void displayExifs(Exif[] exifs) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	private static void displayExifs(Exif[] exifs) throws SecurityException,
+			NoSuchMethodException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
@@ -997,12 +933,16 @@ public class Exif {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 
-		String[] columns = { "Name", "Make", "Model", "Orientation", "Software", "Timestamp", "Exposure", "Iso", "Aperture", "ExposureComp", "Flash", "Width", "Height", "FocalLength", "WhiteBalance", "LightSource", "ExposureProgram" };
+		String[] columns = { "Name", "Make", "Model", "Orientation",
+				"Software", "Timestamp", "Exposure", "Iso", "Aperture",
+				"ExposureComp", "Flash", "Width", "Height", "FocalLength",
+				"WhiteBalance", "LightSource", "ExposureProgram" };
 		Method[] columnMethods = new Method[columns.length];
 
 		for (int i = 0; i < columns.length; i++) {
 			new TableColumn(table, SWT.NONE).setText(columns[i]);
-			columnMethods[i] = Exif.class.getDeclaredMethod("get" + columns[i], new Class<?>[0]);
+			columnMethods[i] = Exif.class.getDeclaredMethod("get" + columns[i],
+					new Class<?>[0]);
 		}
 
 		for (int i = 0; i < exifs.length; i++) {
@@ -1038,7 +978,7 @@ public class Exif {
 						System.out.println(subEntry);
 					}
 					System.out.println("---End-Sub---");
-				}
+				} 
 			}
 		}
 	}

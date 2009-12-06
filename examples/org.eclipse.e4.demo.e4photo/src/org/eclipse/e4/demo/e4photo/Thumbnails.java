@@ -10,18 +10,20 @@
  *******************************************************************************/
 package org.eclipse.e4.demo.e4photo;
 
-import org.eclipse.e4.core.services.annotations.In;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.e4.core.services.ISchedulingExecutor;
+import org.eclipse.e4.core.services.annotations.Optional;
 import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.services.IStylingEngine;
@@ -43,16 +45,15 @@ public class Thumbnails {
 
 	private Gallery gallery;
 	private GalleryItem group;
-	private final IEclipseContext outputContext;
-	private final ISchedulingExecutor backgroundRunner;
 	private IContainer input;
 	private volatile Runnable runnable;
 	private final IStylingEngine stylingEngine;
 
-	public Thumbnails(Composite parent, final IEclipseContext outputContext,
+	private IEclipseContext context;
+
+	@Inject
+	public Thumbnails(Composite parent, 
 			ISchedulingExecutor backgroundRunner, IStylingEngine stylingEngine) {
-		this.outputContext = outputContext;
-		this.backgroundRunner = backgroundRunner;
 		this.stylingEngine = stylingEngine;
 		parent.setLayout(new FillLayout());
 		gallery = new Gallery(parent, SWT.V_SCROLL | SWT.MULTI);
@@ -73,7 +74,7 @@ public class Thumbnails {
 		gallery.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Object data = e.item.getData();
-				outputContext.set(IServiceConstants.SELECTION, data);
+				context.modify(IServiceConstants.SELECTION, data);
 			}
 		});
 
@@ -91,8 +92,8 @@ public class Thumbnails {
 		return new Point(newWidth, newHeight);
 	}
 
-	@In
-	public void setInput(IResource selection) {
+	@Inject @Optional
+	public void setSelection(@Named("selection") IResource selection) {
 		if (selection == null)
 			return;
 		IContainer newInput;
@@ -179,4 +180,9 @@ public class Thumbnails {
 			e1.printStackTrace();
 		}
 	}
+	
+	public void contextSet(IEclipseContext context) {
+		this.context = context;
+	}
+
 }

@@ -11,10 +11,10 @@
 package org.eclipse.e4.demo.e4photo;
 
 import java.io.BufferedInputStream;
-
-import org.eclipse.e4.core.services.annotations.In;
-
 import java.io.InputStream;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
@@ -23,6 +23,7 @@ import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.e4.core.services.annotations.Optional;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -52,6 +53,7 @@ public class Preview {
 	private final Realm bgRealm;
 	private Color borderColor;
 	
+	@Inject
 	public Preview(final Composite parentComposite, Realm backgroundRealm) {
 		this.parent = parentComposite;
 		parent.setData("org.eclipse.e4.ui.css.id", "preview");
@@ -151,8 +153,8 @@ public class Preview {
 	}
 
 
-	@In
-	public void setInput(final IFile input) {
+	@Inject @Optional
+	public void setSelection(@Named("selection") final IFile input) {
 		bgRealm.asyncExec(new Runnable() {
 			public void run() {
 				inputFile.setValue(input);
