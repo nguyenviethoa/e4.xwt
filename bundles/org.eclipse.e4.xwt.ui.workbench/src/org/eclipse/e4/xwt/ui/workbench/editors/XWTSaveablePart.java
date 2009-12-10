@@ -95,7 +95,7 @@ public abstract class XWTSaveablePart extends XWTStaticPart {
 	}
 
 	protected void updatePartTitle(String title) {
-		saveablePart.setName(title);
+		saveablePart.setLabel(title);
 	}
 		
 	public boolean isDirty() {
