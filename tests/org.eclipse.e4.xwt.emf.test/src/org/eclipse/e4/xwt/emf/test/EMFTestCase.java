@@ -8,6 +8,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 public class EMFTestCase extends XWTTestCase {
+	public EMFTestCase() {
+		EMFBinding.initialze();
+	}
+	
 	public void testEMFDataProvider_DataContext() {
 		URL url = EMFTestCase.class
 				.getResource(EMFDataProvider_DataContext.class.getSimpleName()
@@ -22,7 +26,6 @@ public class EMFTestCase extends XWTTestCase {
 	}
 
 	public void testEMFDataProvider_DataContext_Dynamic() {
-		EMFBinding.initialze();
 		URL url = EMFTestCase.class
 				.getResource(EMFDataProvider_DataContext_Dynamic.class
 						.getSimpleName()
@@ -37,7 +40,6 @@ public class EMFTestCase extends XWTTestCase {
 	}
 
 	public void testEMFDataProvider_DataContext_Nested() {
-		EMFBinding.initialze();
 		URL url = EMFTestCase.class
 				.getResource(EMFDataProvider_DataContext_Nested.class
 						.getSimpleName()
@@ -55,7 +57,6 @@ public class EMFTestCase extends XWTTestCase {
 		URL url = EMFTestCase.class.getResource(EMFDataProvider_Type.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
-		EMFBinding.initialze();
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
 				"ecore", new XMIResourceFactoryImpl());
 		runTest(url, new Runnable() {
