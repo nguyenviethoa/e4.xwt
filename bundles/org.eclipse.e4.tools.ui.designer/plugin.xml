@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="org.eclipse.e4.tools.ui.designer.viewContribution"
+            targetID="org.eclipse.jdt.ui.PackageExplorer">
+         <action
+               class="org.eclipse.e4.tools.ui.designer.actions.OpenWorkbenchDesignerAction"
+               id="org.eclipse.e4.tools.ui.designer.actions.OpenWorkbenchDesignerAction"
+               label="Open Workbench Designer"
+               style="push">
+         </action>
+      </viewContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.e4.tools.ui.designer.E4Designer"
+            default="false"
+            extensions="xmi"
+            filenames="Application"
+            id="org.eclipse.e4.tools.ui.designer.E4Designer"
+            name="E4 Designer">
+      </editor>
+   </extension>
+</plugin>
