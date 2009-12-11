@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.e4.xwt.tools.ui.designer.swt.SWTTools;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Widget;
 

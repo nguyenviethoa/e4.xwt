@@ -1,20 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Soyatec - initial API and implementation
+ * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.parts;
 
-import java.util.List;
+import java.util.Iterator;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.xwt.tools.ui.designer.core.figures.ContentPaneFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.core.figures.ImageFigure;
@@ -23,10 +19,13 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.images.IImageListener;
 import org.eclipse.e4.xwt.tools.ui.designer.core.images.ImageFigureController;
 import org.eclipse.e4.xwt.tools.ui.designer.core.policies.DefaultComponentEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
+import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.WidgetInfo;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -39,7 +38,7 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	private IImageListener imageListener;
 	private IVisualInfo visualInfo;
 
-	public VisualEditPart(XamlNode model) {
+	public VisualEditPart(EObject model) {
 		setModel(model);
 	}
 
@@ -48,15 +47,23 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	 */
 	protected IFigure createFigure() {
 		ContentPaneFigure figure = new ContentPaneFigure();
-		ImageFigure imageFigure = new ImageFigure();
-		if (isUseBorder())
-			imageFigure.setBorder(new OutlineBorder(150, ColorConstants.lightGray, null, Graphics.LINE_SOLID));
-		imageFigure.setOpaque(!isTransparent());
-		if (!isTransparent()) {
-			imageFigureController = new ImageFigureController();
-			imageFigureController.setImageFigure(imageFigure);
+		Figure contentPane = null;
+		if (!isRoot()) {
+			contentPane = new Label();
+		} else {
+			ImageFigure imageFigure = new ImageFigure();
+			if (isUseBorder())
+				imageFigure.setBorder(new OutlineBorder(150,
+						ColorConstants.lightGray, null, Graphics.LINE_SOLID));
+			imageFigure.setOpaque(!isTransparent());
+			if (!isTransparent()) {
+				imageFigureController = new ImageFigureController();
+				imageFigureController.setImageFigure(imageFigure);
+			}
+			contentPane = imageFigure;
 		}
-		figure.setContentPane(imageFigure);
+		contentPane.setLayoutManager(new XYLayout());
+		figure.setContentPane(contentPane);
 		return figure;
 	}
 
@@ -74,21 +81,13 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	}
 
 	/**
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
-	 */
-	protected List getModelChildren() {
-		if (getCastModel() != null) {
-			return getCastModel().getChildNodes();
-		}
-		return super.getModelChildren();
-	}
-
-	/**
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
 	 */
 	protected void createEditPolicies() {
-		// Default component role allows delete and basic behavior of a component within a parent edit part that contains it
-		installEditPolicy(EditPolicy.COMPONENT_ROLE, new DefaultComponentEditPolicy());
+		// Default component role allows delete and basic behavior of a
+		// component within a parent edit part that contains it
+		installEditPolicy(EditPolicy.COMPONENT_ROLE,
+				new DefaultComponentEditPolicy());
 
 	}
 
@@ -99,39 +98,108 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 		if (!isTransparent() && imageFigureController != null) {
 			imageFigureController.setImageNotifier(getVisualInfo());
 		}
+		if (imageListener == null) {
+			imageListener = new IImageListener() {
+				public void imageChanged(Image image) {
+					refreshVisuals();
+					for (Iterator iterator = getChildren().iterator(); iterator
+							.hasNext();) {
+						EditPart child = (EditPart) iterator.next();
+						if (child instanceof VisualEditPart) {
+							((VisualEditPart) child).refreshVisuals();
+						}
+					}
+				}
+			};
+		}
+		getVisualInfo().addImageListener(imageListener);
 		super.activate();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#refreshVisuals()
+	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#refresh()
 	 */
-	protected void refreshVisuals() {
-		final IVisualInfo visualInfo = getVisualInfo();
-		if (visualInfo == null) {
+	public void refresh() {
+		// refresh(RefreshContext.ALL());
+	}
+
+	public final void refresh(RefreshContext context) {
+		if (context == null) {
 			return;
 		}
-		if (imageListener == null) {
-			imageListener = new IImageListener() {
-				public void imageChanged(Image image) {
-					IFigure figure = getFigure();
-					if (image != null && figure != null && figure.getParent() != null) {
-						Rectangle r = new Rectangle(visualInfo.getBounds());
-						figure.setBounds(r);
-						setLayoutConstraint(VisualEditPart.this, figure, r);
-					}
-				}
-			};
+		if (!validateVisuals()) {
+			return;
 		}
-		visualInfo.removeImageListener(imageListener);
-		visualInfo.addImageListener(imageListener);
+		// refresh children here.
+		if (context.refreshChildren()) {
+			refreshChildren();
+		}
+
+		// try to refresh image and visuals.
+		if (context.refreshImage()) {
+			getUIDisplay().asyncExec(new Runnable() {
+				public void run() {
+					refreshImage();
+				}
+			});
+			context.setImageRefreshed();
+		}
+		if (context.refreshVisuals()) {
+			refreshVisuals();
+		}
+	}
+
+	protected boolean validateVisuals() {
+		return getVisualInfo() != null
+				&& getVisualInfo().getVisualObject() != null;
+	}
+
+	/**
+	 * This method has declared to final, please use refresh(RefreshContext).
+	 */
+	protected final void refreshImage() {
+		getRootVisualEditPart().getVisualInfo().refreshImage();
+	}
+
+	/**
+	 * This method has declared to final, please use refresh(RefreshContext).
+	 */
+	protected final void refreshVisuals() {
 		IFigure figure = getFigure();
 		if (figure != null && figure.getParent() != null) {
-			Rectangle r = new Rectangle(visualInfo.getBounds());
+			Rectangle r = new Rectangle(getBounds());
 			figure.setBounds(r);
 			setLayoutConstraint(VisualEditPart.this, figure, r);
 		}
+	}
+
+	/**
+	 * Don't remove this overrite method. see RefreshJob. This method has
+	 * declared to final, please use refresh(RefreshContext).
+	 */
+	protected final void refreshChildren() {
+		super.refreshChildren();
+	}
+
+	protected Display getUIDisplay() {
+		if (visualInfo instanceof WidgetInfo) {
+			return ((WidgetInfo) visualInfo).getDisplay();
+		}
+		return Display.getCurrent();
+	}
+
+	protected VisualEditPart getRootVisualEditPart() {
+		EditPart root = this;
+		while (!(root.getParent() instanceof AbstractDiagramEditPart)) {
+			root = root.getParent();
+		}
+		return (VisualEditPart) root;
+	}
+
+	protected Rectangle getBounds() {
+		return getVisualInfo().getBounds();
 	}
 
 	/**
@@ -154,8 +222,12 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	 */
 	public void deactivate() {
 		super.deactivate();
-		if (imageFigureController != null)
+		if (imageFigureController != null) {
 			imageFigureController.deactivate();
+		}
+		if (imageListener != null && visualInfo != null) {
+			visualInfo.removeImageListener(imageListener);
+		}
 	}
 
 	/**
@@ -188,12 +260,31 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 		return transparent;
 	}
 
+	public boolean isRoot() {
+		return getParent() instanceof AbstractDiagramEditPart;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModel()
 	 */
-	public XamlNode getCastModel() {
-		return (XamlNode) super.getModel();
+	public EObject getCastModel() {
+		return (EObject) super.getModel();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.editparts.AbstractEditPart#toString()
+	 */
+	public String toString() {
+		if (visualInfo != null && visualInfo.getVisualObject() != null) {
+			return "EditPart("
+					+ visualInfo.getVisualObject().getClass().getSimpleName()
+					+ ")";
+		}
+		return "";
+	}
+
 }

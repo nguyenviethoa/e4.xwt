@@ -28,7 +28,7 @@ import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesignerModelBuilder;
+import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.metadata.HeightProperty;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.metadata.WidthProperty;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument;
@@ -75,17 +75,16 @@ public class XWTVisualLoader extends XWTLoader {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.e4.xwt.XWTLoader#loadWithOptions(java.io.InputStream, java.net.URL, java.util.Map)
 	 */
-	public synchronized Control loadWithOptions(InputStream stream, URL base, Map<String, Object> options) throws Exception {
+	public synchronized Control loadWithOptions(InputStream stream, URL base, Map<String, Object> options)
+			throws Exception {
 		// FIXME:
 		return super.loadWithOptions(stream, base, options);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.e4.xwt.XWTLoader#loadWithOptions(java.net.URL, java.util.Map)
 	 */
 	public synchronized Control loadWithOptions(URL url, Map<String, Object> options) throws Exception {
@@ -124,13 +123,14 @@ public class XWTVisualLoader extends XWTLoader {
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			IEditorPart activeEditor = activePage.getActiveEditor();
 			try {
-				XWTDesigner designer = (XWTDesigner) activePage.openEditor(new FileEditorInput(file), XWTDesigner.EDITOR_ID, false);
-				XamlDocument xamlDocument = designer.getXamlDocument();
-				XWTDesignerModelBuilder builder = null;
+				XWTDesigner designer = (XWTDesigner) activePage.openEditor(new FileEditorInput(file),
+						XWTDesigner.EDITOR_ID, false);
+				XamlDocument xamlDocument = (XamlDocument) designer.getDocumentRoot();
+				XWTModelBuilder builder = null;
 				if (xamlDocument == null) {
-					builder = new XWTDesignerModelBuilder();
+					builder = new XWTModelBuilder();
 					builder.doLoad(designer, null);
-					xamlDocument = builder.getXamlDocument();
+					xamlDocument = builder.getDocumentRoot();
 				}
 				Control control = (Control) new XWTProxy(file).load(xamlDocument.getRootElement(), options);
 				if (builder != null) {
@@ -146,7 +146,6 @@ public class XWTVisualLoader extends XWTLoader {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.e4.xwt.XWTLoader#registerMetaclass(java.lang.Class)
 	 */
 	public IMetaclass registerMetaclass(Class<?> type) {

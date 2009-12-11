@@ -18,7 +18,7 @@ public interface IVisualRenderer extends IVisualFactory {
 	/**
 	 * Key value of the render.
 	 */
-	String KEY = "org.soyatec.tools.designer.editor.VisualsRender";
+	String KEY = "org.eclipse.e4.tools.ui.designer.editor.VisualsRender";
 
 	/**
 	 * Create all visuals when the document is loaded.

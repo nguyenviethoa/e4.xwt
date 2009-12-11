@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.e4.xwt.converters.StringToFont;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.StringUtil;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;

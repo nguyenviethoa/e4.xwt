@@ -14,7 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import org.eclipse.e4.xwt.tools.ui.designer.core.utils.DisplayUtil;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.BindingContext;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.BindingHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.BindingInfo;

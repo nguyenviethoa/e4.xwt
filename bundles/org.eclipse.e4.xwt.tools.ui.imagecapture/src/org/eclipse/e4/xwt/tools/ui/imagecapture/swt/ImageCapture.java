@@ -83,7 +83,11 @@ public abstract class ImageCapture {
 
 	public Image capture(Control control) {
 		Rectangle bounds = control.getBounds();
-		return getImage(control, bounds.width, bounds.height, false);
+		return capture(control, bounds.width, bounds.height, false);
+	}
+
+	public Image capture(Control control, int width, int height, boolean includeChildren) {
+		return getImage(control, width, height, includeChildren);
 	}
 
 	protected abstract Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren);

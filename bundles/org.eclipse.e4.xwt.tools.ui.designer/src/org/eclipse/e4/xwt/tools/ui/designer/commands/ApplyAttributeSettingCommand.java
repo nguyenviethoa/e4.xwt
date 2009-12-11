@@ -86,6 +86,12 @@ public class ApplyAttributeSettingCommand extends Command {
 		} else {
 			oldValue = attr.getValue();
 		}
+		if (newValue == null || newValue.length() == 0) {
+			if (parent != null) {
+				parent.getAttributes().remove(attr);
+				return;
+			}
+		}
 		attr.setValue(newValue);
 		isCreation = attr.eContainer() == null || (parent != null && attr.eContainer() != parent);
 		if (parent != null && isCreation) {

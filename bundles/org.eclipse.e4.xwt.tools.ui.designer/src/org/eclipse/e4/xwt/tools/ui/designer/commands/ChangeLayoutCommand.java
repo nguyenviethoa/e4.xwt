@@ -17,12 +17,12 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
+import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.CompositeInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutType;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutsHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
-import org.eclipse.e4.xwt.tools.ui.designer.visuals.CompositeVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
@@ -141,8 +141,8 @@ public class ChangeLayoutCommand extends Command {
 		} else if (editPart != null && editPart instanceof VisualEditPart) {
 			IVisualInfo visualInfo = ((VisualEditPart) editPart).getVisualInfo();
 			Composite parent = null;
-			if (visualInfo != null && visualInfo instanceof CompositeVisualInfo) {
-				parent = (Composite) ((CompositeVisualInfo) visualInfo).getVisualable();
+			if (visualInfo != null && visualInfo instanceof CompositeInfo) {
+				parent = (Composite) ((CompositeInfo) visualInfo).getVisualObject();
 			}
 			if (parent == null || parent.isDisposed()) {
 				return;

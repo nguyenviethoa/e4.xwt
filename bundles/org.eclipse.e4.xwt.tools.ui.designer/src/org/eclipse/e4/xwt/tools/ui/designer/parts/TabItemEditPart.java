@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
+import org.eclipse.e4.xwt.tools.ui.designer.core.parts.RefreshContext;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
@@ -43,7 +44,7 @@ public class TabItemEditPart extends ItemEditPart {
 			EditPart parent = getParent();
 			EditDomain editDomain = EditDomain.getEditDomain(parent);
 			XWTDesigner designer = (XWTDesigner) editDomain.getEditorPart();
-			designer.refresh(parent);
+			designer.refresh(parent, RefreshContext.ALL());
 		}
 	}
 

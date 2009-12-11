@@ -13,8 +13,8 @@ package org.eclipse.e4.xwt.tools.ui.designer.editor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.xwt.XWTLoaderManager;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.builder.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.BindingLayerAction;
@@ -39,6 +39,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.parts.XWTEditPartFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
+import org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument;
 import org.eclipse.e4.xwt.ui.XWTPerspectiveFactory;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPartFactory;
@@ -84,7 +85,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
 	 */
 	protected void setInput(IEditorInput input) {
@@ -99,7 +99,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.Designer#dispose()
 	 */
 	public void dispose() {
@@ -112,7 +111,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#initializeActions()
 	 */
 	protected void createActions() {
@@ -152,7 +150,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createPalettePage()
 	 */
 	protected CustomPalettePage createPalettePage() {
@@ -161,16 +158,14 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.Designer#createModelBuilder()
 	 */
 	protected IModelBuilder createModelBuilder() {
-		return new XWTDesignerModelBuilder();
+		return new XWTModelBuilder();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#setupGraphicalViewer()
 	 */
 	protected void setupGraphicalViewer() {
@@ -181,7 +176,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.Designer#configureGraphicalViewer()
 	 */
 	protected void configureGraphicalViewer() {
@@ -248,7 +242,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#configureContainerToolBar(org.eclipse.swt.widgets.ToolBar)
 	 */
 	protected void configureContainerToolBar(ToolBar toolBar) {
@@ -276,7 +269,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createMenuProvider()
 	 */
 	protected ContextMenuProvider createMenuProvider() {
@@ -285,7 +277,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createEditPartFactory()
 	 */
 	protected EditPartFactory createEditPartFactory() {
@@ -294,7 +285,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createOutlinePage()
 	 */
 	protected ContentOutlinePage createOutlinePage() {
@@ -308,7 +298,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#getDropContext()
 	 */
 	protected DropContext getDropContext() {
@@ -328,7 +317,8 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 		if (window == null) {
 			window = workbench.getWorkbenchWindows()[0];
 		}
-		IPerspectiveDescriptor pers = workbench.getPerspectiveRegistry().findPerspectiveWithId(XWTPerspectiveFactory.XWT_PERSPECTIVE_ID);
+		IPerspectiveDescriptor pers = workbench.getPerspectiveRegistry().findPerspectiveWithId(
+				XWTPerspectiveFactory.XWT_PERSPECTIVE_ID);
 		if (pers == null) {
 			return;
 		}
@@ -341,7 +331,6 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createPropertyPage()
 	 */
 	protected IPropertySheetPage createPropertyPage() {
@@ -352,16 +341,14 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createVisualsRender()
 	 */
 	protected IVisualRenderer createVisualsRender() {
-		return new XWTVisualRenderer(getInputFile(), getXamlDocument());
+		return new XWTVisualRenderer(getInputFile(), (XamlDocument) getDocumentRoot());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor#getContributorId()
 	 */
 	public String getContributorId() {

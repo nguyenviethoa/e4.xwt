@@ -1,12 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Soyatec - initial API and implementation
+ * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor;
 
@@ -26,9 +19,6 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.core.component.CustomSashForm;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.builder.DesignerModelBuilder;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.builder.IModelBuilder;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.builder.ModelBuildListener;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.commandstack.CombinedCommandStack;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropTargetAdapter;
@@ -37,14 +27,15 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePa
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineContentProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineLableProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.text.StructuredTextHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.core.parts.RefreshContext;
+import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.root.DesignerRootEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.problems.ConfigurableProblemHandler;
 import org.eclipse.e4.xwt.tools.ui.designer.core.problems.ProblemHandler;
-import org.eclipse.e4.xwt.tools.ui.designer.core.utils.DisplayUtil;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -112,13 +103,14 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
  * @author jliu (jin.liu@soyatec.com)
  */
 @SuppressWarnings("restriction")
-public abstract class Designer extends MultiPageEditorPart implements ISelectionChangedListener, CommandStackListener {
+public abstract class Designer extends MultiPageEditorPart implements
+		ISelectionChangedListener, CommandStackListener {
 
 	public static final String DESIGNER_INPUT = "DESIGNER INPUT";
 	public static final String DESIGNER_TEXT_EDITOR = "DESIGNER TEXT EDITOR";
 
 	// UI editor.
-	private CustomSashForm pageContainer;
+	protected CustomSashForm pageContainer;
 	private CustomPalettePage palettePage;
 	private IPropertySheetPage propertyPage;
 	private ContentOutlinePage outlinePage;
@@ -139,15 +131,18 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	private DropTargetAdapter dropListener;
 	private boolean isProcessHighlighting = false;
 
-	private XamlDocument xamlDocuemnt;
+	private EObject documentRoot;
 	private IVisualRenderer visualsRender;
 
 	private CombinedCommandStack commandStack = new CombinedCommandStack();
 
 	private IModelBuilder modelBuilder;
+	private boolean installed = false;
 	private ModelBuildListener modelBuilderListener = new ModelBuildListener() {
 		public void notifyChanged(Notification event) {
-			performModelChanged(event);
+			if (installed) {
+				performModelChanged(event);
+			}
 		}
 	};
 
@@ -161,9 +156,12 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.part.MultiPageEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+	 * @see
+	 * org.eclipse.ui.part.MultiPageEditorPart#init(org.eclipse.ui.IEditorSite,
+	 * org.eclipse.ui.IEditorInput)
 	 */
-	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
 		super.init(site, input);
 		site.setSelectionProvider(null);// clear multi-page selection provider.
 		display = site.getShell().getDisplay();
@@ -186,7 +184,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 			while (actions.hasNext()) {
 				Object object = (Object) actions.next();
 				if (object instanceof SelectionAction) {
-					((SelectionAction) object).setSelectionProvider(graphicalViewer);
+					((SelectionAction) object)
+							.setSelectionProvider(graphicalViewer);
 				}
 			}
 		}
@@ -232,8 +231,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 				if (editPart != null) {
 					refreshUI(editPart.getParent());
 				} else {
-					while (notifier != null && notifier instanceof XamlNode) {
-						Object parentNode = ((XamlNode) notifier).eContainer();
+					while (notifier != null && notifier instanceof EObject) {
+						Object parentNode = ((EObject) notifier).eContainer();
 						while (getEditPart(parentNode) != null) {
 							refreshUI(getEditPart(parentNode).getParent());
 							break;
@@ -244,23 +243,28 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 				// highlight changed one.
 				if (editPart != null) {
 					isProcessHighlighting = true;
-					setViewerSelection(graphicalViewer, new StructuredSelection(editPart));
+					setViewerSelection(graphicalViewer,
+							new StructuredSelection(editPart));
 					isProcessHighlighting = false;
 				}
 			}
 		}
 	}
 
-	public void refresh(EditPart editPart) {
+	public void refresh(EditPart editPart, RefreshContext context) {
 		if (editPart == null) {
 			return;
 		}
 		try {
-			editPart.refresh();
+			if (editPart instanceof VisualEditPart) {
+				((VisualEditPart) editPart).refresh(context);
+			} else {
+				editPart.refresh();
+			}
 			getOutlinePage().refresh(editPart);
 			List children = editPart.getChildren();
 			for (Object object : children) {
-				refresh((EditPart) object);
+				refresh((EditPart) object, context);
 			}
 		} catch (Exception e) {
 		}
@@ -270,7 +274,7 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		if (editPart != null) {
 			DisplayUtil.asyncExec(new Runnable() {
 				public void run() {
-					refresh(editPart);
+					refresh(editPart, RefreshContext.ALL());
 				}
 			});
 		}
@@ -280,12 +284,12 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		return (EditPart) graphicalViewer.getEditPartRegistry().get(model);
 	}
 
-	private void setXamlDocument(XamlDocument document) {
-		this.xamlDocuemnt = document;
+	private void setDocumentRoot(EObject document) {
+		this.documentRoot = document;
 	}
 
-	public XamlDocument getXamlDocument() {
-		return xamlDocuemnt;
+	public EObject getDocumentRoot() {
+		return documentRoot;
 	}
 
 	/**
@@ -297,7 +301,7 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		UIJob setupJob = new UIJob("Setup") {
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				if (modelBuilder.doLoad(Designer.this, monitor)) {
-					setXamlDocument(modelBuilder.getXamlDocument());
+					setDocumentRoot(modelBuilder.getDocumentRoot());
 				}
 				if (!isDisposed()) {
 					try {
@@ -320,7 +324,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 
 	protected void runWithDialog(IRunnableWithProgress runnable) {
 		try {
-			ProgressMonitorDialog d = new ProgressMonitorDialog(getSite().getShell());
+			ProgressMonitorDialog d = new ProgressMonitorDialog(getSite()
+					.getShell());
 			d.run(true, false, runnable);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -331,10 +336,16 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		IVisualRenderer vr = getVisualsRender();
 		if (vr != null) {
 			vr.createVisuals();
-			getEditDomain().setViewerData(getGraphicalViewer(), IVisualRenderer.KEY, vr);
+			getEditDomain().setViewerData(getGraphicalViewer(),
+					IVisualRenderer.KEY, vr);
 		}
-		getGraphicalViewer().setContents(getDiagramEditPart());
+		EditPart diagram = getDiagramEditPart();
+		getGraphicalViewer().setContents(diagram);
 		loadingFigureController.showLoadingFigure(false);
+		if (diagram != null){
+			refresh(diagram, RefreshContext.ALL());
+			installed = true;
+		}
 	}
 
 	public IVisualRenderer getVisualsRender() {
@@ -348,7 +359,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	 * @return
 	 */
 	private EditPart getDiagramEditPart() {
-		return getEditPartFactory().createEditPart(getGraphicalViewer().getRootEditPart(), getXamlDocument());
+		return getEditPartFactory().createEditPart(
+				getGraphicalViewer().getRootEditPart(), getDocumentRoot());
 	}
 
 	public GraphicalViewer getGraphicalViewer() {
@@ -377,9 +389,7 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		return modelBuilder;
 	}
 
-	protected IModelBuilder createModelBuilder() {
-		return new DesignerModelBuilder();
-	}
+	protected abstract IModelBuilder createModelBuilder();
 
 	/**
 	 * Initialize and create actions.
@@ -405,7 +415,9 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.part.MultiPageEditorPart#createPageContainer(org.eclipse.swt.widgets.Composite)
+	 * @see
+	 * org.eclipse.ui.part.MultiPageEditorPart#createPageContainer(org.eclipse
+	 * .swt.widgets.Composite)
 	 */
 	protected Composite createPageContainer(Composite parent) {
 		ViewForm diagramPart = new ViewForm(parent, SWT.FLAT);
@@ -422,6 +434,10 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		return pageContainer;
 	}
 
+	protected boolean isEditable() {
+		return true;
+	}
+
 	/**
 	 * Create Graphical Viewer for GEF Editor.
 	 * 
@@ -430,7 +446,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	private void createGraphicalViewer(Composite parent) {
 		graphicalViewer = new ScrollingGraphicalViewer();
 		graphicalViewer.createControl(parent);
-		graphicalViewer.getControl().setBackground(ColorConstants.listBackground);
+		graphicalViewer.getControl().setBackground(
+				ColorConstants.listBackground);
 		configureGraphicalViewer();
 	}
 
@@ -453,32 +470,36 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		DesignerRootEditPart rootEditPart = new DesignerRootEditPart();
 		graphicalViewer.setRootEditPart(rootEditPart);
 
-		graphicalViewer.setKeyHandler(new GraphicalViewerKeyHandler(graphicalViewer).setParent(getCommonKeyHandler()));
+		graphicalViewer.setKeyHandler(new GraphicalViewerKeyHandler(
+				graphicalViewer).setParent(getCommonKeyHandler()));
 
 		Iterator<?> actions = getActionRegistry().getActions();
 		while (actions.hasNext()) {
 			Object object = (Object) actions.next();
 			if (object instanceof SelectionAction) {
-				((SelectionAction) object).setSelectionProvider(graphicalViewer);
+				((SelectionAction) object)
+						.setSelectionProvider(graphicalViewer);
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the KeyHandler with common bindings for both the Outline and
 	 * Graphical Views. For example, delete is a common action.
 	 */
-	protected KeyHandler getCommonKeyHandler()
-	{
-		if (fSharedKeyHandler == null)
-		{
+	protected KeyHandler getCommonKeyHandler() {
+		if (fSharedKeyHandler == null) {
 			fSharedKeyHandler = new KeyHandler();
-			fSharedKeyHandler.put(KeyStroke.getPressed(SWT.DEL, SWT.DEL, 0), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
-			fSharedKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0), getActionRegistry().getAction(GEFActionConstants.DIRECT_EDIT));
+			fSharedKeyHandler
+					.put(KeyStroke.getPressed(SWT.DEL, SWT.DEL, 0),
+							getActionRegistry().getAction(
+									ActionFactory.DELETE.getId()));
+			fSharedKeyHandler.put(KeyStroke.getPressed(SWT.F2, 0),
+					getActionRegistry().getAction(
+							GEFActionConstants.DIRECT_EDIT));
 		}
 		return fSharedKeyHandler;
 	}
-
 
 	/**
 	 * MenuProvider of the editor
@@ -497,7 +518,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	}
 
 	/**
-	 * Returns the selection syncronizer object. The synchronizer can be used to sync the selection of 2 or more EditPartViewers.
+	 * Returns the selection syncronizer object. The synchronizer can be used to
+	 * sync the selection of 2 or more EditPartViewers.
 	 * 
 	 * @return
 	 */
@@ -541,10 +563,12 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		CTabFolder tabFolder = (CTabFolder) container;
 		tabFolder.setTabPosition(SWT.TOP);
 		tabFolder.setSimple(false);
-		ToolBar toolBar = new ToolBar(tabFolder, SWT.FLAT | SWT.WRAP | SWT.RIGHT);
+		ToolBar toolBar = new ToolBar(tabFolder, SWT.FLAT | SWT.WRAP
+				| SWT.RIGHT);
 		configureContainerToolBar(toolBar);
 		tabFolder.setTopRight(toolBar);
-		tabFolder.setTabHeight(Math.max(toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y, tabFolder.getTabHeight()));
+		tabFolder.setTabHeight(Math.max(toolBar.computeSize(SWT.DEFAULT,
+				SWT.DEFAULT).y, tabFolder.getTabHeight()));
 	}
 
 	/**
@@ -564,13 +588,16 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	private void createSourcePage() {
 		// Subclass of StructuredTextEditor is not allowed.
 		fTextEditor = new StructuredTextEditor();
-		final StructuredTextUndoManager undoManager = new StructuredTextUndoManager(commandStack);
+		final StructuredTextUndoManager undoManager = new StructuredTextUndoManager(
+				commandStack);
 		TextFileDocumentProvider provider = new TextFileDocumentProvider() {
 			public IDocument getDocument(Object element) {
-				JobSafeStructuredDocument document = (JobSafeStructuredDocument) super.getDocument(element);
+				JobSafeStructuredDocument document = (JobSafeStructuredDocument) super
+						.getDocument(element);
 				if (document != null) {
 					try {
-						Field fUndoManager = BasicStructuredDocument.class.getDeclaredField("fUndoManager");
+						Field fUndoManager = BasicStructuredDocument.class
+								.getDeclaredField("fUndoManager");
 						fUndoManager.setAccessible(true);
 						Object object = fUndoManager.get(document);
 						if (object != null && object != undoManager) {
@@ -634,14 +661,16 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 			dropListener = new DropTargetAdapter();
 			DropContext dropContext = getDropContext();
 			if (dropContext != null) {
-				dropListener.addDropAdapter(new PaletteDropAdapter(this, dropContext));
+				dropListener.addDropAdapter(new PaletteDropAdapter(this,
+						dropContext));
 			}
 		}
 		StyledText styledText = getTextWidget();
 		if (styledText == null || dropListener == null) {
 			return;
 		}
-		DropTarget dropTarget = (DropTarget) styledText.getData(DND.DROP_TARGET_KEY);
+		DropTarget dropTarget = (DropTarget) styledText
+				.getData(DND.DROP_TARGET_KEY);
 		if (dropTarget != null) {
 			dropTarget.removeDropListener(dropListener);
 		}
@@ -649,7 +678,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		styledText.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				StyledText styledText = (StyledText) e.widget;
-				DropTarget dropTarget = (DropTarget) styledText.getData(DND.DROP_TARGET_KEY);
+				DropTarget dropTarget = (DropTarget) styledText
+						.getData(DND.DROP_TARGET_KEY);
 				if (dropTarget != null) {
 					dropTarget.removeDropListener(dropListener);
 				}
@@ -658,7 +688,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		dropTarget.dispose();
 
 		dropTarget = new DropTarget(styledText, DND.DROP_MOVE | DND.DROP_COPY);
-		dropTarget.setTransfer(new Transfer[] { getPalettePage().getPaletteTransfer() });
+		dropTarget.setTransfer(new Transfer[] { getPalettePage()
+				.getPaletteTransfer() });
 		dropTarget.addDropListener(dropListener);
 
 		getProblemHandler().handle();
@@ -666,7 +697,9 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 
 	public void format() {
 		StructuredTextViewer textViewer = getTextViewer();
-		if (textViewer != null && textViewer.canDoOperation(StructuredTextViewer.FORMAT_DOCUMENT)) {
+		if (textViewer != null
+				&& textViewer
+						.canDoOperation(StructuredTextViewer.FORMAT_DOCUMENT)) {
 			textViewer.doOperation(StructuredTextViewer.FORMAT_DOCUMENT);
 		} else if (getDocument() != null) {
 			StructuredTextHelper.format(getDocument());
@@ -711,7 +744,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	public IDocument getDocument() {
 		IDocument document = null;
 		if (fTextEditor != null) {
-			IDocumentProvider documentProvider = fTextEditor.getDocumentProvider();
+			IDocumentProvider documentProvider = fTextEditor
+					.getDocumentProvider();
 			IEditorInput editorInput = fTextEditor.getEditorInput();
 			if (documentProvider == null || editorInput == null) {
 				return null;
@@ -724,7 +758,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
+	 * @seeorg.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.
+	 * IProgressMonitor)
 	 */
 	public void doSave(IProgressMonitor monitor) {
 		fTextEditor.doSave(monitor);
@@ -750,7 +785,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	 */
 	public void dispose() {
 		getModelBuilder().removeModelBuildListener(modelBuilderListener);
-		getCommandStack().getCommandStack4GEF().removeCommandStackListener(this);
+		getCommandStack().getCommandStack4GEF()
+				.removeCommandStackListener(this);
 		getCommandStack().flush();
 		getGraphicalViewer().removeSelectionChangedListener(this);
 		if (modelBuilder != null) {
@@ -790,7 +826,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		} else if (adapter == EditPart.class && getGraphicalViewer() != null) {
 			return getGraphicalViewer().getRootEditPart();
 		} else if (adapter == IFigure.class && getGraphicalViewer() != null) {
-			return ((GraphicalEditPart) getGraphicalViewer().getRootEditPart()).getFigure();
+			return ((GraphicalEditPart) getGraphicalViewer().getRootEditPart())
+					.getFigure();
 		} else if (adapter == IProject.class) {
 			return getProject();
 		} else if (adapter == IFile.class) {
@@ -826,7 +863,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	}
 
 	public IPropertySheetPage getPropertySheetPage() {
-		if (propertyPage == null || propertyPage.getControl() == null || propertyPage.getControl().isDisposed()) {
+		if (propertyPage == null || propertyPage.getControl() == null
+				|| propertyPage.getControl().isDisposed()) {
 			propertyPage = createPropertyPage();
 		}
 		// if (graphicalViewer != null) {
@@ -898,7 +936,9 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 * @see
+	 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
+	 * org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	public final void selectionChanged(SelectionChangedEvent event) {
 		Object source = event.getSource();
@@ -924,15 +964,16 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	 * @param event
 	 */
 	protected void performSelectionChanged(SelectionChangedEvent event) {
-		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) event
+				.getSelection();
 		if (selection.isEmpty()) {
 			return;
 		}
-		
+
 		if (!isProcessHighlighting) {
 			selectEditPartsInCodeEditor(selection);
 		}
-		
+
 		// if (propertyPage != null) {
 		// propertyPage.selectionChanged(this, selection);
 		// }
@@ -961,14 +1002,14 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		String content = styledText.getText();
 		int startOffset = -1;
 		int endOffset = 0;
-		
+
 		Object[] array = selection.toArray();
 		for (Object object : array) {
 			if (object instanceof EditPart) {
 				EditPart editPart = (EditPart) object;
 				Object model = editPart.getModel();
-				if (model instanceof XamlNode) {
-					XamlNode node = (XamlNode) model;
+				if (model instanceof EObject) {
+					EObject node = (EObject) model;
 					IDOMNode textNode = getModelBuilder().getTextNode(node);
 					if (textNode != null) {
 						int nodeStartOffset = textNode.getStartOffset();
@@ -976,36 +1017,34 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 						if (startOffset == -1) {
 							startOffset = nodeStartOffset;
 							endOffset = nodeEndOffset;
-						}
-						else {
+						} else {
 							if (nodeStartOffset > startOffset) {
 								if (nodeStartOffset < endOffset) {
 									continue;
 								}
-								String segment = content.substring(endOffset, nodeStartOffset).trim();
-								if (segment.length() == 0 ) {
+								String segment = content.substring(endOffset,
+										nodeStartOffset).trim();
+								if (segment.length() == 0) {
 									endOffset = nodeEndOffset;
-								}
-								else {
+								} else {
 									startOffset = 0;
 									endOffset = 0;
 									break;
 								}
-							}
-							else {
+							} else {
 								if (nodeEndOffset > startOffset) {
 									continue;
 								}
-								String segment = content.substring(nodeEndOffset, startOffset).trim();
-								if (segment.length() == 0 ) {
+								String segment = content.substring(
+										nodeEndOffset, startOffset).trim();
+								if (segment.length() == 0) {
 									startOffset = nodeStartOffset;
-								}
-								else {
+								} else {
 									startOffset = 0;
 									endOffset = 0;
 									break;
 								}
-								
+
 							}
 						}
 					}
@@ -1022,7 +1061,7 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 		textEditor.selectAndReveal(startOffset, length);
 	}
 
-	public void gotoDefinition(XamlNode node) {
+	public void gotoDefinition(EObject node) {
 		if (isProcessHighlighting) {
 			return;
 		}
@@ -1039,7 +1078,9 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.commands.CommandStackListener#commandStackChanged(java.util.EventObject)
+	 * @see
+	 * org.eclipse.gef.commands.CommandStackListener#commandStackChanged(java
+	 * .util.EventObject)
 	 */
 	public void commandStackChanged(EventObject event) {
 		if (actionGroup != null) {
@@ -1052,7 +1093,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 	}
 
 	/*
-	 * This method is just to make firePropertyChanged accessible from some (anonomous) inner classes.
+	 * This method is just to make firePropertyChanged accessible from some
+	 * (anonomous) inner classes.
 	 */
 	void _firePropertyChange(int property) {
 		super.firePropertyChange(property);
@@ -1107,7 +1149,8 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 					if (getTextEditor().getEditorInput() != getEditorInput()) {
 						setInput(getTextEditor().getEditorInput());
 						/*
-						 * title should always change when input changes. create runnable for following post call
+						 * title should always change when input changes. create
+						 * runnable for following post call
 						 */
 						Runnable runnable = new Runnable() {
 							public void run() {
@@ -1115,9 +1158,13 @@ public abstract class Designer extends MultiPageEditorPart implements ISelection
 							}
 						};
 						/*
-						 * Update is just to post things on the display queue (thread). We have to do this to get the dirty property to get updated after other things on the queue are executed.
+						 * Update is just to post things on the display queue
+						 * (thread). We have to do this to get the dirty
+						 * property to get updated after other things on the
+						 * queue are executed.
 						 */
-						((Control) getTextEditor().getAdapter(Control.class)).getDisplay().asyncExec(runnable);
+						((Control) getTextEditor().getAdapter(Control.class))
+								.getDisplay().asyncExec(runnable);
 					}
 				}
 				break;

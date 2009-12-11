@@ -1,16 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Soyatec - initial API and implementation
+ * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.dnd;
 
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,7 +26,6 @@ public class OutlineDropListener extends ViewerDropAdapter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
 	 */
 	public boolean performDrop(Object data) {
@@ -43,7 +34,6 @@ public class OutlineDropListener extends ViewerDropAdapter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.viewers.ViewerDropAdapter#determineTarget(org.eclipse.swt.dnd.DropTargetEvent)
 	 */
 	protected Object determineTarget(DropTargetEvent event) {
@@ -56,11 +46,10 @@ public class OutlineDropListener extends ViewerDropAdapter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object, int, org.eclipse.swt.dnd.TransferData)
 	 */
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
-		if (dropManager == null || target == null || (!(target instanceof XamlNode))) {
+		if (dropManager == null || target == null) {
 			return false;
 		}
 		OutlineNodeTransfer transfer = OutlineNodeTransfer.getTransfer();
@@ -85,5 +74,4 @@ public class OutlineDropListener extends ViewerDropAdapter {
 		}
 		return dropCommand != null && dropCommand.canExecute();
 	}
-
 }

@@ -16,7 +16,7 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.tools.ui.designer.core.problems.Problem;
-import org.eclipse.e4.xwt.tools.ui.designer.core.utils.DomHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.DomHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.e4.xwt.tools.ui.designer.core.utils.DisplayUtil;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.figures.Expandable;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;

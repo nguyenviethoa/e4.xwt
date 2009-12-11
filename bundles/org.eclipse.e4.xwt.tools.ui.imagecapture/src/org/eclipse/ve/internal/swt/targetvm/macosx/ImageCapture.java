@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.4 $  $Date: 2009/05/03 13:44:46 $ 
+ *  $Revision: 1.1 $  $Date: 2009/12/03 20:37:22 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.macosx;
 
@@ -68,6 +68,14 @@ public class ImageCapture extends org.eclipse.e4.xwt.tools.ui.imagecapture.swt.I
 		int height = Math.min(rect.height, maxHeight);
 
 		Image image = null;
+		if (!(control instanceof Shell)) {
+			Rectangle bounds = control.getBounds();
+			image = new Image(control.getDisplay(), bounds.width, bounds.height);
+			GC gc = new GC(image);
+			control.print(gc);
+			gc.dispose();
+			return image;
+		}
 
 		int controlHandle = -1;
 		int shellHandle = -1;

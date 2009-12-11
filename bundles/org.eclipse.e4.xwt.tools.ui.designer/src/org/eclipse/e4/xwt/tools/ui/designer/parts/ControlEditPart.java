@@ -15,26 +15,24 @@ import java.util.Collection;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.xwt.metadata.IProperty;
-import org.eclipse.e4.xwt.tools.ui.designer.core.figures.ImageFigure;
-import org.eclipse.e4.xwt.tools.ui.designer.core.images.IImageListener;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
+import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.ControlInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.direct.ElementCellEditLocator;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.direct.ElementDirectEditManager;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.ControlLayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.ElementDirectEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
-import org.eclipse.e4.xwt.tools.ui.designer.visuals.ControlVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -54,7 +52,8 @@ public class ControlEditPart extends WidgetEditPart {
 		if (request.getType() == RequestConstants.REQ_OPEN && property != null) {
 			if (manager == null) {
 				IFigure figure = getFigure();
-				manager = new ElementDirectEditManager(this, TextCellEditor.class, new ElementCellEditLocator(figure), figure);
+				manager = new ElementDirectEditManager(this, TextCellEditor.class, new ElementCellEditLocator(figure),
+						figure);
 			}
 			manager.show();
 		}
@@ -65,25 +64,11 @@ public class ControlEditPart extends WidgetEditPart {
 	 * @see org.soyatec.xaml.ve.editor.editparts.ElementGraphicalEditPart#getVisualInfo()
 	 */
 	public IVisualInfo createVisualInfo() {
-		ControlVisualInfo controlVisualInfo = new ControlVisualInfo((Control) getWidget());
-		controlVisualInfo.addImageListener(new IImageListener() {
-			public void imageChanged(Image image) {
-				if (image == null) {
-					try {
-						Color background = ((Control) getWidget()).getParent().getBackground();
-						((ImageFigure) getContentPane()).setBackgroundColor(background);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		return controlVisualInfo;
+		return new ControlInfo(getWidget(), isRoot());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#getExternalModels()
 	 */
 	protected Collection<Object> getExternalModels() {
@@ -102,12 +87,15 @@ public class ControlEditPart extends WidgetEditPart {
 	}
 
 	public boolean isRightToLeft() {
-		return ((ControlVisualInfo) getVisualInfo()).isRightToLeft();
+		Widget widget = getWidget();
+		if (widget == null || widget.isDisposed()) {
+			return false;
+		}
+		return ((widget.getStyle() & SWT.RIGHT_TO_LEFT) != 0);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#createEditPolicies()
 	 */
 	protected void createEditPolicies() {

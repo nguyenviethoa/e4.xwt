@@ -82,6 +82,15 @@ public class ImageCapture extends org.eclipse.e4.xwt.tools.ui.imagecapture.swt.I
 
 	@Override
 	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
+		if (!(control instanceof Shell)) {
+			Rectangle bounds = control.getBounds();
+			Image image = new Image(control.getDisplay(), bounds.width, bounds.height);
+			GC gc = new GC(image);
+			control.print(gc);
+			gc.dispose();
+			return image;
+		}
+
 		Rectangle rectangle = new Rectangle(0, 0, maxWidth, maxHeight);
 		Image image = new Image(control.getDisplay(), rectangle);
 		GC gc = new GC(image);

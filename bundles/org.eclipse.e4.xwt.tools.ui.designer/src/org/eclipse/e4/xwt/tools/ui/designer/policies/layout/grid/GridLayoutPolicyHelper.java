@@ -1,12 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Soyatec - initial API and implementation
+ * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.policies.layout.grid;
 
@@ -15,20 +8,18 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.GridLayoutCommandsFactory;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.GridLayoutHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.GridLayoutHelper_30;
+import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.VisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.ResourceVisitor;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
-import org.eclipse.e4.xwt.tools.ui.designer.swt.GridLayoutHelper;
-import org.eclipse.e4.xwt.tools.ui.designer.swt.GridLayoutHelper_30;
-import org.eclipse.e4.xwt.tools.ui.designer.utils.OffsetUtil;
-import org.eclipse.e4.xwt.tools.ui.designer.visuals.CompositeVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
@@ -139,11 +130,11 @@ public class GridLayoutPolicyHelper {
 		if (host == null) {
 			return null;
 		}
-		CompositeVisualInfo visualComp = (CompositeVisualInfo) host.getVisualInfo();
-		if (visualComp == null || visualComp.getControl() == null) {
+		VisualInfo visualComp = (VisualInfo) host.getVisualInfo();
+		if (visualComp == null || visualComp.getVisualObject() == null) {
 			return null;
 		}
-		return (Composite) visualComp.getControl();
+		return (Composite) visualComp.getVisualObject();
 	}
 
 	/**
@@ -248,11 +239,7 @@ public class GridLayoutPolicyHelper {
 	}
 
 	public Rectangle getClientArea() {
-		IFigure figure = host.getFigure();
-		Rectangle r = figure.getClientArea().getCopy();
-		int dx = OffsetUtil.getXOffset(host);
-		int dy = OffsetUtil.getYOffset(host);
-		return r.getTranslated(dx, dy);
+		return host.getVisualInfo().getClientArea();
 	}
 
 	protected void insertGridGomponentAtBeginning(GridComponent gc) {
@@ -367,7 +354,6 @@ public class GridLayoutPolicyHelper {
 	 * @param child
 	 *            child to find dimensions of.
 	 * @return rectangle of dimensions or <code>null</code> if child not a component. This rectangle must not be modified.
-	 * 
 	 * @since 1.2.0
 	 */
 	public Rectangle getChildDimensions(EObject child) {
@@ -401,7 +387,6 @@ public class GridLayoutPolicyHelper {
 	 * 
 	 * @param childEObject
 	 * @return the component or <code>null</code> if not in the layout.
-	 * 
 	 * @since 1.2.0
 	 */
 	protected GridComponent getComponent(EObject childEObject) {
@@ -417,7 +402,8 @@ public class GridLayoutPolicyHelper {
 	}
 
 	protected void deleteComponent(GridComponent gcomp) {
-		if (gcomp.requestType != null && !gcomp.requestType.equals(RequestConstants.REQ_ADD) && !gcomp.requestType.equals(RequestConstants.REQ_CREATE)) {
+		if (gcomp.requestType != null && !gcomp.requestType.equals(RequestConstants.REQ_ADD)
+				&& !gcomp.requestType.equals(RequestConstants.REQ_CREATE)) {
 			// If it was create or add, then it wasn't here to begin with so no need to add to deleted list.
 			addToDeleted(gcomp.model);
 		}
@@ -442,7 +428,6 @@ public class GridLayoutPolicyHelper {
 	 * 
 	 * @param child
 	 * @param delete
-	 * 
 	 * @since 1.2.0
 	 */
 	public void deleteChild(XamlNode child) {
@@ -461,7 +446,6 @@ public class GridLayoutPolicyHelper {
 	 * 
 	 * @param child
 	 * @param delete
-	 * 
 	 * @since 1.2.0
 	 */
 	public void orphanChild(XamlNode child) {
@@ -475,7 +459,6 @@ public class GridLayoutPolicyHelper {
 	 * Same as {@link #orphanChild(EObject)} except it does it for each child in the list.
 	 * 
 	 * @param children
-	 * 
 	 * @since 1.2.0
 	 */
 	public void orphanChildren(List<XamlNode> children) {
@@ -491,7 +474,8 @@ public class GridLayoutPolicyHelper {
 	 * @param oldChild
 	 * @param delete
 	 * @param forceRemove
-	 *            force the remove. If the oldChild was a filler and this is <code>false</code> it doesn't actually remove it. That is because if it was removed, it would just put a filler back in its place, and then see if row/col should be deleted. If using <code>true</code> then it will force a removal of the filler. Even though a filler will go back in its place, this may still be necessary because the actual eobject has trully been orphaned or moved. And in that case we need to remove it.
+	 *            force the remove. If the oldChild was a filler and this is <code>false</code> it doesn't actually remove it. That is because if it was removed, it would just put a filler back in its place, and then see if row/col should be deleted. If using <code>true</code> then it will force a removal of the filler. Even though a filler will go back in its place, this may still be necessary
+	 *            because the actual eobject has trully been orphaned or moved. And in that case we need to remove it.
 	 * @since 1.2.0
 	 */
 	protected void removeChild(GridComponent oldChild, boolean delete, boolean forceRemove) {
@@ -637,7 +621,6 @@ public class GridLayoutPolicyHelper {
 	 * @param child
 	 * @param cellCol
 	 * @param cellRow
-	 * 
 	 * @since 1.2.0
 	 */
 	protected void replaceEmptyCell(GridComponent child, int cellCol, int cellRow) {
@@ -683,7 +666,6 @@ public class GridLayoutPolicyHelper {
 	 * @param y
 	 * @param spanX
 	 * @param spanY
-	 * 
 	 * @since 1.2.0
 	 */
 	protected void insertComponent(GridComponent gc, GridComponent beforeComponent, int x, int y, int spanX, int spanY) {
@@ -1004,13 +986,15 @@ public class GridLayoutPolicyHelper {
 	private void handleSpanAtEnd(GridComponent gc, CompoundCommand cb) {
 		if (gc.modSpanWidth != NOT_MODIFIED_SPAN || gc.modSpanHeight != NOT_MODIFIED_SPAN) {
 			XamlNode gridData = gc.useGriddata == null ? getLayoutData(gc.model) : gc.useGriddata;
-			XamlAttribute attribute = gridData == null ? null : gridData.getAttribute("horizontalSpan", IConstants.XWT_NAMESPACE);
+			XamlAttribute attribute = gridData == null ? null : gridData.getAttribute("horizontalSpan",
+					IConstants.XWT_NAMESPACE);
 			switch (gc.modSpanWidth) {
 			case SET_TO_DEFAULT_SPAN: {
 				if (gridData != null && attribute != null) {
 					int defaultHSpan = new GridData().horizontalSpan;
 					if (!String.valueOf(defaultHSpan).equals(attribute.getValue())) {
-						cb.add(ApplyAttributeSettingCommand.createCommand(gridData, "horizontalSpan", IConstants.XWT_NAMESPACE, String.valueOf(defaultHSpan)));
+						cb.add(ApplyAttributeSettingCommand.createCommand(gridData, "horizontalSpan",
+								IConstants.XWT_NAMESPACE, String.valueOf(defaultHSpan)));
 					}
 				}
 				break;
@@ -1021,8 +1005,10 @@ public class GridLayoutPolicyHelper {
 			default:
 				if (gridData != null && gc.modSpanWidth > 0) {
 					int defaultHSpan = new GridData().horizontalSpan;
-					if ((attribute == null && defaultHSpan != gc.modSpanWidth) || (attribute != null && (!String.valueOf(gc.modSpanWidth).equals(attribute.getValue())))) {
-						cb.add(ApplyAttributeSettingCommand.createCommand(gridData, "horizontalSpan", IConstants.XWT_NAMESPACE, String.valueOf(gc.modSpanWidth)));
+					if ((attribute == null && defaultHSpan != gc.modSpanWidth)
+							|| (attribute != null && (!String.valueOf(gc.modSpanWidth).equals(attribute.getValue())))) {
+						cb.add(ApplyAttributeSettingCommand.createCommand(gridData, "horizontalSpan",
+								IConstants.XWT_NAMESPACE, String.valueOf(gc.modSpanWidth)));
 					}
 				}
 				break;
@@ -1032,7 +1018,8 @@ public class GridLayoutPolicyHelper {
 				if (gridData != null && attribute != null) {
 					int defaultVSpan = new GridData().verticalSpan;
 					if (!String.valueOf(defaultVSpan).equals(attribute.getValue())) {
-						cb.add(ApplyAttributeSettingCommand.createCommand(gridData, "verticalSpan", IConstants.XWT_NAMESPACE, String.valueOf(defaultVSpan)));
+						cb.add(ApplyAttributeSettingCommand.createCommand(gridData, "verticalSpan",
+								IConstants.XWT_NAMESPACE, String.valueOf(defaultVSpan)));
 					}
 				}
 				break;
@@ -1042,8 +1029,10 @@ public class GridLayoutPolicyHelper {
 			default:
 				if (gridData != null && gc.modSpanHeight > 0) {
 					int defaultHSpan = new GridData().verticalSpan;
-					if ((attribute == null && defaultHSpan != gc.modSpanHeight) || (attribute != null && (!String.valueOf(gc.modSpanHeight).equals(attribute.getValue())))) {
-						cb.add(ApplyAttributeSettingCommand.createCommand(gridData, "verticalSpan", IConstants.XWT_NAMESPACE, String.valueOf(gc.modSpanHeight)));
+					if ((attribute == null && defaultHSpan != gc.modSpanHeight)
+							|| (attribute != null && (!String.valueOf(gc.modSpanHeight).equals(attribute.getValue())))) {
+						cb.add(ApplyAttributeSettingCommand.createCommand(gridData, "verticalSpan",
+								IConstants.XWT_NAMESPACE, String.valueOf(gc.modSpanHeight)));
 					}
 				}
 				break;
@@ -1059,7 +1048,6 @@ public class GridLayoutPolicyHelper {
 	 * @param spanDirection
 	 * @param griddata
 	 *            use <code>null</code> if should use griddata from the child or create one if it doesn't have one. Supply an explicit griddata here in the case of building up from an implicit and we can't fluff one up because there is one being created before this, but not yet applied.
-	 * 
 	 * @since 1.2.0
 	 */
 	public void spanChild(EObject child, Point newSpan, int spanDirection, XamlNode griddata) {
@@ -1074,13 +1062,17 @@ public class GridLayoutPolicyHelper {
 				if (newgridDataWidth > gc.gridDimension.width) {
 					// Increase the horizontalSpan
 					// but first see if we can expand into empty cells without increasing the number of columns
-					int numColsIncrement = spanHorizontalIntoEmptyColumns(gc, gc.gridDimension.y, gc.gridDimension.x + gc.gridDimension.width, gc.gridDimension.height, newgridDataWidth - gc.gridDimension.width);
+					int numColsIncrement = spanHorizontalIntoEmptyColumns(gc, gc.gridDimension.y, gc.gridDimension.x
+							+ gc.gridDimension.width, gc.gridDimension.height, newgridDataWidth
+							- gc.gridDimension.width);
 					if (numColsIncrement > 0) {
 						// We now need to insert at this point this number of columns so that we can span into them.
 						int insertColAt = gc.gridDimension.x + gc.gridDimension.width; // Insert just after current end of control.
 						while (numColsIncrement-- > 0)
 							createNewCol(insertColAt);
-						spanHorizontalIntoEmptyColumns(gc, gc.gridDimension.y, gc.gridDimension.x + gc.gridDimension.width, gc.gridDimension.height, newgridDataWidth - gc.gridDimension.width); // Now span into these new ones.
+						spanHorizontalIntoEmptyColumns(gc, gc.gridDimension.y, gc.gridDimension.x
+								+ gc.gridDimension.width, gc.gridDimension.height, newgridDataWidth
+								- gc.gridDimension.width); // Now span into these new ones.
 					}
 				} else {
 					// Shrink by one column at a time from the right. Fill with filler and then see if column can go away.
@@ -1135,13 +1127,15 @@ public class GridLayoutPolicyHelper {
 				if (newgridDataHeight > gc.gridDimension.height) {
 					// Increase the horizontalSpan
 					// but first see if we can expand into empty cells without increasing the number of columns
-					int numRowsIncrement = spanVerticalIntoEmptyRows(gc, gc.gridDimension.y + gc.gridDimension.height, gc.gridDimension.x, gc.gridDimension.width, newgridDataHeight - gc.gridDimension.height);
+					int numRowsIncrement = spanVerticalIntoEmptyRows(gc, gc.gridDimension.y + gc.gridDimension.height,
+							gc.gridDimension.x, gc.gridDimension.width, newgridDataHeight - gc.gridDimension.height);
 					if (numRowsIncrement > 0) {
 						// We now need to insert at this point this number of columns so that we can span into them.
 						int insertRowAt = gc.gridDimension.y + gc.gridDimension.height; // Insert just after current end of control.
 						while (numRowsIncrement-- > 0)
 							createNewRow(insertRowAt);
-						spanVerticalIntoEmptyRows(gc, gc.gridDimension.y + gc.gridDimension.height, gc.gridDimension.x, gc.gridDimension.width, newgridDataHeight - gc.gridDimension.height); // Now span into these new ones.
+						spanVerticalIntoEmptyRows(gc, gc.gridDimension.y + gc.gridDimension.height, gc.gridDimension.x,
+								gc.gridDimension.width, newgridDataHeight - gc.gridDimension.height); // Now span into these new ones.
 					}
 				} else {
 					// Shrink by one row at a time from the bottom. Fill with filler and then see if row can go away.
@@ -1166,7 +1160,8 @@ public class GridLayoutPolicyHelper {
 	/*
 	 * For spanning horizontally, walk through the row starting atColumn and delete empty or filler labels so we can expand into the empty columns. If no empty cells, numColIncrement is returned so the number of columns can be incremented on the overall grid.
 	 */
-	private int spanHorizontalIntoEmptyColumns(GridComponent spanGC, int atRow, int atColumn, int childHeight, int numColsIncrement) {
+	private int spanHorizontalIntoEmptyColumns(GridComponent spanGC, int atRow, int atColumn, int childHeight,
+			int numColsIncrement) {
 		// Span as far as we can with empty vertical columns, move the spanGC into the new columns as we go.
 		if (atColumn < glayoutTable.length && atRow < glayoutTable[0].length) {
 			for (int col = atColumn; col < glayoutTable.length && numColsIncrement != 0; col++) {
@@ -1192,7 +1187,8 @@ public class GridLayoutPolicyHelper {
 	/*
 	 * For spanning vertically, walk through the col starting atRow and delete empty or filler labels so we can expand into the empty rows. If no empty cells, numRowIncrement is returned so the number of rows can be incremented on the overall grid.
 	 */
-	private int spanVerticalIntoEmptyRows(GridComponent spanGC, int atRow, int atColumn, int childWidth, int numRowsIncrement) {
+	private int spanVerticalIntoEmptyRows(GridComponent spanGC, int atRow, int atColumn, int childWidth,
+			int numRowsIncrement) {
 		// Span as far as we can with empty horizontal rows, move the spanGC into the new rows as we go.
 		if (atColumn < glayoutTable.length && atRow < glayoutTable[0].length) {
 			for (int row = atRow; row < glayoutTable[0].length && numRowsIncrement != 0; row++) {
@@ -1219,7 +1215,8 @@ public class GridLayoutPolicyHelper {
 	 * Return true if the cells atRow from columnStart to columnEnd have either an EMPTY object or is a filler label.
 	 */
 	private boolean isVerticalSpaceAvailable(int atRow, int columnStart, int columnEnd) {
-		if (glayoutTable.length == 0 || glayoutTable[0].length == 0 || columnStart >= glayoutTable.length || columnEnd >= glayoutTable.length || atRow >= glayoutTable[0].length)
+		if (glayoutTable.length == 0 || glayoutTable[0].length == 0 || columnStart >= glayoutTable.length
+				|| columnEnd >= glayoutTable.length || atRow >= glayoutTable[0].length)
 			return false;
 		for (int col = columnStart; col <= columnEnd; col++) {
 			if (glayoutTable[col][atRow] != EMPTY_GRID && !glayoutTable[col][atRow].isFillerLabel()) {
@@ -1233,7 +1230,8 @@ public class GridLayoutPolicyHelper {
 	 * Return true if the cells atCol from rowStart to rowEnd have either an EMPTY object or is a filler label.
 	 */
 	private boolean isHorizontalSpaceAvailable(int atCol, int rowStart, int rowEnd) {
-		if (glayoutTable.length == 0 || glayoutTable[0].length == 0 || rowStart >= glayoutTable[0].length || rowEnd >= glayoutTable[0].length || atCol >= glayoutTable.length)
+		if (glayoutTable.length == 0 || glayoutTable[0].length == 0 || rowStart >= glayoutTable[0].length
+				|| rowEnd >= glayoutTable[0].length || atCol >= glayoutTable.length)
 			return false;
 		for (int row = rowStart; row <= rowEnd; row++) {
 			if (glayoutTable[atCol][row] != EMPTY_GRID && !glayoutTable[atCol][row].isFillerLabel()) {
@@ -1321,13 +1319,16 @@ public class GridLayoutPolicyHelper {
 		XamlNode parent = (XamlNode) host.getLayoutModel();
 		XamlAttribute attribute = parent.getAttribute("numColumns", IConstants.XWT_NAMESPACE);
 		int defaultNum = new GridLayout().numColumns;
-		if ((attribute == null && numCols != defaultNum) || (attribute != null && !String.valueOf(numCols).equals(attribute.getValue()))) {
-			Command cmd = ApplyAttributeSettingCommand.createCommand(parent, "numColumns", IConstants.XWT_NAMESPACE, Integer.toString(numCols));
+		if ((attribute == null && numCols != defaultNum)
+				|| (attribute != null && !String.valueOf(numCols).equals(attribute.getValue()))) {
+			Command cmd = ApplyAttributeSettingCommand.createCommand(parent, "numColumns", IConstants.XWT_NAMESPACE,
+					Integer.toString(numCols));
 			cb.add(cmd);
 		}
 	}
 
-	private void getCommandForAddCreateMoveChildren(Object requestType, List<GridComponent> childrenGC, Object beforeObject, CompoundCommand cb) {
+	private void getCommandForAddCreateMoveChildren(Object requestType, List<GridComponent> childrenGC,
+			Object beforeObject, CompoundCommand cb) {
 		List<XamlNode> children = new ArrayList<XamlNode>(childrenGC.size());
 		List<XamlNode> constraints = new ArrayList<XamlNode>(childrenGC.size());
 		for (int i = 0; i < childrenGC.size(); i++) {
@@ -1395,7 +1396,6 @@ public class GridLayoutPolicyHelper {
 		 * Set into this component the moved component passed in. This is used for moved components. It is assumed that this GridComponent is the new GridComponent for the moved component sent in on the request. This "this" cannot be an existing component.
 		 * 
 		 * @param gc
-		 * 
 		 * @since 1.2.0
 		 */
 		void setMovedComponent(GridComponent gc) {

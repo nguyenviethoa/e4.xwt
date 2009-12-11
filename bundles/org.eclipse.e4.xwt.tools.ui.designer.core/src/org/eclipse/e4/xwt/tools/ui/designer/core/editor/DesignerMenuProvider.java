@@ -1,17 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Soyatec - initial API and implementation
+ * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor;
 
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.ActionFactory;
@@ -37,7 +31,6 @@ public class DesignerMenuProvider extends ContextMenuProvider {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.ContextMenuProvider#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void menuAboutToShow(IMenuManager menu) {
@@ -56,18 +49,38 @@ public class DesignerMenuProvider extends ContextMenuProvider {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.ContextMenuProvider#buildContextMenu(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void buildContextMenu(IMenuManager menu) {
 		ActionRegistry actionRegistry = getActionRegistry();
-		menu.appendToGroup(ActionConstants.UNDO, actionRegistry.getAction(ActionFactory.REDO.getId()));
-		menu.appendToGroup(ActionConstants.UNDO, actionRegistry.getAction(ActionFactory.UNDO.getId()));
-		menu.appendToGroup(ActionConstants.DELETE, actionRegistry.getAction(ActionFactory.DELETE.getId()));
-		menu.appendToGroup(ActionConstants.COPY, actionRegistry.getAction(ActionFactory.COPY.getId()));
-		menu.appendToGroup(ActionConstants.COPY, actionRegistry.getAction(ActionFactory.PASTE.getId()));
-		menu.appendToGroup(ActionConstants.COPY, actionRegistry.getAction(ActionFactory.CUT.getId()));
-		menu.appendToGroup(ActionConstants.EDIT, actionRegistry.getAction(ActionFactory.SELECT_ALL.getId()));
+		IAction action = actionRegistry.getAction(ActionFactory.REDO.getId());
+		if (action != null) {
+			menu.appendToGroup(ActionConstants.UNDO, action);
+		}
+		action = actionRegistry.getAction(ActionFactory.UNDO.getId());
+		if (action != null) {
+			menu.appendToGroup(ActionConstants.UNDO, action);
+		}
+		action = actionRegistry.getAction(ActionFactory.DELETE.getId());
+		if (action != null) {
+			menu.appendToGroup(ActionConstants.DELETE, action);
+		}
+		action = actionRegistry.getAction(ActionFactory.COPY.getId());
+		if (action != null) {
+			menu.appendToGroup(ActionConstants.COPY, action);
+		}
+		action = actionRegistry.getAction(ActionFactory.PASTE.getId());
+		if (action != null) {
+			menu.appendToGroup(ActionConstants.COPY, action);
+		}
+		action = actionRegistry.getAction(ActionFactory.CUT.getId());
+		if (action != null) {
+			menu.appendToGroup(ActionConstants.COPY, action);
+		}
+		action = actionRegistry.getAction(ActionFactory.SELECT_ALL.getId());
+		if (action != null) {
+			menu.appendToGroup(ActionConstants.EDIT, action);
+		}
 	}
 
 	public interface ActionConstants {

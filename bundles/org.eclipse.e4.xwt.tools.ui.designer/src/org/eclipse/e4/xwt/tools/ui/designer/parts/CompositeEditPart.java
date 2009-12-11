@@ -14,10 +14,10 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.e4.xwt.tools.ui.designer.core.figures.ContentPaneFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
+import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.CompositeInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutType;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.LayoutEditPolicyFactory;
-import org.eclipse.e4.xwt.tools.ui.designer.visuals.CompositeVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
@@ -60,7 +60,6 @@ public class CompositeEditPart extends ControlEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#refresh()
 	 */
 	public void refresh() {
@@ -99,7 +98,6 @@ public class CompositeEditPart extends ControlEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class key) {
@@ -115,11 +113,10 @@ public class CompositeEditPart extends ControlEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.xaml.ve.xwt.editparts.ControlEditPart#createVisualComponent()
 	 */
 	public IVisualInfo createVisualInfo() {
-		return new CompositeVisualInfo((Composite) getWidget());
+		return new CompositeInfo((Composite) getWidget(), isRoot());
 	}
 
 }

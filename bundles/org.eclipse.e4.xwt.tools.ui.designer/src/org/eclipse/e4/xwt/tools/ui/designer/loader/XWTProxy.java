@@ -22,8 +22,9 @@ import org.eclipse.e4.xwt.XWTLoaderManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.metadata.ModelUtils;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
 import org.eclipse.e4.xwt.tools.ui.designer.swt.CoolBarHelper;
-import org.eclipse.e4.xwt.tools.ui.designer.swt.SWTTools;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTModelUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
@@ -356,12 +357,11 @@ public class XWTProxy {
 		}
 		Object defaultValue = getDefaultValue(object, attribute);
 		try {
-			IProperty[] properties = metaclass.getProperties();
-			for (IProperty property : properties) {
-				if (property.getName().equals(attribute.getName())) {
-					property.setValue(object, defaultValue);
-					return true;
-				}
+			String name = ModelUtils.normalizePropertyName(attribute.getName());
+			IProperty property = metaclass.findProperty(name);
+			if (property != null) {
+				property.setValue(object, defaultValue);
+				return true;
 			}
 		} catch (Exception e) {
 		}
@@ -372,7 +372,11 @@ public class XWTProxy {
 		if (object == null || attribute == null || attribute.getName() == null) {
 			return null;
 		}
+		// we need to handle this case manually since the shell is never open. all widgets are not visible
 		String name = attribute.getName();
+		if (object instanceof Widget && "visible".equalsIgnoreCase(name) && IConstants.XWT_NAMESPACE.endsWith(attribute.getNamespace())) {
+			return true;
+		}
 		XamlNode model = null;
 		if (object instanceof Widget) {
 			model = getModel((Widget) object);

@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.Draw2dTools;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
-import org.eclipse.e4.xwt.tools.ui.designer.swt.SWTTools;
-import org.eclipse.e4.xwt.tools.ui.designer.visuals.tools.Draw2dTools;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;

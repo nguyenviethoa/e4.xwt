@@ -21,6 +21,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.DirectEditPolicy;
 import org.eclipse.gef.requests.DirectEditRequest;
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
@@ -54,6 +55,10 @@ public class ElementDirectEditPolicy extends DirectEditPolicy {
 
 	@Override
 	protected void showDirectEditFeedback(DirectEditRequest request) {
+		CellEditor cellEditor = request.getCellEditor();
+		if (cellEditor == null) {
+			return;
+		}
 		if (!setting) {
 			GraphicalEditPart graphicalEditPart = (GraphicalEditPart) getHost();
 			IFigure figure = graphicalEditPart.getFigure();
@@ -61,7 +66,7 @@ public class ElementDirectEditPolicy extends DirectEditPolicy {
 			XamlElement element = (XamlElement) (getHost().getModel());
 			XamlAttribute attribute = element.getAttribute("text", IConstants.XWT_NAMESPACE);
 			String value = attribute.getValue();
-			request.getCellEditor().setValue(value);
+			cellEditor.setValue(value);
 			Control control = request.getCellEditor().getControl();
 			if (control instanceof Text) {
 				Rectangle rectangle = figure.getBounds();
@@ -76,9 +81,10 @@ public class ElementDirectEditPolicy extends DirectEditPolicy {
 	@Override
 	public boolean understandsRequest(Request request) {
 		if (request instanceof DirectEditRequest) {
+			DirectEditRequest directEditRequest = (DirectEditRequest) request;
 			XamlElement element = (XamlElement) (getHost().getModel());
 			XamlAttribute attribute = element.getAttribute("text", IConstants.XWT_NAMESPACE);
-			if (attribute == null) {
+			if (directEditRequest.getCellEditor() == null || attribute == null) {
 				return false;
 			}
 		}

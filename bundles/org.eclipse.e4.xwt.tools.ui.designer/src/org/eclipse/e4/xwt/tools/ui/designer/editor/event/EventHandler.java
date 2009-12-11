@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IEventConstants;
-import org.eclipse.e4.xwt.metadata.ModelUtils;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.jdt.ASTHelper;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
@@ -25,8 +24,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.NamingConventions;
-import org.eclipse.jdt.internal.ui.compare.JavaTokenComparator;
 import org.eclipse.swt.widgets.Event;
 
 /**
@@ -59,14 +56,14 @@ public class EventHandler {
 	public String suggestDefaultName(XamlElement element, String value) {
 		String name = value;
 		if (!exist(name)) {
-			return name; 
+			return name;
 		}
 
 		int i = 0;
 		String elementName = "";
-		XamlAttribute attribute = element.getAttribute("name", IConstants.XWT_X_NAMESPACE); 
+		XamlAttribute attribute = element.getAttribute("name", IConstants.XWT_X_NAMESPACE);
 		if (attribute == null) {
-			attribute = element.getAttribute("name", IConstants.XWT_NAMESPACE); 
+			attribute = element.getAttribute("name", IConstants.XWT_NAMESPACE);
 		}
 		if (attribute != null) {
 			elementName = attribute.getValue().trim();
@@ -80,14 +77,14 @@ public class EventHandler {
 		if (elementName.length() > 1) {
 			elementName = Character.toUpperCase(elementName.charAt(0)) + elementName.substring(1);
 		}
-		
+
 		name = value + elementName;
 		while (exist(name)) {
 			name = value + elementName + (++i);
 		}
 		return name;
 	}
-	
+
 	private IMethod findMethod(IMethod[] methods, String methodName) {
 		for (int i = 0; i < methods.length; i++) {
 			IMethod method = methods[i];
@@ -107,7 +104,8 @@ public class EventHandler {
 		createHandler(handlerName, null, null, argus);
 	}
 
-	public void createHandler(String methodName, Class<?> returnType, String contentReturnValue, List<Class<?>> arguments) {
+	public void createHandler(String methodName, Class<?> returnType, String contentReturnValue,
+			List<Class<?>> arguments) {
 		ASTHelper.createMethod(type, methodName, returnType, contentReturnValue, arguments);
 	}
 
@@ -115,7 +113,7 @@ public class EventHandler {
 	 * Create all handlers.
 	 */
 	public void createHandlers() {
-		XamlDocument xamlDocument = designer.getXamlDocument();
+		XamlDocument xamlDocument = (XamlDocument) designer.getDocumentRoot();
 		XamlElement rootElement = xamlDocument.getRootElement();
 		List<XamlAttribute> handlerAttrs = new ArrayList<XamlAttribute>();
 		retrieveHandlerAttrs(rootElement, handlerAttrs);

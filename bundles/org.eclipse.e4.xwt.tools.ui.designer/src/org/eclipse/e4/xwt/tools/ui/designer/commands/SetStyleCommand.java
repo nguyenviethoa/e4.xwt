@@ -15,10 +15,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.converters.StringToInteger;
-import org.eclipse.e4.xwt.tools.ui.designer.swt.StyleGroup;
-import org.eclipse.e4.xwt.tools.ui.designer.utils.StringUtil;
-import org.eclipse.e4.xwt.tools.ui.designer.utils.StyleHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.core.style.StyleGroup;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.StringUtil;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.commands.Command;
@@ -88,14 +86,12 @@ public class SetStyleCommand extends Command {
 			List<String> oldValues = new ArrayList<String>();
 			StringTokenizer stk = new StringTokenizer(value, "|");
 			while (stk.hasMoreTokens()) {
-				oldValues.add(stk.nextToken().trim());
+				oldValues.add(stk.nextToken().trim().toUpperCase());
 			}
 
 			// 1. Maybe not a string.
 			if (oldValues.isEmpty()) {
-				int style = StyleHelper.getStyle(parent);
-				int newStyleValue = (Integer) StringToInteger.instance.convert(newStyle);
-				return createCommand(Integer.toString(style | newStyleValue));
+				return createCommand(newStyle);
 			}
 			// 2. String style.
 			if (group != null && !"default".equals(group.getGroupName())) {

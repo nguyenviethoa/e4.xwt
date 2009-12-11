@@ -1,30 +1,23 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Soyatec - initial API and implementation
+ * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.properties;
 
 import org.eclipse.e4.xwt.metadata.IProperty;
-import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.ArrayCellEditor;
-import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.BooleanCellEditor;
-import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.CharacterCellEditor;
-import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.ColorCellEditor;
-import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.FontCellEditor;
-import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.ImageCellEditor;
-import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.IntegerCellEditor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.LabelProviderFactory;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.editors.ArrayCellEditor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.editors.BooleanCellEditor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.editors.CharacterCellEditor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.editors.ColorCellEditor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.editors.FontCellEditor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.editors.ImageCellEditor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.editors.IntegerCellEditor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.editors.PointCellEditor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.properties.editors.RectangleCellEditor;
 import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.LayoutCellEditor;
 import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.ObjectCellEditor;
-import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.PointCellEditor;
-import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.RectangleCellEditor;
 import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.TextCellEditor;
 import org.eclipse.e4.xwt.tools.ui.designer.properties.editors.TypedPropertiesCellEditor;
-import org.eclipse.e4.xwt.tools.ui.designer.providers.LabelProviderFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;

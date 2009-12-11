@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.xwt.tools.ui.designer.core;bundle-version="0.9.1";visibility:=reexport,
  org.eclipse.e4.xwt.tools.ui.imagecapture;bundle-version="0.9.1";visibility:=reexport,
  org.eclipse.ui.views.properties.tabbed;bundle-version="3.5.0";visibility:=reexport,
- org.eclipse.core.databinding.beans;bundle-version="1.2.0"
+ org.eclipse.core.databinding.beans;bundle-version="1.2.0",
+ org.eclipse.e4.xwt.tools.ui.xaml;bundle-version="0.9.1"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.e4.xwt.tools.ui.designer,
@@ -62,9 +63,6 @@ Export-Package: org.eclipse.e4.xwt.tools.ui.designer,
  org.eclipse.e4.xwt.tools.ui.designer.resources,
  org.eclipse.e4.xwt.tools.ui.designer.swt,
  org.eclipse.e4.xwt.tools.ui.designer.utils,
- org.eclipse.e4.xwt.tools.ui.designer.visuals,
- org.eclipse.e4.xwt.tools.ui.designer.visuals.images,
- org.eclipse.e4.xwt.tools.ui.designer.visuals.tools,
  org.eclipse.e4.xwt.tools.ui.designer.wizards,
  org.eclipse.e4.xwt.tools.ui.designer.wizards.contents,
  org.eclipse.e4.xwt.tools.ui.designer.wizards.models,

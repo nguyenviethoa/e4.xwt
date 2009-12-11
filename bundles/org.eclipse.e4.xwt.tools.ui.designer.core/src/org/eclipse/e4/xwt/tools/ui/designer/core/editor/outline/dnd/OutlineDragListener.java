@@ -1,19 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Soyatec - initial API and implementation
+ * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.dnd;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,17 +29,17 @@ public class OutlineDragListener implements DragSourceListener {
 		if (treeViewer == null) {
 			return null;
 		}
-		
+
 		ISelection selection = treeViewer.getSelection();
 		if (selection == null || selection.isEmpty()) {
 			return null;
 		}
 		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-		ArrayList<XamlNode> collector = new ArrayList<XamlNode>();
+		ArrayList<Object> collector = new ArrayList<Object>();
 		for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
 			Object element = iterator.next();
 			if (element instanceof EditPart) {
-				collector.add((XamlNode) ((EditPart) element).getModel());
+				collector.add(((EditPart) element).getModel());
 			}
 		}
 		return new StructuredSelection(collector.toArray());
@@ -55,7 +47,6 @@ public class OutlineDragListener implements DragSourceListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.swt.dnd.DragSourceListener#dragFinished(org.eclipse.swt.dnd.DragSourceEvent)
 	 */
 	public void dragFinished(DragSourceEvent event) {
@@ -64,7 +55,6 @@ public class OutlineDragListener implements DragSourceListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
 	 */
 	public void dragSetData(DragSourceEvent event) {
@@ -73,7 +63,6 @@ public class OutlineDragListener implements DragSourceListener {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(org.eclipse.swt.dnd.DragSourceEvent)
 	 */
 	public void dragStart(DragSourceEvent event) {

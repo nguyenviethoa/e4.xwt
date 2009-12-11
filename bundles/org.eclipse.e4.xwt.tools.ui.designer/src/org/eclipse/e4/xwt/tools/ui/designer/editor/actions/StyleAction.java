@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.editor.actions;
 
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.converters.StringToInteger;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.SetStyleCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
+import org.eclipse.e4.xwt.tools.ui.designer.core.style.SWTStyles;
+import org.eclipse.e4.xwt.tools.ui.designer.core.style.StyleGroup;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
-import org.eclipse.e4.xwt.tools.ui.designer.swt.SWTStyles;
-import org.eclipse.e4.xwt.tools.ui.designer.swt.StyleGroup;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.StyleHelper;
+import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -64,8 +67,23 @@ public class StyleAction extends Action implements IMenuCreator {
 					String[] items = styleGroup.getStyles();
 					String groupName = styleGroup.getGroupName();
 					for (String style : items) {
-						SetStyleAction action = new SetStyleAction(editPart.getCastModel(), styleGroup, style, "default".equals(groupName) ? AS_CHECK_BOX : AS_RADIO_BUTTON);
+						XamlNode node = editPart.getCastModel();
+						SetStyleAction action = new SetStyleAction(node, styleGroup, style, "default".equals(groupName) ? AS_CHECK_BOX : AS_RADIO_BUTTON);
 						boolean checked = StyleHelper.checkStyle(masterStyle, style);
+						
+						boolean specified = false;
+						XamlAttribute attribute = node.getAttribute("style", IConstants.XWT_X_NAMESPACE);
+						if (attribute != null) {
+							int xmlValue = (Integer) StringToInteger.instance.convert(attribute.getValue());
+							int value = (Integer) StringToInteger.instance.convert(style);
+							specified = StyleHelper.checkStyle(xmlValue, value);
+						}
+						if (checked) {
+							action.setEnabled(specified);
+						}
+						else {
+							action.setEnabled(true);
+						}
 						action.setChecked(checked);
 						menuManager.add(action);
 					}

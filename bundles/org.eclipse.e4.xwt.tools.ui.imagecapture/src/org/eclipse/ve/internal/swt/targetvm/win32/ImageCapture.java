@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
@@ -59,6 +60,14 @@ public class ImageCapture extends org.eclipse.e4.xwt.tools.ui.imagecapture.swt.I
 	}
 
 	protected Image getImage(Control control, int maxWidth, int maxHeight, boolean includeChildren) {
+//		if (!(control instanceof Shell)) {
+//			Rectangle bounds = control.getBounds();
+//			Image image = new Image(control.getDisplay(), bounds.width, bounds.height);
+//			GC gc = new GC(image);
+//			control.print(gc);
+//			gc.dispose();
+//			return image;
+//		}
 		Image myImage = getImage(control, maxWidth, maxHeight);
 		// We need to be able to handle right-to-left coordinates too. In that case the bounds rectangle will be reversed from what we
 		// think. We think the origin is upper-left, but the origin is really upper-right. To get out of this thinking we will

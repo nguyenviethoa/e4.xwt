@@ -1,18 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Soyatec - initial API and implementation
+ * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Soyatec - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.properties.editors;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.tools.ui.designer.dialogs.IntArrayDialog;
+import org.eclipse.e4.xwt.tools.ui.designer.core.dialogs.IntArrayDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -29,7 +22,6 @@ public class RectangleCellEditor extends AbstractCellEditor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.jface.viewers.DialogCellEditor#openDialogBox(org.eclipse.swt.widgets.Control)
 	 */
 	protected Object openDialogBox(Control cellEditorWindow) {
@@ -47,7 +39,8 @@ public class RectangleCellEditor extends AbstractCellEditor {
 				rect = (Rectangle) c.convert(value);
 			}
 		}
-		IntArrayDialog dialog = new IntArrayDialog(cellEditorWindow.getShell(), new int[] { rect.x, rect.y, rect.width, rect.height }, new String[] { "x:", "y:", "width:", "height:" });
+		IntArrayDialog dialog = new IntArrayDialog(cellEditorWindow.getShell(), new int[] { rect.x, rect.y, rect.width,
+				rect.height }, new String[] { "x:", "y:", "width:", "height:" });
 		if (dialog.open() == Window.OK) {
 			int[] result = dialog.getResult();
 			rect.x = result[0];

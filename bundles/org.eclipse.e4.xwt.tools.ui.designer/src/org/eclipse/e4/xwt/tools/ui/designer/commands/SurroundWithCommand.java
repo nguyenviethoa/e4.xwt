@@ -17,13 +17,13 @@ import java.util.List;
 
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.StringUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutType;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.grid.GridLayoutPolicyHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.grid.GridLayoutPolicyHelper.GridComponent;
-import org.eclipse.e4.xwt.tools.ui.designer.utils.StringUtil;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;

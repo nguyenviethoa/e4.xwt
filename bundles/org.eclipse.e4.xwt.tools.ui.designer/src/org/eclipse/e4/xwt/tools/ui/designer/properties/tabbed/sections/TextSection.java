@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections;
 
-import org.eclipse.e4.xwt.tools.ui.designer.core.utils.DisplayUtil;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
 import org.eclipse.e4.xwt.tools.ui.designer.wizards.ExternalizeStringsWizard;

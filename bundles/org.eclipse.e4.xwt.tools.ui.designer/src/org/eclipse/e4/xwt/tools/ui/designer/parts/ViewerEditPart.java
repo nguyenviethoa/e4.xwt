@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.AbstractLayout;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -24,9 +24,9 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.figures.ContentPaneFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
+import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.ViewerInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTModelUtil;
-import org.eclipse.e4.xwt.tools.ui.designer.visuals.ViewerVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
@@ -52,22 +52,19 @@ public class ViewerEditPart extends VisualEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.parts.GraphicalNodeEditPart#createVisualInfo()
 	 */
 	protected IVisualInfo createVisualInfo() {
-		return new ViewerVisualInfo(viewer);
+		return new ViewerInfo(viewer, isRoot());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.parts.GraphicalNodeEditPart#createFigure()
 	 */
 	protected IFigure createFigure() {
 		ContentPaneFigure figure = new ContentPaneFigure();
-		RectangleFigure pane = new RectangleFigure();
-		pane.setOutline(false);
+		Label pane = new Label();
 		// pane.setForegroundColor(ColorConstants.red);
 		pane.setLayoutManager(new AbstractLayout() {
 			public void layout(IFigure parent) {
@@ -90,7 +87,6 @@ public class ViewerEditPart extends VisualEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.parts.GraphicalNodeEditPart#getModelChildren()
 	 */
 	protected List getModelChildren() {
@@ -115,7 +111,6 @@ public class ViewerEditPart extends VisualEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#createEditPolicies()
 	 */
 	protected void createEditPolicies() {
@@ -137,5 +132,13 @@ public class ViewerEditPart extends VisualEditPart {
 				return null;
 			}
 		});
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#getCastModel()
+	 */
+	public XamlNode getCastModel() {
+		return (XamlNode) super.getCastModel();
 	}
 }

@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.commands;
 
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.Draw2dTools;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.form.FormLayoutData;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.form.FormLayoutHelper;
-import org.eclipse.e4.xwt.tools.ui.designer.swt.SWTTools;
-import org.eclipse.e4.xwt.tools.ui.designer.visuals.tools.Draw2dTools;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;

@@ -22,8 +22,9 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.root.BindingLayer;
-import org.eclipse.e4.xwt.tools.ui.designer.core.utils.DisplayUtil;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
+import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.WidgetInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.BindingHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.BindingInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.DataContext;
@@ -32,7 +33,6 @@ import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.ComponentEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.GraphicalNodeEditPolicy;
-import org.eclipse.e4.xwt.tools.ui.designer.visuals.WidgetVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
@@ -58,7 +58,8 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 	 */
 	public Widget getWidget() {
 		if (!validate()) {
-			XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain.getEditDomain(this).getViewerData(getViewer(), IVisualRenderer.KEY);
+			XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain.getEditDomain(this).getViewerData(
+					getViewer(), IVisualRenderer.KEY);
 			if (controlRender != null) {
 				Object component = controlRender.getVisual(getCastModel());
 				if (component instanceof Widget) {
@@ -66,7 +67,7 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 				}
 			}
 			if (validate()) {
-				((WidgetVisualInfo) getVisualInfo()).setVisualable(widget);
+				((IVisualInfo) getVisualInfo()).setVisualObject(widget);
 			}
 		}
 		return widget;
@@ -78,30 +79,18 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#createFigure()
-	 */
-	protected IFigure createFigure() {
-		getWidget();
-		return super.createFigure();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#createVisualInfo()
 	 */
 	protected IVisualInfo createVisualInfo() {
-		return new WidgetVisualInfo(widget);
+		return new WidgetInfo(widget, isRoot());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#getModelChildren()
 	 */
 	protected final List getModelChildren() {
-		List modelChildren = new ArrayList(super.getModelChildren());
+		List modelChildren = new ArrayList(getCastModel().getChildNodes());
 		Collection<?> externalModels = getExternalModels();
 		if (externalModels != null && !externalModels.isEmpty()) {
 			modelChildren.addAll(externalModels);
@@ -119,14 +108,8 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 		return Collections.emptyList();
 	}
 
-	public boolean isRoot() {
-		XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain.getEditDomain(this).getViewerData(getViewer(), IVisualRenderer.KEY);
-		return controlRender != null && controlRender.getRoot() == getWidget();
-	}
-
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.parts.GraphicalNodeEditPart#createEditPolicies()
 	 */
 	protected void createEditPolicies() {
@@ -135,35 +118,24 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new GraphicalNodeEditPolicy());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#activate()
-	 */
-	public void activate() {
-		refreshVisuals();
-		super.activate();
-	}
 
-	/**
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#refreshVisuals()
-	 */
-	protected void refreshVisuals() {
-		getWidget();
-		final IVisualInfo visualInfo = getVisualInfo();
-		if (visualInfo != null) {
-			DisplayUtil.asyncExec(new Runnable() {
-				public void run() {
-					visualInfo.refreshImage();
-				}
-			});
+	public boolean isTransparent() {
+		if (!(getParent() instanceof DiagramEditPart)) {
+			return true;
 		}
-		super.refreshVisuals();
+		return super.isTransparent();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#validateVisuals()
+	 */
+	protected boolean validateVisuals() {
+		getWidget();
+		return super.validateVisuals() && validate();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#addChildVisual(org.eclipse.gef.EditPart, int)
 	 */
 	protected void addChildVisual(EditPart childEditPart, int index) {
@@ -180,7 +152,6 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#removeChildVisual(org.eclipse.gef.EditPart)
 	 */
 	protected void removeChildVisual(EditPart childEditPart) {
@@ -197,11 +168,11 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections()
 	 */
 	protected List getModelSourceConnections() {
-		XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain.getEditDomain(this).getViewerData(getViewer(), IVisualRenderer.KEY);
+		XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain.getEditDomain(this).getViewerData(getViewer(),
+				IVisualRenderer.KEY);
 		Object root = controlRender.getRoot();
 		if (root != null && root instanceof Widget) {
 			root = XWTProxy.getModel((Widget) root);
@@ -224,7 +195,6 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelTargetConnections()
 	 */
 	protected List getModelTargetConnections() {
@@ -237,7 +207,14 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#getCastModel()
+	 */
+	public XamlNode getCastModel() {
+		return (XamlNode) super.getCastModel();
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef.ConnectionEditPart)
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
@@ -246,7 +223,6 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef.Request)
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
@@ -255,7 +231,6 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef.ConnectionEditPart)
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
@@ -264,7 +239,6 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef.Request)
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {

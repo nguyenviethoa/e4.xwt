@@ -54,11 +54,11 @@ public class XWTVisualRenderer extends AbstractRenderer {
 		proxy = new XWTProxy(file);
 	}
 
-	public Object getVisual(XamlNode model, boolean loadOnDemand) {
+	public Object getVisual(EObject model, boolean loadOnDemand) {
 		return proxy.getComponent(model, loadOnDemand);
 	}
 
-	public Object getVisual(XamlNode model) {
+	public Object getVisual(EObject model) {
 		return proxy.getComponent((XamlNode) model);
 	}
 
@@ -91,7 +91,8 @@ public class XWTVisualRenderer extends AbstractRenderer {
 			return false;
 		}
 		try {
-			IMetaclass metaclass = XWT.getMetaclass(Character.toUpperCase(name.charAt(0)) + name.substring(1), node.getNamespace());
+			IMetaclass metaclass = XWT.getMetaclass(Character.toUpperCase(name.charAt(0)) + name.substring(1), node
+					.getNamespace());
 			if (metaclass == null) {
 				return false;
 			}
@@ -225,7 +226,8 @@ public class XWTVisualRenderer extends AbstractRenderer {
 		if (proxy.isNull(parent) || attribute == null) {
 			return false;
 		}
-		if ("style".equalsIgnoreCase(attribute.getName()) && IConstants.XWT_X_NAMESPACE.equals(attribute.getNamespace())) {
+		if ("style".equalsIgnoreCase(attribute.getName())
+				&& IConstants.XWT_X_NAMESPACE.equals(attribute.getNamespace())) {
 			if (needRecreate(parent, attribute)) {
 				return proxy.recreate((Widget) parent, true);
 			}
@@ -291,7 +293,8 @@ public class XWTVisualRenderer extends AbstractRenderer {
 			return false;
 		}
 
-		if ("style".equalsIgnoreCase(attribute.getName()) && IConstants.XWT_X_NAMESPACE.equals(attribute.getNamespace())) {
+		if ("style".equalsIgnoreCase(attribute.getName())
+				&& IConstants.XWT_X_NAMESPACE.equals(attribute.getNamespace())) {
 			Object defaultValue = proxy.getDefaultValue(parent, attribute);
 			if (defaultValue != null && defaultValue instanceof Integer) {
 				int oldStyle = (Integer) XWT.convertFrom(Integer.class, attribute.getValue());
@@ -316,8 +319,9 @@ public class XWTVisualRenderer extends AbstractRenderer {
 
 	public String getHostClassName() {
 		String clr = proxy.getClr();
-		if (clr == null && getDocument() != null) {
-			XamlElement root = getDocument().getRootElement();
+		XamlDocument documentRoot = (XamlDocument) getDocumentRoot();
+		if (clr == null && documentRoot != null) {
+			XamlElement root = documentRoot.getRootElement();
 			XamlAttribute attribute = root.getAttribute(IConstants.XAML_X_CLASS, IConstants.XWT_X_NAMESPACE);
 			if (attribute != null) {
 				return attribute.getValue();
@@ -330,7 +334,7 @@ public class XWTVisualRenderer extends AbstractRenderer {
 	 * Recreate all controls.
 	 */
 	public void recreate() {
-		if (getDocument() == null) {
+		if (getDocumentRoot() == null) {
 			return;
 		}
 		proxy.reset();
@@ -339,16 +343,14 @@ public class XWTVisualRenderer extends AbstractRenderer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.render.IVisualsRender#createVisuals()
 	 */
 	public Result createVisuals() {
-		return new Result(proxy.load(getDocument()));
+		return new Result(proxy.load((XamlDocument) getDocumentRoot()));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.render.IVisualsRender#refreshVisuals(java.lang.Object)
 	 */
 	public Result refreshVisuals(Object source) {
@@ -360,7 +362,6 @@ public class XWTVisualRenderer extends AbstractRenderer {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.soyatec.tools.designer.editor.render.IVisualsRender#getRoot()
 	 */
 	public Object getRoot() {
