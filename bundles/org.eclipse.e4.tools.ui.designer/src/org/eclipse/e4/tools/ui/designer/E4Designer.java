@@ -18,6 +18,8 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineLableProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
 import org.eclipse.gef.EditPartFactory;
@@ -87,5 +89,15 @@ public class E4Designer extends Designer {
 		PropertySheetPage propertyPage = new PropertySheetPage();
 		propertyPage.setPropertySourceProvider(new E4PropertySourceProvider());
 		return propertyPage;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createOutlinePage()
+	 */
+	protected ContentOutlinePage createOutlinePage() {
+		E4OutlineContentProvider contentProvider = new E4OutlineContentProvider();
+		OutlineLableProvider lableProvider = new OutlineLableProvider();
+		return new ContentOutlinePage(this, contentProvider, lableProvider);
 	}
 }
