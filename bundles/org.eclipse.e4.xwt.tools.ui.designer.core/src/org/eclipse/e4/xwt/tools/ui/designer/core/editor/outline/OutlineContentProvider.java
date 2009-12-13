@@ -51,10 +51,7 @@ public class OutlineContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
 	 */
 	public boolean hasChildren(Object element) {
-		if (element instanceof EditPart) {
-			return ((EditPart) element).getChildren().size() > 0;
-		}
-		return false;
+		return getChildren(element).length > 0;
 	}
 
 	/*
@@ -63,10 +60,7 @@ public class OutlineContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof EditPart) {
-			return ((EditPart) inputElement).getChildren().toArray(EMPTY);
-		}
-		return EMPTY;
+		return getChildren(inputElement);
 	}
 
 	/*
@@ -75,7 +69,6 @@ public class OutlineContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 	 */
 	public void dispose() {
-
 	}
 
 	/*
@@ -84,7 +77,5 @@ public class OutlineContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
 	}
-
 }
