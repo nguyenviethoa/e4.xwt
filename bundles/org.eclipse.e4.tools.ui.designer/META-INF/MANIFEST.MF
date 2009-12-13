@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: E4 Designer
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.e4.tools.ui.designer;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.e4.tools.ui.designer.E4DesignerPlugin
-Bundle-Vendor: Soyatec @
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.e4.xwt.tools.ui.designer.core;bundle-version="0.9.1",

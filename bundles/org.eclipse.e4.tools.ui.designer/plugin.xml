@@ -17,7 +17,7 @@
          <action
                class="org.eclipse.e4.tools.ui.designer.actions.OpenWorkbenchDesignerAction"
                id="org.eclipse.e4.tools.ui.designer.actions.OpenWorkbenchDesignerAction"
-               label="Open Workbench Designer"
+               label="%action.label"
                style="push">
          </action>
       </viewContribution>
@@ -30,7 +30,7 @@
             extensions="xmi"
             filenames="Application"
             id="org.eclipse.e4.tools.ui.designer.E4Designer"
-            name="E4 Designer">
+            name="%editor.name">
       </editor>
    </extension>
 </plugin>
