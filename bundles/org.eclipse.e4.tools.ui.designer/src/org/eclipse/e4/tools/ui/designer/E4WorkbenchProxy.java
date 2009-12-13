@@ -111,8 +111,8 @@ public class E4WorkbenchProxy {
 				}
 
 				// Register an SWT resource handler
-				appContext.set(IResourceUtiltities.class.getName(), new ResourceUtility(Activator.getDefault()
-						.getBundleAdmin()));
+//				appContext.set(IResourceUtiltities.class.getName(), new ResourceUtility(Activator.getDefault()
+//						.getBundleAdmin()));
 
 				// set up the keybinding manager
 				try {

@@ -24,6 +24,7 @@ import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.core.services.context.spi.ContextInjectionFactory;
 import org.eclipse.e4.core.services.context.spi.IContextConstants;
 import org.eclipse.e4.core.services.context.spi.IEclipseContextStrategy;
+import org.eclipse.e4.tools.ui.designer.utils.ResourceUtiltities;
 import org.eclipse.e4.ui.internal.services.ActiveContextsFunction;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MPart;
@@ -31,7 +32,10 @@ import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.e4.ui.workbench.swt.internal.PartRenderingEngine;
+import org.eclipse.e4.ui.workbench.swt.util.ISWTResourceUtiltities;
 import org.eclipse.e4.workbench.ui.IExceptionHandler;
+import org.eclipse.e4.workbench.ui.IResourceUtiltities;
+import org.eclipse.e4.workbench.ui.internal.Activator;
 import org.eclipse.e4.workbench.ui.internal.ActiveChildLookupFunction;
 import org.eclipse.e4.workbench.ui.internal.ActivePartLookupFunction;
 import org.eclipse.e4.workbench.ui.internal.E4Workbench;
@@ -115,13 +119,17 @@ public class E4VisualRenderer implements IVisualRenderer {
 		// parent of the global workbench context is an OSGi service
 		// context that can provide OSGi services
 		IProject project = inputFile.getProject();
-		Bundle bundle = Platform.getBundle(project.getName());
+		Bundle bundle = Platform.getBundle("org.eclipse.e4.tools.ui.designer");
 		BundleContext bundleContext = bundle.getBundleContext();
 
 		IEclipseContext serviceContext = EclipseContextFactory.getServiceContext(bundleContext);
 		final IEclipseContext appContext = EclipseContextFactory.create(serviceContext, strategy);
 		appContext.set(IContextConstants.DEBUG_STRING, "WorkbenchAppContext"); //$NON-NLS-1$
 
+		// take over the resource resolution
+		appContext.set(IResourceUtiltities.class.getName(), new ResourceUtiltities(project, Activator.getDefault()
+				.getBundleAdmin()));
+		
 		// FROM: Workbench#createWorkbenchContext
 		IExtensionRegistry registry = RegistryFactory.getRegistry();
 		ExceptionHandler exceptionHandler = new ExceptionHandler();
@@ -131,6 +139,7 @@ public class E4VisualRenderer implements IVisualRenderer {
 		appContext.set(Logger.class.getName(), ContextInjectionFactory.inject(new WorkbenchLogger(), appContext));
 		appContext.set(IContextConstants.DEBUG_STRING, "WorkbenchContext"); //$NON-NLS-1$
 
+				
 		// setup for commands and handlers
 		appContext.set(ContextManager.class.getName(), new ContextManager());
 
