@@ -35,8 +35,6 @@ public class ClassLoaderHelper {
 	static final String PLATFORM_PLUGIN = "platform:/plugin/";
 	
 	public static URL getResourceAsURL(IProject project, String name) {
-		if (project == null)
-			return null;
 		if (name.startsWith(PLATFORM_PLUGIN)) {
 			name = name.substring(PLATFORM_PLUGIN.length()).trim();
 		}
@@ -47,16 +45,18 @@ public class ClassLoaderHelper {
 			int index = name.indexOf('/');
 			if (index != -1) {
 				String projectName = name.substring(0, index);
-				IProject rootProject = project.getWorkspace().getRoot().getProject(projectName);
+				IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 				if (rootProject != null && rootProject.exists()) {
 					project = rootProject;
 					name = name.substring(index + 1);
 				}
 			}	
-		}		
-		IJavaProject javaProject = JavaCore.create(project);
-		if (javaProject != null && javaProject.exists() && javaProject.isOpen()) {
-			return getResourceAsURL(javaProject, name);
+		}
+		if (project != null) {
+			IJavaProject javaProject = JavaCore.create(project);
+			if (javaProject != null && javaProject.exists() && javaProject.isOpen()) {
+				return getResourceAsURL(javaProject, name);
+			}
 		}
 		return null;
 	}
@@ -77,9 +77,36 @@ public class ClassLoaderHelper {
 		return url;
 	}
 
-	public static byte[] getClassContent(IJavaProject javaProject, String className) {
+	public static byte[] getClassContent(IJavaProject javaProject, String name) {
 		if (javaProject == null || !javaProject.exists())
 			return null;
+		if (name.startsWith(PLATFORM_PLUGIN)) {
+			name = name.substring(PLATFORM_PLUGIN.length()).trim();
+		}
+		if (name == null || name.length() == 0) {
+			return null;
+		}
+		if (name.charAt(0) != '/') {
+			int index = name.indexOf('/');
+			if (index != -1) {
+				String projectName = name.substring(0, index);
+				IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+				if (rootProject != null && rootProject.exists()) {
+					javaProject = JavaCore.create(rootProject);
+					name = name.substring(index + 1);
+				}
+			}	
+		}
+		if (javaProject != null && javaProject.exists() && javaProject.isOpen()) {
+			return doGetClassContent(javaProject, name);
+		}
+		return null;
+	}
+	
+	public static byte[] doGetClassContent(IJavaProject javaProject, String className) {
+		if (javaProject == null || !javaProject.exists())
+			return null;
+		
 		String resourceName = className.replace('.', '/') + ".class";
 		try {
 			IPath outPath = javaProject.getProject().getLocation().removeLastSegments(1).append(javaProject.getOutputLocation());

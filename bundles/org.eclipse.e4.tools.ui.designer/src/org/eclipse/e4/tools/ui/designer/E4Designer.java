@@ -96,7 +96,7 @@ public class E4Designer extends Designer {
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createOutlinePage()
 	 */
 	protected ContentOutlinePage createOutlinePage() {
-		E4OutlineContentProvider contentProvider = new E4OutlineContentProvider();
+		E4DesignerOutlineContentProvider contentProvider = new E4DesignerOutlineContentProvider();
 		OutlineLableProvider lableProvider = new OutlineLableProvider();
 		return new ContentOutlinePage(this, contentProvider, lableProvider);
 	}

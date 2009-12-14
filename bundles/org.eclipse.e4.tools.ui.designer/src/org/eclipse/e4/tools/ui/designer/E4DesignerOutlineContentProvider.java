@@ -6,7 +6,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineContentPr
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.root.DesignerRootEditPart;
 import org.eclipse.gef.EditPart;
 
-public class E4OutlineContentProvider extends OutlineContentProvider {
+public class E4DesignerOutlineContentProvider extends OutlineContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
