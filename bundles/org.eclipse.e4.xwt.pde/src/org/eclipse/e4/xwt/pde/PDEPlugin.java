@@ -85,7 +85,7 @@ public class PDEPlugin extends AbstractUIPlugin {
 		Bundle bundle = Platform.getBundle("org.eclipse.e4.xwt");
 		if (bundle.getState() != Bundle.ACTIVE) {
 			try {
-				bundle.start();
+				bundle.start(Bundle.START_TRANSIENT);
 			} catch (BundleException e) {
 				e.printStackTrace();
 			}
