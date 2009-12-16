@@ -93,12 +93,6 @@ public abstract class XWTViewPart extends ViewPart {
 		}
 
 		try {
-			// deviceAdapter = new DeviceAdapter(container) {
-			// @Override
-			// public Object getDataContext() {
-			// return XAMLView.this.getDataContext();
-			// }
-			// };
 			XWT.load(container, inputStream, base, getDataContext());
 			container.layout(true, true);
 		} catch (Exception e) {
