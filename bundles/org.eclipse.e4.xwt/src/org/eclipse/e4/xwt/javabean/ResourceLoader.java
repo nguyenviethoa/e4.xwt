@@ -191,7 +191,7 @@ public class ResourceLoader implements IVisualElementLoader {
 								field.setAccessible(true);
 								try {
 									field.set(clr, targetObject);
-									break;
+									return;
 								} catch (Exception e) {
 								}
 							}

@@ -173,7 +173,7 @@ public class ResourceVisitor {
 								field.setAccessible(true);
 								try {
 									field.set(clr, targetObject);
-									break;
+									return;
 								} catch (Exception e) {
 								}
 							}
