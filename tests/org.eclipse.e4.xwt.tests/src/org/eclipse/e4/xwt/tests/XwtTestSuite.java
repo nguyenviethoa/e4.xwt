@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.e4.xwt.tests.annotation.AnnotationTests;
 import org.eclipse.e4.xwt.tests.attachedproperty.AttachedPropertyTests;
 import org.eclipse.e4.xwt.tests.clr.XWTTestSuite;
 import org.eclipse.e4.xwt.tests.controls.ControlsTestSuite;
@@ -52,6 +53,9 @@ public class XwtTestSuite extends TestSuite {
 
 		// XWT
 		addXWTTests();
+
+		// annotations
+		addTest(new TestSuite(AnnotationTests.class));
 
 		// widgets SWT
 		addControlsTests();

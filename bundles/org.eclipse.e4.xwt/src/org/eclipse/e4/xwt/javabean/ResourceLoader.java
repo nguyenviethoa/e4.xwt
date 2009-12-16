@@ -11,8 +11,10 @@
 package org.eclipse.e4.xwt.javabean;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -38,6 +40,7 @@ import org.eclipse.e4.xwt.IStyle;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.ResourceDictionary;
 import org.eclipse.e4.xwt.Tracking;
+import org.eclipse.e4.xwt.UI;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTLoader;
@@ -167,6 +170,46 @@ public class ResourceLoader implements IVisualElementLoader {
 
 		public void setClr(Object clr) {
 			this.clr = clr;
+		}
+
+		public void inject(Object targetObject, String name) {
+			doInject(targetObject, name, null);
+		}
+
+		protected void doInject(Object targetObject, String name, Object previousClr) {
+			Class<?> filedType = targetObject.getClass();
+			if (clr != null && (previousClr != clr || previousClr == null)) {
+				for (Field field : clr.getClass().getDeclaredFields()) {
+					UI annotation = field.getAnnotation(UI.class);
+					if (annotation != null) {
+						if (!field.getType().isAssignableFrom(filedType)) {
+							continue;
+						}
+						String annotationValue = annotation.value();
+						if (annotationValue == null || annotationValue.length() == 0) {
+							if (field.getName().equals(name)) {
+								field.setAccessible(true);
+								try {
+									field.set(clr, targetObject);
+									break;
+								} catch (Exception e) {
+								}
+							}
+						}
+						else if (annotationValue.equals(name)) {
+							field.setAccessible(true);
+							try {
+								field.set(clr, targetObject);
+								break;
+							} catch (Exception e) {
+							}							
+						}
+					}
+				}
+			}
+			if (parent != null) {
+				parent.doInject(targetObject, name, clr);
+			}
 		}
 
 		public void updateEvent(IRenderingContext context, Widget control,
@@ -853,7 +896,10 @@ public class ResourceLoader implements IVisualElementLoader {
 					IConstants.XAML_X_NAME);
 		}
 		if (nameAttr != null && UserData.getWidget(targetObject) != null) {
-			nameScoped.addNamedObject(nameAttr.getContent(), targetObject);
+			String value = nameAttr.getContent();
+			loadData.inject(targetObject, value);
+			
+			nameScoped.addNamedObject(value, targetObject);
 			done.add(IConstants.XAML_X_NAME);
 		}
 

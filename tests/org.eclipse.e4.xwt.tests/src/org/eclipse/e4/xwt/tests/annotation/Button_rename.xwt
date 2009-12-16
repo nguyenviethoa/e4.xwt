@@ -1,0 +1,8 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+	xmlns:x="http://www.eclipse.org/xwt"
+	x:Class="org.eclipse.e4.xwt.tests.annotation.ButtonHandler_rename">
+	<Shell.layout>
+		<GridLayout numColumns="2"/>
+	</Shell.layout>	
+	<Button name="my button" text="Test"/>
+</Shell>
