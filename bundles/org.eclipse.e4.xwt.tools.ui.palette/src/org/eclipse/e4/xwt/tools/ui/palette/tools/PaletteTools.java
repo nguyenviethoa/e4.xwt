@@ -13,7 +13,8 @@ package org.eclipse.e4.xwt.tools.ui.palette.tools;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPaletteViewerProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.ExtensionRegistry;
-import org.eclipse.e4.xwt.tools.ui.palette.page.resources.PaletteResourceProvider;
+import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteResourceProvider;
+import org.eclipse.e4.xwt.tools.ui.palette.page.resources.URIResourceProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.root.PaletteRootFactory;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditDomain;
@@ -26,24 +27,34 @@ import org.eclipse.ui.IEditorPart;
  */
 public class PaletteTools {
 
-	public static CustomPalettePage createPalettePage(IEditorPart editorPart, PaletteResourceProvider resourceProvider, Class<? extends Tool> creationToolClass, Class<? extends Tool> selectionToolClass) {
-		EditDomain editDomain = (EditDomain) editorPart.getAdapter(EditDomain.class);
+	public static CustomPalettePage createPalettePage(IEditorPart editorPart,
+			IPaletteResourceProvider resourceProvider,
+			Class<? extends Tool> creationToolClass,
+			Class<? extends Tool> selectionToolClass) {
+		EditDomain editDomain = (EditDomain) editorPart
+				.getAdapter(EditDomain.class);
 		if (editDomain == null) {
 			editDomain = new DefaultEditDomain(editorPart);
 		}
 		if (resourceProvider == null) {
 			resourceProvider = ExtensionRegistry.loadFromExtensions(editorPart);
 		}
-		PaletteRoot paletteRoot = createPaletteRoot(resourceProvider, creationToolClass, selectionToolClass);
+		PaletteRoot paletteRoot = createPaletteRoot(resourceProvider,
+				creationToolClass, selectionToolClass);
 		if (paletteRoot != null) {
 			editDomain.setPaletteRoot(paletteRoot);
 		}
-		CustomPaletteViewerProvider provider = new CustomPaletteViewerProvider(editDomain);
+		CustomPaletteViewerProvider provider = new CustomPaletteViewerProvider(
+				editDomain);
 		return new CustomPalettePage(provider);
 	}
 
-	private static PaletteRoot createPaletteRoot(PaletteResourceProvider resourceProvider, Class<? extends Tool> createToolClass, Class<? extends Tool> selectionToolClass) {
-		PaletteRootFactory factory = new PaletteRootFactory(resourceProvider, createToolClass, selectionToolClass);
+	private static PaletteRoot createPaletteRoot(
+			IPaletteResourceProvider resourceProvider,
+			Class<? extends Tool> createToolClass,
+			Class<? extends Tool> selectionToolClass) {
+		PaletteRootFactory factory = new PaletteRootFactory(resourceProvider,
+				createToolClass, selectionToolClass);
 		return factory.createPaletteRoot();
 	}
 }

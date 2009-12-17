@@ -13,7 +13,8 @@ package org.eclipse.e4.xwt.tools.ui.palette.root;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteContentProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteLabelProvider;
-import org.eclipse.e4.xwt.tools.ui.palette.page.resources.PaletteResourceProvider;
+import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteResourceProvider;
+import org.eclipse.e4.xwt.tools.ui.palette.page.resources.URIResourceProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.request.EntryCreationFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gef.Tool;
@@ -32,11 +33,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class PaletteRootFactory {
 
-	private PaletteResourceProvider resourceProvider;
+	private IPaletteResourceProvider resourceProvider;
 	private Class<? extends Tool> creationToolClass;
 	private Class<? extends Tool> selectionToolClass;
 
-	public PaletteRootFactory(PaletteResourceProvider resourceProvider, Class<? extends Tool> creationToolClass, Class<? extends Tool> selectionToolClass) {
+	public PaletteRootFactory(IPaletteResourceProvider resourceProvider, Class<? extends Tool> creationToolClass, Class<? extends Tool> selectionToolClass) {
 		this.resourceProvider = resourceProvider;
 		this.creationToolClass = creationToolClass;
 		this.selectionToolClass = selectionToolClass;

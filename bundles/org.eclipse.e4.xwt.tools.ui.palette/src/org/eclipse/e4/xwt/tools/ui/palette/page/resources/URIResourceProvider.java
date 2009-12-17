@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public abstract class PaletteResourceProvider {
+public abstract class URIResourceProvider extends EntryResourceProvider {
 	private Resource resource;
 
 	public Resource getPaletteResource() {
@@ -41,11 +41,4 @@ public abstract class PaletteResourceProvider {
 
 	protected abstract URI getPaletteResourceURI();
 
-	public IPaletteContentProvider getContentProvider() {
-		return new EntryContentProvider();
-	}
-
-	public IPaletteLabelProvider getLabelProvider() {
-		return new EntryLabelProvider();
-	}
 }

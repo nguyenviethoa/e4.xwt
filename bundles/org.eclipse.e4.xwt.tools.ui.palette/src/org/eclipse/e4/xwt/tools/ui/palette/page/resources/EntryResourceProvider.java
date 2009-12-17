@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.palette.page.resources;
 
-import org.eclipse.ui.IEditorPart;
-
 /**
- * @author jliu (jin.liu@soyatec.com)
+ * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class ExtensionRegistry {
+public abstract class EntryResourceProvider implements IPaletteResourceProvider {
 
-	public static URIResourceProvider loadFromExtensions(IEditorPart editorPart) {
-		return null;
+	public IPaletteContentProvider getContentProvider() {
+		return new EntryContentProvider();
 	}
+
+	public IPaletteLabelProvider getLabelProvider() {
+		return new EntryLabelProvider();
+	}
+
 }
