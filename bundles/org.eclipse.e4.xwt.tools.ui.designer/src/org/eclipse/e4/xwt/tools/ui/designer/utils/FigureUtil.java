@@ -28,12 +28,13 @@ public class FigureUtil {
 		IFigure parentFigure = ((GraphicalEditPart) parent).getFigure();
 		parentFigure.translateToRelative(point);
 		Rectangle bounds = parentFigure.getBounds();
-		int x = point.x - bounds.x - OffsetUtil.getXOffset(parent);
-		int y = point.y - bounds.y - OffsetUtil.getYOffset(parent);
+		int x = point.x - bounds.x;
+		int y = point.y - bounds.y;
 		return new Point(x, y);
 	}
 
-	public static Rectangle translateToRelative(EditPart parent, Rectangle rectangle) {
+	public static Rectangle translateToRelative(EditPart parent,
+			Rectangle rectangle) {
 		Point location = rectangle.getLocation().getCopy();
 		Point p = translateToRelative(parent, location);
 		return new Rectangle(p, rectangle.getSize());

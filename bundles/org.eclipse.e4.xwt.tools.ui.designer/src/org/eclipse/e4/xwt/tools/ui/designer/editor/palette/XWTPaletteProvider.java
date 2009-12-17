@@ -11,13 +11,13 @@
 package org.eclipse.e4.xwt.tools.ui.designer.editor.palette;
 
 import org.eclipse.e4.xwt.tools.ui.designer.XWTDesignerPlugin;
-import org.eclipse.e4.xwt.tools.ui.palette.page.resources.PaletteResourceProvider;
+import org.eclipse.e4.xwt.tools.ui.palette.page.resources.URIResourceProvider;
 import org.eclipse.emf.common.util.URI;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public class XWTPaletteProvider extends PaletteResourceProvider {
+public class XWTPaletteProvider extends URIResourceProvider {
 
 	/*
 	 * (non-Javadoc)
