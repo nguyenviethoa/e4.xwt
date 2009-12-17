@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -332,7 +333,7 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 					continue;
 				}
 				Class<?> propertyType = pd.getPropertyType();
-				if (propertyType.isPrimitive() || propertyType == String.class) {
+				if (propertyType.isPrimitive() || propertyType == String.class || propertyType == URL.class) {
 					printStream.println("\t <Label text=\"" + pd.getDisplayName() + "\"/>");
 					printStream.println("\t <Text x:Style=\"Border\" text=\"{Binding path=" + pd.getName() + "}\">");
 					printStream.println("\t\t <Text.layoutData>");
