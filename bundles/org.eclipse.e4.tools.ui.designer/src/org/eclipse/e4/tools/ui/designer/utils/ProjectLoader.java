@@ -1,8 +1,6 @@
 package org.eclipse.e4.tools.ui.designer.utils;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
 
 import org.eclipse.jdt.core.IJavaProject;
 

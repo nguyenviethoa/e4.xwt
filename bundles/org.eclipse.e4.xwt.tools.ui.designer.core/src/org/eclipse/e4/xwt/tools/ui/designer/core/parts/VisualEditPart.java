@@ -129,7 +129,7 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#refresh()
 	 */
 	public void refresh() {
-		// refresh(RefreshContext.ALL());
+		// Do nothing here, sub class can add some other refreshes.
 	}
 
 	public final void refresh(RefreshContext context) {
@@ -156,6 +156,8 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 		if (context.refreshVisuals()) {
 			refreshVisuals();
 		}
+		// allow subclass refresh.
+		refresh();
 	}
 
 	protected boolean validateVisuals() {

@@ -28,8 +28,6 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
-import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
-import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.GroupRequest;
 
 /**
@@ -47,7 +45,9 @@ public class WidgetEditPart extends VisualEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#createVisualInfo()
+	 * 
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#
+	 * createVisualInfo()
 	 */
 	protected IVisualInfo createVisualInfo() {
 		Object widget = getMuiElement().getWidget();
@@ -60,6 +60,7 @@ public class WidgetEditPart extends VisualEditPart {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#getModelChildren()
 	 */
 	protected List getModelChildren() {
@@ -80,14 +81,17 @@ public class WidgetEditPart extends VisualEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#createEditPolicies()
+	 * 
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#
+	 * createEditPolicies()
 	 */
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy() {
 			protected Command createDeleteCommand(GroupRequest deleteRequest) {
 				List editParts = deleteRequest.getEditParts();
 				CompoundCommand command = new CompoundCommand();
-				for (Iterator iterator = editParts.iterator(); iterator.hasNext();) {
+				for (Iterator iterator = editParts.iterator(); iterator
+						.hasNext();) {
 					EditPart editPart = (EditPart) iterator.next();
 					Object model = editPart.getModel();
 					if (model instanceof MUIElement) {
@@ -97,15 +101,16 @@ public class WidgetEditPart extends VisualEditPart {
 				return command.unwrap();
 			}
 		});
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutEditPolicy() {
-			protected Command getCreateCommand(CreateRequest request) {
-				return null;
-			}
-
-			protected Command createChangeConstraintCommand(EditPart child, Object constraint) {
-				return null;
-			}
-		});
+		// installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutEditPolicy() {
+		// protected Command getCreateCommand(CreateRequest request) {
+		// return null;
+		// }
+		//
+		// protected Command createChangeConstraintCommand(EditPart child,
+		// Object constraint) {
+		// return null;
+		// }
+		// });
 	}
 
 	public Object getWidget() {
@@ -118,13 +123,14 @@ public class WidgetEditPart extends VisualEditPart {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#toString()
 	 */
 	public String toString() {
 		MUIElement muiElement = getMuiElement();
-		if (muiElement != null){
-			if (muiElement instanceof EObject){
-				EClass eClass = ((EObject)muiElement).eClass();
+		if (muiElement != null) {
+			if (muiElement instanceof EObject) {
+				EClass eClass = ((EObject) muiElement).eClass();
 				return eClass.getName();
 			}
 			return muiElement.getClass().getSimpleName();

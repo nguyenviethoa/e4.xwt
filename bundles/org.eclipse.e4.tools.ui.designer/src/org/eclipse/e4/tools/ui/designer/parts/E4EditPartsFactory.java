@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -38,6 +39,8 @@ public class E4EditPartsFactory implements EditPartFactory {
 			}
 			if (widget instanceof Shell) {
 				return new ShellEditPart((EObject) elementImpl);
+			} else if (widget instanceof ToolBar) {
+				return new ToolBarEditPart((EObject) elementImpl);
 			} else if (widget instanceof Composite) {
 				return new CompositeEditPart((EObject) elementImpl);
 			} else if (widget instanceof Control) {

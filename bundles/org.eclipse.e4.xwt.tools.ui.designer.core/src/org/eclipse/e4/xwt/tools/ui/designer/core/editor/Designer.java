@@ -349,7 +349,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 		EditPart diagram = getDiagramEditPart();
 		getGraphicalViewer().setContents(diagram);
 		loadingFigureController.showLoadingFigure(false);
-		if (diagram != null){
+		if (diagram != null) {
 			refresh(diagram, RefreshContext.ALL());
 			installed = true;
 		}

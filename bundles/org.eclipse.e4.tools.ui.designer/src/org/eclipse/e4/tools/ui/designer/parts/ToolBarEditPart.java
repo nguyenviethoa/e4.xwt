@@ -10,30 +10,21 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.parts;
 
-import org.eclipse.e4.tools.ui.designer.policies.CompositeLayoutEditPolicy;
-import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
-import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.CompositeInfo;
+import org.eclipse.e4.tools.ui.designer.policies.ToolBarLayoutEditPolicy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPolicy;
 
 /**
- * @author jin.liu(jin.liu@soyatec.com)
+ * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class CompositeEditPart extends ControlEditPart {
+public class ToolBarEditPart extends CompositeEditPart {
 
-	public CompositeEditPart(EObject model) {
+	public ToolBarEditPart(EObject model) {
 		super(model);
-	}
-
-	protected IVisualInfo createVisualInfo() {
-		Object widget = getMuiElement().getWidget();
-		return new CompositeInfo(widget, isRoot());
 	}
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		removeEditPolicy(EditPolicy.LAYOUT_ROLE);
-		installEditPolicy(EditPolicy.LAYOUT_ROLE,
-				new CompositeLayoutEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new ToolBarLayoutEditPolicy());
 	}
 }
