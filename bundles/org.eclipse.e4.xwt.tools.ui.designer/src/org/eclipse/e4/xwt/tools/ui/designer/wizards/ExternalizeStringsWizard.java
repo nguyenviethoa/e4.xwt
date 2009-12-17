@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -41,7 +42,9 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -107,29 +110,38 @@ public class ExternalizeStringsWizard extends Wizard implements INewWizard {
 
 	private void getDefaultAccessorContents() {
 		IFile inputFile = designer.getInputFile();
-		String projectName = inputFile.getProject().toString();
-		String projectRelativePath = inputFile.getProjectRelativePath().toString();
 
-		String defaultFolder = projectName.substring(2) + "/" + projectRelativePath.substring(0, projectRelativePath.indexOf("/"));
-		String defaultPackage = projectRelativePath.substring(projectRelativePath.indexOf("/") + 1, projectRelativePath.lastIndexOf("/")).replace("/", ".");
-
-		IJavaProject javaProject = JavaCore.create(inputFile.getProject());
-		try {
-			IPackageFragmentRoot fragmentRoot[] = javaProject.getAllPackageFragmentRoots();
-			for (int i = 0; i < fragmentRoot.length; i++) {
-				if (fragmentRoot[i].getResource() != null) {
-					IPackageFragmentRoot defaultRoot = fragmentRoot[i];
-					externalizeStringsWizardPage.setDefaultRoot(defaultRoot);
-					break;
+		IContainer container = inputFile.getParent();
+		IJavaElement javaElement =  JavaCore.create(container);
+		IPackageFragmentRoot defaultRoot = null;
+		if (javaElement != null && javaElement.exists()) {
+			IJavaProject javaProject = JavaCore.create(inputFile.getProject());
+			try {
+				IPackageFragmentRoot fragmentRoot[] = javaProject.getAllPackageFragmentRoots();
+				for (int i = 0; i < fragmentRoot.length; i++) {
+					if (fragmentRoot[i].getKind() == IPackageFragmentRoot.K_SOURCE) {
+						defaultRoot = fragmentRoot[i];
+						for (IJavaElement element : defaultRoot.getChildren()) {
+							if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT) {
+								javaElement = element;
+							}
+						}
+						break;
+					}
 				}
+			} catch (JavaModelException e) {
+				e.printStackTrace();
 			}
-		} catch (JavaModelException e) {
-			e.printStackTrace();
+		}
+		if (javaElement == null || !(javaElement instanceof IPackageFragment)) {
+			String projectName = inputFile.getProject().getName();
+			externalizeStringsWizardPage.setErrorMessage("The project " + projectName + " has not source folder.");
+			return;
 		}
 
-		externalizeStringsWizardPage.setDefaultFolder(defaultFolder);
-		externalizeStringsWizardPage.setDefaultPackage(defaultPackage);
-
+		externalizeStringsWizardPage.setDefaultRoot(defaultRoot);
+		externalizeStringsWizardPage.setDefaultFolder(defaultRoot.getResource().getFullPath().toString());
+		externalizeStringsWizardPage.setDefaultPackage(javaElement.getElementName());
 	}
 
 	/**
@@ -160,7 +172,7 @@ public class ExternalizeStringsWizard extends Wizard implements INewWizard {
 	 */
 	private void showOpenFileDialog() throws returnWizardPage {
 		String dialogMessage = "Do you want to open " + externalizeStringsWizardPage.getInfo().getClassName() + ".java and " + externalizeStringsWizardPage.getInfo().getPropertyName() + ".properties after finish?";
-		String[] dialogButtonLabels = { "Open", "Dis-Open" };
+		String[] dialogButtonLabels = { "Open", "Cancel" };
 		MessageDialog messageDialog = new MessageDialog(getShell(), "Open created files", null, dialogMessage, MessageDialog.QUESTION, dialogButtonLabels, 1);
 		messageDialog.open();
 		if (messageDialog.getReturnCode() == 0) {

@@ -61,7 +61,7 @@ public class ExternalizeStringsCommon {
 	public static IFile getIFile(String folderName, String fileName) throws CoreException {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IResource resource = root.findMember(new Path(folderName));
-		if (!resource.exists() || !(resource instanceof IContainer)) {
+		if (resource == null || !resource.exists() || !(resource instanceof IContainer)) {
 			throwCoreException("Container \"" + folderName + "\" does not exist.");
 		}
 		IContainer container = (IContainer) resource;

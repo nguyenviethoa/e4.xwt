@@ -76,7 +76,7 @@ public class SourceContents {
 		int index = filePath.indexOf("/" + soureKey + "/");
 		String packagePath = "";
 		if (index != -1) {
-			packagePath = (filePath.substring(index + 5)).replace("/", ".");
+			packagePath = (filePath.substring(index + soureKey.length() + 2)).replace("/", ".");
 		}
 		return packagePath;
 	}
