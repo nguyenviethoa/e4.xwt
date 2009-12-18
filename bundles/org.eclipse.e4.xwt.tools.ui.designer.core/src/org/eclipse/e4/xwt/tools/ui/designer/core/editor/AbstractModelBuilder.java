@@ -24,7 +24,10 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder#addModelBuildListener(org.eclipse.e4.xwt.tools.ui.designer.core.editor.ModelBuildListener)
+	 * 
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder#
+	 * addModelBuildListener
+	 * (org.eclipse.e4.xwt.tools.ui.designer.core.editor.ModelBuildListener)
 	 */
 	public void addModelBuildListener(ModelBuildListener listener) {
 		if (listeners == null) {
@@ -35,7 +38,10 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder#hasListener(org.eclipse.e4.xwt.tools.ui.designer.core.editor.ModelBuildListener)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder#hasListener
+	 * (org.eclipse.e4.xwt.tools.ui.designer.core.editor.ModelBuildListener)
 	 */
 	public boolean hasListener(ModelBuildListener listener) {
 		return listeners != null && listeners.contains(listener);
@@ -43,7 +49,10 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder#removeModelBuildListener(org.eclipse.e4.xwt.tools.ui.designer.core.editor.ModelBuildListener)
+	 * 
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder#
+	 * removeModelBuildListener
+	 * (org.eclipse.e4.xwt.tools.ui.designer.core.editor.ModelBuildListener)
 	 */
 	public void removeModelBuildListener(ModelBuildListener listener) {
 		if (listeners != null) {
@@ -56,6 +65,18 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
 			for (ModelBuildListener l : listeners) {
 				l.notifyChanged(event);
 			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder#dispose()
+	 */
+	public void dispose() {
+		if (listeners != null) {
+			listeners.clear();
 		}
 	}
 }

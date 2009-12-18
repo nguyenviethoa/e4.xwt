@@ -14,16 +14,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.pde.internal.ui.wizards.IProjectProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.branding.IProductConstants;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -37,6 +47,8 @@ public class NewApplicationWizardPage extends WizardPage {
 
 	private static final String APPLICATION_XMI_PROPERTY = "applicationXMI";
 	private static final String APPLICATION_CSS_PROPERTY = "applicationCSS";
+	public static final String PRODUCT_NAME = "productName";
+	public static final String APPLICATION = "application";
 	private static String[] PROPERTIES = new String[] {
 			IProductConstants.APP_NAME, APPLICATION_XMI_PROPERTY,
 			APPLICATION_CSS_PROPERTY, IProductConstants.ABOUT_TEXT,
@@ -46,6 +58,7 @@ public class NewApplicationWizardPage extends WizardPage {
 			IProductConstants.PREFERENCE_CUSTOMIZATION };
 
 	private final Map<String, String> data;
+
 	private IProject project;
 	private IProjectProvider projectProvider;
 
@@ -101,13 +114,19 @@ public class NewApplicationWizardPage extends WizardPage {
 		return group;
 	}
 
-	private void createPropertyItem(Composite parent, final String property) {
+	private void createPropertyItem(final Composite parent,
+			final String property) {
 		Hyperlink propertyLink = new Hyperlink(parent, SWT.NONE);
 		propertyLink.setText(property);
 		propertyLink.setUnderlined(true);
 
 		final Text valueText = new Text(parent, SWT.BORDER);
 		valueText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		if (property.equals(IProductConstants.STARTUP_FOREGROUND_COLOR)
+				|| property.equals(IProductConstants.STARTUP_MESSAGE_RECT)
+				|| property.equals(IProductConstants.STARTUP_PROGRESS_RECT)) {
+			valueText.setEditable(false);
+		}
 
 		propertyLink.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkExited(HyperlinkEvent e) {
@@ -119,7 +138,7 @@ public class NewApplicationWizardPage extends WizardPage {
 			}
 
 			public void linkActivated(HyperlinkEvent e) {
-				handleLinkEvent(property, valueText);
+				handleLinkEvent(property, valueText, parent.getShell());
 			}
 		});
 
@@ -130,27 +149,143 @@ public class NewApplicationWizardPage extends WizardPage {
 		});
 	}
 
-	private void handleLinkEvent(String property, Text valueText) {
+	private void handleLinkEvent(String property, Text valueText, Shell shell) {
 		if (property == null || valueText == null || valueText.isDisposed()) {
 			return;
 		}
 		if (property.equals(APPLICATION_XMI_PROPERTY)) {
-			valueText.setText("Application.xmi");
+			// valueText.setText("Application.xmi");
 		} else if (property.equals(APPLICATION_CSS_PROPERTY)) {
-			valueText.setText("css/default.css");
+			// valueText.setText("css/default.css");
 		} else if (property.equals(IProductConstants.APP_NAME)) {
-			valueText.setText("New Product");
+			// valueText.setText("New Product");
 		} else if (property.equals(IProductConstants.ABOUT_TEXT)) {
-			valueText.setText("About Product.");
+			// valueText.setText("About Product.");
 		} else if (property.equals(IProductConstants.PREFERENCE_CUSTOMIZATION)) {
-			valueText.setText("plugin_customization.ini");
+			// valueText.setText("plugin_customization.ini");
 		} else if (property.equals(IProductConstants.STARTUP_FOREGROUND_COLOR)) {
-			valueText.setText("FFFFFF");
+			ColorDialog colorDialog = new ColorDialog(shell);
+			RGB selectRGB = colorDialog.open();
+			valueText.setText((this.hexColorConvert(Integer
+					.toHexString(selectRGB.blue))
+					+ this
+							.hexColorConvert(Integer
+									.toHexString(selectRGB.green)) + this
+					.hexColorConvert(Integer.toHexString(selectRGB.red)))
+					.toUpperCase());
 		} else if (property.equals(IProductConstants.STARTUP_MESSAGE_RECT)) {
-			valueText.setText("7,252,445,20");
+			this.createRectDialog(shell, valueText).open();
+
 		} else if (property.equals(IProductConstants.STARTUP_PROGRESS_RECT)) {
-			valueText.setText("5,275,445,15");
+			this.createRectDialog(shell, valueText).open();
 		}
+	}
+
+	/**
+	 * exchange the color pattern of hex numeric
+	 * 
+	 * @param number
+	 * @return
+	 */
+	public String hexColorConvert(String color) {
+		if (color.length() == 1) {
+			return "0" + color;
+		}
+		return color;
+	}
+
+	/**
+	 * create Rect Set dialog
+	 * 
+	 * @param parent
+	 * @param valueText
+	 * @return
+	 */
+	public Dialog createRectDialog(final Composite parent, final Text valueText) {
+		return new Dialog(parent.getShell()) {
+			Text xPointText, yPointText, widthText, heightText;
+
+			@Override
+			protected Button createButton(Composite parent, int id,
+					String label, boolean defaultButton) {
+				return super.createButton(parent, id, label, defaultButton);
+			}
+
+			@Override
+			protected Control createDialogArea(final Composite parent) {
+				Composite composite = (Composite) super
+						.createDialogArea(parent);
+				composite.getShell().setText("Set Rect");
+				Group group = new Group(composite, SWT.NONE);
+				group.setText("Rect");
+				GridLayout gridLayout = new GridLayout();
+				gridLayout.numColumns = 4;
+				group.setLayout(gridLayout);
+
+				Label xPointLabel = new Label(group, SWT.NONE);
+				xPointLabel.setText("X:");
+				xPointText = new Text(group, SWT.BORDER);
+				VerifyListener verifyListener = createVerifyListener(parent
+						.getShell());
+				xPointText.addVerifyListener(verifyListener);
+				Label yPointLabel = new Label(group, SWT.NONE);
+				yPointLabel.setText("Y:");
+				yPointText = new Text(group, SWT.BORDER);
+				yPointText.addVerifyListener(verifyListener);
+				Label widthLabel = new Label(group, SWT.NONE);
+				widthLabel.setText("Width:");
+				widthText = new Text(group, SWT.BORDER);
+				widthText.addVerifyListener(verifyListener);
+				Label heighttLabel = new Label(group, SWT.NONE);
+				heighttLabel.setText("Height:");
+				heightText = new Text(group, SWT.BORDER);
+				heightText.addVerifyListener(verifyListener);
+
+				return composite;
+			}
+
+			@Override
+			protected void buttonPressed(int buttonId) {
+				if (IDialogConstants.OK_ID == buttonId) {
+					String xPoint = xPointText.getText();
+					String yPoint = yPointText.getText();
+					String width = widthText.getText();
+					String height = heightText.getText();
+					if (xPoint.length() == 0 || yPoint.length() == 0
+							|| width.length() == 0 || height.length() == 0) {
+						MessageDialog.openWarning(parent.getShell(),
+								"Input value empty",
+								"Value shoud not be empty!");
+					} else {
+						valueText.setText(xPoint + "," + yPoint + "," + width
+								+ "," + height);
+						okPressed();
+					}
+				} else if (IDialogConstants.CANCEL_ID == buttonId) {
+					cancelPressed();
+				}
+			}
+		};
+	}
+
+	/**
+	 * create verify Listener
+	 * 
+	 * @param shell
+	 * @return
+	 */
+	public VerifyListener createVerifyListener(final Shell shell) {
+		return new VerifyListener() {
+			public void verifyText(VerifyEvent e) {
+				char c = e.character;
+				if ("0123456789".indexOf(c) == -1) {
+					e.doit = false;
+					MessageDialog.openWarning(shell, "Input value error",
+							"Only numeric is allowed!");
+					return;
+				}
+			}
+		};
 	}
 
 	private void handleTextEvent(String property, Text valueText) {
@@ -173,16 +308,32 @@ public class NewApplicationWizardPage extends WizardPage {
 		Label proNameLabel = new Label(proGroup, SWT.NONE);
 		proNameLabel.setText("Name*");
 
-		Text proNameText = new Text(proGroup, SWT.BORDER);
+		final Text proNameText = new Text(proGroup, SWT.BORDER);
 		proNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		proNameText.addListener(SWT.Modify, new Listener() {
+			public void handleEvent(Event event) {
+				handleTextEvent(PRODUCT_NAME, proNameText);
+			}
+		});
 
 		Label proApplicationLabel = new Label(proGroup, SWT.NONE);
 		proApplicationLabel.setText("Application");
 
-		Text proApplicationText = new Text(proGroup, SWT.BORDER);
+		final Text proApplicationText = new Text(proGroup, SWT.BORDER);
 		proApplicationText
 				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		proApplicationText.addListener(SWT.Modify, new Listener() {
+			public void handleEvent(Event event) {
+				handleTextEvent(APPLICATION, proApplicationText);
+			}
+		});
 		return proGroup;
 	}
 
+	/**
+	 * @return the data
+	 */
+	public Map<String, String> getData() {
+		return data;
+	}
 }

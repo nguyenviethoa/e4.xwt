@@ -3,8 +3,6 @@ package org.eclipse.e4.tools.ui.designer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,15 +19,13 @@ import org.eclipse.e4.core.services.IContributionFactory;
 import org.eclipse.e4.core.services.IContributionFactorySpi;
 import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.core.services.context.spi.ContextInjectionFactory;
-import org.eclipse.e4.tools.ui.designer.utils.ClassLoaderHelper;
 import org.eclipse.e4.tools.ui.designer.utils.ProjectLoader;
 import org.eclipse.e4.workbench.ui.internal.Activator;
 import org.eclipse.e4.workbench.ui.internal.Policy;
 import org.eclipse.e4.workbench.ui.internal.ReflectionContributionFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.IJavaProject;
-import org.osgi.framework.Bundle;
-import org.osgi.service.log.LogService;
+import org.eclipse.jdt.core.JavaCore;
 
 public class E4ReflectionContributionFactory implements IContributionFactory {
 
@@ -37,6 +33,7 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 	private Map<String, Object> languages;
 	private IJavaProject project;
 	private ProjectLoader projectLoader;
+	private ReflectionContributionFactory contributionFactory;
 	
 	/**
 	 * Create a reflection factory.
@@ -44,10 +41,11 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 	 * @param registry
 	 *            to read languages.
 	 */
-	public E4ReflectionContributionFactory(IJavaProject project, IExtensionRegistry registry) {
+	public E4ReflectionContributionFactory(IProject project, IExtensionRegistry registry) {
 		this.registry = registry;
-		this.project = project;
-		this.projectLoader = new ProjectLoader(project);
+		this.project = JavaCore.create(project);
+		this.projectLoader = new ProjectLoader(this.project);
+		contributionFactory = new ReflectionContributionFactory(registry);
 		processLanguages();
 	}
 
@@ -167,6 +165,11 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 	 * , org.eclipse.e4.core.services.context.IEclipseContext)
 	 */
 	public Object create(String uriString, IEclipseContext context) {
+//		Object contribution = contributionFactory.create(uriString, context);
+//		if (contribution != null) {
+//			return contribution;
+//		}
+		
 		Object contribution;
 		try {
 			Class<?> targetClass = projectLoader.loadClass(uriString);
@@ -188,6 +191,7 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 //					+ bundle.getBundleId() + "'"; //$NON-NLS-1$
 //			Activator.log(LogService.LOG_ERROR, message, e);
 		} catch (Throwable e) {
+			e.printStackTrace();
 			contribution = null;
 		}
 		return contribution;

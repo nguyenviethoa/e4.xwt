@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -41,6 +42,8 @@ public class E4EditPartsFactory implements EditPartFactory {
 				return new ShellEditPart((EObject) elementImpl);
 			} else if (widget instanceof ToolBar) {
 				return new ToolBarEditPart((EObject) elementImpl);
+			} else if (widget instanceof SashForm) {
+				return new SashFormEditPart((EObject) elementImpl);
 			} else if (widget instanceof Composite) {
 				return new CompositeEditPart((EObject) elementImpl);
 			} else if (widget instanceof Control) {

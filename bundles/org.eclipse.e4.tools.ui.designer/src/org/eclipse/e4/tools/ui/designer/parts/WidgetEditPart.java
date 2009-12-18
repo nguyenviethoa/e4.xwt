@@ -128,17 +128,17 @@ public class WidgetEditPart extends VisualEditPart {
 	 */
 	public String toString() {
 		MUIElement muiElement = getMuiElement();
+		String value = "";
 		if (muiElement != null) {
 			if (muiElement instanceof EObject) {
 				EClass eClass = ((EObject) muiElement).eClass();
-				return eClass.getName();
+				value = eClass.getName();
 			}
-			return muiElement.getClass().getSimpleName();
 		}
 		Object widget = getWidget();
 		if (widget != null) {
-			return widget.getClass().getSimpleName();
+			value += "-\"" + widget.getClass().getSimpleName() + "\"";
 		}
-		return "";
+		return value;
 	}
 }

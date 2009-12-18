@@ -792,6 +792,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 	 */
 	public void dispose() {
 		getModelBuilder().removeModelBuildListener(modelBuilderListener);
+		getModelBuilder().dispose();
 		getCommandStack().getCommandStack4GEF()
 				.removeCommandStackListener(this);
 		getCommandStack().flush();

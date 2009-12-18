@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
 import org.eclipse.e4.tools.ui.designer.parts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.properties.E4PropertySourceProvider;
-import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
@@ -22,6 +22,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePa
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineLableProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetPage;
@@ -31,17 +32,25 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
  */
 public class E4Designer extends Designer {
 
+	private boolean isDirty = false;
+	private E4UIRenderer uiRenderer = new E4UIRenderer();
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createModelBuilder()
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createModelBuilder()
 	 */
 	protected IModelBuilder createModelBuilder() {
-		return new E4ModelBuilder();
+		return uiRenderer;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createEditPartFactory ()
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createEditPartFactory
+	 * ()
 	 */
 	protected EditPartFactory createEditPartFactory() {
 		return new E4EditPartsFactory();
@@ -49,7 +58,30 @@ public class E4Designer extends Designer {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createPages()
+	 * 
+	 * @see org.eclipse.ui.part.MultiPageEditorPart#isDirty()
+	 */
+	public boolean isDirty() {
+		return isDirty;
+	}
+
+	protected void performModelChanged(Notification event) {
+		super.performModelChanged(event);
+		isDirty = true;
+		firePropertyChange(PROP_DIRTY);
+	}
+
+	public void doSave(IProgressMonitor monitor) {
+		super.doSave(monitor);
+		isDirty = false;
+		firePropertyChange(PROP_DIRTY);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createPages()
 	 */
 	protected void createPages() {
 		super.createPages();
@@ -59,14 +91,17 @@ public class E4Designer extends Designer {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createVisualsRender()
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createVisualsRender()
 	 */
 	protected IVisualRenderer createVisualsRender() {
-		return new E4VisualRenderer(getInputFile(), (MApplication) getDocumentRoot());
+		return uiRenderer;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.Designer#getDropContext()
 	 */
 	protected DropContext getDropContext() {
@@ -75,29 +110,41 @@ public class E4Designer extends Designer {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createPalettePage()
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createPalettePage()
 	 */
 	protected CustomPalettePage createPalettePage() {
-		return PaletteTools.createPalettePage(this, new E4PaletteProvider(), null, null);
+		return PaletteTools.createPalettePage(this, new E4PaletteProvider(),
+				null, null);
 	}
-		
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createPropertyPage()
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createPropertyPage
+	 * ()
 	 */
 	protected IPropertySheetPage createPropertyPage() {
 		PropertySheetPage propertyPage = new PropertySheetPage();
 		propertyPage.setPropertySourceProvider(new E4PropertySourceProvider());
 		return propertyPage;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createOutlinePage()
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createOutlinePage
+	 * ()
 	 */
 	protected ContentOutlinePage createOutlinePage() {
 		E4DesignerOutlineContentProvider contentProvider = new E4DesignerOutlineContentProvider();
 		OutlineLableProvider lableProvider = new OutlineLableProvider();
-		return new ContentOutlinePage(this, contentProvider, lableProvider);
+		ContentOutlinePage outlinePage = new ContentOutlinePage(this,
+				contentProvider, lableProvider);
+		outlinePage.setContextMenuProvider(getContextMenuProvider());
+		return outlinePage;
 	}
 }

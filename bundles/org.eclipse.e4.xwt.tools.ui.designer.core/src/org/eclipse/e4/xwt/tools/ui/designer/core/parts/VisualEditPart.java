@@ -202,6 +202,9 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	protected VisualEditPart getRootVisualEditPart() {
 		EditPart root = this;
 		while (!(root.getParent() instanceof AbstractDiagramEditPart)) {
+			if (root.getParent() == null) {
+				break;
+			}
 			root = root.getParent();
 		}
 		return (VisualEditPart) root;

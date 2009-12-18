@@ -89,6 +89,7 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		// Command
 		entry = createRootEntry(container, MApplicationPackage.Literals.COMMAND);
 		others.remove(MApplicationPackage.Literals.COMMAND);
+
 		// Others
 		if (!others.isEmpty()) {
 			entry = createEntry(container, "Other");
@@ -135,6 +136,7 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		String className = eClass.getName();
 		Entry entry = createEntry(container, className);
 		entry.setId(pkgName + "." + className);
+		entry.setType(eClass);
 		return entry;
 	}
 
