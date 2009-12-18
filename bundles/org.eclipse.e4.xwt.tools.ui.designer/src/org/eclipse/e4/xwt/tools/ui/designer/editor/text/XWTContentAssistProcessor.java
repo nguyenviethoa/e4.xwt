@@ -85,11 +85,14 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 	static XWTSelectionCompletionProposal[] getBooleanProposals() {
 		if (booleanProposals == null) {
 			String[] values = new String[] { "true", "false" };
-			Image image = ImageShop.get(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
+			Image image = ImageShop
+					.get(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
 			booleanProposals = new XWTSelectionCompletionProposal[values.length];
 			for (int j = 0; j < values.length; j++) {
 				String pattern = "\"" + values[j] + "\"";
-				booleanProposals[j] = new XWTSelectionCompletionProposal(pattern, 0, 0, 1, values[j].length(), image, values[j], null, null);
+				booleanProposals[j] = new XWTSelectionCompletionProposal(
+						pattern, 0, 0, 1, values[j].length(), image, values[j],
+						null, null);
 			}
 		}
 		return booleanProposals;
@@ -99,19 +102,22 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		if (colorsProposals == null) {
 			Collection<String> names = XWTMaps.getColorKeys();
 			String[] colorNames = NamedColorsUtil.getColorNames();
-			colorsProposals = new XWTSelectionCompletionProposal[names.size() + colorNames.length];
+			colorsProposals = new XWTSelectionCompletionProposal[names.size()
+					+ colorNames.length];
 
 			int i = 0;
 			for (String colorStr : names) {
 				Color color = ResourceManager.resources.getColor(colorStr);
-				XWTSelectionCompletionProposal p = createColorProposal(color, colorStr);
+				XWTSelectionCompletionProposal p = createColorProposal(color,
+						colorStr);
 				if (p != null) {
 					colorsProposals[i++] = p;
 				}
 			}
 			for (String colorName : colorNames) {
 				Color color = ResourceManager.resources.getColor(colorName);
-				XWTSelectionCompletionProposal p = createColorProposal(color, colorName);
+				XWTSelectionCompletionProposal p = createColorProposal(color,
+						colorName);
 				if (p != null) {
 					colorsProposals[i++] = p;
 				}
@@ -120,7 +126,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		return colorsProposals;
 	}
 
-	static XWTSelectionCompletionProposal createColorProposal(Color color, String colorName) {
+	static XWTSelectionCompletionProposal createColorProposal(Color color,
+			String colorName) {
 		if (color != null) {
 			String pattern = "\"" + colorName + "\"";
 			Image image = new Image(null, 16, 16);
@@ -128,13 +135,15 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 			gc.setBackground(color);
 			gc.fillRectangle(0, 0, 16, 16);
 			gc.dispose();
-			return new XWTSelectionCompletionProposal(pattern, 0, 0, 1, colorName.length(), image, colorName, null, null);
+			return new XWTSelectionCompletionProposal(pattern, 0, 0, 1,
+					colorName.length(), image, colorName, null, null);
 		}
 		return null;
 
 	}
 
-	static XWTSelectionCompletionProposal[] getStylesProposals(Class<?> type, String value) {
+	static XWTSelectionCompletionProposal[] getStylesProposals(Class<?> type,
+			String value) {
 		stylesProposals = null;
 		Image image = ImageShop.get(ImageShop.IMG_ELEMENT);
 		if (value.startsWith("\"")) {
@@ -147,12 +156,14 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		for (String string : names) {
 			replaceString = getStyleCorrectReplacedPattern(string, value, type);
 			String pattern = "\"" + replaceString + "\"";
-			stylesProposals[i++] = new XWTSelectionCompletionProposal(pattern, 0, 0, 1, replaceString.length(), image, string, null, null);
+			stylesProposals[i++] = new XWTSelectionCompletionProposal(pattern,
+					0, 0, 1, replaceString.length(), image, string, null, null);
 		}
 		return stylesProposals;
 	}
 
-	private static String getStyleCorrectReplacedPattern(String newStyle, String oldStyle, Class<?> type) {
+	private static String getStyleCorrectReplacedPattern(String newStyle,
+			String oldStyle, Class<?> type) {
 		int masterStyle = 0;
 		String shouldDelete = "";
 		boolean isInSameGroup = false;
@@ -183,7 +194,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 				oldValues.add(newStyle);
 			}
 		}
-		String newStyleValue = StringUtil.format(oldValues.toArray(new String[oldValues.size()]), "|");
+		String newStyleValue = StringUtil.format(oldValues
+				.toArray(new String[oldValues.size()]), "|");
 		return newStyleValue;
 	}
 
@@ -204,13 +216,15 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		int masterStyle = 0;
 		if (oldValues != null && oldValues.size() != 0) {
 			for (String oldValue : oldValues) {
-				masterStyle = masterStyle | (Integer) StringToInteger.instance.convert(oldValue);
+				masterStyle = masterStyle
+						| (Integer) StringToInteger.instance.convert(oldValue);
 			}
 		}
 		return masterStyle;
 	}
 
-	private static Collection<String> getStyleFromWidgetName(Class<?> type, String value) {
+	private static Collection<String> getStyleFromWidgetName(Class<?> type,
+			String value) {
 		Collection<String> collection = new HashSet<String>();
 		collection.clear();
 		int masterStyle = 0;
@@ -237,7 +251,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		return collection;
 	}
 
-	private static boolean isContainsTheElement(List<String> oldValues, String style) {
+	private static boolean isContainsTheElement(List<String> oldValues,
+			String style) {
 		if (style.contains("SWT.")) {
 			style = style.replace("SWT.", "");
 		}
@@ -255,22 +270,27 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 	static XWTSelectionCompletionProposal[] getAcceleratorsProposals() {
 		if (acceleratorsProposals == null) {
 			Collection<String> names = XWTMaps.getAcceleratorKeys();
-			acceleratorsProposals = new XWTSelectionCompletionProposal[names.size()];
+			acceleratorsProposals = new XWTSelectionCompletionProposal[names
+					.size()];
 			int i = 0;
 			for (String string : names) {
 				String pattern = "\"" + string + "\"";
-				acceleratorsProposals[i++] = new XWTSelectionCompletionProposal(pattern, 0, 0, 1, string.length(), null, string, null, null);
+				acceleratorsProposals[i++] = new XWTSelectionCompletionProposal(
+						pattern, 0, 0, 1, string.length(), null, string, null,
+						null);
 			}
 		}
 		return acceleratorsProposals;
 	}
 
-	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {
+	protected void addAttributeNameProposals(
+			ContentAssistRequest contentAssistRequest) {
 		addXAMLPropertyNameProposals(contentAssistRequest);
 		super.addAttributeNameProposals(contentAssistRequest);
 	}
 
-	private void addXAMLPropertyNameProposals(ContentAssistRequest contentAssistRequest) {
+	private void addXAMLPropertyNameProposals(
+			ContentAssistRequest contentAssistRequest) {
 		List<ICompletionProposal> proposalCollector = new ArrayList<ICompletionProposal>();
 		List<ICompletionProposal> macrosCollector = new ArrayList<ICompletionProposal>();
 
@@ -300,12 +320,14 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 			IProperty[] properties = metaclass.getProperties();
 			for (IProperty property : properties) {
 				Class<?> propertyType = property.getType();
-				if (propertyType != null && Control.class.isAssignableFrom(propertyType)) {
+				if (propertyType != null
+						&& Control.class.isAssignableFrom(propertyType)) {
 					continue;
 				}
 
 				String propertyName = property.getName();
-				if (prefixed != null && !propertyName.toLowerCase().startsWith(prefixed)) {
+				if (prefixed != null
+						&& !propertyName.toLowerCase().startsWith(prefixed)) {
 					continue;
 				}
 
@@ -315,9 +337,15 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 						propertyName = "x:style";
 						defaultValueString = "SWT.NONE";
 					}
-					String replacementString = propertyName + "=\"" + defaultValueString + "\" ";
-					Image image = ImageShop.get(JavaPluginImages.IMG_FIELD_PUBLIC);
-					XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(replacementString, offset, replacementLength, propertyName.length() + 2, defaultValueString.length(), image, propertyName, null, "Property: " + propertyName);
+					String replacementString = propertyName + "=\""
+							+ defaultValueString + "\" ";
+					Image image = ImageShop
+							.get(JavaPluginImages.IMG_FIELD_PUBLIC);
+					XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(
+							replacementString, offset, replacementLength,
+							propertyName.length() + 2, defaultValueString
+									.length(), image, propertyName, null,
+							"Property: " + propertyName);
 					if (useProposalList) {
 						proposalCollector.add(proposal);
 					} else {
@@ -329,19 +357,27 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 			IEvent[] events = metaclass.getEvents();
 			for (IEvent event : events) {
 				String eventName = event.getName();
-				if (prefixed != null && !eventName.toLowerCase().startsWith(prefixed)) {
+				if (prefixed != null
+						&& !eventName.toLowerCase().startsWith(prefixed)) {
 					continue;
 				}
 
-				eventName = Character.toUpperCase(eventName.charAt(0)) + eventName.substring(1) + IEventConstants.SUFFIX;
-				if (event.getName() != null && event.getName().equals(IEventConstants.XWT_LOADED)) {
+				eventName = Character.toUpperCase(eventName.charAt(0))
+						+ eventName.substring(1) + IEventConstants.SUFFIX;
+				if (event.getName() != null
+						&& event.getName().equals(IEventConstants.XWT_LOADED)) {
 					eventName = IEventConstants.XWT_LOADED;
 				}
 
 				if (!existing.contains(eventName)) {
-					String replacementString = eventName + "=\"perform" + eventName + "\" ";
+					String replacementString = eventName + "=\"perform"
+							+ eventName + "\" ";
 					Image image = ImageShop.get(ImageShop.IMG_EVENT);
-					XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(replacementString, offset, replacementLength, eventName.length() + 2, eventName.length() + "perform".length(), image, eventName, null, "Event: " + eventName);
+					XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(
+							replacementString, offset, replacementLength,
+							eventName.length() + 2, eventName.length()
+									+ "perform".length(), image, eventName,
+							null, "Event: " + eventName);
 					if (useProposalList) {
 						proposalCollector.add(proposal);
 					} else {
@@ -354,7 +390,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		Node parentNode = node.getParentNode();
 		String parentName = getNodeName(parentNode);
 		try {
-			IMetaclass parentMetaclass = XWT.getMetaclass(parentName, parentNode.getNamespaceURI());
+			IMetaclass parentMetaclass = XWT.getMetaclass(parentName,
+					parentNode.getNamespaceURI());
 			if (parentMetaclass != null) {
 				// Attached property
 			}
@@ -376,14 +413,19 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor #addAttributeValueProposals (org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest)
+	 * @see
+	 * org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor
+	 * #addAttributeValueProposals
+	 * (org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest)
 	 */
-	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
+	protected void addAttributeValueProposals(
+			ContentAssistRequest contentAssistRequest) {
 		addXAMLPropertyValueProposals(contentAssistRequest);
 		super.addAttributeValueProposals(contentAssistRequest);
 	}
 
-	private void addXAMLPropertyValueProposals(ContentAssistRequest contentAssistRequest) {
+	private void addXAMLPropertyValueProposals(
+			ContentAssistRequest contentAssistRequest) {
 		List<ICompletionProposal> proposalCollector = new ArrayList<ICompletionProposal>();
 		List<ICompletionProposal> macrosCollector = new ArrayList<ICompletionProposal>();
 		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
@@ -395,7 +437,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		if (metaclass != null) {
 			// Find the attribute region and name for which this position should
 			// have a value proposed
-			IStructuredDocumentRegion open = node.getFirstStructuredDocumentRegion();
+			IStructuredDocumentRegion open = node
+					.getFirstStructuredDocumentRegion();
 			ITextRegionList openRegions = open.getRegions();
 			int m = openRegions.indexOf(contentAssistRequest.getRegion());
 			int n = openRegions.indexOf(contentAssistRequest.getRegion());
@@ -428,10 +471,14 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 				// String attributeName = nameRegion.getText();
 				String attributeName = open.getText(nameRegion);
 				IProperty property = metaclass.findProperty(attributeName);
-				if (attributeName.equalsIgnoreCase("x:style") || property != null) {
-					int offset = contentAssistRequest.getReplacementBeginPosition();
-					int replacementLength = contentAssistRequest.getReplacementLength();
-					boolean useProposalList = !contentAssistRequest.shouldSeparate();
+				if (attributeName.equalsIgnoreCase("x:style")
+						|| property != null) {
+					int offset = contentAssistRequest
+							.getReplacementBeginPosition();
+					int replacementLength = contentAssistRequest
+							.getReplacementLength();
+					boolean useProposalList = !contentAssistRequest
+							.shouldSeparate();
 
 					String prefixed = null;
 					String prefixedQuote = "";
@@ -439,7 +486,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 					try {
 						int caretIndex = textWidget.getCaretOffset();
 						IDocument document = fTextViewer.getDocument();
-						prefixed = document.get(offset, caretIndex - offset).toLowerCase();
+						prefixed = document.get(offset, caretIndex - offset)
+								.toLowerCase();
 						if (prefixed.equals("\"\"")) {
 							prefixed = null;
 						}
@@ -454,13 +502,18 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 					if (attributeName.equalsIgnoreCase("accelerator")) {
 						XWTSelectionCompletionProposal[] proposals = getAcceleratorsProposals();
 						for (int j = 0; j < proposals.length; j++) {
-							String pattern = proposals[j].getReplacementString();
-							if (prefixed != null && ((!pattern.toLowerCase().startsWith(prefixed) && !fullValue) || prefixedQuote.equalsIgnoreCase(pattern))) {
+							String pattern = proposals[j]
+									.getReplacementString();
+							if (prefixed != null
+									&& ((!pattern.toLowerCase().startsWith(
+											prefixed) && !fullValue) || prefixedQuote
+											.equalsIgnoreCase(pattern))) {
 								continue;
 							}
 
 							proposals[j].setReplacementOffset(offset);
-							proposals[j].setReplacementLength(replacementLength);
+							proposals[j]
+									.setReplacementLength(replacementLength);
 							if (useProposalList) {
 								proposalCollector.add(proposals[j]);
 							} else {
@@ -482,15 +535,21 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 
 					// styles TODO: filter styles of each element.
 					if (attributeName.equalsIgnoreCase("x:style")) {
-						XWTSelectionCompletionProposal[] proposals = getStylesProposals(metaclass.getType(), value);
+						XWTSelectionCompletionProposal[] proposals = getStylesProposals(
+								metaclass.getType(), value);
 						for (int j = 0; j < proposals.length; j++) {
-							String pattern = proposals[j].getReplacementString();
-							if (prefixed != null && ((!pattern.toLowerCase().startsWith(prefixed) && !fullValue) || prefixedQuote.equalsIgnoreCase(pattern))) {
+							String pattern = proposals[j]
+									.getReplacementString();
+							if (prefixed != null
+									&& ((!pattern.toLowerCase().startsWith(
+											prefixed) && !fullValue) || prefixedQuote
+											.equalsIgnoreCase(pattern))) {
 								continue;
 							}
 
 							proposals[j].setReplacementOffset(offset);
-							proposals[j].setReplacementLength(replacementLength);
+							proposals[j]
+									.setReplacementLength(replacementLength);
 							if (useProposalList) {
 								proposalCollector.add(proposals[j]);
 							} else {
@@ -513,13 +572,18 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 					if (javaType == Boolean.class || javaType == boolean.class) {
 						XWTSelectionCompletionProposal[] proposals = getBooleanProposals();
 						for (int j = 0; j < proposals.length; j++) {
-							String pattern = proposals[j].getReplacementString();
-							if (prefixed != null && ((!pattern.toLowerCase().startsWith(prefixed) && !fullValue) || prefixedQuote.equalsIgnoreCase(pattern))) {
+							String pattern = proposals[j]
+									.getReplacementString();
+							if (prefixed != null
+									&& ((!pattern.toLowerCase().startsWith(
+											prefixed) && !fullValue) || prefixedQuote
+											.equalsIgnoreCase(pattern))) {
 								continue;
 							}
 
 							proposals[j].setReplacementOffset(offset);
-							proposals[j].setReplacementLength(replacementLength);
+							proposals[j]
+									.setReplacementLength(replacementLength);
 							if (useProposalList) {
 								proposalCollector.add(proposals[j]);
 							} else {
@@ -529,11 +593,13 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 					} else if (javaType != null && javaType.isEnum()) {
 						Object[] objects = javaType.getEnumConstants();
 
-						IConverter converter = XWT.findConvertor(javaType, String.class);
+						IConverter converter = XWT.findConvertor(javaType,
+								String.class);
 						for (int j = 0; j < objects.length; j++) {
 							String valueString = "";
 							if (converter != null) {
-								Object stringValue = converter.convert(objects[j]);
+								Object stringValue = converter
+										.convert(objects[j]);
 								if (stringValue != null) {
 									valueString = stringValue.toString();
 								}
@@ -541,11 +607,19 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 								valueString = objects[j].toString();
 							}
 							String pattern = "\"" + valueString + "\"";
-							if (prefixed != null && ((!pattern.toLowerCase().startsWith(prefixed) && !fullValue) || prefixedQuote.equalsIgnoreCase(pattern))) {
+							if (prefixed != null
+									&& ((!pattern.toLowerCase().startsWith(
+											prefixed) && !fullValue) || prefixedQuote
+											.equalsIgnoreCase(pattern))) {
 								continue;
 							}
-							Image image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ENUM);
-							XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(pattern, offset, replacementLength, 1, valueString.length(), image, valueString, null, null);
+							Image image = XMLEditorPluginImageHelper
+									.getInstance().getImage(
+											XMLEditorPluginImages.IMG_OBJ_ENUM);
+							XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(
+									pattern, offset, replacementLength, 1,
+									valueString.length(), image, valueString,
+									null, null);
 							if (useProposalList) {
 								proposalCollector.add(proposal);
 							} else {
@@ -556,7 +630,10 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 						XWTSelectionCompletionProposal[] colorsProposals = getColorsProposals();
 						for (XWTSelectionCompletionProposal proposal : colorsProposals) {
 							String pattern = proposal.getReplacementString();
-							if (prefixed != null && ((!pattern.toLowerCase().startsWith(prefixed) && !fullValue) || prefixedQuote.equalsIgnoreCase(pattern))) {
+							if (prefixed != null
+									&& ((!pattern.toLowerCase().startsWith(
+											prefixed) && !fullValue) || prefixedQuote
+											.equalsIgnoreCase(pattern))) {
 								continue;
 							}
 
@@ -571,26 +648,36 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 					}
 				} else {
 					IEvent[] allEvents = metaclass.getEvents();
-					JavaProject javaProject = (JavaProject) textWidget.getData("javaProject");
+					JavaProject javaProject = (JavaProject) textWidget
+							.getData("javaProject");
 					String className = (String) textWidget.getData("className");
-					List<String> javaMethods = getJavaMethods(javaProject, className);
-					int offset = contentAssistRequest.getReplacementBeginPosition();
+					List<String> javaMethods = getJavaMethods(javaProject,
+							className);
+					int offset = contentAssistRequest
+							.getReplacementBeginPosition();
 					int caretIndex = textWidget.getCaretOffset();
 					IDocument document = fTextViewer.getDocument();
 					String prefixed = null;
 					try {
-						prefixed = document.get(offset + 1, caretIndex - offset - 1);
+						prefixed = document.get(offset + 1, caretIndex - offset
+								- 1);
 					} catch (BadLocationException e) {
 						e.printStackTrace();
 					}
-					int replacementLength = contentAssistRequest.getReplacementLength();
-					boolean useProposalList = !contentAssistRequest.shouldSeparate();
-					for (Iterator<String> iterator = javaMethods.iterator(); iterator.hasNext();) {
+					int replacementLength = contentAssistRequest
+							.getReplacementLength();
+					boolean useProposalList = !contentAssistRequest
+							.shouldSeparate();
+					for (Iterator<String> iterator = javaMethods.iterator(); iterator
+							.hasNext();) {
 						String valueString = iterator.next();
 						if (valueString.equals(prefixed))
 							continue;
 						String pattern = "\"" + valueString + "\"";
-						XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(pattern, offset, replacementLength, 1, valueString.length(), null, valueString, null, null);
+						XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(
+								pattern, offset, replacementLength, 1,
+								valueString.length(), null, valueString, null,
+								null);
 						if (useProposalList) {
 							proposalCollector.add(proposal);
 						} else {
@@ -613,12 +700,14 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		}
 	}
 
-	protected void addTagInsertionProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
+	protected void addTagInsertionProposals(
+			ContentAssistRequest contentAssistRequest, int childPosition) {
 		addXAMLElementProposals(contentAssistRequest);
 		super.addTagInsertionProposals(contentAssistRequest, childPosition);
 	}
 
-	private void addXAMLElementProposals(ContentAssistRequest contentAssistRequest) {
+	private void addXAMLElementProposals(
+			ContentAssistRequest contentAssistRequest) {
 		List<ICompletionProposal> proposalCollector = new ArrayList<ICompletionProposal>();
 		List<ICompletionProposal> macrosCollector = new ArrayList<ICompletionProposal>();
 
@@ -644,7 +733,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 			replacementLength = text.getLength();
 			try {
 				IDocument document = fTextViewer.getDocument();
-				prefixed = document.get(offset, replacementLength).trim().toLowerCase();
+				prefixed = document.get(offset, replacementLength).trim()
+						.toLowerCase();
 			} catch (BadLocationException e1) {
 			}
 		} else if (node instanceof IDOMNode) {
@@ -658,7 +748,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 					replacementLength = text.getLength();
 					try {
 						IDocument document = fTextViewer.getDocument();
-						prefixed = document.get(offset, replacementLength).trim().toLowerCase();
+						prefixed = document.get(offset, replacementLength)
+								.trim().toLowerCase();
 					} catch (BadLocationException e1) {
 					}
 					break;
@@ -680,7 +771,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 				name = "Control";// Add controls to TabItem, CoolItem...
 				containControls = true;
 			} else {
-				List<XWTSelectionCompletionProposal> proposals = createPropertyNodeProposals(name, offset, replacementLength);
+				List<XWTSelectionCompletionProposal> proposals = createPropertyNodeProposals(
+						name, offset, replacementLength);
 				if (useProposalList) {
 					proposalCollector.addAll(proposals);
 				} else {
@@ -701,12 +793,16 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		}
 		IMetaclass metaclass = XWT.getMetaclass(name, node.getNamespaceURI());
 		String tagName = name + ".Resources";
-		if (!addedTags.contains(tagName) && (prefixed == null || tagName.toLowerCase().startsWith(prefixed))) {
+		if (!addedTags.contains(tagName)
+				&& (prefixed == null || tagName.toLowerCase().startsWith(
+						prefixed))) {
 			addedTags.add(tagName);
 
 			String pattern = "<" + tagName + "></" + tagName + ">";
 			Image image = ImageShop.get(ImageShop.IMG_RESOURCES);
-			XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(pattern, offset, replacementLength, tagName.length() + 2, 0, image, tagName, null, "Element resources");
+			XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(
+					pattern, offset, replacementLength, tagName.length() + 2,
+					0, image, tagName, null, "Element resources");
 			if (useProposalList) {
 				proposalCollector.add(proposal);
 			} else {
@@ -716,8 +812,10 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 
 		// layout
 		String layout = name + ".layout";
-		if (!addedTags.contains(layout) && (prefixed == null || layout.startsWith(prefixed))) {
-			XWTSelectionCompletionProposal layoutProposal = createLayoutProposal(metaclass, layout, offset, replacementLength);
+		if (!addedTags.contains(layout)
+				&& (prefixed == null || layout.startsWith(prefixed))) {
+			XWTSelectionCompletionProposal layoutProposal = createLayoutProposal(
+					metaclass, layout, offset, replacementLength);
 			if (layoutProposal != null) {
 				if (useProposalList) {
 					proposalCollector.add(layoutProposal);
@@ -728,8 +826,10 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		}
 		// layoutData
 		String layoutData = name + ".layoutData";
-		if (!addedTags.contains(layout) && (prefixed == null || layout.startsWith(prefixed))) {
-			XWTSelectionCompletionProposal proposal = createLayoutDataProposal(metaclass, layoutData, offset, replacementLength);
+		if (!addedTags.contains(layout)
+				&& (prefixed == null || layout.startsWith(prefixed))) {
+			XWTSelectionCompletionProposal proposal = createLayoutDataProposal(
+					metaclass, layoutData, offset, replacementLength);
 			if (proposal != null) {
 				if (useProposalList) {
 					proposalCollector.add(proposal);
@@ -739,13 +839,16 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 			}
 		}
 		if (metaclass != null) {
-			if (containControls || Composite.class.isAssignableFrom(metaclass.getType())) {
+			if (containControls
+					|| Composite.class.isAssignableFrom(metaclass.getType())) {
 				IMetaclass[] metaclasses = XWT.getAllMetaclasses();
 				for (IMetaclass type : metaclasses) {
-					if (Control.class.isAssignableFrom(type.getType()) && !type.isAbstract()) {
+					if (Control.class.isAssignableFrom(type.getType())
+							&& !type.isAbstract()) {
 
 						String typeName = type.getName();
-						if (prefixed != null && !typeName.toLowerCase().startsWith(prefixed)) {
+						if (prefixed != null
+								&& !typeName.toLowerCase().startsWith(prefixed)) {
 							continue;
 						}
 						if (addedTags.contains(typeName)) {
@@ -753,9 +856,13 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 						} else {
 							addedTags.add(typeName);
 						}
-						String pattern = "<" + typeName + "></" + typeName + ">";
+						String pattern = "<" + typeName + "></" + typeName
+								+ ">";
 						Image image = ImageShop.get(ImageShop.IMG_ELEMENT);
-						XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(pattern, offset, replacementLength, typeName.length() + 2, 0, image, typeName, null, null);
+						XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(
+								pattern, offset, replacementLength, typeName
+										.length() + 2, 0, image, typeName,
+								null, null);
 						if (useProposalList) {
 							proposalCollector.add(proposal);
 						} else {
@@ -778,7 +885,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		}
 	}
 
-	private List<XWTSelectionCompletionProposal> createPropertyNodeProposals(String tagName, int offset, int replacementLength) {
+	private List<XWTSelectionCompletionProposal> createPropertyNodeProposals(
+			String tagName, int offset, int replacementLength) {
 		int index = tagName.indexOf(".");
 		if (index == -1) {
 			return Collections.emptyList();
@@ -786,41 +894,58 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		List<XWTSelectionCompletionProposal> proposals = new ArrayList<XWTSelectionCompletionProposal>();
 		String property = tagName.substring(index + 1);
 		if ("layout".equalsIgnoreCase(property)) {
-			String[] layouts = new String[] { "GridLayout", "FillLayout", "RowLayout", "StackLayout", "FormLayout" };
+			String[] layouts = new String[] { "GridLayout", "FillLayout",
+					"RowLayout", "StackLayout", "FormLayout" };
 			for (int i = 0; i < layouts.length; i++) {
 				String pattern = "<" + layouts[i] + "/>";
 				Image image = ImageShop.get(ImageShop.IMG_ELEMENT);
-				XWTSelectionCompletionProposal p = new XWTSelectionCompletionProposal(pattern, offset, replacementLength, layouts[i].length() + 2, 0, image, layouts[i], null, "Container Layout.");
+				XWTSelectionCompletionProposal p = new XWTSelectionCompletionProposal(
+						pattern, offset, replacementLength,
+						layouts[i].length() + 2, 0, image, layouts[i], null,
+						"Container Layout.");
 				proposals.add(p);
 			}
 		} else if ("layoutData".equalsIgnoreCase(property)) {
-			String[] layoutDatas = new String[] { "GridData", "StackData", "FormData", "RowData" };
+			String[] layoutDatas = new String[] { "GridData", "StackData",
+					"FormData", "RowData" };
 			for (int i = 0; i < layoutDatas.length; i++) {
-				String pattern = "<" + layoutDatas[i] + "></" + layoutDatas[i] + ">";
+				String pattern = "<" + layoutDatas[i] + "></" + layoutDatas[i]
+						+ ">";
 				Image image = ImageShop.get(ImageShop.IMG_ELEMENT);
-				XWTSelectionCompletionProposal p = new XWTSelectionCompletionProposal(pattern, offset, replacementLength, layoutDatas[i].length() + 2, 0, image, layoutDatas[i], null, "Container LayoutData.");
+				XWTSelectionCompletionProposal p = new XWTSelectionCompletionProposal(
+						pattern, offset, replacementLength, layoutDatas[i]
+								.length() + 2, 0, image, layoutDatas[i], null,
+						"Container LayoutData.");
 				proposals.add(p);
 			}
 		}
 		return proposals;
 	}
 
-	private XWTSelectionCompletionProposal createLayoutDataProposal(IMetaclass metaclass, String layoutData, int offset, int replacementLength) {
+	private XWTSelectionCompletionProposal createLayoutDataProposal(
+			IMetaclass metaclass, String layoutData, int offset,
+			int replacementLength) {
 		if (!Control.class.isAssignableFrom(metaclass.getType())) {
 			return null;
 		}
 		String pattern = "<" + layoutData + "></" + layoutData + ">";
 		Image image = JavaPluginImages.get(JavaPluginImages.IMG_FIELD_PUBLIC);
-		return new XWTSelectionCompletionProposal(pattern, offset, replacementLength, layoutData.length() + 2, 0, image, layoutData, null, "Control LayoutData.");
+		return new XWTSelectionCompletionProposal(pattern, offset,
+				replacementLength, layoutData.length() + 2, 0, image,
+				layoutData, null, "Control LayoutData.");
 	}
 
-	private XWTSelectionCompletionProposal createLayoutProposal(IMetaclass metaclass, String tagName, int offset, int replacementLength) {
+	private XWTSelectionCompletionProposal createLayoutProposal(
+			IMetaclass metaclass, String tagName, int offset,
+			int replacementLength) {
 		if (!Composite.class.isAssignableFrom(metaclass.getType())) {
 			return null;
 		}
 		String pattern = "<" + tagName + "></" + tagName + ">";
 		Image image = JavaPluginImages.get(JavaPluginImages.IMG_FIELD_PUBLIC);
-		return new XWTSelectionCompletionProposal(pattern, offset, replacementLength, tagName.length() + 2, 0, image, tagName, null, "Container Layout.");
+		return new XWTSelectionCompletionProposal(pattern, offset,
+				replacementLength, tagName.length() + 2, 0, image, tagName,
+				null, "Container Layout.");
 	}
 
 	private String getNodeName(Node node) {
@@ -832,7 +957,11 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		return name;
 	}
 
-	private List<String> getJavaMethods(JavaProject javaProject, String className) {
+	private List<String> getJavaMethods(JavaProject javaProject,
+			String className) {
+		if (javaProject == null || className == null) {
+			return Collections.emptyList();
+		}
 		List<String> javaMethods = new ArrayList<String>();
 		try {
 			IType type = javaProject.findType(className);

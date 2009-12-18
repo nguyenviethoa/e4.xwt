@@ -61,7 +61,8 @@ public class XWTProxy {
 	private Map<String, Object> options;
 
 	public XWTProxy(IFile file) {
-		// Register XWTVisualLoader when the designer is initialized, so we can share to use this Loader.
+		// Register XWTVisualLoader when the designer is initialized, so we can
+		// share to use this Loader.
 		IXWTLoader xwtLoader = XWTLoaderManager.getActive();
 		if (xwtLoader == null || !(xwtLoader instanceof XWTVisualLoader)) {
 			xwtLoader = new XWTVisualLoader(file);
@@ -206,7 +207,8 @@ public class XWTProxy {
 	// parent = ((Control) widget).getParent();
 	// } else if (widget instanceof Item) {
 	// try {
-	// Method getParentMethod = widget.getClass().getDeclaredMethod("getParent", new Class<?>[0]);
+	// Method getParentMethod = widget.getClass().getDeclaredMethod("getParent",
+	// new Class<?>[0]);
 	// Object obj = getParentMethod.invoke(widget, new Object[0]);
 	// if (obj != null && obj instanceof Widget) {
 	// parent = (Widget) obj;
@@ -235,7 +237,8 @@ public class XWTProxy {
 			if (container != null && container instanceof XamlElement) {
 				Object parentComponent = getComponent(container, loadOnDemand);
 				if (!isNull(parentComponent)) {
-					component = createWidget(parentComponent, (XamlElement) node);
+					component = createWidget(parentComponent,
+							(XamlElement) node);
 				}
 			}
 		}
@@ -248,7 +251,8 @@ public class XWTProxy {
 		} else if (component instanceof Widget) {
 			return ((Widget) component).isDisposed();
 		} else if (component instanceof Viewer) {
-			return ((Viewer) component).getControl() == null || ((Viewer) component).getControl().isDisposed();
+			return ((Viewer) component).getControl() == null
+					|| ((Viewer) component).getControl().isDisposed();
 		}
 		return false;
 	}
@@ -261,10 +265,12 @@ public class XWTProxy {
 		Widget widget = null;
 		if (component instanceof Viewer) {
 			widget = ((Viewer) component).getControl();
-			key = (XamlNode) ((Viewer) component).getData(ResourceVisitor.ELEMENT_KEY);
+			key = (XamlNode) ((Viewer) component)
+					.getData(ResourceVisitor.ELEMENT_KEY);
 			if (key != null) {
 				componentsMap.put(key, component);
-				key = XWTModelUtil.getAdaptableAttribute(key, "control", IConstants.XWT_NAMESPACE);
+				key = XWTModelUtil.getAdaptableAttribute(key, "control",
+						IConstants.XWT_NAMESPACE);
 			}
 		} else if (component instanceof Widget) {
 			widget = (Widget) component;
@@ -288,7 +294,8 @@ public class XWTProxy {
 
 	public Object doCreate(XamlElement element) {
 		try {
-			return resourceVisitor.doCreate(null, element, null, Collections.EMPTY_MAP);
+			return resourceVisitor.doCreate(null, element, null,
+					Collections.EMPTY_MAP);
 		} catch (Exception e) {
 			return null;
 		}
@@ -341,13 +348,16 @@ public class XWTProxy {
 	}
 
 	/**
-	 * This method only deal with general attribute. The style attribute is not its duty.
+	 * This method only deal with general attribute. The style attribute is not
+	 * its duty.
 	 * 
 	 * @param object
 	 * @param attribute
 	 */
 	public boolean removeValue(Object object, XamlAttribute attribute) {
-		// TODO: At present, only the properties of a Widget Object can be removed(replaced with a default one). We should take care of JFace Viewers.
+		// TODO: At present, only the properties of a Widget Object can be
+		// removed(replaced with a default one). We should take care of JFace
+		// Viewers.
 		if (!(object instanceof Widget) && "style".equals(attribute.getName())) {
 			return false;
 		}
@@ -372,9 +382,11 @@ public class XWTProxy {
 		if (object == null || attribute == null || attribute.getName() == null) {
 			return null;
 		}
-		// we need to handle this case manually since the shell is never open. all widgets are not visible
+		// we need to handle this case manually since the shell is never open.
+		// all widgets are not visible
 		String name = attribute.getName();
-		if (object instanceof Widget && "visible".equalsIgnoreCase(name) && IConstants.XWT_NAMESPACE.endsWith(attribute.getNamespace())) {
+		if (object instanceof Widget && "visible".equalsIgnoreCase(name)
+				&& IConstants.XWT_NAMESPACE.endsWith(attribute.getNamespace())) {
 			return true;
 		}
 		XamlNode model = null;
@@ -392,16 +404,21 @@ public class XWTProxy {
 		}
 		XamlElement newModel = (XamlElement) EcoreUtil.copy(model);
 		IMetaclass metaclass = XWTUtility.getMetaclass(newModel);
-		if (metaclass == null || !Control.class.isAssignableFrom(metaclass.getType())) {
+		if (metaclass == null
+				|| !Control.class.isAssignableFrom(metaclass.getType())) {
 			return null;
 		}
 		Shell shell = new Shell(device);
-		Object tempObj = createWidget(shell, (XamlElement) EcoreUtil.copy(model));
+		Object tempObj = createWidget(shell, (XamlElement) EcoreUtil
+				.copy(model));
 		if (tempObj == null || !(tempObj instanceof Widget)) {
 			return false;
 		}
 		try {
-			if (tempObj instanceof Widget && "style".equalsIgnoreCase(name) && IConstants.XWT_X_NAMESPACE.endsWith(attribute.getNamespace())) {
+			if (tempObj instanceof Widget
+					&& "style".equalsIgnoreCase(name)
+					&& IConstants.XWT_X_NAMESPACE.endsWith(attribute
+							.getNamespace())) {
 				return ((Widget) tempObj).getStyle();
 			}
 			IProperty p = metaclass.findProperty(name);
@@ -423,7 +440,8 @@ public class XWTProxy {
 			String attrName = attribute.getName();
 			String namespace = attribute.getNamespace();
 			if (container != null && metaclass != null && attrName != null) {
-				resourceVisitor.initAttribute(metaclass, component, container, namespace, attrName);
+				resourceVisitor.initAttribute(metaclass, component, container,
+						namespace, attrName);
 				buildComponentMap(component);
 				return true;
 			}
@@ -458,10 +476,12 @@ public class XWTProxy {
 		if (component == null) {
 			return null;
 		}
-		if (component instanceof Widget) {
-			return (XamlNode) ((Widget) component).getData(ResourceVisitor.ELEMENT_KEY);
+		if (component instanceof Widget && !((Widget) component).isDisposed()) {
+			return (XamlNode) ((Widget) component)
+					.getData(ResourceVisitor.ELEMENT_KEY);
 		} else if (component instanceof Viewer) {
-			return (XamlNode) ((Viewer) component).getData(ResourceVisitor.ELEMENT_KEY);
+			return (XamlNode) ((Viewer) component)
+					.getData(ResourceVisitor.ELEMENT_KEY);
 		}
 		return null;
 	}
@@ -502,7 +522,8 @@ public class XWTProxy {
 		} else if (parent != null && model instanceof XamlElement) {
 			try {
 				destroy(widget);
-				Widget newWidget = (Widget) createWidget(parent, (XamlElement) model);
+				Widget newWidget = (Widget) createWidget(parent,
+						(XamlElement) model);
 				if (newWidget instanceof Control) {
 					layout((Control) newWidget);
 				}
@@ -516,7 +537,8 @@ public class XWTProxy {
 			} catch (Exception e) {
 			}
 		} else if (parentModel != null) {
-			// If parentModel is a XamlAttribute, we need to retrieve a parent widget for recreating.
+			// If parentModel is a XamlAttribute, we need to retrieve a parent
+			// widget for recreating.
 			parentModel = parentModel.eContainer();
 			parent = getComponent(parentModel);
 			while (parent == null) {

@@ -22,7 +22,6 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.root.BindingLayer;
-import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.WidgetInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.BindingHelper;
@@ -58,8 +57,9 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 	 */
 	public Widget getWidget() {
 		if (!validate()) {
-			XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain.getEditDomain(this).getViewerData(
-					getViewer(), IVisualRenderer.KEY);
+			XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain
+					.getEditDomain(this).getViewerData(getViewer(),
+							IVisualRenderer.KEY);
 			if (controlRender != null) {
 				Object component = controlRender.getVisual(getCastModel());
 				if (component instanceof Widget) {
@@ -79,7 +79,10 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#createVisualInfo()
+	 * 
+	 * @see
+	 * org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#createVisualInfo
+	 * ()
 	 */
 	protected IVisualInfo createVisualInfo() {
 		return new WidgetInfo(widget, isRoot());
@@ -87,9 +90,12 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#getModelChildren()
+	 * 
+	 * @see
+	 * org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#getModelChildren
+	 * ()
 	 */
-	protected final List getModelChildren() {
+	protected List getModelChildren() {
 		List modelChildren = new ArrayList(getCastModel().getChildNodes());
 		Collection<?> externalModels = getExternalModels();
 		if (externalModels != null && !externalModels.isEmpty()) {
@@ -110,14 +116,17 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.tools.designer.parts.GraphicalNodeEditPart#createEditPolicies()
+	 * 
+	 * @see
+	 * org.soyatec.tools.designer.parts.GraphicalNodeEditPart#createEditPolicies
+	 * ()
 	 */
 	protected void createEditPolicies() {
 		super.createEditPolicies();
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
-		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new GraphicalNodeEditPolicy());
+		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE,
+				new GraphicalNodeEditPolicy());
 	}
-
 
 	public boolean isTransparent() {
 		if (!(getParent() instanceof DiagramEditPart)) {
@@ -126,8 +135,11 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 		return super.isTransparent();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#validateVisuals()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#
+	 * validateVisuals()
 	 */
 	protected boolean validateVisuals() {
 		getWidget();
@@ -136,7 +148,10 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#addChildVisual(org.eclipse.gef.EditPart, int)
+	 * 
+	 * @see
+	 * org.eclipse.gef.editparts.AbstractGraphicalEditPart#addChildVisual(org
+	 * .eclipse.gef.EditPart, int)
 	 */
 	protected void addChildVisual(EditPart childEditPart, int index) {
 		if (childEditPart instanceof DataContextEditPart) {
@@ -152,7 +167,10 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#removeChildVisual(org.eclipse.gef.EditPart)
+	 * 
+	 * @see
+	 * org.eclipse.gef.editparts.AbstractGraphicalEditPart#removeChildVisual
+	 * (org.eclipse.gef.EditPart)
 	 */
 	protected void removeChildVisual(EditPart childEditPart) {
 		if (childEditPart instanceof DataContextEditPart) {
@@ -168,19 +186,25 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections()
+	 * 
+	 * @see
+	 * org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelSourceConnections
+	 * ()
 	 */
 	protected List getModelSourceConnections() {
-		XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain.getEditDomain(this).getViewerData(getViewer(),
-				IVisualRenderer.KEY);
+		XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain
+				.getEditDomain(this).getViewerData(getViewer(),
+						IVisualRenderer.KEY);
 		Object root = controlRender.getRoot();
 		if (root != null && root instanceof Widget) {
 			root = XWTProxy.getModel((Widget) root);
-			EditPart rootEp = (EditPart) getViewer().getEditPartRegistry().get(root);
+			EditPart rootEp = (EditPart) getViewer().getEditPartRegistry().get(
+					root);
 			XamlNode model = getCastModel();
 			if (rootEp != null) {
 				List<BindingInfo> sources = new ArrayList<BindingInfo>();
-				List<BindingInfo> allBindings = BindingHelper.getBindings(rootEp);
+				List<BindingInfo> allBindings = BindingHelper
+						.getBindings(rootEp);
 				for (BindingInfo bindingInfo : allBindings) {
 					IObservable observeModel = bindingInfo.getModel();
 					if (model == observeModel.getSource()) {
@@ -195,7 +219,10 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelTargetConnections()
+	 * 
+	 * @see
+	 * org.eclipse.gef.editparts.AbstractGraphicalEditPart#getModelTargetConnections
+	 * ()
 	 */
 	protected List getModelTargetConnections() {
 		List<BindingInfo> bindings = BindingHelper.getBindings(this);
@@ -207,7 +234,10 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#getCastModel()
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart#getCastModel
+	 * ()
 	 */
 	public XamlNode getCastModel() {
 		return (XamlNode) super.getCastModel();
@@ -215,15 +245,22 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef.ConnectionEditPart)
+	 * 
+	 * @see
+	 * org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef
+	 * .ConnectionEditPart)
 	 */
-	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connection) {
+	public ConnectionAnchor getSourceConnectionAnchor(
+			ConnectionEditPart connection) {
 		return new ChopboxAnchor(getFigure());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef.Request)
+	 * 
+	 * @see
+	 * org.eclipse.gef.NodeEditPart#getSourceConnectionAnchor(org.eclipse.gef
+	 * .Request)
 	 */
 	public ConnectionAnchor getSourceConnectionAnchor(Request request) {
 		return new ChopboxAnchor(getFigure());
@@ -231,15 +268,22 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef.ConnectionEditPart)
+	 * 
+	 * @see
+	 * org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef
+	 * .ConnectionEditPart)
 	 */
-	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connection) {
+	public ConnectionAnchor getTargetConnectionAnchor(
+			ConnectionEditPart connection) {
 		return new ChopboxAnchor(getFigure());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef.Request)
+	 * 
+	 * @see
+	 * org.eclipse.gef.NodeEditPart#getTargetConnectionAnchor(org.eclipse.gef
+	 * .Request)
 	 */
 	public ConnectionAnchor getTargetConnectionAnchor(Request request) {
 		return new ChopboxAnchor(getFigure());

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
+import java.util.List;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.core.figures.ContentPaneFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.figures.MenuFigure;
@@ -30,19 +32,33 @@ public class MenuEditPart extends WidgetEditPart {
 	protected void createEditPolicies() {
 		super.createEditPolicies();
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new MenuLayoutEditPolicy());
-		installEditPolicy(PolicyConstants.EXPANDABLE_EDITPOLICY, new ExpandableEditPolicy());
-		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE, new NewNonResizeEditPolicy(false));
+		installEditPolicy(PolicyConstants.EXPANDABLE_EDITPOLICY,
+				new ExpandableEditPolicy());
+		installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE,
+				new NewNonResizeEditPolicy(false));
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#createFigure()
+	 * @see
+	 * org.soyatec.xaml.ve.editor.editparts.GraphicalNodeEditPart#createFigure()
 	 */
 	protected IFigure createFigure() {
 		ContentPaneFigure figure = new ContentPaneFigure();
 		figure.setContentPane(new MenuFigure(this));
 		return figure;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart#getModelChildren
+	 * ()
+	 */
+	protected List getModelChildren() {
+		return super.getModelChildren();
 	}
 
 }

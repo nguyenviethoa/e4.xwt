@@ -181,12 +181,21 @@ public interface PalettePackage extends EPackage {
 	int ENTRY__VISIBLE = 9;
 
 	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTRY__TYPE = 10;
+
+	/**
 	 * The number of structural features of the '<em>Entry</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ENTRY_FEATURE_COUNT = 10;
+	int ENTRY_FEATURE_COUNT = 11;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.e4.xwt.tools.ui.palette.ContextType <em>Context Type</em>}' enum.
@@ -336,6 +345,17 @@ public interface PalettePackage extends EPackage {
 	EAttribute getEntry_Visible();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see org.eclipse.e4.xwt.tools.ui.palette.Entry#getType()
+	 * @see #getEntry()
+	 * @generated
+	 */
+	EAttribute getEntry_Type();
+
+	/**
 	 * Returns the meta object for enum '{@link org.eclipse.e4.xwt.tools.ui.palette.ContextType <em>Context Type</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for enum '<em>Context Type</em>'.
@@ -465,6 +485,14 @@ public interface PalettePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ENTRY__VISIBLE = eINSTANCE.getEntry_Visible();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ENTRY__TYPE = eINSTANCE.getEntry_Type();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.e4.xwt.tools.ui.palette.ContextType <em>Context Type</em>}' enum.

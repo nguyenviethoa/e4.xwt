@@ -44,6 +44,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.impl.EntryImpl#getContext <em>Context</em>}</li>
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.impl.EntryImpl#getScope <em>Scope</em>}</li>
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.impl.EntryImpl#isVisible <em>Visible</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.impl.EntryImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -220,6 +221,26 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	 * @ordered
 	 */
 	protected boolean visible = VISIBLE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Object TYPE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected Object type = TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -421,6 +442,27 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Object getType() {
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setType(Object newType) {
+		Object oldType = type;
+		type = newType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__TYPE, oldType, type));
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -460,6 +502,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 				return getScope();
 			case PalettePackage.ENTRY__VISIBLE:
 				return isVisible();
+			case PalettePackage.ENTRY__TYPE:
+				return getType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -503,6 +547,9 @@ public class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__VISIBLE:
 				setVisible((Boolean)newValue);
 				return;
+			case PalettePackage.ENTRY__TYPE:
+				setType(newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -544,6 +591,9 @@ public class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__VISIBLE:
 				setVisible(VISIBLE_EDEFAULT);
 				return;
+			case PalettePackage.ENTRY__TYPE:
+				setType(TYPE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -575,6 +625,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 				return SCOPE_EDEFAULT == null ? scope != null : !SCOPE_EDEFAULT.equals(scope);
 			case PalettePackage.ENTRY__VISIBLE:
 				return visible != VISIBLE_EDEFAULT;
+			case PalettePackage.ENTRY__TYPE:
+				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -606,6 +658,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 		result.append(scope);
 		result.append(", visible: ");
 		result.append(visible);
+		result.append(", type: ");
+		result.append(type);
 		result.append(')');
 		return result.toString();
 	}

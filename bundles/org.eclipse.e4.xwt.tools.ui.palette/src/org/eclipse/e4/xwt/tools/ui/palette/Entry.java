@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getContext <em>Context</em>}</li>
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getScope <em>Scope</em>}</li>
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#isVisible <em>Visible</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -273,5 +274,31 @@ public interface Entry extends EObject {
 	 * @generated
 	 */
 	void setVisible(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Type</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Type</em>' attribute.
+	 * @see #setType(Object)
+	 * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getEntry_Type()
+	 * @model
+	 * @generated
+	 */
+	Object getType();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Type</em>' attribute.
+	 * @see #getType()
+	 * @generated
+	 */
+	void setType(Object value);
 
 } // Entry

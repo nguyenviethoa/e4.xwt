@@ -30,6 +30,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/context"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/scope"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/visible"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/type"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
