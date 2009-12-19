@@ -35,6 +35,7 @@ import org.eclipse.e4.xwt.animation.BeginStoryboard;
 import org.eclipse.e4.xwt.animation.ColorAnimation;
 import org.eclipse.e4.xwt.animation.DoubleAnimation;
 import org.eclipse.e4.xwt.animation.Duration;
+import org.eclipse.e4.xwt.animation.IntAnimation;
 import org.eclipse.e4.xwt.animation.PauseStoryboard;
 import org.eclipse.e4.xwt.animation.ResumeStoryboard;
 import org.eclipse.e4.xwt.animation.StopStoryboard;
@@ -1421,12 +1422,13 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(MultiDataTrigger.class);
 		registerMetaclass(Condition.class);
 
+		// Animation
 		registerMetaclass(Storyboard.class);
 		registerMetaclass(BeginStoryboard.class);
 		registerMetaclass(StopStoryboard.class);
 		registerMetaclass(PauseStoryboard.class);
 		registerMetaclass(ResumeStoryboard.class);
-		registerMetaclass(DoubleAnimation.class);
+		registerMetaclass(IntAnimation.class);
 		registerMetaclass(DoubleAnimation.class);
 		registerMetaclass(ColorAnimation.class);
 

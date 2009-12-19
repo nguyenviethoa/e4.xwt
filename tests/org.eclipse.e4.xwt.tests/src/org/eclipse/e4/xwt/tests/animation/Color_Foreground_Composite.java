@@ -15,10 +15,10 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
-public class Foreground_Composite {	
+public class Color_Foreground_Composite {	
 	public static void main(String[] args) {
 
-		URL url = Foreground_Composite.class.getResource(Foreground_Composite.class.getSimpleName()
+		URL url = Color_Foreground_Composite.class.getResource(Color_Foreground_Composite.class.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
