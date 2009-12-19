@@ -16,6 +16,8 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -23,6 +25,9 @@ import org.eclipse.swt.widgets.Shell;
 public class AnimationTests extends XWTTestCase {
 	protected Color initialColor;
 	protected int initialInt;
+	protected Point initialLocation;
+	protected Point initialSize;
+	protected Rectangle initialBounds;
 
 	public void test_Color_Background() throws Exception {
 		URL url = Color_Background_Composite.class
@@ -160,6 +165,150 @@ public class AnimationTests extends XWTTestCase {
 					Shell shell = (Shell)element;
 					int alpha = shell.getAlpha();
 					assertTrue(alpha != initialInt);
+				} catch (Exception e) {
+					fail();
+				}
+			}
+		}		
+		);
+	}
+	
+	public void test_Point_Location_Shell() throws Exception {
+		URL url = Point_Location_Shell.class
+				.getResource(Point_Location_Shell.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				try {
+					Object element = XWT.findElementByName(root, "startButton");
+					assertTrue(element instanceof Button);
+					Button button = (Button)element;
+					selectButton(button);
+					
+					element = XWT.findElementByName(root, "window");
+					assertTrue(element instanceof Shell);
+					Shell shell = (Shell)element;
+					initialLocation = shell.getLocation();
+				} catch (Exception e) {
+					fail();
+				}
+			}
+		},
+		new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		},
+		new Runnable() {
+			public void run() {
+				try {
+					Object element = XWT.findElementByName(root, "window");
+					assertTrue(element instanceof Shell);
+					Shell shell = (Shell)element;
+					Point location = shell.getLocation();
+					assertFalse(location.equals(initialLocation));
+				} catch (Exception e) {
+					fail();
+				}
+			}
+		}		
+		);
+	}
+	
+	public void test_Point_Size_Shell() throws Exception {
+		URL url = Point_Size_Shell.class
+				.getResource(Point_Size_Shell.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				try {
+					Object element = XWT.findElementByName(root, "startButton");
+					assertTrue(element instanceof Button);
+					Button button = (Button)element;
+					selectButton(button);
+					
+					element = XWT.findElementByName(root, "window");
+					assertTrue(element instanceof Shell);
+					Shell shell = (Shell)element;
+					initialSize = shell.getSize();
+				} catch (Exception e) {
+					fail();
+				}
+			}
+		},
+		new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		},
+		new Runnable() {
+			public void run() {
+				try {
+					Object element = XWT.findElementByName(root, "window");
+					assertTrue(element instanceof Shell);
+					Shell shell = (Shell)element;
+					Point size = shell.getSize();
+					assertFalse(size.equals(initialSize));
+				} catch (Exception e) {
+					fail();
+				}
+			}
+		}		
+		);
+	}
+	
+	public void test_Rectangle_Bounds_Shell() throws Exception {
+		URL url = Rectangle_Bounds_Shell.class
+				.getResource(Rectangle_Bounds_Shell.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				try {
+					Object element = XWT.findElementByName(root, "startButton");
+					assertTrue(element instanceof Button);
+					Button button = (Button)element;
+					selectButton(button);
+					
+					element = XWT.findElementByName(root, "window");
+					assertTrue(element instanceof Shell);
+					Shell shell = (Shell)element;
+					initialBounds = shell.getBounds();
+				} catch (Exception e) {
+					fail();
+				}
+			}
+		},
+		new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		},
+		new Runnable() {
+			public void run() {
+				try {
+					Object element = XWT.findElementByName(root, "window");
+					assertTrue(element instanceof Shell);
+					Shell shell = (Shell)element;
+					Rectangle rectangle = shell.getBounds();
+					assertFalse(rectangle.equals(initialBounds));
 				} catch (Exception e) {
 					fail();
 				}

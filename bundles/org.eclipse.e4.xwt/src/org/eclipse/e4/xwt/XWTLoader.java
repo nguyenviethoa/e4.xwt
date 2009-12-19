@@ -37,7 +37,10 @@ import org.eclipse.e4.xwt.animation.DoubleAnimation;
 import org.eclipse.e4.xwt.animation.Duration;
 import org.eclipse.e4.xwt.animation.IntAnimation;
 import org.eclipse.e4.xwt.animation.PauseStoryboard;
+import org.eclipse.e4.xwt.animation.PointAnimation;
+import org.eclipse.e4.xwt.animation.RectangleAnimation;
 import org.eclipse.e4.xwt.animation.ResumeStoryboard;
+import org.eclipse.e4.xwt.animation.SizeAnimation;
 import org.eclipse.e4.xwt.animation.StopStoryboard;
 import org.eclipse.e4.xwt.animation.Storyboard;
 import org.eclipse.e4.xwt.collection.CollectionViewSource;
@@ -1431,6 +1434,9 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(IntAnimation.class);
 		registerMetaclass(DoubleAnimation.class);
 		registerMetaclass(ColorAnimation.class);
+		registerMetaclass(PointAnimation.class);
+		registerMetaclass(RectangleAnimation.class);
+		registerMetaclass(SizeAnimation.class);
 
 		registerConvertor(StringToDuration.instance);
 		registerConvertor(StringToRepeatBehavior.instance);

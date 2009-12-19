@@ -10,6 +10,5 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public abstract class RectAnimationBase extends AnimationTimeline {
-
+public class SizeAnimation extends PointAnimation {
 }
