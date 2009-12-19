@@ -10,5 +10,5 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class DoubleAnimationBase extends AnimationTimeline {
+public abstract class DoubleAnimationBase extends AnimationTimeline {
 }

@@ -12,11 +12,14 @@ package org.eclipse.e4.xwt.core;
 
 import java.lang.reflect.Method;
 
+import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.annotation.Containment;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.ModelUtils;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
@@ -25,9 +28,9 @@ import org.eclipse.swt.widgets.Widget;
  * @author yyang (yves.yang@soyatec.com)
  */
 public class EventTrigger extends TriggerBase {
-	protected String sourceName;
-	protected String routedEvent;
-	protected TriggerAction[] actions;
+	private String sourceName;
+	private String routedEvent;
+	private TriggerAction[] actions = TriggerAction.EMPTY_ARRAY;
 
 	public String getSourceName() {
 		return sourceName;
@@ -45,6 +48,7 @@ public class EventTrigger extends TriggerBase {
 		this.routedEvent = routedEvent;
 	}
 
+	@Containment
 	public TriggerAction[] getActions() {
 		return actions;
 	}
@@ -54,38 +58,51 @@ public class EventTrigger extends TriggerBase {
 	}
 
 	public void on(Object target) {
+		String routedEvent = getRoutedEvent();
 		if (routedEvent != null) {
 			Object source = getElementByName(target, getSourceName());
-			IMetaclass iMetaclass = XWT.getMetaclass(source);
-			IEvent event = iMetaclass.findEvent(getRoutedEvent());
+			IMetaclass metaclass = XWT.getMetaclass(source);
+			IEvent event = metaclass.findEvent(ModelUtils.normalizeEventName(routedEvent));
 			if (event == null) {
-				LoggerManager.log("Event " + " is not found in " + source
+				if (routedEvent != null && !routedEvent.toLowerCase().endsWith(IEventConstants.SUFFIX_KEY)) {
+					LoggerManager.log("Event " + routedEvent + " is not found in " + source
+							.getClass().getName() + ". Please add a suffix \"Event\"!");					
+				}
+				else {
+					LoggerManager.log("Event " + routedEvent + " is not found in " + source
 						.getClass().getName());
+				}
 				return;
+			}			
+			for (TriggerAction triggerAction : getActions()) {
+				triggerAction.initialize(target);
 			}
-			
-			Widget widget = UserData.getWidget(target);
-			IEventHandler eventController = UserData.updateEventController(widget);
-			SettersAction runnable = createRunnable(source);
+
+			Widget widget = UserData.getWidget(source);
+			IEventHandler eventController = UserData.updateEventController(source);
+			RunableAction runnable = createRunnable(source);
 			try {
 				Method method = runnable.getClass().getDeclaredMethod("run", Object.class, Event.class);
-				eventController.setEvent(event, widget, this, this, method);
+				eventController.setEvent(event, widget, runnable, this, method);
 			} catch (Exception e) {
 				LoggerManager.log(e);
 			}
 		}
 	}
 	
-	protected SettersAction createRunnable(Object target) {
-		return new SettersAction(target);
+	protected RunableAction createRunnable(Object target) {
+		return new RunableAction(target);
 	}
 	
-	class SettersAction {
+	class RunableAction {
 		protected Object target;
-		public SettersAction(Object target) {
+		public RunableAction(Object target) {
 			this.target = target;
 		}
 		public void run(Object object, Event event) {
+			for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
+				triggerAction.run(target);
+			}
 		}
 	}
 }

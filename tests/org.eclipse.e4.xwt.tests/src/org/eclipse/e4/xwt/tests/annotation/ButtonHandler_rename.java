@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.annotation;
 
-import org.eclipse.e4.xwt.UI;
+import org.eclipse.e4.xwt.annotation.UI;
 import org.eclipse.swt.widgets.Button;
 
 /**

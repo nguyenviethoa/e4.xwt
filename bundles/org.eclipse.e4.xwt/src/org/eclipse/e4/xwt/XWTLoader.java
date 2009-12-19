@@ -32,8 +32,11 @@ import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.animation.BeginStoryboard;
+import org.eclipse.e4.xwt.animation.ColorAnimation;
 import org.eclipse.e4.xwt.animation.DoubleAnimation;
+import org.eclipse.e4.xwt.animation.Duration;
 import org.eclipse.e4.xwt.animation.PauseStoryboard;
+import org.eclipse.e4.xwt.animation.ResumeStoryboard;
 import org.eclipse.e4.xwt.animation.StopStoryboard;
 import org.eclipse.e4.xwt.animation.Storyboard;
 import org.eclipse.e4.xwt.collection.CollectionViewSource;
@@ -51,6 +54,7 @@ import org.eclipse.e4.xwt.converters.SelectionToBoolean;
 import org.eclipse.e4.xwt.converters.SetToIObservableCollection;
 import org.eclipse.e4.xwt.converters.StringToBoolean;
 import org.eclipse.e4.xwt.converters.StringToColor;
+import org.eclipse.e4.xwt.converters.StringToDuration;
 import org.eclipse.e4.xwt.converters.StringToFont;
 import org.eclipse.e4.xwt.converters.StringToFormAttachment;
 import org.eclipse.e4.xwt.converters.StringToImage;
@@ -58,6 +62,7 @@ import org.eclipse.e4.xwt.converters.StringToIntArray;
 import org.eclipse.e4.xwt.converters.StringToInteger;
 import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
+import org.eclipse.e4.xwt.converters.StringToRepeatBehavior;
 import org.eclipse.e4.xwt.converters.StringToType;
 import org.eclipse.e4.xwt.converters.StringToURL;
 import org.eclipse.e4.xwt.core.Condition;
@@ -1420,10 +1425,14 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(BeginStoryboard.class);
 		registerMetaclass(StopStoryboard.class);
 		registerMetaclass(PauseStoryboard.class);
-		registerMetaclass(PauseStoryboard.class);
+		registerMetaclass(ResumeStoryboard.class);
 		registerMetaclass(DoubleAnimation.class);
 		registerMetaclass(DoubleAnimation.class);
+		registerMetaclass(ColorAnimation.class);
 
+		registerConvertor(StringToDuration.instance);
+		registerConvertor(StringToRepeatBehavior.instance);
+		
 		registerMetaclass(CollectionViewSource.class);
 
 		registerMetaclass(DefaultListContentProvider.class);

@@ -12,6 +12,8 @@ package org.eclipse.e4.xwt.animation;
 
 import java.io.Serializable;
 
+import org.eclipse.e4.xwt.XWTException;
+
 public class TimeSpan implements Serializable, Comparable {
 
 	public static final long TicksPerMillisecond = 10000; // scale
@@ -80,7 +82,7 @@ public class TimeSpan implements Serializable, Comparable {
 	 * seconds.
 	 */
 	public TimeSpan(int hours, int minutes, int seconds) throws Exception {
-		this.ticks = TimeToTicks(hours, minutes, seconds);
+		this.ticks = timeToTicks(hours, minutes, seconds);
 	}
 
 	/*
@@ -166,7 +168,7 @@ public class TimeSpan implements Serializable, Comparable {
 	}
 
 	/* Adds the specified TimeSpan to this instance. */
-	public TimeSpan Add(TimeSpan ts) throws Exception {
+	public TimeSpan add(TimeSpan ts) throws Exception {
 		long ticks = this.ticks + ts.ticks;
 		// less than MinValue or more than MaxValue, exception
 		if (((this.ticks >> 0x3f) == (ts.ticks >> 0x3f))
@@ -180,7 +182,7 @@ public class TimeSpan implements Serializable, Comparable {
 	 * Compares two TimeSpan values and returns an integer that indicates their
 	 * relationship.
 	 */
-	public static int Compare(TimeSpan t1, TimeSpan t2) {
+	public static int compare(TimeSpan t1, TimeSpan t2) {
 		if (t1.ticks > t2.ticks) {
 			return 1;
 		}
@@ -215,15 +217,15 @@ public class TimeSpan implements Serializable, Comparable {
 	 * Returns a TimeSpan that represents a specified number of days, where the
 	 * specification is accurate to the nearest millisecond.
 	 */
-	public static TimeSpan FromDays(double value) throws Exception {
-		return Interval(value, MillisPerDay);
+	public static TimeSpan fromDays(double value) throws Exception {
+		return interval(value, MillisPerDay);
 	}
 
 	/*
 	 * Returns a new TimeSpan object whose value is the absolute value of the
 	 * current TimeSpan object
 	 */
-	public TimeSpan Duration() throws Exception {
+	public TimeSpan duration() throws Exception {
 		if (this.ticks == MinValue.ticks) {
 			throw new Exception("Overflow_Duration");
 		}
@@ -241,7 +243,7 @@ public class TimeSpan implements Serializable, Comparable {
 		return false;
 	}
 
-	public static boolean Equals(TimeSpan t1, TimeSpan t2) {
+	public static boolean equals(TimeSpan t1, TimeSpan t2) {
 		return (t1.ticks == t2.ticks);
 	}
 
@@ -253,12 +255,12 @@ public class TimeSpan implements Serializable, Comparable {
 	 * Returns a TimeSpan that represents a specified number of hours, where the
 	 * specification is accurate to the nearest millisecond.
 	 */
-	public static TimeSpan FromHours(double value) throws Exception {
-		return Interval(value, 0x36ee80);
+	public static TimeSpan fromHours(double value) throws Exception {
+		return interval(value, 0x36ee80);
 	}
 
 	/* calculate time interval in ticks */
-	private static TimeSpan Interval(double value, int scale) throws Exception {
+	private static TimeSpan interval(double value, int scale) throws Exception {
 		if (Double.isNaN(value)) {
 			throw new Exception("Arg_CannotBeNaN");
 		}
@@ -272,16 +274,16 @@ public class TimeSpan implements Serializable, Comparable {
 	}
 
 	/* Returns a TimeSpan that represents a specified number of milliseconds. */
-	public static TimeSpan FromMilliseconds(double value) throws Exception {
-		return Interval(value, 1);
+	public static TimeSpan fromMilliseconds(double value) throws Exception {
+		return interval(value, 1);
 	}
 
 	/*
 	 * Returns a TimeSpan that represents a specified number of minutes, where
 	 * the specification is accurate to the nearest millisecond.
 	 */
-	public static TimeSpan FromMinutes(double value) throws Exception {
-		return Interval(value, MillisPerMinute);
+	public static TimeSpan fromMinutes(double value) throws Exception {
+		return interval(value, MillisPerMinute);
 	}
 
 	/* Returns a TimeSpan whose value is the negated value of this instance. */
@@ -296,22 +298,22 @@ public class TimeSpan implements Serializable, Comparable {
 	 * Constructs a new TimeSpan object from a time interval specified in a
 	 * string.
 	 */
-	public static TimeSpan Parse(String s) throws Exception {
+	public static TimeSpan parse(String s) {
 
 		StringParser parser = new StringParser();
 
-		return new TimeSpan(parser.Parse(s));
+		return new TimeSpan(parser.parse(s));
 	}
 
 	/*
 	 * Constructs a new TimeSpan object from a time interval specified in a
 	 * string.
 	 */
-	public static boolean TryParse(String s, OutParameter result) {
+	public static boolean tryParse(String s, OutParameter result) {
 		long num = 0;
 		OutParameter out = new OutParameter(num);
 		StringParser parser = new StringParser();
-		if (parser.TryParse(s, out)) {
+		if (parser.tryParse(s, out)) {
 			result.timeSpan = new TimeSpan(out.value);
 			return true;
 		}
@@ -319,8 +321,8 @@ public class TimeSpan implements Serializable, Comparable {
 		return false;
 	}
 
-	public static TimeSpan FromSeconds(double value) throws Exception {
-		return Interval(value, MillisPerSecond);
+	public static TimeSpan fromSeconds(double value) throws Exception {
+		return interval(value, MillisPerSecond);
 	}
 
 	/* Subtracts a specified TimeSpan from another specified TimeSpan. */
@@ -333,11 +335,11 @@ public class TimeSpan implements Serializable, Comparable {
 		return new TimeSpan(ticks);
 	}
 
-	public static TimeSpan FromTicks(long value) {
+	public static TimeSpan fromTicks(long value) {
 		return new TimeSpan(value);
 	}
 
-	public static long TimeToTicks(int hour, int minute, int second)
+	public static long timeToTicks(int hour, int minute, int second)
 			throws Exception {
 		long num = ((hour * SencondsPerHour) + (minute * 60)) + second;
 		if ((num > Long.valueOf(MaxSeconds))
@@ -347,7 +349,7 @@ public class TimeSpan implements Serializable, Comparable {
 		return (num * TicksPerSecond);
 	}
 
-	private String IntToString(int n, int digits) {
+	private String intToString(int n, int digits) {
 		return ParseNumbers.IntToString(n, 10, digits, (char)0, 0);
 	}
 
@@ -371,21 +373,21 @@ public class TimeSpan implements Serializable, Comparable {
 		}
 
 		// hours, ranging from 0 to 23
-		builder.append(this.IntToString((int) ((num2 / Long
+		builder.append(this.intToString((int) ((num2 / Long
 				.valueOf(TicksPerHour)) % ((long) HoursPerDay)), 2));
 		builder.append(":");
 
 		// munites, ranging from 0 to 59
-		builder.append(this.IntToString(
+		builder.append(this.intToString(
 				(int) ((num2 / ((long) TicksPerMinute)) % ((long) 60)), 2));
 		builder.append(":");
 		// seconds, ranging from 0 to 59
-		builder.append(this.IntToString(
+		builder.append(this.intToString(
 				(int) ((num2 / ((long) TicksPerSecond)) % ((long) 60)), 2));
 		int n = (int) (num2 % ((long) TicksPerSecond));
 		if (n != 0) {
 			builder.append(".");
-			builder.append(this.IntToString(n, 7));
+			builder.append(this.intToString(n, 7));
 		}
 		return builder.toString();
 	}
@@ -413,7 +415,7 @@ public class TimeSpan implements Serializable, Comparable {
 
 	public static TimeSpan operatorPlus(TimeSpan t1, TimeSpan t2)
 			throws Exception {
-		return t1.Add(t2);
+		return t1.add(t2);
 	}
 
 	public static boolean operatorEqual(TimeSpan t1, TimeSpan t2) {
@@ -472,14 +474,14 @@ class StringParser {
 	private ParseError error;
 
 	/* get the next char position and corresponding value */
-	private void NextChar() {
+	private void nextChar() {
 		if (this.pos < this.len) {
 			this.pos++;
 		}
 		this.ch = (this.pos < this.len) ? this.str.charAt(this.pos) : '\0';
 	}
 
-	private char NextNonDigit() {
+	private char nextNonDigit() {
 
 		for (int i = this.pos; i < this.len; i++) {
 			char ch = this.str.charAt(i);
@@ -494,25 +496,25 @@ class StringParser {
 	 * Constructs a new TimeSpan object from a time interval specified in a
 	 * string.
 	 */
-	public long Parse(String s) throws Exception {
+	public long parse(String s) {
 		long num = 0;
 		OutParameter out = new OutParameter(num);
 
-		if (this.TryParse(s, out)) {
+		if (this.tryParse(s, out)) {
 			return out.value;
 		}
 		switch (this.error) {
 		case Format:
-			throw new Exception("Format_InvalidString");
+			throw new XWTException("Format_InvalidString");
 
 		case Overflow:
-			throw new Exception("Overflow_TimeSpanTooLong");
+			throw new XWTException("Overflow_TimeSpanTooLong");
 
 		case OverflowHoursMinutesSeconds:
-			throw new Exception("Overflow_TimeSpanElementTooLarge");
+			throw new XWTException("Overflow_TimeSpanElementTooLarge");
 
 		case ArgumentNull:
-			throw new Exception("s");
+			throw new XWTException("s");
 		}
 		return (long) 0;
 	}
@@ -527,7 +529,7 @@ class StringParser {
 	 * this piece of code is not correct, because in .net it support "out",
 	 * while in Java , it dose not
 	 */
-	public boolean TryParse(String s, OutParameter out) {// TODO,
+	public boolean tryParse(String s, OutParameter out) {// TODO,
 
 		long time = 0;
 		out.value = 0;
@@ -542,17 +544,17 @@ class StringParser {
 		this.str = s;
 		this.len = s.length();
 		this.pos = -1;
-		this.NextChar();
-		this.SkipBlanks();
+		this.nextChar();
+		this.skipBlanks();
 		boolean flag = false;
 
 		if (this.ch == '-') { // year, month, date
 			flag = true;
-			this.NextChar();
+			this.nextChar();
 		}
 
-		if (this.NextNonDigit() == ':') {// hour, minutes, seconds
-			if (!this.ParseTime(timeOut)) {
+		if (this.nextNonDigit() == ':') {// hour, minutes, seconds
+			if (!this.parseTime(timeOut)) {
 				return false;
 			}
 		} else {
@@ -560,15 +562,15 @@ class StringParser {
 			int i = 0;
 			OutParameter iOut = new OutParameter(i);
 
-			if (!this.ParseInt(0xa2e3ff, iOut)) {
+			if (!this.parseInt(0xa2e3ff, iOut)) {
 				return false;
 			}
 			timeOut.value = iOut.value * 0xc92a69c000L;
 			if (this.ch == '.') {
 				long num3 = 0;
 				OutParameter num3Out = new OutParameter(num3);
-				this.NextChar();
-				if (!this.ParseTime(num3Out)) {
+				this.nextChar();
+				if (!this.parseTime(num3Out)) {
 					return false;
 				}
 				timeOut.value += num3Out.value;
@@ -585,7 +587,7 @@ class StringParser {
 			return false;
 		}
 
-		this.SkipBlanks();
+		this.skipBlanks();
 
 		if (this.pos < this.len) {
 			this.error = ParseError.Format;
@@ -597,7 +599,7 @@ class StringParser {
 	}
 
 	/* max stands hours, minutes 59 */
-	private boolean ParseInt(int max, OutParameter out) {// i is munites <60,
+	private boolean parseInt(int max, OutParameter out) {// i is munites <60,
 		// decide minutes
 		// are whether
 		// overflow
@@ -617,7 +619,7 @@ class StringParser {
 				this.error = ParseError.Overflow;
 				return false;
 			}
-			this.NextChar();
+			this.nextChar();
 		}
 		if (pos == this.pos) {
 			this.error = ParseError.Format;
@@ -630,13 +632,13 @@ class StringParser {
 		return true;
 	}
 
-	private boolean ParseTime(OutParameter out) {
+	private boolean parseTime(OutParameter out) {
 		int i = 0;
 		out.value = 0;
 
 		OutParameter iOut = new OutParameter(i);
 
-		if (!this.ParseInt(0x17, iOut)) {// parse hours 0-23
+		if (!this.parseInt(0x17, iOut)) {// parse hours 0-23
 			if (this.error == ParseError.Overflow) {
 				this.error = ParseError.OverflowHoursMinutesSeconds;
 			}
@@ -650,9 +652,9 @@ class StringParser {
 			return false;
 		}
 
-		this.NextChar();
+		this.nextChar();
 
-		if (!this.ParseInt(0x3b, iOut)) {// parse minutes 0-59
+		if (!this.parseInt(0x3b, iOut)) {// parse minutes 0-59
 			if (this.error == ParseError.Overflow) {
 				this.error = ParseError.OverflowHoursMinutesSeconds;
 			}
@@ -662,10 +664,10 @@ class StringParser {
 		out.value += (iOut.value * 0x23c34600L);
 
 		if (this.ch == ':') {
-			this.NextChar();
+			this.nextChar();
 			if (this.ch != '.') {
 
-				if (!this.ParseInt(0x3b, iOut)) {// parse seconds 0-59
+				if (!this.parseInt(0x3b, iOut)) {// parse seconds 0-59
 					if (this.error == ParseError.Overflow) {
 						this.error = ParseError.OverflowHoursMinutesSeconds;
 					}
@@ -676,22 +678,22 @@ class StringParser {
 
 			if (this.ch == '.') {
 
-				this.NextChar();
+				this.nextChar();
 				int num2 = 0x989680;
 
 				while (((num2 > 1) && (this.ch >= '0')) && (this.ch <= '9')) {
 					num2 /= 10;
 					out.value += (this.ch - '0') * num2;
-					this.NextChar();
+					this.nextChar();
 				}
 			}
 		}
 		return true;
 	}
 
-	private void SkipBlanks() {
+	private void skipBlanks() {
 		while ((this.ch == ' ') || (this.ch == '\t')) {
-			this.NextChar();
+			this.nextChar();
 		}
 	}
 

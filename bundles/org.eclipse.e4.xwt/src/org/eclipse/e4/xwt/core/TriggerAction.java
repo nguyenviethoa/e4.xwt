@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
-public class TriggerAction {
+public abstract class TriggerAction {
 	public static final TriggerAction[] EMPTY_ARRAY = new TriggerAction[0];
+	
+	public abstract void run(Object target);
+	
+	public abstract void initialize(Object target);
 }

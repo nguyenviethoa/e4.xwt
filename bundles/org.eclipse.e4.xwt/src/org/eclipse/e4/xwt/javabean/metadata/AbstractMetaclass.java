@@ -109,12 +109,11 @@ public abstract class AbstractMetaclass implements IMetaclass {
 		String name = normalize(property.getName());
 		return propertyCache.put(name, property);
 	}
-	
+
 	public void removeProperty(String propertyName) {
 		String name = normalize(propertyName);
 		propertyCache.remove(name);
 	}
-
 
 	private void buildTypedEvents() {
 		if (buildTypedEvents) {
@@ -361,16 +360,16 @@ public abstract class AbstractMetaclass implements IMetaclass {
 				updateContainment(parameters[0], object);
 				initialize(object);
 			} catch (Exception e) {
-				throw new XWTException(e); 
+				throw new XWTException(e);
 			}
 		}
 		return object;
 	}
 
-	private void updateContainment(Object parent, Object control)
+	private void updateContainment(Object parent, Object childElement)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
-		if (control != null && parent != null && !(parent instanceof Widget)) {
+		if (childElement != null && parent != null && !(parent instanceof Widget)) {
 			//
 			// Add to default property identified by the type
 			//
@@ -378,30 +377,63 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			IProperty[] properties = parentMetaclass.getProperties();
 			IProperty useProperty = null;
 			int count = 0;
-			Class<?> childType = control.getClass();
+			Class<?> childType = childElement.getClass();
+
 			for (IProperty property : properties) {
 				Class<?> propertyType = property.getType();
 				if (propertyType == null || propertyType == Object.class) {
 					continue;
 				}
-				if (propertyType.isArray()) {
-					Class<?> dataType = propertyType.getComponentType();
-					if (dataType.isAssignableFrom(childType)) {
+				if (property.isContainement()) {
+					useProperty = property;
+					count++;
+				}
+			}
+			if (count > 1) {
+				StringBuilder builder = new StringBuilder();
+				builder.append("Class has more containment properties: ");
+				count = 0;
+				for (IProperty property : properties) {
+					Class<?> propertyType = property.getType();
+					if (propertyType == null || propertyType == Object.class) {
+						continue;
+					}
+					if (property.isContainement()) {
+						if (count != 0) {
+							builder.append(", ");
+						}
+						builder.append(property.getName());
+						count++;
+					}
+				}				
+				throw new XWTException("Class has more containment properties: "); 
+			}
+			
+			if (count == 0) {
+				for (IProperty property : properties) {
+					Class<?> propertyType = property.getType();
+					if (propertyType == null || propertyType == Object.class) {
+						continue;
+					}
+					if (propertyType.isArray()) {
+						Class<?> dataType = propertyType.getComponentType();
+						if (dataType.isAssignableFrom(childType)) {
+							if (useProperty == null) {
+								useProperty = property;
+							}
+							count++;
+						}
+					} else if (Collection.class.isAssignableFrom(propertyType)) {
+						if (useProperty == null) {
+							useProperty = property;
+						}
+						count++;
+					} else if (propertyType.isAssignableFrom(childType)) {
 						if (useProperty == null) {
 							useProperty = property;
 						}
 						count++;
 					}
-				} else if (Collection.class.isAssignableFrom(propertyType)) {
-					if (useProperty == null) {
-						useProperty = property;
-					}
-					count++;
-				} else if (propertyType.isAssignableFrom(childType)) {
-					if (useProperty == null) {
-						useProperty = property;
-					}
-					count++;
 				}
 			}
 			if (count == 1) {
@@ -413,26 +445,26 @@ public abstract class AbstractMetaclass implements IMetaclass {
 					Object[] value = null;
 					if (existingValue == null) {
 						value = (Object[]) Array.newInstance(dataType, 1);
-						value[0] = control;
+						value[0] = childElement;
 					} else {
 						value = (Object[]) Array.newInstance(dataType,
 								existingValue.length + 1);
 						System.arraycopy(existingValue, 0, value, 0,
 								existingValue.length);
-						value[existingValue.length] = control;
+						value[existingValue.length] = childElement;
 					}
 					useProperty.setValue(parent, value);
 				} else if (Collection.class.isAssignableFrom(propertyType)
-						&& !(control instanceof IBinding)) {
+						&& !(childElement instanceof IBinding)) {
 					Collection existingValue = (Collection) useProperty
 							.getValue(parent);
 					if (existingValue == null) {
 						existingValue = new ArrayList();
 					}
-					existingValue.add(control);
+					existingValue.add(childElement);
 					useProperty.setValue(parent, existingValue);
 				} else if (propertyType.isAssignableFrom(childType)) {
-					useProperty.setValue(parent, control);
+					useProperty.setValue(parent, childElement);
 				}
 			}
 		}
@@ -461,10 +493,8 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			if (directParent == null) {
 				directParent = UserData.getTreeParent(parent);
 			}
-			if (directParent == null) {
-				throw new IllegalStateException();
-			}
-			if (Control.class.isAssignableFrom(getType())
+			if (directParent != null
+					&& Control.class.isAssignableFrom(getType())
 					&& !(directParent instanceof Composite)) {
 				directParent = getXWTLoader().findCompositeParent(directParent);
 			}
@@ -490,14 +520,14 @@ public abstract class AbstractMetaclass implements IMetaclass {
 				if (parameterTypes[0].isAssignableFrom(parent.getClass())) {
 					if (parameterTypes.length == 1) {
 						if (styleValue == null) {
-							swtObject = constructor.newInstance(new Object[] {
-									parent});
+							swtObject = constructor
+									.newInstance(new Object[] { parent });
 							break;
 						}
 					} else if (parameterTypes[1].isAssignableFrom(int.class)) {
 						if (styleValue == null)
 							swtObject = constructor.newInstance(new Object[] {
-									parent, 0});
+									parent, 0 });
 						else
 							swtObject = constructor.newInstance(new Object[] {
 									parent, styleValue });
@@ -516,8 +546,9 @@ public abstract class AbstractMetaclass implements IMetaclass {
 						continue;
 					}
 
-					if (parameterTypes[0].isAssignableFrom(directParent
-							.getClass())) {
+					if (directParent != null
+							&& parameterTypes[0].isAssignableFrom(directParent
+									.getClass())) {
 						if (parameterTypes.length == 1) {
 							swtObject = constructor
 									.newInstance(new Object[] { directParent });
@@ -689,11 +720,11 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			}
 		}
 	}
-	
+
 	public IObjectInitializer[] getInitializers() {
 		return initializers;
 	}
-	
+
 	public void initialize(Object instance) {
 		if (superClass != null) {
 			superClass.initialize(instance);

@@ -11,11 +11,13 @@
 package org.eclipse.e4.xwt.animation;
 
 import org.eclipse.e4.xwt.core.TriggerAction;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 
 public class BeginStoryboard extends TriggerAction {
-	protected HandoffBehavior handoffBehavior = HandoffBehavior.SnapshotAndReplace;
-	protected String name;
-	
+	private HandoffBehavior handoffBehavior = HandoffBehavior.SnapshotAndReplace;
+	private String name;
+	private Storyboard storyboard;
+		
 	/**
 	 * Getter of the property <tt>HandoffBehavior</tt>
 	 * 
@@ -56,5 +58,36 @@ public class BeginStoryboard extends TriggerAction {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * Getter of the property <tt>Storyboard</tt>
+	 * 
+	 * @return Returns the Storyboard.
+	 * @uml.property name="Storyboard"
+	 */
+	public Storyboard getStoryboard() {
+		return storyboard;
+	}
+
+	/**
+	 * Setter of the property <tt>Storyboard</tt>
+	 * 
+	 * @param NameProperty
+	 *            The Storyboard to set.
+	 * @uml.property name="Storyboard"
+	 */
+	public void setStoryboard(Storyboard storyboard) {
+		this.storyboard = storyboard;
+	}
+	
+	@Override
+	public void initialize(Object target) {
+		UserData.findScopeKeeper(target).addNamedObject(name, this);
+	}
+	
+	@Override
+	public void run(Object target) {
+		getStoryboard().start(target);
 	}
 }

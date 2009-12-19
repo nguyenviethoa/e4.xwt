@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class MatrixAnimationBase extends AnimationTimeline {
+public abstract class MatrixAnimationBase extends AnimationTimeline {
 
 }

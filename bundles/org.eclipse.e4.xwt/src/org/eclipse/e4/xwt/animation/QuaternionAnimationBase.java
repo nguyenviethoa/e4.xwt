@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class QuaternionAnimationBase extends AnimationTimeline {
+public abstract class QuaternionAnimationBase extends AnimationTimeline {
 
 }

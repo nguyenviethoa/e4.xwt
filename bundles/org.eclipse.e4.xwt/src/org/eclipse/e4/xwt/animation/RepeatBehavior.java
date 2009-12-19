@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-
 public class RepeatBehavior {
 	interface IFormatProvider {
 	}
@@ -25,33 +22,29 @@ public class RepeatBehavior {
 		if ((Double.isInfinite(count) || Double.isNaN(count)) || (count < 0)) {
 			throw new IllegalArgumentException("count: " + count);
 		}
-		try {
-			this.repeatDuration = DatatypeFactory.newInstance().newDuration(0L);
-		} catch (DatatypeConfigurationException e) {
-			e.printStackTrace();
-		}
-		this.iterationCount = count;
+		this.repeatDuration = new Duration(new TimeSpan(0L));
+		this.count = count;
 		this.type = RepeatBehaviorType.IterationCount;
 	}
 
-	public RepeatBehavior(javax.xml.datatype.Duration duration) {
-		this.iterationCount = 0;
+	public RepeatBehavior(Duration duration) {
+		this.count = 0;
 		this.repeatDuration = duration;
 		this.type = RepeatBehaviorType.RepeatDuration;
 	}
 
 	public boolean equals(Object value) {
 		if ((value instanceof RepeatBehavior)) {
-			return this.Equals((RepeatBehavior) value);
+			return this.equals((RepeatBehavior) value);
 		}
 		return false;
 	}
 
-	public boolean Equals(RepeatBehavior repeatBehavior) {
+	public boolean equals(RepeatBehavior repeatBehavior) {
 		if (this.type == repeatBehavior.type) {
 			switch (this.type) {
 			case IterationCount: {
-				return (this.iterationCount == repeatBehavior.iterationCount);
+				return (this.count == repeatBehavior.count);
 			}
 			case RepeatDuration: {
 				return (this.repeatDuration == repeatBehavior.repeatDuration);
@@ -64,15 +57,15 @@ public class RepeatBehavior {
 		return false;
 	}
 
-	public static boolean Equals(RepeatBehavior repeatBehavior1,
+	public static boolean equals(RepeatBehavior repeatBehavior1,
 			RepeatBehavior repeatBehavior2) {
-		return repeatBehavior1.Equals(repeatBehavior2);
+		return repeatBehavior1.equals(repeatBehavior2);
 	}
 
 	public int hashCode() {
 		switch (this.type) {
 		case IterationCount: {
-			return (int) this.iterationCount;
+			return (int) this.count;
 		}
 		case RepeatDuration: {
 			return this.repeatDuration.hashCode();
@@ -84,7 +77,7 @@ public class RepeatBehavior {
 		return super.hashCode();
 	}
 
-	String InternalToString(String format, IFormatProvider formatProvider) {
+	String internalToString(String format, IFormatProvider formatProvider) {
 		switch (this.type) {
 		case IterationCount: {
 			StringBuilder builder1 = new StringBuilder();
@@ -104,26 +97,26 @@ public class RepeatBehavior {
 		return null;
 	}
 
-	public static boolean op_Equality(RepeatBehavior repeatBehavior1,
+	public static boolean opEquality(RepeatBehavior repeatBehavior1,
 			RepeatBehavior repeatBehavior2) {
-		return repeatBehavior1.Equals(repeatBehavior2);
+		return repeatBehavior1.equals(repeatBehavior2);
 	}
 
-	public static boolean op_Inequality(RepeatBehavior repeatBehavior1,
+	public static boolean opInequality(RepeatBehavior repeatBehavior1,
 			RepeatBehavior repeatBehavior2) {
-		return !repeatBehavior1.Equals(repeatBehavior2);
+		return !repeatBehavior1.equals(repeatBehavior2);
 	}
 
 	public String toString(String format, IFormatProvider formatProvider) {
-		return this.InternalToString(format, formatProvider);
+		return this.internalToString(format, formatProvider);
 	}
 
 	public String toString() {
-		return this.InternalToString(null, null);
+		return this.internalToString(null, null);
 	}
 
-	public String ToString(IFormatProvider formatProvider) {
-		return this.InternalToString(null, formatProvider);
+	public String toString(IFormatProvider formatProvider) {
+		return this.internalToString(null, formatProvider);
 	}
 
 	// Properties
@@ -136,7 +129,7 @@ public class RepeatBehavior {
 		if (this.type != RepeatBehaviorType.IterationCount) {
 			throw new UnsupportedOperationException();
 		}
-		return this.iterationCount;
+		return this.count;
 	}
 
 	/**
@@ -144,7 +137,7 @@ public class RepeatBehavior {
 	 * 
 	 * @property(Duration)
 	 */
-	public javax.xml.datatype.Duration getDuration() {
+	public Duration getDuration() {
 		if (this.type != RepeatBehaviorType.RepeatDuration) {
 			throw new UnsupportedOperationException();
 		}
@@ -157,9 +150,11 @@ public class RepeatBehavior {
 	 * @property(Forever)
 	 */
 	public static RepeatBehavior getForever() {
-		RepeatBehavior behavior1 = new RepeatBehavior();
-		behavior1.type = RepeatBehaviorType.Forever;
-		return behavior1;
+		if (forever == null) {
+			forever = new RepeatBehavior();
+			forever.type = RepeatBehaviorType.Forever;
+		}
+		return forever;
 	}
 
 	/**
@@ -181,12 +176,34 @@ public class RepeatBehavior {
 	}
 
 	// Fields
-	private double iterationCount;
-	private javax.xml.datatype.Duration repeatDuration;
+	private double count = 1;
+	private Duration repeatDuration;
 	private RepeatBehaviorType type;
+	
+	private static RepeatBehavior forever;
+	public static final RepeatBehavior once = new RepeatBehavior(1);
+
+	public RepeatBehaviorType getRepeatBehaviorType() {
+		return type;
+	}
 
 	// Nested Types
 	enum RepeatBehaviorType {
 		IterationCount, RepeatDuration, Forever;
+	}
+	
+	
+	public static RepeatBehavior parse(String string) {
+		if (string.toLowerCase().equals("forever")) {
+			return getForever();
+		}
+		if (string.toLowerCase().endsWith("x")) {
+			// count
+			string = string.substring(0, string.length() - 1);
+			double count = Double.parseDouble(string);
+			return new RepeatBehavior(count);
+		}
+		
+		return new RepeatBehavior(new Duration(TimeSpan.parse(string)));
 	}
 }

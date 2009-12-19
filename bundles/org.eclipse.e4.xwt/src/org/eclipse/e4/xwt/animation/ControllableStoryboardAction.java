@@ -10,10 +10,17 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.TriggerAction;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 
-public class ControllableStoryboardAction extends TriggerAction {
-	protected String beginStoryboardName;
+public abstract class ControllableStoryboardAction extends TriggerAction {
+	private String beginStoryboardName;
+	private Storyboard storyboard;
+	
+	protected Storyboard getStoryboard() {
+		return storyboard;
+	}
 
 	/**
 	 * Getter of the property <tt>BeginStoryboardName</tt>
@@ -34,5 +41,21 @@ public class ControllableStoryboardAction extends TriggerAction {
 	 */
 	public void setBeginStoryboardName(String beginStoryboardName) {
 		this.beginStoryboardName = beginStoryboardName;
+	}
+	
+	@Override
+	public void initialize(Object target) {
+		String beginStoryboardName = getBeginStoryboardName();
+		if (beginStoryboardName == null || beginStoryboardName.length() == 0) {
+			return;
+		}
+		Object element = UserData.findElementByName(target, beginStoryboardName);
+		if (element instanceof BeginStoryboard) {
+			BeginStoryboard beginStoryboard = (BeginStoryboard) element;
+			storyboard = beginStoryboard.getStoryboard();
+		}
+		else {
+			throw new XWTException("NeginStoryboardName " + beginStoryboardName + " is not found.");
+		}
 	}
 }

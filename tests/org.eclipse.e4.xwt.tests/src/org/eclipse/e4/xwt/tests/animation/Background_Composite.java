@@ -8,26 +8,22 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.metadata;
+package org.eclipse.e4.xwt.tests.animation;
 
-/**
- * 
- * @author yyang
- *
- */
-public class ModelUtils {
-	public static String normalizeEventName(String name) {
-		return name.toLowerCase();
-	}
-		
-	public static String normalizePropertyName(String name) {
-		if (name == null || name.length() == 0) {
-			return name;
+import java.net.URL;
+
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
+
+public class Background_Composite {	
+	public static void main(String[] args) {
+
+		URL url = Background_Composite.class.getResource(Background_Composite.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		char c = name.charAt(0);
-		if (Character.isLowerCase(c)) {
-			return name;
-		}
-		return Character.toLowerCase(name.charAt(0)) + name.substring(1);
 	}
 }

@@ -11,4 +11,11 @@
 package org.eclipse.e4.xwt.animation;
 
 public class ResumeStoryboard extends ControllableStoryboardAction {
+	@Override
+	public void run(Object target) {
+		Storyboard storyboard = getStoryboard();
+		if (storyboard != null) {
+			storyboard.resume();
+		}
+	}
 }

@@ -37,5 +37,7 @@ public interface IProperty extends IBehavior {
 
 	public boolean isDefault();
 	
+	public boolean isContainement();
+	
 	public boolean isReadOnly();
 }

@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class VectorAnimationBase extends AnimationTimeline {
+public abstract class VectorAnimationBase extends AnimationTimeline {
 
 }

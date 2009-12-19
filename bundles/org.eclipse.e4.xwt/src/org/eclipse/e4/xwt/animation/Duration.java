@@ -53,7 +53,7 @@ public class Duration {
 	 * 
 	 * @property(HasTimeSpan)
 	 */
-	public boolean getHasTimeSpan() {
+	public boolean hasTimeSpan() {
 		return (this.durationType == DurationType.TimeSpan);
 	}
 
@@ -63,7 +63,7 @@ public class Duration {
 	 * @property(TimeSpan)
 	 */
 	public TimeSpan getTimeSpan() {
-		if (!this.getHasTimeSpan()) {
+		if (!this.hasTimeSpan()) {
 			throw new UnsupportedOperationException();
 		}
 		return this.timeSpan;

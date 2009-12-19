@@ -42,6 +42,10 @@ public class DelegateProperty implements IProperty {
 		return false;
 	}
 
+	public boolean isContainement() {
+		return false;
+	}
+
 	public void removeSetPostAction(ISetPostAction setPostAction) {
 		this.delegate.removeSetPostAction(setPostAction);
 	}

@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.e4.xwt.tests.animation.AnimationSuite;
 import org.eclipse.e4.xwt.tests.annotation.AnnotationTests;
 import org.eclipse.e4.xwt.tests.attachedproperty.AttachedPropertyTests;
 import org.eclipse.e4.xwt.tests.clr.XWTTestSuite;
@@ -90,6 +91,9 @@ public class XwtTestSuite extends TestSuite {
 
 		// triggers
 		addFormsTests();
+
+		// triggers
+		addAnimationTests();
 	}
 
 	protected void addXAMLTests() {
@@ -142,6 +146,10 @@ public class XwtTestSuite extends TestSuite {
 
 	protected void addFormsTests() {
 		addTest(FormsTestSuite.suite());
+	}
+
+	protected void addAnimationTests() {
+		addTest(AnimationSuite.suite());
 	}
 
 	protected void addTriggerTests() {

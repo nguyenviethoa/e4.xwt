@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class Point3DAnimationBase extends AnimationTimeline {
+public abstract class Point3DAnimationBase extends AnimationTimeline {
 
 }

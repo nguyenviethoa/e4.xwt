@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class Int64AnimationBase extends AnimationTimeline {
+public abstract class Int64AnimationBase extends AnimationTimeline {
 
 }

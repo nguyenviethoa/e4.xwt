@@ -11,24 +11,42 @@
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.annotation.Containment;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 
 public class BeanProperty extends AbstractProperty {
 	protected PropertyDescriptor descriptor;
+	private boolean containment = false;
 
 	public BeanProperty(PropertyDescriptor descriptor) {
 		super(descriptor.getName(), descriptor.getPropertyType());
 		if (descriptor == null)
 			throw new NullPointerException();
 		this.descriptor = descriptor;
+		
+		Method readMethod = descriptor.getReadMethod();
+		if (readMethod != null) {
+			Annotation annotation = readMethod.getAnnotation(Containment.class);
+			if (annotation != null) {
+				containment = true;
+			}
+		}
+		Method writeMethod = descriptor.getWriteMethod();
+		if (writeMethod != null) {
+			Annotation annotation = writeMethod.getAnnotation(Containment.class);
+			if (annotation != null) {
+				containment = true;
+			}
+		}
 	}
 
 	public void setValue(Object target, Object value)
@@ -112,6 +130,10 @@ public class BeanProperty extends AbstractProperty {
 	@Override
 	public boolean isDefault() {
 		return true;
+	}
+	
+	public boolean isContainement() {
+		return containment;
 	}
 
 	public boolean isReadOnly() {

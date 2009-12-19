@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class DoubleAnimationUsingPath extends DoubleAnimationBase {
+import org.pushingpixels.trident.Timeline;
 
+public class DoubleAnimationUsingPath extends DoubleAnimationBase {
+	@Override
+	protected void doStart(Timeline timeline, Object target) {
+	}
 }

@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class BooleanAnimationBase extends AnimationTimeline {
+public abstract class BooleanAnimationBase extends AnimationTimeline {
 
 }

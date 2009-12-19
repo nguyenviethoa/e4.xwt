@@ -49,6 +49,10 @@ public abstract class AbstractProperty extends Behavior implements IProperty {
 	public boolean isDefault() {
 		return false;
 	}
+	
+	public boolean isContainement() {
+		return false;
+	}
 
 	public boolean isReadOnly() {
 		return true;

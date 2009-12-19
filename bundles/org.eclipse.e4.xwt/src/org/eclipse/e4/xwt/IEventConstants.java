@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt;
 public final class IEventConstants {
 	public static final String DATA_PREFIX = "_event.";
 	public static final String SUFFIX = "Event";
+	public static final String SUFFIX_KEY = "event";
 	public static final String PREFIX = "is";
 
 	public static final String KEY_DOWN = "KeyDown";

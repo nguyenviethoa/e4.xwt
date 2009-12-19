@@ -13,9 +13,9 @@ package org.eclipse.e4.xwt.animation;
 import org.eclipse.e4.xwt.metadata.IProperty;
 
 public class Storyboard extends ParallelTimeline {
-	protected String targetName;
-	protected IProperty targetProperty;
-
+	private String targetName;
+	private IProperty targetProperty;
+	
 	public String getTargetName() {
 		return targetName;
 	}
@@ -32,6 +32,9 @@ public class Storyboard extends ParallelTimeline {
 		this.targetProperty = targetProperty;
 	}
 
-	public void begin() {
+	public void begin(Object element) {
+		for (Timeline timeline : getChildren()) {
+			timeline.start(element);
+		}
 	}
 }

@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class DecimalAnimationBase extends AnimationTimeline {
+public abstract class DecimalAnimationBase extends AnimationTimeline {
 
 }

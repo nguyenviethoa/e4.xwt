@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.pushingpixels.trident.Timeline;
+
 public class DoubleAnimation extends DoubleAnimationBase {
 	protected double by;
 	protected double from;
@@ -17,6 +19,30 @@ public class DoubleAnimation extends DoubleAnimationBase {
 	
 	protected boolean isAdditive;
 	protected boolean isCumulativeProperty;	
+
+	public DoubleAnimation(double toValue, Duration duration) {
+		setTo(toValue);
+		setDuration(duration);
+	}
+	
+	public DoubleAnimation(double fromValue, double toValue, Duration duration) {
+		setTo(toValue);
+		setFrom(fromValue);
+		setDuration(duration);
+	}
+	
+	public DoubleAnimation(double toValue, Duration duration, FillBehavior fillBehavior) {
+		setTo(toValue);
+		setDuration(duration);
+		setFillBehavior(fillBehavior);
+	}
+	
+	public DoubleAnimation(double fromValue, double toValue, Duration duration, FillBehavior fillBehavior) {
+		setTo(toValue);
+		setFrom(fromValue);
+		setDuration(duration);
+		setFillBehavior(fillBehavior);
+	}
 
 	public double getBy() {
 		return by;
@@ -57,28 +83,8 @@ public class DoubleAnimation extends DoubleAnimationBase {
 	public void setCumulativeProperty(boolean isCumulativeProperty) {
 		this.isCumulativeProperty = isCumulativeProperty;
 	}
-
-	public DoubleAnimation(double toValue, Duration duration) {
-		setTo(toValue);
-		setDuration(duration);
-	}
 	
-	public DoubleAnimation(double fromValue, double toValue, Duration duration) {
-		setTo(toValue);
-		setFrom(fromValue);
-		setDuration(duration);
-	}
-	
-	public DoubleAnimation(double toValue, Duration duration, FillBehavior fillBehavior) {
-		setTo(toValue);
-		setDuration(duration);
-		setFillBehavior(fillBehavior);
-	}
-	
-	public DoubleAnimation(double fromValue, double toValue, Duration duration, FillBehavior fillBehavior) {
-		setTo(toValue);
-		setFrom(fromValue);
-		setDuration(duration);
-		setFillBehavior(fillBehavior);
+	@Override
+	protected void doStart(Timeline timeline, Object target) {		
 	}
 }

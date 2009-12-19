@@ -10,9 +10,29 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.internal.utils.UserData;
+
 public abstract class AnimationTimeline extends Timeline {
-	protected boolean isDestinationDefault;
-	protected String targetPropertyType;
+	private boolean isDestinationDefault;
+	private String targetName;
+	private String targetProperty;
+
+	public String getTargetName() {
+		return targetName;
+	}
+
+	public void setTargetName(String targetName) {
+		this.targetName = targetName;
+	}
+
+	public String getTargetProperty() {
+		return targetProperty;
+	}
+
+	public void setTargetProperty(String targetProperty) {
+		this.targetProperty = targetProperty;
+	}	
 	
 	/**
 	 * Getter of the property <tt>IsDestinationDefault</tt>
@@ -34,25 +54,17 @@ public abstract class AnimationTimeline extends Timeline {
 	public void setIsDestinationDefault(boolean isDestinationDefault) {
 		this.isDestinationDefault = isDestinationDefault;
 	}
-
-	/**
-	 * Getter of the property <tt>TargetPropertyType</tt>
-	 * 
-	 * @return Returns the targetPropertyType.
-	 * @uml.property name="TargetPropertyType"
-	 */
-	public String getTargetPropertyType() {
-		return targetPropertyType;
-	}
-
-	/**
-	 * Setter of the property <tt>TargetPropertyType</tt>
-	 * 
-	 * @param TargetPropertyTypeProperty
-	 *            The targetPropertyType to set.
-	 * @uml.property name="TargetPropertyType"
-	 */
-	public void setTargetPropertyType(String targetPropertyType) {
-		this.targetPropertyType = targetPropertyType;
+	
+	@Override
+	protected Object findTarget(Object target) {
+		String targetName = getTargetName();
+		if (targetName == null) {
+			return target;
+		}
+		Object newTarget = UserData.findElementByName(target, targetName);
+		if (newTarget == null) {
+			throw new XWTException("Name element " + targetName + " is not found in animation.");
+		}
+		return super.findTarget(newTarget);
 	}
 }

@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-public class ThicknessAnimationBase extends AnimationTimeline {
+public abstract class ThicknessAnimationBase extends AnimationTimeline {
 
 }

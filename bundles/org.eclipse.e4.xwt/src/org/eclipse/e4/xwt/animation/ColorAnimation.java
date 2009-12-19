@@ -10,11 +10,40 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.eclipse.swt.graphics.Color;
 import org.pushingpixels.trident.Timeline;
 
-public class DoubleAnimationUsingKeyFrames extends DoubleAnimationBase {
-
+public class ColorAnimation extends AnimationTimeline {
+	private Color from;
+	private Color by;
+	private Color to;
+	
+	public Color getTo() {
+		return to;
+	}
+	
+	public void setTo(Color to) {
+		this.to = to;
+	}
+	
+	public Color getFrom() {
+		return from;
+	}
+	
+	public void setFrom(Color from) {
+		this.from = from;
+	}
+	
+	public Color getBy() {
+		return by;
+	}
+	
+	public void setBy(Color by) {
+		this.by = by;
+	}
+	
 	@Override
-	protected void doStart(Timeline timeline, Object target) {		
+	protected void doStart(Timeline timeline, Object target) {
+		timeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
 	}
 }
