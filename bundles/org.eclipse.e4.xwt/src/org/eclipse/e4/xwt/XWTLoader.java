@@ -709,6 +709,9 @@ public class XWTLoader implements IXWTLoader {
 		Realm.runWithDefault(realm, new Runnable() {
 			public void run() {
 				try {
+					if (url == null) {
+						throw new XWTException("UI Resource is not found.");
+					}
 					Control control = loadWithOptions(url, options);
 					Shell shell = control.getShell();
 					shell.addDisposeListener(new DisposeListener() {
@@ -769,6 +772,9 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public synchronized Control loadWithOptions(URL url,
 			Map<String, Object> options) throws Exception {
+		if (url == null) {
+			throw new XWTException("UI Resource is not found.");
+		}
 		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object)
 				: getLoadingContext());
