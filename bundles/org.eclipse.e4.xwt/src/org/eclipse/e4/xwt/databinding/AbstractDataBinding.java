@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -19,18 +19,16 @@ import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 /**
- * 
+ *
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class AbstractDataBinding implements IDataBinding {
 	private IDataProvider dataProvider;
 
-	private BindingMode mode = BindingMode.TwoWay;
-	
 	private Binding binding;
-	
+
 	private BindingExpressionPath targetPropertySegments;
-	
+
 	public BindingExpressionPath getSourcePropertyExpression() {
 		return binding.getPathPropertySegments();
 	}
@@ -39,11 +37,11 @@ public abstract class AbstractDataBinding implements IDataBinding {
 		return targetPropertySegments;
 	}
 
-	
+
 	public AbstractDataBinding(Binding binding, IDataProvider dataProvider) {
 		this.binding = binding;
 		this.dataProvider = dataProvider;
-		
+
 		targetPropertySegments = new BindingExpressionPath(getTargetProperty());
 	}
 
@@ -63,14 +61,14 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public BindingMode getBindingMode() {
-		return mode;
+		return binding.getMode();
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public IValueConverter getConverter() {
 		return binding.getConverter();
@@ -91,23 +89,23 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public BindingMode getMode() {
-		return mode;
+		return binding.getMode();
 	}
 
 	/**
-	 * 
+	 *
 	 * @param mode
 	 */
 	public void setMode(BindingMode mode) {
-		this.mode = mode;
+		binding.setMode(mode);
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getSourceProperty() {
@@ -115,7 +113,7 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getTargetProperty() {
@@ -125,7 +123,7 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	public UpdateSourceTrigger getUpdateSourceTrigger() {
 		return binding.getUpdateSourceTrigger();
 	}
-	
+
 	protected IObservable getObservableSource() {
 		return binding.getObservableSource();
 	}
