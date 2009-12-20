@@ -125,6 +125,10 @@ public abstract class ColorSection extends AbstractAttributeSection {
 	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
 	 */
 	public void refresh() {
+		if (!isNeedToRefresh()) {
+			return;
+		}
+		setNeedToRefresh(false);
 		colorStr = getValue();
 		if (colorStr == null) {
 			colorStr = defaultColor();

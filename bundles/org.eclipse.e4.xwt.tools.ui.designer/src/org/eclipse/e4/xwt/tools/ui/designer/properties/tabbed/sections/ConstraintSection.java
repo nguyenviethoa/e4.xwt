@@ -127,6 +127,11 @@ public class ConstraintSection extends AbstractAttributeSection {
 	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
 	 */
 	public void refresh() {
+		if (!isNeedToRefresh()) {
+			return;
+		}
+		setNeedToRefresh(false);
+
 		Rectangle r = getModelValue();
 		if (r == null) {
 			return;

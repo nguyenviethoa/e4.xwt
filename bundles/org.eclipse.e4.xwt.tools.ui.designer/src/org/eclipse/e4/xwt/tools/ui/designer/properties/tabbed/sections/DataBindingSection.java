@@ -22,6 +22,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.databinding.Observable;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.ObservableUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.Property;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.ui.ObserveModelGroup;
+import org.eclipse.e4.xwt.tools.ui.designer.model.RefreshAdapter;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
 import org.eclipse.gef.EditPart;
@@ -62,6 +63,16 @@ public class DataBindingSection extends AbstractPropertySection {
 	private List<BindingInfo> createdBindings;
 
 	private BindingContext bindingContext;
+	
+	private boolean needToRefresh = false; 
+
+	public boolean isNeedToRefresh() {
+		return needToRefresh;
+	}
+
+	public void setNeedToRefresh(boolean needToRefresh) {
+		this.needToRefresh = needToRefresh;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -200,6 +211,10 @@ public class DataBindingSection extends AbstractPropertySection {
 		if (editPart == null || propertiesComboViewer == null || observeModelGroup == null) {
 			return;
 		}
+		if (!isNeedToRefresh()) {
+			return;
+		}
+		setNeedToRefresh(false);
 		Widget widget = editPart.getWidget();
 		if (widget == null || widget.isDisposed()) {
 			return;
@@ -223,5 +238,6 @@ public class DataBindingSection extends AbstractPropertySection {
 		if (object instanceof WidgetEditPart) {
 			this.editPart = (WidgetEditPart) object;
 		}
+		setNeedToRefresh(true);
 	}
 }

@@ -95,6 +95,11 @@ public class FontSection extends AbstractAttributeSection {
 	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
 	 */
 	public void refresh() {
+		if (!isNeedToRefresh()) {
+			return;
+		}
+		setNeedToRefresh(false);
+
 		FontData fd = FontUtil.getFontData(getValue());
 		if (fd != null) {
 			fontName = fd.getName();

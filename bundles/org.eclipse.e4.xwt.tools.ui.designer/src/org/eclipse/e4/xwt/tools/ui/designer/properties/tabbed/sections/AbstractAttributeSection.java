@@ -65,9 +65,18 @@ public abstract class AbstractAttributeSection extends AbstractPropertySection i
 	private WidgetEditPart editPart;
 	private Label attrLable;
 	static Map<String, Object> EMPTY_MAP = Collections.emptyMap();
+	private boolean needToRefresh = false; 
 
 	private RefreshAdapter refreshAdapter;
 
+	public boolean isNeedToRefresh() {
+		return needToRefresh;
+	}
+
+	public void setNeedToRefresh(boolean needToRefresh) {
+		this.needToRefresh = needToRefresh;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -158,6 +167,7 @@ public abstract class AbstractAttributeSection extends AbstractPropertySection i
 		if (this.editPart != null && this.editPart == editPart) {
 			return;
 		}
+		this.needToRefresh = true;
 		this.editPart = editPart;
 		if (attrLable != null && !attrLable.isDisposed()) {
 			String name = getAttributeName();

@@ -99,6 +99,11 @@ public class TextSection extends AbstractAttributeSection {
 		if (textWidget == null || textWidget.isDisposed() || getAttribute() == null) {
 			return;
 		}
+		if (!isNeedToRefresh()) {
+			return;
+		}
+		setNeedToRefresh(false);
+
 		textWidget.removeListener(SWT.Modify, this);
 		setTextValue(textWidget);
 		textWidget.addListener(SWT.Modify, this);

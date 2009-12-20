@@ -66,6 +66,11 @@ public class ImageSection extends AbstractAttributeSection {
 		if (imageText == null || imageText.isDisposed()) {
 			return;
 		}
+		if (!isNeedToRefresh()) {
+			return;
+		}
+		setNeedToRefresh(false);
+
 		String value = getValue();
 		imageText.removeListener(SWT.Modify, this);
 		imageText.setText(value == null ? "" : value);

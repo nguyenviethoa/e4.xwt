@@ -79,6 +79,11 @@ public class LayoutDataSection extends AbstractAttributeSection {
 	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
 	 */
 	public void refresh() {
+		if (!isNeedToRefresh()) {
+			return;
+		}
+		setNeedToRefresh(false);
+
 		LayoutDataType layoutDataType = LayoutsHelper.getLayoutDataType(getEditPart());
 		if (layoutDataType == LayoutDataType.Unknown) {
 			return;

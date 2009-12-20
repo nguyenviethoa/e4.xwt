@@ -127,6 +127,10 @@ public class LayoutSection extends AbstractAttributeSection {
 		if (layoutCombo == null || layoutCombo.isDisposed()) {
 			return;
 		}
+		if (!isNeedToRefresh()) {
+			return;
+		}
+		setNeedToRefresh(false);
 		LayoutType layoutType = LayoutsHelper.getLayoutType(getEditPart());
 		int index = layoutCombo.indexOf(layoutType.value());
 		if (index >= 0 && index != layoutCombo.getSelectionIndex()) {

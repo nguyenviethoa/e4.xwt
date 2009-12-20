@@ -959,6 +959,9 @@ public abstract class Designer extends MultiPageEditorPart implements
 			isDispatching = false;
 		} else {
 			// If not the active editor, ignore selection changed.
+			while (Display.getDefault().readAndDispatch())
+				;
+
 			IEditorPart activeEditor = getSite().getPage().getActiveEditor();
 			if (Designer.this.equals(activeEditor)) {
 				performSelectionChanged(event);
