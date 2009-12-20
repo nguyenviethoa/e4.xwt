@@ -15,7 +15,7 @@ public abstract class Timeline {
 
 	protected int desiredFrameRate = 0;
 	protected double accelerationRatio = 0;
-	protected boolean autoReverseProperty = false;
+	protected boolean autoReverse = false;
 	protected TimeSpan beginTime = null;
 	protected double decelerationRatio = 0;
 	protected Duration duration = Duration.getAutomatic();
@@ -42,12 +42,12 @@ public abstract class Timeline {
 		this.accelerationRatio = accelerationRatio;
 	}
 
-	public boolean isAutoReverseProperty() {
-		return autoReverseProperty;
+	public boolean isAutoReverse() {
+		return autoReverse;
 	}
 
-	public void setAutoReverseProperty(boolean autoReverseProperty) {
-		this.autoReverseProperty = autoReverseProperty;
+	public void setAutoReverse(boolean autoReverse) {
+		this.autoReverse = autoReverse;
 	}
 
 	public TimeSpan getBeginTime() {
@@ -154,26 +154,27 @@ public abstract class Timeline {
 		if (timeline == null) {
 			return;
 		}
+		org.pushingpixels.trident.Timeline.RepeatBehavior loopBehavior = org.pushingpixels.trident.Timeline.RepeatBehavior.LOOP;
+		if (isAutoReverse()) {
+			loopBehavior = org.pushingpixels.trident.Timeline.RepeatBehavior.REVERSE;
+		}
+
 		if (behavior.getHasCount()) {
 			double loopCount = behavior.getCount();
 			if (!behavior.getHasDuration()) {
-				timeline.playLoop((int) loopCount,
-						org.pushingpixels.trident.Timeline.RepeatBehavior.LOOP);
+				timeline.playLoop((int) loopCount, loopBehavior);
 			} else {
 				Duration duration = behavior.getDuration();
-				timeline.playLoopSkipping((int) loopCount,
-						org.pushingpixels.trident.Timeline.RepeatBehavior.LOOP,
+				timeline.playLoopSkipping((int) loopCount, loopBehavior,
 						duration.getTimeSpan().getMilliseconds());
 			}
 		} else {
 			if (!behavior.getHasDuration()) {
-				timeline
-						.playLoop(org.pushingpixels.trident.Timeline.RepeatBehavior.LOOP);
+				timeline.playLoop(loopBehavior);
 			} else {
 				Duration duration = behavior.getDuration();
-				timeline.playLoopSkipping(
-						org.pushingpixels.trident.Timeline.RepeatBehavior.LOOP,
-						duration.getTimeSpan().getMilliseconds());
+				timeline.playLoopSkipping(loopBehavior, duration.getTimeSpan()
+						.getMilliseconds());
 			}
 		}
 	}
