@@ -164,7 +164,7 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 		DataContextFieldAdapter adapter = new DataContextFieldAdapter();
 		fieldEditor = new StringButtonDialogField(adapter);
 		fieldEditor.setDialogFieldListener(adapter);
-		fieldEditor.setButtonLabel("Browse");
+		fieldEditor.setButtonLabel("Browse...");
 		fieldEditor.setLabelText("Data Context Type:");
 		fieldEditor.doFillIntoGrid(composite, 4);
 		LayoutUtil.setWidthHint(fieldEditor.getTextControl(null), getMaxFieldWidth());
