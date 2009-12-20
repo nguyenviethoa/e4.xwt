@@ -107,10 +107,10 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 
 		createSeparator(composite, nColumns);
 		{
-			Label metaclassLabel = new Label(composite, SWT.NONE);
-			metaclassLabel.setText("Generating Metaclass");
+			new Label(composite, SWT.NONE);
 			metaclassButton = new Button(composite, SWT.CHECK);
 			metaclassButton.setSelection(shouldGenMetaclass);
+			metaclassButton.setText("Generating Metaclass");
 			GridData data = new GridData();
 			data.horizontalSpan = 3;
 			metaclassButton.setLayoutData(data);
@@ -249,6 +249,8 @@ public class NewPresentationWizardPage extends org.eclipse.jdt.ui.wizards.NewCla
 	
 	@Override
 	public void setPackageFragment(IPackageFragment pack, boolean canBeModified) {
+		
+		
 		String name = pack.getElementName() + ".ui";
 		IPackageFragmentRoot root = (IPackageFragmentRoot) pack.getParent();
 		IPackageFragment packageFragment = root.getPackageFragment(name);
