@@ -99,4 +99,70 @@ public class ControlBindingTests extends XWTTestCase {
 			}
 		});
 	}
+
+	public void testTwoRadios() throws Exception {
+		URL url = ControlBindingTests.class.getResource(TwoRadios.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button radio1 = (Button) XWT.findElementByName(root, "button1");
+				Button radio2 = (Button) XWT.findElementByName(root, "button2");
+				checkInitial(radio1, radio2);
+			}
+			private void checkInitial(Button radio1, Button radio2) {
+				if (!radio2.getEnabled())
+					fail("radio2 should have been enabled");
+			}
+		});
+	}
+	
+	public void testTwoRadios_Select1() throws Exception {
+		URL url = ControlBindingTests.class.getResource(TwoRadios.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button radio1 = (Button) XWT.findElementByName(root, "button1");
+				selectButton(radio1, true);
+			}
+		}, 
+		new Runnable() {
+			public void run() {
+				Button radio1 = (Button) XWT.findElementByName(root, "button1");
+				Button radio2 = (Button) XWT.findElementByName(root, "button2");
+				checkSelected(radio1, radio2);
+			}
+
+			private void checkSelected(Button radio1, Button radio2) {
+				if (radio2.getEnabled())
+					fail("radio2 should have been disabled");
+			}
+		});
+	}
+
+	public void testTwoRadios_UnSelect1() throws Exception {
+		URL url = ControlBindingTests.class.getResource(TwoRadios.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button radio1 = (Button) XWT.findElementByName(root, "button1");
+				selectButton(radio1, true);
+			}
+		}, 
+		new Runnable() {
+			public void run() {
+				Button radio1 = (Button) XWT.findElementByName(root, "button1");
+				selectButton(radio1, false);
+			}
+		}, 
+		new Runnable() {
+			public void run() {
+				Button radio2 = (Button) XWT.findElementByName(root, "button2");
+				if (!radio2.getEnabled())
+					fail("radio2 should have been disabled");
+			}
+		});
+	}
 }
