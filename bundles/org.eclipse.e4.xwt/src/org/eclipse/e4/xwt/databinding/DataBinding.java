@@ -16,6 +16,7 @@ import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
+import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.core.Binding;
 import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
@@ -59,10 +60,11 @@ public class DataBinding extends AbstractDataBinding {
 				// TODO should raise an exception
 				return null;
 			}
+			Object value = observableSource;
 			if (observableSource instanceof IObservableValue) {
-				return ((IObservableValue)observableSource).getValue();				
+				value = ((IObservableValue)observableSource).getValue();				
 			}
-			return observableSource;
+			return convertedValue(value);
 		}
 		
 		IDataProvider dataProvider = getDataProvider();		
@@ -93,10 +95,19 @@ public class DataBinding extends AbstractDataBinding {
 			bindingContext.bind(observableSource, observableWidget, this);
 		}
 		
+		Object value = observableSource;
 		if (observableSource instanceof IObservableValue) {
-			return ((IObservableValue)observableSource).getValue();				
+			value = ((IObservableValue)observableSource).getValue();				
 		}
-		return observableSource;
+		return convertedValue(value);
+	}
+	
+	private Object convertedValue(Object value) {
+		IValueConverter converter = getConverter();
+		if (converter != null) {
+			value = converter.convert(value);
+		}
+		return value;
 	}
 
 	public boolean isSourceProeprtyReadOnly() {

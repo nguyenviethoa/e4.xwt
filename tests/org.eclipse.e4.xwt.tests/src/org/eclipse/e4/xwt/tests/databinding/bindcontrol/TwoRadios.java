@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     Soyatec - initial API and implementation
+ *     Soyatec and hceylan - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.databinding.bindcontrol;
 

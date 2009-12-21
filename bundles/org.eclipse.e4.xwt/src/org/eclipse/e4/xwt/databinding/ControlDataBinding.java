@@ -15,6 +15,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
+import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.internal.core.Binding;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
@@ -60,14 +61,24 @@ public class ControlDataBinding extends AbstractDataBinding {
 
 		if (targetWidget == null) {
 			if (sourceWidget != null) {
-				return sourceWidget.getValue();
+				Object value = sourceWidget.getValue();
+				IValueConverter converter = getConverter();
+				if (converter != null) {
+					value = converter.convert(value);
+				}
+				return value;
 			}
 			return source;
 		}
 		IBindingContext bindingContext = new BindingContext();
 		bindingContext.bind(sourceWidget, targetWidget, this);
 		if (sourceWidget != null) {
-			return sourceWidget.getValue();
+			Object value = sourceWidget.getValue();
+			IValueConverter converter = getConverter();
+			if (converter != null) {
+				value = converter.convert(value);
+			}
+			return value;
 		}
 		return source;
 	}
