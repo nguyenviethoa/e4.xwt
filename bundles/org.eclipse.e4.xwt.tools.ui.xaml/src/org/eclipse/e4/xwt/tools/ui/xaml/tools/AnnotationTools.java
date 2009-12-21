@@ -32,6 +32,16 @@ public class AnnotationTools {
 		annotation.getDetails().put(key, value);
 	}
 
+	public static void removeAnnotation(XamlNode node, String key) {
+		if (node == null) {
+			return;
+		}
+		Annotation annotation = node.getAnnotation(key);
+		if (annotation != null) {
+			node.getAnnotations().remove(annotation);
+		}
+	}
+
 	public static boolean isAnnotated(XamlNode node, String key) {
 		if (node == null) {
 			return false;
