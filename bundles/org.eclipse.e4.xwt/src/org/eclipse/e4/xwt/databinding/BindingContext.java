@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -23,16 +23,18 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.IValueValidator;
 import org.eclipse.e4.xwt.InverseValueConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
+import org.eclipse.e4.xwt.validators.InverseValidator;
 
 /**
  * @author jliu jin.liu@soyatec.com
  */
 public class BindingContext implements IBindingContext {
 	public static final UpdateSetStrategy POLICY_UPDATE = new UpdateSetStrategy(UpdateSetStrategy.POLICY_UPDATE);
-	
+
 
 	public Binding bind(IObservableValue source, IObservableValue target) {
 		return bind(source, target, null);
@@ -40,7 +42,7 @@ public class BindingContext implements IBindingContext {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
 	public Binding bind(IObservable source, IObservable target, IDataBindingInfo dataBinding) {
@@ -51,6 +53,7 @@ public class BindingContext implements IBindingContext {
 			IValueConverter converter = null;
 			int sourceToTargetPolicy = UpdateSetStrategy.POLICY_UPDATE;
 			int targetToSourcePolicy = UpdateSetStrategy.POLICY_UPDATE;
+			IValueValidator[] validators;
 			// Set policy to UpdateValueStrategy.
 			if (dataBinding != null) {
 				switch (dataBinding.getMode()) {
@@ -65,6 +68,7 @@ public class BindingContext implements IBindingContext {
 					break;
 				}
 				converter = dataBinding.getConverter();
+				validators = dataBinding.getValidators();
 			}
 			UpdateSetStrategy sourceToTarget = new UpdateSetStrategy(sourceToTargetPolicy);
 			UpdateSetStrategy targetToSource = new UpdateSetStrategy(targetToSourcePolicy);
@@ -94,25 +98,25 @@ public class BindingContext implements IBindingContext {
 			return bindList((IObservableList) target, (IObservableList)source, targetToSource, sourceToTarget, converter);
 		}
 		throw new IllegalStateException();
-		
+
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
 	public Binding bindList(IObservableList source, IObservableList target, UpdateListStrategy sourceToTarget, UpdateListStrategy targetToSource, IValueConverter converter) {
 		if (converter != null) {
-			return bindList(source, target, sourceToTarget, targetToSource, converter, new InverseValueConverter(converter));			
+			return bindList(source, target, sourceToTarget, targetToSource, converter, new InverseValueConverter(converter));
 		}
 		else {
-			return bindList(source, target, sourceToTarget, targetToSource, null, null);						
+			return bindList(source, target, sourceToTarget, targetToSource, null, null);
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 * @param source
 	 * @param target
 	 * @param sourceToTarget if it is null, the default converter will be update policy
@@ -120,7 +124,7 @@ public class BindingContext implements IBindingContext {
 	 * @param sourceToTargetConvertor if it is null, the default converter will be used
 	 * @param targetToSourceConvertor if it is null, the default converter will be used
 	 */
-	public Binding bindList(IObservableList source, IObservableList target, UpdateListStrategy sourceToTarget, UpdateListStrategy targetToSource, 
+	public Binding bindList(IObservableList source, IObservableList target, UpdateListStrategy sourceToTarget, UpdateListStrategy targetToSource,
 			IConverter sourceToTargetConvertor, IConverter targetToSourceConvertor) {
 		if (source != null && target != null) {
 			if (sourceToTarget == null) {
@@ -129,7 +133,7 @@ public class BindingContext implements IBindingContext {
 			if (targetToSource == null) {
 				targetToSource = new UpdateListStrategy(UpdateListStrategy.POLICY_UPDATE);
 			}
-			
+
 			if (sourceToTargetConvertor != null) {
 				sourceToTarget.setConverter(sourceToTargetConvertor);
 			}
@@ -143,24 +147,24 @@ public class BindingContext implements IBindingContext {
 		}
 		return null;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
 	public Binding bindSet(IObservableSet source, IObservableSet target, UpdateSetStrategy sourceToTarget, UpdateSetStrategy targetToSource, IValueConverter converter) {
 		if (converter != null) {
-			return bindSet(source, target, sourceToTarget, targetToSource, converter, new InverseValueConverter(converter));			
+			return bindSet(source, target, sourceToTarget, targetToSource, converter, new InverseValueConverter(converter));
 		}
 		else {
-			return bindSet(source, target, sourceToTarget, targetToSource, null, null);						
+			return bindSet(source, target, sourceToTarget, targetToSource, null, null);
 		}
 	}
 
-	
+
 	/**
-	 * 
+	 *
 	 * @param source
 	 * @param target
 	 * @param sourceToTarget if it is null, the default converter will be update policy
@@ -168,7 +172,7 @@ public class BindingContext implements IBindingContext {
 	 * @param sourceToTargetConvertor if it is null, the default converter will be used
 	 * @param targetToSourceConvertor if it is null, the default converter will be used
 	 */
-	public Binding bindSet(IObservableSet source, IObservableSet target, UpdateSetStrategy sourceToTarget, UpdateSetStrategy targetToSource, 
+	public Binding bindSet(IObservableSet source, IObservableSet target, UpdateSetStrategy sourceToTarget, UpdateSetStrategy targetToSource,
 			IConverter sourceToTargetConvertor, IConverter targetToSourceConvertor) {
 		if (source != null && target != null) {
 			if (sourceToTarget == null) {
@@ -177,7 +181,7 @@ public class BindingContext implements IBindingContext {
 			if (targetToSource == null) {
 				targetToSource = new UpdateSetStrategy(UpdateSetStrategy.POLICY_UPDATE);
 			}
-			
+
 			if (sourceToTargetConvertor != null) {
 				sourceToTarget.setConverter(sourceToTargetConvertor);
 			}
@@ -191,10 +195,10 @@ public class BindingContext implements IBindingContext {
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * @param source
 	 * @param target
 	 * @param sourceToTarget if it is null, the default converter will be update policy
@@ -202,7 +206,7 @@ public class BindingContext implements IBindingContext {
 	 * @param sourceToTargetConvertor if it is null, the default converter will be used
 	 * @param targetToSourceConvertor if it is null, the default converter will be used
 	 */
-	public Binding bind(IObservableList source, IObservableList target, UpdateListStrategy sourceToTarget, UpdateListStrategy targetToSource, 
+	public Binding bind(IObservableList source, IObservableList target, UpdateListStrategy sourceToTarget, UpdateListStrategy targetToSource,
 			IConverter sourceToTargetConvertor, IConverter targetToSourceConvertor) {
 		if (source != null && target != null) {
 			if (sourceToTarget == null) {
@@ -211,7 +215,7 @@ public class BindingContext implements IBindingContext {
 			if (targetToSource == null) {
 				targetToSource = new UpdateListStrategy(UpdateListStrategy.POLICY_UPDATE);
 			}
-			
+
 			if (sourceToTargetConvertor != null) {
 				sourceToTarget.setConverter(sourceToTargetConvertor);
 			}
@@ -225,15 +229,16 @@ public class BindingContext implements IBindingContext {
 		}
 		return null;
 	}
-	
-	
+
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
 	private Binding bindValue(IObservableValue source, IObservableValue target, IDataBindingInfo dataBinding) {
 		IValueConverter converter = null;
+		IValueValidator[] validators = null;
 		int sourceToTargetPolicy = UpdateValueStrategy.POLICY_UPDATE;
 		int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
 		// Set policy to UpdateValueStrategy.
@@ -250,29 +255,67 @@ public class BindingContext implements IBindingContext {
 				break;
 			}
 			converter = dataBinding.getConverter();
+			validators = dataBinding.getValidators();
 		}
 		UpdateValueStrategy sourceToTarget = new UpdateValueStrategy(sourceToTargetPolicy);
 		UpdateValueStrategy targetToSource = new UpdateValueStrategy(targetToSourcePolicy);
-		
+
+		bindValidators(validators, sourceToTarget, targetToSource);
+
 		return bind(source, target, sourceToTarget, targetToSource, converter);
+	}
+
+	private void bindValidators(IValueValidator[] validators, UpdateValueStrategy sourceToTarget,
+			UpdateValueStrategy targetToSource) {
+		if (validators != null){
+			for (IValueValidator validator : validators) {
+				switch (validator.getBindingMode()) {
+				case SourceToTarget:
+					addValidatorToStrategy(sourceToTarget, validator);
+					break;
+				case TargetToSource:
+					addValidatorToStrategy(targetToSource, new InverseValidator(validator));
+					break;
+				case Both:
+				default:
+					addValidatorToStrategy(sourceToTarget, validator);
+					addValidatorToStrategy(targetToSource, new InverseValidator(validator));
+				}
+			}
+		}
+	}
+
+	private void addValidatorToStrategy(UpdateValueStrategy strategy,
+			IValueValidator validator) {
+		switch (validator.getPhase()) {
+		case AfterGet:
+			strategy.setAfterGetValidator(validator);
+			break;
+		case AfterConvert:
+			strategy.setAfterConvertValidator(validator);
+			break;
+		case BeforeSet:
+		default:
+			strategy.setBeforeSetValidator(validator);
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
 	 */
 	public Binding bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, IValueConverter converter) {
 		if (converter != null) {
-			return bind(source, target, sourceToTarget, targetToSource, converter, new InverseValueConverter(converter));			
+			return bind(source, target, sourceToTarget, targetToSource, converter, new InverseValueConverter(converter));
 		}
 		else {
-			return bind(source, target, sourceToTarget, targetToSource, null, null);						
+			return bind(source, target, sourceToTarget, targetToSource, null, null);
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 * @param source
 	 * @param target
 	 * @param sourceToTarget if it is null, the default converter will be update policy
@@ -280,7 +323,7 @@ public class BindingContext implements IBindingContext {
 	 * @param sourceToTargetConvertor if it is null, the default converter will be used
 	 * @param targetToSourceConvertor if it is null, the default converter will be used
 	 */
-	public Binding bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource, 
+	public Binding bind(IObservableValue source, IObservableValue target, UpdateValueStrategy sourceToTarget, UpdateValueStrategy targetToSource,
 			IConverter sourceToTargetConvertor, IConverter targetToSourceConvertor) {
 		if (source != null && target != null) {
 			if (sourceToTarget == null) {
@@ -289,7 +332,7 @@ public class BindingContext implements IBindingContext {
 			if (targetToSource == null) {
 				targetToSource = new UpdateValueStrategy(UpdateValueStrategy.POLICY_UPDATE);
 			}
-			
+
 			// Add converter to UpdateValueStrategy.
 			Object sourceValueType = source.getValueType();
 			if (sourceValueType == null) {

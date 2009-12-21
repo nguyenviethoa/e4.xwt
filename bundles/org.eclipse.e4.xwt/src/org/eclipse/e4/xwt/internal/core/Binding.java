@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -14,6 +14,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.IValueValidator;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
@@ -27,7 +28,7 @@ import org.eclipse.swt.widgets.Widget;
 
 /**
  * Generic Binding definition
- * 
+ *
  * @author yyang (yves.yang@soyatec.com)
  */
 public class Binding extends DynamicBinding {
@@ -39,17 +40,21 @@ public class Binding extends DynamicBinding {
 	private String elementName;
 
 	private IValueConverter converter;
-	
+
+	private IValueValidator[] validators = IValueValidator.EMPTY_ARRAY;
+
 	private IObservable observableSource;
 
 	/**
-	 * <p>Default</p>
-	 * 
+	 * <p>
+	 * Default
+	 * </p>
+	 *
 	 */
 	private UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.Default;
 
 	private BindingExpressionPath pathSegments;
-	
+
 	public BindingExpressionPath getPathPropertySegments() {
 		if (pathSegments == null) {
 			pathSegments = new BindingExpressionPath(getPath());
@@ -60,7 +65,7 @@ public class Binding extends DynamicBinding {
 	public UpdateSourceTrigger getUpdateSourceTrigger() {
 		return updateSourceTrigger;
 	}
-	
+
 	public void setUpdateSourceTrigger(UpdateSourceTrigger updateSourceTrigger) {
 		this.updateSourceTrigger = updateSourceTrigger;
 	}
@@ -105,12 +110,12 @@ public class Binding extends DynamicBinding {
 		}
 		return null;
 	}
-	
+
 	protected boolean isSelfBinding(Object data) {
 		if (data != this) {
 			return false;
 		}
-		Binding binding = (Binding)data;
+		Binding binding = (Binding) data;
 		return BindingExpressionPath.isEmptyPath(binding.getPath());
 	}
 
@@ -131,15 +136,17 @@ public class Binding extends DynamicBinding {
 				if (widget == null) {
 					widget = UserData.getWidget(control);
 				}
-				return ScopeManager.observeValue(widget, value, getPathPropertySegments(), getUpdateSourceTrigger());
+				return ScopeManager.observeValue(widget, value,
+						getPathPropertySegments(), getUpdateSourceTrigger());
 			}
 		}
 		if (source != null && !BindingExpressionPath.isEmptyPath(path)) {
 			Widget widget = UserData.getWidget(source);
 			if (widget == null) {
 				widget = UserData.getWidget(control);
-			}			
-			return ScopeManager.observeValue(widget, source, getPathPropertySegments(), getUpdateSourceTrigger());
+			}
+			return ScopeManager.observeValue(widget, source,
+					getPathPropertySegments(), getUpdateSourceTrigger());
 		}
 		return source;
 	}
@@ -159,21 +166,22 @@ public class Binding extends DynamicBinding {
 		if (source instanceof IBinding) {
 			source = ((IBinding) source).getValue();
 		}
-		
+
 		if (path == null) {
 			return false;
 		}
-		
+
 		int index = BindingExpressionPath.lastIndexOf(path);
 		if (index == -1) {
 			return (source instanceof Control || source instanceof Viewer);
 		}
-		
+
 		if (source instanceof IDataProvider) {
 			return false;
 		}
 		String parentPath = path.substring(0, index);
-		IObservable observable = ScopeManager.observeValue(getControl(), source, parentPath, getUpdateSourceTrigger());
+		IObservable observable = ScopeManager.observeValue(getControl(),
+				source, parentPath, getUpdateSourceTrigger());
 		if (observable instanceof IObservableValue) {
 			IObservableValue observableValue = (IObservableValue) observable;
 			Object type = observableValue.getValueType();
@@ -199,17 +207,18 @@ public class Binding extends DynamicBinding {
 				}
 			}
 		}
-		
+
 		// direct binding
 		if (dataContext instanceof IBinding) {
 			dataContext = ((IBinding) dataContext).getValue();
 		}
 
 		IDataProvider dataProvider = getDataProvider(dataContext);
-		
+
 		try {
 			if (isSourceControl()) {
-				ControlDataBinding controlDataBinding = new ControlDataBinding(dataContext, this, dataProvider);
+				ControlDataBinding controlDataBinding = new ControlDataBinding(
+						dataContext, this, dataProvider);
 				return controlDataBinding.getValue();
 			}
 		} catch (XWTException e) {
@@ -225,21 +234,40 @@ public class Binding extends DynamicBinding {
 		}
 		return dataContext;
 	}
-	
+
 	public boolean isSourceProeprtyReadOnly() {
 		IDataProvider dataProvider = getDataProvider();
 		try {
-			return ScopeManager.isProeprtyReadOnly(dataProvider, getPathPropertySegments());
+			return ScopeManager.isProeprtyReadOnly(dataProvider,
+					getPathPropertySegments());
 		} catch (XWTException e) {
 		}
 		return false;
 	}
-	
+
 	public IObservable getObservableSource() {
 		return observableSource;
 	}
 
 	public void setObservableSource(IObservable observableSource) {
 		this.observableSource = observableSource;
+	}
+
+	/**
+	 * Returns the validators for the binding
+	 *
+	 * @return the array of validators
+	 */
+	public IValueValidator[] getValidators() {
+		return this.validators;
+	}
+	
+	/**
+	 * Set the validators for the binding
+	 * 
+	 * @param validators
+	 */
+	public void setValidators(IValueValidator[] validators) {
+		this.validators = validators;
 	}
 }

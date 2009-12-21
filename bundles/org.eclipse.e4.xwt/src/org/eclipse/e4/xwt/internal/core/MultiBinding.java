@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -16,6 +16,7 @@ import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IMultiValueConverter;
+import org.eclipse.e4.xwt.IValueValidator;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.converters.StringMultiValueConerter;
@@ -33,7 +34,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Support the aggregation of data binding
- * 
+ *
  * @author yyang (yves.yang@soyatec.com)
  */
 public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
@@ -41,14 +42,16 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 
 	private IMultiValueConverter valueConverter;
 
+	private IValueValidator[] valueValidators = IValueValidator.EMPTY_ARRAY;
+
 	private AggregateObservableValue observableValue;
-	
+
 	private IObservableValue observableWidget;
 	private BindingExpressionPath targetPropertySegments;
 
 	/**
 	 * <p>Default</p>
-	 * 
+	 *
 	 */
 	private UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.Default;
 
@@ -78,7 +81,7 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 	public void setConverter(IMultiValueConverter valueConverter) {
 		this.valueConverter = valueConverter;
 	}
-		
+
 	public boolean isSourceProeprtyReadOnly() {
 		for (Binding binding : bindings) {
 			if (binding.isSourceProeprtyReadOnly()) {
@@ -87,9 +90,9 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		}
 		return false;
 	}
-	
+
 	public Object getValue() {
-		
+
 		if (observableValue == null) {
 			IObservableValue[] values = new IObservableValue[bindings.length];
 			for (int i = 0; i < values.length; i++) {
@@ -106,11 +109,11 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 
 			observableValue = new AggregateObservableValue(values, getConverter());
 		}
-		
+
 		IObservableValue observableWidget = getObservableWidget();
 
 		IDataProvider dataProvider = getDataProvider();
-		if (dataProvider != null) { 
+		if (dataProvider != null) {
 			IBindingContext bindingContext = dataProvider.getBindingContext();
 			if (bindingContext != null) {
 				Object target = getControl();
@@ -138,10 +141,10 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 			}
 			bindingContext.bind(observableValue, observableWidget, this);
 		}
-		
+
 		return observableValue.getValue();
 	}
-	
+
 	public IObservableValue getObservableWidget() {
 		if (observableWidget == null) {
 			Object target = getControl();
@@ -155,7 +158,7 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		}
 		return observableWidget;
 	}
-	
+
 	public Object createBoundSource() {
 		Object control = getControl();
 		Object source = XWT.getDataContext(control);
@@ -163,13 +166,13 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		if (localDataContext == this) {
 			return source;
 		}
-		
+
 		if (source instanceof IDynamicBinding) {
 			return ((IDynamicBinding) source).createBoundSource();
 		}
 		return source;
 	}
-	
+
 	public boolean isSourceControl() {
 		Object source = null;
 		Object dataContextHost = getDataContextHost();
@@ -182,11 +185,19 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		}
 		return false;
 	}
-	
+
 	public BindingExpressionPath getTargettPropertyExpression() {
 		if (targetPropertySegments == null) {
 			targetPropertySegments = new BindingExpressionPath(getType());
 		}
 		return targetPropertySegments;
+	}
+
+	public IValueValidator[] getValidators() {
+		return valueValidators;
+	}
+
+	public void setValidators(IValueValidator[] valueValidators) {
+		this.valueValidators = valueValidators;
 	}
 }

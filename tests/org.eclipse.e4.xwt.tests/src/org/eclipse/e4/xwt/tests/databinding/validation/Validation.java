@@ -6,18 +6,24 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     Soyatec - initial API and implementation
+ *     Soyatec & hceylan - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.tests.databinding.validation;
 
-import org.eclipse.e4.xwt.databinding.BindingMode;
+import java.net.URL;
 
-public interface IDataBindingInfo {
-	public IDataProvider getDataProvider();
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
 
-	BindingMode getMode();
+public class Validation {
+	public static void main(String[] args) {
 
-	IValueConverter getConverter();
-
-	IValueValidator[] getValidators();
+		URL url = Validation.class.getResource(Validation.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
