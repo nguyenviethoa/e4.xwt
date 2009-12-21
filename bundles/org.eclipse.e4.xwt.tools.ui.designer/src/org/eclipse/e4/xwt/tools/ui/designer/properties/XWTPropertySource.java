@@ -76,7 +76,7 @@ public class XWTPropertySource implements IPropertySource {
 		List<IPropertyDescriptor> result = new ArrayList<IPropertyDescriptor>();
 		IMetaclass metaclass = fContext.getMetaclass();
 		if (metaclass == null) {
-			return null;
+			return new IPropertyDescriptor[0];// Fixed bug of switch.
 		}
 		IProperty[] properties = metaclass.getProperties();
 		List<String> done = new ArrayList<String>();

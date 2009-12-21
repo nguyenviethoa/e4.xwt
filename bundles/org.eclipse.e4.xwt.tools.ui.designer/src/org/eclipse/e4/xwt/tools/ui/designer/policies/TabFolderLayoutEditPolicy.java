@@ -28,6 +28,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.ForwardedRequest;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.TabItem;
 
 /**
@@ -37,7 +38,9 @@ public class TabFolderLayoutEditPolicy extends LayoutEditPolicy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.policies.layout.NullLayoutEditPolicy#getCreateCommand(org.eclipse.gef.requests.CreateRequest)
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.policies.layout.NullLayoutEditPolicy
+	 * #getCreateCommand(org.eclipse.gef.requests.CreateRequest)
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
 		TabFolderEditPart host = (TabFolderEditPart) getHost();
@@ -50,17 +53,22 @@ public class TabFolderLayoutEditPolicy extends LayoutEditPolicy {
 		if (metaclass == null) {
 			return null;
 		}
-		if (TabItem.class.isAssignableFrom(metaclass.getType())) {
+		Class<?> type = metaclass.getType();
+		if (TabItem.class.isAssignableFrom(type)
+				|| CTabItem.class.isAssignableFrom(type)) {
 			return new DefaultCreateCommand(host, request);
 		} else {
-			return new AttachedPropertyCreateCommand(host.getActiveItemPart(), request, "control");
+			return new AttachedPropertyCreateCommand(host.getActiveItemPart(),
+					request, "control");
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#createChildEditPolicy(org.eclipse.gef.EditPart)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#createChildEditPolicy(org
+	 * .eclipse.gef.EditPart)
 	 */
 	protected EditPolicy createChildEditPolicy(EditPart child) {
 		return new NewNonResizeEditPolicy(false);
@@ -69,7 +77,9 @@ public class TabFolderLayoutEditPolicy extends LayoutEditPolicy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getMoveChildrenCommand(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#getMoveChildrenCommand(
+	 * org.eclipse.gef.Request)
 	 */
 	protected Command getMoveChildrenCommand(Request request) {
 		return null;
@@ -78,7 +88,9 @@ public class TabFolderLayoutEditPolicy extends LayoutEditPolicy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getDeleteDependantCommand(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#getDeleteDependantCommand
+	 * (org.eclipse.gef.Request)
 	 */
 	protected Command getDeleteDependantCommand(Request request) {
 		EditPart sender = ((ForwardedRequest) request).getSender();

@@ -350,7 +350,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 		getGraphicalViewer().setContents(diagram);
 		loadingFigureController.showLoadingFigure(false);
 		if (diagram != null) {
-			refresh(diagram, RefreshContext.ALL());
+			refreshUI(diagram);
 			installed = true;
 		}
 	}

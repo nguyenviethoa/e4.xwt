@@ -108,7 +108,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 
 			public void documentChanged(DocumentEvent event) {
 				// Revert File.
-				if (event.getOffset() == 0 && event.getLength() != 0 && event.getText() != null) {
+				if (event.getOffset() == 0 && event.getLength() != 0
+						&& event.getText() != null) {
 					new ReloadJob().schedule();
 				}
 			}
@@ -126,7 +127,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		if (!textDocument.getAdapters().contains(nodeAdapter)) {
 			textDocument.addAdapter(nodeAdapter);
 		}
-		IDOMElement textElement = (IDOMElement) textDocument.getDocumentElement();
+		IDOMElement textElement = (IDOMElement) textDocument
+				.getDocumentElement();
 
 		if (buildingType == NONE) {
 			buildingType = LOADING;
@@ -169,6 +171,7 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.xaml.ve.editor.IDiagramModelBuilder#getModelRoot()
 	 */
 	public XamlDocument getDocumentRoot() {
@@ -202,9 +205,11 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		}
 	}
 
-	protected void createChild(XamlNode parent, IDOMElement text, IProgressMonitor monitor) {
+	protected void createChild(XamlNode parent, IDOMElement text,
+			IProgressMonitor monitor) {
 		List<IDOMNode> attributes = getAttributes(text);
-		List<XamlAttribute> oldAttrs = new ArrayList<XamlAttribute>(parent.getAttributes());
+		List<XamlAttribute> oldAttrs = new ArrayList<XamlAttribute>(parent
+				.getAttributes());
 		for (int i = 0; i < attributes.size(); i++) {
 			IDOMNode attr = attributes.get(i);
 			oldAttrs.remove(createAttribute(parent, attr, i));
@@ -218,7 +223,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		}
 
 		List<IDOMElement> childNodes = getChildNodes(text);
-		List<XamlElement> oldChildren = new ArrayList<XamlElement>(parent.getChildNodes());
+		List<XamlElement> oldChildren = new ArrayList<XamlElement>(parent
+				.getChildNodes());
 		for (int i = 0; i < childNodes.size(); i++) {
 			IDOMElement child = childNodes.get(i);
 			oldChildren.remove(createElement(parent, child, i));
@@ -244,7 +250,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		List<IDOMElement> childNodes = new ArrayList<IDOMElement>();
 		Node child = parent.getFirstChild();
 		while (child != null) {
-			if (child instanceof IDOMElement && child.getLocalName().indexOf(".") == -1) {
+			if (child instanceof IDOMElement
+					&& child.getLocalName().indexOf(".") == -1) {
 				childNodes.add((IDOMElement) child);
 			}
 			child = child.getNextSibling();
@@ -372,13 +379,14 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		return buffer.toString();
 	}
 
-	protected XamlElement createElement(XamlNode parent, IDOMElement child, int index) {
+	protected XamlElement createElement(XamlNode parent, IDOMElement child,
+			int index) {
 		String name = child.getLocalName();
 		String prefix = child.getPrefix();
 		String ns = document.getDeclaredNamespace(prefix);
 		XamlElement e = parent.getChild(index);
-		if (e == null || e.getName() == null || e.getNamespace() == null || !e.getName().equals(name)
-				|| !e.getNamespace().equals(ns)) {
+		if (e == null || e.getName() == null || e.getNamespace() == null
+				|| !e.getName().equals(name) || !e.getNamespace().equals(ns)) {
 			e = XamlFactory.eINSTANCE.createElement(normalizeName(name), ns);
 			e.setId(generateID(name));
 		}
@@ -427,7 +435,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		// XamlNode oldParent = parent;
 		// parent = getAttribute(parent, attrName, ns);
 		// if (parent == null) {
-		// parent = XamlFactory.eINSTANCE.createAttribute(normalizeName(attrName), ns);
+		// parent =
+		// XamlFactory.eINSTANCE.createAttribute(normalizeName(attrName), ns);
 		// oldParent.getAttributes().add((XamlAttribute) parent);
 		// }
 		// name = names.get(i + 1);
@@ -470,7 +479,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			if (valueNode != null && valueNode instanceof XamlElement) {
 				addChild(a, (XamlElement) valueNode, -1);
 			}
-			for (Iterator<XamlElement> iterator = a.getChildNodes().iterator(); iterator.hasNext();) {
+			for (Iterator<XamlElement> iterator = a.getChildNodes().iterator(); iterator
+					.hasNext();) {
 				if (iterator.next() != valueNode) {
 					iterator.remove();
 				}
@@ -490,7 +500,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		return value != null && value.startsWith("{") && value.endsWith("}");
 	}
 
-	protected XamlAttribute getAttribute(XamlNode parent, String attrName, String namespace) {
+	protected XamlAttribute getAttribute(XamlNode parent, String attrName,
+			String namespace) {
 		return XWTModelUtil.getAdaptableAttribute(parent, attrName, namespace);
 	}
 
@@ -517,7 +528,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		return n;
 	}
 
-	protected XamlAttribute addAttribute(XamlNode parent, XamlAttribute a, int index) {
+	protected XamlAttribute addAttribute(XamlNode parent, XamlAttribute a,
+			int index) {
 		if (parent == null || a == null) {
 			return null;
 		}
@@ -556,7 +568,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 	}
 
 	protected IDOMDocument getTextDocument(IDocument doc) {
-		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+		IStructuredModel model = StructuredModelManager.getModelManager()
+				.getExistingModelForRead(doc);
 		if (model != null && model instanceof IDOMModel) {
 			return ((IDOMModel) model).getDocument();
 		}
@@ -590,7 +603,11 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			String childName = localName + "." + name;
 			while (localName != null && localName.indexOf(".") != -1) {
 				/*
-				 * If the parent like: "TableViewer.table", we should add the new attribute("layoutData") to TableViewer element directly, the new element should be "TableViewer.table.layoutData" and its parent should be "TableViewer" but not "TableViewer.table".
+				 * If the parent like: "TableViewer.table", we should add the
+				 * new attribute("layoutData") to TableViewer element directly,
+				 * the new element should be "TableViewer.table.layoutData" and
+				 * its parent should be "TableViewer" but not
+				 * "TableViewer.table".
 				 */
 				parent = (IDOMElement) parent.getParentNode();
 				localName = parent.getLocalName();
@@ -600,12 +617,14 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			if (!attributes.isEmpty()) {
 				for (XamlAttribute attr : attributes) {
 					if (attr.getValue() != null) {
-						IDOMElement node = (IDOMElement) textDocument.createElement(childName);
+						IDOMElement node = (IDOMElement) textDocument
+								.createElement(childName);
 						reverseAttr(node, attr);
 						parent.appendChild(node);
 						map(model, node);
 					} else {
-						IDOMElement node = (IDOMElement) textDocument.createElement(childName);
+						IDOMElement node = (IDOMElement) textDocument
+								.createElement(childName);
 						EList<XamlElement> childNodes2 = attr.getChildNodes();
 						for (XamlElement child : childNodes2) {
 							reverseNode(node, child);
@@ -615,7 +634,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 					}
 				}
 			} else if (!childNodes.isEmpty()) {
-				IDOMElement node = (IDOMElement) textDocument.createElement(childName);
+				IDOMElement node = (IDOMElement) textDocument
+						.createElement(childName);
 				for (XamlElement child : childNodes) {
 					reverseNode(node, child);
 				}
@@ -640,7 +660,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		if (prefix == null && namespace != null) {
 			prefix = getPrefix(namespace);
 		}
-		if ((prefix != null && !prefix.equals(node.getPrefix())) || (prefix == null && node.getPrefix() != null)) {
+		if ((prefix != null && !prefix.equals(node.getPrefix()))
+				|| (prefix == null && node.getPrefix() != null)) {
 			node.setPrefix(prefix);
 		}
 		if (prefix != null) {
@@ -699,7 +720,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 	}
 
 	protected String getPrefix(String namespace) {
-		EMap<String, String> declaredNamespaces = document.getDeclaredNamespaces();
+		EMap<String, String> declaredNamespaces = document
+				.getDeclaredNamespaces();
 		Set<String> existings = declaredNamespaces.keySet();
 		for (String p : existings) {
 			if (namespace.equals(declaredNamespaces.get(p))) {
@@ -733,7 +755,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			}
 		} else {
 			IDOMDocument textDocument = getTextDocument(jfaceDom);
-			Text textNode = textDocument.createTextNode(value == null ? "" : value);
+			Text textNode = textDocument.createTextNode(value == null ? ""
+					: value);
 			node.appendChild(textNode);
 		}
 	}
@@ -793,10 +816,25 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			int eventType = msg.getEventType();
 			switch (eventType) {
 			case Notification.ADD: {
-				if (textNode == null || (!(textNode instanceof IDOMElement) && !(textNode instanceof IDOMAttr))) {
+				if (textNode == null && notifier instanceof EObject) {
+					EObject eContainer = ((EObject) notifier).eContainer();
+					IDOMNode superParent = mapper.getTextNode(eContainer);
+					if (superParent != null) {
+						if (notifier instanceof XamlAttribute) {
+							reverseAttr(superParent, (XamlAttribute) notifier);
+						} else if (notifier instanceof XamlElement) {
+							reverseNode(superParent, (XamlElement) newValue);
+						}
+					}
+					textNode = mapper.getTextNode(notifier);
+				}
+				if (textNode == null
+						|| (!(textNode instanceof IDOMElement) && !(textNode instanceof IDOMAttr))) {
 					break;
 				}
-				if (notifier instanceof XamlAttribute && newValue instanceof XamlElement) {
+				if (notifier instanceof XamlAttribute
+						&& textNode instanceof IDOMAttr
+						&& newValue instanceof XamlElement) {
 					validatePrefix((XamlElement) newValue);
 					String flatValue = ((XamlElement) newValue).getFlatValue();
 					if (flatValue == null) {
@@ -819,13 +857,15 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 				int newPos = msg.getPosition();
 				IDOMNode parentNode = textNode;
 				IDOMNode moveable = newNode;
-				if (parentNode == null || moveable == null || parentNode != moveable.getParentNode()) {
+				if (parentNode == null || moveable == null
+						|| parentNode != moveable.getParentNode()) {
 					break;
 				}
 				List<IDOMElement> eles = getChildNodes(parentNode);
 				int offset = newPos - oldPos;
 				int oldIndex = eles.indexOf(moveable);
-				int newIndex = offset > 0 ? oldIndex + offset + 1 : oldIndex + offset;
+				int newIndex = offset > 0 ? oldIndex + offset + 1 : oldIndex
+						+ offset;
 				Node nextSibling = moveable.getNextSibling();
 				parentNode.removeChild(moveable);
 				if (nextSibling instanceof Text) {
@@ -854,9 +894,11 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 								textNode.removeChild(oldNode);
 							}
 						}
-					} else if (textNode instanceof IDOMElement && oldNode instanceof IDOMAttr) {
+					} else if (textNode instanceof IDOMElement
+							&& oldNode instanceof IDOMAttr) {
 						if (contains(textNode, (Attr) oldNode)) {
-							((IDOMElement) textNode).removeAttributeNode((Attr) oldNode);
+							((IDOMElement) textNode)
+									.removeAttributeNode((Attr) oldNode);
 						}
 					}
 					mapper.remove(oldNode);
@@ -871,12 +913,14 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			case Notification.UNSET:
 				if (textNode != null) {
 					if (textNode instanceof Attr) {
-						String value = newValue == null ? "" : newValue.toString();
+						String value = newValue == null ? "" : newValue
+								.toString();
 						Attr attr = (Attr) textNode;
 						if (!value.equals(attr.getNodeValue())) {
 							attr.setNodeValue(value);
 						}
-					} else if (newValue != null && oldValue != null && oldValue.equals(getContent(textNode))) {
+					} else if (newValue != null && oldValue != null
+							&& oldValue.equals(getContent(textNode))) {
 						reverseContent(textNode, newValue.toString());
 					}
 				}
@@ -898,7 +942,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		if (jfaceDom != null) {
 			IDOMDocument textDocument = getTextDocument(jfaceDom);
 			if (textDocument != null) {
-				IDOMElement textElement = (IDOMElement) textDocument.getDocumentElement();
+				IDOMElement textElement = (IDOMElement) textDocument
+						.getDocumentElement();
 				formatRemoveEmpty(textElement);
 			}
 			StructuredTextHelper.format(jfaceDom);
@@ -920,8 +965,10 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 					TextImpl t = (TextImpl) item;
 					if (t.isWhitespace() || t.isInvalid()) {
 						Node next = t.getNextSibling();
-						while (next != null && next.getNodeType() == Node.TEXT_NODE
-								&& (((TextImpl) next).isWhitespace() || ((TextImpl) next).isInvalid())) {
+						while (next != null
+								&& next.getNodeType() == Node.TEXT_NODE
+								&& (((TextImpl) next).isWhitespace() || ((TextImpl) next)
+										.isInvalid())) {
 							node.removeChild(next);
 							next = next.getNextSibling();
 						}
@@ -977,7 +1024,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 	}
 
 	public void reload() {
-		if (buildingType == RELOADING || buildingType == BUILDING_MODEL || !isValidThread()) {
+		if (buildingType == RELOADING || buildingType == BUILDING_MODEL
+				|| !isValidThread()) {
 			return;
 		}
 		if (document == null || jfaceDom == null) {
@@ -988,13 +1036,15 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			return;
 		}
 		buildingType = RELOADING;
-		IDOMElement textElement = (IDOMElement) textDocument.getDocumentElement();
+		IDOMElement textElement = (IDOMElement) textDocument
+				.getDocumentElement();
 		loadingModel(textElement, null);
 		buildingType = NONE;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.xaml.ve.editor.IDiagramModelBuilder#dispose()
 	 */
 	public void dispose() {
@@ -1013,11 +1063,13 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 	}
 
 	protected boolean isValidThread() {
-		return getDisplay() == null || getDisplay().getThread() == Thread.currentThread();
+		return getDisplay() == null
+				|| getDisplay().getThread() == Thread.currentThread();
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.xaml.ve.editor.IDiagramModelBuilder#saveCache()
 	 */
 	public void doSave(IProgressMonitor monitor) {
@@ -1026,7 +1078,10 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.xaml.ve.editor.IDiagramModelBuilder#hasListener(org.soyatec .xaml.ve.editor.IModelChangeListener)
+	 * 
+	 * @see
+	 * org.soyatec.xaml.ve.editor.IDiagramModelBuilder#hasListener(org.soyatec
+	 * .xaml.ve.editor.IModelChangeListener)
 	 */
 	public boolean hasListener(ModelBuildListener listener) {
 		if (listeners == null) {
@@ -1049,8 +1104,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			return type == NodeAdapter.class;
 		}
 
-		public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue,
-				Object newValue, int pos) {
+		public void notifyChanged(INodeNotifier notifier, int eventType,
+				Object changedFeature, Object oldValue, Object newValue, int pos) {
 			if (buildingType == BUILDING_MODEL) {
 				return;
 			}
@@ -1065,11 +1120,13 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 				if (changedNode != null && newValue == null) {
 					// remove.
 					parentNode.getAttributes().remove(changedNode);
-				} else if (parentNode != null && changedFeature instanceof IDOMAttr) {
+				} else if (parentNode != null
+						&& changedFeature instanceof IDOMAttr) {
 					createAttribute(parentNode, (IDOMAttr) changedFeature, -1);
 				}
 				buildingType = NONE;
-			} else if (eventType == INodeNotifier.REMOVE && parentNode != null && changedNode != null) {
+			} else if (eventType == INodeNotifier.REMOVE && parentNode != null
+					&& changedNode != null) {
 				if (changedNode instanceof XamlElement) {
 					parentNode.getChildNodes().remove(changedNode);
 				} else if (changedNode instanceof XamlAttribute) {
@@ -1079,7 +1136,8 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			} else if (eventType == INodeNotifier.STRUCTURE_CHANGED) {
 				IJobManager jobManager = Job.getJobManager();
 				Job currentJob = jobManager.currentJob();
-				if (!(currentJob instanceof ReloadJob) && (reloadJob == null || reloadJob.getResult() != null)) {
+				if (!(currentJob instanceof ReloadJob)
+						&& (reloadJob == null || reloadJob.getResult() != null)) {
 					reloadJob = new ReloadJob();
 					reloadJob.setRule(new ISchedulingRule() {
 						public boolean contains(ISchedulingRule rule) {

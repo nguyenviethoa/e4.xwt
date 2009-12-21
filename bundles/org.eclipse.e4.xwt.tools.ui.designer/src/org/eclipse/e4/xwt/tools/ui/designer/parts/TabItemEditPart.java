@@ -17,6 +17,7 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Widget;
@@ -26,7 +27,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class TabItemEditPart extends ItemEditPart {
 
-	public TabItemEditPart(TabItem item, XamlNode model) {
+	public TabItemEditPart(Item item, XamlNode model) {
 		super(item, model);
 	}
 

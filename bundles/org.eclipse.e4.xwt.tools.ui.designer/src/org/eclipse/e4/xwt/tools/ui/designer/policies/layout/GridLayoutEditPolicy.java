@@ -22,6 +22,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.GridLayoutCommandsFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.NoOpCommand;
+import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.CreateReqHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.EntryHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutType;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
@@ -63,13 +64,16 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author jliu jin.liu@soyatec.com
  */
-public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListener, ILayoutEditPolicy {
+public class GridLayoutEditPolicy extends LayoutEditPolicy implements
+		IGridListener, ILayoutEditPolicy {
 
 	public static final String REQ_GRIDLAYOUT_SPAN = "GridLayout span cells"; //$NON-NLS-1$
 
 	public static final int DEFAULT_CELL_WIDTH = 40;
 	public static final int DEFAULT_CELL_HEIGHT = 35;
-	private static final int ADDEDCELLBORDER = 3; // How much to expand cell for added cell to draw the new border.
+	private static final int ADDEDCELLBORDER = 3; // How much to expand cell for
+													// added cell to draw the
+													// new border.
 	private GridController gridController;
 	private boolean fShowGrid = false;
 	private GridLayoutGridFigure fGridLayoutGridFigure;
@@ -98,7 +102,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 		GridController.registerEditPart(getHost(), gridController);
 		gridController.addGridListener(this);
 		getHostFigure().addFigureListener(hostFigureListener);
-		if (getHost().getSelected() == EditPart.SELECTED || getHost().getSelected() == EditPart.SELECTED_PRIMARY) {
+		if (getHost().getSelected() == EditPart.SELECTED
+				|| getHost().getSelected() == EditPart.SELECTED_PRIMARY) {
 			gridController.setGridShowing(true);
 		}
 		editPartListener = createEditPartListener();
@@ -113,14 +118,17 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#createChildEditPolicy(org.eclipse.gef.EditPart)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#createChildEditPolicy(org
+	 * .eclipse.gef.EditPart)
 	 */
 	protected EditPolicy createChildEditPolicy(EditPart child) {
 		if (child instanceof MenuBarEditPart) {
 			return new NewNonResizeEditPolicy(false);
 		}
 		// return new NonResizableSpannableEditPolicy(this);
-		return new NewResizableEditPolicy(PositionConstants.SOUTH | PositionConstants.EAST, true);
+		return new NewResizableEditPolicy(PositionConstants.SOUTH
+				| PositionConstants.EAST, true);
 	}
 
 	private EditPartListener createEditPartListener() {
@@ -140,7 +148,9 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 			}
 
 			public void selectedStateChanged(EditPart editpart) {
-				if ((editpart == null || editpart == getHost() || isChildEditPart(editpart)) && (editpart.getSelected() == EditPart.SELECTED || editpart.getSelected() == EditPart.SELECTED_PRIMARY)) {
+				if ((editpart == null || editpart == getHost() || isChildEditPart(editpart))
+						&& (editpart.getSelected() == EditPart.SELECTED || editpart
+								.getSelected() == EditPart.SELECTED_PRIMARY)) {
 					if (gridController != null) {
 						gridController.setGridShowing(true);
 					} else {
@@ -148,8 +158,10 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 							gridController.setGridShowing(false);
 					}
 				} else {
-					// Hide the grid just in case we were show before and changed the prefs
-					if (gridController != null && gridController.isGridShowing())
+					// Hide the grid just in case we were show before and
+					// changed the prefs
+					if (gridController != null
+							&& gridController.isGridShowing())
 						gridController.setGridShowing(false);
 				}
 			}
@@ -167,7 +179,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	 */
 	public void deactivate() {
 
-		GridController gridController = GridController.getGridController(getHost());
+		GridController gridController = GridController
+				.getGridController(getHost());
 		eraseGridFigure();
 		if (gridController != null) {
 			gridController.removeGridListener(this);
@@ -180,7 +193,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 			List children = getHost().getChildren();
 			Iterator iterator = children.iterator();
 			while (iterator.hasNext())
-				((EditPart) iterator.next()).removeEditPartListener(editPartListener);
+				((EditPart) iterator.next())
+						.removeEditPartListener(editPartListener);
 			editPartListener = null;
 		}
 		super.deactivate();
@@ -224,7 +238,9 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getCommand(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#getCommand(org.eclipse.
+	 * gef.Request)
 	 */
 	public Command getCommand(Request request) {
 		// if (REQ_GRIDLAYOUT_SPAN.equals(request.getType())) {
@@ -251,15 +267,20 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 		return resize.unwrap();
 	}
 
-	protected Command createResizeChildrenCommand(Request request, EditPart child, Object newSize) {
-		GridLayoutCommandsFactory factory = new GridLayoutCommandsFactory((CompositeEditPart) getHost());
-		return factory.getResizeChildrenCommand(child, (ChangeBoundsRequest) request);
+	protected Command createResizeChildrenCommand(Request request,
+			EditPart child, Object newSize) {
+		GridLayoutCommandsFactory factory = new GridLayoutCommandsFactory(
+				(CompositeEditPart) getHost());
+		return factory.getResizeChildrenCommand(child,
+				(ChangeBoundsRequest) request);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getAddCommand(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#getAddCommand(org.eclipse
+	 * .gef.Request)
 	 */
 	protected Command getAddCommand(Request request) {
 		return getMoveChildrenCommand(request);
@@ -268,9 +289,15 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getCreateCommand(org.eclipse.gef.requests.CreateRequest)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#getCreateCommand(org.eclipse
+	 * .gef.requests.CreateRequest)
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
+		CreateReqHelper reqHelper = new CreateReqHelper(request);
+		if (!reqHelper.canCreate(getHost())) {
+			return null;
+		}
 		if (fGridLayoutGridFigure == null) {
 			// TODO: Maybe create layout here.
 			return UnexecutableCommand.INSTANCE;
@@ -312,7 +339,10 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 			cell.setLocation(helper.getNumColumns(), helper.getNumRows());
 			helper.createNewCol(cell.x);
 			if (cell.x != 0 || cell.y != 0)
-				helper.createNewRow(cell.y); // If other than (0,0) for add row col, we need a new row. If it was (0,0) then we are adding the first entry to the grid.
+				helper.createNewRow(cell.y); // If other than (0,0) for add row
+												// col, we need a new row. If it
+												// was (0,0) then we are adding
+												// the first entry to the grid.
 			helper.replaceFillerOrEmpty(newObject, requestType, cell);
 			break;
 		case GridLayoutRequest.NO_ADD:
@@ -326,10 +356,13 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getDeleteDependantCommand(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#getDeleteDependantCommand
+	 * (org.eclipse.gef.Request)
 	 */
 	protected Command getDeleteDependantCommand(Request request) {
-		// Get the commands to insert filler labels into the cells where the control used to be
+		// Get the commands to insert filler labels into the cells where the
+		// control used to be
 		if (request instanceof ForwardedRequest) {
 			EditPart editPart = ((ForwardedRequest) request).getSender();
 			if (editPart instanceof CompositeEditPart) {
@@ -343,7 +376,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	}
 
 	protected Command getOrphanChildrenCommand(Request request) {
-		// Get the commands to insert filler labels into the cells where the control used to be
+		// Get the commands to insert filler labels into the cells where the
+		// control used to be
 		if (request instanceof GroupRequest) {
 			helper.startRequest();
 			List children = getChildren((GroupRequest) request);
@@ -370,7 +404,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 		Rectangle dims = helper.getChildDimensions((EObject) child.getModel());
 		Rectangle bounds;
 		if (dims != null) {
-			bounds = getGridLayoutGridFigure().getGridBroundsForCellBounds(dims);
+			bounds = getGridLayoutGridFigure()
+					.getGridBroundsForCellBounds(dims);
 		} else
 			bounds = new Rectangle();
 
@@ -392,7 +427,10 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	}
 
 	/*
-	 * this gets the location from the request and then makes it absolute (relative to the bounds of the host figure). If we didn't do this the point is relative to the viewport that is displayed, not absolute wrt to the entire canvas.
+	 * this gets the location from the request and then makes it absolute
+	 * (relative to the bounds of the host figure). If we didn't do this the
+	 * point is relative to the viewport that is displayed, not absolute wrt to
+	 * the entire canvas.
 	 */
 	private Point getLocationFromRequest(Request request) {
 		Point loc = ((DropRequest) request).getLocation().getCopy();
@@ -403,10 +441,13 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getMoveChildrenCommand(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#getMoveChildrenCommand(
+	 * org.eclipse.gef.Request)
 	 */
 	protected Command getMoveChildrenCommand(Request request) {
-		if (fGridLayoutGridFigure == null || !(request instanceof ChangeBoundsRequest))
+		if (fGridLayoutGridFigure == null
+				|| !(request instanceof ChangeBoundsRequest))
 			return UnexecutableCommand.INSTANCE;
 		ChangeBoundsRequest req = (ChangeBoundsRequest) request;
 		List editparts = req.getEditParts();
@@ -414,7 +455,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 		if (editparts.size() > 1)
 			return UnexecutableCommand.INSTANCE;
 
-		XamlNode trueEObject = (XamlNode) ((EditPart) editparts.get(0)).getModel();
+		XamlNode trueEObject = (XamlNode) ((EditPart) editparts.get(0))
+				.getModel();
 		if (trueEObject == null) {
 			return UnexecutableCommand.INSTANCE;
 		}
@@ -451,7 +493,10 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 			cell.setLocation(helper.getNumColumns(), helper.getNumRows());
 			helper.createNewCol(cell.x);
 			if (cell.x != 0 || cell.y != 0)
-				helper.createNewRow(cell.y); // If other than (0,0) for add row col, we need a new row. If it was (0,0) then we are adding the first entry to the grid.
+				helper.createNewRow(cell.y); // If other than (0,0) for add row
+												// col, we need a new row. If it
+												// was (0,0) then we are adding
+												// the first entry to the grid.
 			helper.replaceFillerOrEmpty(trueEObject, requestType, cell);
 			break;
 		case GridLayoutRequest.NO_ADD:
@@ -470,23 +515,35 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 
 		// Get the cell location that the mouse was dragged to
 		Point spanToPosition = getLocationFromRequest(request).getCopy();
-		Point spanToCellLocation = getGridLayoutGridFigure().getCellLocation(spanToPosition.x, spanToPosition.y);
+		Point spanToCellLocation = getGridLayoutGridFigure().getCellLocation(
+				spanToPosition.x, spanToPosition.y);
 		// Get the cell location where we started the drag operation
 		Dimension dim = request.getSizeDelta();
 		int handleSizeOffset = GridSpanHandle.HANDLE_SIZE / 2;
-		Point startPosition = new Point(spanToPosition.x - dim.width - handleSizeOffset, spanToPosition.y - dim.height - handleSizeOffset);
+		Point startPosition = new Point(spanToPosition.x - dim.width
+				- handleSizeOffset, spanToPosition.y - dim.height
+				- handleSizeOffset);
 		// Get the cell location of the child component
 		GraphicalEditPart ep = (GraphicalEditPart) editParts.get(0);
 		EObject child = (EObject) ep.getModel();
-		Point childCellLocation = helper.getChildDimensions(child).getLocation();
-		Point startCellLocation = getGridLayoutGridFigure().getCellLocation(startPosition);
-		// If the cell location where the pointer is located is different from the original cell location where we started,
+		Point childCellLocation = helper.getChildDimensions(child)
+				.getLocation();
+		Point startCellLocation = getGridLayoutGridFigure().getCellLocation(
+				startPosition);
+		// If the cell location where the pointer is located is different from
+		// the original cell location where we started,
 		// create the commands to change the gridwidth or gridheight
-		if ((spanToCellLocation.x >= childCellLocation.x && spanToCellLocation.y >= childCellLocation.y) && (spanToCellLocation.x != startCellLocation.x || spanToCellLocation.y != startCellLocation.y)) {
-			// Let the helper get the gridWidth or gridHeight commands based on the cell location
-			// where the pointer is and the span direction (EAST for gridwidth or SOUTH for gridheight)
+		if ((spanToCellLocation.x >= childCellLocation.x && spanToCellLocation.y >= childCellLocation.y)
+				&& (spanToCellLocation.x != startCellLocation.x || spanToCellLocation.y != startCellLocation.y)) {
+			// Let the helper get the gridWidth or gridHeight commands based on
+			// the cell location
+			// where the pointer is and the span direction (EAST for gridwidth
+			// or SOUTH for gridheight)
 			helper.startRequest();
-			helper.spanChild(child, new Point(spanToCellLocation.x - childCellLocation.x + 1, spanToCellLocation.y - childCellLocation.y + 1), request.getResizeDirection(), null);
+			helper.spanChild(child, new Point(spanToCellLocation.x
+					- childCellLocation.x + 1, spanToCellLocation.y
+					- childCellLocation.y + 1), request.getResizeDirection(),
+					null);
 			return helper.stopRequest();
 		}
 		return NoOpCommand.INSTANCE;
@@ -495,7 +552,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.xwt.editpolicies.gridlayout.IGridListener#gridHeightChanged(int, int)
+	 * @seeorg.soyatec.xaml.ve.xwt.editpolicies.gridlayout.IGridListener#
+	 * gridHeightChanged(int, int)
 	 */
 	public void gridHeightChanged(int gridHeight, int oldGridHeight) {
 		// do nothing
@@ -504,7 +562,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.xwt.editpolicies.gridlayout.IGridListener#gridMarginChanged(int, int)
+	 * @seeorg.soyatec.xaml.ve.xwt.editpolicies.gridlayout.IGridListener#
+	 * gridMarginChanged(int, int)
 	 */
 	public void gridMarginChanged(int gridMargin, int oldGridMargin) {
 		// do nothing
@@ -513,7 +572,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.xwt.editpolicies.gridlayout.IGridListener#gridVisibilityChanged(boolean)
+	 * @seeorg.soyatec.xaml.ve.xwt.editpolicies.gridlayout.IGridListener#
+	 * gridVisibilityChanged(boolean)
 	 */
 	public void gridVisibilityChanged(boolean showGrid) {
 		if (showGrid) {
@@ -526,7 +586,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.xwt.editpolicies.gridlayout.IGridListener#gridWidthChanged(int, int)
+	 * @seeorg.soyatec.xaml.ve.xwt.editpolicies.gridlayout.IGridListener#
+	 * gridWidthChanged(int, int)
 	 */
 	public void gridWidthChanged(int gridWidth, int oldGridWidth) {
 		// do nothing
@@ -568,19 +629,22 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	 * @since 1.2.0
 	 */
 	protected void showAddedCellFeedback(Rectangle cellBounds) {
-		cellBounds = cellBounds.getExpanded(cellBounds.width < 10 ? 20 : 0, cellBounds.height < 10 ? 20 : 0);
+		cellBounds = cellBounds.getExpanded(cellBounds.width < 10 ? 20 : 0,
+				cellBounds.height < 10 ? 20 : 0);
 		fRowColFigure = new GridLayoutAddedCellFeedbackFigure();
 		fRowColFigure.setBounds(cellBounds);
 		addFeedback(fRowColFigure);
 	}
 
 	/**
-	 * Show a new yellow column inserted into the grid near the column closest to position and only within that row
+	 * Show a new yellow column inserted into the grid near the column closest
+	 * to position and only within that row
 	 */
 	protected void showColumnFeedBackWithinARow(Rectangle cellBounds) {
 		cellBounds = cellBounds.getCopy();
 		cellBounds.x -= 3; // start to the right by three from side of cell.
-		cellBounds.width = 6; // But only six wide. So it will be centered over the right side of the cell.
+		cellBounds.width = 6; // But only six wide. So it will be centered over
+								// the right side of the cell.
 		fRowColFigure = new GridLayoutColumnFigure(cellBounds);
 		addFeedback(fRowColFigure);
 	}
@@ -599,10 +663,13 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#showTargetFeedback(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#showTargetFeedback(org.
+	 * eclipse.gef.Request)
 	 */
 	public void showTargetFeedback(Request request) {
-		if (!(REQ_CREATE.equals(request.getType()) && FeedbackHelper.showCreationFeedback(fbm, (CreateRequest) request))) {
+		if (!(REQ_CREATE.equals(request.getType()) && FeedbackHelper
+				.showCreationFeedback(fbm, (CreateRequest) request))) {
 			super.showTargetFeedback(request);
 		}
 	}
@@ -611,7 +678,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	 * Shows an insertion line if there is one or more current children.
 	 */
 	protected void showLayoutTargetFeedback(Request request) {
-		if (!(REQ_CREATE.equals(request.getType()) && FeedbackHelper.showCreationFeedback(fbm, (CreateRequest) request))) {
+		if (!(REQ_CREATE.equals(request.getType()) && FeedbackHelper
+				.showCreationFeedback(fbm, (CreateRequest) request))) {
 			super.showLayoutTargetFeedback(request);
 		}
 		if (!fShowGrid)
@@ -633,18 +701,21 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 		Point cell = new Point(gridReq.column, gridReq.row);
 		Rectangle cellBounds = getGridLayoutGridFigure().getCellBounds(cell);
 
-		// Calculate the bounds of the target cell figure based on whether a column is added,
+		// Calculate the bounds of the target cell figure based on whether a
+		// column is added,
 		// row is added, or it's inserted before another control.
 		switch (gridReq.type) {
 		case GridLayoutRequest.INSERT_COLUMN:
-			// If a column is added, show the target figure in between the two columns
+			// If a column is added, show the target figure in between the two
+			// columns
 			showNewColumnFeedBack(gridReq.column);
 			Rectangle colFigBounds = fRowColFigure.getBounds();
 			// mapModelToFigure(cellBounds);
 			cellBounds.width = DEFAULT_CELL_WIDTH;
 			if (cellBounds.height < 10)
 				cellBounds.expand(0, 20);
-			cellBounds.x = colFigBounds.x + colFigBounds.width / 2 - cellBounds.width / 2;
+			cellBounds.x = colFigBounds.x + colFigBounds.width / 2
+					- cellBounds.width / 2;
 			break;
 		case GridLayoutRequest.INSERT_ROW:
 			// If a row is added, show the target figure in between the two rows
@@ -654,17 +725,20 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 			cellBounds.height = DEFAULT_CELL_HEIGHT;
 			if (cellBounds.width < 10)
 				cellBounds.expand(20, 0);
-			cellBounds.y = rowFigBounds.y + rowFigBounds.height / 2 - cellBounds.height / 2;
+			cellBounds.y = rowFigBounds.y + rowFigBounds.height / 2
+					- cellBounds.height / 2;
 			break;
 		case GridLayoutRequest.INSERT_COLUMN_WITHIN_ROW:
-			// In case cell is spanned vertically we need to have the complete cellbounds.
+			// In case cell is spanned vertically we need to have the complete
+			// cellbounds.
 			showColumnFeedBackWithinARow(cellBounds);
 			// mapModelToFigure(cellBounds);
 			colFigBounds = fRowColFigure.getBounds();
 			cellBounds.width = DEFAULT_CELL_WIDTH;
 			if (cellBounds.height < 10)
 				cellBounds.expand(0, 20);
-			cellBounds.x = colFigBounds.x + colFigBounds.width / 2 - cellBounds.width / 2;
+			cellBounds.x = colFigBounds.x + colFigBounds.width / 2
+					- cellBounds.width / 2;
 			break;
 		case GridLayoutRequest.ADD_COLUMN:
 		case GridLayoutRequest.ADD_ROW:
@@ -672,12 +746,14 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 			showAddedCellFeedback(cellBounds);
 			colFigBounds = fRowColFigure.getBounds();
 			// Center the cell within these bounds.
-			cellBounds = colFigBounds.getCopy().shrink(ADDEDCELLBORDER, ADDEDCELLBORDER);
+			cellBounds = colFigBounds.getCopy().shrink(ADDEDCELLBORDER,
+					ADDEDCELLBORDER);
 			break;
 		case GridLayoutRequest.NO_ADD:
 			return; // No feedback.
 		default:
-			// mapModelToFigure(cellBounds.expand(cellBounds.width < 10 ? 20 : 0, cellBounds.height < 10 ? 20 : 0));
+			// mapModelToFigure(cellBounds.expand(cellBounds.width < 10 ? 20 :
+			// 0, cellBounds.height < 10 ? 20 : 0));
 			break;
 		}
 
@@ -689,7 +765,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	}
 
 	/**
-	 * Show a new yellow column inserted into the grid near the column closest to position
+	 * Show a new yellow column inserted into the grid near the column closest
+	 * to position
 	 */
 	protected void showNewColumnFeedBack(int col) {
 		Rectangle rect = fGridLayoutGridFigure.getColumnRectangle(col);
@@ -700,7 +777,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	}
 
 	/**
-	 * Show a new yellow row inserted into the grid near the row closest to position
+	 * Show a new yellow row inserted into the grid near the row closest to
+	 * position
 	 */
 	protected void showNewRowFeedBack(int row) {
 		Rectangle rect = fGridLayoutGridFigure.getRowRectangle(row);
@@ -712,7 +790,9 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	}
 
 	/*
-	 * Show target feedback when dragging the span handles of a component. Highlight the cells the component will occupy based on the begining cell position and end cell position of the pointer.
+	 * Show target feedback when dragging the span handles of a component.
+	 * Highlight the cells the component will occupy based on the begining cell
+	 * position and end cell position of the pointer.
 	 */
 	public void showSpanTargetFeedback(ChangeBoundsRequest request) {
 		// If the grid is not on, turn it on
@@ -722,20 +802,39 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 		Point spanToPosition = request.getLocation().getCopy();
 
 		// Get the cell location of the child component
-		GraphicalEditPart ep = (GraphicalEditPart) request.getEditParts().get(0);
+		GraphicalEditPart ep = (GraphicalEditPart) request.getEditParts()
+				.get(0);
 		EObject child = (EObject) ep.getModel();
 		Rectangle childDim = getHelper().getChildDimensions(child);
 
-		// Get the start and end cell bounds in order to determine the entire bounds of the cell feedback figure.
-		Rectangle startCellBounds = getGridLayoutGridFigure().getCellBounds(childDim.getLocation());
-		Rectangle endCellChildBounds = getGridLayoutGridFigure().getCellBounds(childDim.getBottomRight().translate(-1, -1)); // This is the lower right of the child itself.
-		if (request.getResizeDirection() == PositionConstants.EAST || request.getResizeDirection() == PositionConstants.WEST) {
-			spanToPosition.y = endCellChildBounds.y; // This forces us to not span north/south when going east/west. And it will make it tall enough that entire cell spanned height is covered.
+		// Get the start and end cell bounds in order to determine the entire
+		// bounds of the cell feedback figure.
+		Rectangle startCellBounds = getGridLayoutGridFigure().getCellBounds(
+				childDim.getLocation());
+		Rectangle endCellChildBounds = getGridLayoutGridFigure().getCellBounds(
+				childDim.getBottomRight().translate(-1, -1)); // This is the
+																// lower right
+																// of the child
+																// itself.
+		if (request.getResizeDirection() == PositionConstants.EAST
+				|| request.getResizeDirection() == PositionConstants.WEST) {
+			spanToPosition.y = endCellChildBounds.y; // This forces us to not
+														// span north/south when
+														// going east/west. And
+														// it will make it tall
+														// enough that entire
+														// cell spanned height
+														// is covered.
 		} else {
-			spanToPosition.x = endCellChildBounds.x + endCellChildBounds.width - 1; // This forces us to not span left/right when going north/south. And it will make it wide enough that entire cell spanned width is covered.
+			spanToPosition.x = endCellChildBounds.x + endCellChildBounds.width
+					- 1; // This forces us to not span left/right when going
+							// north/south. And it will make it wide enough that
+							// entire cell spanned width is covered.
 		}
-		Rectangle endCellBounds = getGridLayoutGridFigure().getCellBounds(getGridLayoutGridFigure().getCellLocation(spanToPosition));
-		if (endCellBounds == null || endCellBounds.x < startCellBounds.x || endCellBounds.y < startCellBounds.y) {
+		Rectangle endCellBounds = getGridLayoutGridFigure().getCellBounds(
+				getGridLayoutGridFigure().getCellLocation(spanToPosition));
+		if (endCellBounds == null || endCellBounds.x < startCellBounds.x
+				|| endCellBounds.y < startCellBounds.y) {
 			// End is not within a cell, or the end is before the start cell.
 			if (fGridLayoutSpanFigure != null) {
 				removeFeedback(fGridLayoutSpanFigure);
@@ -744,9 +843,11 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 			return;
 		}
 
-		Rectangle spanrect = startCellBounds.union(endCellBounds).resize(-1, -1);
+		Rectangle spanrect = startCellBounds.union(endCellBounds)
+				.resize(-1, -1);
 		if (fGridLayoutSpanFigure == null) {
-			fGridLayoutSpanFigure = new GridLayoutSpanFeedbackFigure(request.getResizeDirection());
+			fGridLayoutSpanFigure = new GridLayoutSpanFeedbackFigure(request
+					.getResizeDirection());
 		}
 		fGridLayoutSpanFigure.setLayoutFigureBounds(spanrect);
 		addFeedback(fGridLayoutSpanFigure);
@@ -755,7 +856,9 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy#refresh()
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy
+	 * #refresh()
 	 */
 	public void refresh() {
 		helper.refresh();
@@ -765,7 +868,9 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements IGridListe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy#getType()
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy
+	 * #getType()
 	 */
 	public LayoutType getType() {
 		return LayoutType.GridLayout;

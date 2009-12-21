@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.util.swt;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -22,11 +23,13 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Decorations;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -78,13 +81,15 @@ public class WidgetLocator {
 			}
 			Composite parent = control.getParent();
 			Rectangle bounds = parent.getBounds();
-			if (parent instanceof Scrollable) {
+			if (parent instanceof Scrollable && !(parent instanceof Group)
+					&& !(parent instanceof TabFolder)
+					&& !(parent instanceof CTabFolder)) {
 				Rectangle clientArea = parent.getClientArea();
 				Rectangle calced = parent.computeTrim(bounds.x, bounds.y,
 						clientArea.width, clientArea.height);
 				Rectangle correct = new Rectangle(2 * bounds.x - calced.x, 2
 						* bounds.y - calced.y, clientArea.width, // bug
-																	// workaround
+						// workaround
 						clientArea.height);
 				r.x += (correct.x - bounds.x);
 				r.y += (correct.y - bounds.y);

@@ -20,12 +20,18 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -111,28 +117,19 @@ public class CreateReqHelper {
 			Object createType = getCreateType(child);
 			if (createType instanceof Class<?>) {
 				Class<?> type = (Class<?>) createType;
-				// the child of coolBar/expandBar only is coolItem/expandItem.
-				if (CoolBar.class.isAssignableFrom(parentType)) {
-					if (!CoolItem.class.isAssignableFrom(type)) {
-						return false;
-					}
+				if (ExpandItem.class.isAssignableFrom(type)) {
+					return ExpandBar.class.isAssignableFrom(parentType);
+				} else if (ToolItem.class.isAssignableFrom(type)) {
+					return ToolBar.class.isAssignableFrom(parentType);
+				} else if (CoolItem.class.isAssignableFrom(type)) {
+					return CoolBar.class.isAssignableFrom(parentType);
+				} else if (TabItem.class.isAssignableFrom(type)) {
+					return TabFolder.class.isAssignableFrom(parentType);
+				} else if (CTabItem.class.isAssignableFrom(type)) {
+					return CTabFolder.class.isAssignableFrom(parentType);
 				}
-				if (ExpandBar.class.isAssignableFrom(parentType)) {
-					if (!ExpandItem.class.isAssignableFrom(type)) {
-						return false;
-					}
-				}// the coolItem/expandItem is permitted to add a control except its parent and itself.
-				if (CoolItem.class.isAssignableFrom(parentType)) {
-					if (Control.class.isAssignableFrom(type) && !CoolBar.class.isAssignableFrom(type)) {
-						return true;
-					}
-				}
-				if (ExpandItem.class.isAssignableFrom(parentType)) {
-					if (Control.class.isAssignableFrom(type) && !ExpandBar.class.isAssignableFrom(type)) {
-						return true;
-					}
-				}
-				Constructor<?>[] constructors = ((Class<?>) createType).getConstructors();
+				Constructor<?>[] constructors = ((Class<?>) createType)
+						.getConstructors();
 				for (Constructor<?> constructor : constructors) {
 					Class<?>[] parameterTypes = constructor.getParameterTypes();
 					if (parameterTypes.length == 0) {
@@ -148,12 +145,16 @@ public class CreateReqHelper {
 				IMetaclass metaclass = XWT.getMetaclass(parentType);
 				if (metaclass != null) {
 					canCreate = metaclass.findProperty((String) createType) != null;
-					if ("menuBar".equals(stringType) || "menu".equals(stringType) || "layoutData".equals(stringType)) {
-						canCreate = canCreate && parentNode.getAttribute(stringType) == null;
+					if ("menuBar".equals(stringType)
+							|| "menu".equals(stringType)
+							|| "layoutData".equals(stringType)) {
+						canCreate = canCreate
+								&& parentNode.getAttribute(stringType) == null;
 					}
 				}
 			}
-			// System.out.println("Parent: " + parentType.getSimpleName() + " |Create: " + createType + " |-->Result: " + canCreate);
+			// System.out.println("Parent: " + parentType.getSimpleName() +
+			// " |Create: " + createType + " |-->Result: " + canCreate);
 			return canCreate;
 		} catch (Exception e) {
 		}

@@ -17,17 +17,23 @@ import java.util.List;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.TabFolderLayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author rui.ban rui.ban@soyatec.com
  */
 public class TabFolderEditPart extends CompositeEditPart {
 
-	public TabFolderEditPart(TabFolder tabFolder, XamlNode model) {
+	public TabFolderEditPart(Composite tabFolder, XamlNode model) {
 		super(tabFolder, model);
 	}
 
@@ -37,31 +43,64 @@ public class TabFolderEditPart extends CompositeEditPart {
 	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#getExternalModels()
 	 */
 	protected Collection<Object> getExternalModels() {
-		List<Object> externales = new ArrayList<Object>(super.getExternalModels());
-		TabFolder tabFolder = (TabFolder) getWidget();
-		if (tabFolder != null) {
-			TabItem[] selection = tabFolder.getSelection();
-			for (TabItem tabItem : selection) {
-				Control control = tabItem.getControl();
-				Object data = XWTProxy.getModel(control);
-				if (data != null) {
-					externales.add(data);
-				}
+		List<Object> externales = new ArrayList<Object>(super
+				.getExternalModels());
+		Control control = getActiveItemControl();
+		if (control != null && !control.isDisposed()) {
+			Object data = XWTProxy.getModel(control);
+			if (data != null) {
+				externales.add(data);
 			}
 		}
 		return externales;
 	}
 
-	public TabItemEditPart getActiveItemPart() {
-		TabFolder tabFolder = (TabFolder) getWidget();
-		if (tabFolder != null) {
-			TabItem[] selection = tabFolder.getSelection();
-			for (TabItem tabItem : selection) {
-				Object data = XWTProxy.getModel(tabItem);
-				if (data != null) {
-					return (TabItemEditPart) getViewer().getEditPartRegistry().get(data);
-				}
+	public Control getActiveItemControl() {
+		Item activeItem = getActiveItem();
+		if (activeItem == null || activeItem.isDisposed()) {
+			return null;
+		}
+		if (activeItem instanceof TabItem) {
+			return ((TabItem) activeItem).getControl();
+		} else if (activeItem instanceof CTabItem) {
+			return ((CTabItem) activeItem).getControl();
+		}
+		return null;
+	}
+
+	public Item getActiveItem() {
+		Widget widget = getWidget();
+		if (widget == null || widget.isDisposed()) {
+			return null;
+		}
+		if (widget instanceof TabFolder) {
+			TabItem[] selection = ((TabFolder) widget).getSelection();
+			if (selection != null && selection.length > 0) {
+				return selection[0];
 			}
+		} else if (widget instanceof CTabFolder) {
+			CTabFolder folder = (CTabFolder) widget;
+			CTabItem selection = folder.getSelection();
+			if (selection != null) {
+				return selection;
+			}
+			CTabItem[] items = folder.getItems();
+			if (items != null && items.length > 0) {
+				folder.setSelection(items[0]);
+				return items[0];
+			}
+		}
+		return null;
+	}
+
+	public EditPart getActiveItemPart() {
+		Item tabItem = getActiveItem();
+		if (tabItem == null) {
+			return null;
+		}
+		Object data = XWTProxy.getModel(tabItem);
+		if (data != null) {
+			return (EditPart) getViewer().getEditPartRegistry().get(data);
 		}
 		return null;
 	}
@@ -69,10 +108,12 @@ public class TabFolderEditPart extends CompositeEditPart {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart#createEditPolicies()
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart#
+	 * createEditPolicies()
 	 */
 	protected void createEditPolicies() {
 		super.createEditPolicies();
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new TabFolderLayoutEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE,
+				new TabFolderLayoutEditPolicy());
 	}
 }

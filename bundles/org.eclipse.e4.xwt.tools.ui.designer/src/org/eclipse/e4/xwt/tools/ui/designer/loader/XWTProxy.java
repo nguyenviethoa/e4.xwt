@@ -505,54 +505,54 @@ public class XWTProxy {
 		if (model == null) {
 			return false;
 		}
-		if (widget == rootComponent) {
-			destroy(widget);
-			componentsMap.clear();
-			return load(model.getOwnerDocument()) != null;
-		}
-		// recreate by using ResourceVistor.
-		EObject parentModel = model.eContainer();
-		Object parent = getComponent(parentModel);
-		if (fromParent) {
-			if (parent == null) {
-				return false;
-			} else if (parent instanceof Widget) {
-				return recreate((Widget) parent, false);
-			}
-		} else if (parent != null && model instanceof XamlElement) {
-			try {
-				destroy(widget);
-				Widget newWidget = (Widget) createWidget(parent,
-						(XamlElement) model);
-				if (newWidget instanceof Control) {
-					layout((Control) newWidget);
-				}
-				if (parent instanceof Widget) {
-					((Widget) parent).getDisplay().update();
-				}
-				if (parent instanceof Control) {
-					layout((Control) parent);
-				}
-				return true;
-			} catch (Exception e) {
-			}
-		} else if (parentModel != null) {
-			// If parentModel is a XamlAttribute, we need to retrieve a parent
-			// widget for recreating.
-			parentModel = parentModel.eContainer();
-			parent = getComponent(parentModel);
-			while (parent == null) {
-				if (parentModel == null) {
-					break;
-				}
-				parentModel = parentModel.eContainer();
-				parent = getComponent(parentModel);
-			}
-			if (parent != null && parent instanceof Widget) {
-				return recreate((Widget) parent, false);
-			}
-		}
-
-		return false;
+		// if (widget == rootComponent) {
+		destroy(rootComponent);
+		componentsMap.clear();
+		return load(model.getOwnerDocument()) != null;
+		// }
+		// // recreate by using ResourceVistor.
+		// EObject parentModel = model.eContainer();
+		// Object parent = getComponent(parentModel);
+		// if (fromParent) {
+		// if (parent == null) {
+		// return false;
+		// } else if (parent instanceof Widget) {
+		// return recreate((Widget) parent, false);
+		// }
+		// } else if (parent != null && model instanceof XamlElement) {
+		// try {
+		// destroy(widget);
+		// Widget newWidget = (Widget) createWidget(parent,
+		// (XamlElement) model);
+		// if (newWidget instanceof Control) {
+		// layout((Control) newWidget);
+		// }
+		// if (parent instanceof Widget) {
+		// ((Widget) parent).getDisplay().update();
+		// }
+		// if (parent instanceof Control) {
+		// layout((Control) parent);
+		// }
+		// return true;
+		// } catch (Exception e) {
+		// }
+		// } else if (parentModel != null) {
+		// // If parentModel is a XamlAttribute, we need to retrieve a parent
+		// // widget for recreating.
+		// parentModel = parentModel.eContainer();
+		// parent = getComponent(parentModel);
+		// while (parent == null) {
+		// if (parentModel == null) {
+		// break;
+		// }
+		// parentModel = parentModel.eContainer();
+		// parent = getComponent(parentModel);
+		// }
+		// if (parent != null && parent instanceof Widget) {
+		// return recreate((Widget) parent, false);
+		// }
+		// }
+		//
+		// return false;
 	}
 }

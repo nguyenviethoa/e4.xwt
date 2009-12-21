@@ -60,7 +60,8 @@ public class XWTEditPartFactory extends EditPartFactory {
 	}
 
 	/**
-	 * @see org.eclipse.gef.EditPartFactory#createEditPart(org.eclipse.gef.EditPart, java.lang.Object)
+	 * @see org.eclipse.gef.EditPartFactory#createEditPart(org.eclipse.gef.EditPart,
+	 *      java.lang.Object)
 	 */
 	public EditPart createEditPart(EditPart context, Object model) {
 		if (model instanceof XamlDocument) {
@@ -79,20 +80,21 @@ public class XWTEditPartFactory extends EditPartFactory {
 			if (visual != null) {
 				type = visual.getClass();
 			} else if (element instanceof XamlElement) {
-				IMetaclass metaclass = XWTUtility.getMetaclass((XamlElement) model);
+				IMetaclass metaclass = XWTUtility
+						.getMetaclass((XamlElement) model);
 				if (metaclass != null && metaclass.getType() != null) {
 					type = metaclass.getType();
 				}
 			}
 			if (type == null) {
-				throw new UnsupportedOperationException("Unsupport Type: " + model.toString());
+				throw new UnsupportedOperationException("Unsupport Type: "
+						+ model.toString());
 			}
 			if (Shell.class.isAssignableFrom(type)) {
 				return new ShellEditPart((Shell) visual, element);
-			} else if (TabFolder.class.isAssignableFrom(type)) {
-				return new TabFolderEditPart((TabFolder) visual, element);
-			} else if (CTabFolder.class.isAssignableFrom(type)) {
-				return new CTabFolderEditPart((CTabFolder) visual, element);
+			} else if (TabFolder.class.isAssignableFrom(type)
+					|| CTabFolder.class.isAssignableFrom(type)) {
+				return new TabFolderEditPart((Composite) visual, element);
 			} else if (CoolBar.class.isAssignableFrom(type)) {
 				return new CoolBarEditPart((CoolBar) visual, element);
 			} else if (ToolBar.class.isAssignableFrom(type)) {
@@ -105,10 +107,9 @@ public class XWTEditPartFactory extends EditPartFactory {
 				return new LabelEditPart((Label) visual, element);
 			} else if (Control.class.isAssignableFrom(type)) {
 				return new ControlEditPart((Control) visual, element);
-			} else if (TabItem.class.isAssignableFrom(type)) {
-				return new TabItemEditPart((TabItem) visual, element);
-			} else if (CTabItem.class.isAssignableFrom(type)) {
-				return new CTabItemEditPart((CTabItem) visual, element);
+			} else if (TabItem.class.isAssignableFrom(type)
+					|| CTabItem.class.isAssignableFrom(type)) {
+				return new TabItemEditPart((Item) visual, element);
 			} else if (MenuItem.class.isAssignableFrom(type)) {
 				return new MenuItemEditPart((MenuItem) visual, element);
 			} else if (CoolItem.class.isAssignableFrom(type)) {
@@ -117,7 +118,8 @@ public class XWTEditPartFactory extends EditPartFactory {
 				return new ToolItemEditPart((ToolItem) visual, element);
 			} else if (ExpandItem.class.isAssignableFrom(type)) {
 				return new ExpandItemEditPart((ExpandItem) visual, element);
-			} else if (TableColumn.class.isAssignableFrom(type) || TreeColumn.class.isAssignableFrom(type)) {
+			} else if (TableColumn.class.isAssignableFrom(type)
+					|| TreeColumn.class.isAssignableFrom(type)) {
 				return new ColumnEditPart((Item) visual, element);
 			} else if (Menu.class.isAssignableFrom(type)) {
 				if (StyleHelper.checkStyle(element, SWT.BAR)) {
@@ -131,7 +133,8 @@ public class XWTEditPartFactory extends EditPartFactory {
 				return new WidgetEditPart((Widget) visual, element);
 			} else {
 				try {
-					Class<?> jfaceViewer = Class.forName("org.eclipse.jface.viewers.Viewer");
+					Class<?> jfaceViewer = Class
+							.forName("org.eclipse.jface.viewers.Viewer");
 					if (jfaceViewer.isAssignableFrom(type)) {
 						return new ViewerEditPart((Viewer) visual, element);
 					}
@@ -139,6 +142,7 @@ public class XWTEditPartFactory extends EditPartFactory {
 				}
 			}
 		}
-		throw new UnsupportedOperationException("Unsupport Type: " + model.toString());
+		throw new UnsupportedOperationException("Unsupport Type: "
+				+ model.toString());
 	}
 }
