@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline;
 
-import java.util.List;
-
-import org.eclipse.e4.xwt.tools.ui.designer.core.parts.AbstractDiagramEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
