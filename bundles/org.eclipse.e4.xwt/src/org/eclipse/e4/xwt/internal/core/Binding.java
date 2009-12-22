@@ -261,13 +261,22 @@ public class Binding extends DynamicBinding {
 	public IValueValidator[] getValidators() {
 		return this.validators;
 	}
-	
+
 	/**
 	 * Set the validators for the binding
-	 * 
+	 *
 	 * @param validators
 	 */
 	public void setValidators(IValueValidator[] validators) {
 		this.validators = validators;
+	}
+
+	/**
+	 * Sets a single validator
+	 *
+	 * @param validator
+	 */
+	public void setValidator(IValueValidator validator) {
+		this.validators = new IValueValidator[] { validator };
 	}
 }

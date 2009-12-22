@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.Stack;
@@ -37,7 +38,11 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 class ElementHandler extends DefaultHandler implements ContentHandler {
 	private Stack<StringBuffer> bufferStack;
-
+	private static final String[] BINDING_PROPERTIES = new String[] {
+		"path", "validator"
+	};
+	
+	
 	/**
 	 * Temporary element hiberarchy
 	 */
@@ -195,7 +200,8 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 						if (attributeName != null) {
 							if (attributeValue != null) {
 								Attribute attribute = new Attribute(normalizeAttrNamespace(current.getNamespace()), attributeName, elementManager.generateID(current.getName()));
-								if ("path".equalsIgnoreCase(attributeName) && "Binding".equalsIgnoreCase(element.getName())) {
+								if (isExpendedProperty(attributeName) 
+										&& "Binding".equalsIgnoreCase(element.getName())) {
 									attributeValue = expendNamespaces(element, attributeValue);
 								}
 								handleContent(attribute, attributeValue);
@@ -241,7 +247,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 
 			if (equals) {
 				Attribute attribute = new Attribute(normalizeAttrNamespace(current.getNamespace()), attributeName, elementManager.generateID(current.getName()));
-				if ("path".equalsIgnoreCase(attributeName) && "Binding".equalsIgnoreCase(element.getName())) {
+				if (isExpendedProperty(attributeName) && "Binding".equalsIgnoreCase(element.getName())) {
 					attributeValue = expendNamespaces(element, attributeValue);
 				}
 				
@@ -263,6 +269,16 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 			}
 		}
 	};
+	
+	static boolean isExpendedProperty(String name) {
+		// TODO need a generic solution for each property of Binding 
+		for (String propertyName : BINDING_PROPERTIES) {
+			if (propertyName.equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	protected String expendNamespaces(DocumentObject element, String value) {
 		if (value.indexOf(':') == -1) {

@@ -61,6 +61,7 @@ import org.eclipse.e4.xwt.converters.StringToColor;
 import org.eclipse.e4.xwt.converters.StringToDuration;
 import org.eclipse.e4.xwt.converters.StringToFont;
 import org.eclipse.e4.xwt.converters.StringToFormAttachment;
+import org.eclipse.e4.xwt.converters.StringToIValueValidator;
 import org.eclipse.e4.xwt.converters.StringToImage;
 import org.eclipse.e4.xwt.converters.StringToIntArray;
 import org.eclipse.e4.xwt.converters.StringToInteger;
@@ -1183,6 +1184,7 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(StringToURL.instance);
 		registerConvertor(StringToType.instance);
 		registerConvertor(StringToFormAttachment.instance);
+		registerConvertor(StringToIValueValidator.instance);
 		registerConvertor(ListToIObservableCollection.instance);
 		registerConvertor(SetToIObservableCollection.instance);
 		registerConvertor(ObjectToISelection.instance);
