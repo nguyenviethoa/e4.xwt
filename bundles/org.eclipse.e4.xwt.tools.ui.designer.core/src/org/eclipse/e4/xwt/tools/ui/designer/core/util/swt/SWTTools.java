@@ -72,9 +72,6 @@ public class SWTTools {
 				Point l = getOffset((Shell) parent);
 				location.x = location.x + l.x;
 				location.y = location.y + l.y;
-				if (SWTUtil.IsCocoa) {
-					location.y += 22;
-				}					
 			} else if (checkStyle(parent, SWT.BORDER)) {
 				int borderWidth = parent.getBorderWidth();
 				location.x += borderWidth;
@@ -90,8 +87,7 @@ public class SWTTools {
 			return new Point(0, 0);
 		}
 		Rectangle calced = scroll.computeTrim(0, 0, 0, 0);
-		return new Point(-calced.x, -calced.y);
-
+		return new Point(-calced.x, -calced.y + calced.height);
 	}
 
 	public static Point getSize(Control control) {

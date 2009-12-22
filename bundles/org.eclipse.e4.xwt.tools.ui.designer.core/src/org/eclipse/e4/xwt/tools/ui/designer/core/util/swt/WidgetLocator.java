@@ -80,25 +80,15 @@ public class WidgetLocator {
 				return toDisplay(r, control);
 			}
 			Composite parent = control.getParent();
-			if (parent instanceof Scrollable && !(parent instanceof Group)
+			if (parent instanceof Scrollable
 					&& !(parent instanceof TabFolder)
 					&& !(parent instanceof CTabFolder)) {
 				Rectangle calced = parent.computeTrim(0, 0, 0, 0);
 				r.x += (- calced.x);
-				r.y += (- calced.y);
-				if (parent instanceof Shell) {
+				r.y += (- calced.y)*2 + calced.height;
+				if (!(parent instanceof Shell)) {
 					if (SWTUtil.IsCocoa) {
-						r.y += 22;
-					}					
-				}
-			}
-			else if (SWTUtil.IsCocoa) {
-				if (parent instanceof Scrollable) {
-					Rectangle calced = parent.computeTrim(0, 0, 0, 0);
-					r.x += - calced.x;
-					r.y += (- calced.y)*2;
-					if (parent instanceof Shell) {
-						r.y += 20;
+						r.y -= calced.height;
 					}					
 				}
 			}

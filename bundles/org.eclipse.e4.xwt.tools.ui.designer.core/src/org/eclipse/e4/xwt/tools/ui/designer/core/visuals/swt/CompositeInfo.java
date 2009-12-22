@@ -38,17 +38,12 @@ public class CompositeInfo extends ControlInfo {
 			// get the display-relative location.
 			Rectangle bounds = WidgetLocator.getBounds(
 					(Scrollable) visualObject, true);
-			if (visualObject instanceof Shell) {
-				if (SWTUtil.IsCocoa) {
-					bounds.y += 22;
-				}
-			}
 			Rectangle clientArea = ((Scrollable) visualObject).getClientArea();
 			Rectangle calced = ((Scrollable) visualObject).computeTrim(0, 0, 0, 0);
 			bounds.width = clientArea.width;
 			bounds.height = clientArea.height;
 			bounds.x += -calced.x;
-			bounds.y += -calced.y;
+			bounds.y += -calced.y + calced.height;
 			return Draw2dTools.toDraw2d(bounds);
 		}
 		return super.getClientArea();

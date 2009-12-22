@@ -177,9 +177,6 @@ public class GridLayoutHelper {
 					if (child instanceof Scrollable) {
 						Rectangle rect = ((Scrollable) child).computeTrim(0, 0, 0, 0);
 						trim = rect.width;
-						if (SWTUtil.IsCocoa) {
-							rect.y += 22;
-						}
 					} else {
 						trim = child.getBorderWidth() * 2;
 					}
