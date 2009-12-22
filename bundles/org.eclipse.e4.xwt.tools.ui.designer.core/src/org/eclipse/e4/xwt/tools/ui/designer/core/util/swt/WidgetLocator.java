@@ -86,20 +86,15 @@ public class WidgetLocator {
 				Rectangle calced = parent.computeTrim(0, 0, 0, 0);
 				r.x += (- calced.x);
 				r.y += (- calced.y);
-				if (parent instanceof Shell) {
-					if (SWTUtil.IsCocoa) {
-						r.y += calced.height;
-					}
+				if (parent instanceof Shell && SWTUtil.IsCocoa) {
+					r.y += calced.height;
 				}
 			}
 			else if (SWTUtil.IsCocoa) {
-				if (parent instanceof Scrollable) {
+				if (parent instanceof Group) {
 					Rectangle calced = parent.computeTrim(0, 0, 0, 0);
 					r.x += - calced.x;
-					r.y += (- calced.y)*2;
-					if (parent instanceof Shell) {
-						r.y += calced.height;
-					}					
+					r.y += calced.height + calced.y;
 				}
 			}
 			return r;

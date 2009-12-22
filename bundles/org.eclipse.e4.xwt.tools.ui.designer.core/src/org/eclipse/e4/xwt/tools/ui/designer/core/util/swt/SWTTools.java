@@ -87,7 +87,11 @@ public class SWTTools {
 			return new Point(0, 0);
 		}
 		Rectangle calced = scroll.computeTrim(0, 0, 0, 0);
-		return new Point(-calced.x, -calced.y);
+		Point point = new Point(-calced.x, -calced.y);
+		if (scroll instanceof Shell && SWTUtil.IsCocoa) {
+			point.y += calced.height - calced.y;
+		}
+		return point;
 	}
 
 	public static Point getSize(Control control) {
