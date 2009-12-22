@@ -43,7 +43,7 @@ public class CompositeInfo extends ControlInfo {
 			bounds.width = clientArea.width;
 			bounds.height = clientArea.height;
 			bounds.x += -calced.x;
-			bounds.y += -calced.y + calced.height;
+			bounds.y += -calced.y;
 			return Draw2dTools.toDraw2d(bounds);
 		}
 		return super.getClientArea();

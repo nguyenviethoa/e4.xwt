@@ -87,7 +87,7 @@ public class SWTTools {
 			return new Point(0, 0);
 		}
 		Rectangle calced = scroll.computeTrim(0, 0, 0, 0);
-		return new Point(-calced.x, -calced.y + calced.height);
+		return new Point(-calced.x, -calced.y);
 	}
 
 	public static Point getSize(Control control) {
