@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.e4.xwt.tools.ui.designer.commands.MoveChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.RowLayoutCommandsFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutType;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
@@ -108,8 +109,7 @@ public class RowLayoutEditPolicy extends FlowLayoutEditPolicy implements ILayout
 	 * @see org.eclipse.gef.editpolicies.OrderedLayoutEditPolicy#createMoveChildCommand(org.eclipse.gef.EditPart, org.eclipse.gef.EditPart)
 	 */
 	protected Command createMoveChildCommand(EditPart child, EditPart after) {
-		RowLayoutCommandsFactory factory = new RowLayoutCommandsFactory(child);
-		return factory.getMoveChildCommand(after);
+		return new MoveChildCommand(child, after);
 	}
 
 	/*

@@ -37,13 +37,12 @@ public class CompositeInfo extends ControlInfo {
 			Rectangle bounds = WidgetLocator.getBounds(
 					(Scrollable) visualObject, true);
 			Rectangle clientArea = ((Scrollable) visualObject).getClientArea();
-			Rectangle calced = ((Scrollable) visualObject).computeTrim(
-					bounds.x, bounds.y, clientArea.width, clientArea.height);
-			// bug workground, if Shell, the location of clientArea is always
-			// (0,0).
-			Rectangle correct = new Rectangle(2 * bounds.x - calced.x, 2
-					* bounds.y - calced.y, clientArea.width, clientArea.height);
-			return Draw2dTools.toDraw2d(correct);
+			Rectangle calced = ((Scrollable) visualObject).computeTrim(0, 0, 0, 0);
+			bounds.width = clientArea.width;
+			bounds.height = clientArea.height;
+			bounds.x += -calced.x;
+			bounds.y += -calced.y;
+			return Draw2dTools.toDraw2d(bounds);
 		}
 		return super.getClientArea();
 	}

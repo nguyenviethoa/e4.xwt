@@ -65,6 +65,11 @@ public class PasteElementAction extends SelectionAction {
 		if (contents == null) {
 			return false;
 		}
+
+		if (part.getGraphicalViewer() == null) {
+			return false;
+		}
+
 		List parts = part.getGraphicalViewer().getSelectedEditParts();
 		if (parts == null || parts.isEmpty()) {
 			return false;

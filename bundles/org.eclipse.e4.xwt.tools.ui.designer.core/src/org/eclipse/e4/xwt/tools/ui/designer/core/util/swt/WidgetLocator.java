@@ -80,19 +80,12 @@ public class WidgetLocator {
 				return toDisplay(r, control);
 			}
 			Composite parent = control.getParent();
-			Rectangle bounds = parent.getBounds();
 			if (parent instanceof Scrollable && !(parent instanceof Group)
 					&& !(parent instanceof TabFolder)
 					&& !(parent instanceof CTabFolder)) {
-				Rectangle clientArea = parent.getClientArea();
-				Rectangle calced = parent.computeTrim(bounds.x, bounds.y,
-						clientArea.width, clientArea.height);
-				Rectangle correct = new Rectangle(2 * bounds.x - calced.x, 2
-						* bounds.y - calced.y, clientArea.width, // bug
-						// workaround
-						clientArea.height);
-				r.x += (correct.x - bounds.x);
-				r.y += (correct.y - bounds.y);
+				Rectangle calced = parent.computeTrim(0, 0, 0, 0);
+				r.x += (- calced.x);
+				r.y += (- calced.y);
 			}
 			return r;
 		}

@@ -86,14 +86,8 @@ public class SWTTools {
 		if (scroll == null || scroll.isDisposed()) {
 			return new Point(0, 0);
 		}
-		Rectangle bounds = scroll.getBounds();
-		Rectangle clientArea = scroll.getClientArea();
-		Rectangle calced = scroll.computeTrim(bounds.x, bounds.y, clientArea.width, clientArea.height);
-		Rectangle correct = new Rectangle(2 * bounds.x - calced.x, 2 * bounds.y - calced.y, clientArea.width - 1, // bug workaround
-				clientArea.height - 1);
-		int x = correct.x - bounds.x;
-		int y = correct.y - bounds.y;
-		return new Point(x, y);
+		Rectangle calced = scroll.computeTrim(0, 0, 0, 0);
+		return new Point(-calced.x, -calced.y);
 
 	}
 

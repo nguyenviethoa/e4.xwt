@@ -27,6 +27,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.VisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.ResourceVisitor;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.ShellEditPart;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
@@ -246,7 +247,10 @@ public class GridLayoutPolicyHelper {
 	}
 
 	public Rectangle getClientArea() {
-		return host.getVisualInfo().getClientArea();
+		if (host instanceof ShellEditPart){
+			return host.getVisualInfo().getClientArea();
+		}
+		return host.getFigure().getBounds();
 	}
 
 	protected void insertGridGomponentAtBeginning(GridComponent gc) {

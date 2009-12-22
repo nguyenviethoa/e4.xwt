@@ -17,6 +17,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.Draw2dTools;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.ShellEditPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -35,7 +36,9 @@ public class FormLayoutHelper {
 	}
 
 	public Rectangle getClientArea() {
-		if (compositeEp != null && compositeEp.getVisualInfo() != null) {
+		if (compositeEp instanceof ShellEditPart) {
+			return ((ShellEditPart) compositeEp).getFigure().getBounds();
+		} else if (compositeEp != null && compositeEp.getVisualInfo() != null) {
 			return compositeEp.getVisualInfo().getClientArea();
 		}
 		return new Rectangle();
@@ -68,7 +71,8 @@ public class FormLayoutHelper {
 		return new FormLayoutData(formData, bounds);
 	}
 
-	private void computeHorizontalAttachment(FormData formData, Rectangle clientArea, Rectangle bounds, Control control) {
+	private void computeHorizontalAttachment(FormData formData,
+			Rectangle clientArea, Rectangle bounds, Control control) {
 		int marginLeft = bounds.x;
 		int marginRight = clientArea.width - bounds.right();
 		// 1. alignment
@@ -134,7 +138,8 @@ public class FormLayoutHelper {
 		}
 	}
 
-	private void computeVerticalAttachment(FormData formData, Rectangle clientArea, Rectangle bounds, Control control) {
+	private void computeVerticalAttachment(FormData formData,
+			Rectangle clientArea, Rectangle bounds, Control control) {
 		int marginTop = bounds.y;
 		int marginBottom = clientArea.height - bounds.bottom();
 		// 1. alignment
@@ -202,7 +207,8 @@ public class FormLayoutHelper {
 		}
 	}
 
-	public Control getVerticalNearest(Rectangle clientArea, Rectangle bounds, Control control) {
+	public Control getVerticalNearest(Rectangle clientArea, Rectangle bounds,
+			Control control) {
 		Control nearest = null;
 		int distance = 0;
 		Composite parent = getParent();
@@ -231,7 +237,8 @@ public class FormLayoutHelper {
 		return nearest;
 	}
 
-	public Control getHorizontalNearest(Rectangle clientArea, Rectangle bounds, Control control) {
+	public Control getHorizontalNearest(Rectangle clientArea, Rectangle bounds,
+			Control control) {
 		Control nearest = null;
 		int distance = 0;
 		Composite parent = getParent();

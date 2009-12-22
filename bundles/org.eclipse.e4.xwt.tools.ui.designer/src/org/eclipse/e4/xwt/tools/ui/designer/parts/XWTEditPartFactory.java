@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
@@ -101,7 +102,9 @@ public class XWTEditPartFactory extends EditPartFactory {
 				return new ToolBarEditPart((ToolBar) visual, element);
 			} else if (ExpandBar.class.isAssignableFrom(type)) {
 				return new ExpandBarEditPart((ExpandBar) visual, element);
-			} else if (Composite.class.isAssignableFrom(type)) {
+			} else if (SashForm.class.isAssignableFrom(type)){
+				return new SashFormEditPart((SashForm) visual, element);
+			}else if (Composite.class.isAssignableFrom(type)) {
 				return new CompositeEditPart((Composite) visual, element);
 			} else if (Label.class.isAssignableFrom(type)) {
 				return new LabelEditPart((Label) visual, element);

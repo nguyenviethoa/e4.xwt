@@ -34,10 +34,6 @@ public class RowLayoutCommandsFactory extends LayoutCommandsFactory {
 		super(host);
 	}
 
-	public Command getMoveChildCommand(EditPart after) {
-		return new MoveChildCommand(after);
-	}
-
 	public Command getResizeChildCommand(Object newSize) {
 		return new ResizeCommand(getHost(), (Dimension) newSize);
 	}
@@ -46,75 +42,6 @@ public class RowLayoutCommandsFactory extends LayoutCommandsFactory {
 		return new InsertCreateCommand(getHost(), after, createRequest);
 	}
 
-	class MoveChildCommand extends Command {
-
-		private EditPart after;
-		private int index = -1;
-
-		public MoveChildCommand(EditPart after) {
-			this.after = after;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.gef.commands.Command#execute()
-		 */
-		public void execute() {
-			XamlElement parent = (XamlElement) getHost().getParent().getModel();
-			EList<XamlElement> children = parent.getChildNodes();
-			XamlElement model = (XamlElement) getModel();
-			index = children.indexOf(model);
-			if (index == -1) {
-				return;
-			}
-			int newPosition = index;
-			if (after == null) {
-				newPosition = children.size();
-			} else {
-				XamlElement aftermodel = (XamlElement) after.getModel();
-				newPosition = children.indexOf(aftermodel);
-			}
-			if (newPosition > index) {
-				newPosition = newPosition - 1;
-			}
-			if (newPosition == -1 || newPosition > children.size() || index == newPosition) {
-				return;
-			}
-			children.move(newPosition, model);
-
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.gef.commands.Command#undo()
-		 */
-		public void undo() {
-			XamlElement parent = (XamlElement) getHost().getParent().getModel();
-			XamlElement model = (XamlElement) getModel();
-			parent.getChildNodes().move(index, model);
-
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.gef.commands.Command#canExecute()
-		 */
-		public boolean canExecute() {
-			return getHost() != null && getHost() != after;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.gef.commands.Command#canUndo()
-		 */
-		public boolean canUndo() {
-			return index != -1;
-		}
-	}
 
 	class ResizeChildCommand extends Command {
 

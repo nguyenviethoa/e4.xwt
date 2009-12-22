@@ -11,15 +11,11 @@
 package org.eclipse.e4.xwt.tools.ui.designer.editor.dnd;
 
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.EntryHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart;
 import org.eclipse.e4.xwt.tools.ui.imagecapture.swt.ImageCapture;
-import org.eclipse.e4.xwt.tools.ui.palette.Entry;
-import org.eclipse.e4.xwt.tools.ui.palette.request.EntryCreationFactory;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreationFactory;
@@ -61,18 +57,18 @@ public class EntryCreationTool extends CreationTool {
 	 */
 	public void activate() {
 		super.activate();
-		CreationFactory factory = getFactory();
-		if (factory != null && factory instanceof EntryCreationFactory) {
-			Entry entry = (Entry) factory.getNewObject();
-			XamlNode node = EntryHelper.getNode(entry);
-			if (node != null && node instanceof XamlElement) {
-				Image image = getImageFrom((XamlElement) node);
-				if (image != null) {
-					cursor = new Cursor(null, image.getImageData(), 0, 0);
-					setDefaultCursor(cursor);
-				}
-			}
-		}
+//		CreationFactory factory = getFactory();
+//		if (factory != null && factory instanceof EntryCreationFactory) {
+//			Entry entry = (Entry) factory.getNewObject();
+//			XamlNode node = EntryHelper.getNode(entry);
+//			if (node != null && node instanceof XamlElement) {
+//				Image image = getImageFrom((XamlElement) node);
+//				if (image != null) {
+//					cursor = new Cursor(null, image.getImageData(), 0, 0);
+//					setDefaultCursor(cursor);
+//				}
+//			}
+//		}
 	}
 
 	private Image getImageFrom(XamlElement node) {
@@ -128,12 +124,12 @@ public class EntryCreationTool extends CreationTool {
 	 */
 	public void deactivate() {
 		super.deactivate();
-		if (shell != null) {
-			shell.dispose();
-		}
-		if (cursor != null) {
-			cursor.dispose();
-		}
+//		if (shell != null) {
+//			shell.dispose();
+//		}
+//		if (cursor != null) {
+//			cursor.dispose();
+//		}
 	}
 
 	/*
