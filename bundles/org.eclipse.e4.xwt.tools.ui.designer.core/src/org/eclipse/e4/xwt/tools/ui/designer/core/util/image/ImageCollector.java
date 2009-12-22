@@ -74,14 +74,28 @@ public class ImageCollector {
 					shell = (Shell) control;
 				} else {
 					shell = control.getShell();
+					shell.pack();
+					shell.setLocation(0, 0);
+					while(control.getDisplay().readAndDispatch()) 
+						;
 				}
+				bounds = control.getBounds();
+
 				shell.setAlpha(0);
 				shell.moveBelow(null);
 				if (!shell.isVisible()) {
 					shell.setVisible(true);
 				}
-				image = ImageCapture.getInstance().capture(control,
-						bounds.width, bounds.height, true);
+				if (control instanceof Shell) {
+					image = ImageCapture.getInstance().capture(control,
+							bounds.width, bounds.height, true);
+				}
+				else {
+					image = new Image(control.getDisplay(), bounds.width,
+							bounds.height);
+					GC gc = new GC(image);
+					control.print(gc);
+				}
 				shell.setVisible(false);
 			} else {
 				image = new Image(control.getDisplay(), bounds.width,
@@ -91,7 +105,7 @@ public class ImageCollector {
 				gc.dispose();
 			}
 			if (image != null) {
-				// saveImage(image, "D:\\images\\image" + (i++) + ".jpg");
+				saveImage(image, "/home/yyang/image" + (i++) + ".jpg");
 				imageRunnable.imageCollected(image);
 				final Image forDispose = image;
 				control.addListener(SWT.Dispose, new Listener() {
