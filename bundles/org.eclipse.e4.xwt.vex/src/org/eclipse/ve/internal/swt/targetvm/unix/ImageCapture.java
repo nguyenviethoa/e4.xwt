@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.5 $  $Date: 2009/05/03 13:44:46 $ 
+ *  $Revision: 1.6 $  $Date: 2009/12/02 15:57:42 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.vex.swt.DisposeUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.GC;
@@ -108,7 +109,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 					simulateDecoration(decorations, realShellImage, decorations.getBounds(), decorations.getClientArea(), topLeft);
 					GC gc = new GC(realShellImage);
 					gc.drawImage(image, topLeft.x, topLeft.y);
-					gc.dispose();
+					DisposeUtil.dispose(gc);
 					image = realShellImage;
 				} finally {
 					origImage.dispose();

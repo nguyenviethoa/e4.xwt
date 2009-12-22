@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.5 $  $Date: 2009/12/02 16:13:35 $ 
+ *  $Revision: 1.6 $  $Date: 2009/12/02 16:13:57 $ 
  */
 package org.eclipse.e4.xwt.vex.swt;
 
@@ -61,7 +61,7 @@ public abstract class ImageCapture {
 					Image childImage = new Image(display, child.getBounds());
 					GC gc = new GC(childImage);
 					child.print(gc);
-					gc.dispose();
+					DisposeUtil.dispose(gc);
 					try {
 						myImageGC.drawImage(childImage, x, y);
 					} finally {
@@ -89,7 +89,7 @@ public abstract class ImageCapture {
 				return getImage(control, bounds.width, bounds.height, true);	
 			}	
 		} finally {
-			gc.dispose();
+			DisposeUtil.dispose(gc);
 		}
 	}
 

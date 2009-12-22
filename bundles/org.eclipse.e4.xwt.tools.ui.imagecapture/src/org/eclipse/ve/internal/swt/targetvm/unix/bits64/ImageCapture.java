@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.1 $  $Date: 2009/12/03 20:37:25 $ 
+ *  $Revision: 1.2 $  $Date: 2009/12/11 22:14:10 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix.bits64;
 
@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ve.internal.swt.targetvm.unix.DisposeUtil;
 
 /**
  * GTK version of Image Capture
@@ -87,7 +88,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.tools.ui.imagecapture.swt.I
 			image = new Image(control.getDisplay(), bounds.width, bounds.height);
 			GC gc = new GC(image);
 			control.print(gc);
-			gc.dispose();
+			DisposeUtil.dispose(gc);
 			return image;
 		}
 

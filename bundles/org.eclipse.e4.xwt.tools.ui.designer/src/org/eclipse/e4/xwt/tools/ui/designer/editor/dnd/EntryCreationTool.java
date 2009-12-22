@@ -16,6 +16,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart;
 import org.eclipse.e4.xwt.tools.ui.imagecapture.swt.ImageCapture;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
+import org.eclipse.e4.xwt.ui.utils.DisposeUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreationFactory;
@@ -112,7 +113,7 @@ public class EntryCreationTool extends CreationTool {
 				width -= 1;
 				height -= 1;
 			}
-			gc.dispose(); 
+			DisposeUtil.dispose(gc);
 		}
 		return image;
 	}

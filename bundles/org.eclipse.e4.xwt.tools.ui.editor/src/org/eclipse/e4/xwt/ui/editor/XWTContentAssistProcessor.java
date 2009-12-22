@@ -28,6 +28,7 @@ import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.ui.utils.DisposeUtil;
 import org.eclipse.e4.xwt.ui.utils.ImageManager;
 import org.eclipse.e4.xwt.utils.NamedColorsUtil;
 import org.eclipse.e4.xwt.utils.ResourceManager;
@@ -133,7 +134,7 @@ public class XWTContentAssistProcessor extends AbstractContentAssistProcessor im
 			GC gc = new GC(image);
 			gc.setBackground(color);
 			gc.fillRectangle(0, 0, 16, 16);
-			gc.dispose();
+			DisposeUtil.dispose(gc);
 			return new SelectionCompletionProposal(pattern, 0, 0, 1, colorName.length(), image, colorName, null, null);
 		}
 		return null;

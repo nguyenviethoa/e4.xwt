@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: ImageCapture.java,v $
- *  $Revision: 1.1 $  $Date: 2009/12/03 20:37:22 $ 
+ *  $Revision: 1.2 $  $Date: 2009/12/11 22:14:10 $ 
  */
 package org.eclipse.ve.internal.swt.targetvm.unix;
 
@@ -107,7 +107,7 @@ public class ImageCapture extends org.eclipse.e4.xwt.tools.ui.imagecapture.swt.I
 					simulateDecoration(decorations, realShellImage, decorations.getBounds(), decorations.getClientArea(), topLeft);
 					GC gc = new GC(realShellImage);
 					gc.drawImage(image, topLeft.x, topLeft.y);
-					gc.dispose();
+					DisposeUtil.dispose(gc);
 					image = realShellImage;
 				} finally {
 					origImage.dispose();

@@ -95,6 +95,7 @@ public class ImageCollector {
 							bounds.height);
 					GC gc = new GC(image);
 					control.print(gc);
+					// gc.dispose(); Not need since dispose of image disposes the gc
 				}
 				shell.setVisible(false);
 			} else {
@@ -102,10 +103,10 @@ public class ImageCollector {
 						bounds.height);
 				GC gc = new GC(image);
 				control.print(gc);
-				gc.dispose();
+				// gc.dispose(); Not need since dispose of image disposes the gc
 			}
 			if (image != null) {
-				saveImage(image, "/home/yyang/image" + (i++) + ".jpg");
+				// saveImage(image, "/home/yyang/image" + (i++) + ".jpg");
 				imageRunnable.imageCollected(image);
 				final Image forDispose = image;
 				control.addListener(SWT.Dispose, new Listener() {

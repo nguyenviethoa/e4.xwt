@@ -33,6 +33,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.style.StyleGroup;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.StringUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.text.assist.XWTSelectionCompletionProposal;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
+import org.eclipse.e4.xwt.ui.utils.DisposeUtil;
 import org.eclipse.e4.xwt.utils.NamedColorsUtil;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.jdt.core.IMethod;
@@ -134,7 +135,7 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 			GC gc = new GC(image);
 			gc.setBackground(color);
 			gc.fillRectangle(0, 0, 16, 16);
-			gc.dispose();
+			DisposeUtil.dispose(gc);
 			return new XWTSelectionCompletionProposal(pattern, 0, 0, 1,
 					colorName.length(), image, colorName, null, null);
 		}
