@@ -14,7 +14,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.e4.xwt.IDataBinding;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.e4.xwt.IValueValidator;
+import org.eclipse.e4.xwt.IValidationRule;
 import org.eclipse.e4.xwt.internal.core.Binding;
 import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
@@ -130,8 +130,8 @@ public abstract class AbstractDataBinding implements IDataBinding {
 		return binding.getType();
 	}
 
-	public IValueValidator[] getValidators() {
-		return binding.getValidators();
+	public IValidationRule[] getValidators() {
+		return binding.getValidationRules();
 	}
 
 	public UpdateSourceTrigger getUpdateSourceTrigger() {

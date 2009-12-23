@@ -11,15 +11,15 @@
 package org.eclipse.e4.xwt.converters;
 
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.IValueValidator;
+import org.eclipse.e4.xwt.IValidationRule;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public class StringToIValueValidator implements IConverter {
-	public static StringToIValueValidator instance = new StringToIValueValidator();
+public class StringToIValidationRule implements IConverter {
+	public static StringToIValidationRule instance = new StringToIValidationRule();
 
 	/*
 	 * (non-Javadoc)
@@ -29,6 +29,9 @@ public class StringToIValueValidator implements IConverter {
 	public Object convert(Object fromObject) {
 		try {
 			Class<?> type = XWT.getLoadingContext().loadClass(fromObject.toString());
+			if (type == null) {
+				throw new XWTException("Class " + fromObject.toString() + " is not found.");				
+			}
 			return type.newInstance();
 		} catch (Exception e) {
 			throw new XWTException(e);
@@ -50,6 +53,6 @@ public class StringToIValueValidator implements IConverter {
 	 * @see org.eclipse.core.databinding.conversion.IConverter#getToType()
 	 */
 	public Object getToType() {
-		return IValueValidator.class;
+		return IValidationRule.class;
 	}
 }

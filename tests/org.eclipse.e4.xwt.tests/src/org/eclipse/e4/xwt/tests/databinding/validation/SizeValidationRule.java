@@ -12,18 +12,18 @@ package org.eclipse.e4.xwt.tests.databinding.validation;
 
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.e4.xwt.validators.AbstractValidator;
+import org.eclipse.e4.xwt.validation.AbstractValidationRule;
 
 /**
  * @author hceylan
  *
  */
-public class RequiredValidator extends AbstractValidator {
+public class SizeValidationRule extends AbstractValidationRule {
 
 	/**
 	 *
 	 */
-	public RequiredValidator() {
+	public SizeValidationRule() {
 		super();
 	}
 
@@ -44,8 +44,9 @@ public class RequiredValidator extends AbstractValidator {
 	 * .Object)
 	 */
 	public IStatus validate(Object value) {
-		if (value == null || value.toString().length() == 0){
-			return ValidationStatus.error("Value is required");
+		String strValue = (String) value;
+		if (value != null && (strValue.length() < 8 || strValue.length() > 16)){
+			return ValidationStatus.error("Value should be 8 - 16 chars long");
 		}
 
 		return ValidationStatus.ok();

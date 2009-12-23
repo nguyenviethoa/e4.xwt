@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.IStatus;
  * @author hceylan
  *
  */
-public interface IValueValidator extends IValidator {
-	public static IValueValidator[] EMPTY_ARRAY = new IValueValidator[0];
+public interface IValidationRule extends IValidator {
+	public static IValidationRule[] EMPTY_ARRAY = new IValidationRule[0];
 
 	public enum Phase {
 		AfterGet, //

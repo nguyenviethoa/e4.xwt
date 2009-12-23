@@ -14,7 +14,7 @@ import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.e4.xwt.IValueValidator;
+import org.eclipse.e4.xwt.IValidationRule;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
@@ -41,7 +41,7 @@ public class Binding extends DynamicBinding {
 
 	private IValueConverter converter;
 
-	private IValueValidator[] validators = IValueValidator.EMPTY_ARRAY;
+	private IValidationRule[] validationRules = IValidationRule.EMPTY_ARRAY;
 
 	private IObservable observableSource;
 
@@ -254,29 +254,29 @@ public class Binding extends DynamicBinding {
 	}
 
 	/**
-	 * Returns the validators for the binding
+	 * Returns the validationRules for the binding
 	 *
-	 * @return the array of validators
+	 * @return the array of validationRules
 	 */
-	public IValueValidator[] getValidators() {
-		return this.validators;
+	public IValidationRule[] getValidationRules() {
+		return this.validationRules;
 	}
 
 	/**
-	 * Set the validators for the binding
+	 * Set the validationRules for the binding
 	 *
 	 * @param validators
 	 */
-	public void setValidators(IValueValidator[] validators) {
-		this.validators = validators;
+	public void setValidationRules(IValidationRule[] validationRules) {
+		this.validationRules = validationRules;
 	}
 
 	/**
-	 * Sets a single validator
+	 * Sets a single validationRule
 	 *
 	 * @param validator
 	 */
-	public void setValidator(IValueValidator validator) {
-		this.validators = new IValueValidator[] { validator };
+	public void setValidationRule(IValidationRule validationRule) {
+		this.validationRules = new IValidationRule[] { validationRule };
 	}
 }

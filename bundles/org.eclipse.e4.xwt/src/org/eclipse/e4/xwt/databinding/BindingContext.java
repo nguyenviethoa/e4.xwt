@@ -23,11 +23,11 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.e4.xwt.IValueValidator;
+import org.eclipse.e4.xwt.IValidationRule;
 import org.eclipse.e4.xwt.InverseValueConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
-import org.eclipse.e4.xwt.validators.InverseValidator;
+import org.eclipse.e4.xwt.validation.InverseValidationRule;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -294,7 +294,7 @@ public class BindingContext implements IBindingContext {
 	private Binding bindValue(IObservableValue source, IObservableValue target,
 			IDataBindingInfo dataBinding) {
 		IValueConverter converter = null;
-		IValueValidator[] validators = null;
+		IValidationRule[] validators = null;
 		int sourceToTargetPolicy = UpdateValueStrategy.POLICY_UPDATE;
 		int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
 		// Set policy to UpdateValueStrategy.
@@ -323,31 +323,31 @@ public class BindingContext implements IBindingContext {
 		return bind(source, target, sourceToTarget, targetToSource, converter);
 	}
 
-	private void bindValidators(IValueValidator[] validators,
+	private void bindValidators(IValidationRule[] validators,
 			UpdateValueStrategy sourceToTarget,
 			UpdateValueStrategy targetToSource) {
 		if (validators != null) {
-			for (IValueValidator validator : validators) {
+			for (IValidationRule validator : validators) {
 				switch (validator.getBindingMode()) {
 				case SourceToTarget:
 					addValidatorToStrategy(sourceToTarget, validator);
 					break;
 				case TargetToSource:
 					addValidatorToStrategy(targetToSource,
-							new InverseValidator(validator));
+							new InverseValidationRule(validator));
 					break;
 				case Both:
 				default:
 					addValidatorToStrategy(sourceToTarget, validator);
 					addValidatorToStrategy(targetToSource,
-							new InverseValidator(validator));
+							new InverseValidationRule(validator));
 				}
 			}
 		}
 	}
 
 	private void addValidatorToStrategy(UpdateValueStrategy strategy,
-			IValueValidator validator) {
+			IValidationRule validator) {
 		switch (validator.getPhase()) {
 		case AfterGet:
 			strategy.setAfterGetValidator(validator);

@@ -19,5 +19,5 @@ public interface IDataBindingInfo {
 
 	IValueConverter getConverter();
 
-	IValueValidator[] getValidators();
+	IValidationRule[] getValidators();
 }

@@ -8,21 +8,21 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.validators;
+package org.eclipse.e4.xwt.validation;
 
-import org.eclipse.e4.xwt.IValueValidator;
+import org.eclipse.e4.xwt.IValidationRule;
 
 /**
- * Abstract implementation of {@link IValueValidator}
+ * Abstract implementation of {@link IValidationRule}
  *
  * @author hceylan
  */
-public abstract class AbstractValidator implements IValueValidator {
+public abstract class AbstractValidationRule implements IValidationRule {
 
 	/**
 	 *
 	 */
-	public AbstractValidator() {
+	public AbstractValidationRule() {
 		super();
 	}
 

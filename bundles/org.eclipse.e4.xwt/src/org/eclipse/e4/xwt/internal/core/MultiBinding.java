@@ -17,7 +17,7 @@ import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IMultiValueConverter;
-import org.eclipse.e4.xwt.IValueValidator;
+import org.eclipse.e4.xwt.IValidationRule;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.converters.StringMultiValueConerter;
@@ -44,7 +44,7 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 
 	private IMultiValueConverter valueConverter;
 
-	private IValueValidator[] valueValidators = IValueValidator.EMPTY_ARRAY;
+	private IValidationRule[] valueValidators = IValidationRule.EMPTY_ARRAY;
 
 	private AggregateObservableValue observableValue;
 
@@ -209,11 +209,11 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		return targetPropertySegments;
 	}
 
-	public IValueValidator[] getValidators() {
+	public IValidationRule[] getValidators() {
 		return valueValidators;
 	}
 
-	public void setValidators(IValueValidator[] valueValidators) {
+	public void setValidators(IValidationRule[] valueValidators) {
 		this.valueValidators = valueValidators;
 	}
 }

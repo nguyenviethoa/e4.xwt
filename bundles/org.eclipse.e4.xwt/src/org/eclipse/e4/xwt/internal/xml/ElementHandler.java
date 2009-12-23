@@ -39,12 +39,12 @@ import org.xml.sax.helpers.DefaultHandler;
 class ElementHandler extends DefaultHandler implements ContentHandler {
 	private Stack<StringBuffer> bufferStack;
 	private static final String[] BINDING_PROPERTIES = new String[] {
-		"path", "validator"
+		"path", "validationRule"
 	};
 	
 	
 	/**
-	 * Temporary element hiberarchy
+	 * Temporary element hierarchy
 	 */
 	private Stack<DocumentObject> elementStack;
 
@@ -202,7 +202,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 								Attribute attribute = new Attribute(normalizeAttrNamespace(current.getNamespace()), attributeName, elementManager.generateID(current.getName()));
 								if (isExpendedProperty(attributeName) 
 										&& "Binding".equalsIgnoreCase(element.getName())) {
-									attributeValue = expendNamespaces(element, attributeValue);
+									attributeValue = expandNamespaces(element, attributeValue);
 								}
 								handleContent(attribute, attributeValue);
 								element.setAttribute(attribute);
@@ -248,7 +248,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 			if (equals) {
 				Attribute attribute = new Attribute(normalizeAttrNamespace(current.getNamespace()), attributeName, elementManager.generateID(current.getName()));
 				if (isExpendedProperty(attributeName) && "Binding".equalsIgnoreCase(element.getName())) {
-					attributeValue = expendNamespaces(element, attributeValue);
+					attributeValue = expandNamespaces(element, attributeValue);
 				}
 				
 				if (attributeValue != null) {
@@ -280,7 +280,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		return false;
 	}
 
-	protected String expendNamespaces(DocumentObject element, String value) {
+	protected String expandNamespaces(DocumentObject element, String value) {
 		if (value.indexOf(':') == -1) {
 			return value;
 		}
@@ -586,7 +586,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 				&& IConstants.XWT_X_NAMESPACE.equals(element.getNamespace())
 				&& IConstants.XAML_STYLE.equalsIgnoreCase(element.getName())) {
 			// handle the expansion of x:Style = "(j:class).variable"
-			text = expendNamespaces(element, text);
+			text = expandNamespaces(element, text);
 		}
 		element.setContent(text);
 	}

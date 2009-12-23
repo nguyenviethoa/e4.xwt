@@ -8,16 +8,16 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.validators;
+package org.eclipse.e4.xwt.validation;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.e4.xwt.IValueValidator;
+import org.eclipse.e4.xwt.IValidationRule;
 
-public class InverseValidator implements IValueValidator {
+public class InverseValidationRule implements IValidationRule {
 
-	private final IValueValidator delegate;
+	private final IValidationRule delegate;
 
-	public InverseValidator(IValueValidator delegate) {
+	public InverseValidationRule(IValidationRule delegate) {
 		super();
 
 		this.delegate = delegate;
