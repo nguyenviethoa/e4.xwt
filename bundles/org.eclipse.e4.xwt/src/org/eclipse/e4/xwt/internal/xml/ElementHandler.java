@@ -281,7 +281,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	}
 
 	protected String expandNamespaces(DocumentObject element, String value) {
-		if (value.indexOf(':') == -1) {
+		if (value.startsWith("{") || (value.indexOf(':') == -1)) {
 			return value;
 		}
 		int length = IConstants.XAML_CLR_NAMESPACE_PROTO.length();
