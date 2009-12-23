@@ -120,6 +120,7 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnsPropert
 import org.eclipse.e4.xwt.jface.ComboBoxCellEditor;
 import org.eclipse.e4.xwt.jface.DefaultCellModifier;
 import org.eclipse.e4.xwt.jface.DefaultColumnViewerLabelProvider;
+import org.eclipse.e4.xwt.jface.DefaultComboViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.DefaultListContentProvider;
 import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.JFaceInitializer;
@@ -1481,6 +1482,7 @@ public class XWTLoader implements IXWTLoader {
 
 		registerMetaclass(DefaultCellModifier.class);
 		registerMetaclass(DefaultListViewerLabelProvider.class);
+		registerMetaclass(DefaultComboViewerLabelProvider.class);
 		registerMetaclass(DefaultColumnViewerLabelProvider.class);
 		registerMetaclass(ViewerFilter.class);
 

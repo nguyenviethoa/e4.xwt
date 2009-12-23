@@ -5,7 +5,6 @@ import java.net.URL;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.tests.XWTTestCase;
 import org.eclipse.e4.xwt.tests.forms.FormTestCase;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Label;
@@ -14,7 +13,7 @@ import org.eclipse.swt.widgets.TableItem;
 public class Forms_TableViewer_Set_MasterDetail_Tests extends FormTestCase {
 
 	public void testTableViewer_MasterDetail() throws Exception {
-		URL url = Forms_TableViewer_Set_MasterDetail_Tests.class
+		URL url = TableViewer_MasterDetail.class
 				.getResource(TableViewer_MasterDetail.class.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
@@ -38,7 +37,7 @@ public class Forms_TableViewer_Set_MasterDetail_Tests extends FormTestCase {
 	}
 
 	public void testTableViewer_MasterDetail_DetailDisplay() throws Exception {
-		URL url = Forms_TableViewer_Set_MasterDetail_Tests.class
+		URL url = TableViewer_MasterDetail.class
 				.getResource(TableViewer_MasterDetail.class.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {

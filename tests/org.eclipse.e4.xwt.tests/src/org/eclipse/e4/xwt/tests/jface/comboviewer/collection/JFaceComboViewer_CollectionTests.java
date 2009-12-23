@@ -21,9 +21,9 @@ public class JFaceComboViewer_CollectionTests extends XWTTestCase {
 
 			public void checkListViewer() {
 				Object element = XWT.findElementByName(root, "ComboViewer");
-				assertTrue(element instanceof org.eclipse.jface.viewers.ListViewer);
-				org.eclipse.jface.viewers.ListViewer listViewer = (org.eclipse.jface.viewers.ListViewer) element;
-				String[] items = listViewer.getList().getItems();
+				assertTrue(element instanceof org.eclipse.jface.viewers.ComboViewer);
+				org.eclipse.jface.viewers.ComboViewer comboViewer = (org.eclipse.jface.viewers.ComboViewer) element;
+				String[] items = comboViewer.getCombo().getItems();
 				assertTrue(items.length == 2);
 				assertEquals(items[0], "Thomas");
 				assertEquals(items[1], "Jin");
@@ -42,9 +42,9 @@ public class JFaceComboViewer_CollectionTests extends XWTTestCase {
 
 			public void checkListViewer() {
 				Object element = XWT.findElementByName(root, "ComboViewer");
-				assertTrue(element instanceof org.eclipse.jface.viewers.ListViewer);
-				org.eclipse.jface.viewers.ListViewer listViewer = (org.eclipse.jface.viewers.ListViewer) element;
-				String[] items = listViewer.getList().getItems();
+				assertTrue(element instanceof org.eclipse.jface.viewers.ComboViewer);
+				org.eclipse.jface.viewers.ComboViewer comboViewer = (org.eclipse.jface.viewers.ComboViewer) element;
+				String[] items = comboViewer.getCombo().getItems();
 				assertTrue(items.length == 2);
 				assertEquals(items[0], "Thomas");
 				assertEquals(items[1], "Jin");
@@ -67,10 +67,10 @@ public class JFaceComboViewer_CollectionTests extends XWTTestCase {
 			}
 
 			public void checkButton() {
-				org.eclipse.jface.viewers.ListViewer listView = (org.eclipse.jface.viewers.ListViewer) XWT
-						.findElementByName(root, "ListViewer");
-				assertTrue(listView.getInput() instanceof IObservableCollection);
-				IObservableCollection collection = (IObservableCollection) listView
+				org.eclipse.jface.viewers.ComboViewer comboViewer = (org.eclipse.jface.viewers.ComboViewer) XWT
+						.findElementByName(root, "ComboViewer");
+				assertTrue(comboViewer.getInput() instanceof IObservableCollection);
+				IObservableCollection collection = (IObservableCollection) comboViewer
 						.getInput();
 				assertTrue(collection.size() == 3);
 			}
@@ -93,10 +93,10 @@ public class JFaceComboViewer_CollectionTests extends XWTTestCase {
 			}
 
 			public void checkButton() {
-				org.eclipse.jface.viewers.ListViewer listView = (org.eclipse.jface.viewers.ListViewer) XWT
-						.findElementByName(root, "ListViewer");
-				assertTrue(listView.getInput() instanceof IObservableCollection);
-				IObservableCollection collection = (IObservableCollection) listView
+				org.eclipse.jface.viewers.ComboViewer comboViewer = (org.eclipse.jface.viewers.ComboViewer) XWT
+						.findElementByName(root, "ComboViewer");
+				assertTrue(comboViewer.getInput() instanceof IObservableCollection);
+				IObservableCollection collection = (IObservableCollection) comboViewer
 						.getInput();
 				assertTrue(collection.size() == 3);
 			}
@@ -119,10 +119,10 @@ public class JFaceComboViewer_CollectionTests extends XWTTestCase {
 			}
 
 			public void checkButton() {
-				org.eclipse.jface.viewers.ListViewer listView = (org.eclipse.jface.viewers.ListViewer) XWT
-						.findElementByName(root, "ListViewer");
-				assertTrue(listView.getInput() instanceof IObservableCollection);
-				IObservableCollection collection = (IObservableCollection) listView
+				org.eclipse.jface.viewers.ComboViewer comboViewer = (org.eclipse.jface.viewers.ComboViewer) XWT
+						.findElementByName(root, "ComboViewer");
+				assertTrue(comboViewer.getInput() instanceof IObservableCollection);
+				IObservableCollection collection = (IObservableCollection) comboViewer
 						.getInput();
 				assertTrue(collection.size() == 3);
 			}

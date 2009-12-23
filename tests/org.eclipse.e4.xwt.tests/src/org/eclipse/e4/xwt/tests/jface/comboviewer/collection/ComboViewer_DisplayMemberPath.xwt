@@ -1,7 +1,7 @@
 <Composite xmlns="http://www.eclipse.org/xwt/presentation"
     xmlns:x="http://www.eclipse.org/xwt"
-    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.listviewer.collection"
-    x:Class="org.eclipse.e4.xwt.tests.jface.comboviewer.collection.ListViewer"
+    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.comboviewer.collection"
+    x:Class="org.eclipse.e4.xwt.tests.jface.comboviewer.collection.ComboViewer"
     DataContext="{StaticResource myCompany}">
 	<Composite.layout>
 		<GridLayout numColumns="2"/>
@@ -14,11 +14,11 @@
 			</j:Company.employees>
 		</j:Company>
 	</Composite.resources>
-	<ListViewer name="ComboViewer" input="{Binding Path=employees}" displayMemberPath="name">
-		<ListViewer.control.layoutData>
+	<ComboViewer name="ComboViewer" input="{Binding Path=employees}" displayMemberPath="name">
+		<ComboViewer.control.layoutData>
 			<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
          		grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
-		</ListViewer.control.layoutData>
-	</ListViewer>
+		</ComboViewer.control.layoutData>
+	</ComboViewer>
 	<Button name="Button" text="Add Person" SelectionEvent="addPerson" />
 </Composite>

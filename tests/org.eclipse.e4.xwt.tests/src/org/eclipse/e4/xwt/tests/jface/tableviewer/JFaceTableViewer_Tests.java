@@ -101,7 +101,7 @@ public class JFaceTableViewer_Tests extends XWTTestCase {
 	}
 
 	public void testTableViewerColumnsPath() throws Exception {
-		URL url = JFaceTableViewer_Tests.class
+		URL url = TableViewerColumn_Property.class
 				.getResource(TableViewerColumn_Property.class.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {

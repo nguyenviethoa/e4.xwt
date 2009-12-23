@@ -8,7 +8,7 @@ import org.eclipse.e4.xwt.tests.XWTTestCase;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public class FormTestCase extends XWTTestCase {
+public abstract class FormTestCase extends XWTTestCase {
 	protected void runTest(final URL url, Map<String, Object> options,
 			Runnable... checkActions) {
 		ClassLoader classLoader = Thread.currentThread()
