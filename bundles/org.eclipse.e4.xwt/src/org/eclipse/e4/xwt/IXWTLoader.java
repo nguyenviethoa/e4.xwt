@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.IObservable;
@@ -49,11 +50,12 @@ public interface IXWTLoader {
 
 	/**
 	 * Used for editor/designer to pass design mode
-	 */	
+	 */
 	String DESIGN_MODE_ROPERTY = "XWT.DesignMode";
-	
+
 	/**
-	 * Default styles to apply. The value should be a collection or Array of IStyle
+	 * Default styles to apply. The value should be a collection or Array of
+	 * IStyle
 	 * 
 	 */
 	String DEFAULT_STYLES_PROPERTY = "XWT.DefaultStyles";
@@ -86,10 +88,9 @@ public interface IXWTLoader {
 	 */
 	String LOADED_ACTION = "XWT.onLoaded";
 
-	
 	/**
-	 * Register an Observable IChangeListener for a given UI element. The second 
-	 * registration of the same listener on the same UI Element has no effect. 
+	 * Register an Observable IChangeListener for a given UI element. The second
+	 * registration of the same listener on the same UI Element has no effect.
 	 * 
 	 * @param control
 	 * @param listener
@@ -98,20 +99,22 @@ public interface IXWTLoader {
 	boolean addObservableChangeListener(Object control, IChangeListener listener);
 
 	/**
-	 * Undo the registration of the Observable IChangeListener for a given UI element. 
+	 * Undo the registration of the Observable IChangeListener for a given UI
+	 * element.
 	 * 
 	 * @param context
 	 * @param listener
 	 */
 	void removeObservableChangeListener(Object context, IChangeListener listener);
-	
+
 	/**
 	 * Find the used IObservable value for given data.
 	 * 
 	 * @param nsmapace
 	 * @return
 	 */
-	IObservable observe(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger);
+	IObservable observe(Object context, Object data, String propertyName,
+			UpdateSourceTrigger updateSourceTrigger);
 
 	/**
 	 * Find the used IObservableFactory value for given data.
@@ -119,7 +122,8 @@ public interface IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	IObservableFactory observableFactory(Object context, String propertyName, UpdateSourceTrigger updateSourceTrigger);
+	IObservableFactory observableFactory(Object context, String propertyName,
+			UpdateSourceTrigger updateSourceTrigger);
 
 	/**
 	 * Find the used IObservableValue value for given data.
@@ -127,7 +131,8 @@ public interface IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	IObservableValue observableValue(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger);
+	IObservableValue observableValue(Object context, Object data,
+			String propertyName, UpdateSourceTrigger updateSourceTrigger);
 
 	/**
 	 * Find the used IObservableList value for given data.
@@ -135,7 +140,8 @@ public interface IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	IObservableList findObservableList(Object context, Object data, String propertyName);
+	IObservableList findObservableList(Object context, Object data,
+			String propertyName);
 
 	/**
 	 * Find the used IObservableList value for given data.
@@ -143,7 +149,8 @@ public interface IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	IObservableSet findObservableSet(Object context, Object data, String propertyName);
+	IObservableSet findObservableSet(Object context, Object data,
+			String propertyName);
 
 	/**
 	 * Find the used IObservableValue value for given data.
@@ -151,7 +158,8 @@ public interface IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	IObservableValue findObservableValue(Object context, Object data, String propertyName);
+	IObservableValue findObservableValue(Object context, Object data,
+			String propertyName);
 
 	/**
 	 * 
@@ -194,7 +202,8 @@ public interface IXWTLoader {
 	void setLogger(ILogger log);
 
 	/**
-	 * This namespace service returns the associated or declared namespace for a given class.
+	 * This namespace service returns the associated or declared namespace for a
+	 * given class.
 	 * 
 	 * @param javaclass
 	 * @return
@@ -202,7 +211,8 @@ public interface IXWTLoader {
 	String getNamespace(Class<?> javaclass);
 
 	/**
-	 * Get the name of the element, which is defined by <code>Name</code> or <code>x:Name</code>. Return <code>null</code>
+	 * Get the name of the element, which is defined by <code>Name</code> or
+	 * <code>x:Name</code>. Return <code>null</code>
 	 * 
 	 * @param object
 	 * @return
@@ -252,7 +262,8 @@ public interface IXWTLoader {
 	void setTriggers(Object widget, TriggerBase[] triggers);
 
 	/**
-	 * Get the CLR (Common Language Runtime) object. If no CLR object is found in this element, the research will be propagated in it parent.
+	 * Get the CLR (Common Language Runtime) object. If no CLR object is found
+	 * in this element, the research will be propagated in it parent.
 	 * 
 	 * @param widget
 	 * @return
@@ -284,35 +295,49 @@ public interface IXWTLoader {
 	IMetaclass getMetaclass(Object object);
 
 	/**
-	 * Load the file content. All widget will be created but they are showed. This method return the root element.
+	 * Load the file content. All widget will be created but they are showed.
+	 * This method return the root element.
 	 * 
 	 */
 	Control load(URL file) throws Exception;
 
 	/**
-	 * Load the file content with a DataContext. All widget will be created but they are showed. This method returns the root element. The DataContext will be associated to the root element.
+	 * Load the file content with a DataContext. All widget will be created but
+	 * they are showed. This method returns the root element. The DataContext
+	 * will be associated to the root element.
 	 */
 	Control load(URL file, Object dataContext) throws Exception;
 
 	/**
-	 * Load the file content under a Composite. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 * Load the file content under a Composite. All widget will be created. This
+	 * method returns the root element. The DataContext will be associated to
+	 * the root element.
 	 */
 	Control load(Composite parent, URL file) throws Exception;
 
 	/**
-	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 * Load the file content under a Composite with a DataContext. All widget
+	 * will be created. This method returns the root element. The DataContext
+	 * will be associated to the root element.
 	 */
-	Control load(Composite parent, URL file, Object dataContext) throws Exception;
+	Control load(Composite parent, URL file, Object dataContext)
+			throws Exception;
 
 	/**
-	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 * Load the file content under a Composite with a DataContext. All widget
+	 * will be created. This method returns the root element. The DataContext
+	 * will be associated to the root element.
 	 */
-	Control load(Composite parent, Class<?> viewType, Object dataContext) throws Exception;
+	Control load(Composite parent, Class<?> viewType, Object dataContext)
+			throws Exception;
 
 	/**
-	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 * Load the file content under a Composite with a DataContext. All widget
+	 * will be created. This method returns the root element. The DataContext
+	 * will be associated to the root element.
 	 */
-	Control loadWithOptions(Class<?> viewType, Map<String, Object> options) throws Exception;
+	Control loadWithOptions(Class<?> viewType, Map<String, Object> options)
+			throws Exception;
 
 	/**
 	 * Open and show the file content in a new Shell.
@@ -325,9 +350,11 @@ public interface IXWTLoader {
 	void open(final URL url) throws Exception;
 
 	/**
-	 * load the content from a stream with a style, a DataContext and a ResourceDictionary. The root elements will be hold by Composite parent
+	 * load the content from a stream with a style, a DataContext and a
+	 * ResourceDictionary. The root elements will be hold by Composite parent
 	 */
-	Control load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception;
+	Control load(Composite parent, InputStream stream, URL file,
+			Object dataContext) throws Exception;
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
@@ -342,7 +369,8 @@ public interface IXWTLoader {
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	void open(final URL url, final Map<String, Object> options) throws Exception;
+	void open(final URL url, final Map<String, Object> options)
+			throws Exception;
 
 	/**
 	 * Data conversion service from String to a given type
@@ -362,7 +390,8 @@ public interface IXWTLoader {
 	 */
 	Object convertFrom(Class<?> targetType, String string);
 
-	Control loadWithOptions(URL url, Map<String, Object> options) throws Exception;
+	Control loadWithOptions(URL url, Map<String, Object> options)
+			throws Exception;
 
 	/**
 	 * 
@@ -383,7 +412,8 @@ public interface IXWTLoader {
 	 * @return
 	 * @throws Exception
 	 */
-	Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception;
+	Control loadWithOptions(InputStream stream, URL url,
+			Map<String, Object> options) throws Exception;
 
 	/**
 	 * Metaclass services to return all registered Metaclasses.
@@ -419,7 +449,7 @@ public interface IXWTLoader {
 	 * @param javaclass
 	 */
 	void registerMetaclass(IMetaclass type);
-	
+
 	/**
 	 * Get the dynamic property value
 	 * 
@@ -433,7 +463,7 @@ public interface IXWTLoader {
 	 * @param javaclass
 	 */
 	void setPropertyValue(Object uiElement, IProperty property, Object value);
-	
+
 	/**
 	 * Remove the dynamic property value
 	 * 
@@ -447,7 +477,7 @@ public interface IXWTLoader {
 	 * @param javaclass
 	 */
 	boolean hasPropertyValue(Object uiElement, IProperty property);
-	
+
 	/**
 	 * Register Metaclass factory
 	 * 
@@ -556,10 +586,11 @@ public interface IXWTLoader {
 
 	Collection<IStyle> getDefaultStyles();
 
-	void addDataProviderFactory(String name, IDataProviderFactory dataProviderFactory);
+	void addDataProviderFactory(String name,
+			IDataProviderFactory dataProviderFactory);
 
 	void removeDataProviderFactory(String name);
-	
+
 	void removeDataProviderFactory(IDataProviderFactory dataProvider);
 
 	Collection<IDataProviderFactory> getDataProviderFactories();
@@ -573,7 +604,7 @@ public interface IXWTLoader {
 	ILoadingContext getLoadingContext();
 
 	void setLoadingContext(ILoadingContext loadingContext);
-	
+
 	/**
 	 * Change the language support
 	 * 
@@ -589,7 +620,7 @@ public interface IXWTLoader {
 	ILanguageSupport getLanguageSupport();
 
 	/**
-	 * Create a UI Profile with the provide data and apply it immediately. 
+	 * Create a UI Profile with the provide data and apply it immediately.
 	 * 
 	 * @param profileData
 	 * @return
@@ -603,11 +634,20 @@ public interface IXWTLoader {
 	 * @return
 	 */
 	public boolean applyProfile(Object profile);
-	
+
 	/**
 	 * Restore the previous profile
 	 * 
 	 * @return
 	 */
 	public Object restoreProfile();
+
+	/**
+	 * Returns the {@link DataBindingContext} of the element
+	 * 
+	 * @param element
+	 * @param contextName
+	 * @return
+	 */
+	DataBindingContext getDataBindingContext(Object element, String contextName);
 }

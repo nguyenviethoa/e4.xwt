@@ -20,7 +20,7 @@ import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 
 /**
- *
+ * 
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class AbstractDataBinding implements IDataBinding {
@@ -37,7 +37,6 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	public BindingExpressionPath getTargetPropertyExpression() {
 		return targetPropertySegments;
 	}
-
 
 	public AbstractDataBinding(Binding binding, IDataProvider dataProvider) {
 		this.binding = binding;
@@ -69,6 +68,16 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	}
 
 	/**
+	 * Returns the name of the data binding context this binding is associated
+	 * with
+	 * 
+	 * @return
+	 */
+	protected String getContextName() {
+		return binding.getContextName();
+	}
+
+	/**
 	 *
 	 */
 	public IValueConverter getConverter() {
@@ -90,7 +99,7 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	}
 
 	/**
-	 *
+	 * 
 	 * @return
 	 */
 	public BindingMode getMode() {
@@ -98,7 +107,7 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param mode
 	 */
 	public void setMode(BindingMode mode) {
@@ -106,7 +115,7 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	}
 
 	/**
-	 *
+	 * 
 	 * @return
 	 */
 	protected String getSourceProperty() {
@@ -114,7 +123,7 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	}
 
 	/**
-	 *
+	 * 
 	 * @return
 	 */
 	protected String getTargetProperty() {
@@ -124,7 +133,7 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	public IValueValidator[] getValidators() {
 		return binding.getValidators();
 	}
-	
+
 	public UpdateSourceTrigger getUpdateSourceTrigger() {
 		return binding.getUpdateSourceTrigger();
 	}

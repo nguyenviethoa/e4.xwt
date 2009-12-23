@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -31,25 +31,25 @@ import org.eclipse.swt.widgets.Widget;
 
 public class ScopeKeeper implements DisposeListener {
 	private static final long serialVersionUID = 1L;
-	
+
 	protected HashMap<String, Object> nameMap = new HashMap<String, Object>();
 
 	protected HashMap<Widget, HashMap<Object, HashMap<String, IObservable>>> bindingData = new HashMap<Widget, HashMap<Object, HashMap<String, IObservable>>>();
 
 	protected Widget host;
-	
+
 	private final ScopeKeeper parent;
-	
+
 	private ChangeListenerSupport changeListenerSupport = new ChangeListenerSupport();
-	
+
 	class ChangeListenerSupport implements IChangeListener {
 		private List<IChangeListener> changeListeners = Collections.EMPTY_LIST;
-	
+
 		public void handleChange(ChangeEvent event) {
 			for (IChangeListener changeListener : changeListeners) {
 				changeListener.handleChange(event);
 			}
-			
+
 			// notify to parent as well.
 			Widget parent = UserData.getTreeParent(host);
 			ScopeKeeper scopeKeeper = UserData.findScopeKeeper(parent);
@@ -57,7 +57,7 @@ public class ScopeKeeper implements DisposeListener {
 				scopeKeeper.fireChangeListener(event);
 			}
 		}
-		
+
 		public boolean addChangeListener(IChangeListener listener) {
 			if (changeListeners.contains(listener)) {
 				return false;
@@ -72,7 +72,7 @@ public class ScopeKeeper implements DisposeListener {
 		public void removeChangeListener(IChangeListener listener) {
 			changeListeners.remove(listener);
 		}
-		
+
 		public void dispose() {
 			changeListeners = null;
 		}
@@ -88,8 +88,9 @@ public class ScopeKeeper implements DisposeListener {
 	public void widgetDisposed(DisposeEvent e) {
 		Widget source = e.widget;
 		if (source == host) {
-			for (HashMap<Object, HashMap<String, IObservable>> hashMap : bindingData.values()) {
-				for (HashMap<String, IObservable> map: hashMap.values()) {
+			for (HashMap<Object, HashMap<String, IObservable>> hashMap : bindingData
+					.values()) {
+				for (HashMap<String, IObservable> map : hashMap.values()) {
 					for (IObservable observable : map.values()) {
 						observable.removeChangeListener(changeListenerSupport);
 					}
@@ -97,9 +98,10 @@ public class ScopeKeeper implements DisposeListener {
 			}
 			changeListenerSupport.dispose();
 		}
-		HashMap<Object, HashMap<String, IObservable>> hashMap = bindingData.get(source);
+		HashMap<Object, HashMap<String, IObservable>> hashMap = bindingData
+				.get(source);
 		if (hashMap != null) {
-			for (HashMap<String, IObservable> map: hashMap.values()) {
+			for (HashMap<String, IObservable> map : hashMap.values()) {
 				for (IObservable observable : map.values()) {
 					observable.removeChangeListener(changeListenerSupport);
 				}
@@ -110,6 +112,10 @@ public class ScopeKeeper implements DisposeListener {
 
 	public void addNamedObject(String name, Object object) {
 		nameMap.put(name, object);
+	}
+
+	public Widget getHost() {
+		return host;
 	}
 
 	public Object getNamedObject(String name) {
@@ -128,9 +134,10 @@ public class ScopeKeeper implements DisposeListener {
 			return true;
 		return parent == null ? false : parent.containsName(name);
 	}
-	
+
 	/**
-	 * Register a change listener. The second call to register a same listener has no effect.
+	 * Register a change listener. The second call to register a same listener
+	 * has no effect.
 	 * 
 	 * @param listener
 	 */
@@ -146,7 +153,7 @@ public class ScopeKeeper implements DisposeListener {
 	public void removeChangeListener(IChangeListener listener) {
 		changeListenerSupport.removeChangeListener(listener);
 	}
-	
+
 	public void fireChangeListener(ChangeEvent event) {
 		changeListenerSupport.handleChange(event);
 	}
@@ -155,11 +162,10 @@ public class ScopeKeeper implements DisposeListener {
 			IObservable value) {
 		if (widget == null) {
 			widget = host;
-		}
-		else {
+		} else {
 			widget.addDisposeListener(this);
 		}
-			
+
 		HashMap<Object, HashMap<String, IObservable>> widgetData = bindingData
 				.get(widget);
 		if (widgetData == null) {
@@ -176,7 +182,7 @@ public class ScopeKeeper implements DisposeListener {
 			throw new IllegalStateException();
 		}
 		objectData.put(property, value);
-		
+
 		value.addChangeListener(changeListenerSupport);
 	}
 
@@ -186,7 +192,7 @@ public class ScopeKeeper implements DisposeListener {
 		if (observable instanceof IObservableValue) {
 			return (IObservableValue) observable;
 		}
-		
+
 		return null;
 	}
 
@@ -199,8 +205,7 @@ public class ScopeKeeper implements DisposeListener {
 		return null;
 	}
 
-	IObservableSet getObservableSet(Widget control, Object data,
-			String property) {
+	IObservableSet getObservableSet(Widget control, Object data, String property) {
 		IObservable observable = getObservable(control, data, property);
 		if (observable instanceof IObservableSet) {
 			return (IObservableSet) observable;
@@ -208,10 +213,10 @@ public class ScopeKeeper implements DisposeListener {
 		return null;
 	}
 
-	IObservable localGetObservable(Widget control, Object data,
-			String property) {
+	IObservable localGetObservable(Widget control, Object data, String property) {
 		// find locally
-		for (HashMap<Object, HashMap<String, IObservable>> widgetData : bindingData.values()) {
+		for (HashMap<Object, HashMap<String, IObservable>> widgetData : bindingData
+				.values()) {
 			if (widgetData != null) {
 				HashMap<String, IObservable> objectData = widgetData.get(data);
 				if (objectData != null) {
@@ -224,9 +229,8 @@ public class ScopeKeeper implements DisposeListener {
 		}
 		return null;
 	}
-	
-	IObservable getObservable(Widget control, Object data,
-			String property) {
+
+	IObservable getObservable(Widget control, Object data, String property) {
 		// find locally
 		IObservable observable = localGetObservable(control, data, property);
 		if (observable != null) {
@@ -241,12 +245,13 @@ public class ScopeKeeper implements DisposeListener {
 		}
 		return observable;
 	}
-	
+
 	static IObservable deepFindObservable(Widget control, Object data,
 			String property) {
 		ScopeKeeper scopeKeeper = UserData.getLocalScopeKeeper(control);
 		if (scopeKeeper != null) {
-			IObservable observable = scopeKeeper.localGetObservable(control, data, property);
+			IObservable observable = scopeKeeper.localGetObservable(control,
+					data, property);
 			if (observable != null) {
 				return observable;
 			}
@@ -254,7 +259,8 @@ public class ScopeKeeper implements DisposeListener {
 		if (control instanceof Composite) {
 			Composite composite = (Composite) control;
 			for (Control child : composite.getChildren()) {
-				IObservable observable = deepFindObservable(child, data, property);
+				IObservable observable = deepFindObservable(child, data,
+						property);
 				if (observable != null) {
 					return observable;
 				}

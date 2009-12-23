@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.core;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
@@ -22,6 +23,7 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.converters.StringMultiValueConerter;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
 import org.eclipse.e4.xwt.databinding.AggregateObservableValue;
+import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.ModelUtils;
@@ -54,6 +56,8 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 	 *
 	 */
 	private UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.Default;
+
+	private IBindingContext bindingContext;
 
 	public UpdateSourceTrigger getUpdateSourceTrigger() {
 		return updateSourceTrigger;
@@ -114,7 +118,8 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 
 		IDataProvider dataProvider = getDataProvider();
 		if (dataProvider != null) {
-			IBindingContext bindingContext = dataProvider.getBindingContext();
+
+			IBindingContext bindingContext = getBindingContext();
 			if (bindingContext != null) {
 				Object target = getControl();
 				if (target instanceof Text && getType().equalsIgnoreCase("text")) {
@@ -145,6 +150,15 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		return observableValue.getValue();
 	}
 
+	private IBindingContext getBindingContext() {
+		if (this.bindingContext == null){
+			DataBindingContext dataBindingContext = XWT.getDataBindingContext(getControl(), getContextName());
+			this.bindingContext = new BindingContext(dataBindingContext);
+		}
+
+		return this.bindingContext;
+	}
+
 	public IObservableValue getObservableWidget() {
 		if (observableWidget == null) {
 			Object target = getControl();
@@ -152,7 +166,9 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 			String targetProperty = getType();
 			targetProperty = ModelUtils.normalizePropertyName(targetProperty);
 			try {
-				observableWidget = ScopeManager.observeValue(target, host, getTargettPropertyExpression(), getUpdateSourceTrigger());
+				observableWidget = ScopeManager.observeValue(target, host,
+						getTargettPropertyExpression(),
+						getUpdateSourceTrigger());
 			} catch (XWTException e) {
 			}
 		}

@@ -4,18 +4,20 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.e4.xwt.databinding;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.core.Binding;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
@@ -27,7 +29,8 @@ import org.eclipse.e4.xwt.internal.utils.UserData;
 public class ControlDataBinding extends AbstractDataBinding {
 	private Object source;
 
-	public ControlDataBinding(Object source, Binding binding, IDataProvider dataProvider) {
+	public ControlDataBinding(Object source, Binding binding,
+			IDataProvider dataProvider) {
 		super(binding, dataProvider);
 		this.source = source;
 	}
@@ -40,7 +43,8 @@ public class ControlDataBinding extends AbstractDataBinding {
 		IObservableValue targetWidget = null;
 		Object target = getControl();
 		if (target != null) {
-			IObservable observable = ScopeManager.observeValue(target, target, getTargetProperty(), getUpdateSourceTrigger());
+			IObservable observable = ScopeManager.observeValue(target, target,
+					getTargetProperty(), getUpdateSourceTrigger());
 			if (observable instanceof IObservableValue) {
 				targetWidget = (IObservableValue) observable;
 			}
@@ -53,8 +57,9 @@ public class ControlDataBinding extends AbstractDataBinding {
 		if (control == null) {
 			control = getControl();
 		}
-		
-		IObservable observable = ScopeManager.observeValue(control, source, getSourceProperty(), getUpdateSourceTrigger());
+
+		IObservable observable = ScopeManager.observeValue(control, source,
+				getSourceProperty(), getUpdateSourceTrigger());
 		if (observable instanceof IObservableValue) {
 			sourceWidget = (IObservableValue) observable;
 		}
@@ -70,7 +75,10 @@ public class ControlDataBinding extends AbstractDataBinding {
 			}
 			return source;
 		}
-		IBindingContext bindingContext = new BindingContext();
+
+		DataBindingContext dataBindingContext = XWT.getDataBindingContext(
+				getControl(), getContextName());
+		IBindingContext bindingContext = new BindingContext(dataBindingContext);
 		bindingContext.bind(sourceWidget, targetWidget, this);
 		if (sourceWidget != null) {
 			Object value = sourceWidget.getValue();

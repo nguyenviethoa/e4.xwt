@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IObservableValueListener;
 import org.eclipse.e4.xwt.XWT;
@@ -28,6 +29,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.TableTreeItem;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Caret;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -49,12 +52,13 @@ import org.eclipse.swt.widgets.Widget;
 public class UserData {
 	private HashMap<Object, Object> dictionary = null;
 	private IObservableValueListener observableValueManager;
-	
+
 	protected IObservableValueListener getObservableValueManager() {
 		return observableValueManager;
 	}
 
-	protected void setObservableValueManager(IObservableValueListener observableValueManager) {
+	protected void setObservableValueManager(
+			IObservableValueListener observableValueManager) {
 		this.observableValueManager = observableValueManager;
 	}
 
@@ -64,11 +68,12 @@ public class UserData {
 		}
 		dictionary.put(key, value);
 		if (observableValueManager != null && (key instanceof IProperty)) {
-			IObservableValue observableValue = observableValueManager.getValue((IProperty)key);
+			IObservableValue observableValue = observableValueManager
+					.getValue((IProperty) key);
 			observableValue.setValue(value);
 		}
 	}
-	
+
 	public Object getData(Object key) {
 		if (dictionary == null) {
 			return null;
@@ -100,7 +105,9 @@ public class UserData {
 	public static boolean isUIElementType(Object element) {
 		if (element instanceof Class<?>) {
 			Class<?> elementType = (Class<?>) element;
-			return Widget.class.isAssignableFrom(elementType) || Viewer.class.isAssignableFrom(elementType) || ControlEditor.class.isAssignableFrom(elementType);
+			return Widget.class.isAssignableFrom(elementType)
+					|| Viewer.class.isAssignableFrom(elementType)
+					|| ControlEditor.class.isAssignableFrom(elementType);
 		}
 		return false;
 	}
@@ -114,18 +121,22 @@ public class UserData {
 		if (dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY) != null) {
 			throw new IllegalStateException("Name context is already set");
 		}
-		dataDictionary.setData(IUserDataConstants.XWT_NAMECONTEXT_KEY, nameContext);
+		dataDictionary.setData(IUserDataConstants.XWT_NAMECONTEXT_KEY,
+				nameContext);
 	}
-	
+
 	protected static UserData updateDataDictionary(Object target) {
 		Widget widget = getWidget(target);
 		if (widget == null) {
 			return null;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary == null) {
 			dataDictionary = new UserData();
-			widget.setData(IUserDataConstants.XWT_USER_DATA_KEY, dataDictionary);
+			widget
+					.setData(IUserDataConstants.XWT_USER_DATA_KEY,
+							dataDictionary);
 		}
 		return dataDictionary;
 	}
@@ -143,7 +154,8 @@ public class UserData {
 	}
 
 	/**
-	 * Find the root widget used by XWT. In fact, it tries to find the root ScopeKeeper  
+	 * Find the root widget used by XWT. In fact, it tries to find the root
+	 * ScopeKeeper
 	 * 
 	 * @param element
 	 * @return
@@ -158,7 +170,7 @@ public class UserData {
 			}
 			current = getTreeParent(current);
 		}
-		
+
 		return root;
 	}
 
@@ -194,14 +206,40 @@ public class UserData {
 		return null;
 	}
 
+	public static Widget findScopeRoot(Object element) {
+		Widget widget = getWidget(element);
+		if (widget == null) {
+			return null;
+		}
+
+		Widget current = widget;
+		while (current != null) {
+			UserData dataDictionary = (UserData) current
+					.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+			if (dataDictionary != null) {
+				Object data = dataDictionary
+						.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
+				if (data != null) {
+					return current;
+				}
+			}
+
+			current = getTreeParent(current);
+		}
+
+		return null;
+	}
+
 	public static ScopeKeeper getLocalScopeKeeper(Object element) {
 		Widget widget = getWidget(element);
 		if (widget == null) {
 			return null;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
-			Object data = dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
+			Object data = dataDictionary
+					.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
 			if (data != null) {
 				return (ScopeKeeper) data;
 			}
@@ -214,9 +252,11 @@ public class UserData {
 		if (widget == null) {
 			return null;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
-			ScopeKeeper nameContext = (ScopeKeeper) dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
+			ScopeKeeper nameContext = (ScopeKeeper) dataDictionary
+					.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
 			if (nameContext != null) {
 				Object element = nameContext.getNamedObject(name);
 				if (element != null) {
@@ -234,14 +274,17 @@ public class UserData {
 	public static String getElementName(Object object) {
 		if (object instanceof Widget) {
 			Widget widget = (Widget) object;
-			UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+			UserData dataDictionary = (UserData) widget
+					.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 			if (dataDictionary != null) {
 				return (String) widget.getData(IUserDataConstants.XWT_NAME_KEY);
 			}
 		} else if (object instanceof Viewer) {
 			Viewer viewer = (Viewer) object;
-			UserData dataDictionary = (UserData)viewer.getControl().getData(IUserDataConstants.XWT_USER_DATA_KEY);
-			return (String) dataDictionary.getData(IUserDataConstants.XWT_NAME_KEY);
+			UserData dataDictionary = (UserData) viewer.getControl().getData(
+					IUserDataConstants.XWT_USER_DATA_KEY);
+			return (String) dataDictionary
+					.getData(IUserDataConstants.XWT_NAME_KEY);
 		}
 		return null;
 	}
@@ -255,9 +298,11 @@ public class UserData {
 		if (widget == null) {
 			return null;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
-			Object data = dataDictionary.getData(IUserDataConstants.XWT_CLR_KEY);
+			Object data = dataDictionary
+					.getData(IUserDataConstants.XWT_CLR_KEY);
 			if (data != null) {
 				return data;
 			}
@@ -274,9 +319,11 @@ public class UserData {
 		if (widget == null) {
 			return null;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
-			return (Widget) dataDictionary.getData(IUserDataConstants.XWT_PARENT_KEY);
+			return (Widget) dataDictionary
+					.getData(IUserDataConstants.XWT_PARENT_KEY);
 		}
 		return getParent(element);
 	}
@@ -340,7 +387,8 @@ public class UserData {
 	}
 
 	public static IEventHandler findEventController(Object widget) {
-		return (IEventHandler)findData(widget, IUserDataConstants.XWT_CONTROLLER_KEY);
+		return (IEventHandler) findData(widget,
+				IUserDataConstants.XWT_CONTROLLER_KEY);
 	}
 
 	public static Object getDataContext(Object widget) {
@@ -350,16 +398,18 @@ public class UserData {
 	public static TriggerBase[] getTriggers(Object element) {
 		Widget widget = getWidget(element);
 		if (widget == null) {
-			return TriggerBase.EMPTY_ARRAY;		
+			return TriggerBase.EMPTY_ARRAY;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
-			TriggerBase[] triggers =  (TriggerBase[]) dataDictionary.getData(IUserDataConstants.XWT_TRIGGERS_KEY);
+			TriggerBase[] triggers = (TriggerBase[]) dataDictionary
+					.getData(IUserDataConstants.XWT_TRIGGERS_KEY);
 			if (triggers != null) {
 				return triggers;
 			}
 		}
-		return TriggerBase.EMPTY_ARRAY;		
+		return TriggerBase.EMPTY_ARRAY;
 	}
 
 	public static void setTriggers(Object widget, TriggerBase[] triggers) {
@@ -371,25 +421,29 @@ public class UserData {
 		if (widget == null) {
 			return null;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		Object host = null;
 		if (dataDictionary != null) {
-			host = dataDictionary.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
+			host = dataDictionary
+					.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
 			if (host != null) {
 				return widget;
 			}
 		}
 		Widget parent = widget;
 		while (parent != null) {
-			dataDictionary = (UserData)parent.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+			dataDictionary = (UserData) parent
+					.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 			if (dataDictionary != null) {
-				host = dataDictionary.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
+				host = dataDictionary
+						.getData(IUserDataConstants.XWT_DATACONTEXT_KEY);
 				if (host != null) {
 					return parent;
 				}
-				parent = (Widget) dataDictionary.getData(IUserDataConstants.XWT_PARENT_KEY);
-			}
-			else {
+				parent = (Widget) dataDictionary
+						.getData(IUserDataConstants.XWT_PARENT_KEY);
+			} else {
 				parent = getParent(parent);
 			}
 		}
@@ -397,9 +451,10 @@ public class UserData {
 	}
 
 	public static void setDataContext(Object widget, Object dataContext) {
-		setLocalData(widget, IUserDataConstants.XWT_DATACONTEXT_KEY, dataContext);
+		setLocalData(widget, IUserDataConstants.XWT_DATACONTEXT_KEY,
+				dataContext);
 	}
-	
+
 	public static Widget getWidget(Object target) {
 		if (JFacesHelper.isViewer(target)) {
 			return JFacesHelper.getControl(target);
@@ -412,9 +467,9 @@ public class UserData {
 	}
 
 	public static Viewer getLocalViewer(Object object) {
-		return (Viewer)getLocalData(object, IUserDataConstants.XWT_VIEWER_KEY);
+		return (Viewer) getLocalData(object, IUserDataConstants.XWT_VIEWER_KEY);
 	}
-	
+
 	public static Object getLocalDataContext(Object object) {
 		return getLocalData(object, IUserDataConstants.XWT_DATACONTEXT_KEY);
 	}
@@ -424,7 +479,8 @@ public class UserData {
 		if (widget == null) {
 			return null;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary == null) {
 			return null;
 		}
@@ -436,7 +492,8 @@ public class UserData {
 		if (widget == null) {
 			return null;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary == null) {
 			return null;
 		}
@@ -448,7 +505,8 @@ public class UserData {
 		if (widget == null) {
 			return false;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary == null) {
 			return false;
 		}
@@ -460,7 +518,8 @@ public class UserData {
 		if (widget == null) {
 			return;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary == null) {
 			return;
 		}
@@ -472,16 +531,17 @@ public class UserData {
 		if (widget == null) {
 			return;
 		}
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary == null) {
 			return;
 		}
 		dataDictionary.removeData(key);
 	}
 
-	
 	public static Map<String, Object> getLocalResources(Object object) {
-		return (Map<String, Object>)getLocalData(object, IUserDataConstants.XWT_RESOURCES_KEY);
+		return (Map<String, Object>) getLocalData(object,
+				IUserDataConstants.XWT_RESOURCES_KEY);
 	}
 
 	public static void setResources(Object object, Map<?, ?> resources) {
@@ -496,16 +556,19 @@ public class UserData {
 		setLocalData(object, IUserDataConstants.XWT_VIEWER_KEY, parent);
 	}
 
-	public static void setEventController(Object object, IEventHandler controller) {
+	public static void setEventController(Object object,
+			IEventHandler controller) {
 		setLocalData(object, IUserDataConstants.XWT_CONTROLLER_KEY, controller);
 	}
 
 	public static IEventHandler updateEventController(Object object) {
 		UserData dataDictionary = updateDataDictionary(object);
-		IEventHandler controller = (IEventHandler) dataDictionary.getData(IUserDataConstants.XWT_CONTROLLER_KEY);
+		IEventHandler controller = (IEventHandler) dataDictionary
+				.getData(IUserDataConstants.XWT_CONTROLLER_KEY);
 		if (controller == null) {
 			controller = XWT.getLanguageSupport().createEventHandler();
-			dataDictionary.setData(IUserDataConstants.XWT_CONTROLLER_KEY, controller);
+			dataDictionary.setData(IUserDataConstants.XWT_CONTROLLER_KEY,
+					controller);
 		}
 		return controller;
 	}
@@ -515,41 +578,45 @@ public class UserData {
 		dataDictionary.setData(key, value);
 	}
 
-	public static void setLocalData(Object object, IProperty property, Object value) {
+	public static void setLocalData(Object object, IProperty property,
+			Object value) {
 		UserData dataDictionary = updateDataDictionary(object);
 		dataDictionary.setData(property, value);
 	}
 
-	public static IObservableValueListener getObservableValueManager(Object object) {
+	public static IObservableValueListener getObservableValueManager(
+			Object object) {
 		Widget widget = getWidget(object);
 		if (widget == null) {
 			return null;
 		}
-		
-		UserData userData = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+
+		UserData userData = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (userData != null) {
 			return userData.getObservableValueManager();
 		}
 		return null;
 	}
-	
-	public static void setObservableValueManager(Object object, IObservableValueListener eventManager) {
+
+	public static void setObservableValueManager(Object object,
+			IObservableValueListener eventManager) {
 		Widget widget = getWidget(object);
 		if (widget == null) {
 			throw new IllegalStateException("Not SWT Widget");
 		}
-		UserData userData = (UserData)updateDataDictionary(object);
+		UserData userData = (UserData) updateDataDictionary(object);
 		userData.setObservableValueManager(eventManager);
 	}
-	
-	
+
 	public static Object findData(Object object, String key) {
 		Widget widget = getWidget(object);
 		if (widget == null) {
 			return Collections.EMPTY_MAP;
 		}
-		
-		UserData dataDictionary = (UserData)widget.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		Object resources = null;
 		if (dataDictionary != null) {
 			resources = dataDictionary.getData(key);
@@ -559,25 +626,27 @@ public class UserData {
 		}
 		Widget parent = widget;
 		while (parent != null) {
-			dataDictionary = (UserData)parent.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+			dataDictionary = (UserData) parent
+					.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 			if (dataDictionary != null) {
 				resources = dataDictionary.getData(key);
 				if (resources != null) {
 					return resources;
 				}
-				parent = (Widget) dataDictionary.getData(IUserDataConstants.XWT_PARENT_KEY);
-			}
-			else {
+				parent = (Widget) dataDictionary
+						.getData(IUserDataConstants.XWT_PARENT_KEY);
+			} else {
 				parent = getParent(parent);
 			}
 		}
 		return null;
 	}
-	
+
 	public static Map<?, ?> getResources(Object object) {
-		return (Map<?, ?>) findData(object, IUserDataConstants.XWT_RESOURCES_KEY);
+		return (Map<?, ?>) findData(object,
+				IUserDataConstants.XWT_RESOURCES_KEY);
 	}
-	
+
 	public static void setObjectName(Object object, String name) {
 		Widget widget = getWidget(object);
 		ScopeKeeper nameScoped;
@@ -586,17 +655,37 @@ public class UserData {
 			return;
 		}
 		Widget parent = UserData.getTreeParent(widget);
-		UserData dataDictionary = (UserData)parent.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		UserData dataDictionary = (UserData) parent
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
 			if (dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY) != null) {
-				nameScoped = (ScopeKeeper) dataDictionary.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
+				nameScoped = (ScopeKeeper) dataDictionary
+						.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
 			} else {
-				ScopeKeeper parentNameScope = parent == null ? null : findScopeKeeper(parent);
+				ScopeKeeper parentNameScope = parent == null ? null
+						: findScopeKeeper(parent);
 				nameScoped = new ScopeKeeper(parentNameScope, widget);
 				bindNameContext(parent, nameScoped);
 			}
 			nameScoped.addNamedObject(name, widget);
 		}
 		// throw an exception or log a message?
+	}
+
+	public static DataBindingContext createDataBinding(Widget host) {
+		final DataBindingContext dataBindingContext = new DataBindingContext(
+				XWT.getRealm());
+		host.addDisposeListener(new DisposeListener() {
+
+			public void widgetDisposed(DisposeEvent e) {
+				dataBindingContext.dispose();
+			}
+		});
+
+		UserData.setLocalData(host,
+				IUserDataConstants.XWT_DEFAULT_DATABINDINGCONTEXT_KEY,
+				dataBindingContext);
+
+		return dataBindingContext;
 	}
 }

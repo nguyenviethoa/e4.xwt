@@ -4,8 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0       *
  * which accompanies this distribution, and is available at                    *
  * http://www.eclipse.org/legal/epl-v10.html                                   *
- *                                                                             *  
- * Contributors:                                                               *        
+ *                                                                             *
+ * Contributors:                                                               *
  *     Soyatec - initial API and implementation                                *
  *******************************************************************************/
 package org.eclipse.e4.xwt.dataproviders;
@@ -19,27 +19,16 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.core.IBinding;
-import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public abstract class AbstractDataProvider implements IDataProvider {
-	
-	private HashMap<String, Object> properties = new HashMap<String, Object>();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getBindingContext()
-	 */
-	public IBindingContext getBindingContext() {
-		return new BindingContext();
-	}
+	private HashMap<String, Object> properties = new HashMap<String, Object>();
 
 	public Object getProperty(String property) {
 		return properties.get(property);
@@ -60,18 +49,18 @@ public abstract class AbstractDataProvider implements IDataProvider {
 	public boolean isPropertyReadOnly(String path) {
 		return false;
 	}
-	
-	public IObservable observe(Object data, String path, Object elementType, int observeKind) {
+
+	public IObservable observe(Object data, String path, Object elementType,
+			int observeKind) {
 		Object type = null;
 		if (elementType == null) {
 			type = getModelService().toModelType(data);
-		}
-		else {
+		} else {
 			type = elementType;
 		}
 		Object propertyType = getModelService().toModelPropertyType(type, path);
 		Class<?> propertyTypeClass = null;
-		
+
 		if (propertyType instanceof Class<?>) {
 			propertyTypeClass = (Class<?>) propertyType;
 			if (IBinding.class.isAssignableFrom(propertyTypeClass)) {
@@ -81,26 +70,30 @@ public abstract class AbstractDataProvider implements IDataProvider {
 
 		switch (observeKind) {
 		case ScopeManager.AUTO:
-			if (propertyTypeClass != null && (propertyTypeClass.isArray() || List.class.isAssignableFrom(propertyTypeClass))) {
+			if (propertyTypeClass != null
+					&& (propertyTypeClass.isArray() || List.class
+							.isAssignableFrom(propertyTypeClass))) {
 				if (data instanceof IObservableValue) {
 					IObservableValue observable = (IObservableValue) data;
-					return observeDetailList(observable, type, path, propertyType);
+					return observeDetailList(observable, type, path,
+							propertyType);
 				}
-				return observeList(data, path);				
-			}
-			else if (propertyTypeClass != null && (Set.class.isAssignableFrom(propertyTypeClass))) {
+				return observeList(data, path);
+			} else if (propertyTypeClass != null
+					&& (Set.class.isAssignableFrom(propertyTypeClass))) {
 				if (data instanceof IObservableValue) {
 					IObservableValue observable = (IObservableValue) data;
-					return observeDetailSet(observable, type, path, propertyType);
+					return observeDetailSet(observable, type, path,
+							propertyType);
 				}
-				return observeSet(data, path);				
-			}
-			else {
+				return observeSet(data, path);
+			} else {
 				if (data instanceof IObservableValue) {
 					IObservableValue observable = (IObservableValue) data;
-					return observeDetailValue(observable, type, path, propertyType);
+					return observeDetailValue(observable, type, path,
+							propertyType);
 				}
-				return observeValue(data, path);				
+				return observeValue(data, path);
 			}
 		case ScopeManager.VALUE:
 			if (data instanceof IObservableValue) {
@@ -109,12 +102,14 @@ public abstract class AbstractDataProvider implements IDataProvider {
 			}
 			return observeValue(data, path);
 		case ScopeManager.COLLECTION:
-			if (propertyTypeClass != null && Set.class.isAssignableFrom(propertyTypeClass)) {
+			if (propertyTypeClass != null
+					&& Set.class.isAssignableFrom(propertyTypeClass)) {
 				if (data instanceof IObservableValue) {
 					IObservableValue observable = (IObservableValue) data;
-					return observeDetailSet(observable, type, path, propertyType);
+					return observeDetailSet(observable, type, path,
+							propertyType);
 				}
-				return observeSet(data, path);				
+				return observeSet(data, path);
 			}
 			if (data instanceof IObservableValue) {
 				IObservableValue observable = (IObservableValue) data;
@@ -126,7 +121,7 @@ public abstract class AbstractDataProvider implements IDataProvider {
 				IObservableValue observable = (IObservableValue) data;
 				return observeDetailSet(observable, type, path, propertyType);
 			}
-			return observeSet(data, path);				
+			return observeSet(data, path);
 		case ScopeManager.LIST:
 			if (data instanceof IObservableValue) {
 				IObservableValue observable = (IObservableValue) data;
@@ -136,8 +131,9 @@ public abstract class AbstractDataProvider implements IDataProvider {
 		}
 		return null;
 	}
-	
-	protected abstract IObservableValue observeValue(Object bean, String propertyName);
+
+	protected abstract IObservableValue observeValue(Object bean,
+			String propertyName);
 
 	protected IObservableList observeList(Object bean, String propertyName) {
 		return null;
@@ -147,15 +143,19 @@ public abstract class AbstractDataProvider implements IDataProvider {
 		return null;
 	}
 
-	protected IObservableList observeDetailList(IObservableValue bean, Object elementType, String propertyName, Object propertyType) {
+	protected IObservableList observeDetailList(IObservableValue bean,
+			Object elementType, String propertyName, Object propertyType) {
 		return null;
 	}
 
-	protected IObservableSet observeDetailSet(IObservableValue bean, Object elementType, String propertyName, Object propertyType) {
+	protected IObservableSet observeDetailSet(IObservableValue bean,
+			Object elementType, String propertyName, Object propertyType) {
 		return null;
 	}
 
-	protected abstract IObservableValue observeDetailValue(IObservableValue bean, Object elementType, String propertyName, Object propertyType);
+	protected abstract IObservableValue observeDetailValue(
+			IObservableValue bean, Object elementType, String propertyName,
+			Object propertyType);
 
 	// TODO to remove
 	public IValueProperty createValueProperty(Object type, String fullPath) {

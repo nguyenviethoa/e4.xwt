@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -15,14 +15,14 @@ import org.eclipse.core.databinding.property.value.IValueProperty;
 
 /**
  * A Data Binding provider defines the nature of Data Binding such as Bean Object Binding, EMF Object Binding, XML data Binding or Data Base binding
- * 
+ *
  * @author yyang
  */
 public interface IDataProvider {
 
 	/**
 	 * Return the data of the provider, this value can be not used for databindings.
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 */
@@ -30,7 +30,7 @@ public interface IDataProvider {
 
 	/**
 	 * Return the data of the provider, this value can be not used for databindings.
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 */
@@ -38,7 +38,7 @@ public interface IDataProvider {
 
 	/**
 	 * Return the data of the provider, this value can be not used for databindings.
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 */
@@ -46,7 +46,7 @@ public interface IDataProvider {
 
 	/**
 	 * Return the data of the provider, this value can be not used for databindings.
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 */
@@ -54,7 +54,7 @@ public interface IDataProvider {
 
 	/**
 	 * Return the data type of the provider.lue
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 */
@@ -62,18 +62,11 @@ public interface IDataProvider {
 
 	/**
 	 * check if the property is read only.
-	 * 
+	 *
 	 * @param path
 	 * @return
 	 */
 	boolean isPropertyReadOnly(String path);
-
-	/**
-	 * Process context of databindings.
-	 * 
-	 * @return
-	 */
-	IBindingContext getBindingContext();
 
 	Object getProperty(String property);
 
@@ -82,25 +75,25 @@ public interface IDataProvider {
 	boolean hasProperty(String property);
 
 	void removeProperty(String property);
-	
+
 	IObservable observe(Object data, String path, Object targetType, int observeKind);
-	
+
 	IValueProperty createValueProperty(Object type, String fullPath);
-	
+
 	interface DataModelService {
 		/**
 		 * get the type of this object
-		 * 
+		 *
 		 * @param object
 		 * @return
 		 */
 		Object toModelType(Object object);
-		
-		Object loadModelType(String typeName);	
-		
+
+		Object loadModelType(String typeName);
+
 		Object toModelPropertyType(Object object, String propertyName);
 	}
-	
+
 	DataModelService getModelService();
-	
+
 }

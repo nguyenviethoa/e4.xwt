@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *     Anyware-tech - add multiple loaders
@@ -17,10 +17,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
@@ -34,7 +36,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.animation.BeginStoryboard;
 import org.eclipse.e4.xwt.animation.ColorAnimation;
 import org.eclipse.e4.xwt.animation.DoubleAnimation;
-import org.eclipse.e4.xwt.animation.Duration;
 import org.eclipse.e4.xwt.animation.IntAnimation;
 import org.eclipse.e4.xwt.animation.PauseStoryboard;
 import org.eclipse.e4.xwt.animation.PointAnimation;
@@ -151,6 +152,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * Default XWT loader
@@ -182,7 +184,7 @@ public class XWTLoader implements IXWTLoader {
 		cores.push(core);
 		return core;
 	}
-	
+
 	public boolean applyProfile(Object profile) {
 		if (profile instanceof Core) {
 			if (cores.peek() == profile) {
@@ -193,14 +195,14 @@ public class XWTLoader implements IXWTLoader {
 		}
 		throw new XWTException("Wrong UI Profile.");
 	}
-	
+
 	public Object restoreProfile() {
 		if (cores.size() > 1) {
 			return cores.pop();
 		}
-		throw new XWTException("No user-defined UI Profile.");	
+		throw new XWTException("No user-defined UI Profile.");
 	}
-	
+
 	public Realm getRealm() {
 		return realm;
 	}
@@ -208,7 +210,7 @@ public class XWTLoader implements IXWTLoader {
 	protected Core getCurrentCore() {
 		return cores.peek();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -265,14 +267,16 @@ public class XWTLoader implements IXWTLoader {
 	}
 
 	/**
-	 * Register an Observable IChangeListener for a given UI element. The second 
-	 * registration of the same listener on the same UI Element has no effect. 
+	 * Register an Observable IChangeListener for a given UI element. The second
+	 * registration of the same listener on the same UI Element has no effect.
 	 * 
 	 * @param context
 	 * @param listener
-	 * @return <code>true</code> the listener is added, <code>false</code> if the listener already exists
+	 * @return <code>true</code> the listener is added, <code>false</code> if
+	 *         the listener already exists
 	 */
-	public boolean addObservableChangeListener(Object control, IChangeListener listener) {
+	public boolean addObservableChangeListener(Object control,
+			IChangeListener listener) {
 		ScopeKeeper scope = UserData.findScopeKeeper(control);
 		if (scope != null) {
 			return scope.addChangeListener(listener);
@@ -281,14 +285,16 @@ public class XWTLoader implements IXWTLoader {
 	}
 
 	/**
-	 * Undo the registration of the Observable IChangeListener for a given UI element. 
+	 * Undo the registration of the Observable IChangeListener for a given UI
+	 * element.
 	 * 
 	 * @param context
 	 * @param listener
 	 */
-	public void removeObservableChangeListener(Object control, IChangeListener listener) {
+	public void removeObservableChangeListener(Object control,
+			IChangeListener listener) {
 		ScopeKeeper scope = UserData.findScopeKeeper(control);
-		if (scope == null) {
+		if (scope != null) {
 			scope.removeChangeListener(listener);
 		}
 	}
@@ -298,8 +304,10 @@ public class XWTLoader implements IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	public IObservable observe(Object control, Object data, String fullPath, UpdateSourceTrigger updateSourceTrigger) {
-		return ScopeManager.observe(control, data, new BindingExpressionPath(fullPath), updateSourceTrigger);
+	public IObservable observe(Object control, Object data, String fullPath,
+			UpdateSourceTrigger updateSourceTrigger) {
+		return ScopeManager.observe(control, data, new BindingExpressionPath(
+				fullPath), updateSourceTrigger);
 	}
 
 	/**
@@ -307,17 +315,19 @@ public class XWTLoader implements IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	public IObservableFactory observableFactory(Object control, String fullPath, UpdateSourceTrigger updateSourceTrigger) {
-		return ScopeManager.observableFactory(control, new BindingExpressionPath(fullPath), updateSourceTrigger);
+	public IObservableFactory observableFactory(Object control,
+			String fullPath, UpdateSourceTrigger updateSourceTrigger) {
+		return ScopeManager.observableFactory(control,
+				new BindingExpressionPath(fullPath), updateSourceTrigger);
 	}
-
 
 	/**
 	 * 
 	 * @param nsmapace
 	 * @return
 	 */
-	public IObservableList findObservableList(Object context, Object data, String fullPath) {
+	public IObservableList findObservableList(Object context, Object data,
+			String fullPath) {
 		return ScopeManager.findObservableList(context, null, data, fullPath);
 	}
 
@@ -326,7 +336,8 @@ public class XWTLoader implements IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	public IObservableSet findObservableSet(Object context, Object data, String fullPath) {
+	public IObservableSet findObservableSet(Object context, Object data,
+			String fullPath) {
 		return ScopeManager.findObservableSet(context, null, data, fullPath);
 	}
 
@@ -335,8 +346,10 @@ public class XWTLoader implements IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	public IObservableValue observableValue(Object control, Object data, String fullPath, UpdateSourceTrigger updateSourceTrigger) {
-		return ScopeManager.observableValue(control, data, fullPath, updateSourceTrigger);
+	public IObservableValue observableValue(Object control, Object data,
+			String fullPath, UpdateSourceTrigger updateSourceTrigger) {
+		return ScopeManager.observableValue(control, data, fullPath,
+				updateSourceTrigger);
 	}
 
 	/**
@@ -344,7 +357,8 @@ public class XWTLoader implements IXWTLoader {
 	 * @param nsmapace
 	 * @return
 	 */
-	public IObservableValue findObservableValue(Object context, Object data, String fullPath) {
+	public IObservableValue findObservableValue(Object context, Object data,
+			String fullPath) {
 		return ScopeManager.findObservableValue(context, null, data, fullPath);
 	}
 
@@ -372,7 +386,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @return
 	 */
 	public INamespaceHandler getNamespaceHandler(String nsmapace) {
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
 			INamespaceHandler handler = core.getNamespaceHandler(nsmapace);
 			if (handler != null) {
@@ -417,6 +431,41 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public Object findElementByName(Object context, String name) {
 		return UserData.findElementByName(context, name);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.IXWTLoader#getDataBindingContext(java.lang.Object,
+	 * java.lang.String)
+	 */
+	public DataBindingContext getDataBindingContext(Object element,
+			String contextName) {
+		if (IUserDataConstants.XWT_DEFAULT.equalsIgnoreCase(contextName
+				.toLowerCase(Locale.ENGLISH))) {
+			Widget host = UserData.findScopeRoot(element);
+			DataBindingContext dataBindingContext = (DataBindingContext) UserData
+					.getLocalData(
+							host,
+							IUserDataConstants.XWT_DEFAULT_DATABINDINGCONTEXT_KEY);
+
+			if (dataBindingContext == null) {
+				return UserData.createDataBinding(host);
+			}
+
+			return dataBindingContext;
+		}
+
+		DataBindingContext dataBindingContext = (DataBindingContext) UserData
+				.findData(element, contextName);
+
+		if (dataBindingContext == null) {
+			throw new XWTException("DataBindContext with the name "
+					+ contextName + " not found!");
+		}
+
+		return dataBindingContext;
 	}
 
 	/*
@@ -498,7 +547,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#getMetaclass(java.lang.Object)
 	 */
 	public IMetaclass getMetaclass(Object object) {
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
 			IMetaclass metaclass = core.findMetaclass(object);
 			if (metaclass != null) {
@@ -508,8 +557,7 @@ public class XWTLoader implements IXWTLoader {
 		Class<?> javaClass = null;
 		if (object instanceof Class<?>) {
 			javaClass = (Class<?>) object;
-		}
-		else {
+		} else {
 			javaClass = object.getClass();
 		}
 		Class<?> superclass = javaClass.getSuperclass();
@@ -517,7 +565,8 @@ public class XWTLoader implements IXWTLoader {
 		if (superclass != null) {
 			superMetaclass = getMetaclass(superclass);
 		}
-		return getCurrentCore().registerMetaclass(javaClass, IConstants.XWT_NAMESPACE, superMetaclass);
+		return getCurrentCore().registerMetaclass(javaClass,
+				IConstants.XWT_NAMESPACE, superMetaclass);
 	}
 
 	/*
@@ -633,7 +682,8 @@ public class XWTLoader implements IXWTLoader {
 			Map<String, Object> options) throws Exception {
 		ILoadingContext context = getLoadingContext();
 		try {
-			setLoadingContext(new DefaultLoadingContext(viewType.getClassLoader()));
+			setLoadingContext(new DefaultLoadingContext(viewType
+					.getClassLoader()));
 			options = prepareOptions(options);
 			return loadWithOptions(viewType.getResource(viewType
 					.getSimpleName()
@@ -780,7 +830,8 @@ public class XWTLoader implements IXWTLoader {
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object)
 				: getLoadingContext());
 		options = prepareOptions(options);
-		Control visualObject = getCurrentCore().load(loadingContext, url, options);
+		Control visualObject = getCurrentCore().load(loadingContext, url,
+				options);
 		return visualObject;
 	}
 
@@ -807,7 +858,8 @@ public class XWTLoader implements IXWTLoader {
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object)
 				: getLoadingContext());
 		options = prepareOptions(options);
-		Control visualObject = getCurrentCore().load(loadingContext, stream, base, options);
+		Control visualObject = getCurrentCore().load(loadingContext, stream,
+				base, options);
 		return visualObject;
 	}
 
@@ -817,10 +869,11 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#getAllMetaclasses()
 	 */
 	public IMetaclass[] getAllMetaclasses() {
-		Collection<IMetaclass> collector = new ArrayList<IMetaclass>();	
-		for (int i = cores.size()-1; i >= 0; i--) {
+		Collection<IMetaclass> collector = new ArrayList<IMetaclass>();
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
-			Collection<IMetaclass> metaclasses = core.getAllMetaclasses(IConstants.XWT_NAMESPACE);
+			Collection<IMetaclass> metaclasses = core
+					.getAllMetaclasses(IConstants.XWT_NAMESPACE);
 			collector.addAll(metaclasses);
 		}
 		return collector.toArray(new IMetaclass[collector.size()]);
@@ -833,9 +886,10 @@ public class XWTLoader implements IXWTLoader {
 	 * java.lang.String)
 	 */
 	public IMetaclass getMetaclass(String tagName, String ns) {
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
-			IMetaclass metaclass = core.getMetaclass(getLoadingContext(), tagName, ns);
+			IMetaclass metaclass = core.getMetaclass(getLoadingContext(),
+					tagName, ns);
 			if (metaclass != null) {
 				return metaclass;
 			}
@@ -849,7 +903,8 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#registerMetaclass(java.lang.Class)
 	 */
 	public IMetaclass registerMetaclass(Class<?> type) {
-		return getCurrentCore().registerMetaclass(type, IConstants.XWT_NAMESPACE);
+		return getCurrentCore().registerMetaclass(type,
+				IConstants.XWT_NAMESPACE);
 	}
 
 	/*
@@ -881,7 +936,7 @@ public class XWTLoader implements IXWTLoader {
 	public IConverter findConvertor(Class<?> source, Class<?> target) {
 		source = ObjectUtil.normalizedType(source);
 		target = ObjectUtil.normalizedType(target);
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
 			IConverter converter = core.findConvertor(source, target);
 			if (converter != null) {
@@ -914,7 +969,8 @@ public class XWTLoader implements IXWTLoader {
 	protected void registerConvertor(ValueConvertorRegister convertorRegister,
 			Class<?> source, Class<?> target, Class<?> converterType,
 			String methodName, boolean value) {
-		getCurrentCore().registerConvertor(convertorRegister, source, target, converterType, methodName, value);
+		getCurrentCore().registerConvertor(convertorRegister, source, target,
+				converterType, methodName, value);
 	}
 
 	protected IConverter loadConvertor(Class<?> converter, String methodName,
@@ -977,7 +1033,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#getCommand(java.lang.String)
 	 */
 	public ICommand getCommand(String name) {
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
 			ICommand command = core.getCommand(name);
 			if (command != null) {
@@ -994,7 +1050,7 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public Map<String, ICommand> getCommands() {
 		HashMap<String, ICommand> collector = new HashMap<String, ICommand>();
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
 			Map<String, ICommand> map = core.getCommands();
 			if (map != null) {
@@ -1061,7 +1117,8 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#addDataProviderFactory(org.eclipse.e4.xwt
 	 * .IDataProviderFactory)
 	 */
-	public void addDataProviderFactory(String name, IDataProviderFactory dataProviderFactory) {
+	public void addDataProviderFactory(String name,
+			IDataProviderFactory dataProviderFactory) {
 		getCurrentCore().addDataProviderFactory(name, dataProviderFactory);
 		registerMetaclass(dataProviderFactory.getType());
 	}
@@ -1076,7 +1133,7 @@ public class XWTLoader implements IXWTLoader {
 	public void removeDataProviderFactory(String name) {
 		getCurrentCore().removeDataProviderFactory(name);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1084,7 +1141,8 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#removeDataProviderFactory(org.eclipse.e4
 	 * .xwt.IDataProviderFactory)
 	 */
-	public void removeDataProviderFactory(IDataProviderFactory dataProviderFactory) {
+	public void removeDataProviderFactory(
+			IDataProviderFactory dataProviderFactory) {
 		getCurrentCore().removeDataProviderFactory(dataProviderFactory);
 	}
 
@@ -1095,9 +1153,10 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public Collection<IDataProviderFactory> getDataProviderFactories() {
 		ArrayList<IDataProviderFactory> collector = new ArrayList<IDataProviderFactory>();
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
-			Collection<IDataProviderFactory> factories = core.getDataProviderFactories();
+			Collection<IDataProviderFactory> factories = core
+					.getDataProviderFactories();
 			if (factories != null) {
 				collector.addAll(factories);
 			}
@@ -1111,7 +1170,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#findDataProvider(java.lang.Object)
 	 */
 	public IDataProvider findDataProvider(Object dataContext) {
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
 			IDataProvider provider = core.findDataProvider(dataContext);
 			if (provider != null) {
@@ -1123,9 +1182,9 @@ public class XWTLoader implements IXWTLoader {
 
 	private void initialize() {
 		cores = new Stack<Core>();
-		Core core = new Core(new ResourceLoaderFactory(), this); 
+		Core core = new Core(new ResourceLoaderFactory(), this);
 		cores.push(core);
-				
+
 		core.registerService(ValueConvertorRegister.class,
 				new ValueConvertorRegister());
 
@@ -1365,23 +1424,27 @@ public class XWTLoader implements IXWTLoader {
 				IConstants.XWT_NAMESPACE);
 		if (metaclass != null) {
 			IProperty property = metaclass.findProperty("Input");
-			
+
 			metaclass.addProperty(new InputBeanProperty(property));
 			metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT,
 					IUserDataConstants.XWT_DATACONTEXT_KEY));
-			
+
 			metaclass.removeProperty("selection");
-			
-			metaclass.addProperty(new DataProperty(PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH, String.class,
+
+			metaclass.addProperty(new DataProperty(
+					PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH,
+					String.class,
 					PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH));
-			metaclass.addProperty(new SingleSelectionBeanProperty(PropertiesConstants.PROPERTY_SINGLE_SELECTION));
-			metaclass.addProperty(new MultiSelectionBeanProperty(PropertiesConstants.PROPERTY_MULTI_SELECTION));
+			metaclass.addProperty(new SingleSelectionBeanProperty(
+					PropertiesConstants.PROPERTY_SINGLE_SELECTION));
+			metaclass.addProperty(new MultiSelectionBeanProperty(
+					PropertiesConstants.PROPERTY_MULTI_SELECTION));
 		}
 
 		type = org.eclipse.jface.viewers.AbstractListViewer.class;
 		metaclass = (IMetaclass) core.getMetaclass(type,
 				IConstants.XWT_NAMESPACE);
-		if (metaclass != null) {			
+		if (metaclass != null) {
 			metaclass.addInitializer(new JFaceInitializer());
 		}
 
@@ -1392,7 +1455,7 @@ public class XWTLoader implements IXWTLoader {
 			metaclass.addProperty(new DynamicBeanProperty(type, String[].class,
 					PropertiesConstants.PROPERTY_COLUMN_PROPERTIES));
 			metaclass.addProperty(new TableViewerColumnsProperty());
-			
+
 			metaclass.addInitializer(new JFaceInitializer());
 		}
 
@@ -1420,7 +1483,7 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(DefaultListViewerLabelProvider.class);
 		registerMetaclass(DefaultColumnViewerLabelProvider.class);
 		registerMetaclass(ViewerFilter.class);
-		
+
 		registerMetaclass(ObjectDataProvider.class);
 
 		registerMetaclass(Style.class);
@@ -1448,7 +1511,7 @@ public class XWTLoader implements IXWTLoader {
 
 		registerConvertor(StringToDuration.instance);
 		registerConvertor(StringToRepeatBehavior.instance);
-		
+
 		registerMetaclass(CollectionViewSource.class);
 
 		registerMetaclass(DefaultListContentProvider.class);
@@ -1463,7 +1526,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#findLoadingContext(java.lang.Object)
 	 */
 	public ILoadingContext findLoadingContext(Object container) {
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
 			ILoadingContext context = core.findLoadingContext(container);
 			if (context != null) {
@@ -1502,10 +1565,9 @@ public class XWTLoader implements IXWTLoader {
 	public void setLoadingContext(ILoadingContext loadingContext) {
 		getCurrentCore().setLoadingContext(loadingContext);
 	}
-	
-	
+
 	public ILanguageSupport getLanguageSupport() {
-		for (int i = cores.size()-1; i >= 0; i--) {
+		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
 			ILanguageSupport support = core.getLanguageSupport();
 			if (support != null) {
@@ -1514,7 +1576,7 @@ public class XWTLoader implements IXWTLoader {
 		}
 		return null;
 	}
-	
+
 	public void setLanguageSupport(ILanguageSupport languageSupport) {
 		getCurrentCore().setLanguageSupport(languageSupport);
 	}

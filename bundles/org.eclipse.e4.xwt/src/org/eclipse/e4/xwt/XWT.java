@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *     Anyware-tech - add multiple loaders
@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.IObservable;
@@ -39,7 +40,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * XWT is the main class of the XWT framework. It provides most of the services in API.
+ * XWT is the main class of the XWT framework. It provides most of the services
+ * in API.
  * 
  * @author yyang
  */
@@ -51,10 +53,10 @@ public class XWT {
 	 */
 	public static ILogger getLogger() {
 		return XWTLoaderManager.getActive().getLogger();
-	}	
-	
+	}
+
 	/**
-	 * Create a UI Profile with the provide data and apply it immediately. 
+	 * Create a UI Profile with the provide data and apply it immediately.
 	 * 
 	 * @param profileData
 	 * @return
@@ -72,7 +74,7 @@ public class XWT {
 	public static boolean applyProfile(Object profile) {
 		return XWTLoaderManager.getActive().applyProfile(profile);
 	}
-	
+
 	/**
 	 * Restore the previous profile
 	 * 
@@ -81,14 +83,16 @@ public class XWT {
 	public static Object restoreProfile() {
 		return XWTLoaderManager.getActive().restoreProfile();
 	}
-	
+
 	/**
 	 * 
 	 * @param nsmapace
 	 * @param handler
 	 */
-	public static void registerNamspaceHandler(String nsmapace, INamespaceHandler handler) {
-		XWTLoaderManager.getActive().registerNamespaceHandler(nsmapace, handler);
+	public static void registerNamspaceHandler(String nsmapace,
+			INamespaceHandler handler) {
+		XWTLoaderManager.getActive()
+				.registerNamespaceHandler(nsmapace, handler);
 	}
 
 	/**
@@ -109,25 +113,30 @@ public class XWT {
 	}
 
 	/**
-	 * Register an Observable IChangeListener for a given UI element. The second 
-	 * registration of the same listener on the same UI Element has no effect. 
+	 * Register an Observable IChangeListener for a given UI element. The second
+	 * registration of the same listener on the same UI Element has no effect.
 	 * 
 	 * @param context
 	 * @param listener
 	 * @return
 	 */
-	public static boolean addObservableChangeListener(Object context, IChangeListener listener) {
-		return XWTLoaderManager.getActive().addObservableChangeListener(context, listener);		
+	public static boolean addObservableChangeListener(Object context,
+			IChangeListener listener) {
+		return XWTLoaderManager.getActive().addObservableChangeListener(
+				context, listener);
 	}
 
 	/**
-	 * Undo the registration of the Observable IChangeListener for a given UI element. 
+	 * Undo the registration of the Observable IChangeListener for a given UI
+	 * element.
 	 * 
 	 * @param context
 	 * @param listener
 	 */
-	public static void removeObservableChangeListener(Object context, IChangeListener listener) {
-		XWTLoaderManager.getActive().removeObservableChangeListener(context, listener);		
+	public static void removeObservableChangeListener(Object context,
+			IChangeListener listener) {
+		XWTLoaderManager.getActive().removeObservableChangeListener(context,
+				listener);
 	}
 
 	/**
@@ -136,8 +145,10 @@ public class XWT {
 	 * @param nsmapace
 	 * @return null if it doesn't exist.
 	 */
-	public static IObservableValue findObservableValue(Object context, Object data, String propertyName) {
-		return XWTLoaderManager.getActive().findObservableValue(context, data, propertyName);
+	public static IObservableValue findObservableValue(Object context,
+			Object data, String propertyName) {
+		return XWTLoaderManager.getActive().findObservableValue(context, data,
+				propertyName);
 	}
 
 	/**
@@ -146,8 +157,10 @@ public class XWT {
 	 * @param nsmapace
 	 * @return null if it doesn't exist.
 	 */
-	public static IObservableList findObservableList(Object context, Object data, String propertyName) {
-		return XWTLoaderManager.getActive().findObservableList(context, data, propertyName);
+	public static IObservableList findObservableList(Object context,
+			Object data, String propertyName) {
+		return XWTLoaderManager.getActive().findObservableList(context, data,
+				propertyName);
 	}
 
 	/**
@@ -156,38 +169,10 @@ public class XWT {
 	 * @param nsmapace
 	 * @return null if it doesn't exist.
 	 */
-	public static IObservableSet findObservableSet(Object context, Object data, String propertyName) {
-		return XWTLoaderManager.getActive().findObservableSet(context, data, propertyName);
-	}
-	
-	/**
-	 * get or create a IObservableValue
-	 * 
-	 * @param nsmapace
-	 * @return return null or raises an exception XWTException if fails
-	 */
-	public static IObservableValue observableValue(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger) {
-		return XWTLoaderManager.getActive().observableValue(context, data, propertyName, updateSourceTrigger);
-	}
-
-	/**
-	 * get or create a IObservable
-	 * 
-	 * @param nsmapace
-	 * @return return null or raises an exception XWTException if fails
-	 */
-	public static IObservable observe(Object context, Object data, String propertyName, UpdateSourceTrigger updateSourceTrigger) {
-		return XWTLoaderManager.getActive().observe(context, data, propertyName, updateSourceTrigger);
-	}
-
-	/**
-	 * get or create a IObservable
-	 * 
-	 * @param nsmapace
-	 * @return return null or raises an exception XWTException if fails
-	 */
-	public static IObservableFactory observableFactory(Object context, String propertyName, UpdateSourceTrigger updateSourceTrigger) {
-		return XWTLoaderManager.getActive().observableFactory(context, propertyName, updateSourceTrigger);
+	public static IObservableSet findObservableSet(Object context, Object data,
+			String propertyName) {
+		return XWTLoaderManager.getActive().findObservableSet(context, data,
+				propertyName);
 	}
 
 	/**
@@ -196,8 +181,46 @@ public class XWT {
 	 * @param nsmapace
 	 * @return return null or raises an exception XWTException if fails
 	 */
-	public static IObservableValue observableValue(Object context, Object data, String propertyName) {
-		return XWTLoaderManager.getActive().observableValue(context, data, propertyName, UpdateSourceTrigger.Default);
+	public static IObservableValue observableValue(Object context, Object data,
+			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
+		return XWTLoaderManager.getActive().observableValue(context, data,
+				propertyName, updateSourceTrigger);
+	}
+
+	/**
+	 * get or create a IObservable
+	 * 
+	 * @param nsmapace
+	 * @return return null or raises an exception XWTException if fails
+	 */
+	public static IObservable observe(Object context, Object data,
+			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
+		return XWTLoaderManager.getActive().observe(context, data,
+				propertyName, updateSourceTrigger);
+	}
+
+	/**
+	 * get or create a IObservable
+	 * 
+	 * @param nsmapace
+	 * @return return null or raises an exception XWTException if fails
+	 */
+	public static IObservableFactory observableFactory(Object context,
+			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
+		return XWTLoaderManager.getActive().observableFactory(context,
+				propertyName, updateSourceTrigger);
+	}
+
+	/**
+	 * get or create a IObservableValue
+	 * 
+	 * @param nsmapace
+	 * @return return null or raises an exception XWTException if fails
+	 */
+	public static IObservableValue observableValue(Object context, Object data,
+			String propertyName) {
+		return XWTLoaderManager.getActive().observableValue(context, data,
+				propertyName, UpdateSourceTrigger.Default);
 	}
 
 	/**
@@ -210,7 +233,8 @@ public class XWT {
 	}
 
 	/**
-	 * Get the name of the element, which is defined by <code>Name</code> or <code>x:Name</code>. Return <code>null</code>
+	 * Get the name of the element, which is defined by <code>Name</code> or
+	 * <code>x:Name</code>. Return <code>null</code>
 	 * 
 	 * @param object
 	 * @return
@@ -246,6 +270,32 @@ public class XWT {
 	}
 
 	/**
+	 * Returns the {@link DataBindingContext} with the contexName within the
+	 * upper scope of the control.
+	 * <p>
+	 * ContextName should be unique within the Scope of the first parent
+	 * instance with ScopeKeeper attribute
+	 * <p>
+	 * While locating DataBindingContext, if the name is 'default' the default
+	 * DataBindingcontext of the scope root is returned. If the name is not
+	 * 'default' then up until all the way to the root, scope roots are
+	 * traversed and researched for a StaticResource DataBindingContext with the
+	 * x:Key as the contextName.
+	 * <p>
+	 * If still not found {@link XWTException} thrown...
+	 * 
+	 * @param element
+	 * @param contextName
+	 *            Name of the {@link DataBindingContext}
+	 * @return
+	 */
+	public static DataBindingContext getDataBindingContext(Object element,
+			String contextName) {
+		return (DataBindingContext) XWTLoaderManager.getActive()
+				.getDataBindingContext(element, contextName);
+	}
+
+	/**
 	 * Get the DataContext of given element
 	 * 
 	 * @param context
@@ -276,7 +326,8 @@ public class XWT {
 	}
 
 	/**
-	 * Get the CLR (Common Language Runtime) object. If no CLR object is found in this element, the research will be propagated in it parent.
+	 * Get the CLR (Common Language Runtime) object. If no CLR object is found
+	 * in this element, the research will be propagated in it parent.
 	 * 
 	 * @param widget
 	 * @return
@@ -296,12 +347,14 @@ public class XWT {
 	}
 
 	public static IProperty findProperty(Object object, String name) {
-		IMetaclass metaclass = XWTLoaderManager.getActive().getMetaclass(object);
+		IMetaclass metaclass = XWTLoaderManager.getActive()
+				.getMetaclass(object);
 		return metaclass.findProperty(name);
 	}
 
 	public static IEvent findEvent(Object object, String name) {
-		IMetaclass metaclass = XWTLoaderManager.getActive().getMetaclass(object);
+		IMetaclass metaclass = XWTLoaderManager.getActive()
+				.getMetaclass(object);
 		return metaclass.findEvent(name);
 	}
 
@@ -310,7 +363,8 @@ public class XWT {
 	}
 
 	/**
-	 * Load the file content. All widget will be created but they are showed. This method return the root element.
+	 * Load the file content. All widget will be created but they are showed.
+	 * This method return the root element.
 	 * 
 	 */
 	static public synchronized Control load(URL file) throws Exception {
@@ -318,24 +372,32 @@ public class XWT {
 	}
 
 	/**
-	 * Load the file content. All widget will be created but they are showed. This method return the root element.
+	 * Load the file content. All widget will be created but they are showed.
+	 * This method return the root element.
 	 * 
 	 */
-	static public synchronized Control load(URL file, Object dataContext) throws Exception {
+	static public synchronized Control load(URL file, Object dataContext)
+			throws Exception {
 		return XWTLoaderManager.getActive().load(file, dataContext);
 	}
 
 	/**
-	 * Load the file content under a Composite. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 * Load the file content under a Composite. All widget will be created. This
+	 * method returns the root element. The DataContext will be associated to
+	 * the root element.
 	 */
-	static public synchronized Control load(Composite parent, URL file) throws Exception {
+	static public synchronized Control load(Composite parent, URL file)
+			throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file);
 	}
 
 	/**
-	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
+	 * Load the file content under a Composite with a DataContext. All widget
+	 * will be created. This method returns the root element. The DataContext
+	 * will be associated to the root element.
 	 */
-	static public synchronized Control load(Composite parent, URL file, Object dataContext) throws Exception {
+	static public synchronized Control load(Composite parent, URL file,
+			Object dataContext) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file, dataContext);
 	}
 
@@ -347,30 +409,37 @@ public class XWT {
 	}
 
 	/**
-	 * load the content from a stream with a style, a DataContext and a ResourceDictionary. The root elements will be hold by Composite parent
+	 * load the content from a stream with a style, a DataContext and a
+	 * ResourceDictionary. The root elements will be hold by Composite parent
 	 */
-	static public synchronized Control load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception {
-		return XWTLoaderManager.getActive().load(parent, stream, file, dataContext);
+	static public synchronized Control load(Composite parent,
+			InputStream stream, URL file, Object dataContext) throws Exception {
+		return XWTLoaderManager.getActive().load(parent, stream, file,
+				dataContext);
 	}
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public synchronized void open(URL url, Object dataContext) throws Exception {
+	static public synchronized void open(URL url, Object dataContext)
+			throws Exception {
 		XWTLoaderManager.getActive().open(url, dataContext);
 	}
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public synchronized void open(Class<?> type, Object dataContext) throws Exception {
-		open(type.getResource(type.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX), dataContext);
+	static public synchronized void open(Class<?> type, Object dataContext)
+			throws Exception {
+		open(type.getResource(type.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX), dataContext);
 	}
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public synchronized void open(URL url, Map<String, Object> options) throws Exception {
+	static public synchronized void open(URL url, Map<String, Object> options)
+			throws Exception {
 		XWTLoaderManager.getActive().open(url, options);
 	}
 
@@ -378,7 +447,8 @@ public class XWT {
 		return XWTLoaderManager.getActive().convertFrom(targetType, string);
 	}
 
-	static public synchronized Control loadWithOptions(URL url, Map<String, Object> options) throws Exception {
+	static public synchronized Control loadWithOptions(URL url,
+			Map<String, Object> options) throws Exception {
 		return XWTLoaderManager.getActive().loadWithOptions(url, options);
 	}
 
@@ -390,7 +460,8 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public synchronized Control load(InputStream stream, URL url) throws Exception {
+	static public synchronized Control load(InputStream stream, URL url)
+			throws Exception {
 		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
 
@@ -402,10 +473,11 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public synchronized Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
-		return XWTLoaderManager.getActive().loadWithOptions(stream, url, options);
+	static public synchronized Control loadWithOptions(InputStream stream,
+			URL url, Map<String, Object> options) throws Exception {
+		return XWTLoaderManager.getActive().loadWithOptions(stream, url,
+				options);
 	}
-
 
 	/**
 	 * Metaclass services to return all registered Metaclasses.
@@ -472,16 +544,20 @@ public class XWT {
 		XWTLoaderManager.getActive().addDefaultStyle(style);
 	}
 
-	public static void addDataProviderFactory(String name, IDataProviderFactory dataProviderFactory) {
-		XWTLoaderManager.getActive().addDataProviderFactory(name, dataProviderFactory);
+	public static void addDataProviderFactory(String name,
+			IDataProviderFactory dataProviderFactory) {
+		XWTLoaderManager.getActive().addDataProviderFactory(name,
+				dataProviderFactory);
 	}
 
 	public static void removeDataProviderFactory(String name) {
 		XWTLoaderManager.getActive().removeDataProviderFactory(name);
 	}
 
-	public static void removeDataProviderFactory(IDataProviderFactory dataProviderFactory) {
-		XWTLoaderManager.getActive().removeDataProviderFactory(dataProviderFactory);
+	public static void removeDataProviderFactory(
+			IDataProviderFactory dataProviderFactory) {
+		XWTLoaderManager.getActive().removeDataProviderFactory(
+				dataProviderFactory);
 	}
 
 	public static Collection<IDataProviderFactory> getDataProviderFactories() {
@@ -512,9 +588,10 @@ public class XWT {
 	 * @param javaclass
 	 */
 	static public Object getPropertyValue(Object uiElement, IProperty property) {
-		return XWTLoaderManager.getActive().getPropertyValue(uiElement, property);
+		return XWTLoaderManager.getActive().getPropertyValue(uiElement,
+				property);
 	}
-	
+
 	/**
 	 * Get the dynamic property value
 	 * 
@@ -526,16 +603,8 @@ public class XWT {
 		if (property == null) {
 			return null;
 		}
-		return XWTLoaderManager.getActive().getPropertyValue(uiElement, property);
-	}
-	
-	/**
-	 * Set the dynamic property value
-	 * 
-	 * @param javaclass
-	 */
-	static public void setPropertyValue(Object uiElement, IProperty property, Object value) {
-		XWTLoaderManager.getActive().setPropertyValue(uiElement, property, value);
+		return XWTLoaderManager.getActive().getPropertyValue(uiElement,
+				property);
 	}
 
 	/**
@@ -543,13 +612,26 @@ public class XWT {
 	 * 
 	 * @param javaclass
 	 */
-	static public void setPropertyValue(Object uiElement, String propertyName, Object value) {
+	static public void setPropertyValue(Object uiElement, IProperty property,
+			Object value) {
+		XWTLoaderManager.getActive().setPropertyValue(uiElement, property,
+				value);
+	}
+
+	/**
+	 * Set the dynamic property value
+	 * 
+	 * @param javaclass
+	 */
+	static public void setPropertyValue(Object uiElement, String propertyName,
+			Object value) {
 		IMetaclass metaclass = XWT.getMetaclass(uiElement);
 		IProperty property = metaclass.findProperty(propertyName);
 		if (property == null) {
 			throw new XWTException("Property " + propertyName + " not found.");
 		}
-		XWTLoaderManager.getActive().setPropertyValue(uiElement, property, value);
+		XWTLoaderManager.getActive().setPropertyValue(uiElement, property,
+				value);
 	}
 
 	/**
@@ -567,7 +649,8 @@ public class XWT {
 	 * @param javaclass
 	 */
 	static public boolean hasPropertyValue(Object uiElement, IProperty property) {
-		return XWTLoaderManager.getActive().hasPropertyValue(uiElement, property);
+		return XWTLoaderManager.getActive().hasPropertyValue(uiElement,
+				property);
 	}
 
 	/**
@@ -662,6 +745,8 @@ public class XWT {
 	}
 
 	static public boolean isXWTNamespace(String namespace) {
-		return IConstants.XWT_X_NAMESPACE.equals(namespace) || IConstants.XWT_NAMESPACE.equals(namespace) || namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO);
+		return IConstants.XWT_X_NAMESPACE.equals(namespace)
+				|| IConstants.XWT_NAMESPACE.equals(namespace)
+				|| namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO);
 	}
 }

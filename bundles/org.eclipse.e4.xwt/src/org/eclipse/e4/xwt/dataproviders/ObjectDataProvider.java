@@ -4,8 +4,8 @@
  * are made available under the terms of the Eclipse Public License v1.0       *
  * which accompanies this distribution, and is available at                    *
  * http://www.eclipse.org/legal/epl-v10.html                                   *
- *                                                                             *  
- * Contributors:                                                               *        
+ *                                                                             *
+ * Contributors:                                                               *
  *     Soyatec - initial API and implementation                                *
  *******************************************************************************/
 package org.eclipse.e4.xwt.dataproviders;
@@ -22,11 +22,9 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.core.IBinding;
-import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.databinding.JFaceXWTDataBinding;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -37,34 +35,34 @@ import org.eclipse.e4.xwt.metadata.IProperty;
 public class ObjectDataProvider extends AbstractDataProvider implements
 		IObjectDataProvider {
 	static DataModelService dataModelService = new DataModelService() {
-		
+
 		public Object toModelType(Object object) {
 			return JFaceXWTDataBinding.toType(object);
 		}
-		
+
 		public Object loadModelType(String className) {
 			return XWT.getLoadingContext().loadClass(className);
 		}
-		
+
 		public Object toModelPropertyType(Object type, String propertyName) {
 			IMetaclass metaclass = XWT.getMetaclass(type);
 			IProperty property = metaclass.findProperty(propertyName);
-			
+
 			if (property == null) {
-				throw new XWTException(" Property \"" + propertyName + "\" is not found in the class " + metaclass.getType().getName());
+				throw new XWTException(" Property \"" + propertyName
+						+ "\" is not found in the class "
+						+ metaclass.getType().getName());
 			}
 			return property.getType();
 		}
 	};
-	
+
 	private Object objectInstance;
 	private Class<?> objectType;
 
 	private String methodName;
 
 	private List<Object> methodParameters;
-
-	private BindingContext bindingContext = new BindingContext();
 
 	/*
 	 * (non-Javadoc)
@@ -114,7 +112,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 		}
 		return objectType;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -271,7 +269,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 			return true;
 		}
 		if (target instanceof IBinding) {
-			target = ((IBinding)target).getValue();
+			target = ((IBinding) target).getValue();
 		}
 		Class<?> type = JFaceXWTDataBinding.toType(target);
 		int index = path.indexOf(".");
@@ -313,35 +311,35 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 			Object elementType, String propertyName, Object propertyType) {
 		if (JFaceXWTDataBinding.isBeanSupport(bean)) {
 			return BeansObservables.observeDetailList(bean, propertyName,
-					(Class<?>)propertyType);
+					(Class<?>) propertyType);
 		}
 		return PojoObservables.observeDetailList(bean, propertyName,
-				(Class<?>)propertyType);
+				(Class<?>) propertyType);
 	}
 
 	protected IObservableSet observeDetailSet(IObservableValue bean,
 			Object elementType, String propertyName, Object propertyType) {
 		if (JFaceXWTDataBinding.isBeanSupport(bean)) {
 			return BeansObservables.observeDetailSet(bean, propertyName,
-					(Class<?>)propertyType);
+					(Class<?>) propertyType);
 		}
 		return PojoObservables.observeDetailSet(bean, propertyName,
-				(Class<?>)propertyType);
+				(Class<?>) propertyType);
 	}
 
 	@Override
 	protected IObservableValue observeDetailValue(IObservableValue master,
 			Object elementType, String propertyName, Object propertyType) {
-		Class<?> beanClass = (Class<?>)elementType;
+		Class<?> beanClass = (Class<?>) elementType;
 		if (beanClass == null && master.getValueType() instanceof Class<?>) {
 			beanClass = (Class<?>) master.getValueType();
 		}
 		if (JFaceXWTDataBinding.isBeanSupport(elementType)) {
-			return BeanProperties.value(beanClass, propertyName, (Class<?>)propertyType)
-					.observeDetail(master);
+			return BeanProperties.value(beanClass, propertyName,
+					(Class<?>) propertyType).observeDetail(master);
 		}
-		return PojoProperties.value(beanClass, propertyName, (Class<?>)propertyType)
-				.observeDetail(master);
+		return PojoProperties.value(beanClass, propertyName,
+				(Class<?>) propertyType).observeDetail(master);
 	}
 
 	public IValueProperty createValueProperty(Object type, String propertyName) {
@@ -353,15 +351,6 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 				propertyName);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.dataproviders.IDataProvider#getBindingContext()
-	 */
-	public IBindingContext getBindingContext() {
-		return bindingContext;
-	}
-	
 	public DataModelService getModelService() {
 		return dataModelService;
 	}
