@@ -76,7 +76,8 @@ public class XWTVisualRenderer extends AbstractRenderer {
 		if (notifier == null || (oldValue == null && newValue == null)) {
 			return null;
 		}
-		if ((oldValue != null && oldValue != newValue) || (oldValue == null && newValue != null)) {
+		if ((oldValue != null && oldValue != newValue)
+				|| (oldValue == null && newValue != null)) {
 			return applyNewValue(msg);
 		}
 		return null;
@@ -91,13 +92,15 @@ public class XWTVisualRenderer extends AbstractRenderer {
 			return false;
 		}
 		try {
-			IMetaclass metaclass = XWT.getMetaclass(Character.toUpperCase(name.charAt(0)) + name.substring(1), node
-					.getNamespace());
+			IMetaclass metaclass = XWT.getMetaclass(Character.toUpperCase(name
+					.charAt(0))
+					+ name.substring(1), node.getNamespace());
 			if (metaclass == null) {
 				return false;
 			}
 			Class<?> type = metaclass.getType();
-			return Widget.class.isAssignableFrom(type) || Viewer.class.isAssignableFrom(type);
+			return Widget.class.isAssignableFrom(type)
+					|| Viewer.class.isAssignableFrom(type);
 		} catch (Exception e) {
 			return false;
 		}
@@ -139,9 +142,10 @@ public class XWTVisualRenderer extends AbstractRenderer {
 			if (proxy.isNull(parent)) {
 				break;
 			}
-			if (newValue instanceof XamlElement && parent != null && canRender((XamlElement) newValue)) {
+			if (newValue instanceof XamlElement && parent != null
+					&& canRender((XamlElement) newValue)) {
 				if (parent instanceof Widget) {
-					updated = proxy.recreate((Widget) parent, false);
+					updated = proxy.recreate((Widget) parent);
 					updateObj = null;// If updated, we can refresh all visuals.
 				}
 			} else if (notifier instanceof XamlAttribute) {
@@ -175,8 +179,11 @@ public class XWTVisualRenderer extends AbstractRenderer {
 					updated = proxy.destroy(removeWidget);
 				}
 				if (parent instanceof Composite) {
-					IMetaclass metaclass = XWTUtility.getMetaclass((XamlElement) oldValue);
-					if (metaclass != null && Layout.class.isAssignableFrom(metaclass.getType())) {
+					IMetaclass metaclass = XWTUtility
+							.getMetaclass((XamlElement) oldValue);
+					if (metaclass != null
+							&& Layout.class.isAssignableFrom(metaclass
+									.getType())) {
 						updated = proxy.removeLayout((Composite) parent);
 					}
 					proxy.layout((Composite) parent);
@@ -194,7 +201,7 @@ public class XWTVisualRenderer extends AbstractRenderer {
 				break;
 			}
 			if (parent instanceof Widget) {
-				updated = proxy.recreate((Widget) parent, false);
+				updated = proxy.recreate((Widget) parent);
 				updateObj = null;// If updated, we can refresh all visuals.
 			}
 			if (parent instanceof Composite) {
@@ -222,14 +229,15 @@ public class XWTVisualRenderer extends AbstractRenderer {
 		return new Result(updateObj, updated);
 	}
 
-	private boolean applyAttribute(Object parent, XamlElement element, XamlAttribute attribute) {
+	private boolean applyAttribute(Object parent, XamlElement element,
+			XamlAttribute attribute) {
 		if (proxy.isNull(parent) || attribute == null) {
 			return false;
 		}
 		if ("style".equalsIgnoreCase(attribute.getName())
 				&& IConstants.XWT_X_NAMESPACE.equals(attribute.getNamespace())) {
 			if (needRecreate(parent, attribute)) {
-				return proxy.recreate((Widget) parent, true);
+				return proxy.recreate((Widget) parent);
 			}
 			return false;
 		} else {
@@ -243,7 +251,8 @@ public class XWTVisualRenderer extends AbstractRenderer {
 						proxy.layout(control);
 					}
 				}
-			}// if the parent is Item,it must get the parent of this item and layout his parent
+			}// if the parent is Item,it must get the parent of this item and
+				// layout his parent
 			if (parent instanceof Control) {
 				Control control = (Control) parent;
 				proxy.layout(control);
@@ -263,9 +272,12 @@ public class XWTVisualRenderer extends AbstractRenderer {
 		return newStyle != oldStyle;
 		// if (newStyleStr != null) {
 		// if (newStyle == SWT.NONE) {
-		// if ("SWT.NONE".equalsIgnoreCase(newStyleStr) || "NONE".equalsIgnoreCase(newStyleStr) || "0".equals(newStyleStr.trim())) {
+		// if ("SWT.NONE".equalsIgnoreCase(newStyleStr) ||
+		// "NONE".equalsIgnoreCase(newStyleStr) ||
+		// "0".equals(newStyleStr.trim())) {
 		// Object defaultStyle = proxy.getDefaultValue(parent, attr);
-		// return defaultStyle != null && defaultStyle instanceof Integer && ((newStyle | (Integer) defaultStyle) != oldStyle);
+		// return defaultStyle != null && defaultStyle instanceof Integer &&
+		// ((newStyle | (Integer) defaultStyle) != oldStyle);
 		// }
 		// return false;
 		// } else {
@@ -277,7 +289,10 @@ public class XWTVisualRenderer extends AbstractRenderer {
 		// boolean result = false;
 		// for (String aStyle : styles) {
 		// newStyle = (Integer) XWT.convertFrom(Integer.class, aStyle);
-		// if (newStyle == SWT.NONE && (!("SWT.NONE".equalsIgnoreCase(newStyleStr) || !"NONE".equalsIgnoreCase(newStyleStr) || !"0".equals(newStyleStr.trim())))) {
+		// if (newStyle == SWT.NONE &&
+		// (!("SWT.NONE".equalsIgnoreCase(newStyleStr) ||
+		// !"NONE".equalsIgnoreCase(newStyleStr) ||
+		// !"0".equals(newStyleStr.trim())))) {
 		// return false;
 		// }
 		// result |= (oldStyle & newStyle) == 0;
@@ -288,7 +303,8 @@ public class XWTVisualRenderer extends AbstractRenderer {
 		// return false;
 	}
 
-	private boolean removeAttribute(Object parent, XamlElement element, XamlAttribute attribute) {
+	private boolean removeAttribute(Object parent, XamlElement element,
+			XamlAttribute attribute) {
 		if (proxy.isNull(parent) || attribute == null) {
 			return false;
 		}
@@ -297,9 +313,10 @@ public class XWTVisualRenderer extends AbstractRenderer {
 				&& IConstants.XWT_X_NAMESPACE.equals(attribute.getNamespace())) {
 			Object defaultValue = proxy.getDefaultValue(parent, attribute);
 			if (defaultValue != null && defaultValue instanceof Integer) {
-				int oldStyle = (Integer) XWT.convertFrom(Integer.class, attribute.getValue());
+				int oldStyle = (Integer) XWT.convertFrom(Integer.class,
+						attribute.getValue());
 				if ((oldStyle & (Integer) defaultValue) == 0) {
-					return proxy.recreate((Widget) parent, true);
+					return proxy.recreate((Widget) parent);
 				}
 			}
 			return false;
@@ -322,7 +339,8 @@ public class XWTVisualRenderer extends AbstractRenderer {
 		XamlDocument documentRoot = (XamlDocument) getDocumentRoot();
 		if (clr == null && documentRoot != null) {
 			XamlElement root = documentRoot.getRootElement();
-			XamlAttribute attribute = root.getAttribute(IConstants.XAML_X_CLASS, IConstants.XWT_X_NAMESPACE);
+			XamlAttribute attribute = root.getAttribute(
+					IConstants.XAML_X_CLASS, IConstants.XWT_X_NAMESPACE);
 			if (attribute != null) {
 				return attribute.getValue();
 			}
@@ -343,7 +361,9 @@ public class XWTVisualRenderer extends AbstractRenderer {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.tools.designer.editor.render.IVisualsRender#createVisuals()
+	 * 
+	 * @see
+	 * org.soyatec.tools.designer.editor.render.IVisualsRender#createVisuals()
 	 */
 	public Result createVisuals() {
 		return new Result(proxy.load((XamlDocument) getDocumentRoot()));
@@ -351,7 +371,10 @@ public class XWTVisualRenderer extends AbstractRenderer {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.tools.designer.editor.render.IVisualsRender#refreshVisuals(java.lang.Object)
+	 * 
+	 * @see
+	 * org.soyatec.tools.designer.editor.render.IVisualsRender#refreshVisuals
+	 * (java.lang.Object)
 	 */
 	public Result refreshVisuals(Object source) {
 		if (source instanceof Notification) {
@@ -362,6 +385,7 @@ public class XWTVisualRenderer extends AbstractRenderer {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.render.IVisualsRender#getRoot()
 	 */
 	public Object getRoot() {

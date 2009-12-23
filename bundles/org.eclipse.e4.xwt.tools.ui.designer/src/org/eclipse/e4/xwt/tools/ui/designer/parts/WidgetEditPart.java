@@ -57,9 +57,12 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 	 */
 	public Widget getWidget() {
 		if (!validate()) {
-			XWTVisualRenderer controlRender = (XWTVisualRenderer) EditDomain
-					.getEditDomain(this).getViewerData(getViewer(),
-							IVisualRenderer.KEY);
+			EditDomain editDomain = EditDomain.getEditDomain(this);
+			if (editDomain == null){
+				return null;
+			}
+			XWTVisualRenderer controlRender = (XWTVisualRenderer) editDomain
+					.getViewerData(getViewer(), IVisualRenderer.KEY);
 			if (controlRender != null) {
 				Object component = controlRender.getVisual(getCastModel());
 				if (component instanceof Widget) {

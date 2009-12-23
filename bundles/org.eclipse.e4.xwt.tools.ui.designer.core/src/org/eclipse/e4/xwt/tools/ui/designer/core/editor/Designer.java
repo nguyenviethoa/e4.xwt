@@ -933,6 +933,11 @@ public abstract class Designer extends MultiPageEditorPart implements
 				result.add(part);
 			}
 		}
+		List existings = viewer.getSelectedEditParts();
+		if (existings != null && existings.size() == result.size()
+				&& existings.containsAll(result)) {
+			return;
+		}
 		if (!result.isEmpty()) {
 			viewer.setSelection(new StructuredSelection(result));
 			if (result.size() > 0) {

@@ -77,7 +77,11 @@ public class EditDomain extends DefaultEditDomain {
 
 	public static EditDomain getEditDomain(EditPart ep) {
 		if (ep != null) {
-			return (EditDomain) ep.getViewer().getEditDomain();
+			EditPartViewer viewer = ep.getViewer();
+			if (viewer == null ){
+				return null;
+			}
+			return (EditDomain) viewer.getEditDomain();
 		}
 		return null;
 	}

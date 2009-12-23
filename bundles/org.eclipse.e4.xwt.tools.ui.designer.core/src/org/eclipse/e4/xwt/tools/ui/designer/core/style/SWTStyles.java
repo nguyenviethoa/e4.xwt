@@ -97,6 +97,9 @@ public class SWTStyles {
 	private static Set<String> styles(Class<?> type) {
 		Set<String> result = new HashSet<String>();
 		String key = type.getName();
+		if (RESOURCE_BUNDLE.getObject(key) == null){
+			return Collections.emptySet();
+		}
 		String value = RESOURCE_BUNDLE.getString(key);
 		if (value != null) {
 			StringTokenizer stk = new StringTokenizer(value, ",");

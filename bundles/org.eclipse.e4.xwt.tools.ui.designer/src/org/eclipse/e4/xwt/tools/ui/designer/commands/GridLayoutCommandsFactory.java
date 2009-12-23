@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.CreateReqHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.InitializeHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
@@ -24,6 +25,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gef.requests.CreateRequest;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -34,26 +36,31 @@ public class GridLayoutCommandsFactory extends LayoutCommandsFactory {
 		super(host);
 	}
 
-	public Command getCreateCommand(List<XamlNode> constraints, List<XamlNode> children, Object beforeObject) {
+	public Command getCreateCommand(List<XamlNode> constraints,
+			List<XamlNode> children, Object beforeObject) {
 		return new CreationCommand(constraints, children, beforeObject);
 	}
 
-	public Command getAddCommand(List<XamlNode> constraints, List<XamlNode> children, Object beforeObject) {
+	public Command getAddCommand(List<XamlNode> constraints,
+			List<XamlNode> children, Object beforeObject) {
 		return getCreateCommand(constraints, children, beforeObject);
 	}
 
-	public Command getMoveChildrenCommand(List<XamlNode> children, XamlNode before) {
+	public Command getMoveChildrenCommand(List<XamlNode> children,
+			XamlNode before) {
 		if (children == null) {
 			return NoOpCommand.INSTANCE;
 		}
 		return new MoveChildrenCommand(children, before);
 	}
 
-	public Command getDeleteDependentCommand(final List<XamlNode> deletedComponents) {
+	public Command getDeleteDependentCommand(
+			final List<XamlNode> deletedComponents) {
 		return new DeleteCommand(deletedComponents);
 	}
 
-	public Command getOrphanChildrenCommand(final List<XamlNode> orphanedComponents) {
+	public Command getOrphanChildrenCommand(
+			final List<XamlNode> orphanedComponents) {
 		return new Command() {
 			public void execute() {
 				System.out.println(orphanedComponents);
@@ -61,7 +68,8 @@ public class GridLayoutCommandsFactory extends LayoutCommandsFactory {
 		};
 	}
 
-	public Command getResizeChildrenCommand(EditPart child, ChangeBoundsRequest request) {
+	public Command getResizeChildrenCommand(EditPart child,
+			ChangeBoundsRequest request) {
 		return new ResizeCommand(child, request.getSizeDelta());
 	}
 
@@ -74,7 +82,8 @@ public class GridLayoutCommandsFactory extends LayoutCommandsFactory {
 		/**
 		 * 
 		 */
-		public CreationCommand(List<XamlNode> constraints, List<XamlNode> children, Object beforeObject) {
+		public CreationCommand(List<XamlNode> constraints,
+				List<XamlNode> children, Object beforeObject) {
 			this.children = children;
 			this.beforeObject = beforeObject;
 		}
@@ -86,11 +95,11 @@ public class GridLayoutCommandsFactory extends LayoutCommandsFactory {
 		 */
 		public boolean canExecute() {
 			for (XamlNode child : children) {
-				String s = child.getName();
-				if (s.equals("CoolItem") && !getModel().getName().equals("CoolBar"))
+				if (!CreateReqHelper.canCreate(getModel(), child))
 					return false;
 			}
-			return getModel() != null && children != null && !children.isEmpty();
+			return getModel() != null && children != null
+					&& !children.isEmpty();
 		}
 
 		/*
@@ -130,7 +139,8 @@ public class GridLayoutCommandsFactory extends LayoutCommandsFactory {
 		private int insertAt = -1;
 		private Map<XamlElement, Integer> moved = null;
 
-		public MoveChildrenCommand(List<XamlNode> children, XamlNode insertBeforeValue) {
+		public MoveChildrenCommand(List<XamlNode> children,
+				XamlNode insertBeforeValue) {
 			this.children = children;
 			this.insertBeforeValue = insertBeforeValue;
 		}
@@ -168,7 +178,8 @@ public class GridLayoutCommandsFactory extends LayoutCommandsFactory {
 				if (newPosition == oldPosition) {
 					continue;
 				}
-				moved.put(childNodes.move(newPosition, oldPosition), oldPosition);
+				moved.put(childNodes.move(newPosition, oldPosition),
+						oldPosition);
 			}
 		}
 

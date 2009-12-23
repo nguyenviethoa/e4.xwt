@@ -36,4 +36,19 @@ public class SashFormEditPart extends CompositeEditPart {
 		installEditPolicy(EditPolicy.LAYOUT_ROLE,
 				new SashFormLayoutEditPolicy());
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart#refresh()
+	 */
+	public void refresh() {
+		super.refresh();
+		EditPolicy layoutPolicy = getEditPolicy(EditPolicy.LAYOUT_ROLE);
+		if (layoutPolicy != null) {
+			layoutPolicy.deactivate();
+			layoutPolicy.activate();
+		}
+	}
 }

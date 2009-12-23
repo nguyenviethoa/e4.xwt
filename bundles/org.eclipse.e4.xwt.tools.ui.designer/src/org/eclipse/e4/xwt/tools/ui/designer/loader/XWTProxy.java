@@ -43,6 +43,8 @@ import org.eclipse.swt.widgets.Decorations;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -497,62 +499,37 @@ public class XWTProxy {
 		return true;
 	}
 
-	public boolean recreate(Widget widget, boolean fromParent) {
-		if (widget == null || widget.isDisposed()) {
-			return false;
+	public boolean recreate(Widget widget) {
+		// cache runtime properties
+		XamlNode model = null;
+		if (widget != null && !widget.isDisposed()) {
+			model = getModel(widget);
 		}
-		XamlNode model = getModel(widget);
-		if (model == null) {
-			return false;
-		}
-		// if (widget == rootComponent) {
+
+		// reload
 		destroy(rootComponent);
 		componentsMap.clear();
-		return load(model.getOwnerDocument()) != null;
-		// }
-		// // recreate by using ResourceVistor.
-		// EObject parentModel = model.eContainer();
-		// Object parent = getComponent(parentModel);
-		// if (fromParent) {
-		// if (parent == null) {
-		// return false;
-		// } else if (parent instanceof Widget) {
-		// return recreate((Widget) parent, false);
-		// }
-		// } else if (parent != null && model instanceof XamlElement) {
-		// try {
-		// destroy(widget);
-		// Widget newWidget = (Widget) createWidget(parent,
-		// (XamlElement) model);
-		// if (newWidget instanceof Control) {
-		// layout((Control) newWidget);
-		// }
-		// if (parent instanceof Widget) {
-		// ((Widget) parent).getDisplay().update();
-		// }
-		// if (parent instanceof Control) {
-		// layout((Control) parent);
-		// }
-		// return true;
-		// } catch (Exception e) {
-		// }
-		// } else if (parentModel != null) {
-		// // If parentModel is a XamlAttribute, we need to retrieve a parent
-		// // widget for recreating.
-		// parentModel = parentModel.eContainer();
-		// parent = getComponent(parentModel);
-		// while (parent == null) {
-		// if (parentModel == null) {
-		// break;
-		// }
-		// parentModel = parentModel.eContainer();
-		// parent = getComponent(parentModel);
-		// }
-		// if (parent != null && parent instanceof Widget) {
-		// return recreate((Widget) parent, false);
-		// }
-		// }
-		//
-		// return false;
+		load(model.getOwnerDocument());
+
+		// try to restore some runtime properties.
+		if (model != null) {
+			widget = (Widget) componentsMap.get(model);
+			if (widget instanceof TabItem) {
+				TabItem tabItem = (TabItem) widget;
+				tabItem.getParent().setSelection(tabItem);
+			} else if (widget instanceof Control) {
+				Composite parent = ((Control) widget).getParent();
+				if (parent instanceof TabFolder) {
+					TabFolder tabFolder = (TabFolder) parent;
+					for (TabItem item : tabFolder.getItems()) {
+						if (item.getControl() == widget) {
+							tabFolder.setSelection(item);
+							break;
+						}
+					}
+				}
+			}
+		}
+		return widget != null && !widget.isDisposed();
 	}
 }

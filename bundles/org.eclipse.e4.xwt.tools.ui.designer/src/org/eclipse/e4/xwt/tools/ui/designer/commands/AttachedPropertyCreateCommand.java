@@ -51,7 +51,7 @@ public class AttachedPropertyCreateCommand extends AbstractCreateCommand {
 		XamlNode newParent = parent;
 		XamlNode newChild = child;
 		if (attachedAttr == null) {
-			newChild = attachedAttr = XamlFactory.eINSTANCE.createAttribute("control", IConstants.XWT_NAMESPACE);
+			newChild = attachedAttr = XamlFactory.eINSTANCE.createAttribute(attachedProperty, IConstants.XWT_NAMESPACE);
 			if (child instanceof XamlElement) {
 				attachedAttr.getChildNodes().add((XamlElement) child);
 			}
