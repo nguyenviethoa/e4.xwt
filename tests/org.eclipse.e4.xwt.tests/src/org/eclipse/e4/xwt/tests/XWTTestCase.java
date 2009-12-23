@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * 
+ *
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class XWTTestCase extends TestCase {
@@ -58,19 +58,29 @@ public abstract class XWTTestCase extends TestCase {
 			assertNotNull(root);
 			Shell shell = root.getShell();
 			shell.open();
+			/**
+			 * The shells of the tests failed are not cleanup properly.
+			 * This is a minimalistic solution to clean up the desktop...
+			 */
 			Display display = shell.getDisplay();
-
-			for (Runnable runnable : checkActions) {
-				while (display.readAndDispatch())
-					;
-				display.syncExec(runnable);
-				while (display.readAndDispatch())
-					;
-				while (display.readAndDispatch())
-					;
+			try{
+				for (Runnable runnable : checkActions) {
+					while (display.readAndDispatch())
+						;
+					display.syncExec(runnable);
+					while (display.readAndDispatch())
+						;
+					while (display.readAndDispatch())
+						;
+				}
+				assertFalse(root.isDisposed());
+			} finally {
+				try{
+				shell.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-			assertFalse(root.isDisposed());
-			shell.close();
 			while (display.readAndDispatch())
 				;
 		} catch (Exception e) {
@@ -109,7 +119,7 @@ public abstract class XWTTestCase extends TestCase {
 	protected void selectButton(Button button) {
 		selectButton(button, true);
 	}
-	
+
 	protected void checkVisibility(String name, Class<? extends Control> type){
 		Object element = XWT.findElementByName(root, name);
 		if (element == null) {
@@ -133,17 +143,17 @@ public abstract class XWTTestCase extends TestCase {
 			} catch (Exception e) {
 				e.printStackTrace();
 				fail(e.getMessage());
-			}			
+			}
 		}
 		assertTrue(Composite.class.isInstance(element));
 		Composite composite = (Composite) element;
-		assertEquals(composite.getChildren().length, number);			
+		assertEquals(composite.getChildren().length, number);
 	}
 
 	protected void checkChildren(String name, int number){
 		checkChildren(name, null, number);
 	}
-	
+
 	protected void selectButton(Button button, boolean selection) {
 		Point size = button.getSize();
 		Display display = button.getDisplay();
