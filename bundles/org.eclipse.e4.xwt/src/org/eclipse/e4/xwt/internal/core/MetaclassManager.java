@@ -90,7 +90,21 @@ public class MetaclassManager {
 	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
 		IMetaclass metaclass = nameRegister.get(name);
 		if (metaclass != null) {
-			return metaclass;
+			if (namespace == null || namespace.equals(IConstants.XWT_NAMESPACE)) {
+				return metaclass;				
+			}
+			if (namespace != null && namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
+				String packageName = namespace.substring(IConstants.XAML_CLR_NAMESPACE_PROTO.length());
+				int index = packageName.indexOf('=');
+				if (index != -1) {
+					packageName = packageName.substring(0, index);
+				}
+				// if using default package(null), use only name as class name, else use package.class as class name
+				String className = packageName.length() == 0 ? name : (packageName + "." + name);
+				if (metaclass.getType().getName().equals(className)) {
+					return metaclass;
+				}
+			}
 		}
 		if (namespace == null || !namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
 			return null;
@@ -126,7 +140,7 @@ public class MetaclassManager {
 	public IMetaclass getMetaclass(Class<?> type) {
 		if (classRegister.contains(type)) {
 			IMetaclass metaclass = nameRegister.get(type.getSimpleName());
-			if (metaclass != null) {
+			if (metaclass != null && metaclass.getType() == type) {
 				return metaclass;
 			}
 		}

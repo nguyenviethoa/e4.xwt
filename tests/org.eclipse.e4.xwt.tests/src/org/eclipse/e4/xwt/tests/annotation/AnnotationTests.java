@@ -23,6 +23,7 @@ public class AnnotationTests extends XWTTestCase {
 				.getResource(Button.class
 						.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
+		ButtonHandler.instance = null;
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
@@ -46,6 +47,7 @@ public class AnnotationTests extends XWTTestCase {
 		URL url = Button.class
 				.getResource("Button_rename"
 						+ IConstants.XWT_EXTENSION_SUFFIX);
+		ButtonHandler_rename.instance = null;
 		runTest(url, new Runnable() {
 			public void run() {
 				checkButton();
