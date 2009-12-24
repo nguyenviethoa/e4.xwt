@@ -10,10 +10,16 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.e4.xwt.tools.ui.designer.policies.SashFormLayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Sash;
 
 /**
  * @author jin.liu (jin.liu@soyatec.com)
@@ -50,5 +56,40 @@ public class SashFormEditPart extends CompositeEditPart {
 			layoutPolicy.deactivate();
 			layoutPolicy.activate();
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart#getExternalModels
+	 * ()
+	 */
+	protected Collection<Object> getExternalModels() {
+		Collection<Object> externalModels = new ArrayList<Object>(super
+				.getExternalModels());
+		SashForm sashForm = (SashForm) getWidget();
+		if (sashForm != null && !sashForm.isDisposed()) {
+			Control[] children = sashForm.getChildren();
+			for (Control control : children) {
+				if (control instanceof Sash) {
+					externalModels.add(control);
+				}
+			}
+		}
+		return externalModels;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.gef.editparts.AbstractEditPart#createChild(java.lang.Object)
+	 */
+	protected EditPart createChild(Object model) {
+		if (model instanceof Sash) {
+			return new SashEditPart((Sash) model, null);
+		}
+		return super.createChild(model);
 	}
 }

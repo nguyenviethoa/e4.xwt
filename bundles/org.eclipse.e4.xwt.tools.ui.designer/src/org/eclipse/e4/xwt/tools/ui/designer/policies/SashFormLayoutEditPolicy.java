@@ -82,7 +82,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	}
 
 	protected Command createChangeBoundsCommand(ChangeBoundsRequest request) {
-		return new ChangeWeightsCommand(getHost(), request);
+		return new ChangeWeightsCommand((SashFormEditPart) getHost(), request);
 	}
 
 	/*

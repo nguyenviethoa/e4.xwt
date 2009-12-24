@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.commands;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,24 +21,28 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.StringUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Sash;
 
 /**
  * @author jin.liu (jin.liu@soyatec.com)
  * 
  */
 public class ChangeWeightsCommand extends Command {
-	private EditPart parent;
+	private SashFormEditPart parent;
 	private ChangeBoundsRequest request;
 	private Command command;
+	private Integer[] weights;
 
-	public ChangeWeightsCommand(EditPart parent, ChangeBoundsRequest request) {
+	public ChangeWeightsCommand(SashFormEditPart parent,
+			ChangeBoundsRequest request) {
 		super("Change Weights");
 		this.parent = parent;
 		this.request = request;
@@ -47,13 +52,24 @@ public class ChangeWeightsCommand extends Command {
 		if (parent == null || request == null || request.getEditParts() == null) {
 			return false;
 		}
-		return parent instanceof VisualEditPart;
+		if (!(parent instanceof VisualEditPart)) {
+			return false;
+		}
+		IVisualInfo visualInfo = ((VisualEditPart) parent).getVisualInfo();
+		SashForm sashForm = (SashForm) visualInfo.getVisualObject();
+		weights = computeWeights(sashForm);
+		if (weights == null) {
+			return false;
+		}
+		for (Integer integer : weights) {
+			if (integer == null || integer.intValue() < 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void execute() {
-		IVisualInfo visualInfo = ((VisualEditPart) parent).getVisualInfo();
-		SashForm sashForm = (SashForm) visualInfo.getVisualObject();
-		Integer[] weights = computeWeights(sashForm);
 		command = new ApplyAttributeSettingCommand(
 				(XamlNode) parent.getModel(), "weights",
 				IConstants.XWT_NAMESPACE, StringUtil.format(weights));
@@ -68,57 +84,109 @@ public class ChangeWeightsCommand extends Command {
 		command.undo();
 	}
 
-	private Integer[] computeWeights(SashForm sashForm) {
-		int[] weights = sashForm.getWeights();
+	private VisualEditPart getEditPart() {
+		List<VisualEditPart> editParts = new ArrayList<VisualEditPart>(request
+				.getEditParts());
+		if (editParts.size() > 0) {
+			return editParts.get(0);
+		}
+		return null;
+	}
 
-		List editParts = request.getEditParts();
-		//		
-		XamlNode parentNode = (XamlNode) parent.getModel();
-		for (Object object : editParts) {
-			int index = parentNode.getChildNodes().indexOf(
-					((EditPart) object).getModel());
-			if (index == -1) {
-				continue;
+	private Integer[] computeWeights(SashForm sashForm) {
+
+		int[] weights = sashForm.getWeights();
+		int[] newWeights = weights;
+
+		VisualEditPart editPart = getEditPart();
+		if (editPart != null) {
+			XamlNode parentNode = (XamlNode) parent.getModel();
+			int index = parentNode.getChildNodes().indexOf(editPart.getModel());
+			Object visualObject = editPart.getVisualInfo().getVisualObject();
+			if (index != -1) {
+				int resizeDirection = request.getResizeDirection();
+				Dimension sizeDelta = request.getSizeDelta();
+				int offset = getResizeOffset((Control) visualObject,
+						newWeights, index, sizeDelta.width, sizeDelta.height,
+						resizeDirection == PositionConstants.EAST
+								|| resizeDirection == PositionConstants.WEST);
+				for (int i = 0; i < newWeights.length; i++) {
+					if (i == index) {
+						newWeights[i] += offset;
+					} else {
+						newWeights[i] -= offset / (newWeights.length - 1);
+					}
+				}
 			}
-			int offset = getResizeOffset((VisualEditPart) object, weights,
-					index);
-			for (int i = 0; i < weights.length; i++) {
-				if (i == index) {
-					weights[i] += offset;
-				} else {
-					weights[i] -= offset / (weights.length - 1);
+			// SashEditPart.
+			else {
+				Sash sash = (Sash) visualObject;
+				int sashIndex = getSashIndex(sashForm, sash);
+				org.eclipse.draw2d.geometry.Point moveDelta = request
+						.getMoveDelta();
+				boolean horizontal = (sash.getStyle() & SWT.VERTICAL) != 0;
+				Control[] controls = getControls(sashForm);
+				if (controls != null) {
+					int resizeOffset = getResizeOffset(controls[sashIndex],
+							newWeights, sashIndex, moveDelta.x, moveDelta.y,
+							horizontal);
+					newWeights[sashIndex] += resizeOffset;
+					newWeights[sashIndex + 1] -= resizeOffset;
 				}
 			}
 		}
 		List<Integer> ws = new ArrayList<Integer>();
-		for (int i = 0; i < weights.length; i++) {
-			ws.add(weights[i]);
+		for (int i = 0; i < newWeights.length; i++) {
+			ws.add(newWeights[i]);
 		}
 		return ws.toArray(new Integer[ws.size()]);
 	}
 
-	private int getResizeOffset(VisualEditPart visualEp, int[] weights,
-			int index) {
+	private int getSashIndex(SashForm sashForm, Sash sash) {
+		try {
+			Field field = SashForm.class.getDeclaredField("sashes");
+			field.setAccessible(true);
+			Sash[] sashes = (Sash[]) field.get(sashForm);
+			for (int i = 0; i < sashes.length; i++) {
+				if (sashes[i].equals(sash)) {
+					return i;
+				}
+			}
+		} catch (Exception e) {
+		}
+		return -1;
+	}
+
+	private Control[] getControls(SashForm sashForm) {
+		try {
+			Field field = SashForm.class.getDeclaredField("controls");
+			field.setAccessible(true);
+			return (Control[]) field.get(sashForm);
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
+	private int getResizeOffset(Control control, int[] weights, int index,
+			int x, int y, boolean horizontal) {
 		float total = 0;
 		for (int i : weights) {
 			total += i;
 		}
 
-		Object visualObject = visualEp.getVisualInfo().getVisualObject();
-		Point size = SWTTools.getSize((Control) visualObject);
-		int resizeDirection = request.getResizeDirection();
-		Dimension sizeDelta = request.getSizeDelta();
-		if (resizeDirection == PositionConstants.EAST
-				|| resizeDirection == PositionConstants.WEST) {
+		Point size = SWTTools.getSize(control);
+		// int resizeDirection = request.getResizeDirection();
+		// Dimension sizeDelta = request.getSizeDelta();
+		if (horizontal) {
 			float percent = weights[index] / total;
 			float width = (size.x / percent);
-			float newPercent = (size.x + sizeDelta.width) / width;
+			float newPercent = (size.x + x) / width;
 			int newWeight = (int) (total * newPercent);
 			return newWeight - weights[index];
 		} else {
 			float percent = weights[index] / total;
 			float height = (size.y / percent);
-			float newPercent = (size.y + sizeDelta.height) / height;
+			float newPercent = (size.y + y) / height;
 			int newWeight = (int) (total * newPercent);
 			return newWeight - weights[index];
 		}
