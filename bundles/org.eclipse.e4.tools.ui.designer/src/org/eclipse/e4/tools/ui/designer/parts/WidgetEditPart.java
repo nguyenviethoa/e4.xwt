@@ -20,7 +20,6 @@ import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.WidgetInfo;
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -34,7 +33,6 @@ import org.eclipse.gef.requests.GroupRequest;
  * @author jin.liu(jin.liu@soyatec.com)
  */
 public class WidgetEditPart extends VisualEditPart {
-	private Adapter refresher;
 
 	/**
 	 * @param model

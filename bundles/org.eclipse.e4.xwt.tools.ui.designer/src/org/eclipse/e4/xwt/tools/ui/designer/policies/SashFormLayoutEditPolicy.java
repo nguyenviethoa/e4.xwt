@@ -16,6 +16,7 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.ChangeWeightsCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.InsertCreateCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.MoveChildCommand;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.SashEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -93,6 +94,9 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 * (org.eclipse.gef.EditPart)
 	 */
 	protected EditPolicy createChildEditPolicy(EditPart child) {
+		if (child instanceof SashEditPart) {
+			return new SashMoveableEditPolicy((SashEditPart) child);
+		}
 		int directions = 0;
 		if (isHorizontal()) {
 			directions = PositionConstants.EAST_WEST;

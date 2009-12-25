@@ -76,12 +76,7 @@ public class E4UIEventPublisher extends EContentAdapter {
 		}
 	}
 
-	/**
-	 * @param notification
-	 * @param argMap
-	 * @return
-	 */
-	private String formatData(Notification notification,
+	public static String formatData(Notification notification,
 			Map<String, Object> argMap) {
 		// The unchecked casts below represent 'asserts'
 		MApplicationElement appElement = (MApplicationElement) notification
@@ -106,7 +101,7 @@ public class E4UIEventPublisher extends EContentAdapter {
 		return getTopic(feature, getEventType(notification));
 	}
 
-	private String getEventType(Notification notification) {
+	private static String getEventType(Notification notification) {
 		switch (notification.getEventType()) {
 		case Notification.ADD:
 			return EventTypes.ADD;
@@ -125,7 +120,7 @@ public class E4UIEventPublisher extends EContentAdapter {
 	 * @param type
 	 * @return fully qualified topic
 	 */
-	private String getTopic(EStructuralFeature eFeature, String type) {
+	private static String getTopic(EStructuralFeature eFeature, String type) {
 		EClass eContainingClass = eFeature.getEContainingClass();
 		return UIEvents.UITopicBase + UIEvents.TOPIC_SEP
 				+ eContainingClass.getEPackage().getName() + UIEvents.TOPIC_SEP

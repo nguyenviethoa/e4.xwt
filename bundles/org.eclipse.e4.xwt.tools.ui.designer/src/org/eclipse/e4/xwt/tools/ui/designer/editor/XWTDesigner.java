@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.editor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.xwt.XWTLoaderManager;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
@@ -59,6 +60,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -95,6 +97,15 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 			xwtLoader = new XWTVisualLoader(inputFile);
 			XWTLoaderManager.setActive(xwtLoader, true);
 		}
+	}
+	
+	@Override
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
+		super.init(site, input);
+		EditDomain domain = getEditDomain();
+		domain.setDefaultTool(new XWTSelectionTool());
+		domain.loadDefaultTool();
 	}
 
 	/*
@@ -153,7 +164,7 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createPalettePage()
 	 */
 	protected CustomPalettePage createPalettePage() {
-		return PaletteTools.createPalettePage(this, new XWTPaletteProvider(), EntryCreationTool.class, null);
+		return PaletteTools.createPalettePage(this, new XWTPaletteProvider(), EntryCreationTool.class, XWTSelectionTool.class);
 	}
 
 	/*

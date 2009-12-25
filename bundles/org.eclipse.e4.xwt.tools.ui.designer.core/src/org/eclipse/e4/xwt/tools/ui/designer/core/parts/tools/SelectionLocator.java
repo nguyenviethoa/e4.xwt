@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.parts.figures;
+package org.eclipse.e4.xwt.tools.ui.designer.core.parts.tools;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;

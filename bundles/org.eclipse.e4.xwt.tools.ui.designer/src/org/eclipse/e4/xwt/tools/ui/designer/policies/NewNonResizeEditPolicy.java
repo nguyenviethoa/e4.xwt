@@ -13,7 +13,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.policies;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.e4.xwt.tools.ui.designer.parts.figures.SelectionHandle;
+import org.eclipse.e4.xwt.tools.ui.designer.core.parts.tools.SelectionHandle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.SharedCursors;

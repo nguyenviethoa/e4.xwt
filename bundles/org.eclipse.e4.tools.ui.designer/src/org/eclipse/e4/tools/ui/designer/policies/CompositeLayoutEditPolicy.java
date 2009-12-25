@@ -39,5 +39,4 @@ public class CompositeLayoutEditPolicy extends XYLayoutEditPolicy {
 			Object constraint) {
 		return factory.getChangeConstraintCommand(child, constraint);
 	}
-
 }

@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.properties;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.workbench.ui.UIEvents;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -43,6 +46,7 @@ public class E4PropertySource implements IPropertySource {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
 	 */
 	public Object getEditableValue() {
@@ -54,15 +58,18 @@ public class E4PropertySource implements IPropertySource {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
+	 * 
+	 * @see
+	 * org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
 	 */
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		if (descriptors == null) {
 			List<IPropertyDescriptor> descs = new ArrayList<IPropertyDescriptor>();
-			EList<EStructuralFeature> features = model.eClass().getEAllStructuralFeatures();
+			EClass type = model.eClass();
+			EList<EStructuralFeature> features = type
+					.getEAllStructuralFeatures();
 			for (EStructuralFeature sf : features) {
-				// Only enable attributes now.
-				if (!(sf instanceof EAttribute)) {
+				if (!buildTopic(type, sf)) {
 					continue;
 				}
 				descs.add(createPropertyDescriptor(sf));
@@ -72,7 +79,46 @@ public class E4PropertySource implements IPropertySource {
 		return descriptors;
 	}
 
-	private IPropertyDescriptor createPropertyDescriptor(final EStructuralFeature feature) {
+	private boolean buildTopic(EClass type, EStructuralFeature feature) {
+		if (!(feature instanceof EAttribute) || feature.getUpperBound() != 1) {
+			return false;
+		}
+		EDataType eAttributeType = ((EAttribute) feature).getEAttributeType();
+		Class<?> instanceClass = eAttributeType.getInstanceClass();
+		if (instanceClass == null
+				|| (instanceClass.isArray() || !(instanceClass.isPrimitive() || String.class == instanceClass))) {
+			return false;
+		}
+		EList<EClass> eSuperTypes = type.getESuperTypes();
+		for (EClass eClass : eSuperTypes) {
+			if (buildTopic(eClass, feature)) {
+				return true;
+			}
+		}
+		Class<?>[] interfaces = UIEvents.class.getDeclaredClasses();
+		Class<?> classType = null;
+		for (Class<?> clazz : interfaces) {
+			String simpleName = clazz.getSimpleName();
+			if (type.getName().equals(simpleName)) {
+				classType = clazz;
+				break;
+			}
+		}
+		if (classType == null) {
+			return false;
+		}
+		Field[] declaredFields = classType.getDeclaredFields();
+		for (Field field : declaredFields) {
+			String name = field.getName();
+			if (name.equalsIgnoreCase(feature.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private IPropertyDescriptor createPropertyDescriptor(
+			final EStructuralFeature feature) {
 		return new PropertyDescriptor(feature, feature.getName()) {
 			public CellEditor createPropertyEditor(Composite parent) {
 				return createCellEditor(feature, parent);
@@ -80,18 +126,26 @@ public class E4PropertySource implements IPropertySource {
 		};
 	}
 
-	protected CellEditor createCellEditor(EStructuralFeature feature, Composite parent) {
+	protected CellEditor createCellEditor(EStructuralFeature feature,
+			Composite parent) {
+		if (!(feature instanceof EAttribute)) {
+			return null;
+		}
 		EDataType eAttributeType = ((EAttribute) feature).getEAttributeType();
 		if (Object.class == eAttributeType.getInstanceClass()) {
 			return null;
 		}
-		EDataTypeCellEditor cellEditor = new EDataTypeCellEditor(eAttributeType, parent);
+		EDataTypeCellEditor cellEditor = new EDataTypeCellEditor(
+				eAttributeType, parent);
 		return cellEditor;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java
+	 * .lang.Object)
 	 */
 	public Object getPropertyValue(Object id) {
 		if (id instanceof EStructuralFeature) {
@@ -102,7 +156,10 @@ public class E4PropertySource implements IPropertySource {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang
+	 * .Object)
 	 */
 	public boolean isPropertySet(Object id) {
 		if (id instanceof EStructuralFeature) {
@@ -113,7 +170,10 @@ public class E4PropertySource implements IPropertySource {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java
+	 * .lang.Object)
 	 */
 	public void resetPropertyValue(Object id) {
 
@@ -121,7 +181,10 @@ public class E4PropertySource implements IPropertySource {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java
+	 * .lang.Object, java.lang.Object)
 	 */
 	public void setPropertyValue(Object id, Object value) {
 		if (id instanceof EStructuralFeature) {

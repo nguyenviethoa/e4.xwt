@@ -15,6 +15,7 @@ import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
 import org.eclipse.e4.tools.ui.designer.parts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.properties.E4PropertySourceProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
@@ -24,6 +25,9 @@ import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 
@@ -56,6 +60,15 @@ public class E4Designer extends Designer {
 		return new E4EditPartsFactory();
 	}
 
+	@Override
+	public void init(IEditorSite site, IEditorInput input)
+			throws PartInitException {
+		super.init(site, input);
+		EditDomain domain = getEditDomain();
+		domain.setDefaultTool(new E4SelectionTool());
+		domain.loadDefaultTool();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -116,7 +129,7 @@ public class E4Designer extends Designer {
 	 */
 	protected CustomPalettePage createPalettePage() {
 		return PaletteTools.createPalettePage(this, new E4PaletteProvider(),
-				null, null);
+				null, E4SelectionTool.class);
 	}
 
 	/*

@@ -8,12 +8,13 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.parts;
+package org.eclipse.e4.tools.ui.designer.parts;
 
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.tools.ui.designer.parts.misc.DragSashTracker;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
+import org.eclipse.e4.tools.ui.designer.parts.handlers.DragSashTracker;
+import org.eclipse.e4.ui.model.application.MApplicationFactory;
+import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
+import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.ControlInfo;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.SharedCursors;
@@ -27,13 +28,25 @@ import org.eclipse.swt.widgets.Sash;
  */
 public class SashEditPart extends ControlEditPart {
 
-	public SashEditPart(Sash sash, XamlNode model) {
-		super(sash, model);
+	private Sash sash;
+
+	public SashEditPart(Sash sash, EObject model) {
+		super(model);
+		this.sash = sash;
 		if (model == null) {
-			model = XamlFactory.eINSTANCE.createElement("Sash",
-					IConstants.XWT_NAMESPACE);
+			model = (EObject) MApplicationFactory.eINSTANCE.createItem();
 			setModel(model);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.tools.ui.designer.parts.ControlEditPart#createVisualInfo()
+	 */
+	protected IVisualInfo createVisualInfo() {
+		return new ControlInfo(sash, false);
 	}
 
 	/*
@@ -47,8 +60,16 @@ public class SashEditPart extends ControlEditPart {
 		return new DragSashTracker(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.tools.ui.designer.parts.WidgetEditPart#toString()
+	 */
+	public String toString() {
+		return "Sash";
+	}
+	
 	public Cursor getDefaultCursor() {
-		Sash sash = (Sash) getWidget();
 		if ((sash.getStyle() & SWT.HORIZONTAL) == SWT.HORIZONTAL) {
 			return SharedCursors.SIZENS;			
 		}

@@ -55,10 +55,12 @@ public class E4WorkbenchProxy {
 	private IPresentationEngine renderer;
 	private Object root;
 	private E4UIEventPublisher globalDistahcher;
+	private MApplicationElement uiRoot;
 
 	public E4WorkbenchProxy(MApplicationElement uiRoot,
 			IEclipseContext applicationContext) {
-		appContext = applicationContext;
+		this.uiRoot = uiRoot;
+		this.appContext = applicationContext;
 		appContext.set(IWorkbench.class.getName(), this);
 
 		if (uiRoot instanceof MApplication) {
@@ -106,12 +108,7 @@ public class E4WorkbenchProxy {
 		Workbench.processHierarchy(appElement);
 	}
 
-	/**
-	 * @param renderingEngineURI
-	 * @param cssURI
-	 * @param cssResourcesURI
-	 */
-	public void createAndRunUI(final MApplicationElement uiRoot) {
+	public void createAndRunUI() {
 		final Display display = Display.getDefault();
 		Realm.runWithDefault(SWTObservables.getRealm(display), new Runnable() {
 
@@ -223,6 +220,12 @@ public class E4WorkbenchProxy {
 		return null;
 	}
 
+	public void remove(MUIElement element) {
+		if (renderer != null) {
+			renderer.removeGui(element);
+		}
+	}
+
 	protected void initializeNullStyling(IEclipseContext appContext) {
 		appContext.set(IStylingEngine.SERVICE_NAME, new IStylingEngine() {
 			public void setClassname(Object widget, String classname) {
@@ -251,5 +254,15 @@ public class E4WorkbenchProxy {
 
 	public Object getRoot() {
 		return root;
+	}
+
+	public void reload() {
+		if (root != null && root instanceof Widget) {
+			((Widget) root).dispose();
+		}
+		if (renderer != null) {
+			renderer.stop();
+		}
+		createAndRunUI();
 	}
 }

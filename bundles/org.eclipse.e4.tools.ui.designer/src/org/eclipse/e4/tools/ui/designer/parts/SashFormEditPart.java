@@ -10,9 +10,16 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.parts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.e4.tools.ui.designer.policies.SashFormLayoutEditPolicy;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Sash;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -25,7 +32,44 @@ public class SashFormEditPart extends CompositeEditPart {
 
 	protected void createEditPolicies() {
 		super.createEditPolicies();
+		removeEditPolicy(EditPolicy.LAYOUT_ROLE);
 		installEditPolicy(EditPolicy.LAYOUT_ROLE,
 				new SashFormLayoutEditPolicy());
+	}
+
+	public void refresh() {
+		super.refresh();
+		EditPolicy layoutPolicy = getEditPolicy(EditPolicy.LAYOUT_ROLE);
+		if (layoutPolicy != null) {
+			layoutPolicy.deactivate();
+			layoutPolicy.activate();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.tools.ui.designer.parts.WidgetEditPart#getModelChildren()
+	 */
+	protected List getModelChildren() {
+		List children = new ArrayList(super.getModelChildren());
+		SashForm sashForm = (SashForm) getMuiElement().getWidget();
+		if (sashForm != null && !sashForm.isDisposed()) {
+			Control[] controls = sashForm.getChildren();
+			for (Control control : controls) {
+				if (control instanceof Sash) {
+					children.add(control);
+				}
+			}
+		}
+		return children;
+	}
+
+	protected EditPart createChild(Object model) {
+		if (model instanceof Sash) {
+			return new SashEditPart((Sash) model, null);
+		}
+		return super.createChild(model);
 	}
 }

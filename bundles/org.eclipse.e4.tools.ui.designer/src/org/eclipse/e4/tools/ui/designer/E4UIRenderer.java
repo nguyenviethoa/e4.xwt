@@ -48,6 +48,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 	private Resource resource;
 	private IFile inputFile;
 	private E4WorkbenchProxy workbench;
+	private IEclipseContext appContext;
 
 	public boolean doLoad(Designer designer, IProgressMonitor monitor) {
 		inputFile = designer.getInputFile();
@@ -101,7 +102,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		if (appModel == null) {
 			return Result.NONE;
 		}
-		IEclipseContext appContext = E4Application.createDefaultContext();
+		appContext = E4Application.createDefaultContext();
 
 		// Set the app's context after adding itself
 		appContext.set(MApplication.class.getName(), appModel);
@@ -129,11 +130,17 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 						.getBundleAdmin()));
 
 		workbench = new E4WorkbenchProxy(appModel, appContext);
-		workbench.createAndRunUI(appModel);
+		workbench.createAndRunUI();
 		E4UIEventPublisher globalDistahcher = workbench.getGlobalDistahcher();
 		globalDistahcher.addPublishedAdapter(new AdapterImpl() {
 			public void notifyChanged(Notification msg) {
 				int eventType = msg.getEventType();
+				if (eventType == Notification.REMOVE) {
+					Object oldValue = msg.getOldValue();
+					if (oldValue != null && oldValue instanceof MUIElement) {
+						workbench.remove((MUIElement) oldValue);
+					}
+				}
 				if (eventType == Notification.ADD
 						|| eventType == Notification.REMOVE) {
 					layout(getRoot());
