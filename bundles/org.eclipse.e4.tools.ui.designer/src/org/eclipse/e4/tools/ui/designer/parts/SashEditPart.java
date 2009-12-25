@@ -70,9 +70,14 @@ public class SashEditPart extends ControlEditPart {
 	}
 	
 	public Cursor getDefaultCursor() {
-		if ((sash.getStyle() & SWT.HORIZONTAL) == SWT.HORIZONTAL) {
+		if (isHorizontal()) {
 			return SharedCursors.SIZENS;			
 		}
 		return SharedCursors.SIZEWE;			
 	}
+	
+	public boolean isHorizontal() {
+		return ((sash.getStyle() & SWT.HORIZONTAL) == SWT.HORIZONTAL);		
+	}
+
 }
