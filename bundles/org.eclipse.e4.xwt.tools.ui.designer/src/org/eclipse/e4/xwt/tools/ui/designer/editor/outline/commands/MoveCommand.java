@@ -59,10 +59,6 @@ public abstract class MoveCommand extends Command {
 		if (!state) {
 			return false;
 		}
-		XamlNode xamlNode = (XamlNode) target;
-		if (xamlNode.getParent() == null) {
-			return false;
-		}
 		
 		IStructuredSelection sourceNodes = getSource();
 		XamlNode parent = null;
@@ -78,8 +74,11 @@ public abstract class MoveCommand extends Command {
 			else {
 				sourceNode = (XamlNode) element;
 				XamlNode sourceParent = sourceNode.getParent();
-				if (parent == null) {
+				if (sourceParent == null) {
 					return false;
+				}
+				if (parent == null) {
+					parent = sourceParent;
 				}
 				else if (parent != sourceParent) {
 					return false;
