@@ -20,6 +20,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.StyleHelper;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
@@ -46,6 +47,18 @@ public class StyleAction extends Action implements IMenuCreator {
 		setMenuCreator(this);
 	}
 
+	@Override
+	public boolean isEnabled() {
+		Object model = editPart.getModel();
+		if (model instanceof EObject) {
+			EObject object = (EObject)model;
+			if (object.eContainer() == null) {
+				return false;
+			}
+		}
+		return super.isEnabled();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

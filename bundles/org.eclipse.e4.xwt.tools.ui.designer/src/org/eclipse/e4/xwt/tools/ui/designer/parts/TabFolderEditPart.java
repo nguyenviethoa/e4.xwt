@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
@@ -40,19 +38,17 @@ public class TabFolderEditPart extends CompositeEditPart {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#getExternalModels()
+	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#collectExternalModels()
 	 */
-	protected Collection<Object> getExternalModels() {
-		List<Object> externales = new ArrayList<Object>(super
-				.getExternalModels());
+	protected void collectExternalModels(List<Object> collector) {
+		super.collectExternalModels(collector);
 		Control control = getActiveItemControl();
 		if (control != null && !control.isDisposed()) {
 			Object data = XWTProxy.getModel(control);
 			if (data != null) {
-				externales.add(data);
+				collector.add(data);
 			}
 		}
-		return externales;
 	}
 
 	public Control getActiveItemControl() {

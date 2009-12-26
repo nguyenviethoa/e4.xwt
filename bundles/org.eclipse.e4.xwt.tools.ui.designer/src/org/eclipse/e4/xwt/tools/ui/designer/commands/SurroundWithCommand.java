@@ -20,6 +20,7 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.StringUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutType;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.grid.GridLayoutPolicyHelper;
@@ -30,6 +31,7 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.e4.xwt.tools.ui.xaml.tools.AnnotationTools;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
@@ -70,6 +72,15 @@ public class SurroundWithCommand extends Command {
 			} else if (parent != child.getParent()) {
 				return false;
 			}
+			
+			Object model = child.getModel();
+			if (model instanceof EObject) {
+				EObject object = (EObject) model;
+				if (object.eContainer() == null) {
+					return false;
+				}
+			}
+			
 		}
 		if (parent == null) {
 			return false;
@@ -146,7 +157,21 @@ public class SurroundWithCommand extends Command {
 		sort(surroundings, parentModel.getChildNodes());
 		CompoundCommand commands = new CompoundCommand();
 		XamlElement newParent = createParent();
-		if (LayoutType.NullLayout == layoutType) {
+		if (parent instanceof SashFormEditPart) {
+			int index = -1;
+			for (WidgetEditPart child : surroundings) {
+				XamlElement castModel = (XamlElement) child.getCastModel();
+				if (index == -1) {
+					index = parentModel.getChildNodes().indexOf(castModel);
+				}
+				
+				XamlElement newChild = (XamlElement) EcoreUtil.copy(castModel);
+				newParent.getChildNodes().add(newChild);
+			}
+
+			commands.add(new AddNewChildCommand(parentModel, newParent, index));
+		}
+		else if (LayoutType.NullLayout == layoutType) {
 			int x = -1, y = -1, right = 0, bottom = 0;
 			for (WidgetEditPart child : surroundings) {
 				Rectangle r = child.getVisualInfo().getBounds();
@@ -180,7 +205,6 @@ public class SurroundWithCommand extends Command {
 			}
 
 			commands.add(new AddNewChildCommand(parentModel, newParent));
-
 		} else if (LayoutType.GridLayout == layoutType) {
 			int numRows = -1, numColumns = 0;
 			if (surroundings.size() == 1) {
@@ -260,7 +284,6 @@ public class SurroundWithCommand extends Command {
 			newParent.getAttributes().add(gridDataAttr);
 
 			commands.add(new AddNewChildCommand(parentModel, newParent, index));
-
 		} else if (LayoutType.RowLayout == layoutType || LayoutType.FillLayout == layoutType) {
 			XamlAttribute a = parentModel.getAttribute("layout");
 			if (a != null) {

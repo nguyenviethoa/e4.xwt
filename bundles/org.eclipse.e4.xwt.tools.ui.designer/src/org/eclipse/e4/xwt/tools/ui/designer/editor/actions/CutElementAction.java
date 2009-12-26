@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.Clipboard;
@@ -58,7 +59,21 @@ public class CutElementAction extends SelectionAction {
 			return false;
 		}
 		List selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
-		return selectedEditParts != null && !selectedEditParts.isEmpty();
+		boolean result = selectedEditParts != null && !selectedEditParts.isEmpty();
+		if (result) {
+			for (Iterator iterator = selectedEditParts.iterator(); iterator
+					.hasNext();) {
+				EditPart editPart = (EditPart) iterator.next();
+				Object object = editPart.getModel();
+				if (object instanceof EObject) {
+					EObject eObject = (EObject) object;
+					if (eObject.eContainer() == null) {
+						return false;
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	/*

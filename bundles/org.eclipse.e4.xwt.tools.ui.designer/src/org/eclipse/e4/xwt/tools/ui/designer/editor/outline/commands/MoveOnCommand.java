@@ -51,6 +51,9 @@ public class MoveOnCommand extends MoveCommand {
 			else {
 				sourceNode = (XamlNode) element;
 				XamlNode sourceParent = sourceNode.getParent();
+				if (sourceParent == null) {
+					return false;					
+				}
 				if (sourceParent == getTarget()) {
 					return false;
 				}

@@ -15,8 +15,13 @@ import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
@@ -39,16 +44,7 @@ public class SurroundWithAction extends AbstractDropDownAction {
 	}
 
 	private void initActions() {
-		actionList = new Class<?>[1];
-		try {
-			actionList[0] = Composite.class;
-			// actionList[1] = Group.class;
-			// actionList[2] = ScrolledComposite.class;
-			// actionList[3] = SashForm.class;
-			// actionList[4] = TabFolder.class;
-			// actionList[5] = CTabFolder.class;
-		} catch (Exception e) {
-		}
+		actionList = new Class<?>[] {Composite.class, Group.class, ScrolledComposite.class, SashForm.class, TabFolder.class, CTabFolder.class};
 	}
 
 	/*

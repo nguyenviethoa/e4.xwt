@@ -10,8 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -69,21 +68,20 @@ public class ControlEditPart extends WidgetEditPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#getExternalModels()
+	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#collectExternalModels()
 	 */
-	protected Collection<Object> getExternalModels() {
-		Collection<Object> externals = new ArrayList<Object>(super.getExternalModels());
+	protected void collectExternalModels(List<Object> collector) {
+		super.collectExternalModels(collector);
 		Control control = (Control) getWidget();
 		if (control != null && !control.isDisposed()) {
 			Menu menu = control.getMenu();
 			if (menu != null) {
 				Object data = XWTProxy.getModel(menu);
 				if (data != null) {
-					externals.add(data);
+					collector.add(data);
 				}
 			}
 		}
-		return externals;
 	}
 
 	public boolean isRightToLeft() {

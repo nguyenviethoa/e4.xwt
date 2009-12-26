@@ -19,6 +19,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.e4.tools.ui.designer.parts.SashEditPart;
+import org.eclipse.e4.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.tools.ui.designer.parts.handlers.DragSashTracker;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.tools.SelectionHandle;
 import org.eclipse.gef.GraphicalEditPart;
@@ -27,10 +28,12 @@ import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.ResizableHandleKit;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
+ * @author Yves YANG (yves.yang@soyatec.com)
  */
 public class SashMoveableEditPolicy extends ResizableEditPolicy {
 
@@ -93,44 +96,99 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 	
 		rect.resize(request.getSizeDelta());
 		
-		GraphicalEditPart graphicalEditPart = (GraphicalEditPart) editPart.getParent();
-		IFigure parentFigure = graphicalEditPart.getFigure();
-		PrecisionRectangle bounds = new PrecisionRectangle(parentFigure.getBounds());
-		parentFigure.translateToAbsolute(bounds);
+		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart.getParent();
+		List children = sashFormEditPart.getChildren();
+		SashForm sashForm = (SashForm) sashFormEditPart.getWidget();
+		int[] weights = sashForm.getWeights();
+		GraphicalEditPart previous = null;
+		int previousIndex = 0;
+		GraphicalEditPart next = null;
+		int nextIndex = 0;
+		int i = 0;
+		for (Object object : children) {
+			if (!(object instanceof SashEditPart)){
+				if (object instanceof GraphicalEditPart) {
+					if (next == null) {
+						previous = (GraphicalEditPart) object;
+						previousIndex = i;
+					}
+					else if (next == editPart) {
+						next = (GraphicalEditPart) object;
+						nextIndex = i;
+					}					
+				}
+				i++;
+			}
+			else if (object == editPart){
+				next = editPart;
+			}
+		}
+		int total = weights[previousIndex] + weights[nextIndex];
+
+		PrecisionRectangle previousBounds = null;
+		{
+			IFigure figure = previous.getFigure();
+			previousBounds = new PrecisionRectangle(figure.getBounds());
+			figure.translateToAbsolute(previousBounds);
+		}
+		PrecisionRectangle nextBounds = null;
+		{
+			IFigure figure = next.getFigure();
+			nextBounds = new PrecisionRectangle(figure.getBounds());
+			figure.translateToAbsolute(nextBounds);
+		}
 		
-		if (rect.x < bounds.x) {
-			rect.x = bounds.x;
+		if (rect.x < previousBounds.x) {
+			rect.x = previousBounds.x;
 		}
-		if (rect.x + rect.width > bounds.x + bounds.width) {
-			rect.x = bounds.x + bounds.width - rect.width;
+		if (rect.x + rect.width > (previousBounds.x + previousBounds.width + nextBounds.width)) {
+			rect.x = (previousBounds.x + previousBounds.width + nextBounds.width) - rect.width;
 		}
 		
-		if (rect.y < bounds.y) {
-			rect.y = bounds.y;
+		if (rect.y < previousBounds.y) {
+			rect.y = previousBounds.y;
 		}
-		if (rect.y + rect.height > bounds.y + bounds.height) {
-			rect.y = bounds.y + bounds.height - rect.height;
+		if (rect.y + rect.height > (previousBounds.y + previousBounds.height + nextBounds.height)) {
+			rect.y = (previousBounds.y + previousBounds.height + nextBounds.height) - rect.height;
 		}
 		feedback.translateToRelative(rect);
 
 		feedback.setBounds(rect);
 		
 		if (editPart.isHorizontal()) {
-			int weight = (int)((rect.y - bounds.y) * 1000 / bounds.height);
-			label.setText("[" + weight + ", " + (1000 - weight) + "]");
+			int previousWeight = (int)((rect.y - previousBounds.y) * total / (previousBounds.height + nextBounds.height - rect.height));
+			weights[previousIndex] = previousWeight;
+			weights[nextIndex] = total - previousWeight;
+			
+			label.setText(widgetsString(weights));
 			Dimension dimension = label.getPreferredSize();
 			label.setSize(dimension);
 			location.x = (int)rect.x + (rect.width - dimension.width)/2;
 			location.y = (int)rect.y + 10;
 		}
 		else {
-			int weight = (int)((rect.x - bounds.x) * 1000 / bounds.width);
-			label.setText("[" + weight + ", " + (1000 - weight) + "]");
+			int previousWeight = (int)((rect.x - previousBounds.x) * total / (previousBounds.width + nextBounds.width - rect.width));
+			weights[previousIndex] = previousWeight;
+			weights[nextIndex] = total - previousWeight;
+			label.setText(widgetsString(weights));
 			Dimension dimension = label.getPreferredSize();
 			label.setSize(dimension);		
 			location.x = (int)rect.x + 10;
 			location.y = (int)rect.y + (rect.height - dimension.height)/2;
 		}
 		label.setLocation(location);
+	}
+
+	private String widgetsString(int[] widgets) {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append('[');
+		for (int i = 0; i < widgets.length; i++) {
+			if (i != 0) {
+				stringBuilder.append(",");				
+			}
+			stringBuilder.append(widgets[i]);
+		}
+		stringBuilder.append(']');
+		return stringBuilder.toString();
 	}
 }

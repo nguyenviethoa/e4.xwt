@@ -11,10 +11,12 @@
 package org.eclipse.e4.xwt.tools.ui.designer.editor.actions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.Clipboard;
@@ -42,8 +44,28 @@ public class CopyElementAction extends SelectionAction {
 	}
 
 	protected boolean calculateEnabled() {
-
-		return true;
+		if (editorPart == null) {
+			return false;
+		}
+		if (editorPart.getGraphicalViewer() == null) {
+			return false;
+		}
+		List selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
+		boolean result = selectedEditParts != null && !selectedEditParts.isEmpty();
+		if (result) {
+			for (Iterator iterator = selectedEditParts.iterator(); iterator
+					.hasNext();) {
+				EditPart editPart = (EditPart) iterator.next();
+				Object object = editPart.getModel();
+				if (object instanceof EObject) {
+					EObject eObject = (EObject) object;
+					if (eObject.eContainer() == null) {
+						return false;
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	public void run() {
@@ -68,14 +90,4 @@ public class CopyElementAction extends SelectionAction {
 			Clipboard.getDefault().setContents(selectResult);
 		super.run();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.ui.actions.WorkbenchPartAction#isEnabled()
-	 */
-	public boolean isEnabled() {
-		return true;
-	}
-
 }

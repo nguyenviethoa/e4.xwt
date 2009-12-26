@@ -11,8 +11,6 @@
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.ChopboxAnchor;
@@ -100,21 +98,17 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 	 */
 	protected List getModelChildren() {
 		List modelChildren = new ArrayList(getCastModel().getChildNodes());
-		Collection<?> externalModels = getExternalModels();
-		if (externalModels != null && !externalModels.isEmpty()) {
-			modelChildren.addAll(externalModels);
-		}
+		collectExternalModels(modelChildren);
 		return modelChildren;
 	}
 
-	protected Collection<?> getExternalModels() {
+	protected void collectExternalModels(List<Object> collector) {
 		if (isRoot()) {
 			DataContext dataContext = BindingHelper.getDataContext(getWidget());
 			if (dataContext != null) {
-				return Collections.singletonList(dataContext);
+				collector.add(dataContext);
 			}
 		}
-		return Collections.emptyList();
 	}
 
 	/*

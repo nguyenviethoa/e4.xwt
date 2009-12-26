@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
@@ -47,21 +45,19 @@ public class MenuItemEditPart extends WidgetEditPart {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#getExternalModels()
+	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#collectExternalModels()
 	 */
-	protected Collection<Object> getExternalModels() {
-		List<Object> externals = new ArrayList<Object>();
+	protected void collectExternalModels(List<Object> collector) {
 		MenuItem menuItem = (MenuItem) getWidget();
 		if (menuItem != null) {
 			Menu menu = menuItem.getMenu();
 			if (menu != null) {
 				Object data = menu.getData(ResourceVisitor.ELEMENT_KEY);
 				if (data != null && data instanceof XamlElement) {
-					externals.add(data);
+					collector.add(data);
 				}
 			}
 		}
-		return externals;
 	}
 
 	/*

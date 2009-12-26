@@ -53,13 +53,15 @@ public class SashFormEditPart extends CompositeEditPart {
 	 * org.eclipse.e4.tools.ui.designer.parts.WidgetEditPart#getModelChildren()
 	 */
 	protected List getModelChildren() {
-		List children = new ArrayList(super.getModelChildren());
+		List children = super.getModelChildren();
 		SashForm sashForm = (SashForm) getMuiElement().getWidget();
 		if (sashForm != null && !sashForm.isDisposed()) {
+			int i = 1;
 			Control[] controls = sashForm.getChildren();
 			for (Control control : controls) {
 				if (control instanceof Sash) {
-					children.add(control);
+					children.add(i, control);
+					i += 2;
 				}
 			}
 		}

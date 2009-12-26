@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
@@ -31,20 +29,19 @@ public class ShellEditPart extends CompositeEditPart {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#getExternalModels()
+	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#collectExternalModels()
 	 */
-	protected Collection<Object> getExternalModels() {
-		List<Object> externals = new ArrayList<Object>(super.getExternalModels());
+	protected void collectExternalModels(List<Object> collector) {
+		super.collectExternalModels(collector);
 		Shell shell = (Shell) getWidget();
 		if (shell != null && !shell.isDisposed()) {
 			Menu menuBar = shell.getMenuBar();
 			if (menuBar != null && !menuBar.isDisposed()) {
 				Object data = XWTProxy.getModel(menuBar);
 				if (data != null) {
-					externals.add(data);
+					collector.add(data);
 				}
 			}
 		}
-		return externals;
 	}
 }

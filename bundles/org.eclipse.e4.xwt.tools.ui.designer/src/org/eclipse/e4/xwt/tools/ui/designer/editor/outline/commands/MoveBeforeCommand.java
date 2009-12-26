@@ -29,11 +29,6 @@ public class MoveBeforeCommand extends MoveCommand {
 	public MoveBeforeCommand(IStructuredSelection source, Object target, int operation) {
 		super(source, target, operation);
 	}
-
-	@Override
-	public boolean canExecute() {
-		return super.canExecute() && getTarget().getParent() != null;
-	}
 	
 	/*
 	 * (non-Javadoc)

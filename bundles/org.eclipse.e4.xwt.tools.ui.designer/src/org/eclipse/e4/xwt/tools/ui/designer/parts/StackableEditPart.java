@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
@@ -36,20 +34,18 @@ public abstract class StackableEditPart extends CompositeEditPart {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart#getExternalModels
+	 * org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart#collectExternalModels
 	 * ()
 	 */
-	protected Collection<Object> getExternalModels() {
-		List<Object> externales = new ArrayList<Object>(super
-				.getExternalModels());
+	protected void collectExternalModels(List<Object> collector) {
+		super.collectExternalModels(collector);
 		Control popControl = getPopControl();
 		if (popControl != null) {
 			XamlNode model = XWTProxy.getModel(popControl);
 			if (model != null) {
-				externales.add(model);
+				collector.add(model);
 			}
 		}
-		return externales;
 	}
 
 	public StackItemEditPart getPopItemPart() {

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
@@ -33,21 +31,19 @@ public class ToolBarEditPart extends CompositeEditPart {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart#getExternalModels()
+	 * @see org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart#collectExternalModels()
 	 */
-	protected Collection<Object> getExternalModels() {
-		List<Object> externals = new ArrayList<Object>();
+	protected void collectExternalModels(List<Object> collector) {
 		ToolBar toolBar = (ToolBar) getWidget();
 		if (toolBar != null && !toolBar.isDisposed()) {
 			Control[] children = toolBar.getChildren();
 			for (Control control : children) {
 				Object data = XWTProxy.getModel(control);
 				if (data != null) {
-					externals.add(data);
+					collector.add(data);
 				}
 			}
 		}
-		return externals;
 	}
 
 	/*

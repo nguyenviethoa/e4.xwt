@@ -31,11 +31,6 @@ public class MoveAfterCommand extends MoveCommand {
 		setLabel("Move After");
 	}
 
-	@Override
-	public boolean canExecute() {
-		return super.canExecute() && getTarget().getParent() != null;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 

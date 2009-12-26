@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
@@ -30,21 +28,19 @@ public class CoolBarEditPart extends CompositeEditPart {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#getExternalModels()
+	 * @see org.soyatec.xaml.ve.xwt.editparts.WidgetEditPart#collectExternalModels()
 	 */
-	protected Collection<Object> getExternalModels() {
-		List<Object> externals = new ArrayList<Object>();
+	protected void collectExternalModels(List<Object> collector) {
 		CoolBar coolBar = (CoolBar) getWidget();
 		if (coolBar != null && !coolBar.isDisposed()) {
 			Control[] children = coolBar.getChildren();
 			for (Control control : children) {
 				Object data = XWTProxy.getModel(control);
 				if (data != null) {
-					externals.add(data);
+					collector.add(data);
 				}
 			}
 		}
-		return externals;
 	}
 
 	protected void createEditPolicies() {

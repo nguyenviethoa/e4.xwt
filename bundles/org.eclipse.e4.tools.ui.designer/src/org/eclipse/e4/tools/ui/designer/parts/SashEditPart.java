@@ -17,7 +17,10 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.ControlInfo;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.SharedCursors;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Sash;
@@ -74,6 +77,14 @@ public class SashEditPart extends ControlEditPart {
 			return SharedCursors.SIZENS;			
 		}
 		return SharedCursors.SIZEWE;			
+	}
+	
+	@Override
+	public Command getCommand(Request request) {
+		if (request.getType().equals(RequestConstants.REQ_DELETE)) {
+			return UnexecutableCommand.INSTANCE;
+		}
+		return super.getCommand(request);
 	}
 	
 	public boolean isHorizontal() {

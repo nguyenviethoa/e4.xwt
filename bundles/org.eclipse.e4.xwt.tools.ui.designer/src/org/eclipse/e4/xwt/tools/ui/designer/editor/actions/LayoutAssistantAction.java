@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.dialogs.LayoutAssistantWindow;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.ui.IWorkbenchPart;
@@ -92,6 +93,17 @@ public class LayoutAssistantAction extends SelectionAction {
 	 * @see org.eclipse.gef.ui.actions.WorkbenchPartAction#calculateEnabled()
 	 */
 	protected boolean calculateEnabled() {
-		return getEditPart() != null;
+		EditPart editPart = getEditPart();
+		if (editPart == null) {
+			return false;
+		}
+		Object model = editPart.getModel();
+		if (model instanceof EObject) {
+			EObject object = (EObject)model;
+			if (object.eContainer() == null) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

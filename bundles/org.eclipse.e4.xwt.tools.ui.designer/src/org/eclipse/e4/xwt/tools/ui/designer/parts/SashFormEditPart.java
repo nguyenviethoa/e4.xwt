@@ -10,8 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.policies.SashFormLayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
@@ -65,19 +64,19 @@ public class SashFormEditPart extends CompositeEditPart {
 	 * org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart#getExternalModels
 	 * ()
 	 */
-	protected Collection<Object> getExternalModels() {
-		Collection<Object> externalModels = new ArrayList<Object>(super
-				.getExternalModels());
+	protected void collectExternalModels(List<Object> collector) {
+		super.collectExternalModels(collector);
 		SashForm sashForm = (SashForm) getWidget();
 		if (sashForm != null && !sashForm.isDisposed()) {
 			Control[] children = sashForm.getChildren();
+			int i = 1;
 			for (Control control : children) {
 				if (control instanceof Sash) {
-					externalModels.add(control);
+					collector.add(i, control);
+					i += 2;
 				}
 			}
 		}
-		return externalModels;
 	}
 
 	/*

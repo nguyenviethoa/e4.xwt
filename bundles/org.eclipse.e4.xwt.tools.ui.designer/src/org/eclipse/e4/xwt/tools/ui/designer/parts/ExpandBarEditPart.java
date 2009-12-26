@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
@@ -33,21 +31,19 @@ public class ExpandBarEditPart extends CompositeEditPart {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart#getExternalModels()
+	 * @see org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart#CollectExternalModels()
 	 */
-	protected Collection<Object> getExternalModels() {
-		List<Object> externals = new ArrayList<Object>();
+	protected void CollectExternalModels(List<Object> collector) {
 		ExpandBar expandBar = (ExpandBar) getWidget();
 		if (expandBar != null && !expandBar.isDisposed()) {
 			Control[] children = expandBar.getChildren();
 			for (Control control : children) {
 				Object data = XWTProxy.getModel(control);
 				if (data != null) {
-					externals.add(data);
+					collector.add(data);
 				}
 			}
 		}
-		return externals;
 	}
 
 	protected void createEditPolicies() {
