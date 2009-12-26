@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.e4.tools.ui.designer.parts.SashEditPart;
@@ -24,6 +26,8 @@ import org.eclipse.gef.Handle;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.ResizableHandleKit;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -31,11 +35,33 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 public class SashMoveableEditPolicy extends ResizableEditPolicy {
 
 	private SashEditPart editPart;
+	private Label label;
+	private Point location = new Point();
 
 	public SashMoveableEditPolicy(SashEditPart editPart) {
 		this.editPart = editPart;
 	}
 
+	/**
+	 * Creates the figure used for feedback.
+	 * @return the new feedback figure
+	 */
+	protected IFigure createDragSourceFeedbackFigure() {
+		label = new Label();
+		label.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+		getFeedbackLayer().add(label);
+		return super.createDragSourceFeedbackFigure();
+	}
+	
+	@Override
+	protected void eraseChangeBoundsFeedback(ChangeBoundsRequest request) {
+		super.eraseChangeBoundsFeedback(request);
+		if (label != null) {
+			removeFeedback(label);
+		}
+		label = null;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -66,28 +92,45 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 		}
 	
 		rect.resize(request.getSizeDelta());
-		feedback.translateToRelative(rect);		
 		
 		GraphicalEditPart graphicalEditPart = (GraphicalEditPart) editPart.getParent();
-		IFigure panrertFigure = graphicalEditPart.getFigure();
-		PrecisionRectangle bounds = new PrecisionRectangle(panrertFigure.getBounds());
-		panrertFigure.translateToAbsolute(bounds);
+		IFigure parentFigure = graphicalEditPart.getFigure();
+		PrecisionRectangle bounds = new PrecisionRectangle(parentFigure.getBounds());
+		parentFigure.translateToAbsolute(bounds);
 		
-		if (rect.preciseX < bounds.preciseX) {
-			rect.preciseX = bounds.preciseX;
+		if (rect.x < bounds.x) {
+			rect.x = bounds.x;
 		}
-		if (rect.preciseX + rect.preciseWidth > bounds.preciseX + bounds.preciseWidth) {
-			rect.preciseX = bounds.preciseX + bounds.preciseWidth - rect.preciseWidth;
-		}
-		
-		if (rect.preciseY < bounds.preciseY) {
-			rect.preciseY = bounds.preciseY;
-		}
-		if (rect.preciseY + rect.preciseHeight > bounds.preciseY + bounds.preciseHeight) {
-			rect.preciseY = bounds.preciseY + bounds.preciseHeight - rect.preciseHeight;
+		if (rect.x + rect.width > bounds.x + bounds.width) {
+			rect.x = bounds.x + bounds.width - rect.width;
 		}
 		
-		rect.updateInts();
+		if (rect.y < bounds.y) {
+			rect.y = bounds.y;
+		}
+		if (rect.y + rect.height > bounds.y + bounds.height) {
+			rect.y = bounds.y + bounds.height - rect.height;
+		}
+		feedback.translateToRelative(rect);
+
 		feedback.setBounds(rect);
+		
+		if (editPart.isHorizontal()) {
+			int weight = (int)((rect.y - bounds.y) * 1000 / bounds.height);
+			label.setText("[" + weight + ", " + (1000 - weight) + "]");
+			Dimension dimension = label.getPreferredSize();
+			label.setSize(dimension);
+			location.x = (int)rect.x + (rect.width - dimension.width)/2;
+			location.y = (int)rect.y + 10;
+		}
+		else {
+			int weight = (int)((rect.x - bounds.x) * 1000 / bounds.width);
+			label.setText("[" + weight + ", " + (1000 - weight) + "]");
+			Dimension dimension = label.getPreferredSize();
+			label.setSize(dimension);		
+			location.x = (int)rect.x + 10;
+			location.y = (int)rect.y + (rect.height - dimension.height)/2;
+		}
+		label.setLocation(location);
 	}
 }

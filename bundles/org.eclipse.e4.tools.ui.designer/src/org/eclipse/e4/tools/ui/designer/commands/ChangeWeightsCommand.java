@@ -40,8 +40,8 @@ import org.eclipse.swt.widgets.Sash;
 public class ChangeWeightsCommand extends Command {
 	private SashFormEditPart parent;
 	private ChangeBoundsRequest request;
-	private Command command;
 	private Integer[] weights;
+	private Integer[] oldWeights;
 
 	public ChangeWeightsCommand(SashFormEditPart parent,
 			ChangeBoundsRequest request) {
@@ -73,36 +73,30 @@ public class ChangeWeightsCommand extends Command {
 
 	public void execute() {
 		MPartSashContainer parentNode = (MPartSashContainer) parent.getModel();
-		EList<MPSCElement> children = parentNode.getChildren();
-		CompoundCommand cmd = new CompoundCommand();
-		int index = -1;
-		for (int i = 0; i < children.size(); i++) {
-			MPSCElement child = children.get(i);
-			if (child.getWidget() == null) {
-				continue;
-			}
-			index++;
-			if (index >= 0 && index < weights.length) {
-				Integer integer = weights[index];
-				ApplyAttributeSettingCommand applyCommand = new ApplyAttributeSettingCommand(
-						(EObject) child, "containerData", integer.toString());
-				if (applyCommand.canExecute()) {
-					cmd.add(applyCommand);
-				}
-			}
-		}
-		command = cmd.unwrap();
-		if (command.canExecute()) {
-			command.execute();
+		EList<Integer> widgetList = parentNode.getWeights();
+		oldWeights = new Integer[widgetList.size()];
+		for (int i = 0; i < oldWeights.length; i++) {
+			oldWeights[i] = widgetList.get(i);
+		}		
+		widgetList.clear();
+
+		for (int i = 0; i < weights.length; i++) {
+			widgetList.add(weights[i]);
 		}
 	}
 
 	public boolean canUndo() {
-		return command != null && command.canUndo();
+		return oldWeights != null && oldWeights.length > 0;
 	}
 
 	public void undo() {
-		command.undo();
+		MPartSashContainer parentNode = (MPartSashContainer) parent.getModel();
+		EList<Integer> widgetList = parentNode.getWeights();
+		widgetList.clear();
+		for (int i = 0; i < oldWeights.length; i++) {
+			widgetList.add(oldWeights[i]);
+		}
+		oldWeights = null;
 	}
 
 	private VisualEditPart getEditPart() {
