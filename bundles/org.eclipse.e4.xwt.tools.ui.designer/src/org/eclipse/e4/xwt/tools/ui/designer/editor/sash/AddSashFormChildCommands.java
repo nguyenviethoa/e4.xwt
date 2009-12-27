@@ -1,8 +1,5 @@
 package org.eclipse.e4.xwt.tools.ui.designer.editor.sash;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.SashUtil;
@@ -63,11 +60,13 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 		}
 		
 		try {
+			// add in the list first
+			super.execute();
+
+			// update the weights after, since the Notifier as update it. Her we just override it.
 			String value = SashUtil.weightsValue(weights);
 			XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
 			attribute.setValue(value);
-		
-			super.execute();
 		} catch (Exception e) {
 		}
 	}

@@ -35,7 +35,6 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
@@ -640,6 +639,8 @@ public class XWTModelBuilder extends EContentAdapter implements IModelBuilder {
 		if (!text.getAdapters().contains(nodeAdapter)) {
 			text.addAdapter(nodeAdapter);
 		}
+		
+		
 	}
 
 	private String validatePrefix(XamlNode node) {

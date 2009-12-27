@@ -12,6 +12,30 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.util;
 
 public class SashUtil {
 
+	public static String removeWeights(String weights, int index) {
+		String[] values = weights.split(",");
+		StringBuilder stringBuilder = new StringBuilder();
+		String value = null;
+		for (int i = 0; i < values.length; i++) {
+			if (i != 0 && i != index) {
+				stringBuilder.append(",");
+			}
+			if (value != null){
+				int item1 = Integer.parseInt(value);
+				int item2 = Integer.parseInt(values[i]);
+				values[i] = "" + (item1 + item2);
+				value = null;
+			}
+			if (i != index) {
+				stringBuilder.append(values[i]);
+			}
+			else {
+				value = values[i];
+			}
+		}
+		return stringBuilder.toString();
+	}
+
 	public static String weightsValue(int[] weights) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (int i = 0; i < weights.length; i++) {

@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -506,6 +507,15 @@ public class XWTProxy {
 			model = getModel(widget);
 		}
 
+		// in case of SashFrom 
+		if (widget instanceof Control) {
+			Control control = (Control) widget;
+			Composite composite = control.getParent();
+			if (composite instanceof SashForm) {
+				
+			}
+		}
+	
 		// reload
 		destroy(rootComponent);
 		componentsMap.clear();

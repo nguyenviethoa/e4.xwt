@@ -67,6 +67,9 @@ public class SashEditPart extends ControlEditPart {
 	
 	public boolean isHorizontal() {
 		Sash sash = (Sash) getWidget();
-		return ((sash.getStyle() & SWT.HORIZONTAL) == SWT.HORIZONTAL);		
+		if (sash != null && !sash.isDisposed()) {
+			return ((sash.getStyle() & SWT.HORIZONTAL) == SWT.HORIZONTAL);
+		}
+		return true;
 	}
 }

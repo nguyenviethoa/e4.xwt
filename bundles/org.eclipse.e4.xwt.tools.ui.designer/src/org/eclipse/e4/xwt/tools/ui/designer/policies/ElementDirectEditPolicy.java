@@ -65,6 +65,9 @@ public class ElementDirectEditPolicy extends DirectEditPolicy {
 			
 			XamlElement element = (XamlElement) (getHost().getModel());
 			XamlAttribute attribute = element.getAttribute("text", IConstants.XWT_NAMESPACE);
+			if (attribute == null) {
+				return;
+			}
 			String value = attribute.getValue();
 			cellEditor.setValue(value);
 			Control control = request.getCellEditor().getControl();

@@ -17,6 +17,7 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.AbstractRenderer;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.SashUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
@@ -27,10 +28,12 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -134,6 +137,7 @@ public class XWTVisualRenderer extends AbstractRenderer {
 			}
 			parent = proxy.getComponent(notifyEObject);
 		}
+		
 		if (notifyEObject != null && notifyEObject instanceof XamlElement) {
 			updateObj = (XamlElement) notifyEObject;
 		}
@@ -142,6 +146,18 @@ public class XWTVisualRenderer extends AbstractRenderer {
 			if (proxy.isNull(parent)) {
 				break;
 			}
+			// in case of SashFrom 
+			if (parent instanceof SashForm) {
+				XamlAttribute attribute = updateObj.getAttribute("weights", IConstants.XWT_NAMESPACE);
+				if (attribute != null) {
+					String value = attribute.getValue();
+					if (value != null && value.length() > 0 ) {
+						value += ",0";
+						attribute.setValue(value);
+					}
+				}
+			}
+			
 			if (newValue instanceof XamlElement && parent != null
 					&& canRender((XamlElement) newValue)) {
 				if (parent instanceof Widget) {
@@ -175,6 +191,33 @@ public class XWTVisualRenderer extends AbstractRenderer {
 		case Notification.REMOVE:
 			if (oldValue instanceof XamlElement) {
 				Object removeWidget = getVisual((XamlElement) oldValue);
+				
+				// in case of SashFrom 
+				if (parent instanceof SashForm) {
+					XamlAttribute attribute = updateObj.getAttribute("weights", IConstants.XWT_NAMESPACE);
+					if (attribute != null) {
+						String value = attribute.getValue();
+						if (value != null && value.length() > 0 ) {
+							SashForm sashForm = (SashForm) parent;
+							Control[] children = sashForm.getChildren();
+							int index = 0;
+							
+							for (int i = 0, c = 0; i < children.length; i++) {
+								if (removeWidget == children[i]) {
+									index = c;
+									break;
+								}
+								if (!(children[i] instanceof Sash)) {
+									c++;
+								}
+							}
+							
+							value = SashUtil.removeWeights(value, index);
+							attribute.setValue(value);
+						}
+					}
+				}
+
 				if (removeWidget != null) {
 					updated = proxy.destroy(removeWidget);
 				}
