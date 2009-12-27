@@ -39,6 +39,7 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
@@ -66,7 +67,7 @@ import org.w3c.dom.Text;
  * @author jliu jin.liu@soyatec.com
  */
 @SuppressWarnings("restriction")
-public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
+public class XWTModelBuilder extends EContentAdapter implements IModelBuilder {
 
 	private static final int NONE = 0;
 	private static final int LOADING = 1;
@@ -92,7 +93,7 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		return typeName + RANDOM.nextInt(Integer.MAX_VALUE);
 	}
 
-	public boolean doLoad(Designer designer, IProgressMonitor monitor) {
+	public boolean doLoad(Designer designer, final IProgressMonitor monitor) {
 		this.designer = designer;
 		input = designer.getInputFile();
 		jfaceDom = designer.getDocument();
@@ -116,6 +117,7 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		});
 		if (input != null) {
 			document = ModelCacheUtility.doLoadFromCache(input, monitor);
+			
 		}
 		if (document == null) {
 			document = XamlFactory.eINSTANCE.createXamlDocument();
@@ -127,7 +129,7 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		if (!textDocument.getAdapters().contains(nodeAdapter)) {
 			textDocument.addAdapter(nodeAdapter);
 		}
-		IDOMElement textElement = (IDOMElement) textDocument
+		final IDOMElement textElement = (IDOMElement) textDocument
 				.getDocumentElement();
 
 		if (buildingType == NONE) {
@@ -186,6 +188,9 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		String nsURI = text.getNamespaceURI();
 		String prefix = text.getPrefix();
 		XamlElement rootElement = document.getRootElement();
+		
+		document.eResource().eAdapters().add(this);
+		
 		boolean isNew = false;
 		if (rootElement == null || !name.equals(rootElement.getName())) {
 			rootElement = XamlFactory.eINSTANCE.createElement(name, nsURI);
@@ -199,7 +204,7 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		createChild(rootElement, text, monitor);
 
 		map(rootElement, text);
-		addAdapter(document);
+		//addAdapter(document);
 		if (isNew) {
 			document.setRootElement(rootElement);
 		}
@@ -552,21 +557,6 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 		return a;
 	}
 
-	protected void addAdapter(EObject eObj) {
-		if (eObj == null || eObj.eAdapters().contains(this)) {
-			return;
-		}
-		eObj.eAdapters().add(this);
-		if (eObj instanceof XamlNode) {
-			for (XamlAttribute attr : ((XamlNode) eObj).getAttributes()) {
-				addAdapter(attr);
-			}
-			for (XamlElement child : ((XamlNode) eObj).getChildNodes()) {
-				addAdapter(child);
-			}
-		}
-	}
-
 	protected IDOMDocument getTextDocument(IDocument doc) {
 		IStructuredModel model = StructuredModelManager.getModelManager()
 				.getExistingModelForRead(doc);
@@ -646,7 +636,6 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 	}
 
 	public void map(XamlNode model, IDOMNode text) {
-		addAdapter(model);
 		mapper.map(model, text);
 		if (!text.getAdapters().contains(nodeAdapter)) {
 			text.addAdapter(nodeAdapter);
@@ -789,7 +778,6 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 			});
 			rewirteJob.schedule(500);
 		}
-
 	}
 
 	protected void tryToUpdateText(Notification msg) {
@@ -981,10 +969,6 @@ public class XWTModelBuilder extends AdapterImpl implements IModelBuilder {
 	}
 
 	protected void fireModelEvent(Notification n) {
-		Object newValue = n.getNewValue();
-		if (newValue != null && newValue instanceof EObject) {
-			addAdapter((EObject) newValue);
-		}
 		if (!listeners.isEmpty()) {
 			for (ModelBuildListener listener : listeners) {
 				listener.notifyChanged(n);

@@ -1,5 +1,8 @@
 package org.eclipse.e4.xwt.tools.ui.designer.editor.sash;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.SashUtil;
@@ -40,13 +43,7 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 		SashFormEditPart sashFormEditPart = (SashFormEditPart) host;
 		SashForm form = (SashForm) sashFormEditPart.getWidget();
 		oldWeights = form.getWeights();
-		
-		// TODO: EMF transaction framework should be used here. 
-		try {
-			super.execute();
-		} catch (Exception e) {
-		}
-
+				
 		int[] weights = new int[oldWeights.length + 1];
 		int index = getIndex();
 		if (index == -1) {
@@ -65,9 +62,14 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 			weights[i+1] = oldWeights[i];
 		}
 		
-		String value = SashUtil.weightsValue(weights);
-		XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
-		attribute.setValue(value);
+		try {
+			String value = SashUtil.weightsValue(weights);
+			XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
+			attribute.setValue(value);
+		
+			super.execute();
+		} catch (Exception e) {
+		}
 	}
 	
 	@Override
@@ -79,7 +81,7 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 	public void undo() {
 		super.undo();
 		XamlNode sashForm = (XamlNode) host.getModel();
-		String value = SashUtil.weightsDisplayString(oldWeights);
+		String value = SashUtil.weightsValue(oldWeights);
 		XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
 		attribute.setValue(value);
 	}

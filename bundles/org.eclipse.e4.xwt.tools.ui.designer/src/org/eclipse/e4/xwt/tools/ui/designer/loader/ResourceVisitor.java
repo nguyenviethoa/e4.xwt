@@ -1470,7 +1470,11 @@ public class ResourceVisitor {
 				}
 			}
 		} catch (Exception e) {
-			LoggerManager.log(e);
+			if (e instanceof RuntimeException) {
+				RuntimeException exception = (RuntimeException) e;
+				throw exception;
+			}
+			throw new XWTException(e);
 		}
 	}
 
