@@ -20,12 +20,18 @@ import org.eclipse.gef.requests.CreateRequest;
  */
 public class InsertCreateCommand extends AbstractCreateCommand {
 
-	private EditPart after;
+	private EditPart reference;
 	private int index = -1;
+	private boolean after = false;
 
-	public InsertCreateCommand(EditPart parent, EditPart after, CreateRequest createRequest) {
+	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, boolean after) {
 		super(parent, createRequest);
+		this.reference = reference;
 		this.after = after;
+	}
+
+	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest) {
+		this(parent, reference, createRequest, false);
 	}
 
 	/*
@@ -43,9 +49,24 @@ public class InsertCreateCommand extends AbstractCreateCommand {
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.commands.AbstractCreationCommand#preExecute(org.soyatec.tools.designer.xaml.XamlNode, org.eclipse.gef.requests.CreateRequest)
 	 */
 	protected void preExecute(XamlNode newNode, CreateRequest createRequest) {
-		if (after != null) {
-			index = getParentModel().getChildNodes().indexOf(after.getModel());
+		if (reference != null) {
+			index = getParentModel().getChildNodes().indexOf(reference.getModel());
+			if (after) {
+				int size = getParentModel().getChildNodes().size();
+				index++;
+				if (index >= size) {
+					index = - 1;
+				}
+			}
 		}
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public boolean isAfter() {
+		return after;
 	}
 
 }

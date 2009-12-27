@@ -8,9 +8,9 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.policies;
+package org.eclipse.e4.xwt.tools.ui.designer.policies.layout;
 
-import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.RowLayoutEditPolicy;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.NewNonResizeEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.StyleHelper;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.gef.EditPart;

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.parts;
 
+import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;

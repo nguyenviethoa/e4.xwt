@@ -13,7 +13,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.parts;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
-import org.eclipse.e4.xwt.tools.ui.designer.policies.ToolBarLayoutEditPolicy;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ToolBarLayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.swt.widgets.Control;

@@ -15,7 +15,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.e4.xwt.tools.ui.designer.core.figures.ContentPaneFigure;
-import org.eclipse.e4.xwt.tools.ui.designer.policies.MenuBarLayoutEditPolicy;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.MenuBarLayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.swt.widgets.Menu;

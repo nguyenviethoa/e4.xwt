@@ -33,11 +33,11 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
  * @author jliu jin.liu@soyatec.com
  */
 public class NewResizableEditPolicy extends ResizableEditPolicy {
+	protected static final int WIDTH = 50;
+	protected static final int HEIGHT = 16;
 
 	private boolean diaplayNonHandles = true;
 	private Label tooltip;
-	private static final int WIDTH = 50;
-	private static final int HEIGHT = 16;
 
 	public NewResizableEditPolicy(int directions, boolean displayNonHandles) {
 		setResizeDirections(directions);

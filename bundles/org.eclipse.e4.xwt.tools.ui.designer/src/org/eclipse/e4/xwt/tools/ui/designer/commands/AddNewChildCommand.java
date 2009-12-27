@@ -21,7 +21,6 @@ import org.eclipse.gef.commands.Command;
  * @author jliu jin.liu@soyatec.com
  */
 public class AddNewChildCommand extends Command {
-
 	private XamlNode parent;
 	private XamlNode child;
 	private int index;
@@ -97,4 +96,7 @@ public class AddNewChildCommand extends Command {
 		}
 	}
 
+	public int getIndex() {
+		return index;
+	}
 }

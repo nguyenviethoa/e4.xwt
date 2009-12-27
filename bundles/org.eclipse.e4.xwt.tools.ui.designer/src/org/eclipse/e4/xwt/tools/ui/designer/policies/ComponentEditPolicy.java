@@ -33,16 +33,16 @@ public class ComponentEditPolicy extends DefaultComponentEditPolicy {
 	protected Command getDeleteCommand(GroupRequest request) {
 		List editParts = request.getEditParts();
 		if (!editParts.isEmpty()) {
-			List<XamlNode> deleteThems = new ArrayList<XamlNode>();
+			List<XamlNode> deleteItems = new ArrayList<XamlNode>();
 			for (Iterator iterator = editParts.iterator(); iterator.hasNext();) {
 				Object object = (Object) iterator.next();
 				if (object instanceof VisualEditPart) {
 					VisualEditPart part = (VisualEditPart) object;
-					deleteThems.add((XamlNode) part.getCastModel());
+					deleteItems.add((XamlNode) part.getCastModel());
 				}
 			}
-			if (!deleteThems.isEmpty()) {
-				return new DeleteCommand(deleteThems);
+			if (!deleteItems.isEmpty()) {
+				return new DeleteCommand(deleteItems);
 			}
 		}
 		return super.getDeleteCommand(request);

@@ -8,16 +8,15 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.policies;
+package org.eclipse.e4.xwt.tools.ui.designer.policies.layout;
 
 /*
- * $RCSfile: NonResizableSpannableEditPolicy.java,v $ $Revision: 1.7 $ $Date: 2005/11/11 15:57:16 $
+ * $RCSfile: NonResizableSpannableEditPolicy.java,v $ $Revision: 1.1 $ $Date: 2009/12/03 20:32:22 $
  */
 
 import java.util.List;
 
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.GridLayoutEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.grid.GridSpanHandle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;

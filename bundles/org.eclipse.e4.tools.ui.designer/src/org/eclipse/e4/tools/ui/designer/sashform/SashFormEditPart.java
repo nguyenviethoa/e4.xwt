@@ -8,15 +8,16 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.parts;
+package org.eclipse.e4.tools.ui.designer.sashform;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.e4.tools.ui.designer.policies.SashFormLayoutEditPolicy;
+import org.eclipse.e4.tools.ui.designer.parts.CompositeEditPart;
+import org.eclipse.e4.tools.ui.designer.parts.SashEditPart;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Sash;
@@ -73,5 +74,18 @@ public class SashFormEditPart extends CompositeEditPart {
 			return new SashEditPart((Sash) model, null);
 		}
 		return super.createChild(model);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.editpolicies.FlowLayoutEditPolicy#isHorizontal()
+	 */
+	public boolean isHorizontal() {
+		SashForm sashForm = (SashForm) getWidget();
+		if (sashForm != null && !sashForm.isDisposed()) {
+			return (sashForm.getOrientation() & SWT.HORIZONTAL) != 0;
+		}
+		return true;
 	}
 }

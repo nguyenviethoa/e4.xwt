@@ -8,13 +8,14 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.policies;
+package org.eclipse.e4.xwt.tools.ui.designer.policies.layout;
 
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AttachedPropertyCreateCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DefaultCreateCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.CreateReqHelper;
-import org.eclipse.e4.xwt.tools.ui.designer.parts.TabFolderEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.StackableEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.NewNonResizeEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
@@ -29,7 +30,7 @@ import org.eclipse.swt.widgets.Item;
  * @author jin.liu (jin.liu@soyatec.com)
  * 
  */
-public class TabFolderLayoutEditPolicy extends LayoutEditPolicy {
+public class StackableLayoutEditPolicy extends LayoutEditPolicy {
 
 	/*
 	 * (non-Javadoc)
@@ -50,7 +51,7 @@ public class TabFolderLayoutEditPolicy extends LayoutEditPolicy {
 	 * .gef.requests.CreateRequest)
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
-		TabFolderEditPart host = (TabFolderEditPart) getHost();
+		StackableEditPart host = (StackableEditPart) getHost();
 		CreateReqHelper helper = new CreateReqHelper(request);
 		XamlNode newObject = helper.getNewObject();
 		if (newObject == null) {
@@ -63,7 +64,7 @@ public class TabFolderLayoutEditPolicy extends LayoutEditPolicy {
 		if (Item.class.isAssignableFrom(metaclass.getType())) {
 			return new DefaultCreateCommand(host, request);
 		} else {
-			return new AttachedPropertyCreateCommand(host.getActiveItemPart(),
+			return new AttachedPropertyCreateCommand(host.getPopItemPart(),
 					request, "control");
 		}
 	}

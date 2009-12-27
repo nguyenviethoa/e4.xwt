@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.commands;
+package org.eclipse.e4.tools.ui.designer.sashform;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,17 +16,16 @@ import java.util.List;
 
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.e4.tools.ui.designer.parts.SashFormEditPart;
+import org.eclipse.e4.ui.model.application.MElementContainer;
+import org.eclipse.e4.ui.model.application.MGenericTile;
 import org.eclipse.e4.ui.model.application.MPSCElement;
-import org.eclipse.e4.ui.model.application.MPartSashContainer;
+import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
@@ -34,88 +33,28 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Sash;
 
 /**
- * @author jin.liu (jin.liu@soyatec.com)
  * 
+ * @author yyang <yves.yang@soyatec.com>
+ *
  */
-public class ChangeWeightsCommand extends Command {
-	private SashFormEditPart parent;
-	private ChangeBoundsRequest request;
-	private Integer[] weights;
-	private Integer[] oldWeights;
-
-	public ChangeWeightsCommand(SashFormEditPart parent,
-			ChangeBoundsRequest request) {
-		super("Change Weights");
-		this.parent = parent;
-		this.request = request;
+public class SashFormUtil {
+	public static Integer[] computeWeights(SashFormEditPart parent) {
+		MGenericTile<MUIElement> parentNode = (MGenericTile<MUIElement>) parent.getModel();
+		EList<Integer> integers = parentNode.getWeights();
+		return integers.toArray(new Integer[integers.size()]);
 	}
-
-	public boolean canExecute() {
-		if (parent == null || request == null || request.getEditParts() == null) {
-			return false;
-		}
-		if (!(parent instanceof VisualEditPart)) {
-			return false;
-		}
+			
+	public static Integer[] computeWeights(SashFormEditPart parent,
+			ChangeBoundsRequest request) {
 		IVisualInfo visualInfo = ((VisualEditPart) parent).getVisualInfo();
 		SashForm sashForm = (SashForm) visualInfo.getVisualObject();
-		weights = computeWeights(sashForm);
-		if (weights == null) {
-			return false;
-		}
-		for (Integer integer : weights) {
-			if (integer == null || integer.intValue() < 0) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public void execute() {
-		MPartSashContainer parentNode = (MPartSashContainer) parent.getModel();
-		EList<Integer> widgetList = parentNode.getWeights();
-		oldWeights = new Integer[widgetList.size()];
-		for (int i = 0; i < oldWeights.length; i++) {
-			oldWeights[i] = widgetList.get(i);
-		}		
-		widgetList.clear();
-
-		for (int i = 0; i < weights.length; i++) {
-			widgetList.add(weights[i]);
-		}
-	}
-
-	public boolean canUndo() {
-		return oldWeights != null && oldWeights.length > 0;
-	}
-
-	public void undo() {
-		MPartSashContainer parentNode = (MPartSashContainer) parent.getModel();
-		EList<Integer> widgetList = parentNode.getWeights();
-		widgetList.clear();
-		for (int i = 0; i < oldWeights.length; i++) {
-			widgetList.add(oldWeights[i]);
-		}
-		oldWeights = null;
-	}
-
-	private VisualEditPart getEditPart() {
-		List<VisualEditPart> editParts = new ArrayList<VisualEditPart>(request
-				.getEditParts());
-		if (editParts.size() > 0) {
-			return editParts.get(0);
-		}
-		return null;
-	}
-
-	private Integer[] computeWeights(SashForm sashForm) {
 
 		int[] weights = sashForm.getWeights();
 		int[] newWeights = weights;
 
-		VisualEditPart editPart = getEditPart();
+		VisualEditPart editPart = getEditPart(request);
 		if (editPart != null) {
-			MPartSashContainer parentNode = (MPartSashContainer) parent
+			MElementContainer<MPSCElement> parentNode = (MElementContainer<MPSCElement>) parent
 					.getModel();
 			EList<MPSCElement> children = parentNode.getChildren();
 			Object visualObject = editPart.getVisualInfo().getVisualObject();
@@ -172,7 +111,7 @@ public class ChangeWeightsCommand extends Command {
 		return ws.toArray(new Integer[ws.size()]);
 	}
 
-	private int getSashIndex(SashForm sashForm, Sash sash) {
+	static private int getSashIndex(SashForm sashForm, Sash sash) {
 		try {
 			Field field = SashForm.class.getDeclaredField("sashes");
 			field.setAccessible(true);
@@ -187,7 +126,7 @@ public class ChangeWeightsCommand extends Command {
 		return -1;
 	}
 
-	private Control[] getControls(SashForm sashForm) {
+	static private Control[] getControls(SashForm sashForm) {
 		try {
 			Field field = SashForm.class.getDeclaredField("controls");
 			field.setAccessible(true);
@@ -197,8 +136,8 @@ public class ChangeWeightsCommand extends Command {
 		return null;
 	}
 
-	private int getResizeOffset(Control control, int[] weights, int index,
-			int x, int y, boolean horizontal) {
+	static private int getResizeOffset(Control control, int[] weights,
+			int index, int x, int y, boolean horizontal) {
 		float total = 0;
 		for (int i : weights) {
 			total += i;
@@ -220,5 +159,14 @@ public class ChangeWeightsCommand extends Command {
 			int newWeight = (int) (total * newPercent);
 			return newWeight - weights[index];
 		}
+	}
+
+	static private VisualEditPart getEditPart(GroupRequest request) {
+		List<VisualEditPart> editParts = new ArrayList<VisualEditPart>(request
+				.getEditParts());
+		if (editParts.size() > 0) {
+			return editParts.get(0);
+		}
+		return null;
 	}
 }

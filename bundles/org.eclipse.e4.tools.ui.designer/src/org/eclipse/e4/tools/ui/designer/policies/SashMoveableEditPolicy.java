@@ -19,9 +19,10 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.e4.tools.ui.designer.parts.SashEditPart;
-import org.eclipse.e4.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.tools.ui.designer.parts.handlers.DragSashTracker;
+import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.tools.SelectionHandle;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.SashUtil;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
@@ -160,7 +161,7 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 			weights[previousIndex] = previousWeight;
 			weights[nextIndex] = total - previousWeight;
 			
-			label.setText(widgetsString(weights));
+			label.setText(SashUtil.weightsDisplayString(weights));
 			Dimension dimension = label.getPreferredSize();
 			label.setSize(dimension);
 			location.x = (int)rect.x + (rect.width - dimension.width)/2;
@@ -170,25 +171,12 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 			int previousWeight = (int)((rect.x - previousBounds.x) * total / (previousBounds.width + nextBounds.width - rect.width));
 			weights[previousIndex] = previousWeight;
 			weights[nextIndex] = total - previousWeight;
-			label.setText(widgetsString(weights));
+			label.setText(SashUtil.weightsDisplayString(weights));
 			Dimension dimension = label.getPreferredSize();
 			label.setSize(dimension);		
 			location.x = (int)rect.x + 10;
 			location.y = (int)rect.y + (rect.height - dimension.height)/2;
 		}
 		label.setLocation(location);
-	}
-
-	private String widgetsString(int[] widgets) {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append('[');
-		for (int i = 0; i < widgets.length; i++) {
-			if (i != 0) {
-				stringBuilder.append(",");				
-			}
-			stringBuilder.append(widgets[i]);
-		}
-		stringBuilder.append(']');
-		return stringBuilder.toString();
 	}
 }

@@ -21,7 +21,6 @@ import org.eclipse.gef.requests.CreateRequest;
  * @author Jin Liu(jin.liu@soyatec.com)
  */
 public class CompositeLayoutEditPolicy extends XYLayoutEditPolicy {
-
 	private CommandsFactory factory;
 
 	public void activate() {
@@ -30,7 +29,7 @@ public class CompositeLayoutEditPolicy extends XYLayoutEditPolicy {
 			factory = new CompositeCommandsFactory(getHost());
 		}
 	}
-
+	
 	protected Command getCreateCommand(CreateRequest request) {
 		return factory.getCreateCommand(request, null);
 	}

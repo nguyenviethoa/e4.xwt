@@ -8,16 +8,23 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.policies;
+package org.eclipse.e4.xwt.tools.ui.designer.core.util;
 
-import org.eclipse.e4.xwt.tools.ui.designer.commands.AttachedPropertyCreateCommand;
-import org.eclipse.e4.xwt.tools.ui.designer.policies.layout.NonResizableLayoutEditPolicy;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.requests.CreateRequest;
+public class SashUtil {
 
-public class CoolItemEditPolicy extends NonResizableLayoutEditPolicy {
+	public static String weightsValue(int[] weights) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (int i = 0; i < weights.length; i++) {
+			if (i != 0) {
+				stringBuilder.append(",");				
+			}
+			stringBuilder.append(weights[i]);
+		}
+		return stringBuilder.toString();
+	}
 
-	protected Command getCreateCommand(CreateRequest request) {
-		return new AttachedPropertyCreateCommand(getHost(), request, "control");
+	public static String weightsDisplayString(int[] weights) {
+		return "[" + weightsValue(weights) + "]";
 	}
 }
+

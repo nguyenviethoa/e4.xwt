@@ -8,17 +8,25 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.policies;
+package org.eclipse.e4.xwt.tools.ui.designer.policies.layout;
 
+import org.eclipse.draw2d.Polygon;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AttachedPropertyCreateCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DefaultCreateCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.CreateReqHelper;
-import org.eclipse.e4.xwt.tools.ui.designer.parts.StackableEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.TabFolderEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.NewNonResizeEditPolicy;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.feedback.CrossFeedback;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.feedback.FeedbackHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.utils.FigureUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
@@ -29,8 +37,9 @@ import org.eclipse.swt.widgets.Item;
  * @author jin.liu (jin.liu@soyatec.com)
  * 
  */
-public class StackableLayoutEditPolicy extends LayoutEditPolicy {
-
+public class TabFolderLayoutEditPolicy extends LayoutEditPolicy {
+	private Polygon targetFeedback;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -42,6 +51,30 @@ public class StackableLayoutEditPolicy extends LayoutEditPolicy {
 		return new NewNonResizeEditPolicy(false);
 	}
 
+	protected void showLayoutTargetFeedback(Request request) {
+		if (REQ_CREATE.equals(request.getType())) {
+			TabFolderEditPart parent = (TabFolderEditPart) getHost();
+			if (targetFeedback == null) {
+				targetFeedback = FeedbackHelper.createTargetFeedback();
+			}
+			FeedbackHelper.updateTargetFeedback(parent, targetFeedback);
+			addFeedback(targetFeedback);
+		}
+		super.showLayoutTargetFeedback(request);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#eraseLayoutTargetFeedback(org.eclipse.gef.Request)
+	 */
+	protected void eraseLayoutTargetFeedback(Request request) {
+		if (targetFeedback != null && targetFeedback.getParent() != null) {
+			removeFeedback(targetFeedback);
+		}
+		super.eraseLayoutTargetFeedback(request);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -50,7 +83,7 @@ public class StackableLayoutEditPolicy extends LayoutEditPolicy {
 	 * .gef.requests.CreateRequest)
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
-		StackableEditPart host = (StackableEditPart) getHost();
+		TabFolderEditPart host = (TabFolderEditPart) getHost();
 		CreateReqHelper helper = new CreateReqHelper(request);
 		XamlNode newObject = helper.getNewObject();
 		if (newObject == null) {
@@ -63,7 +96,7 @@ public class StackableLayoutEditPolicy extends LayoutEditPolicy {
 		if (Item.class.isAssignableFrom(metaclass.getType())) {
 			return new DefaultCreateCommand(host, request);
 		} else {
-			return new AttachedPropertyCreateCommand(host.getPopItemPart(),
+			return new AttachedPropertyCreateCommand(host.getActiveItemPart(),
 					request, "control");
 		}
 	}

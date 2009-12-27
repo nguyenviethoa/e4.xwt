@@ -8,8 +8,12 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.policies;
+package org.eclipse.e4.xwt.tools.ui.designer.policies.layout;
 
+import org.eclipse.e4.xwt.tools.ui.designer.commands.AbstractCreateCommand;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.feedback.FeedbackHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.feedback.FeedbackManager;
+import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -18,9 +22,12 @@ import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 
 /**
+ * This class is used to create a LAYOUT_ROLE for each controls of SWT, so we can easily create or add some properties.
+ * 
  * @author jliu (jin.liu@soyatec.com)
  */
-public class NonResizableLayoutEditPolicy extends LayoutEditPolicy {
+public class ControlLayoutEditPolicy extends LayoutEditPolicy {
+	private FeedbackManager fbm = new FeedbackManager(this);
 
 	/*
 	 * (non-Javadoc)
@@ -28,7 +35,30 @@ public class NonResizableLayoutEditPolicy extends LayoutEditPolicy {
 	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#createChildEditPolicy(org.eclipse.gef.EditPart)
 	 */
 	protected EditPolicy createChildEditPolicy(EditPart child) {
-		return new NewNonResizeEditPolicy(false);
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#showLayoutTargetFeedback(org.eclipse.gef.Request)
+	 */
+	protected void showLayoutTargetFeedback(Request request) {
+		if (request instanceof CreateRequest) {
+			FeedbackHelper.showFillFeedback(fbm, (CreateRequest) request);
+		} else {
+			super.showLayoutTargetFeedback(request);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#eraseLayoutTargetFeedback(org.eclipse.gef.Request)
+	 */
+	protected void eraseLayoutTargetFeedback(Request request) {
+		fbm.eraseFeedback(request);
+		super.eraseLayoutTargetFeedback(request);
 	}
 
 	/*
@@ -37,7 +67,11 @@ public class NonResizableLayoutEditPolicy extends LayoutEditPolicy {
 	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getCreateCommand(org.eclipse.gef.requests.CreateRequest)
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
-		return null;
+		return new AbstractCreateCommand(getHost(), request) {
+			protected void preExecute(XamlNode newNode, CreateRequest createRequest) {
+				// Do nothing.
+			}
+		};
 	}
 
 	/*

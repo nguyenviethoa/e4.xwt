@@ -8,28 +8,27 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.policies;
+package org.eclipse.e4.xwt.tools.ui.designer.editor.sash;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.tools.SelectionHandle;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.SashUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.misc.DragSashTracker;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.ResizableHandleKit;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -50,10 +49,11 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 	 */
 	protected IFigure createDragSourceFeedbackFigure() {
 		label = new Label();
-		label.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+		label.setForegroundColor(ColorConstants.blue);
 		getFeedbackLayer().add(label);
 		return super.createDragSourceFeedbackFigure();
 	}
+	
 	
 	@Override
 	protected void eraseChangeBoundsFeedback(ChangeBoundsRequest request) {
@@ -158,7 +158,7 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 			weights[previousIndex] = previousWeight;
 			weights[nextIndex] = total - previousWeight;
 			
-			label.setText(widgetsString(weights));
+			label.setText(SashUtil.weightsDisplayString(weights));
 			Dimension dimension = label.getPreferredSize();
 			label.setSize(dimension);
 			location.x = (int)rect.x + (rect.width - dimension.width)/2;
@@ -168,7 +168,7 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 			int previousWeight = (int)((rect.x - previousBounds.x) * total / (previousBounds.width + nextBounds.width - rect.width));
 			weights[previousIndex] = previousWeight;
 			weights[nextIndex] = total - previousWeight;
-			label.setText(widgetsString(weights));
+			label.setText(SashUtil.weightsDisplayString(weights));
 			Dimension dimension = label.getPreferredSize();
 			label.setSize(dimension);		
 			location.x = (int)rect.x + 10;
@@ -176,18 +176,4 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 		}
 		label.setLocation(location);
 	}
-	
-	private String widgetsString(int[] widgets) {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append('[');
-		for (int i = 0; i < widgets.length; i++) {
-			if (i != 0) {
-				stringBuilder.append(",");				
-			}
-			stringBuilder.append(widgets[i]);
-		}
-		stringBuilder.append(']');
-		return stringBuilder.toString();
-	}
-
 }

@@ -10,8 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.policies.layout;
 
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Polygon;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.NullLayoutCommandsFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutType;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
@@ -22,6 +26,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.policies.feedback.FeedbackManager;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.FigureUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
@@ -34,6 +39,7 @@ public class NullLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 
 	private FeedbackManager fbm = new FeedbackManager(this);
 	private CrossFeedback crossFeedback;
+	private Polygon targetFeedback;
 
 	/*
 	 * (non-Javadoc)
@@ -83,13 +89,19 @@ public class NullLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 		if (REQ_CREATE.equals(request.getType())) {
 			if (!FeedbackHelper.showCreationFeedback(fbm, (CreateRequest) request)) {
 				Point location = ((CreateRequest) request).getLocation().getCopy();
-				EditPart parent = getHost();
+				GraphicalEditPart parent = (GraphicalEditPart) getHost();
 				if (!(parent instanceof CompositeEditPart)) {
 					return;
 				}
 				if (crossFeedback == null) {
 					crossFeedback = new CrossFeedback(location);
 				}
+				if (targetFeedback == null) {
+					targetFeedback = FeedbackHelper.createTargetFeedback();
+				}
+				FeedbackHelper.updateTargetFeedback(parent, targetFeedback);
+				addFeedback(targetFeedback);
+				
 				Point center = FigureUtil.translateToRelative(parent, location);
 				crossFeedback.setTooltipText("(" + center.x + "," + center.y + ")");
 				crossFeedback.setCenter(location);
@@ -109,6 +121,9 @@ public class NullLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 		fbm.eraseFeedback(request);
 		if (crossFeedback != null && crossFeedback.getParent() != null) {
 			removeFeedback(crossFeedback);
+		}
+		if (targetFeedback != null && targetFeedback.getParent() != null) {
+			removeFeedback(targetFeedback);
 		}
 		super.eraseLayoutTargetFeedback(request);
 	}

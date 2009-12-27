@@ -8,53 +8,42 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.parts;
+package org.eclipse.e4.xwt.tools.ui.designer.editor.sash;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.e4.tools.ui.designer.policies.CompositeLayoutEditPolicy;
-import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
-import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
-import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.CompositeInfo;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.EditPolicy;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.NewResizableEditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreateRequest;
 
 /**
- * @author jin.liu(jin.liu@soyatec.com)
+ * 
+ * @author yyang <yves.yang@soyatec.com>
+ *
  */
-public class CompositeEditPart extends ControlEditPart {
-	static final int WIDTH = 20;
-
-	public CompositeEditPart(EObject model) {
-		super(model);
-	}
-
-	protected IVisualInfo createVisualInfo() {
-		Object widget = getMuiElement().getWidget();
-		return new CompositeInfo(widget, isRoot());
-	}
-
-	protected void createEditPolicies() {
-		super.createEditPolicies();
-		removeEditPolicy(EditPolicy.LAYOUT_ROLE);
-		installEditPolicy(EditPolicy.LAYOUT_ROLE,
-				new CompositeLayoutEditPolicy());
-	}
+public class SashFormChildResizableEditPolicy extends NewResizableEditPolicy {
+	static final int WIDTH = 10;
 	
+	public SashFormChildResizableEditPolicy(int directions,
+			boolean displayNonHandles) {
+		super(directions, displayNonHandles);
+	}
+
 	@Override
 	public boolean understandsRequest(Request request) {
 		if (request instanceof CreateRequest) {
-			IFigure figure = getFigure();
+			GraphicalEditPart editPart = (GraphicalEditPart) getHost();
+			IFigure figure = editPart.getFigure();
 			Rectangle bounds = figure.getBounds().getCopy();
 			figure.translateToAbsolute(bounds);
 					
 			CreateRequest createRequest = (CreateRequest) request;
 			Point location = createRequest.getLocation();
 						
-			SashFormEditPart sashFormEditPart = (SashFormEditPart) getParent();
+			SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart.getParent();
 			if (sashFormEditPart.isHorizontal()) {
 				if (location.x <= bounds.x + WIDTH || location.x > bounds.x + bounds.width - WIDTH) {
 					return false;
@@ -65,7 +54,7 @@ public class CompositeEditPart extends ControlEditPart {
 					return false;
 				}
 			}
-		}		
+		}
 		return super.understandsRequest(request);
 	}
 }

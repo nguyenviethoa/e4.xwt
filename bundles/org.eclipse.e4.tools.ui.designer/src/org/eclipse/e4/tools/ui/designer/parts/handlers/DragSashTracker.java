@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.parts.handlers;
 
-import org.eclipse.e4.tools.ui.designer.commands.ChangeWeightsCommand;
 import org.eclipse.e4.tools.ui.designer.parts.SashEditPart;
-import org.eclipse.e4.tools.ui.designer.parts.SashFormEditPart;
+import org.eclipse.e4.tools.ui.designer.sashform.ChangeWeightsCommand;
+import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
