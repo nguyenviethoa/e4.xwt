@@ -3,7 +3,7 @@
 	<Shell.layout>
 		<GridLayout numColumns="1" />
 	</Shell.layout>
-	<Button x:Style="SWT.CHECK" x:Name="theTextBox" text="{Binding ElementName=theTextBox, Path=selection}">
+	<Button x:Style="CHECK" x:Name="theTextBox" text="{Binding ElementName=theTextBox, Path=selection}">
 		<Button.layoutData>
 			<GridData horizontalAlignment="FILL"
 				grabExcessHorizontalSpace="true" />

@@ -2,8 +2,8 @@
 	xmlns:x="http://www.eclipse.org/xwt">
 	<Composite.layout>
 		<GridLayout numColumns="2"/>
-	</Composite.layout>	
-	
+	</Composite.layout>
+
 	<Composite.Resources>
 		<Style x:Key="any" TargetType="Button">
 			<!-- Property trigger -->
@@ -16,5 +16,5 @@
 			</Style.Triggers>
 		</Style>
 	</Composite.Resources>
-	<Button x:Style="SWT.CHECK" Text="Trigger"/>
+	<Button x:Style="CHECK" Text="Trigger"/>
 </Composite>

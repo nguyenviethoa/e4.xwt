@@ -3,13 +3,13 @@
 	<Shell.layout>
 		<GridLayout numColumns="1" />
 	</Shell.layout>
-	<Button x:Style="SWT.CHECK" x:Name="EnabledButton" Text="Enabled" enabled="true" visible="true">
+	<Button x:Style="CHECK" x:Name="EnabledButton" Text="Enabled" enabled="true" visible="true">
 		<Button.layoutData>
 			<GridData horizontalAlignment="FILL"
 				grabExcessHorizontalSpace="true" />
 		</Button.layoutData>
 	</Button>
-	<Button x:style="SWT.CHECK" Text="Selection" Name="SelectionButton">
+	<Button x:style="CHECK" Text="Selection" Name="SelectionButton">
 		<Button.layoutData>
 			<GridData horizontalAlignment="FILL"
 				grabExcessHorizontalSpace="true" />

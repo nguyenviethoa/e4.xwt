@@ -4,31 +4,31 @@
 		<GridLayout numColumns="2" />
 	</Shell.layout>
 	<!-- Selection property -->
-	<Button x:Style="SWT.CHECK" x:Name="StateBox" Text="Selection State"
+	<Button x:Style="CHECK" x:Name="StateBox" Text="Selection State"
 		enabled="true" visible="true">
 	</Button>
-	<Button x:style="SWT.CHECK" Text="{Binding ElementName=StateBox,Path=Text}"
+	<Button x:style="CHECK" Text="{Binding ElementName=StateBox,Path=Text}"
 		Selection="{Binding ElementName=StateBox, Path=Selection}">
 	</Button>
 	<!-- Text property -->
-	<Text x:Style="SWT.BORDER" name="Message" text="Text Binding">
+	<Text x:Style="BORDER" name="Message" text="Text Binding">
 	</Text>
-	<Text x:Style="SWT.BORDER" text="{Binding ElementName=Message, Path=text}"
+	<Text x:Style="BORDER" text="{Binding ElementName=Message, Path=text}"
 		foreground="{Binding ElementName=Message, Path=foreground}">
 	</Text>
 	<!-- Visible property -->
-	<Button x:style="SWT.CHECK" x:Name="VisibleBox" Text="Visible"
+	<Button x:style="CHECK" x:Name="VisibleBox" Text="Visible"
 		Selection="false">
 	</Button>
 	<Label text="Visible Binding" visible="{Binding ElementName=VisibleBox, Path=Selection}">
 	</Label>
 	<!-- Visible property bound to text -->
-	<Text x:Name="StateText" x:Style="SWT.BORDER" Text="true">
+	<Text x:Name="StateText" x:Style="BORDER" Text="true">
 	</Text>
 	<Button text="bound to text" visible="{Binding ElementName=StateText, Path=Text}">
 	</Button>
 	<!-- Enable property -->
-	<Button x:style="SWT.CHECK" x:Name="EnabledBox" Text="Enabled"
+	<Button x:style="CHECK" x:Name="EnabledBox" Text="Enabled"
 		Selection="false">
 	</Button>
 	<Button text="Push me"

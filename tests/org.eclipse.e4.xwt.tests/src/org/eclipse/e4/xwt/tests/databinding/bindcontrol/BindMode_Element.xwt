@@ -6,13 +6,13 @@
 	<!-- Mode:OneWay -->
 	<Label Text="Binding Mode:OneWay">
 	</Label>
-	<Text x:Style="SWT.BORDER" x:Name="theOneWayTextBox" Text="OneWay">
+	<Text x:Style="BORDER" x:Name="theOneWayTextBox" Text="OneWay">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
 				grabExcessHorizontalSpace="true" />
 		</Text.layoutData>
 	</Text>
-	<Text x:style="SWT.BORDER"> 
+	<Text x:style="BORDER">
 		<Text.text>
 			<Binding ElementName="theOneWayTextBox" Path="Text" Mode="OneWay"/>
 		</Text.text>
@@ -24,13 +24,13 @@
 	<!-- Mode:OneTime -->
 	<Label Text="Binding Mode:OneTime">
 	</Label>
-	<Text x:Style="SWT.BORDER" x:Name="theOneTimeTextBox" Text="OneTime">
+	<Text x:Style="BORDER" x:Name="theOneTimeTextBox" Text="OneTime">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
 				grabExcessHorizontalSpace="true" />
 		</Text.layoutData>
 	</Text>
-	<Text x:style="SWT.BORDER" >*
+	<Text x:style="BORDER" >*
 		<Text.text>
 			<Binding ElementName="theOneTimeTextBox" Path="Text" Mode="OneTime"/>
 		</Text.text>
@@ -42,13 +42,13 @@
 	<!-- Mode:TwoWay -->
 	<Label Text="Binding Mode:TwoWay">
 	</Label>
-	<Text x:Style="SWT.BORDER" x:Name="theTwoWayTextBox" Text="TwoWay">
+	<Text x:Style="BORDER" x:Name="theTwoWayTextBox" Text="TwoWay">
 		<Text.layoutData>
 			<GridData horizontalAlignment="FILL"
 				grabExcessHorizontalSpace="true" />
 		</Text.layoutData>
 	</Text>
-	<Text x:style="SWT.BORDER">
+	<Text x:style="BORDER">
 		<Text.text>
 			<Binding ElementName="theTwoWayTextBox" Path="Text" Mode="Mode=TwoWay}"/>
 		</Text.text>

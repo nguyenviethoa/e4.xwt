@@ -4,7 +4,7 @@
 	<Composite.layout>
 		<GridLayout numColumns="2" />
 	</Composite.layout>
-	<Text background="SWT.COLOR_BLUE" />
-	<Text x:style="SWT.MULTI" 
+	<Text background="COLOR_BLUE" />
+	<Text x:style="MULTI"
 		  text="Text{color:blue;background-color:red;}" ModifyEvent="updateCSSEngine" />
 </Composite>
