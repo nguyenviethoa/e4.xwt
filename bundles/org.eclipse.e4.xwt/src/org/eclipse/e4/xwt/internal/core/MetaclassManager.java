@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -19,8 +19,8 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.IMetaclassFactory;
 import org.eclipse.e4.xwt.IXWTLoader;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.utils.ClassLoaderUtil;
-import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.javabean.metadata.Metaclass;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 
@@ -32,10 +32,11 @@ public class MetaclassManager {
 	protected Collection<Class<?>> classRegister = new HashSet<Class<?>>();
 	protected MetaclassManager parent;
 	protected MetaclassService service;
-	
+
 	private IXWTLoader xwtLoader;
 
-	public MetaclassManager(MetaclassService service, MetaclassManager parent,IXWTLoader xwtLoader) {
+	public MetaclassManager(MetaclassService service, MetaclassManager parent,
+			IXWTLoader xwtLoader) {
 		this.parent = parent;
 		this.service = service;
 		this.xwtLoader = xwtLoader;
@@ -58,7 +59,7 @@ public class MetaclassManager {
 	public IMetaclass register(Class<?> javaClass) {
 		return register(javaClass, null);
 	}
-	
+
 	public IMetaclass register(Class<?> javaClass, IMetaclass superMetaclass) {
 		IMetaclass metaclass = getMetaclass(javaClass);
 		if (metaclass != null) {
@@ -76,7 +77,8 @@ public class MetaclassManager {
 		return thisMetaclass;
 	}
 
-	protected IMetaclass createMetaclass(Class<?> javaClass, IMetaclass superMetaclass) {
+	protected IMetaclass createMetaclass(Class<?> javaClass,
+			IMetaclass superMetaclass) {
 		if (service != null) {
 			IMetaclassFactory factory = service.findFactory(javaClass);
 			if (factory != null) {
@@ -84,45 +86,56 @@ public class MetaclassManager {
 			}
 		}
 		boolean lazyLoading = false; // TODO Get value from preference
-		return new Metaclass(javaClass, superMetaclass, lazyLoading,xwtLoader);
+		return new Metaclass(javaClass, superMetaclass, lazyLoading, xwtLoader);
 	}
 
-	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
+	public IMetaclass getMetaclass(ILoadingContext context, String name,
+			String namespace) {
 		IMetaclass metaclass = nameRegister.get(name);
 		if (metaclass != null) {
 			if (namespace == null || namespace.equals(IConstants.XWT_NAMESPACE)) {
-				return metaclass;				
+				return metaclass;
 			}
-			if (namespace != null && namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
-				String packageName = namespace.substring(IConstants.XAML_CLR_NAMESPACE_PROTO.length());
+			if (namespace != null
+					&& namespace
+							.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
+				String packageName = namespace
+						.substring(IConstants.XAML_CLR_NAMESPACE_PROTO.length());
 				int index = packageName.indexOf('=');
 				if (index != -1) {
 					packageName = packageName.substring(0, index);
 				}
-				// if using default package(null), use only name as class name, else use package.class as class name
-				String className = packageName.length() == 0 ? name : (packageName + "." + name);
+				// if using default package(null), use only name as class name,
+				// else use package.class as class name
+				String className = packageName.length() == 0 ? name
+						: (packageName + "." + name);
 				if (metaclass.getType().getName().equals(className)) {
 					return metaclass;
 				}
 			}
 		}
-		if (namespace == null || !namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
+		if (namespace == null
+				|| !namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
 			return null;
 		}
-		String packageName = namespace.substring(IConstants.XAML_CLR_NAMESPACE_PROTO.length());
+		String packageName = namespace
+				.substring(IConstants.XAML_CLR_NAMESPACE_PROTO.length());
 		int index = packageName.indexOf('=');
 		if (index != -1) {
 			packageName = packageName.substring(0, index);
 		}
-		// if using default package(null), use only name as class name, else use package.class as class name
-		String className = packageName.length() == 0 ? name : (packageName + "." + name);
+		// if using default package(null), use only name as class name, else use
+		// package.class as class name
+		String className = packageName.length() == 0 ? name : (packageName
+				+ "." + name);
 		// try {
 		Class<?> type = ClassLoaderUtil.loadClass(context, className);
 		if (type == null) {
-			LoggerManager.log(new IllegalStateException("Cannot load " + className));
+			throw new XWTException("Cannot load " + className);
 		}
 		metaclass = register(type, null);
-		// There is no need to mapping a CLR class, since the ClassLoader will be changed.
+		// There is no need to mapping a CLR class, since the ClassLoader will
+		// be changed.
 		nameRegister.remove(type.getSimpleName());
 		return metaclass;
 	}

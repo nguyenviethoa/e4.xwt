@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
-import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
 
 /**
  *
@@ -35,16 +35,16 @@ public interface IDynamicBinding extends IBinding {
 	boolean isSourceControl();
 
 	/**
-	 * Returns the name of the {@link DataBindingContext} associated with this binding
+	 * Returns the {@link BindingContext} associated with this binding
 	 *
-	 * @return the name of the {@link DataBindingContext}
+	 * @return the {@link BindingContext}
 	 */
-	String getContextName();
+	IBindingContext getBindingContext();
 
 	/**
-	 * Sets the name of the {@link DataBindingContext} this binding is associated with
+	 * Sets the {@link BindingContext} this binding is associated with
 	 *
-	 * @param contextName
+	 * @param dataBindingContext
 	 */
-	void setContextName(String contextName);
+	void setBindingContext(IBindingContext dataBindingContext);
 }

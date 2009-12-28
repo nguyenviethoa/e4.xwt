@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -176,7 +176,8 @@ public class ResourceLoader implements IVisualElementLoader {
 			doInject(targetObject, name, null);
 		}
 
-		protected void doInject(Object targetObject, String name, Object previousClr) {
+		protected void doInject(Object targetObject, String name,
+				Object previousClr) {
 			Class<?> filedType = targetObject.getClass();
 			if (clr != null && (previousClr != clr || previousClr == null)) {
 				for (Field field : clr.getClass().getDeclaredFields()) {
@@ -186,7 +187,8 @@ public class ResourceLoader implements IVisualElementLoader {
 							continue;
 						}
 						String annotationValue = annotation.value();
-						if (annotationValue == null || annotationValue.length() == 0) {
+						if (annotationValue == null
+								|| annotationValue.length() == 0) {
 							if (field.getName().equals(name)) {
 								field.setAccessible(true);
 								try {
@@ -195,14 +197,13 @@ public class ResourceLoader implements IVisualElementLoader {
 								} catch (Exception e) {
 								}
 							}
-						}
-						else if (annotationValue.equals(name)) {
+						} else if (annotationValue.equals(name)) {
 							field.setAccessible(true);
 							try {
 								field.set(clr, targetObject);
 								break;
 							} catch (Exception e) {
-							}							
+							}
 						}
 					}
 				}
@@ -335,7 +336,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			options.remove(RESOURCE_LOADER_PROPERTY);
 			ResourceDictionary resourceDictionary = (ResourceDictionary) options
 					.get(IXWTLoader.RESOURCE_DICTIONARY_PROPERTY);
-			
+
 			if (resourceDictionary != null) {
 				Object styles = resourceDictionary.get(Core.DEFAULT_STYLES_KEY);
 				if (styles != null) {
@@ -345,7 +346,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 
 			Object control = doCreate(parent, element, null, options);
-						
+
 			// get databinding messages and print into console view
 			if (dataBindingTrack != null) {
 				String dataBindingMessage = dataBindingTrack
@@ -358,15 +359,19 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (control instanceof Composite) {
 				((Composite) control).layout();
 			}
-			ILoadedAction loadedAction = (ILoadedAction) options.get(IXWTLoader.LOADED_ACTION);
+			ILoadedAction loadedAction = (ILoadedAction) options
+					.get(IXWTLoader.LOADED_ACTION);
 			if (loadedAction != null) {
 				loadedAction.onLoaded(control);
 			}
 			return control;
 		} catch (Exception e) {
-			LoggerManager.log(e);
+			if (e instanceof RuntimeException) {
+				throw ((RuntimeException) e);
+			}
+
+			throw new XWTException(e);
 		}
-		return null;
 	}
 
 	private Object doCreate(Object parent, Element element,
@@ -660,14 +665,14 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (targetObject instanceof IDynamicBinding) {
 				IDynamicBinding dynamicBinding = (IDynamicBinding) targetObject;
 				dynamicBinding.setControl(control);
-				dynamicBinding.setHost(loadData.getHost());				
+				dynamicBinding.setHost(loadData.getHost());
 			}
 			if (dico != null) {
 				UserData.setResources(control, dico);
 			}
 			if (dataContext != null) {
 				IProperty property = widgetMetaclass
-						.findProperty(IConstants.XAML_DATACONTEXT);
+						.findProperty(IConstants.XAML_DATA_CONTEXT);
 				if (property != null) {
 					property.setValue(UserData.getWidget(control), dataContext);
 				} else {
@@ -795,7 +800,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		try {
 			{
 				Attribute dataContextAttribute = element
-						.getAttribute(IConstants.XAML_DATACONTEXT);
+						.getAttribute(IConstants.XAML_DATA_CONTEXT);
 				if (dataContextAttribute != null) {
 					Widget composite = (Widget) swtObject;
 					DocumentObject documentObject = dataContextAttribute
@@ -862,10 +867,10 @@ public class ResourceLoader implements IVisualElementLoader {
 		// x:DataContext
 		{
 			Attribute dataContextAttribute = element
-					.getAttribute(IConstants.XAML_DATACONTEXT);
+					.getAttribute(IConstants.XAML_DATA_CONTEXT);
 			if (dataContextAttribute != null) {
 				IProperty property = metaclass
-						.findProperty(IConstants.XAML_DATACONTEXT);
+						.findProperty(IConstants.XAML_DATA_CONTEXT);
 				Widget composite = (Widget) UserData.getWidget(targetObject);
 				DocumentObject documentObject = dataContextAttribute
 						.getChildren()[0];
@@ -898,7 +903,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (nameAttr != null && UserData.getWidget(targetObject) != null) {
 			String value = nameAttr.getContent();
 			loadData.inject(targetObject, value);
-			
+
 			nameScoped.addNamedObject(value, targetObject);
 			done.add(IConstants.XAML_X_NAME);
 		}
@@ -928,10 +933,11 @@ public class ResourceLoader implements IVisualElementLoader {
 						continue; // done before
 					} else if (IConstants.XAML_X_NAME
 							.equalsIgnoreCase(attrName)) {
-						nameScoped.addNamedObject(element.getAttribute(namespace,
-								attrName).getContent(), targetObject);
+						nameScoped
+								.addNamedObject(element.getAttribute(namespace,
+										attrName).getContent(), targetObject);
 						done.add(attrName);
-					} else if (IConstants.XAML_DATACONTEXT
+					} else if (IConstants.XAML_DATA_CONTEXT
 							.equalsIgnoreCase(attrName)) {
 						continue; // done before
 					} else if (IConstants.XAML_X_ARRAY
@@ -996,8 +1002,8 @@ public class ResourceLoader implements IVisualElementLoader {
 							attrName);
 					Widget widget = UserData.getWidget(loadData
 							.getCurrentWidget());
-					namespaceHandler.handleAttribute(widget, targetObject, attrName,
-							attribute.getContent());
+					namespaceHandler.handleAttribute(widget, targetObject,
+							attrName, attribute.getContent());
 				}
 			}
 		}
@@ -1289,8 +1295,8 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 			}
 		}
-		
-		if (propertyName.equals(IConstants.XAML_DATACONTEXT)) {
+
+		if (propertyName.equals(IConstants.XAML_DATA_CONTEXT)) {
 			property = null;
 		}
 		if (IConstants.XAML_COMMAND.equalsIgnoreCase(propertyName)
@@ -1311,199 +1317,207 @@ public class ResourceLoader implements IVisualElementLoader {
 					.getContent());
 			return;
 		}
-		
-		try {
-			String contentValue = attribute.getContent();
-			if ("MenuItem".equalsIgnoreCase(element.getName())
-					&& "Text".equalsIgnoreCase(attrName)) {
-				Attribute attributeAccelerator = element
-						.getAttribute("Accelerator");
-				if (attributeAccelerator != null) {
-					contentValue = contentValue
-							+ '\t'
-							+ getContentValue(attributeAccelerator.getContent());
-				}
-			}
 
-			if (contentValue != null
-					&& "Accelerator".equalsIgnoreCase(attrName)) {
-				contentValue = XWTMaps.getCombAccelerator(contentValue);
-				if (contentValue.contains("'")) {
-					contentValue = removeSubString(contentValue, "'");
-				}
+		String contentValue = attribute.getContent();
+		if ("MenuItem".equalsIgnoreCase(element.getName())
+				&& "Text".equalsIgnoreCase(attrName)) {
+			Attribute attributeAccelerator = element
+					.getAttribute("Accelerator");
+			if (attributeAccelerator != null) {
+				contentValue = contentValue
+						+ '\t'
+						+ getContentValue(attributeAccelerator.getContent());
 			}
-			if (contentValue != null
-					&& (Image.class.isAssignableFrom(property.getType()))) {
-				contentValue = getImagePath(attribute, contentValue);
-			}
-			if (contentValue != null
-					&& (URL.class.isAssignableFrom(property.getType()))) {
-				contentValue = getSourceURL(contentValue);
-			}
-			Object value = null;
-			DocumentObject[] children = attribute.getChildren();
-			boolean usingExistingValue = false;
-			if (contentValue == null) {
-				Class<?> type = property.getType();
-				if (Collection.class.isAssignableFrom(type)) {
-					value = getCollectionProperty(type, target, attribute,
-							attrName);
-				} else {
-					Object directTarget = null;
-					if (TableViewerColumn.class.isAssignableFrom(type)
-							&& attrName.equalsIgnoreCase("columns")) {
-						children = DocumentObjectSorter.sortWithAttr(children,
-								"Index").toArray(
-								new DocumentObject[children.length]);
-					}
-					else {
-						try {
-							Object propertyValue = property.getValue(target);
-							if (UserData.getWidget(propertyValue) != null) {
-								directTarget = propertyValue;
-								// use the existing property value as parent, not need to add the constraint
-								if (type != Table.class) {
-									type = null;
-									usingExistingValue = true;
-								}
-							}
-						} catch (Exception e) {
-						}
-					}
-					if (directTarget == null) {
-						directTarget = target;
-					}
-					
-					for (DocumentObject child : children) {
-						String name = child.getName();
-						String ns = child.getNamespace();
-						if (name.equalsIgnoreCase(IConstants.XAML_X_STATIC)
-								&& ns.equals(IConstants.XWT_X_NAMESPACE)) {
-							value = getStaticValue(child);
-						} else if (name
-								.equalsIgnoreCase(IConstants.XAML_STATICRESOURCES)
-								&& ns.equals(IConstants.XWT_NAMESPACE)) {
-							String key = child.getContent();
-							value = new StaticResourceBinding(loadData
-									.getCurrentWidget(), key);
-						} else if ((IConstants.XWT_X_NAMESPACE.equals(ns) && IConstants.XAML_X_ARRAY
-								.equalsIgnoreCase(name))) {
-							value = getArrayProperty(property.getType(),
-									directTarget, child, name);
-						} else if (property.getType().isArray()) {
-							value = getArrayProperty(property.getType(),
-									directTarget, attribute, name);
-							break;
-						} else if (isAssignableFrom(element, TableColumn.class)
-								&& isAssignableFrom(child, TableEditor.class)) {
-							value = child;
-						} else if (TableViewerColumn.class
-								.isAssignableFrom(property.getType())
-								&& attribute.getContent() != null) {
-							value = attribute.getContent();
-						} else {
-							value = doCreate(directTarget, (Element) child, type,
-									EMPTY_MAP);
-							if (value == null && type != null && !(type == Table.class && "TableColumn".equals(child.getName()) && Table.class.isInstance(directTarget))) {
-								throw new XWTException(child.getName() + " cannot be a content of " + type.getName() + " " + target.getClass().getName() + "." + property.getName());
-							}
-							if (value instanceof IDynamicBinding) {
-								((IDynamicBinding) value).setType(attrName);
-							}
-						}
-					}
-				}
-			}
-			if (contentValue != null && value == null
-					&& !IConstants.XAML_COMMAND.equalsIgnoreCase(propertyName)) {
-				if (property.getType().isInstance(Class.class)) {
-					int index = contentValue.lastIndexOf(':');
-					if (index != -1) {
-						String prefix = contentValue.substring(0, index);
-						contentValue = findNamespace(attribute, prefix)
-								+ contentValue.substring(index);
-					}
-				}
-				value = loader.convertFrom(property.getType(), contentValue);
-			}
-			if (!usingExistingValue) {
-				if (value != null) {
-					Class<?> propertyType = property.getType();
-					if (!propertyType.isAssignableFrom(value.getClass())
-							|| (value instanceof IBinding && !(IBinding.class
-									.isAssignableFrom(propertyType)))) {
-						Object orginalValue = value;
-						IConverter converter = loader.findConvertor(value
-								.getClass(), propertyType);
-						if (converter != null) {
-							value = converter.convert(value);
-							if (value != null
-									&& orginalValue instanceof IBinding
-									&& !propertyType.isAssignableFrom(value
-											.getClass())) {
-								converter = loader.findConvertor(value.getClass(),
-										propertyType);
-								if (converter != null) {
-									value = converter.convert(value);
-								} else {
-									LoggerManager.log(new XWTException("Convertor "
-											+ value.getClass().getSimpleName()
-											+ "->" + propertyType.getSimpleName()
-											+ " is not found"));
-								}
-							}
-						} else {
-							LoggerManager.log(new XWTException("Convertor "
-									+ value.getClass().getSimpleName() + "->"
-									+ propertyType.getSimpleName()
-									+ " is not found"));
-						}
-					}
-					if (isAttached) {
-						UserData.setLocalData(target, property, value);
-					}
-					else {
-						property.setValue(target, value);
-					}
-				} else {
-					if (value == null) {
-						value = property.getValue(target);
-					}
-					if (value != null) {
-						// create children.
-						for (DocumentObject child : children) {
-							String name = child.getName();
-							String ns = child.getNamespace();
-							if (!IConstants.XWT_X_NAMESPACE.equals(ns)
-									|| !IConstants.XAML_X_ARRAY
-											.equalsIgnoreCase(name)) {
-								Class<?> type = property.getType();
-								if (!Collection.class.isAssignableFrom(type)) {
-									doCreate(value, (Element) child, null,
-											EMPTY_MAP);
-								}
-							}
-						}
-					}
-				}
-			}
+		}
 
-			if (attribute.attributeNames(IConstants.XWT_NAMESPACE).length > 0) {
-				IMetaclass propertyMetaclass = loader.getMetaclass(property
-						.getType());
+		if (contentValue != null
+				&& "Accelerator".equalsIgnoreCase(attrName)) {
+			contentValue = XWTMaps.getCombAccelerator(contentValue);
+			if (contentValue.contains("'")) {
+				contentValue = removeSubString(contentValue, "'");
+			}
+		}
+		if (contentValue != null
+				&& (Image.class.isAssignableFrom(property.getType()))) {
+			contentValue = getImagePath(attribute, contentValue);
+		}
+		if (contentValue != null
+				&& (URL.class.isAssignableFrom(property.getType()))) {
+			contentValue = getSourceURL(contentValue);
+		}
+		Object value = null;
+		DocumentObject[] children = attribute.getChildren();
+		boolean usingExistingValue = false;
+		if (contentValue == null) {
+			Class<?> type = property.getType();
+			if (Collection.class.isAssignableFrom(type)) {
+				value = getCollectionProperty(type, target, attribute,
+						attrName);
+			} else {
+				Object directTarget = null;
+				if (TableViewerColumn.class.isAssignableFrom(type)
+						&& attrName.equalsIgnoreCase("columns")) {
+					children = DocumentObjectSorter.sortWithAttr(children,
+							"Index").toArray(
+							new DocumentObject[children.length]);
+				} else {
+					try {
+						Object propertyValue = property.getValue(target);
+						if (UserData.getWidget(propertyValue) != null) {
+							directTarget = propertyValue;
+							// use the existing property value as parent,
+							// not need to add the constraint
+							if (type != Table.class) {
+								type = null;
+								usingExistingValue = true;
+							}
+						}
+					} catch (Exception e) {
+					}
+				}
+				if (directTarget == null) {
+					directTarget = target;
+				}
+
+				for (DocumentObject child : children) {
+					String name = child.getName();
+					String ns = child.getNamespace();
+					if (name.equalsIgnoreCase(IConstants.XAML_X_STATIC)
+							&& ns.equals(IConstants.XWT_X_NAMESPACE)) {
+						value = getStaticValue(child);
+					} else if (name
+							.equalsIgnoreCase(IConstants.XAML_STATICRESOURCES)
+							&& ns.equals(IConstants.XWT_NAMESPACE)) {
+						String key = child.getContent();
+						value = new StaticResourceBinding(loadData
+								.getCurrentWidget(), key);
+					} else if ((IConstants.XWT_X_NAMESPACE.equals(ns) && IConstants.XAML_X_ARRAY
+							.equalsIgnoreCase(name))) {
+						value = getArrayProperty(property.getType(),
+								directTarget, child, name);
+					} else if (property.getType().isArray()) {
+						value = getArrayProperty(property.getType(),
+								directTarget, attribute, name);
+						break;
+					} else if (isAssignableFrom(element, TableColumn.class)
+							&& isAssignableFrom(child, TableEditor.class)) {
+						value = child;
+					} else if (TableViewerColumn.class
+							.isAssignableFrom(property.getType())
+							&& attribute.getContent() != null) {
+						value = attribute.getContent();
+					} else {
+						value = doCreate(directTarget, (Element) child,
+								type, EMPTY_MAP);
+						if (value == null
+								&& type != null
+								&& !(type == Table.class
+										&& "TableColumn".equals(child
+												.getName()) && Table.class
+										.isInstance(directTarget))) {
+							throw new XWTException(child.getName()
+									+ " cannot be a content of "
+									+ type.getName() + " "
+									+ target.getClass().getName() + "."
+									+ property.getName());
+						}
+						if (value instanceof IDynamicBinding) {
+							((IDynamicBinding) value).setType(attrName);
+						}
+					}
+				}
+			}
+		}
+		if (contentValue != null && value == null
+				&& !IConstants.XAML_COMMAND.equalsIgnoreCase(propertyName)) {
+			if (property.getType().isInstance(Class.class)) {
+				int index = contentValue.lastIndexOf(':');
+				if (index != -1) {
+					String prefix = contentValue.substring(0, index);
+					contentValue = findNamespace(attribute, prefix)
+							+ contentValue.substring(index);
+				}
+			}
+			value = loader.convertFrom(property.getType(), contentValue);
+		}
+		if (!usingExistingValue) {
+			if (value != null) {
+				Class<?> propertyType = property.getType();
+				if (!propertyType.isAssignableFrom(value.getClass())
+						|| (value instanceof IBinding && !(IBinding.class
+								.isAssignableFrom(propertyType)))) {
+					Object orginalValue = value;
+					IConverter converter = loader.findConvertor(value
+							.getClass(), propertyType);
+					if (converter != null) {
+						value = converter.convert(value);
+						if (value != null
+								&& orginalValue instanceof IBinding
+								&& !propertyType.isAssignableFrom(value
+										.getClass())) {
+							converter = loader.findConvertor(value
+									.getClass(), propertyType);
+							if (converter != null) {
+								value = converter.convert(value);
+							} else {
+								LoggerManager.log(new XWTException(
+										"Convertor "
+												+ value.getClass()
+														.getSimpleName()
+												+ "->"
+												+ propertyType
+														.getSimpleName()
+												+ " is not found"));
+							}
+						}
+					} else {
+						LoggerManager.log(new XWTException("Convertor "
+								+ value.getClass().getSimpleName() + "->"
+								+ propertyType.getSimpleName()
+								+ " is not found"));
+					}
+				}
+				if (isAttached) {
+					UserData.setLocalData(target, property, value);
+				} else {
+					property.setValue(target, value);
+				}
+			} else {
 				if (value == null) {
 					value = property.getValue(target);
 				}
 				if (value != null) {
-					List<String> delayedAttributes = new ArrayList<String>();
-					init(propertyMetaclass, value, attribute, delayedAttributes);
-					for (String delayed : delayedAttributes) {
-						initAttribute(metaclass, target, element, null, delayed);
+					// create children.
+					for (DocumentObject child : children) {
+						String name = child.getName();
+						String ns = child.getNamespace();
+						if (!IConstants.XWT_X_NAMESPACE.equals(ns)
+								|| !IConstants.XAML_X_ARRAY
+										.equalsIgnoreCase(name)) {
+							Class<?> type = property.getType();
+							if (!Collection.class.isAssignableFrom(type)) {
+								doCreate(value, (Element) child, null,
+										EMPTY_MAP);
+							}
+						}
 					}
 				}
 			}
-		} catch (Exception e) {
-			throw new XWTException(e);
+		}
+
+		if (attribute.attributeNames(IConstants.XWT_NAMESPACE).length > 0) {
+			IMetaclass propertyMetaclass = loader.getMetaclass(property
+					.getType());
+			if (value == null) {
+				value = property.getValue(target);
+			}
+			if (value != null) {
+				List<String> delayedAttributes = new ArrayList<String>();
+				init(propertyMetaclass, value, attribute, delayedAttributes);
+				for (String delayed : delayedAttributes) {
+					initAttribute(metaclass, target, element, null, delayed);
+				}
+			}
 		}
 	}
 
@@ -1520,8 +1534,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				contentValue = "/" + contentValue;
 			}
 			ILoadingContext loadingContext = context.getLoadingContext();
-			URL resource = loadingContext.getResource(
-					contentValue);
+			URL resource = loadingContext.getResource(contentValue);
 			if (resource == null) {
 				try {
 					resource = new URL(context.getResourcePath() + contentValue);
@@ -1585,8 +1598,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				contentValue = "/" + contentValue;
 			}
 			ILoadingContext loadingContext = context.getLoadingContext();
-			URL resource = loadingContext.getResource(
-					contentValue);
+			URL resource = loadingContext.getResource(contentValue);
 			if (resource == null) {
 				URL resourcePath = context.getResourcePath();
 				String fPath = resourcePath.toString();

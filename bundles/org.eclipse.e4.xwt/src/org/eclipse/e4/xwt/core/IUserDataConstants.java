@@ -15,7 +15,7 @@ public interface IUserDataConstants {
 	public static String XWT_RESOURCES_KEY = "Resources";
 	public static String XWT_STYLE_KEY = "Style";
 	public static String XWT_DATACONTEXT_KEY = "DataContext";
-	public static String XWT_DEFAULT_DATABINDINGCONTEXT_KEY = "DefaultDataBindingContext";
+	public static String XWT_BINDING_CONTEXT_KEY = "DefaultDataBindingContext";
 	public static String XWT_TRIGGERS_KEY = "Triggers";
 	public static String XWT_NAME_KEY = "Name";
 	public static String XWT_PARENT_KEY = "Parent";
@@ -25,5 +25,4 @@ public interface IUserDataConstants {
 	public static String XWT_CLR_KEY = "clr";
 
 	public static String XWT_USER_DATA_KEY = "__XWT.UserData";
-	public static String XWT_DEFAULT = "default";
 }

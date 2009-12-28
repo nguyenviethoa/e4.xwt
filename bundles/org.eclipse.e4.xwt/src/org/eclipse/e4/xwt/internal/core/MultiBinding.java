@@ -10,10 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.core;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataBindingInfo;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IMultiValueConverter;
@@ -23,7 +21,7 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.converters.StringMultiValueConerter;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
 import org.eclipse.e4.xwt.databinding.AggregateObservableValue;
-import org.eclipse.e4.xwt.databinding.BindingContext;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.ModelUtils;
@@ -36,7 +34,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Support the aggregation of data binding
- *
+ * 
  * @author yyang (yves.yang@soyatec.com)
  */
 public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
@@ -52,12 +50,14 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 	private BindingExpressionPath targetPropertySegments;
 
 	/**
-	 * <p>Default</p>
-	 *
+	 * <p>
+	 * Default
+	 * </p>
+	 * 
 	 */
 	private UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.Default;
 
-	private IBindingContext bindingContext;
+	private BindingGate bindingGate;
 
 	public UpdateSourceTrigger getUpdateSourceTrigger() {
 		return updateSourceTrigger;
@@ -86,7 +86,7 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		this.valueConverter = valueConverter;
 	}
 
-	public boolean isSourceProeprtyReadOnly() {
+	public boolean isSourcePropertyReadOnly() {
 		for (Binding binding : bindings) {
 			if (binding.isSourceProeprtyReadOnly()) {
 				return true;
@@ -104,14 +104,15 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 				IObservable observable = bindings[i].getObservableSource();
 				if (observable instanceof IObservableValue) {
 					values[i] = (IObservableValue) observable;
-				}
-				else {
-					LoggerManager.log("Binding expression has a problem with " + bindings[i].getPath());
+				} else {
+					LoggerManager.log("Binding expression has a problem with "
+							+ bindings[i].getPath());
 					return null;
 				}
 			}
 
-			observableValue = new AggregateObservableValue(values, getConverter());
+			observableValue = new AggregateObservableValue(values,
+					getConverter());
 		}
 
 		IObservableValue observableWidget = getObservableWidget();
@@ -119,44 +120,49 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		IDataProvider dataProvider = getDataProvider();
 		if (dataProvider != null) {
 
-			IBindingContext bindingContext = getBindingContext();
-			if (bindingContext != null) {
+			BindingGate bindingGate = getBindingGate();
+			if (bindingGate != null) {
 				Object target = getControl();
-				if (target instanceof Text && getType().equalsIgnoreCase("text")) {
-					if (isSourceProeprtyReadOnly()) {
+				if (target instanceof Text
+						&& getType().equalsIgnoreCase("text")) {
+					if (isSourcePropertyReadOnly()) {
 						Text text = (Text) target;
 						text.setEditable(false);
-				}
-				} else if (target instanceof Button && getType().equalsIgnoreCase("selection")) {
-					if (isSourceProeprtyReadOnly()) {
+					}
+				} else if (target instanceof Button
+						&& getType().equalsIgnoreCase("selection")) {
+					if (isSourcePropertyReadOnly()) {
 						Button button = (Button) target;
 						button.setEnabled(false);
 					}
-				} else if ((target instanceof Combo || target instanceof CCombo) && getType().equalsIgnoreCase("text")) {
-					if (isSourceProeprtyReadOnly()) {
+				} else if ((target instanceof Combo || target instanceof CCombo)
+						&& getType().equalsIgnoreCase("text")) {
+					if (isSourcePropertyReadOnly()) {
 						Control control = (Control) target;
 						control.setEnabled(false);
 					}
-				} else if (target instanceof MenuItem && getType().equalsIgnoreCase("selection")) {
-					if (isSourceProeprtyReadOnly()) {
+				} else if (target instanceof MenuItem
+						&& getType().equalsIgnoreCase("selection")) {
+					if (isSourcePropertyReadOnly()) {
 						MenuItem menuItem = (MenuItem) target;
 						menuItem.setEnabled(false);
 					}
 				}
 			}
-			bindingContext.bind(observableValue, observableWidget, this);
+			bindingGate.bind(observableValue, observableWidget, this);
 		}
 
 		return observableValue.getValue();
 	}
 
-	private IBindingContext getBindingContext() {
-		if (this.bindingContext == null){
-			DataBindingContext dataBindingContext = XWT.getDataBindingContext(getControl(), getContextName());
-			this.bindingContext = new BindingContext(dataBindingContext);
+	private BindingGate getBindingGate() {
+		if (this.bindingGate == null) {
+			IBindingContext dataBindingContext = XWT
+					.getBindingContext(getControl());
+			this.bindingGate = new BindingGate(dataBindingContext);
 		}
 
-		return this.bindingContext;
+		return this.bindingGate;
 	}
 
 	public IObservableValue getObservableWidget() {

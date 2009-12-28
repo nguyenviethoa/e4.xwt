@@ -218,11 +218,14 @@ public abstract class AbstractMetaclass implements IMetaclass {
 		if (property == null) {
 			try {
 				Method getter = DynamicProperty.createGetter(type, name);
+				if (getter == null) {
+					return null;
+				}
 				Class<?> propertyType = getter.getReturnType();
 				Method setter = DynamicProperty.createSetter(type,
 						propertyType, name);
 				return new DynamicProperty(propertyType, setter, getter, name);
-			} catch (Exception e) {
+			} catch (NoSuchMethodException e) {
 				return null;
 			}
 
@@ -231,7 +234,7 @@ public abstract class AbstractMetaclass implements IMetaclass {
 	}
 
 	protected String normalize(String name) {
-		return name.toLowerCase();
+		return name == null ? name : name.toLowerCase();
 	}
 
 	/*
@@ -369,7 +372,8 @@ public abstract class AbstractMetaclass implements IMetaclass {
 	private void updateContainment(Object parent, Object childElement)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
-		if (childElement != null && parent != null && !(parent instanceof Widget)) {
+		if (childElement != null && parent != null
+				&& !(parent instanceof Widget)) {
 			//
 			// Add to default property identified by the type
 			//
@@ -405,10 +409,11 @@ public abstract class AbstractMetaclass implements IMetaclass {
 						builder.append(property.getName());
 						count++;
 					}
-				}				
-				throw new XWTException("Class has more containment properties: "); 
+				}
+				throw new XWTException(
+						"Class has more containment properties: ");
 			}
-			
+
 			if (count == 0) {
 				for (IProperty property : properties) {
 					Class<?> propertyType = property.getType();

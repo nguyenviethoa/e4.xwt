@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.IObservable;
@@ -26,6 +25,8 @@ import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.core.TriggerBase;
+import org.eclipse.e4.xwt.databinding.BindingContext;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -252,6 +253,14 @@ public interface IXWTLoader {
 	 * @return
 	 */
 	void setDataContext(Object widget, Object dataContext);
+
+	/**
+	 * Changes the default data context of given element
+	 * 
+	 * @param widget
+	 * @param dataBindingContext
+	 */
+	void setDataBindingContext(Object widget, Object dataBindingContext);
 
 	/**
 	 * Change the Triggers of given element
@@ -643,11 +652,11 @@ public interface IXWTLoader {
 	public Object restoreProfile();
 
 	/**
-	 * Returns the {@link DataBindingContext} of the element
+	 * Returns the {@link BindingContext} of the element
 	 * 
 	 * @param element
 	 * @param contextName
 	 * @return
 	 */
-	DataBindingContext getDataBindingContext(Object element, String contextName);
+	IBindingContext getBindingContext(Object element);
 }

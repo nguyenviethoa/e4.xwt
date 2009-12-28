@@ -15,13 +15,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IObservableValueListener;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.TriggerBase;
+import org.eclipse.e4.xwt.databinding.BindingContext;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -395,6 +396,10 @@ public class UserData {
 		return findData(widget, IUserDataConstants.XWT_DATACONTEXT_KEY);
 	}
 
+	public static IBindingContext getBindingContext(Object widget) {
+		return (IBindingContext)findData(widget, IUserDataConstants.XWT_BINDING_CONTEXT_KEY);
+	}
+
 	public static TriggerBase[] getTriggers(Object element) {
 		Widget widget = getWidget(element);
 		if (widget == null) {
@@ -448,6 +453,13 @@ public class UserData {
 			}
 		}
 		return null;
+	}
+
+	public static void setBindingContext(Object widget,
+			Object bindingContext) {
+		setLocalData(widget,
+				IUserDataConstants.XWT_BINDING_CONTEXT_KEY,
+				bindingContext);
 	}
 
 	public static void setDataContext(Object widget, Object dataContext) {
@@ -672,10 +684,12 @@ public class UserData {
 		// throw an exception or log a message?
 	}
 
-	public static DataBindingContext createDataBinding(Widget host) {
-		final DataBindingContext dataBindingContext = new DataBindingContext(
-				XWT.getRealm());
-		host.addDisposeListener(new DisposeListener() {
+	public static IBindingContext createBindingContext(Object host) {
+		Widget widget = getWidget(host);
+		final IBindingContext dataBindingContext = new BindingContext(
+				widget);
+		dataBindingContext.setRealm(XWT.getRealm());
+		widget.addDisposeListener(new DisposeListener() {
 
 			public void widgetDisposed(DisposeEvent e) {
 				dataBindingContext.dispose();
@@ -683,9 +697,10 @@ public class UserData {
 		});
 
 		UserData.setLocalData(host,
-				IUserDataConstants.XWT_DEFAULT_DATABINDINGCONTEXT_KEY,
+				IUserDataConstants.XWT_BINDING_CONTEXT_KEY,
 				dataBindingContext);
 
 		return dataBindingContext;
 	}
+
 }

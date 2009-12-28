@@ -11,14 +11,12 @@
 
 package org.eclipse.e4.xwt.databinding;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.core.Binding;
+import org.eclipse.e4.xwt.internal.core.BindingGate;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 
@@ -76,10 +74,9 @@ public class ControlDataBinding extends AbstractDataBinding {
 			return source;
 		}
 
-		DataBindingContext dataBindingContext = XWT.getDataBindingContext(
-				getControl(), getContextName());
-		IBindingContext bindingContext = new BindingContext(dataBindingContext);
-		bindingContext.bind(sourceWidget, targetWidget, this);
+		IBindingContext dataBindingContext = getDataBindingContext();
+		BindingGate bindingGate = new BindingGate(dataBindingContext);
+		bindingGate.bind(sourceWidget, targetWidget, this);
 		if (sourceWidget != null) {
 			Object value = sourceWidget.getValue();
 			IValueConverter converter = getConverter();
@@ -90,7 +87,7 @@ public class ControlDataBinding extends AbstractDataBinding {
 		}
 		return source;
 	}
-
+	
 	/**
 	 * 
 	 * @return

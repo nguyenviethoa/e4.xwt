@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
@@ -123,7 +123,7 @@ public class ScopeManager {
 		return scope.getObservableList(UserData.getWidget(control), data,
 				propertyName);
 	}
-	
+
 	static class ObservableValueBuilder {
 		private Widget widget;
 		private Object control;
@@ -145,15 +145,22 @@ public class ScopeManager {
 			this.observeKind = observeKind;
 		}
 
-		public IObservable observe(Object targevalue) {
-			this.value = targevalue;
+		public IObservable observe(Object targetValue) {
+			this.value = targetValue;
 			widget = UserData.getWidget(control);
 			ScopeKeeper scopeManager = UserData.findScopeKeeper(widget);
 			if (scopeManager == null) {
 				return null;
 			}
-			IObservable observable = scopeManager.getObservable(widget,
-					value, expressionPath.getStripedPath());
+
+			if (expressionPath.getFullPath() == null) {
+				if (targetValue instanceof IObservable) {
+					return (IObservable) targetValue;
+				}
+			}
+
+			IObservable observable = scopeManager.getObservable(widget, value,
+					expressionPath.getStripedPath());
 			if (observable != null) {
 				return observable;
 			}
@@ -184,9 +191,17 @@ public class ScopeManager {
 					}
 					observable = resolveObservablevalue(scopeManager,
 							dataValue, type, segment);
+					// Hasan: As long as this is already an IObservableValue we
+					// should look deep into the chain
+					while (observable instanceof IObservableValue
+							&& ((IObservableValue) observable).getValue() instanceof IObservable) {
+						observable = (IObservable) ((IObservableValue) observable)
+								.getValue();
+					}
 					dataValue = observable;
-					if (i != size -1) {
-						type = dataProvider.getModelService().toModelType(dataValue);
+					if (i != size - 1) {
+						type = dataProvider.getModelService().toModelType(
+								dataValue);
 						if (type != null) {
 							dataProvider = XWT.findDataProvider(type);
 						}
@@ -208,7 +223,8 @@ public class ScopeManager {
 					if (index != -1) {
 						String className = path.substring(0, index);
 						segment = path.substring(index + 1);
-						type = dataProvider.getModelService().loadModelType(className);
+						type = dataProvider.getModelService().loadModelType(
+								className);
 						if (type == null) {
 							throw new XWTException("Class " + className
 									+ " not found");
@@ -246,7 +262,10 @@ public class ScopeManager {
 					throw e;
 				}
 				throw new XWTException(" Property " + segment
-						+ " is not found in " + expressionPath.getFullPath()); // maybe to raise an
+						+ " is not found in " + expressionPath.getFullPath()); // maybe
+																				// to
+																				// raise
+																				// an
 				// exception
 			}
 			return segmentValue;
@@ -267,7 +286,8 @@ public class ScopeManager {
 						propertyName, updateSourceTrigger, observeKind);
 			}
 
-			if (observable == null && dataProvider instanceof IObjectDataProvider) {
+			if (observable == null
+					&& dataProvider instanceof IObjectDataProvider) {
 				IMetaclass mateclass = XWT.getMetaclass(type);
 				IProperty property = mateclass.findProperty(propertyName);
 				if (property instanceof EventProperty) {
@@ -279,7 +299,8 @@ public class ScopeManager {
 			if (observable != null) {
 				return observable;
 			}
-			observable = dataProvider.observe(object, propertyName, type, observeKind);
+			observable = dataProvider.observe(object, propertyName, type,
+					observeKind);
 			if (observable instanceof IObservableValue) {
 				IObservableValue activeValue = (IObservableValue) observable;
 
@@ -288,9 +309,10 @@ public class ScopeManager {
 					// TODO maybe need to moved in IDataProvider
 					Class<?> classType = (Class<?>) valueType;
 					if (valueType != null && classType.isArray()) {
-						// Create a IObserableValue to handle the connection between
+						// Create a IObserableValue to handle the connection
+						// between
 						// Array and List
-	
+
 						Object values = dataProvider.getData(propertyName);
 						ArrayList<Object> array = new ArrayList<Object>();
 						if (values != null) {
@@ -298,9 +320,10 @@ public class ScopeManager {
 								array.add(value);
 							}
 						}
-						WritableList writableList = new WritableList(
-								XWT.getRealm(), array, classType.getComponentType());
-	
+						WritableList writableList = new WritableList(XWT
+								.getRealm(), array, classType
+								.getComponentType());
+
 						return new ListToArrayObservableValue(writableList,
 								activeValue);
 					}
@@ -309,15 +332,16 @@ public class ScopeManager {
 			return observable;
 		}
 	}
-	
-	
-	static class ObservableFactory extends ObservableValueBuilder implements IObservableFactory {
 
-		public ObservableFactory(Object control, BindingExpressionPath expressionPath, 
+	static class ObservableFactory extends ObservableValueBuilder implements
+			IObservableFactory {
+
+		public ObservableFactory(Object control,
+				BindingExpressionPath expressionPath,
 				UpdateSourceTrigger updateSourceTrigger) {
 			super(control, null, expressionPath, updateSourceTrigger, AUTO);
 		}
-				
+
 		public IObservable createObservable(Object target) {
 			return observe(target);
 		}
@@ -325,7 +349,8 @@ public class ScopeManager {
 
 	public static IObservableValue observeValue(Object control, Object value,
 			String fullPath, UpdateSourceTrigger updateSourceTrigger) {
-		return observeValue(control, value, new BindingExpressionPath(fullPath), updateSourceTrigger);
+		return observeValue(control, value,
+				new BindingExpressionPath(fullPath), updateSourceTrigger);
 	}
 
 	public static IObservableValue observeValue(Object control, Object value,
@@ -349,10 +374,10 @@ public class ScopeManager {
 	public static IObservableFactory observableFactory(Object control,
 			BindingExpressionPath expressionPath,
 			UpdateSourceTrigger updateSourceTrigger) {
-		return new ObservableFactory(control, expressionPath, updateSourceTrigger);
+		return new ObservableFactory(control, expressionPath,
+				updateSourceTrigger);
 	}
 
-	
 	public static IObservable observe(Object control, Object value,
 			String fullPath, UpdateSourceTrigger updateSourceTrigger,
 			int observeKind) {
@@ -406,8 +431,7 @@ public class ScopeManager {
 	protected static IValueProperty doCreateValueProperty(Object type,
 			String fullPath) {
 		IDataProvider dataProvider = XWT.findDataProvider(type);
-		return dataProvider.createValueProperty(type,
-				fullPath);
+		return dataProvider.createValueProperty(type, fullPath);
 	}
 
 	/**
@@ -439,7 +463,8 @@ public class ScopeManager {
 					if (index != -1) {
 						String className = path.substring(0, index);
 						segment = path.substring(index + 1);
-						type = dataProvider.getModelService().loadModelType(className);
+						type = dataProvider.getModelService().loadModelType(
+								className);
 						if (type == null) {
 							throw new XWTException("Class " + className
 									+ " not found");
@@ -449,7 +474,7 @@ public class ScopeManager {
 				}
 
 				type = dataProvider.getDataType(segment);
-				
+
 				if (type != null) {
 					dataProvider = XWT.findDataProvider(type);
 					if (dataProvider == null) {
@@ -473,7 +498,8 @@ public class ScopeManager {
 				if (index != -1) {
 					String className = path.substring(0, index);
 					segment = path.substring(index + 1);
-					type = dataProvider.getModelService().loadModelType(className);
+					type = dataProvider.getModelService().loadModelType(
+							className);
 					if (type == null) {
 						throw new XWTException("Class " + className
 								+ " not found");

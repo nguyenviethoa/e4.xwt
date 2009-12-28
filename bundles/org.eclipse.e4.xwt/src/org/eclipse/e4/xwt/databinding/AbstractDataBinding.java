@@ -73,8 +73,8 @@ public abstract class AbstractDataBinding implements IDataBinding {
 	 * 
 	 * @return
 	 */
-	protected String getContextName() {
-		return binding.getContextName();
+	protected IBindingContext getDataBindingContext() {
+		return binding.getBindingContext();
 	}
 
 	/**

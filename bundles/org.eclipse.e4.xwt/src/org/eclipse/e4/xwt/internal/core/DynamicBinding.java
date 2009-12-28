@@ -13,15 +13,16 @@ package org.eclipse.e4.xwt.internal.core;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IXWTLoader;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
-import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.databinding.BindingMode;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Widget;
 
 /**
  * Generic Binding definition
- * 
+ *
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class DynamicBinding implements IDynamicBinding {
@@ -37,7 +38,7 @@ public abstract class DynamicBinding implements IDynamicBinding {
 	 * The name of the {@link DataBindingContext} that we will look up in static
 	 * resources
 	 */
-	private String contextName = IUserDataConstants.XWT_DEFAULT;
+	private IBindingContext bindingContext;
 
 	/**
 	 * which used to decide binding type, not only text.
@@ -46,11 +47,15 @@ public abstract class DynamicBinding implements IDynamicBinding {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.e4.xwt.core.IDynamicBinding#getContextName()
 	 */
-	public String getContextName() {
-		return this.contextName;
+	public IBindingContext getBindingContext() {
+		if (this.bindingContext == null) {
+			Object element = (control == null ? host : control);
+			this.bindingContext = XWT.getBindingContext(element);
+		}
+		return this.bindingContext;
 	}
 
 	public Object getHost() {
@@ -63,20 +68,12 @@ public abstract class DynamicBinding implements IDynamicBinding {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * org.eclipse.e4.xwt.core.IDynamicBinding#setContextName(java.lang.String)
+	 * org.eclipse.e4.xwt.core.IDynamicBinding#setBindingContext(IBindingContext)
 	 */
-	public void setContextName(String contextName) {
-		if (contextName != null && contextName.length() > 0
-				&& !IUserDataConstants.XWT_DEFAULT.equals(control)) {
-			if (!IUserDataConstants.XWT_DEFAULT.equals(this.contextName)) {
-				throw new IllegalStateException(
-						"ContextName has already been set to " + contextName);
-			}
-		}
-
-		this.contextName = contextName;
+	public void setBindingContext(IBindingContext bindingContext) {
+		this.bindingContext = bindingContext;
 	}
 
 	public void setControl(Object control) {

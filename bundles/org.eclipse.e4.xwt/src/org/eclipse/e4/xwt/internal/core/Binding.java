@@ -28,13 +28,14 @@ import org.eclipse.swt.widgets.Widget;
 
 /**
  * Generic Binding definition
- *
+ * 
  * @author yyang (yves.yang@soyatec.com)
  */
 public class Binding extends DynamicBinding {
 	public static Binding[] EMPTY_ARRAY = new Binding[0];
 
 	private String path;
+
 	private Object source;
 
 	private String elementName;
@@ -45,11 +46,15 @@ public class Binding extends DynamicBinding {
 
 	private IObservable observableSource;
 
+	public Binding() {
+		super();
+	}
+
 	/**
 	 * <p>
 	 * Default
 	 * </p>
-	 *
+	 * 
 	 */
 	private UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.Default;
 
@@ -88,6 +93,9 @@ public class Binding extends DynamicBinding {
 
 	public void setSource(Object source) {
 		this.source = source;
+		if (this.source instanceof IObservable) {
+			this.observableSource = (IObservable) this.source;
+		}
 	}
 
 	public void setPath(String path) {
@@ -226,7 +234,8 @@ public class Binding extends DynamicBinding {
 		}
 
 		DataBinding dataBinding = null;
-		if (dataProvider != null && (path != null)) {
+		if (dataProvider != null
+				&& (path != null || dataContext instanceof IObservable)) {
 			dataBinding = new DataBinding(this, dataProvider);
 		}
 		if (dataBinding != null) {
@@ -255,7 +264,7 @@ public class Binding extends DynamicBinding {
 
 	/**
 	 * Returns the validationRules for the binding
-	 *
+	 * 
 	 * @return the array of validationRules
 	 */
 	public IValidationRule[] getValidationRules() {
@@ -264,7 +273,7 @@ public class Binding extends DynamicBinding {
 
 	/**
 	 * Set the validationRules for the binding
-	 *
+	 * 
 	 * @param validators
 	 */
 	public void setValidationRules(IValidationRule[] validationRules) {
@@ -273,7 +282,7 @@ public class Binding extends DynamicBinding {
 
 	/**
 	 * Sets a single validationRule
-	 *
+	 * 
 	 * @param validator
 	 */
 	public void setValidationRule(IValidationRule validationRule) {

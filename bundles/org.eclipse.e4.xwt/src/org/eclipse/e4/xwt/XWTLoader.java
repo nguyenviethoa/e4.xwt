@@ -17,12 +17,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
@@ -50,6 +48,8 @@ import org.eclipse.e4.xwt.converters.CollectionToBoolean;
 import org.eclipse.e4.xwt.converters.CollectionToInteger;
 import org.eclipse.e4.xwt.converters.DateToString;
 import org.eclipse.e4.xwt.converters.EnumToString;
+import org.eclipse.e4.xwt.converters.IStatusToBoolean;
+import org.eclipse.e4.xwt.converters.IStatusToString;
 import org.eclipse.e4.xwt.converters.ListToIObservableCollection;
 import org.eclipse.e4.xwt.converters.ListToSet;
 import org.eclipse.e4.xwt.converters.ObjectToBoolean;
@@ -82,6 +82,8 @@ import org.eclipse.e4.xwt.core.Setter;
 import org.eclipse.e4.xwt.core.Style;
 import org.eclipse.e4.xwt.core.Trigger;
 import org.eclipse.e4.xwt.core.TriggerBase;
+import org.eclipse.e4.xwt.databinding.BindingContext;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.dataproviders.ObjectDataProvider;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
@@ -153,13 +155,11 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.widgets.Widget;
 
 /**
  * Default XWT loader
  * 
- * @author yyang (yves.yang@soyatec.com) 
- *         jliu (jin.liu@soyatec.com)
+ * @author yyang (yves.yang@soyatec.com) jliu (jin.liu@soyatec.com)
  */
 public class XWTLoader implements IXWTLoader {
 	// Declarations
@@ -441,31 +441,11 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#getDataBindingContext(java.lang.Object,
 	 * java.lang.String)
 	 */
-	public DataBindingContext getDataBindingContext(Object element,
-			String contextName) {
-		if (IUserDataConstants.XWT_DEFAULT.equalsIgnoreCase(contextName
-				.toLowerCase(Locale.ENGLISH))) {
-			Widget host = UserData.findScopeRoot(element);
-			DataBindingContext dataBindingContext = (DataBindingContext) UserData
-					.getLocalData(
-							host,
-							IUserDataConstants.XWT_DEFAULT_DATABINDINGCONTEXT_KEY);
-
-			if (dataBindingContext == null) {
-				return UserData.createDataBinding(host);
-			}
-
-			return dataBindingContext;
-		}
-
-		DataBindingContext dataBindingContext = (DataBindingContext) UserData
-				.findData(element, contextName);
-
+	public IBindingContext getBindingContext(Object element) {
+		IBindingContext dataBindingContext = UserData.getBindingContext(element);
 		if (dataBindingContext == null) {
-			throw new XWTException("DataBindContext with the name "
-					+ contextName + " not found!");
+			dataBindingContext = UserData.createBindingContext(element);
 		}
-
 		return dataBindingContext;
 	}
 
@@ -489,6 +469,17 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public TriggerBase[] getTriggers(Object element) {
 		return UserData.getTriggers(element);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.IXWTLoader#setDataBindingContext(java.lang.Object,
+	 * java.lang.Object)
+	 */
+	public void setDataBindingContext(Object widget, Object dataBindingContext) {
+		UserData.setBindingContext(widget, dataBindingContext);
 	}
 
 	/*
@@ -1250,6 +1241,9 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(ObjectToISelection.instance);
 		registerConvertor(ListToSet.instance);
 
+		registerConvertor(IStatusToString.instance);
+		registerConvertor(IStatusToBoolean.instance);
+
 		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) core
 				.getService(ValueConvertorRegister.class);
 		convertorRegister.register(String.class, float.class,
@@ -1400,8 +1394,10 @@ public class XWTLoader implements IXWTLoader {
 
 		type = org.eclipse.swt.widgets.Widget.class;
 		metaclass = (IMetaclass) registerMetaclass(type);
-		metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT,
+		metaclass.addProperty(new DataProperty(IConstants.XAML_DATA_CONTEXT,
 				IUserDataConstants.XWT_DATACONTEXT_KEY));
+		metaclass.addProperty(new DataProperty(IConstants.XAML_BINDING_CONTEXT,
+				IUserDataConstants.XWT_BINDING_CONTEXT_KEY));
 		metaclass.addProperty(new DataProperty(IConstants.XAML_TRIGGERS,
 				TriggerBase[].class, IUserDataConstants.XWT_TRIGGERS_KEY));
 		metaclass.addProperty(new StyleProperty());
@@ -1427,7 +1423,7 @@ public class XWTLoader implements IXWTLoader {
 			IProperty property = metaclass.findProperty("Input");
 
 			metaclass.addProperty(new InputBeanProperty(property));
-			metaclass.addProperty(new DataProperty(IConstants.XAML_DATACONTEXT,
+			metaclass.addProperty(new DataProperty(IConstants.XAML_DATA_CONTEXT,
 					IUserDataConstants.XWT_DATACONTEXT_KEY));
 
 			metaclass.removeProperty("selection");
@@ -1485,6 +1481,9 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(DefaultComboViewerLabelProvider.class);
 		registerMetaclass(DefaultColumnViewerLabelProvider.class);
 		registerMetaclass(ViewerFilter.class);
+
+		// DataBinding stuff
+		registerMetaclass(BindingContext.class);
 
 		registerMetaclass(ObjectDataProvider.class);
 
@@ -1582,4 +1581,5 @@ public class XWTLoader implements IXWTLoader {
 	public void setLanguageSupport(ILanguageSupport languageSupport) {
 		getCurrentCore().setLanguageSupport(languageSupport);
 	}
+
 }

@@ -10,17 +10,15 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.IBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.core.Binding;
+import org.eclipse.e4.xwt.internal.core.BindingGate;
 import org.eclipse.e4.xwt.internal.core.BindingExpressionPath;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
 import org.eclipse.e4.xwt.metadata.ModelUtils;
@@ -41,7 +39,7 @@ public class DataBinding extends AbstractDataBinding {
 
 	private IObservable observableWidget;
 
-	private IBindingContext bindingContext;
+	private BindingGate bindingGate;
 
 	/**
 	 * Constructor for dataProvider.
@@ -74,7 +72,7 @@ public class DataBinding extends AbstractDataBinding {
 			return convertedValue(value);
 		}
 
-		IBindingContext bindingContext = getBindingContext();
+		BindingGate bindingContext = getBindingGate();
 
 		if (bindingContext != null && observableSource != null) {
 			Object target = getControl();
@@ -113,14 +111,13 @@ public class DataBinding extends AbstractDataBinding {
 		return convertedValue(value);
 	}
 
-	private IBindingContext getBindingContext() {
-		if (this.bindingContext == null) {
-			DataBindingContext dataBindingContext = XWT.getDataBindingContext(
-					getControl(), getContextName());
-			this.bindingContext = new BindingContext(dataBindingContext);
+	private BindingGate getBindingGate() {
+		if (this.bindingGate == null) {
+			IBindingContext dataBindingContext = getDataBindingContext();
+			this.bindingGate = new BindingGate(dataBindingContext);
 		}
 
-		return this.bindingContext;
+		return this.bindingGate;
 	}
 
 	private Object convertedValue(Object value) {
@@ -145,13 +142,9 @@ public class DataBinding extends AbstractDataBinding {
 		IObservable observableSource = getObservableSource();
 		if (observableSource == null) {
 			IDataProvider dataProvider = getDataProvider();
-			try {
-				observableSource = ScopeManager.observe(getControl(),
-						dataProvider.getData(null),
-						getSourcePropertyExpression(),
-						getUpdateSourceTrigger(), observeKind);
-			} catch (XWTException e) {
-			}
+			observableSource = ScopeManager.observe(getControl(), dataProvider
+					.getData(null), getSourcePropertyExpression(),
+					getUpdateSourceTrigger(), observeKind);
 			if (observableSource != null) {
 				setObservableSource(observableSource);
 			}

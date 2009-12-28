@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.IObservable;
@@ -29,6 +28,8 @@ import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.TriggerBase;
+import org.eclipse.e4.xwt.databinding.BindingContext;
+import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.metadata.IEvent;
@@ -270,29 +271,23 @@ public class XWT {
 	}
 
 	/**
-	 * Returns the {@link DataBindingContext} with the contexName within the
+	 * Returns the {@link BindingContext} within the
 	 * upper scope of the control.
 	 * <p>
-	 * ContextName should be unique within the Scope of the first parent
-	 * instance with ScopeKeeper attribute
+	 * Each UI Element may have a local DataBindingContext property. While locating 
+	 * DataBindingContext, if the current UI Element has not the property, the parent's 
+	 * will be used.
 	 * <p>
-	 * While locating DataBindingContext, if the name is 'default' the default
-	 * DataBindingcontext of the scope root is returned. If the name is not
-	 * 'default' then up until all the way to the root, scope roots are
-	 * traversed and researched for a StaticResource DataBindingContext with the
-	 * x:Key as the contextName.
+	 * If none is found, a default one will be created as default for the current scope
 	 * <p>
 	 * If still not found {@link XWTException} thrown...
 	 * 
 	 * @param element
-	 * @param contextName
-	 *            Name of the {@link DataBindingContext}
 	 * @return
 	 */
-	public static DataBindingContext getDataBindingContext(Object element,
-			String contextName) {
-		return (DataBindingContext) XWTLoaderManager.getActive()
-				.getDataBindingContext(element, contextName);
+	public static IBindingContext getBindingContext(Object element) {
+		return (IBindingContext) XWTLoaderManager.getActive()
+				.getBindingContext(element);
 	}
 
 	/**

@@ -6,455 +6,257 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Soyatec - initial API and implementation
+ *     Soyatec & hceylan - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.databinding;
 
+import org.eclipse.core.databinding.AggregateValidationStatus;
 import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateListStrategy;
 import org.eclipse.core.databinding.UpdateSetStrategy;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.core.databinding.observable.IObservable;
+import org.eclipse.core.databinding.ValidationStatusProvider;
+import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.e4.xwt.IBindingContext;
-import org.eclipse.e4.xwt.IDataBindingInfo;
-import org.eclipse.e4.xwt.IValueConverter;
-import org.eclipse.e4.xwt.IValidationRule;
-import org.eclipse.e4.xwt.InverseValueConverter;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
-import org.eclipse.e4.xwt.validation.InverseValidationRule;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.widgets.Widget;
 
 /**
- * @author jliu jin.liu@soyatec.com
+ * @author hceylan
  */
 public class BindingContext implements IBindingContext {
-	public static final UpdateSetStrategy POLICY_UPDATE = new UpdateSetStrategy(
-			UpdateSetStrategy.POLICY_UPDATE);
-	private final DataBindingContext dataBindingContext;
 
-	public BindingContext(DataBindingContext dataBindingContext) {
+	private org.eclipse.core.databinding.DataBindingContext context;
+
+	private Realm realm;
+
+	private AggregateValidationStatus status;
+
+	private int statusType = MAX_SEVERITY;
+
+	private final Widget parent;
+
+	public BindingContext(Widget parent) {
 		super();
-
-		this.dataBindingContext = dataBindingContext;
+		this.parent = parent;
 	}
 
-	public Binding bind(IObservableValue source, IObservableValue target) {
-		return bind(source, target, null);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.
-	 * databinding.observable.value.IObservableValue,
-	 * org.eclipse.core.databinding.observable.value.IObservableValue)
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#getContext()
 	 */
-	public Binding bind(IObservable source, IObservable target,
-			IDataBindingInfo dataBinding) {
-		if (source instanceof IObservableValue
-				&& target instanceof IObservableValue) {
-			return bindValue((IObservableValue) source,
-					(IObservableValue) target, dataBinding);
-		} else if (source instanceof IObservableSet
-				&& target instanceof IObservableSet) {
-			IValueConverter converter = null;
-			int sourceToTargetPolicy = UpdateSetStrategy.POLICY_UPDATE;
-			int targetToSourcePolicy = UpdateSetStrategy.POLICY_UPDATE;
-			// Set policy to UpdateValueStrategy.
-			if (dataBinding != null) {
-				switch (dataBinding.getMode()) {
-				case OneWay:
-					targetToSourcePolicy = UpdateSetStrategy.POLICY_NEVER;
-					break;
-				case OneTime:
-					sourceToTargetPolicy = UpdateSetStrategy.POLICY_NEVER;
-					targetToSourcePolicy = UpdateSetStrategy.POLICY_NEVER;
-					break;
-				default:
-					break;
-				}
-				converter = dataBinding.getConverter();
-			}
-			UpdateSetStrategy sourceToTarget = new UpdateSetStrategy(
-					sourceToTargetPolicy);
-			UpdateSetStrategy targetToSource = new UpdateSetStrategy(
-					targetToSourcePolicy);
-			return bindSet((IObservableSet) target, (IObservableSet) source,
-					targetToSource, sourceToTarget, converter);
-		} else if (source instanceof IObservableList
-				&& target instanceof IObservableList) {
-			IValueConverter converter = null;
-			int sourceToTargetPolicy = UpdateListStrategy.POLICY_UPDATE;
-			int targetToSourcePolicy = UpdateListStrategy.POLICY_UPDATE;
-			// Set policy to UpdateValueStrategy.
-			if (dataBinding != null) {
-				switch (dataBinding.getMode()) {
-				case OneWay:
-					targetToSourcePolicy = UpdateListStrategy.POLICY_NEVER;
-					break;
-				case OneTime:
-					sourceToTargetPolicy = UpdateListStrategy.POLICY_NEVER;
-					targetToSourcePolicy = UpdateListStrategy.POLICY_NEVER;
-					break;
-				default:
-					break;
-				}
-				converter = dataBinding.getConverter();
-			}
-			UpdateListStrategy sourceToTarget = new UpdateListStrategy(
-					sourceToTargetPolicy);
-			UpdateListStrategy targetToSource = new UpdateListStrategy(
-					targetToSourcePolicy);
-			return bindList((IObservableList) target, (IObservableList) source,
-					targetToSource, sourceToTarget, converter);
-		}
-		throw new IllegalStateException();
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.
-	 * databinding.observable.value.IObservableValue,
-	 * org.eclipse.core.databinding.observable.value.IObservableValue)
-	 */
-	public Binding bindList(IObservableList source, IObservableList target,
-			UpdateListStrategy sourceToTarget,
-			UpdateListStrategy targetToSource, IValueConverter converter) {
-		if (converter != null) {
-			return bindList(source, target, sourceToTarget, targetToSource,
-					converter, new InverseValueConverter(converter));
-		} else {
-			return bindList(source, target, sourceToTarget, targetToSource,
-					null, null);
-		}
-	}
-
-	/**
-	 * 
-	 * @param source
-	 * @param target
-	 * @param sourceToTarget
-	 *            if it is null, the default converter will be update policy
-	 * @param targetToSource
-	 *            if it is null, the default converter will be update policy
-	 * @param sourceToTargetConvertor
-	 *            if it is null, the default converter will be used
-	 * @param targetToSourceConvertor
-	 *            if it is null, the default converter will be used
-	 */
-	public Binding bindList(IObservableList source, IObservableList target,
-			UpdateListStrategy sourceToTarget,
-			UpdateListStrategy targetToSource,
-			IConverter sourceToTargetConvertor,
-			IConverter targetToSourceConvertor) {
-		if (source != null && target != null) {
-			if (sourceToTarget == null) {
-				sourceToTarget = new UpdateListStrategy(
-						UpdateListStrategy.POLICY_UPDATE);
-			}
-			if (targetToSource == null) {
-				targetToSource = new UpdateListStrategy(
-						UpdateListStrategy.POLICY_UPDATE);
-			}
-
-			if (sourceToTargetConvertor != null) {
-				sourceToTarget.setConverter(sourceToTargetConvertor);
-			}
-
-			if (targetToSourceConvertor != null) {
-				targetToSource.setConverter(targetToSourceConvertor);
-			}
-
-			this.dataBindingContext.bindList(target, source, targetToSource,
-					sourceToTarget);
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.
-	 * databinding.observable.value.IObservableValue,
-	 * org.eclipse.core.databinding.observable.value.IObservableValue)
-	 */
-	public Binding bindSet(IObservableSet source, IObservableSet target,
-			UpdateSetStrategy sourceToTarget, UpdateSetStrategy targetToSource,
-			IValueConverter converter) {
-		if (converter != null) {
-			return bindSet(source, target, sourceToTarget, targetToSource,
-					converter, new InverseValueConverter(converter));
-		} else {
-			return bindSet(source, target, sourceToTarget, targetToSource,
-					null, null);
-		}
-	}
-
-	/**
-	 * 
-	 * @param source
-	 * @param target
-	 * @param sourceToTarget
-	 *            if it is null, the default converter will be update policy
-	 * @param targetToSource
-	 *            if it is null, the default converter will be update policy
-	 * @param sourceToTargetConvertor
-	 *            if it is null, the default converter will be used
-	 * @param targetToSourceConvertor
-	 *            if it is null, the default converter will be used
-	 */
-	public Binding bindSet(IObservableSet source, IObservableSet target,
-			UpdateSetStrategy sourceToTarget, UpdateSetStrategy targetToSource,
-			IConverter sourceToTargetConvertor,
-			IConverter targetToSourceConvertor) {
-		if (source != null && target != null) {
-			if (sourceToTarget == null) {
-				sourceToTarget = new UpdateSetStrategy(
-						UpdateSetStrategy.POLICY_UPDATE);
-			}
-			if (targetToSource == null) {
-				targetToSource = new UpdateSetStrategy(
-						UpdateSetStrategy.POLICY_UPDATE);
-			}
-
-			if (sourceToTargetConvertor != null) {
-				sourceToTarget.setConverter(sourceToTargetConvertor);
-			}
-
-			if (targetToSourceConvertor != null) {
-				targetToSource.setConverter(targetToSourceConvertor);
-			}
-
-			this.dataBindingContext.bindSet(target, source, targetToSource,
-					sourceToTarget);
-		}
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param source
-	 * @param target
-	 * @param sourceToTarget
-	 *            if it is null, the default converter will be update policy
-	 * @param targetToSource
-	 *            if it is null, the default converter will be update policy
-	 * @param sourceToTargetConvertor
-	 *            if it is null, the default converter will be used
-	 * @param targetToSourceConvertor
-	 *            if it is null, the default converter will be used
-	 */
-	public Binding bind(IObservableList source, IObservableList target,
-			UpdateListStrategy sourceToTarget,
-			UpdateListStrategy targetToSource,
-			IConverter sourceToTargetConvertor,
-			IConverter targetToSourceConvertor) {
-		if (source != null && target != null) {
-			if (sourceToTarget == null) {
-				sourceToTarget = new UpdateListStrategy(
-						UpdateListStrategy.POLICY_UPDATE);
-			}
-			if (targetToSource == null) {
-				targetToSource = new UpdateListStrategy(
-						UpdateListStrategy.POLICY_UPDATE);
-			}
-
-			if (sourceToTargetConvertor != null) {
-				sourceToTarget.setConverter(sourceToTargetConvertor);
-			}
-
-			if (targetToSourceConvertor != null) {
-				targetToSource.setConverter(targetToSourceConvertor);
-			}
-
-			this.dataBindingContext.bindList(target, source, targetToSource,
-					sourceToTarget);
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.
-	 * databinding.observable.value.IObservableValue,
-	 * org.eclipse.core.databinding.observable.value.IObservableValue)
-	 */
-	private Binding bindValue(IObservableValue source, IObservableValue target,
-			IDataBindingInfo dataBinding) {
-		IValueConverter converter = null;
-		IValidationRule[] validators = null;
-		int sourceToTargetPolicy = UpdateValueStrategy.POLICY_UPDATE;
-		int targetToSourcePolicy = UpdateValueStrategy.POLICY_UPDATE;
-		// Set policy to UpdateValueStrategy.
-		if (dataBinding != null) {
-			switch (dataBinding.getMode()) {
-			case OneWay:
-				targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
-				break;
-			case OneTime:
-				sourceToTargetPolicy = UpdateValueStrategy.POLICY_NEVER;
-				targetToSourcePolicy = UpdateValueStrategy.POLICY_NEVER;
-				break;
-			default:
-				break;
-			}
-			converter = dataBinding.getConverter();
-			validators = dataBinding.getValidators();
-		}
-		UpdateValueStrategy sourceToTarget = new UpdateValueStrategy(
-				sourceToTargetPolicy);
-		UpdateValueStrategy targetToSource = new UpdateValueStrategy(
-				targetToSourcePolicy);
-
-		bindValidators(validators, sourceToTarget, targetToSource);
-
-		return bind(source, target, sourceToTarget, targetToSource, converter);
-	}
-
-	private void bindValidators(IValidationRule[] validators,
-			UpdateValueStrategy sourceToTarget,
-			UpdateValueStrategy targetToSource) {
-		if (validators != null) {
-			for (IValidationRule validator : validators) {
-				switch (validator.getBindingMode()) {
-				case SourceToTarget:
-					addValidatorToStrategy(sourceToTarget, validator);
-					break;
-				case TargetToSource:
-					addValidatorToStrategy(targetToSource,
-							new InverseValidationRule(validator));
-					break;
-				case Both:
-				default:
-					addValidatorToStrategy(sourceToTarget, validator);
-					addValidatorToStrategy(targetToSource,
-							new InverseValidationRule(validator));
-				}
-			}
-		}
-	}
-
-	private void addValidatorToStrategy(UpdateValueStrategy strategy,
-			IValidationRule validator) {
-		switch (validator.getPhase()) {
-		case AfterGet:
-			strategy.setAfterGetValidator(validator);
-			break;
-		case AfterConvert:
-			strategy.setAfterConvertValidator(validator);
-			break;
-		case BeforeSet:
-		default:
-			strategy.setBeforeSetValidator(validator);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.databinding.IBindingContext#bind(org.eclipse.core.
-	 * databinding.observable.value.IObservableValue,
-	 * org.eclipse.core.databinding.observable.value.IObservableValue)
-	 */
-	public Binding bind(IObservableValue source, IObservableValue target,
-			UpdateValueStrategy sourceToTarget,
-			UpdateValueStrategy targetToSource, IValueConverter converter) {
-		if (converter != null) {
-			return bind(source, target, sourceToTarget, targetToSource,
-					converter, new InverseValueConverter(converter));
-		} else {
-			return bind(source, target, sourceToTarget, targetToSource, null,
-					null);
-		}
-	}
-
-	/**
-	 * 
-	 * @param source
-	 * @param target
-	 * @param sourceToTarget
-	 *            if it is null, the default converter will be update policy
-	 * @param targetToSource
-	 *            if it is null, the default converter will be update policy
-	 * @param sourceToTargetConvertor
-	 *            if it is null, the default converter will be used
-	 * @param targetToSourceConvertor
-	 *            if it is null, the default converter will be used
-	 */
-	public Binding bind(IObservableValue source, IObservableValue target,
-			UpdateValueStrategy sourceToTarget,
-			UpdateValueStrategy targetToSource,
-			IConverter sourceToTargetConvertor,
-			IConverter targetToSourceConvertor) {
-		if (source != null && target != null) {
-			if (sourceToTarget == null) {
-				sourceToTarget = new UpdateValueStrategy(
-						UpdateValueStrategy.POLICY_UPDATE);
-			}
-			if (targetToSource == null) {
-				targetToSource = new UpdateValueStrategy(
-						UpdateValueStrategy.POLICY_UPDATE);
-			}
-
-			// Add converter to UpdateValueStrategy.
-			Object sourceValueType = source.getValueType();
-			if (sourceValueType == null) {
-				sourceValueType = Object.class;
-			}
-			Object targetValueType = target.getValueType();
-			if (targetValueType == null) {
-				targetValueType = Object.class;
-			}
-			Class<?> sourceType = (sourceValueType instanceof Class<?>) ? (Class<?>) sourceValueType
-					: sourceValueType.getClass();
-			Class<?> targetType = (targetValueType instanceof Class<?>) ? (Class<?>) targetValueType
-					: targetValueType.getClass();
-			if (sourceType == null) {
-				sourceType = Object.class;
+	public org.eclipse.core.databinding.DataBindingContext getContext() {
+		if (this.context == null) {
+			if (this.realm != null) {
+				this.context = new org.eclipse.core.databinding.DataBindingContext(
+						this.realm);
 			} else {
-				sourceType = ObjectUtil.normalizedType(sourceType);
+				this.context = new org.eclipse.core.databinding.DataBindingContext(
+						XWT.getRealm());
 			}
 
-			if (targetType == null) {
-				targetType = Object.class;
-			} else {
-				targetType = ObjectUtil.normalizedType(targetType);
+			if (this.parent != null) {
+				this.parent.addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent e) {
+						context.dispose();
+					}
+				});
 			}
-
-			if (sourceToTargetConvertor != null) {
-				sourceToTarget.setConverter(sourceToTargetConvertor);
-			} else if (!targetType.isAssignableFrom(sourceType)) {
-				IConverter m2t = XWT.findConvertor(sourceType, targetType);
-				if (m2t != null) {
-					sourceToTarget.setConverter(m2t);
-				}
-			}
-
-			if (targetToSourceConvertor != null) {
-				targetToSource.setConverter(targetToSourceConvertor);
-			} else if (!sourceType.isAssignableFrom(targetType)) {
-				IConverter t2m = XWT.findConvertor(targetType, sourceType);
-				if (t2m != null) {
-					targetToSource.setConverter(t2m);
-				}
-			}
-
-			this.dataBindingContext.bindValue(target, source, targetToSource,
-					sourceToTarget);
 		}
-		return null;
+		return this.context;
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#getRealm()
+	 */
+	public Realm getRealm() {
+		return this.realm;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#getStatus()
+	 */
+	public AggregateValidationStatus getStatus() {
+		if (this.status == null) {
+			this.status = new AggregateValidationStatus(getContext(),
+					this.statusType);
+			if (this.parent != null) {
+				this.parent.addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent e) {
+						status.dispose();
+					}
+				});
+			}
+		}
+		return this.status;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#getStatusType()
+	 */
+	public int getStatusType() {
+		return statusType;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#bindValue(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue)
+	 */
+	public final Binding bindValue(IObservableValue targetObservableValue,
+			IObservableValue modelObservableValue) {
+		return getContext().bindValue(targetObservableValue,
+				modelObservableValue);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		return getContext().equals(obj);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#bindValue(org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.observable.value.IObservableValue, org.eclipse.core.databinding.UpdateValueStrategy, org.eclipse.core.databinding.UpdateValueStrategy)
+	 */
+	public final Binding bindValue(IObservableValue targetObservableValue,
+			IObservableValue modelObservableValue,
+			UpdateValueStrategy targetToModel, UpdateValueStrategy modelToTarget) {
+		return getContext().bindValue(targetObservableValue,
+				modelObservableValue, targetToModel, modelToTarget);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#bindList(org.eclipse.core.databinding.observable.list.IObservableList, org.eclipse.core.databinding.observable.list.IObservableList)
+	 */
+	public final Binding bindList(IObservableList targetObservableList,
+			IObservableList modelObservableList) {
+		return getContext()
+				.bindList(targetObservableList, modelObservableList);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#bindList(org.eclipse.core.databinding.observable.list.IObservableList, org.eclipse.core.databinding.observable.list.IObservableList, org.eclipse.core.databinding.UpdateListStrategy, org.eclipse.core.databinding.UpdateListStrategy)
+	 */
+	public final Binding bindList(IObservableList targetObservableList,
+			IObservableList modelObservableList,
+			UpdateListStrategy targetToModel, UpdateListStrategy modelToTarget) {
+		return getContext().bindList(targetObservableList,
+				modelObservableList, targetToModel, modelToTarget);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#bindSet(org.eclipse.core.databinding.observable.set.IObservableSet, org.eclipse.core.databinding.observable.set.IObservableSet)
+	 */
+	public final Binding bindSet(IObservableSet targetObservableSet,
+			IObservableSet modelObservableSet) {
+		return getContext().bindSet(targetObservableSet, modelObservableSet);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#bindSet(org.eclipse.core.databinding.observable.set.IObservableSet, org.eclipse.core.databinding.observable.set.IObservableSet, org.eclipse.core.databinding.UpdateSetStrategy, org.eclipse.core.databinding.UpdateSetStrategy)
+	 */
+	public final Binding bindSet(IObservableSet targetObservableSet,
+			IObservableSet modelObservableSet, UpdateSetStrategy targetToModel,
+			UpdateSetStrategy modelToTarget) {
+		return getContext().bindSet(targetObservableSet, modelObservableSet,
+				targetToModel, modelToTarget);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#dispose()
+	 */
+	public final void dispose() {
+		getContext().dispose();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#getBindings()
+	 */
+	public final IObservableList getBindings() {
+		return getContext().getBindings();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#getValidationStatusProviders()
+	 */
+	public final IObservableList getValidationStatusProviders() {
+		return getContext().getValidationStatusProviders();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#getValidationStatusMap()
+	 */
+	public final IObservableMap getValidationStatusMap() {
+		return getContext().getValidationStatusMap();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#addBinding(org.eclipse.core.databinding.Binding)
+	 */
+	public void addBinding(Binding binding) {
+		getContext().addBinding(binding);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#addValidationStatusProvider(org.eclipse.core.databinding.ValidationStatusProvider)
+	 */
+	public void addValidationStatusProvider(
+			ValidationStatusProvider validationStatusProvider) {
+		getContext().addValidationStatusProvider(validationStatusProvider);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#updateModels()
+	 */
+	public final void updateModels() {
+		getContext().updateModels();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#updateTargets()
+	 */
+	public final void updateTargets() {
+		getContext().updateTargets();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#removeBinding(org.eclipse.core.databinding.Binding)
+	 */
+	public boolean removeBinding(Binding binding) {
+		return getContext().removeBinding(binding);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#removeValidationStatusProvider(org.eclipse.core.databinding.ValidationStatusProvider)
+	 */
+	public boolean removeValidationStatusProvider(
+			ValidationStatusProvider validationStatusProvider) {
+		return getContext().removeValidationStatusProvider(
+				validationStatusProvider);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#getValidationRealm()
+	 */
+	public final Realm getValidationRealm() {
+		return getContext().getValidationRealm();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#setRealm(org.eclipse.core.databinding.observable.Realm)
+	 */
+	public void setRealm(Realm realm) {
+		this.realm = realm;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#setStatusType(int)
+	 */
+	public void setStatusType(int statusType) {
+		this.statusType = statusType;
+	}
+
 }
