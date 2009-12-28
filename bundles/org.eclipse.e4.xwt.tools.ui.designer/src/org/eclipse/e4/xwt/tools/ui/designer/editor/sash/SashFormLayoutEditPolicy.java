@@ -24,12 +24,10 @@ import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.ChangeWeightsCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.MoveChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
-import org.eclipse.e4.xwt.tools.ui.designer.parts.CompositeEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.misc.CompositeEditPartHelper;
-import org.eclipse.e4.xwt.tools.ui.designer.policies.NewResizableEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -51,7 +49,7 @@ import org.eclipse.gef.requests.GroupRequest;
 public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	static int WIDTH = 4;
 	private Polygon insertionLine;
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -294,12 +292,10 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 		if (request instanceof ChangeBoundsRequest) {
 			return createChangeBoundsCommand((ChangeBoundsRequest) request);
 		}
-		if (REQ_DELETE.equals(request.getType()))
-			return getDeleteCommand((GroupRequest) request);
 		return super.getCommand(request);
 	}
 
-	protected Command getDeleteCommand(GroupRequest request) {
+	protected Command getDeleteDependantCommand(GroupRequest request) {
 		List editParts = request.getEditParts();
 		if (!editParts.isEmpty()) {
 			List<XamlNode> deleteThems = new ArrayList<XamlNode>();
@@ -314,7 +310,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 				return new SashFormDeleteCommand(deleteThems);
 			}
 		}
-		return null;
+		return super.getDeleteDependantCommand(request);
 	}
 
 	protected Command createChangeBoundsCommand(ChangeBoundsRequest request) {
@@ -348,7 +344,8 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 		} else {
 			directions = PositionConstants.NORTH_SOUTH;
 		}
-		return new NewResizableEditPolicy(directions, false);
+		child.removeEditPolicy(PRIMARY_DRAG_ROLE);
+		return new SashFormChildResizableEditPolicy(directions, false);
 	}
 
 	/*

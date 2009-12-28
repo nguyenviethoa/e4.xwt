@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.misc.DragSashTracker;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
@@ -37,6 +40,14 @@ public class SashEditPart extends ControlEditPart {
 					IConstants.XWT_NAMESPACE);
 			setModel(model);
 		}
+	}
+	
+	@Override
+	protected IFigure createContentPane() {
+		RectangleFigure rectangle = new RectangleFigure();
+		rectangle.setForegroundColor(ColorConstants.lightGray);
+		rectangle.setFill(true);
+		return rectangle;
 	}
 
 	@Override

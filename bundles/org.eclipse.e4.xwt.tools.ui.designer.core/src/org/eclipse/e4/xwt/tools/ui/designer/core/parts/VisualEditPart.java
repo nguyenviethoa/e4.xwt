@@ -54,9 +54,9 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	 */
 	protected IFigure createFigure() {
 		ContentPaneFigure figure = new ContentPaneFigure();
-		Figure contentPane = null;
+		IFigure contentPane = null;
 		if (!isRoot()) {
-			contentPane = new Label();
+			contentPane = createContentPane();
 		} else {
 			ImageFigure imageFigure = new ImageFigure();
 			if (isUseBorder())
@@ -74,6 +74,10 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 		return figure;
 	}
 
+	protected IFigure createContentPane() {
+		return new Label();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
