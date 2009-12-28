@@ -29,6 +29,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.misc.CompositeEditPartHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.NewResizableEditPolicy;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -347,7 +348,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 		} else {
 			directions = PositionConstants.NORTH_SOUTH;
 		}
-		return new SashFormChildResizableEditPolicy(directions, false);
+		return new NewResizableEditPolicy(directions, false);
 	}
 
 	/*

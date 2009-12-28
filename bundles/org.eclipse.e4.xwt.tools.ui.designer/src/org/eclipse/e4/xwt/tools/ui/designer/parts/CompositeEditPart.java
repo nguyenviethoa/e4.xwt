@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
+import java.util.List;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.Transform;
+import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.figures.ContentPaneFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.CompositeInfo;
@@ -27,10 +31,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.requests.LocationRequest;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Widget;
@@ -127,28 +133,42 @@ public class CompositeEditPart extends ControlEditPart {
 
 	@Override
 	public EditPart getTargetEditPart(Request request) {
-		if (request instanceof CreateRequest) {
+		if (getParent() instanceof SashFormEditPart) {
 			IFigure figure = getFigure();
 			Rectangle bounds = figure.getBounds().getCopy();
 			figure.translateToAbsolute(bounds);
-					
-			CreateRequest createRequest = (CreateRequest) request;
-			Point location = createRequest.getLocation();
-		
-			if (getParent() instanceof SashFormEditPart) {
-				SashFormEditPart sashFormEditPart = (SashFormEditPart) getParent();
-				if (sashFormEditPart.isHorizontal()) {
-					if (location.x <= bounds.x + WIDTH || location.x > bounds.x + bounds.width - WIDTH) {
-						return null;
-					}
-				}
-				else {
-					if (location.y <= bounds.y + WIDTH || location.y > bounds.y + bounds.height - WIDTH) {
-						return null;
-					}
+						
+			SashFormEditPart sashFormEditPart = (SashFormEditPart) getParent();
+
+			Transposer transposer = new Transposer();
+			transposer.setEnabled(!sashFormEditPart.isHorizontal());
+			bounds = transposer.t(bounds);
+			
+			if (request instanceof CreateRequest) {
+				CreateRequest createRequest = (CreateRequest) request;
+				Point location = createRequest.getLocation().getCopy();
+				location = transposer.t(location);
+				
+				if (location.x <= bounds.x + WIDTH || location.x > bounds.x + bounds.width - WIDTH) {
+					return null;
 				}
 			}
-		}		
+			else if (RequestConstants.REQ_SELECTION == request.getType()) {
+				LocationRequest locationRequest = (LocationRequest) request;
+				Point location = locationRequest.getLocation().getCopy();
+				location = transposer.t(location);
+				List<EditPart> children = sashFormEditPart.getChildren();
+				int index = children.indexOf(this);
+				if (index != 0 && index != (children.size() - 1)) {
+					if (location.x <= bounds.x + WIDTH/2) {
+						return children.get(index-1);
+					}
+					else if (location.x > bounds.x + bounds.width - WIDTH/2) {
+						return children.get(index+1);
+					}	
+				}
+			}
+		}
 		return super.getTargetEditPart(request);
 	}
 }
