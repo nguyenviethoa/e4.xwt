@@ -135,7 +135,7 @@ public class ColorChooser extends Dialog {
 	private Control createNamedColorsControl(Composite parent) {
 		ScrolledComposite scrollable = new ScrolledComposite(parent, SWT.BORDER | SWT.V_SCROLL);
 		Composite control = new Composite(scrollable, SWT.NONE);
-		control.setLayout(new GridLayout(22, true));
+		control.setLayout(new GridLayout(16, true));
 		control.setBackground(BACKGROUND);
 		String[] namedColors = NamedColorsUtil.getColorNames();
 		for (String colorName : namedColors) {
@@ -202,7 +202,7 @@ public class ColorChooser extends Dialog {
 
 	private Control createSystemColorsControl(Composite parent) {
 		Composite control = new Composite(parent, SWT.BORDER);
-		control.setLayout(new GridLayout(2, true));
+		control.setLayout(new GridLayout(16, true));
 		control.setBackground(BACKGROUND);
 		Collection<String> systemColors = XWTMaps.getColorKeys();
 		for (String sysColor : systemColors) {
@@ -215,7 +215,7 @@ public class ColorChooser extends Dialog {
 		final CLabel colorLabel = new CLabel(parent, SWT.NONE);
 		colorLabel.setBackground(BACKGROUND);
 		colorLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		colorLabel.setText(systemColor);
+		colorLabel.setToolTipText(systemColor);
 		Color color = ResourceManager.resources.getColor(systemColor);
 		if (color != null) {
 			Display device = Display.getCurrent();
