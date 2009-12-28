@@ -156,11 +156,31 @@ public interface IXWTLoader {
 	/**
 	 * Find the used IObservableValue value for given data.
 	 * 
-	 * @param nsmapace
+	 * @param context
+	 * @param data
+	 * @param propertyName
 	 * @return
 	 */
 	IObservableValue findObservableValue(Object context, Object data,
 			String propertyName);
+	
+	/**
+	 * Find the resource in Resources Dictionary attached in the UI Element.
+	 * If the key isn't found, the research will be propagated in its parent. 
+	 * 
+	 * @param object
+	 * @param key
+	 * @return
+	 */
+	Object findResource(Object object, String key);
+
+	/**
+	 * Get the Resources Dictionary attached in the UI Element.
+	 * 
+	 * @param object
+	 * @return
+	 */
+	Map<String, Object> getResources(Object object);
 
 	/**
 	 * 

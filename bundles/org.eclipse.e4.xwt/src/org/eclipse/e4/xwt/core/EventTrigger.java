@@ -57,7 +57,8 @@ public class EventTrigger extends TriggerBase {
 		this.actions = actions;
 	}
 
-	public void on(Object target) {
+	@Override
+	public void prepare(Object target) {
 		String routedEvent = getRoutedEvent();
 		if (routedEvent != null) {
 			Object source = getElementByName(target, getSourceName());
@@ -88,6 +89,9 @@ public class EventTrigger extends TriggerBase {
 				LoggerManager.log(e);
 			}
 		}
+	}
+	
+	public void on(Object target) {
 	}
 	
 	protected RunableAction createRunnable(Object target) {

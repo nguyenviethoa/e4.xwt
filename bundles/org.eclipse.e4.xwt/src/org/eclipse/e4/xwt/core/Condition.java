@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.core;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -85,6 +86,9 @@ public class Condition {
 		if (value == null) {
 			return false;
 		}
+		while (value instanceof IObservableValue) {
+			value = ((IObservableValue) value).getValue();
+		}
 
 		Object dataObject = TriggerBase.getElementByName(element, sourceName);
 
@@ -98,12 +102,13 @@ public class Condition {
 				}
 			}
 			cacheData = new CacheData();
-			
+	
 			IMetaclass metaclass = XWT.getMetaclass(dataObject);
 			IProperty prop = metaclass.findProperty(propertyName);
 			if (prop != null && value != null) {
 				cacheData.property = prop;
-				IConverter converter = XWT.findConvertor(value.getClass(), prop
+				Class<?> valueType = value.getClass();
+				IConverter converter = XWT.findConvertor(valueType, prop
 						.getType());
 				Object trueValue = value;
 				if (converter != null) {
@@ -122,13 +127,86 @@ public class Condition {
 			if (existingValue == null) {
 				return false;
 			}
-			Class<?> currentValueType = existingValue.getClass();
+			while (existingValue instanceof IObservableValue) {
+				existingValue = ((IObservableValue) existingValue).getValue();
+			}
+			Class<?> existingValueType = existingValue.getClass();
 			Class<?> valueType = value.getClass();
 			Object normalizedValue = value;
-			if (!currentValueType.isAssignableFrom(valueType) && !valueType.isAssignableFrom(currentValueType)) {
-				IConverter converter = XWT.findConvertor(valueType, currentValueType);
+			if (!existingValueType.isAssignableFrom(valueType) && !valueType.isAssignableFrom(existingValueType)) {
+				IConverter converter = XWT.findConvertor(valueType, existingValueType);
 				if (converter != null) {
 					normalizedValue = converter.convert(normalizedValue);
+				}
+				else if (value != null && value.toString().trim().length() > 0){
+					boolean found = false;
+					// in case where the value is a boolean
+					converter = XWT.findConvertor(valueType, Boolean.class);
+					if (converter != null) {
+						try {
+							Object booleanValue = converter.convert(value);
+							if (booleanValue != null) {
+								converter = XWT.findConvertor(existingValueType, Boolean.class);
+								if (converter != null) {
+									existingValue = converter.convert(existingValue);
+									normalizedValue = booleanValue;
+									found = true;
+								}
+							}
+						} catch (Exception e) {
+						}
+					}
+					if (!found) {
+						converter = XWT.findConvertor(valueType, int.class);
+						if (converter != null) {
+							try {
+								Object booleanValue = converter.convert(value);
+								if (booleanValue != null) {
+									converter = XWT.findConvertor(existingValueType, int.class);
+									if (converter != null) {
+										existingValue = converter.convert(existingValue);
+										normalizedValue = booleanValue;
+										found = true;
+									}
+								}
+							} catch (Exception e) {
+							}
+						}						
+					}
+					if (!found) {
+						converter = XWT.findConvertor(valueType, double.class);
+						if (converter != null) {
+							try {
+								Object booleanValue = converter.convert(value);
+								if (booleanValue != null) {
+									converter = XWT.findConvertor(existingValueType, double.class);
+									if (converter != null) {
+										existingValue = converter.convert(existingValue);
+										normalizedValue = booleanValue;
+										found = true;
+									}
+								}
+							} catch (Exception e) {
+							}
+						}						
+					}
+					if (!found) {
+						converter = XWT.findConvertor(valueType, String.class);
+						if (converter != null) {
+							try {
+								Object booleanValue = converter.convert(value);
+								if (booleanValue != null) {
+									converter = XWT.findConvertor(existingValueType, String.class);
+									if (converter != null) {
+										existingValue = converter.convert(existingValue);
+										normalizedValue = booleanValue;
+										found = true;
+									}
+								}
+							} catch (Exception e) {
+							}
+						}						
+					}
 				}
 			}
 			return Operator.compare(existingValue, operator, normalizedValue);

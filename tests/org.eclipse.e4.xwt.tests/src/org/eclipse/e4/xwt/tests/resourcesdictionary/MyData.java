@@ -8,11 +8,8 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.core;
+package org.eclipse.e4.xwt.tests.resourcesdictionary;
 
-public abstract class SetterBase {
-	public static final SetterBase[] EMPTY_SETTERS = new SetterBase[0];
+public class MyData {
 
-	public abstract Object applyTo(Object element, boolean update);
-	public abstract void undo(Object element, Object value);
 }

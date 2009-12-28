@@ -50,14 +50,14 @@ public class MultiTrigger extends TriggerBase {
 					return;
 				}
 			}
-			
+
 			if (oldvalues != null) {
 				return;
 			}
 
 			for (SetterBase setter : getSetters()) {
 				try {
-					Object oldValue = setter.applyTo(element);
+					Object oldValue = setter.applyTo(element, true);
 					if (oldvalues == null) {
 						oldvalues = new HashMap<SetterBase, Object>();
 					}
@@ -68,9 +68,13 @@ public class MultiTrigger extends TriggerBase {
 			}
 		}
 	}
-
+	
 	@Override
 	public void on(Object target) {
+	}
+
+	@Override
+	public void prepare(Object target) {
 		if (getConditions().length == 0) {
 			return;
 		}
@@ -81,9 +85,11 @@ public class MultiTrigger extends TriggerBase {
 
 			Object source = getElementByName(target, sourceName);
 			if (source == null) {
-				throw new XWTException("No element is found with the name = " + sourceName);
+				throw new XWTException("No element is found with the name = "
+						+ sourceName);
 			}
-			IObservable observableValue = ScopeManager.observeValue(source, source, propertyName, UpdateSourceTrigger.PropertyChanged);
+			IObservable observableValue = ScopeManager.observeValue(source,
+					source, propertyName, UpdateSourceTrigger.PropertyChanged);
 			observableValue.addChangeListener(changeListener);
 		}
 	}

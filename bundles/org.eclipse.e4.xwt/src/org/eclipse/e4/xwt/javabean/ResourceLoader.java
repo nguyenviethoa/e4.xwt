@@ -641,6 +641,11 @@ public class ResourceLoader implements IVisualElementLoader {
 		TriggerBase[] triggers = UserData.getTriggers(widget);
 		for (TriggerBase triggerBase : triggers) {
 			if (triggerBase != null) {
+				triggerBase.prepare(target);
+			}
+		}
+		for (TriggerBase triggerBase : triggers) {
+			if (triggerBase != null) {
 				triggerBase.on(target);
 			}
 		}

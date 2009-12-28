@@ -88,7 +88,7 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 
 	public boolean isSourcePropertyReadOnly() {
 		for (Binding binding : bindings) {
-			if (binding.isSourceProeprtyReadOnly()) {
+			if (binding.isSourcePropertyReadOnly()) {
 				return true;
 			}
 		}

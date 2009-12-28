@@ -38,9 +38,9 @@ public class TableViewerColumnsProperty extends AbstractProperty {
 		if (count != 0) {
 			String[] columnProperties = new String[count];
 			for (int i = 0; i < columnProperties.length; i++) {
-				columnProperties[i] = (String) table.getColumn(i).getData(TableViewerColumnDisplayMemberPath.PROEPRTY_DATA_KEY);
+				columnProperties[i] = (String) table.getColumn(i).getData(TableViewerColumnDisplayMemberPath.PROPERTY_DATA_KEY);
 				if (columnProperties[i] != null) {
-					table.getColumn(i).setData(TableViewerColumnDisplayMemberPath.PROEPRTY_DATA_KEY, null);
+					table.getColumn(i).setData(TableViewerColumnDisplayMemberPath.PROPERTY_DATA_KEY, null);
 				}
 			}
 			tableViewer.setColumnProperties(columnProperties);

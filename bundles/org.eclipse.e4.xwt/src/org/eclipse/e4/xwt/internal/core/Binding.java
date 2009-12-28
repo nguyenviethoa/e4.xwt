@@ -39,7 +39,6 @@ public class Binding extends DynamicBinding {
 	private Object source;
 
 	private String elementName;
-
 	private IValueConverter converter;
 
 	private IValidationRule[] validationRules = IValidationRule.EMPTY_ARRAY;
@@ -244,10 +243,10 @@ public class Binding extends DynamicBinding {
 		return dataContext;
 	}
 
-	public boolean isSourceProeprtyReadOnly() {
+	public boolean isSourcePropertyReadOnly() {
 		IDataProvider dataProvider = getDataProvider();
 		try {
-			return ScopeManager.isProeprtyReadOnly(dataProvider,
+			return ScopeManager.isPropertyReadOnly(dataProvider,
 					getPathPropertySegments());
 		} catch (XWTException e) {
 		}

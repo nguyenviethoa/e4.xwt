@@ -76,6 +76,9 @@ public class Trigger extends TriggerBase {
 	}
 
 	public void on(Object target) {
+	}
+
+	public void prepare(Object target) {
 		if (property != null) {
 			final Object source = getElementByName(target, sourceName);
 			if (source == null) {
@@ -127,7 +130,7 @@ public class Trigger extends TriggerBase {
 					}
 					for (SetterBase setter : getSetters()) {
 						try {
-							Object oldValue = setter.applyTo(element);
+							Object oldValue = setter.applyTo(element, true);
 							if (oldvalues == null) {
 								oldvalues = new HashMap<SetterBase, Object>();
 							}

@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Widget;
 public class MultiDataTrigger extends TriggerBase {
 	private Condition[] conditions = Condition.EMPTY_ARRAY;
 	private Setter[] setters;
+	private ValueChangeListener changeListener;
 
 	public Condition[] getConditions() {
 		return conditions;
@@ -44,20 +45,20 @@ public class MultiDataTrigger extends TriggerBase {
 		}
 
 		public void handleChange(ChangeEvent event) {
+			doHandleChange(true);
+		}
+
+		public void doHandleChange(boolean update) {
 			for (Condition condition : getConditions()) {
 				if (!condition.evaluate(element)) {
 					restoreValues();
 					return;
 				}
 			}
-			
-			if (oldvalues != null) {
-				return;
-			}
 
 			for (SetterBase setter : getSetters()) {
 				try {
-					Object oldValue = setter.applyTo(element);
+					Object oldValue = setter.applyTo(element, update);
 					if (oldvalues == null) {
 						oldvalues = new HashMap<SetterBase, Object>();
 					}
@@ -70,41 +71,44 @@ public class MultiDataTrigger extends TriggerBase {
 	}
 
 	@Override
-	public void on(Object target) {
+	public void prepare(Object target) {
 		if (getConditions().length == 0) {
 			return;
-		}		
+		}
 		Widget widget = UserData.getWidget(target);
 		if (widget == null) {
 			return;
-		}		
+		}
 
-		ValueChangeListener changeListener = new ValueChangeListener(target);
+		changeListener = new ValueChangeListener(target);
 		for (Condition condition : getConditions()) {
 			String sourceName = condition.getSourceName();
-			
+
 			IBinding binding = condition.getBinding();
 			Object bindingTarget = null;
 			if (binding != null) {
 				if (binding instanceof IDynamicBinding) {
 					IDynamicBinding dynamicBinding = (IDynamicBinding) binding;
 					bindingTarget = dynamicBinding.createBoundSource();
-				}
-				else {
+				} else {
 					bindingTarget = binding.getValue();
 				}
-			}
-			else {
+			} else {
 				Object sourceObject = getElementByName(target, sourceName);
 				Widget sourceWidget = UserData.getWidget(sourceObject);
 				bindingTarget = XWT.getDataContext(sourceWidget);
 			}
-			
+
 			if (!(bindingTarget instanceof IObservableValue)) {
 				return;
 			}
 			IObservableValue observableValue = (IObservableValue) bindingTarget;
 			observableValue.addChangeListener(changeListener);
 		}
+		changeListener.doHandleChange(false);
+	}
+
+	public void on(Object target) {
+		changeListener.doHandleChange(true);
 	}
 }

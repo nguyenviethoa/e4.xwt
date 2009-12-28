@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.TableColumn;
  * @author yyang (yves.yang@soyatec.com)
  */
 public class TableViewerColumnDisplayMemberPath extends AbstractProperty {
-	public static final String PROEPRTY_DATA_KEY = "_XWT.TableViewerColumnDsiplayPath";
+	public static final String PROPERTY_DATA_KEY = "_XWT.TableViewerColumnDsiplayPath";
 
 	public TableViewerColumnDisplayMemberPath() {
 		super(PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH, String.class);
@@ -34,6 +34,6 @@ public class TableViewerColumnDisplayMemberPath extends AbstractProperty {
 		TableViewerColumn tableViewerColumn = (TableViewerColumn) target;
 		TableColumn tableColumn = tableViewerColumn.getColumn();
 		String text = (String) value;
-		tableColumn.setData(PROEPRTY_DATA_KEY, text);
+		tableColumn.setData(PROPERTY_DATA_KEY, text);
 	}
 }

@@ -50,7 +50,7 @@ public class Setter extends SetterBase {
 		this.value = value;
 	}
 
-	public Object applyTo(Object element) {
+	public Object applyTo(Object element, boolean update) {
 		String propName = getProperty();
 		String propValue = getValue();
 		String targetName = getTargetName();
@@ -65,7 +65,9 @@ public class Setter extends SetterBase {
 			Object toValue = XWT.convertFrom(prop.getType(), propValue);
 			try {
 				oldValue = prop.getValue(setterTarget);
-				prop.setValue(setterTarget, toValue);
+				if (update) {
+					prop.setValue(setterTarget, toValue);
+				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

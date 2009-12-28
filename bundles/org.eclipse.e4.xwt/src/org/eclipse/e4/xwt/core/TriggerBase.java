@@ -46,6 +46,7 @@ public abstract class TriggerBase {
 	}
 	
 	public abstract void on(Object target);
+	public abstract void prepare(Object target);
 	
 	abstract class AbstractChangeListener implements IChangeListener {
 		protected HashMap<SetterBase, Object> oldvalues = null;
@@ -62,8 +63,6 @@ public abstract class TriggerBase {
 			for (SetterBase setter : oldvalues.keySet()) {
 				setter.undo(element, oldvalues.get(setter));
 			}
-			
-			oldvalues = null;
 		}
 	}
 	

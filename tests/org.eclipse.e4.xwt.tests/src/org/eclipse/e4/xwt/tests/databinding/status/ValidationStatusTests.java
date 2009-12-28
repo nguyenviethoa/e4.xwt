@@ -15,13 +15,15 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public class ValidationStatusTests extends XWTTestCase {
 
 	public void testValidationDefault1() throws Exception {
-		URL url = ValidationStatusTests.class.getResource(ValidationStatusDefault.class
+		URL url = ValidationStatusTests.class.getResource(ValidationStatusName.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
@@ -42,7 +44,7 @@ public class ValidationStatusTests extends XWTTestCase {
 	}
 
 	public void testValidationDefault2() throws Exception {
-		URL url = ValidationStatusTests.class.getResource(ValidationStatusDefault.class
+		URL url = ValidationStatusTests.class.getResource(ValidationStatusName.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
@@ -179,6 +181,81 @@ public class ValidationStatusTests extends XWTTestCase {
 				text1.setFocus();
 				assertEquals("OK", text1.getToolTipText());
 				assertEquals("OK", text2.getToolTipText());
+			}
+		});
+	}
+	
+	public void testValidationTriggerLocal() throws Exception {
+		URL url = ValidationStatusTests.class.getResource(ValidationStatusTriggerLocal.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Text text1 = (Text) XWT.findElementByName(root, "text1");
+				Text text2 = (Text) XWT.findElementByName(root, "text2");
+				Color red = root.getDisplay().getSystemColor(SWT.COLOR_RED);
+				Color black = root.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+
+				assertEquals(red, text1.getForeground());
+				assertEquals(red, text2.getForeground());
+
+				text1.setText("4");
+				text2.setFocus();
+				assertEquals(red, text1.getForeground());
+				
+				text1.setFocus();
+				text1.setText("5");
+				text2.setFocus();
+				assertEquals(black, text1.getForeground());
+				
+				text2.setText("4");
+				text1.setFocus();
+				assertEquals(red, text2.getForeground());
+
+				text2.setFocus();
+				text2.setText("6");
+				text1.setFocus();
+				assertEquals(black, text2.getForeground());
+			}
+		});
+	}
+
+	public void testValidationTriggerShared() throws Exception {
+		URL url = ValidationStatusTests.class.getResource(ValidationStatusTriggerShared.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Text text1 = (Text) XWT.findElementByName(root, "text1");
+				Text text2 = (Text) XWT.findElementByName(root, "text2");
+				Label statusLabel = (Label) XWT.findElementByName(root, "statusLabel");
+				
+				Color red = root.getDisplay().getSystemColor(SWT.COLOR_RED);
+				Color black = root.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+
+				assertEquals(red, statusLabel.getForeground());
+
+				text1.setText("4");
+				text2.setFocus();
+				assertEquals(red, statusLabel.getForeground());
+				assertEquals("Value must be 5", statusLabel.getText());
+
+				text1.setFocus();
+				text1.setText("5");
+				text2.setFocus();
+				assertEquals(red, statusLabel.getForeground());
+				assertEquals("Value must be 6", statusLabel.getText());
+				
+				text2.setText("4");
+				text1.setFocus();
+				assertEquals(red, statusLabel.getForeground());
+				assertEquals("Value must be 6", statusLabel.getText());
+
+				text2.setFocus();
+				text2.setText("6");
+				text1.setFocus();
+				assertEquals(black, statusLabel.getForeground());
+				assertEquals("OK", statusLabel.getText());
 			}
 		});
 	}

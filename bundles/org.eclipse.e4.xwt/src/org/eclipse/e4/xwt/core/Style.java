@@ -52,8 +52,13 @@ public class Style {
 
 	public void apply(Object target) {
 		for (SetterBase setter : getSetters()) {
-			setter.applyTo(target);
+			setter.applyTo(target, true);
 		}
+		
+		for (TriggerBase triggerBase : getTriggers()) {
+			triggerBase.prepare(target);
+		}
+		
 		for (TriggerBase triggerBase : getTriggers()) {
 			triggerBase.on(target);				
 		}

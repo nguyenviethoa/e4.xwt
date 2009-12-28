@@ -347,6 +347,14 @@ public class XWT {
 		return metaclass.findProperty(name);
 	}
 
+	public static Object findResource(Object object, String name) {
+		return XWTLoaderManager.getActive().findResource(object, name);
+	}
+
+	public static Map<String, Object> getResources(Object object) {
+		return XWTLoaderManager.getActive().getResources(object);
+	}
+
 	public static IEvent findEvent(Object object, String name) {
 		IMetaclass metaclass = XWTLoaderManager.getActive()
 				.getMetaclass(object);

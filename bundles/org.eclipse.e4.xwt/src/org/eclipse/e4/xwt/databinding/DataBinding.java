@@ -78,25 +78,25 @@ public class DataBinding extends AbstractDataBinding {
 			Object target = getControl();
 			if (target instanceof Text
 					&& getTargetProperty().equalsIgnoreCase("text")) {
-				if (isSourceProeprtyReadOnly()) {
+				if (isSourcePropertyReadOnly()) {
 					Text text = (Text) target;
 					text.setEditable(false);
 				}
 			} else if (target instanceof Button
 					&& getTargetProperty().equalsIgnoreCase("selection")) {
-				if (isSourceProeprtyReadOnly()) {
+				if (isSourcePropertyReadOnly()) {
 					Button button = (Button) target;
 					button.setEnabled(false);
 				}
 			} else if ((target instanceof Combo || target instanceof CCombo)
 					&& getTargetProperty().equalsIgnoreCase("text")) {
-				if (isSourceProeprtyReadOnly()) {
+				if (isSourcePropertyReadOnly()) {
 					Control control = (Control) target;
 					control.setEnabled(false);
 				}
 			} else if (target instanceof MenuItem
 					&& getTargetProperty().equalsIgnoreCase("selection")) {
-				if (isSourceProeprtyReadOnly()) {
+				if (isSourcePropertyReadOnly()) {
 					MenuItem menuItem = (MenuItem) target;
 					menuItem.setEnabled(false);
 				}
@@ -128,10 +128,10 @@ public class DataBinding extends AbstractDataBinding {
 		return value;
 	}
 
-	public boolean isSourceProeprtyReadOnly() {
+	public boolean isSourcePropertyReadOnly() {
 		IDataProvider dataProvider = getDataProvider();
 		try {
-			return ScopeManager.isProeprtyReadOnly(dataProvider,
+			return ScopeManager.isPropertyReadOnly(dataProvider,
 					getSourcePropertyExpression());
 		} catch (XWTException e) {
 		}

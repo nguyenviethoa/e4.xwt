@@ -556,6 +556,21 @@ public class UserData {
 				IUserDataConstants.XWT_RESOURCES_KEY);
 	}
 
+	public static Object findResource(Object object, String key) {
+		Map<String, Object> map = (Map<String, Object>) getLocalData(object,
+				IUserDataConstants.XWT_RESOURCES_KEY);
+		if (map.containsKey(key)) {
+			return map.get(key);
+		}
+		
+		Object parent = getTreeParent(object);
+		if (parent != null) {
+			return findResource(parent, key);
+		}
+		return null;
+	}
+
+	
 	public static void setResources(Object object, Map<?, ?> resources) {
 		setLocalData(object, IUserDataConstants.XWT_RESOURCES_KEY, resources);
 	}

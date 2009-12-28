@@ -447,7 +447,7 @@ public class ScopeManager {
 	 * @param propertyName
 	 * @return
 	 */
-	public static boolean isProeprtyReadOnly(IDataProvider dataProvider,
+	public static boolean isPropertyReadOnly(IDataProvider dataProvider,
 			BindingExpressionPath expressionPath) {
 		String[] segments = expressionPath.getSegments();
 		if (segments == null || segments.length == 0) {

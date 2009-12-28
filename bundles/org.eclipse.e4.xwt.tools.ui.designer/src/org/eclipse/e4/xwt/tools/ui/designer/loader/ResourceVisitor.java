@@ -631,6 +631,11 @@ public class ResourceVisitor {
 		TriggerBase[] triggers = UserData.getTriggers(widget);
 		for (TriggerBase triggerBase : triggers) {
 			if (triggerBase != null) {
+				triggerBase.prepare(target);
+			}
+		}
+		for (TriggerBase triggerBase : triggers) {
+			if (triggerBase != null) {
 				triggerBase.on(target);
 			}
 		}

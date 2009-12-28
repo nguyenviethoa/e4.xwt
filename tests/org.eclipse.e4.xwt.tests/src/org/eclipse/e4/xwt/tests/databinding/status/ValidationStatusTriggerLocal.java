@@ -6,10 +6,10 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.widgets.Composite;
 
-public class ValidationStatusDefault extends Composite {
+public class ValidationStatusTriggerLocal extends Composite {
 	public static void main(String[] args) {
 
-		URL url = ValidationStatusDefault.class.getResource(ValidationStatusDefault.class
+		URL url = ValidationStatusTriggerLocal.class.getResource(ValidationStatusTriggerLocal.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
@@ -19,7 +19,7 @@ public class ValidationStatusDefault extends Composite {
 		}
 	}
 
-	public ValidationStatusDefault(Composite parent, int style) {
+	public ValidationStatusTriggerLocal(Composite parent, int style) {
 		super(parent, style);
 	}
 

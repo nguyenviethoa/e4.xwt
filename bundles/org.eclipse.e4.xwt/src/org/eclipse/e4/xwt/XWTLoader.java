@@ -365,6 +365,17 @@ public class XWTLoader implements IXWTLoader {
 
 	/**
 	 * 
+	 */
+	public Object findResource(Object object, String key) {
+		return UserData.findResource(object, key);
+	}
+
+	public Map<String, Object> getResources(Object object) {
+		return UserData.getLocalResources(object);
+	}
+
+	/**
+	 * 
 	 * @param nsmapace
 	 * @param handler
 	 */

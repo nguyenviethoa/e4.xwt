@@ -28,6 +28,7 @@ public class DataTrigger extends TriggerBase {
 	private Operator operator = Operator.EQ;
 	private IBinding binding;
 	private SetterBase[] setters;
+	private ValueChangeListener changeListener;
 
 	public Operator getOperator() {
 		return operator;
@@ -64,7 +65,129 @@ public class DataTrigger extends TriggerBase {
 		this.setters = setters;
 	}	
 	
-	public void on(Object target) {
+	class ValueChangeListener extends AbstractChangeListener {
+		public ValueChangeListener(Object element) {
+			super(element);
+		}
+
+		public void handleChange(ChangeEvent event) {
+			doHandleChange(true);				
+		}
+
+		public void doHandleChange(boolean update) {
+			Widget widget = UserData.getWidget(element);
+			if (widget == null) {
+				return;
+			}
+			Object currentValue = binding.getValue();
+			if (currentValue == null) {
+				return;
+			}
+			while (currentValue instanceof IObservableValue) {
+				currentValue = ((IObservableValue) currentValue).getValue();
+			}
+
+			Class<?> currentValueType = currentValue.getClass();
+			Class<?> valueType = value.getClass();
+			Object normalizedValue = value;
+			if (!currentValueType.isAssignableFrom(valueType) && !valueType.isAssignableFrom(currentValueType)) {
+				IConverter converter = XWT.findConvertor(valueType, currentValueType);
+				if (converter != null) {
+					normalizedValue = converter.convert(normalizedValue);
+				}
+				else if (value != null && value.toString().trim().length() > 0){
+					boolean found = false;
+					// in case where the value is a boolean
+					converter = XWT.findConvertor(valueType, Boolean.class);
+					if (converter != null) {
+						try {
+							Object booleanValue = converter.convert(value);
+							if (booleanValue != null) {
+								converter = XWT.findConvertor(currentValueType, Boolean.class);
+								if (converter != null) {
+									currentValue = converter.convert(currentValue);
+									normalizedValue = booleanValue;
+									found = true;
+								}
+							}
+						} catch (Exception e) {
+						}
+					}
+					if (!found) {
+						converter = XWT.findConvertor(valueType, Integer.class);
+						if (converter != null) {
+							try {
+								Object booleanValue = converter.convert(value);
+								if (booleanValue != null) {
+									converter = XWT.findConvertor(currentValueType, Integer.class);
+									if (converter != null) {
+										currentValue = converter.convert(currentValue);
+										normalizedValue = booleanValue;
+										found = true;
+									}
+								}
+							} catch (Exception e) {
+							}
+						}
+					}
+					if (!found) {
+						converter = XWT.findConvertor(valueType, Double.class);
+						if (converter != null) {
+							try {
+								Object booleanValue = converter.convert(value);
+								if (booleanValue != null) {
+									converter = XWT.findConvertor(currentValueType, Double.class);
+									if (converter != null) {
+										currentValue = converter.convert(currentValue);
+										normalizedValue = booleanValue;
+										found = true;
+									}
+								}
+							} catch (Exception e) {
+							}
+						}
+					}
+					if (!found) {
+						converter = XWT.findConvertor(valueType, String.class);
+						if (converter != null) {
+							try {
+								Object booleanValue = converter.convert(value);
+								if (booleanValue != null) {
+									converter = XWT.findConvertor(currentValueType, String.class);
+									if (converter != null) {
+										currentValue = converter.convert(currentValue);
+										normalizedValue = booleanValue;
+										found = true;
+									}
+								}
+							} catch (Exception e) {
+							}
+						}
+					}
+				}
+			}
+			if (!Operator.compare(currentValue, operator, normalizedValue) && update) {
+				restoreValues();
+				return;
+			}
+
+			for (SetterBase setter : getSetters()) {
+				try {
+					Object oldValue = setter.applyTo(element, update);
+					if (!update) {
+						if (oldvalues == null) {
+							oldvalues = new HashMap<SetterBase, Object>();
+						}
+						oldvalues.put(setter, oldValue);
+					}
+				} catch (RuntimeException e) {
+					continue;
+				}
+			}
+		}
+	}
+
+	public void prepare(Object target) {
 		if (value == null) {
 			return;
 		}
@@ -89,46 +212,13 @@ public class DataTrigger extends TriggerBase {
 			return;
 		}
 		IObservableValue observableValue = (IObservableValue) bindingTarget;
-		observableValue.addChangeListener(new AbstractChangeListener(target) {
-			public void handleChange(ChangeEvent event) {
-				Widget widget = UserData.getWidget(element);
-				if (widget == null) {
-					return;
-				}
-				Object currentValue = binding.getValue();
-				if (currentValue == null) {
-					return;
-				}
-				Class<?> currentValueType = currentValue.getClass();
-				Class<?> valueType = value.getClass();
-				Object normalizedValue = value;
-				if (!currentValueType.isAssignableFrom(valueType) && !valueType.isAssignableFrom(currentValueType)) {
-					IConverter converter = XWT.findConvertor(valueType, currentValueType);
-					if (converter != null) {
-						normalizedValue = converter.convert(normalizedValue);
-					}
-				}
-				if (!Operator.compare(currentValue, operator, normalizedValue)) {
-					restoreValues();
-					return;					
-				}
-				
-				if (oldvalues != null) {
-					return;
-				}
+		changeListener = new ValueChangeListener(target);
+		observableValue.addChangeListener(changeListener);
+		changeListener.doHandleChange(false); // get default value
+	}
 
-				for (SetterBase setter : getSetters()) {
-					try {
-						Object oldValue = setter.applyTo(element);
-						if (oldvalues == null) {
-							oldvalues = new HashMap<SetterBase, Object>();
-						}
-						oldvalues.put(setter, oldValue);
-					} catch (RuntimeException e) {
-						continue;
-					}
-				}
-			}
-		});
+	@Override
+	public void on(Object target) {
+		changeListener.doHandleChange(true);
 	}
 }

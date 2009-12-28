@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.converters;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.e4.xwt.XWTException;
 
 /**
  * String to Boolean converter
@@ -22,7 +23,13 @@ public class StringToBoolean implements IConverter {
 
 	public Object convert(Object fromObject) {
 		String str = (String) fromObject;
-		return "true".equalsIgnoreCase(str) ? Boolean.TRUE : Boolean.FALSE;
+		if ("true".equalsIgnoreCase(str)) {
+			return true;
+		}
+		else if ("false".equalsIgnoreCase(str)) {
+			return false;
+		}
+		throw new XWTException(str + " is not a boolean");
 	}
 
 	public Object getFromType() {
