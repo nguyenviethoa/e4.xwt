@@ -12,6 +12,8 @@ package org.eclipse.e4.xwt.tools.ui.designer.parts;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.XYLayout;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.xwt.tools.ui.designer.core.figures.ContentPaneFigure;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.CompositeInfo;
@@ -22,10 +24,13 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editpolicies.SnapFeedbackPolicy;
+import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Widget;
@@ -34,6 +39,7 @@ import org.eclipse.swt.widgets.Widget;
  * @author jliu jin.liu@soyatec.com
  */
 public class CompositeEditPart extends ControlEditPart {
+	static final int WIDTH = 10;
 
 	private ILayoutEditPolicy layoutEditPolicy;
 
@@ -119,4 +125,30 @@ public class CompositeEditPart extends ControlEditPart {
 		return new CompositeInfo((Composite) getWidget(), isRoot());
 	}
 
+	@Override
+	public EditPart getTargetEditPart(Request request) {
+		if (request instanceof CreateRequest) {
+			IFigure figure = getFigure();
+			Rectangle bounds = figure.getBounds().getCopy();
+			figure.translateToAbsolute(bounds);
+					
+			CreateRequest createRequest = (CreateRequest) request;
+			Point location = createRequest.getLocation();
+		
+			if (getParent() instanceof SashFormEditPart) {
+				SashFormEditPart sashFormEditPart = (SashFormEditPart) getParent();
+				if (sashFormEditPart.isHorizontal()) {
+					if (location.x <= bounds.x + WIDTH || location.x > bounds.x + bounds.width - WIDTH) {
+						return null;
+					}
+				}
+				else {
+					if (location.y <= bounds.y + WIDTH || location.y > bounds.y + bounds.height - WIDTH) {
+						return null;
+					}
+				}
+			}
+		}		
+		return super.getTargetEditPart(request);
+	}
 }

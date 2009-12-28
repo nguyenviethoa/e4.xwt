@@ -662,7 +662,7 @@ public class ResourceVisitor {
 			}
 			if (dataContext != null) {
 				IProperty property = widgetMetaclass
-						.findProperty(IConstants.XAML_DATACONTEXT);
+						.findProperty(IConstants.XAML_DATA_CONTEXT);
 				if (property != null) {
 					property.setValue(UserData.getWidget(control), dataContext);
 				} else {
@@ -857,10 +857,10 @@ public class ResourceVisitor {
 		// x:DataContext
 		{
 			XamlAttribute dataContextAttribute = element
-					.getAttribute(IConstants.XAML_DATACONTEXT);
+					.getAttribute(IConstants.XAML_DATA_CONTEXT);
 			if (dataContextAttribute != null) {
 				IProperty property = metaclass
-						.findProperty(IConstants.XAML_DATACONTEXT);
+						.findProperty(IConstants.XAML_DATA_CONTEXT);
 				Widget composite = (Widget) targetObject;
 				XamlNode documentObject = dataContextAttribute.getChildNodes()
 						.get(0);
@@ -926,7 +926,7 @@ public class ResourceVisitor {
 					nameScoped.addNamedObject(element.getAttribute(attrName,
 							namespace).getValue(), targetObject);
 					done.add(attrName);
-				} else if (IConstants.XAML_DATACONTEXT
+				} else if (IConstants.XAML_DATA_CONTEXT
 						.equalsIgnoreCase(attrName)) {
 					continue; // done before
 				} else if (IConstants.XAML_X_ARRAY.equalsIgnoreCase(attrName)) {
@@ -1248,7 +1248,7 @@ public class ResourceVisitor {
 				}
 			}
 		}
-		if (propertyName.equals(IConstants.XAML_DATACONTEXT)) {
+		if (propertyName.equals(IConstants.XAML_DATA_CONTEXT)) {
 			property = null;
 		}
 		if (IConstants.XAML_COMMAND.equalsIgnoreCase(propertyName)
