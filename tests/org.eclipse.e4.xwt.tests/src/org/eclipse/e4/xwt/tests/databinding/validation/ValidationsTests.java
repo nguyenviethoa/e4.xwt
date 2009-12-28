@@ -17,10 +17,10 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
 import org.eclipse.swt.widgets.Text;
 
-public class ValidatorsTests extends XWTTestCase {
+public class ValidationsTests extends XWTTestCase {
 
 	public void testValidation() throws Exception {
-		URL url = ValidatorsTests.class.getResource(Validation.class
+		URL url = ValidationsTests.class.getResource(Validation.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {

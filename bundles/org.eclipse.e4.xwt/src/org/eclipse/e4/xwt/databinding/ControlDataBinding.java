@@ -37,7 +37,6 @@ public class ControlDataBinding extends AbstractDataBinding {
 	 * Get bind value of two bindings.
 	 */
 	public Object getValue() {
-		IObservableValue sourceWidget = null;
 		IObservableValue targetWidget = null;
 		Object target = getControl();
 		if (target != null) {
@@ -58,6 +57,7 @@ public class ControlDataBinding extends AbstractDataBinding {
 
 		IObservable observable = ScopeManager.observeValue(control, source,
 				getSourceProperty(), getUpdateSourceTrigger());
+		IObservableValue sourceWidget = null;
 		if (observable instanceof IObservableValue) {
 			sourceWidget = (IObservableValue) observable;
 		}
@@ -65,6 +65,9 @@ public class ControlDataBinding extends AbstractDataBinding {
 		if (targetWidget == null) {
 			if (sourceWidget != null) {
 				Object value = sourceWidget.getValue();
+				while(value instanceof IObservableValue) {
+					value = ((IObservableValue)value).getValue();
+				}
 				IValueConverter converter = getConverter();
 				if (converter != null) {
 					value = converter.convert(value);
@@ -79,6 +82,9 @@ public class ControlDataBinding extends AbstractDataBinding {
 		bindingGate.bind(sourceWidget, targetWidget, this);
 		if (sourceWidget != null) {
 			Object value = sourceWidget.getValue();
+			while(value instanceof IObservableValue) {
+				value = ((IObservableValue)value).getValue();
+			}
 			IValueConverter converter = getConverter();
 			if (converter != null) {
 				value = converter.convert(value);

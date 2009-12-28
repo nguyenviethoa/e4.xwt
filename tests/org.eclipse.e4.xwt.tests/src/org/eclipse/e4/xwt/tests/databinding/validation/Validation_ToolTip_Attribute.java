@@ -4,39 +4,26 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *     Soyatec - initial API and implementation
+ *     Soyatec & hceylan - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.databinding.pojo;
+package org.eclipse.e4.xwt.tests.databinding.validation;
 
 import java.net.URL;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 
-public class DataBinding {
+public class Validation_ToolTip_Attribute {
 	public static void main(String[] args) {
 
-		URL url = DataBinding.class.getResource(DataBinding.class
-				.getSimpleName()
+		URL url = Validation_ToolTip_Attribute.class.getResource(Validation_ToolTip_Attribute.class.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected void onNew(Event event) {
-		Shell shell = (Shell) XWT.findElementByName(event.widget, "Root");
-		Company company = (Company) XWT.getDataContext(shell);
-		company.setName("Eclipse");
-		IObservableValue managerValue = XWT.observableValue(shell, company,
-				"name");
-		managerValue.setValue("Eclipse");
 	}
 }

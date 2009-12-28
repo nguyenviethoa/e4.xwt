@@ -105,8 +105,8 @@ public class DataBinding extends AbstractDataBinding {
 		}
 
 		Object value = observableSource;
-		if (observableSource instanceof IObservableValue) {
-			value = ((IObservableValue) observableSource).getValue();
+		while (value instanceof IObservableValue) {
+			value = ((IObservableValue) value).getValue();
 		}
 		return convertedValue(value);
 	}

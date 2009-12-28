@@ -162,6 +162,11 @@ public class ScopeManager {
 			IObservable observable = scopeManager.getObservable(widget, value,
 					expressionPath.getStripedPath());
 			if (observable != null) {
+				while (observable instanceof IObservableValue
+						&& ((IObservableValue) observable).getValue() instanceof IObservable) {
+					observable = (IObservable) ((IObservableValue) observable)
+							.getValue();
+				}
 				return observable;
 			}
 			dataProvider = XWT.findDataProvider(value);
