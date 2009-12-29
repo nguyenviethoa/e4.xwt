@@ -18,15 +18,11 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.NewResizableEditPolicy;
-import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
-import org.eclipse.gef.RequestConstants;
-import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gef.requests.LocationRequest;
+import org.eclipse.gef.requests.SelectionRequest;
 
 /**
  * 
@@ -34,7 +30,7 @@ import org.eclipse.gef.requests.LocationRequest;
  *
  */
 public class SashFormChildResizableEditPolicy extends NewResizableEditPolicy {
-	static final int WIDTH = 10;
+	public static final int WIDTH = 10;
 	
 	public SashFormChildResizableEditPolicy(int directions,
 			boolean displayNonHandles) {
@@ -69,8 +65,8 @@ public class SashFormChildResizableEditPolicy extends NewResizableEditPolicy {
 				return sashFormEditPart;
 			}
 		}
-		else if (RequestConstants.REQ_SELECTION == request.getType()) {
-			LocationRequest locationRequest = (LocationRequest) request;
+		else if (request instanceof SelectionRequest) {
+			SelectionRequest locationRequest = (SelectionRequest) request;
 			Point location = locationRequest.getLocation().getCopy();
 			location = transposer.t(location);
 			List<EditPart> children = sashFormEditPart.getChildren();

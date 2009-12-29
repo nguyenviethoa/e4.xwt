@@ -27,6 +27,7 @@ public abstract class AbstractCreateCommand extends Command {
 	protected CreateRequest createRequest;
 	protected CreateReqHelper helper;
 	private Command addChildCommand;
+	private XamlNode child;
 
 	public AbstractCreateCommand(EditPart parent, CreateRequest createRequest) {
 		this.parent = parent;
@@ -41,17 +42,9 @@ public abstract class AbstractCreateCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
 	public void execute() {
-		XamlNode child = helper.getNewObject();
-
 		preExecute(child, createRequest);
 
-		if (!InitializeHelper.checkValue(child)) {
-			return;
-		}
-		addChildCommand = createCreateCommand(getParentModel(), child);
-		if (addChildCommand != null) {
-			addChildCommand.execute();
-		}
+		addChildCommand.execute();
 	}
 
 	protected Command createCreateCommand(XamlNode parent, XamlNode child) {
@@ -64,6 +57,20 @@ public abstract class AbstractCreateCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
 	public boolean canExecute() {
+		if (child == null) {
+			child = helper.getNewObject();
+		}
+		if (addChildCommand == null) {
+			addChildCommand = createCreateCommand(getParentModel(), child);
+		}
+
+		if (!InitializeHelper.checkValue(child)) {
+			return false;
+		}
+
+		if (addChildCommand != null && !addChildCommand.canExecute()) {
+			return false;
+		}
 		return parent != null && getParentModel() != null && helper.canCreate(parent);
 	}
 

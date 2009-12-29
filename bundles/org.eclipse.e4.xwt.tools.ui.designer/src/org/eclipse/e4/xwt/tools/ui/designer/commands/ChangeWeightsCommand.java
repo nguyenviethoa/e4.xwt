@@ -28,6 +28,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Sash;
 
@@ -106,7 +107,7 @@ public class ChangeWeightsCommand extends Command {
 			if (index != -1) {
 				int resizeDirection = request.getResizeDirection();
 				Dimension sizeDelta = request.getSizeDelta();
-				int offset = getResizeOffset((Control) visualObject,
+				int offset = getResizeOffset((Control) visualObject, null,
 						newWeights, index, sizeDelta.width, sizeDelta.height,
 						resizeDirection == PositionConstants.EAST
 								|| resizeDirection == PositionConstants.WEST);
@@ -127,7 +128,7 @@ public class ChangeWeightsCommand extends Command {
 				boolean horizontal = (sash.getStyle() & SWT.VERTICAL) != 0;
 				Control[] controls = getControls(sashForm);
 				if (controls != null) {
-					int resizeOffset = getResizeOffset(controls[sashIndex],
+					int resizeOffset = getResizeOffset(controls[sashIndex], sash, 
 							newWeights, sashIndex, moveDelta.x, moveDelta.y,
 							horizontal);
 					newWeights[sashIndex] += resizeOffset;
@@ -167,26 +168,38 @@ public class ChangeWeightsCommand extends Command {
 		return null;
 	}
 
-	private int getResizeOffset(Control control, int[] weights, int index,
+	private int getResizeOffset(Control control, Sash sash, int[] weights, int index,
 			int x, int y, boolean horizontal) {
 		float total = 0;
 		for (int i : weights) {
 			total += i;
 		}
 
-		Point size = SWTTools.getSize(control);
-		// int resizeDirection = request.getResizeDirection();
-		// Dimension sizeDelta = request.getSizeDelta();
+		Rectangle bounds = SWTTools.getBounds(control);
+				
 		if (horizontal) {
+			int w = bounds.width;
+			if (sash != null) {
+				// in case the child doesn't fill the cell
+				Rectangle sashBounds = SWTTools.getBounds(sash);
+				w = Math.max(w, sashBounds.x - bounds.x);
+			}
 			float percent = weights[index] / total;
-			float width = (size.x / percent);
-			float newPercent = (size.x + x) / width;
+			float width = (w / percent);
+			float newPercent = (w + x) / width;
 			int newWeight = (int) (total * newPercent);
 			return newWeight - weights[index];
 		} else {
+			int h = bounds.height;
+			if (sash != null) {
+				// in case the child doesn't fill the cell
+				Rectangle sashBounds = SWTTools.getBounds(sash);
+				h = Math.max(h, sashBounds.y - bounds.y);
+			}
+			
 			float percent = weights[index] / total;
-			float height = (size.y / percent);
-			float newPercent = (size.y + y) / height;
+			float height = (h / percent);
+			float newPercent = (h + y) / height;
 			int newWeight = (int) (total * newPercent);
 			return newWeight - weights[index];
 		}

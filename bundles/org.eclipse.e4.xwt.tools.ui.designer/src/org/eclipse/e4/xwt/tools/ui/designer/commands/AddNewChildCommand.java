@@ -99,4 +99,12 @@ public class AddNewChildCommand extends Command {
 	public int getIndex() {
 		return index;
 	}
+	
+	public XamlNode getParent() {
+		return parent;
+	}
+
+	public XamlNode getChild() {
+		return child;
+	}
 }

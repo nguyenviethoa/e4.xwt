@@ -1,13 +1,18 @@
 package org.eclipse.e4.xwt.tools.ui.designer.editor.sash;
 
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.internal.utils.LoggerManager;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.SashUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
+import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.widgets.Sash;
 
 public class AddSashFormChildCommands extends AddNewChildCommand {
 	public static final String WIEGHTS_ATTR = "weights";
@@ -30,8 +35,16 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 	}
 	
 	@Override
-	public boolean canExecute() {
-		return super.canExecute() && host instanceof SashFormEditPart;
+	public boolean canExecute() {		
+		boolean result = super.canExecute() && host instanceof SashFormEditPart;
+		if (!result) {
+			return false;
+		}
+		XamlNode child = getChild();
+		String name = child.getName();
+		String ns = child.getNamespace();
+		IMetaclass metaclass = XWT.getMetaclass(name, ns);
+		return metaclass.getType() != Sash.class;
 	}
 	
 	@Override
@@ -66,8 +79,13 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 			// update the weights after, since the Notifier as update it. Her we just override it.
 			String value = SashUtil.weightsValue(weights);
 			XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
+			if (attribute == null) {
+				attribute = XamlFactory.eINSTANCE.createAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
+				sashForm.getAttributes().add(attribute);
+			}
 			attribute.setValue(value);
 		} catch (Exception e) {
+			LoggerManager.log(e);
 		}
 	}
 	

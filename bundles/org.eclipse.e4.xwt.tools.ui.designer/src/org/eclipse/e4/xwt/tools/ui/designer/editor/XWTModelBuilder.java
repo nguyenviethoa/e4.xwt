@@ -788,7 +788,8 @@ public class XWTModelBuilder extends EContentAdapter implements IModelBuilder {
 		if (designer != null) {
 			designer.getCommandStack().stop();
 		}
-
+		super.notifyChanged(msg);
+		
 		IDOMDocument textDocument = getTextDocument(jfaceDom);
 		Object notifier = msg.getNotifier();
 		Object oldValue = msg.getOldValue();

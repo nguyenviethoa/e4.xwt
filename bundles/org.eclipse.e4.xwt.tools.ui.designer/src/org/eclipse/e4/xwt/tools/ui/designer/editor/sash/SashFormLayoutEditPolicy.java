@@ -41,6 +41,7 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.gef.requests.GroupRequest;
+import org.eclipse.gef.requests.SelectionRequest;
 
 /**
  * @author jin.liu (jin.liu@soyatec.com)
@@ -49,7 +50,7 @@ import org.eclipse.gef.requests.GroupRequest;
 public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	static int WIDTH = 4;
 	private Polygon insertionLine;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -122,7 +123,8 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 		transposer.setEnabled(!isHorizontal());
 
 		SashFormEditPart host = (SashFormEditPart) getHost();
-		List<ControlEditPart> children = CompositeEditPartHelper.getChildren(host);
+		List<ControlEditPart> children = CompositeEditPartHelper
+				.getChildren(host);
 		Rectangle parentBox = transposer.t(getAbsoluteBounds(host));
 		if (children.size() == 0) {
 			Point p1 = new Point(parentBox.x, parentBox.y);
@@ -281,6 +283,72 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 		return new MoveChildCommand(child, after);
 	}
 
+	@Override
+	public EditPart getTargetEditPart(Request request) {
+		if (request instanceof SelectionRequest) {
+			SashFormEditPart host = (SashFormEditPart) getHost();
+			List<EditPart> children = host.getChildren();
+			if (children.size() == 0) {
+				return null;
+			}
+
+			SelectionRequest selectionRequest = (SelectionRequest) request;
+			Transposer transposer = new Transposer();
+			transposer.setEnabled(!isHorizontal());
+			Point location = selectionRequest.getLocation().getCopy();
+			location = transposer.t(location);
+
+			CreateRequest createRequest = new CreateRequest();
+			createRequest.setLocation(selectionRequest.getLocation());
+			int index = getFeedbackIndexFor(createRequest);
+			if (index == - 1) {
+				return null;
+			}
+			if (index == 0) {
+				return children.get(1);
+			}
+			GraphicalEditPart reference = (GraphicalEditPart) children
+					.get(index);
+			Rectangle bounds = getAbsoluteBounds(reference);
+			bounds = transposer.t(bounds);
+			GraphicalEditPart previousSash = null;
+			GraphicalEditPart nextSash = null;
+
+			if (reference instanceof SashEditPart) {
+				if (location.x < bounds.x + (bounds.width/2)) {
+					nextSash = reference;
+					if (index - 2 < 0) {
+						return reference;
+					}
+					previousSash = (GraphicalEditPart) children.get(index - 2);
+				}
+				else {
+					previousSash = reference;
+					if (index + 2 >= children.size()) {
+						return reference;
+					}
+					nextSash = (GraphicalEditPart) children.get(index + 2);
+					
+				}
+			} else {
+				previousSash = (GraphicalEditPart) children.get(index - 1);
+				nextSash = (GraphicalEditPart) children.get(index);
+			}
+			Rectangle previousBounds = getAbsoluteBounds(previousSash);
+			previousBounds = transposer.t(previousBounds);
+
+			Rectangle nextBounds = getAbsoluteBounds(nextSash);
+			nextBounds = transposer.t(nextBounds);
+
+			int width = nextBounds.x - previousBounds.x - previousBounds.width;
+			if (location.x < previousBounds.x + previousBounds.width + width/2) {
+				return previousSash;
+			}
+			return nextSash;
+		}
+		return super.getTargetEditPart(request);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -322,7 +390,8 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			}
 		}
 		if (isChildRequest) {
-			return new ChangeWeightsCommand((SashFormEditPart) getHost(), request);
+			return new ChangeWeightsCommand((SashFormEditPart) getHost(),
+					request);
 		}
 		return null;
 	}
