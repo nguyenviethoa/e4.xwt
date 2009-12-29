@@ -68,7 +68,7 @@ public abstract class AbstractCreateCommand extends Command {
 			return false;
 		}
 
-		if (addChildCommand != null && !addChildCommand.canExecute()) {
+		if (addChildCommand == null || !addChildCommand.canExecute()) {
 			return false;
 		}
 		return parent != null && getParentModel() != null && helper.canCreate(parent);
