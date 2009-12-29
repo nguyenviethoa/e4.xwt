@@ -27,56 +27,59 @@ import org.eclipse.gef.requests.SelectionRequest;
 /**
  * 
  * @author yyang <yves.yang@soyatec.com>
- *
+ * 
  */
 public class SashFormChildResizableEditPolicy extends NewResizableEditPolicy {
 	public static final int WIDTH = 10;
-	
+
 	public SashFormChildResizableEditPolicy(int directions,
 			boolean displayNonHandles) {
 		super(directions, displayNonHandles);
 	}
-	
+
 	@Override
 	public EditPart getTargetEditPart(Request request) {
-		EditPart part = getTargetEditPart(request, (GraphicalEditPart) getHost());
+		EditPart part = getTargetEditPart(request,
+				(GraphicalEditPart) getHost());
 		if (part != null) {
 			return part;
 		}
 		return super.getTargetEditPart(request);
 	}
 
-	public static EditPart getTargetEditPart(Request request, GraphicalEditPart editPart) {
-		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart.getParent();
+	public static EditPart getTargetEditPart(Request request,
+			GraphicalEditPart editPart) {
+		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart
+				.getParent();
 		IFigure figure = editPart.getFigure();
 		Rectangle bounds = figure.getBounds().getCopy();
-		figure.translateToAbsolute(bounds);						
+		figure.translateToAbsolute(bounds);
 
 		Transposer transposer = new Transposer();
 		transposer.setEnabled(!sashFormEditPart.isHorizontal());
 		bounds = transposer.t(bounds);
-		
+
 		if (request instanceof CreateRequest) {
 			CreateRequest createRequest = (CreateRequest) request;
 			Point location = createRequest.getLocation().getCopy();
 			location = transposer.t(location);
-			
-			if (location.x <= bounds.x + WIDTH || location.x > bounds.x + bounds.width - WIDTH) {
+
+			if (location.x <= bounds.x + WIDTH
+					|| location.x > bounds.x + bounds.width - WIDTH) {
 				return sashFormEditPart;
 			}
-		}
-		else if (request instanceof SelectionRequest) {
+		} else if (request instanceof SelectionRequest) {
 			SelectionRequest locationRequest = (SelectionRequest) request;
 			Point location = locationRequest.getLocation().getCopy();
 			location = transposer.t(location);
 			List<EditPart> children = sashFormEditPart.getChildren();
 			int index = children.indexOf(editPart);
 			if (index != 0 && location.x <= bounds.x + WIDTH) {
-				return children.get(index-1);
+				return children.get(index - 1);
+			} else if (location.x > bounds.x + bounds.width - WIDTH
+					&& index != (children.size() - 1)) {
+				return children.get(index + 1);
 			}
-			else if (location.x > bounds.x + bounds.width - WIDTH && index != (children.size() - 1)) {
-				return children.get(index+1);
-			}	
 		}
 		return null;
 	}

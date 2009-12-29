@@ -49,7 +49,10 @@ import org.eclipse.gef.requests.SelectionRequest;
  */
 public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	static int WIDTH = 4;
+	static public final String INSERT_AFTER = "_INSERT_AFTER";
+	static public final String INSERT_INDEX = "_INSERT_INDEX";
 	private Polygon insertionLine;
+	
 
 	/*
 	 * (non-Javadoc)
@@ -80,9 +83,19 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 				after = true;
 			}
 		}
-		
-		
-		return new SashFormInsertCreateCommand(getHost(), reference, request, index, after);
+		else {
+			Object value = request.getExtendedData().get(INSERT_AFTER);
+			if (value instanceof Boolean) {
+				after = (Boolean) value;
+			}
+			Object indexValue = request.getExtendedData().get(INSERT_INDEX);
+			if (indexValue instanceof Integer) {
+				index = (Integer) indexValue;
+				index = index / 2;
+			}
+		}
+		return new SashFormInsertCreateCommand(getHost(), reference, request,
+				index, after);
 	}
 
 	protected Point getLocationFromRequest(Request request) {
@@ -152,12 +165,13 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			fb.setPoint(p3, 2);
 			fb.translateToRelative(p4);
 			fb.setPoint(p4, 3);
+			request.getExtendedData().put(INSERT_AFTER, false);
 			return;
-		}
-		else if (children.size() == 1) {
+		} else if (children.size() == 1) {
 			Point p1 = new Point(parentBox.x + parentBox.width / 2, parentBox.y);
 			p1 = transposer.t(p1);
-			Point p2 = new Point(parentBox.x + parentBox.width / 2, parentBox.y + parentBox.height);
+			Point p2 = new Point(parentBox.x + parentBox.width / 2, parentBox.y
+					+ parentBox.height);
 			p2 = transposer.t(p2);
 
 			Point p3 = new Point(parentBox.x + parentBox.width, parentBox.y
@@ -175,6 +189,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			fb.setPoint(p3, 2);
 			fb.translateToRelative(p4);
 			fb.setPoint(p4, 3);
+			request.getExtendedData().put(INSERT_AFTER, true);
 			return;
 		}
 
@@ -206,6 +221,9 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 						.t(getAbsoluteBounds((GraphicalEditPart) editPart));
 			}
 		}
+		request.getExtendedData().put(INSERT_AFTER, !before);
+		request.getExtendedData().put(INSERT_INDEX, epIndex);
+
 		int x = Integer.MIN_VALUE;
 		if (before) {
 			/*
@@ -329,7 +347,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			CreateRequest createRequest = new CreateRequest();
 			createRequest.setLocation(selectionRequest.getLocation());
 			int index = getFeedbackIndexFor(createRequest);
-			if (index == - 1) {
+			if (index == -1) {
 				return null;
 			}
 			if (index == 0) {
@@ -343,20 +361,19 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			GraphicalEditPart nextSash = null;
 
 			if (reference instanceof SashEditPart) {
-				if (location.x < bounds.x + (bounds.width/2)) {
+				if (location.x < bounds.x + (bounds.width / 2)) {
 					nextSash = reference;
 					if (index - 2 < 0) {
 						return reference;
 					}
 					previousSash = (GraphicalEditPart) children.get(index - 2);
-				}
-				else {
+				} else {
 					previousSash = reference;
 					if (index + 2 >= children.size()) {
 						return reference;
 					}
 					nextSash = (GraphicalEditPart) children.get(index + 2);
-					
+
 				}
 			} else {
 				previousSash = (GraphicalEditPart) children.get(index - 1);
@@ -369,7 +386,8 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			nextBounds = transposer.t(nextBounds);
 
 			int width = nextBounds.x - previousBounds.x - previousBounds.width;
-			if (location.x < previousBounds.x + previousBounds.width + width/2) {
+			if (location.x < previousBounds.x + previousBounds.width + width
+					/ 2) {
 				return previousSash;
 			}
 			return nextSash;

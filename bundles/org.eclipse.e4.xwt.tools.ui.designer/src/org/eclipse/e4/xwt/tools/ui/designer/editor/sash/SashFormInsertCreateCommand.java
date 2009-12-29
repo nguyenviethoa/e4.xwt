@@ -21,20 +21,26 @@ import org.eclipse.gef.requests.CreateRequest;
  */
 public class SashFormInsertCreateCommand extends InsertCreateCommand {
 
-	public SashFormInsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, int index, boolean after) {
+	public SashFormInsertCreateCommand(EditPart parent, EditPart reference,
+			CreateRequest createRequest, int index, boolean after) {
 		super(parent, reference, createRequest, index, after);
 	}
 
-	public SashFormInsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, int index) {
+	public SashFormInsertCreateCommand(EditPart parent, EditPart reference,
+			CreateRequest createRequest, int index) {
 		this(parent, reference, createRequest, index, false);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.commands.AbstractCreationCommand#createCreateCommand(org.soyatec.tools.designer.xaml.XamlNode, org.soyatec.tools.designer.xaml.XamlNode)
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.commands.AbstractCreationCommand
+	 * #createCreateCommand(org.soyatec.tools.designer.xaml.XamlNode,
+	 * org.soyatec.tools.designer.xaml.XamlNode)
 	 */
 	protected Command createCreateCommand(XamlNode parent, XamlNode child) {
-		return new AddSashFormChildCommands(getParent(), child, getIndex(), isAfter());
+		return new AddSashFormChildCommands(getParent(), child, getIndex(),
+				isAfter());
 	}
 }

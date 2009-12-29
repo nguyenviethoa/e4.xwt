@@ -43,9 +43,10 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 	public SashMoveableEditPolicy(SashEditPart editPart) {
 		this.editPart = editPart;
 	}
-	
+
 	/**
 	 * Creates the figure used for feedback.
+	 * 
 	 * @return the new feedback figure
 	 */
 	protected IFigure createDragSourceFeedbackFigure() {
@@ -54,8 +55,7 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 		getFeedbackLayer().add(label);
 		return super.createDragSourceFeedbackFigure();
 	}
-	
-	
+
 	@Override
 	protected void eraseChangeBoundsFeedback(ChangeBoundsRequest request) {
 		super.eraseChangeBoundsFeedback(request);
@@ -64,7 +64,7 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 		}
 		label = null;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -78,35 +78,36 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 				null);
 		return list;
 	}
-	
+
 	/**
 	 * When we drag Sash
 	 * 
 	 */
 	protected void showChangeBoundsFeedback(ChangeBoundsRequest request) {
 		IFigure feedback = getDragSourceFeedbackFigure();
-		
+
 		Transposer transposer = new Transposer();
 		transposer.setEnabled(!editPart.isHorizontal());
-		
+
 		Rectangle rect = getInitialFeedbackBounds().getCopy();
 		getHostFigure().translateToAbsolute(rect);
 		rect = transposer.t(rect);
-		
+
 		Point moveDelta = request.getMoveDelta().getCopy();
 		moveDelta = transposer.t(moveDelta);
-		
+
 		rect.performTranslate(0, moveDelta.y);
-		
-		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart.getParent();
+
+		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart
+				.getParent();
 		List children = sashFormEditPart.getChildren();
 		SashForm sashForm = (SashForm) sashFormEditPart.getWidget();
 		int[] weights = sashForm.getWeights();
-		
+
 		int index = children.indexOf(editPart);
 		int start;
 		int end;
-		
+
 		if (index - 2 < 0) {
 			GraphicalEditPart previous = (GraphicalEditPart) children.get(0);
 			IFigure figure = previous.getFigure();
@@ -114,33 +115,34 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 			figure.translateToAbsolute(rectangle);
 			rectangle = transposer.t(rectangle);
 			start = rectangle.y;
-		}
-		else {
-			GraphicalEditPart previous = (GraphicalEditPart) children.get(index -2);
+		} else {
+			GraphicalEditPart previous = (GraphicalEditPart) children
+					.get(index - 2);
 			IFigure figure = previous.getFigure();
 			Rectangle rectangle = figure.getBounds().getCopy();
 			figure.translateToAbsolute(rectangle);
 			rectangle = transposer.t(rectangle);
 			start = rectangle.y + rectangle.height;
 		}
-		
+
 		if (index + 2 > children.size() - 1) {
-			GraphicalEditPart next = (GraphicalEditPart) children.get(children.size() - 1);
+			GraphicalEditPart next = (GraphicalEditPart) children.get(children
+					.size() - 1);
 			IFigure figure = next.getFigure();
 			Rectangle rectangle = figure.getBounds().getCopy();
 			figure.translateToAbsolute(rectangle);
 			rectangle = transposer.t(rectangle);
 			end = rectangle.y + rectangle.height;
-		}
-		else {
-			GraphicalEditPart next = (GraphicalEditPart) children.get(index + 2);
+		} else {
+			GraphicalEditPart next = (GraphicalEditPart) children
+					.get(index + 2);
 			IFigure figure = next.getFigure();
 			Rectangle rectangle = figure.getBounds().getCopy();
 			figure.translateToAbsolute(rectangle);
 			rectangle = transposer.t(rectangle);
 			end = rectangle.y;
 		}
-		
+
 		if (rect.y < start) {
 			rect.y = start;
 		}
@@ -149,28 +151,28 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 		}
 
 		int weightIndex = index / 2;
-		int total = weights[weightIndex] + weights[weightIndex +1];
+		int total = weights[weightIndex] + weights[weightIndex + 1];
 
 		{
-			int previousWeight = (int)((rect.y - start) * total / (end - start - rect.height));
+			int previousWeight = (int) ((rect.y - start) * total / (end - start - rect.height));
 			weights[weightIndex] = previousWeight;
 			weights[weightIndex + 1] = total - previousWeight;
-			
+
 			label.setText(SashUtil.weightsDisplayString(weights));
 			Dimension dimension = label.getPreferredSize();
 			label.setSize(dimension);
 			dimension = transposer.t(dimension);
 
-			location.y = (int)rect.y + 10;
-			location.x = (int)rect.x + (rect.width - dimension.width)/2;
+			location.y = (int) rect.y + 10;
+			location.x = (int) rect.x + (rect.width - dimension.width) / 2;
 		}
 		location = transposer.t(location);
-		
+
 		rect = transposer.t(rect);
 
 		feedback.translateToRelative(rect);
 		feedback.setBounds(rect);
-		
+
 		label.translateToRelative(location);
 		label.setLocation(location);
 	}

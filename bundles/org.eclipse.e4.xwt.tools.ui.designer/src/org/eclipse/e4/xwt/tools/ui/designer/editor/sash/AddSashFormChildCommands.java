@@ -29,14 +29,15 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 		this(parent, child, index, false);
 	}
 
-	public AddSashFormChildCommands(EditPart parent, XamlNode child, int index, boolean after) {
-		super((XamlNode)parent.getModel(),  child, index);
+	public AddSashFormChildCommands(EditPart parent, XamlNode child, int index,
+			boolean after) {
+		super((XamlNode) parent.getModel(), child, index);
 		this.host = parent;
 		this.after = after;
 	}
-	
+
 	@Override
-	public boolean canExecute() {		
+	public boolean canExecute() {
 		boolean result = super.canExecute() && host instanceof SashFormEditPart;
 		if (!result) {
 			return false;
@@ -47,22 +48,22 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 		IMetaclass metaclass = XWT.getMetaclass(name, ns);
 		return metaclass.getType() != Sash.class;
 	}
-	
+
 	@Override
 	public void execute() {
 		XamlNode sashForm = (XamlNode) host.getModel();
 		SashFormEditPart sashFormEditPart = (SashFormEditPart) host;
 		SashForm form = (SashForm) sashFormEditPart.getWidget();
 		oldWeights = form.getWeights();
-		
+
 		int children = 0;
-		
+
 		for (Object child : sashFormEditPart.getChildren()) {
 			if (!(child instanceof SashEditPart)) {
-				children ++;
+				children++;
 			}
 		}
-		
+
 		if (children == 0) {
 			try {
 				// add in the list first
@@ -81,48 +82,50 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 				sum += oldWeights[i];
 			}
 			if (children > oldWeights.length) {
-				int delta = sum/(children - oldWeights.length);				
-				for (int i = oldWeights.length; i < children -1; i++) {
+				int delta = sum / (children - oldWeights.length);
+				for (int i = oldWeights.length; i < children - 1; i++) {
 					weights[i] = delta;
 				}
-				weights[children -1] = sum - (delta*(children - oldWeights.length));
+				weights[children - 1] = sum
+						- (delta * (children - oldWeights.length));
 			}
-			
+
 			int index = getIndex();
 			if (index == -1) {
 				index = children - 1;
-			}
-			else if (after) {
+			} else if (after) {
 				index--;
 			}
-			
-			int part1 = weights[index]/2;
+
+			int part1 = weights[index] / 2;
 			int part2 = weights[index] - part1;
-			
+
 			for (int i = children - 1; i > index; i--) {
-				weights[i+1] = oldWeights[i];
+				weights[i + 1] = oldWeights[i];
 			}
 			weights[index] = part1;
-			weights[index+1] = part2;
-		}
-		else {
-			int delta = 1000/weights.length;
+			weights[index + 1] = part2;
+		} else {
+			int delta = 1000 / weights.length;
 			for (int i = 0; i < weights.length - 1; i++) {
 				weights[i] = delta;
 			}
-			weights[weights.length -1] = sum - (delta*(children));			
+			weights[weights.length - 1] = sum - (delta * (children));
 		}
-		
+
 		try {
 			// add in the list first
 			super.execute();
 
 			if (weights.length > 1) {
-				// update the weights after, since the Notifier as update it. Her we just override it.
+				// update the weights after, since the Notifier as update it.
+				// Her we just override it.
 				String value = SashUtil.weightsValue(weights);
-				XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
+				XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR,
+						IConstants.XWT_NAMESPACE);
 				if (attribute == null) {
-					attribute = XamlFactory.eINSTANCE.createAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
+					attribute = XamlFactory.eINSTANCE.createAttribute(
+							WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
 					sashForm.getAttributes().add(attribute);
 				}
 				attribute.setValue(value);
@@ -131,18 +134,19 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 			LoggerManager.log(e);
 		}
 	}
-	
+
 	@Override
 	public boolean canUndo() {
 		return super.canUndo() && oldWeights != null;
 	}
-	
+
 	@Override
 	public void undo() {
 		super.undo();
 		XamlNode sashForm = (XamlNode) host.getModel();
 		String value = SashUtil.weightsValue(oldWeights);
-		XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
+		XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR,
+				IConstants.XWT_NAMESPACE);
 		attribute.setValue(value);
 	}
 }

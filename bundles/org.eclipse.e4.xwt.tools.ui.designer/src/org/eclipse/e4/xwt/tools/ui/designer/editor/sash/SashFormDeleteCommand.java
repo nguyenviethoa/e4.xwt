@@ -33,7 +33,8 @@ import org.eclipse.gef.commands.Command;
  */
 public class SashFormDeleteCommand extends Command {
 	private List<XamlNode> deleteNodes;
-	private Map<EObject, DeleteData> deletedObjects = new HashMap<EObject, DeleteData>(1);
+	private Map<EObject, DeleteData> deletedObjects = new HashMap<EObject, DeleteData>(
+			1);
 
 	public SashFormDeleteCommand(List deleteNodes) {
 		this.deleteNodes = convertNodes(deleteNodes);
@@ -74,15 +75,18 @@ public class SashFormDeleteCommand extends Command {
 			dd.parent = (EObject) deleted.eContainer();
 			if (deleted instanceof XamlElement) {
 				if (dd.parent instanceof XamlNode) {
-					dd.index = ((XamlNode) dd.parent).getChildNodes().indexOf(deleted);
+					dd.index = ((XamlNode) dd.parent).getChildNodes().indexOf(
+							deleted);
 					if (dd.index > -1) {
 						((XamlNode) dd.parent).getChildNodes().remove(dd.index);
 					}
 				} else if (dd.parent instanceof XamlDocument) {
 					((XamlDocument) dd.parent).setRootElement(null);
 				}
-			} else if (deleted instanceof XamlAttribute && dd.parent instanceof XamlNode) {
-				dd.index = ((XamlNode) dd.parent).getAttributes().indexOf(deleted);
+			} else if (deleted instanceof XamlAttribute
+					&& dd.parent instanceof XamlNode) {
+				dd.index = ((XamlNode) dd.parent).getAttributes().indexOf(
+						deleted);
 				if (dd.index > -1) {
 					((XamlNode) dd.parent).getAttributes().remove(dd.index);
 				}
@@ -107,18 +111,24 @@ public class SashFormDeleteCommand extends Command {
 			if (deleted instanceof XamlElement) {
 				if (parent instanceof XamlNode) {
 					if (index > -1) {
-						((XamlNode) parent).getChildNodes().add(index, (XamlElement) deleted);
+						((XamlNode) parent).getChildNodes().add(index,
+								(XamlElement) deleted);
 					} else {
-						((XamlNode) parent).getChildNodes().add((XamlElement) deleted);
+						((XamlNode) parent).getChildNodes().add(
+								(XamlElement) deleted);
 					}
 				} else if (parent instanceof XamlDocument) {
-					((XamlDocument) parent).setRootElement((XamlElement) deleted);
+					((XamlDocument) parent)
+							.setRootElement((XamlElement) deleted);
 				}
-			} else if (deleted instanceof XamlAttribute && parent instanceof XamlNode) {
+			} else if (deleted instanceof XamlAttribute
+					&& parent instanceof XamlNode) {
 				if (index > -1) {
-					((XamlNode) parent).getAttributes().add(index, (XamlAttribute) deleted);
+					((XamlNode) parent).getAttributes().add(index,
+							(XamlAttribute) deleted);
 				} else {
-					((XamlNode) parent).getAttributes().add((XamlAttribute) deleted);
+					((XamlNode) parent).getAttributes().add(
+							(XamlAttribute) deleted);
 				}
 			}
 		}
