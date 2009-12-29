@@ -201,19 +201,23 @@ public class XWTVisualRenderer extends AbstractRenderer {
 							SashForm sashForm = (SashForm) parent;
 							Control[] children = sashForm.getChildren();
 							int index = 0;
+							int c = 0;
 							
-							for (int i = 0, c = 0; i < children.length; i++) {
+							for (int i = 0; i < children.length; i++) {
 								if (removeWidget == children[i]) {
 									index = c;
-									break;
 								}
 								if (!(children[i] instanceof Sash)) {
 									c++;
 								}
 							}
-							
-							value = SashUtil.removeWeights(value, index);
-							attribute.setValue(value);
+							if (c <= 1) {
+								updateObj.getAttributes().remove(attribute);
+							}
+							else {
+								value = SashUtil.removeWeights(value, index);
+								attribute.setValue(value);
+							}
 						}
 					}
 				}

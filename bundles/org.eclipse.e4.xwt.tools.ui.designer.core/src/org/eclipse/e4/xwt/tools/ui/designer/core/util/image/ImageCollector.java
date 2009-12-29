@@ -82,9 +82,16 @@ public class ImageCollector {
 				bounds = control.getBounds();
 
 				shell.setAlpha(0);
-				shell.moveBelow(null);
-				if (!shell.isVisible()) {
-					shell.setVisible(true);
+				if (SWTUtil.IsCocoa) {
+					if (!shell.isVisible()) {
+						shell.open();
+					}
+				}
+				else {
+					shell.moveBelow(null);
+					if (!shell.isVisible()) {
+						shell.setVisible(true);
+					}
 				}
 				if (control instanceof Shell) {
 					image = ImageCapture.getInstance().capture(control,

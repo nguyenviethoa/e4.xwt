@@ -24,14 +24,19 @@ public class InsertCreateCommand extends AbstractCreateCommand {
 	private int index = -1;
 	private boolean after = false;
 
-	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, boolean after) {
+	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, int index, boolean after) {
 		super(parent, createRequest);
 		this.reference = reference;
 		this.after = after;
+		this.index = index;
+	}
+
+	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, int index) {
+		this(parent, reference, createRequest, index, false);
 	}
 
 	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest) {
-		this(parent, reference, createRequest, false);
+		this(parent, reference, createRequest, -1, false);
 	}
 
 	/*

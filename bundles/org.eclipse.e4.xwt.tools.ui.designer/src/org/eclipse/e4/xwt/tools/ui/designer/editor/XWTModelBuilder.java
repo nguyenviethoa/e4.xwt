@@ -876,7 +876,7 @@ public class XWTModelBuilder extends EContentAdapter implements IModelBuilder {
 				if (textNode != null) {
 					if (oldNode instanceof IDOMElement) {
 						NodeList nodelist = textNode.getChildNodes();
-						// before remove,we must check if there is the oldNode
+						// before remove, we must check if there is the oldNode
 						// in the textNode.Because the oldNode may have be
 						// deleted.
 						for (int i = 0; i < nodelist.getLength(); i++) {

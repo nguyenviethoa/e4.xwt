@@ -61,14 +61,18 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	protected Command getCreateCommand(CreateRequest request) {
 		EditPart reference = getInsertionReference(request);
 		boolean after = false;
+		int index = -1;
 		if (reference instanceof SashEditPart) {
+			int i = 0;
 			EditPart previous = null;
 			for (Object child : getHost().getChildren()) {
 				if (child == reference) {
+					index = i;
 					break;
 				}
 				if (!(child instanceof SashEditPart)) {
 					previous = (EditPart) child;
+					i++;
 				}
 			}
 			if (previous != null) {
@@ -76,8 +80,9 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 				after = true;
 			}
 		}
-		return new SashFormInsertCreateCommand(getHost(), reference, request,
-				after);
+		
+		
+		return new SashFormInsertCreateCommand(getHost(), reference, request, index, after);
 	}
 
 	protected Point getLocationFromRequest(Request request) {
@@ -137,6 +142,29 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			p3 = transposer.t(p3);
 
 			Point p4 = new Point(parentBox.x + parentBox.width / 2, parentBox.y);
+			p4 = transposer.t(p4);
+
+			fb.translateToRelative(p1);
+			fb.setPoint(p1, 0);
+			fb.translateToRelative(p2);
+			fb.setPoint(p2, 1);
+			fb.translateToRelative(p3);
+			fb.setPoint(p3, 2);
+			fb.translateToRelative(p4);
+			fb.setPoint(p4, 3);
+			return;
+		}
+		else if (children.size() == 1) {
+			Point p1 = new Point(parentBox.x + parentBox.width / 2, parentBox.y);
+			p1 = transposer.t(p1);
+			Point p2 = new Point(parentBox.x + parentBox.width / 2, parentBox.y + parentBox.height);
+			p2 = transposer.t(p2);
+
+			Point p3 = new Point(parentBox.x + parentBox.width, parentBox.y
+					+ parentBox.height);
+			p3 = transposer.t(p3);
+
+			Point p4 = new Point(parentBox.x + parentBox.width, parentBox.y);
 			p4 = transposer.t(p4);
 
 			fb.translateToRelative(p1);

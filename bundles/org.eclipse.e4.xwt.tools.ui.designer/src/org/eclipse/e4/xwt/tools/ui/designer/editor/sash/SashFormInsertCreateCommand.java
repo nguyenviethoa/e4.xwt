@@ -21,12 +21,12 @@ import org.eclipse.gef.requests.CreateRequest;
  */
 public class SashFormInsertCreateCommand extends InsertCreateCommand {
 
-	public SashFormInsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, boolean after) {
-		super(parent, reference, createRequest, after);
+	public SashFormInsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, int index, boolean after) {
+		super(parent, reference, createRequest, index, after);
 	}
 
-	public SashFormInsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest) {
-		this(parent, reference, createRequest, false);
+	public SashFormInsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, int index) {
+		this(parent, reference, createRequest, index, false);
 	}
 
 	/*

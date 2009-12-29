@@ -6,6 +6,7 @@ import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.tools.ui.designer.commands.AddNewChildCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.SashUtil;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.SashEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
@@ -53,37 +54,79 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 		SashFormEditPart sashFormEditPart = (SashFormEditPart) host;
 		SashForm form = (SashForm) sashFormEditPart.getWidget();
 		oldWeights = form.getWeights();
-				
-		int[] weights = new int[oldWeights.length + 1];
-		int index = getIndex();
-		if (index == -1) {
-			index = oldWeights.length - 1;
+		
+		int children = 0;
+		
+		for (Object child : sashFormEditPart.getChildren()) {
+			if (!(child instanceof SashEditPart)) {
+				children ++;
+			}
 		}
-		else if (after) {
-			index--;
+		
+		if (children == 0) {
+			try {
+				// add in the list first
+				super.execute();
+			} catch (Exception e) {
+				LoggerManager.log(e);
+			}
+			return;
 		}
-		for (int i = 0; i <= index; i++) {
-			weights[i] = oldWeights[i];
+
+		int[] weights = new int[children + 1];
+		int sum = 0;
+		if (oldWeights.length != 0) {
+			for (int i = 0; i < oldWeights.length; i++) {
+				weights[i] = oldWeights[i];
+				sum += oldWeights[i];
+			}
+			if (children > oldWeights.length) {
+				int delta = sum/(children - oldWeights.length);				
+				for (int i = oldWeights.length; i < children -1; i++) {
+					weights[i] = delta;
+				}
+				weights[children -1] = sum - (delta*(children - oldWeights.length));
+			}
+			
+			int index = getIndex();
+			if (index == -1) {
+				index = children - 1;
+			}
+			else if (after) {
+				index--;
+			}
+			
+			int part1 = weights[index]/2;
+			int part2 = weights[index] - part1;
+			
+			for (int i = children - 1; i > index; i--) {
+				weights[i+1] = oldWeights[i];
+			}
+			weights[index] = part1;
+			weights[index+1] = part2;
 		}
-		int part = weights[index]/2;
-		weights[index+1] = weights[index] - part;
-		weights[index] = part;
-		for (int i = index+1; i < oldWeights.length; i++) {
-			weights[i+1] = oldWeights[i];
+		else {
+			int delta = 1000/weights.length;
+			for (int i = 0; i < weights.length - 1; i++) {
+				weights[i] = delta;
+			}
+			weights[weights.length -1] = sum - (delta*(children));			
 		}
 		
 		try {
 			// add in the list first
 			super.execute();
 
-			// update the weights after, since the Notifier as update it. Her we just override it.
-			String value = SashUtil.weightsValue(weights);
-			XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
-			if (attribute == null) {
-				attribute = XamlFactory.eINSTANCE.createAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
-				sashForm.getAttributes().add(attribute);
+			if (weights.length > 1) {
+				// update the weights after, since the Notifier as update it. Her we just override it.
+				String value = SashUtil.weightsValue(weights);
+				XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
+				if (attribute == null) {
+					attribute = XamlFactory.eINSTANCE.createAttribute(WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
+					sashForm.getAttributes().add(attribute);
+				}
+				attribute.setValue(value);
 			}
-			attribute.setValue(value);
 		} catch (Exception e) {
 			LoggerManager.log(e);
 		}
