@@ -14,6 +14,7 @@ import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;
+import org.eclipse.e4.ui.widgets.ETabFolder;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -45,6 +46,8 @@ public class E4EditPartsFactory implements EditPartFactory {
 				return new ToolBarEditPart((EObject) elementImpl);
 			} else if (widget instanceof SashForm) {
 				return new SashFormEditPart((EObject) elementImpl);
+			} else if (widget instanceof ETabFolder) {
+				return new PartContainerEditPart((EObject) elementImpl);
 			} else if (widget instanceof Composite) {
 				return new CompositeEditPart((EObject) elementImpl);
 			} else if (widget instanceof Control) {

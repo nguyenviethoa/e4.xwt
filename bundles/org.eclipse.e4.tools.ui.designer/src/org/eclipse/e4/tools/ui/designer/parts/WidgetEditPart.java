@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.MUILabel;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.WidgetInfo;
@@ -133,10 +134,17 @@ public class WidgetEditPart extends VisualEditPart {
 				value = eClass.getName();
 			}
 		}
-		Object widget = getWidget();
-		if (widget != null) {
-			value += "-\"" + widget.getClass().getSimpleName() + "\"";
+		if (muiElement instanceof MUILabel) {
+			String label = ((MUILabel) muiElement).getLabel();
+			if (label != null && !"".equals(label)) {
+				value += " - \"" + label + "\"";
+			}
 		}
+		// Object widget = getWidget();
+		// if (widget != null) {
+		// value += "-\"" + widget.getClass().getSimpleName() + "\"";
+		// }
 		return value;
 	}
+
 }

@@ -17,8 +17,8 @@ import java.util.List;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MGenericTile;
 import org.eclipse.e4.ui.model.application.MPSCElement;
+import org.eclipse.e4.ui.model.application.MPartSashContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
@@ -35,15 +35,34 @@ import org.eclipse.swt.widgets.Sash;
 /**
  * 
  * @author yyang <yves.yang@soyatec.com>
- *
+ * 
  */
 public class SashFormUtil {
 	public static Integer[] computeWeights(SashFormEditPart parent) {
-		MGenericTile<MUIElement> parentNode = (MGenericTile<MUIElement>) parent.getModel();
-		EList<Integer> integers = parentNode.getWeights();
+		MPartSashContainer parentNode = (MPartSashContainer) parent.getModel();
+		List<Integer> integers = new ArrayList<Integer>();
+		for (MUIElement child : parentNode.getChildren()) {
+			Integer weight = getWeight(child);
+			if (weight == null) {
+				continue;
+			}
+			integers.add(weight);
+		}
 		return integers.toArray(new Integer[integers.size()]);
 	}
-			
+
+	public static Integer getWeight(MUIElement element) {
+		if (element == null || element.getWidget() == null) {
+			return null;
+		}
+		String containerData = element.getContainerData();
+		try {
+			return Integer.parseInt(containerData);
+		} catch (NumberFormatException e) {
+			return -1;
+		}
+	}
+
 	public static Integer[] computeWeights(SashFormEditPart parent,
 			ChangeBoundsRequest request) {
 		IVisualInfo visualInfo = ((VisualEditPart) parent).getVisualInfo();
@@ -168,5 +187,18 @@ public class SashFormUtil {
 			return editParts.get(0);
 		}
 		return null;
+	}
+
+	static boolean isHorizontal(SashForm sashForm) {
+		return (sashForm.getStyle() & SWT.HORIZONTAL) != 0;
+	}
+
+	public static boolean isHorizontal(SashFormEditPart editPart) {
+		if (editPart == null || editPart.getVisualInfo() == null) {
+			throw new NullPointerException();
+		}
+		SashForm sashForm = (SashForm) editPart.getVisualInfo()
+				.getVisualObject();
+		return isHorizontal(sashForm);
 	}
 }

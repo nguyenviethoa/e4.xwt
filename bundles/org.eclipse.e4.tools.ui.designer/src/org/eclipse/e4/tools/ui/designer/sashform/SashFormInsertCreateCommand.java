@@ -26,21 +26,20 @@ public class SashFormInsertCreateCommand extends Command {
 	private CreateRequest request;
 	private SashFormEditPart parent;
 	private EditPart reference;
-	private Integer[] weights;
-	private Integer[] oldWeights;
-	
+
 	private MGenericTile<MUIElement> parentModel;
 	private MUIElement creatingModel;
 	private int index = -1;
 	private boolean after;
+	private Integer weight;
 
-	public SashFormInsertCreateCommand(SashFormEditPart parent, CreateRequest request,
-			EditPart reference) {
+	public SashFormInsertCreateCommand(SashFormEditPart parent,
+			CreateRequest request, EditPart reference) {
 		this(parent, request, reference, false);
 	}
 
-	public SashFormInsertCreateCommand(SashFormEditPart parent, CreateRequest request,
-			EditPart reference, boolean after) {
+	public SashFormInsertCreateCommand(SashFormEditPart parent,
+			CreateRequest request, EditPart reference, boolean after) {
 		this.parent = parent;
 		this.request = request;
 		this.reference = reference;
@@ -55,54 +54,35 @@ public class SashFormInsertCreateCommand extends Command {
 		if (model instanceof MGenericTile) {
 			parentModel = (MGenericTile<MUIElement>) model;
 		}
-		if (oldWeights != null && creatingModel != null) {
-			return true;
-		}
-		
-		oldWeights = SashFormUtil.computeWeights(parent);
-		if (oldWeights == null) {
-			return false;
-		}
 
 		creatingModel = E4PaletteHelper.createElement(parentModel, request);
 		return parentModel != null && creatingModel != null;
 	}
 
 	public void execute() {
+		EList<MUIElement> children = parentModel.getChildren();
 		if (reference != null) {
-			index = parentModel.getChildren().indexOf(reference.getModel());
+			index = children.indexOf(reference.getModel());
 			if (after) {
-				index ++;
-				if (index > parentModel.getChildren().size() - 1) {
-					index = parentModel.getChildren().size() - 1;
+				index++;
+				if (index > children.size() - 1) {
+					index = children.size() - 1;
 				}
 			}
 		}
-		if (index != -1) {
-			parentModel.getChildren().add(index, creatingModel);
-		} else {
-			index = parentModel.getChildren().size() - 1;
-			parentModel.getChildren().add(creatingModel);
+		if (index == -1) {
+			index = children.size() - 1;
 		}
-		EList<Integer> eList = parentModel.getWeights();
-		eList.clear();
-		
-		if (after && index != -1) {
-			index --;
+		// update weights
+		MUIElement muiElement = children.get(index);
+		weight = SashFormUtil.getWeight(muiElement);
+		if (weight != null && weight != -1) {
+			int part = weight / 2;
+			muiElement.setContainerData(Integer.toString(part));
+			creatingModel.setContainerData(Integer.toString(part));
 		}
-		weights = new Integer[oldWeights.length + 1];
-		
-		for (int i = 0; i < oldWeights.length; i++) {
-			int weight = oldWeights[i];
-			if (i == index) {
-				int part = weight/2;
-				eList.add(part);
-				eList.add(weight - part);
-			}
-			else {
-				eList.add(weight);
-			}
-		}
+
+		children.add(index, creatingModel);
 	}
 
 	public boolean canUndo() {
@@ -111,11 +91,10 @@ public class SashFormInsertCreateCommand extends Command {
 
 	public void undo() {
 		parentModel.getChildren().remove(creatingModel);
-		EList<Integer> eList = parentModel.getWeights();
-		eList.clear();
-		for (int i = 0; i < oldWeights.length; i++) {
-			int weight = oldWeights[i];
-			eList.add(weight);
-		}		
+		if (weight != null && index >= 0
+				&& index < parentModel.getChildren().size() - 1) {
+			MUIElement muiElement = parentModel.getChildren().get(index);
+			muiElement.setContainerData(weight.toString());
+		}
 	}
 }

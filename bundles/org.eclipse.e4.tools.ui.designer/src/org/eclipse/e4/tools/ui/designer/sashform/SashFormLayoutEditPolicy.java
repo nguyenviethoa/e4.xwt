@@ -17,6 +17,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.e4.tools.ui.designer.commands.MoveChildCommand;
+import org.eclipse.e4.tools.ui.designer.commands.NoOpCommand;
 import org.eclipse.e4.tools.ui.designer.parts.SashEditPart;
 import org.eclipse.e4.tools.ui.designer.policies.SashMoveableEditPolicy;
 import org.eclipse.e4.ui.model.application.MPartSashContainer;
@@ -224,7 +225,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	}
 
 	protected Command createAddCommand(EditPart child, EditPart after) {
-		return null;
+		return NoOpCommand.INSTANCE;
 	}
 
 	protected Command createMoveChildCommand(EditPart child, EditPart after) {
@@ -253,7 +254,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 * gef.Request)
 	 */
 	public Command getCommand(Request request) {
-		if (request instanceof ChangeBoundsRequest) {
+		if (request.getType().equals(RequestConstants.REQ_RESIZE_CHILDREN)) {
 			return new ChangeWeightsCommand((SashFormEditPart) getHost(),
 					(ChangeBoundsRequest) request);
 		}

@@ -34,6 +34,17 @@
       </editor>
    </extension>
    <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.e4.tools.ui.designer.E4Designer"
+            default="false"
+            extensions="e4xmi"
+            filenames="Application"
+            id="org.eclipse.e4.tools.ui.designer.E4Designer"
+            name="%editor.name">
+      </editor>
+   </extension>
+   <extension
          point="org.eclipse.ui.newWizards">
       <category
             id="org.eclipse.e4"
@@ -56,4 +67,16 @@
             name="New Workbeanch Window">
       </wizard>  
    </extension>
+   <extension
+       id="org.eclipse.e4.xwt.content-types"
+       point="org.eclipse.core.contenttype.contentTypes">
+     <content-type
+          base-type="org.eclipse.core.runtime.xml"
+          file-extensions="e4xmi"
+          id="org.eclipse.e4.content-type"
+          name="e4 XMI"
+          priority="low">
+      </content-type>
+   </extension>
+   
 </plugin>

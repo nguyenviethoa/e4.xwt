@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.sashform;
 
+import org.eclipse.e4.tools.ui.designer.commands.ApplyAttributeSettingCommand;
+import org.eclipse.e4.ui.model.application.MPSCElement;
 import org.eclipse.e4.ui.model.application.MPartSashContainer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 
 /**
@@ -24,7 +28,7 @@ public class ChangeWeightsCommand extends Command {
 	private SashFormEditPart parent;
 	private ChangeBoundsRequest request;
 	private Integer[] weights;
-	private Integer[] oldWeights;
+	private Command command;
 
 	public ChangeWeightsCommand(SashFormEditPart parent,
 			ChangeBoundsRequest request) {
@@ -40,7 +44,7 @@ public class ChangeWeightsCommand extends Command {
 		if (!(parent instanceof VisualEditPart)) {
 			return false;
 		}
-		
+
 		weights = SashFormUtil.computeWeights(parent, request);
 		if (weights == null) {
 			return false;
@@ -55,29 +59,35 @@ public class ChangeWeightsCommand extends Command {
 
 	public void execute() {
 		MPartSashContainer parentNode = (MPartSashContainer) parent.getModel();
-		EList<Integer> widgetList = parentNode.getWeights();
-		oldWeights = new Integer[widgetList.size()];
-		for (int i = 0; i < oldWeights.length; i++) {
-			oldWeights[i] = widgetList.get(i);
-		}		
-		widgetList.clear();
-
-		for (int i = 0; i < weights.length; i++) {
-			widgetList.add(weights[i]);
+		EList<MPSCElement> children = parentNode.getChildren();
+		CompoundCommand cmd = new CompoundCommand();
+		int index = -1;
+		for (int i = 0; i < children.size(); i++) {
+			MPSCElement child = children.get(i);
+			if (child.getWidget() == null) {
+				continue;
+			}
+			index++;
+			if (index >= 0 && index < weights.length) {
+				Integer integer = weights[index];
+				ApplyAttributeSettingCommand applyCommand = new ApplyAttributeSettingCommand(
+						(EObject) child, "containerData", integer.toString());
+				if (applyCommand.canExecute()) {
+					cmd.add(applyCommand);
+				}
+			}
+		}
+		command = cmd.unwrap();
+		if (command.canExecute()) {
+			command.execute();
 		}
 	}
 
 	public boolean canUndo() {
-		return oldWeights != null && oldWeights.length > 0;
+		return command != null && command.canUndo();
 	}
 
 	public void undo() {
-		MPartSashContainer parentNode = (MPartSashContainer) parent.getModel();
-		EList<Integer> widgetList = parentNode.getWeights();
-		widgetList.clear();
-		for (int i = 0; i < oldWeights.length; i++) {
-			widgetList.add(oldWeights[i]);
-		}
-		oldWeights = null;
+		command.undo();
 	}
 }

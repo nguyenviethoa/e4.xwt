@@ -65,6 +65,7 @@ public class MoveChildCommand extends Command {
 		if (newPosition > oldPosition) {
 			newPosition--;
 		}
+		// return true;
 		return newPosition != -1 && oldPosition != -1
 				&& oldPosition != newPosition;
 	}
