@@ -8,13 +8,8 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.core;
+package org.eclipse.e4.xwt.tests.jface.tableviewer;
 
-/**
- * 
- * @author yyang (yves.yang@soyatec.com)
- */
-public interface IBinding {
-	Object getValue();
-	void reset();
+public enum Sex {
+	Male, Female;
 }

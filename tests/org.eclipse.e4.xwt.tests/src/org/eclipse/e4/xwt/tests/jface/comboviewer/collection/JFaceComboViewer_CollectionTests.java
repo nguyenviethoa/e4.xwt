@@ -77,35 +77,9 @@ public class JFaceComboViewer_CollectionTests extends XWTTestCase {
 		});
 	}
 
-	public void test_ComboViewer_DisplayMemberPath() {
+	public void test_ComboViewer_BindingPath() {
 		URL url = JFaceComboViewer_CollectionTests.class
-				.getResource(ComboViewer_DisplayMemberPath.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, new Runnable() {
-			public void run() {
-				Button button = (Button) XWT.findElementByName(root, "Button");
-				selectButton(button);
-			}
-		}, new Runnable() {
-			public void run() {
-				checkButton();
-			}
-
-			public void checkButton() {
-				org.eclipse.jface.viewers.ComboViewer comboViewer = (org.eclipse.jface.viewers.ComboViewer) XWT
-						.findElementByName(root, "ComboViewer");
-				assertTrue(comboViewer.getInput() instanceof IObservableCollection);
-				IObservableCollection collection = (IObservableCollection) comboViewer
-						.getInput();
-				assertTrue(collection.size() == 3);
-			}
-		});
-	}
-
-	public void test_ComboViewer_LabelProvider_DisplayMemberPath() {
-		URL url = JFaceComboViewer_CollectionTests.class
-				.getResource(ComboViewer_LabelProvider_DisplayMemberPath.class
+				.getResource(ComboViewer_BindingPath.class
 						.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {

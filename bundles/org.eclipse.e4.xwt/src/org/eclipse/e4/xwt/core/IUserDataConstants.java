@@ -25,4 +25,8 @@ public interface IUserDataConstants {
 	public static String XWT_CLR_KEY = "clr";
 
 	public static String XWT_USER_DATA_KEY = "__XWT.UserData";
+	
+	public static String XWT_PROPERTY_DATA_KEY = "_XWT.TableViewerColumnDisplayPath";
+	public static String XWT_PROPERTY_ITEM_TEXT_KEY = "_XWT.TableViewerColumnItemText";
+	public static String XWT_PROPERTY_ITEM_IMAGE_KEY = "_XWT.TableViewerColumnItemImage";
 }

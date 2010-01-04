@@ -23,7 +23,7 @@
 	</Composite.Resources>
 	<TableViewer Name="IndustryViewer" input="{Binding Path=members}">
 		<TableViewer.columns>
-			<TableViewerColumn width="150" text="Name" displayMemberPath="name"/>
+			<TableViewerColumn width="150" text="Name" bindingPath="name"/>
 		</TableViewer.columns>
 		<TableViewer.table HeaderVisible="true">
 		</TableViewer.table>
@@ -40,8 +40,8 @@
 	</Label>
 	<TableViewer Name="CompanyViewer" input="{Binding ElementName=IndustryViewer,Path=singleSelection.(j:Company.employees)}">
 		<TableViewer.columns>
-			<TableViewerColumn width="150" text="Name" displayMemberPath="name"/>
-			<TableViewerColumn width="150" text="Age" displayMemberPath="age"/>
+			<TableViewerColumn width="150" text="Name" bindingPath="name"/>
+			<TableViewerColumn width="150" text="Age" bindingPath="age"/>
 		</TableViewer.columns>
 		<TableViewer.table HeaderVisible="true">
 		</TableViewer.table>

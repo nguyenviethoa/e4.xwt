@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -19,11 +20,16 @@ import org.eclipse.swt.widgets.TableColumn;
  * 
  * @author yyang (yves.yang@soyatec.com)
  */
-public class TableViewerColumnDisplayMemberPath extends AbstractProperty {
-	public static final String PROPERTY_DATA_KEY = "_XWT.TableViewerColumnDsiplayPath";
+public class TableViewerColumnDynamicProperty extends AbstractProperty {
+	private String propertyKey; 
+	
+	public String getPropertyKey() {
+		return propertyKey;
+	}
 
-	public TableViewerColumnDisplayMemberPath() {
-		super(PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH, String.class);
+	public TableViewerColumnDynamicProperty(String propertyName, String propertyKey, Class<?> type) {
+		super(propertyName, type);
+		this.propertyKey = propertyKey;
 	}
 
 	public Object getValue(Object target) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
@@ -33,7 +39,6 @@ public class TableViewerColumnDisplayMemberPath extends AbstractProperty {
 	public void setValue(Object target, Object value) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
 		TableViewerColumn tableViewerColumn = (TableViewerColumn) target;
 		TableColumn tableColumn = tableViewerColumn.getColumn();
-		String text = (String) value;
-		tableColumn.setData(PROPERTY_DATA_KEY, text);
+		UserData.setLocalData(tableColumn, getPropertyKey(), value);
 	}
 }

@@ -1,7 +1,7 @@
 <Composite xmlns="http://www.eclipse.org/xwt/presentation"
     xmlns:x="http://www.eclipse.org/xwt"
-    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.comboviewer.collection"
-    x:Class="org.eclipse.e4.xwt.tests.jface.comboviewer.collection.ComboViewer"
+    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.comboviewer.array"
+    x:Class="org.eclipse.e4.xwt.tests.jface.comboviewer.array.ComboViewer"
     DataContext="{StaticResource myCompany}">
 	<Composite.layout>
 		<GridLayout numColumns="2"/>
@@ -9,12 +9,17 @@
 	<Composite.resources>
 		<j:Company x:Key="myCompany">
 			<j:Company.employees>
-				<j:Employee Name="Thomas"/>
-				<j:Employee Name="Jin"/>
+				<x:Array Type="j:Employee">
+					<j:Employee Name="Thomas"/>
+					<j:Employee Name="Jin"/>
+				</x:Array>
 			</j:Company.employees>
 		</j:Company>
 	</Composite.resources>
-	<ComboViewer name="ComboViewer" input="{Binding Path=employees}" displayMemberPath="name">
+	<ComboViewer name="ComboViewer" input="{Binding Path=employees}" bindingPath="name">
+		<ComboViewer.contentProvider>
+			<j:ContentProvider/>
+		</ComboViewer.contentProvider>
 		<ComboViewer.control.layoutData>
 			<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
          		grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>

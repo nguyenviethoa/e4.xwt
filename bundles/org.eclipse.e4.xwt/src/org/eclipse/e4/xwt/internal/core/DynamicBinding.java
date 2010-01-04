@@ -15,6 +15,7 @@ import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
+import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.databinding.BindingMode;
 import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.internal.utils.UserData;
@@ -118,6 +119,9 @@ public abstract class DynamicBinding implements IDynamicBinding {
 		}
 		Object data = UserData.getLocalDataContext(control);
 		if (data == null || data == this) {
+			if (data == null && UserData.hasLocalData(control, IUserDataConstants.XWT_DATACONTEXT_KEY)) {
+				return control;
+			}
 			Widget parent = UserData.getParent(control);
 			if (parent != null) {
 				return UserData.getDataContextHost(parent);

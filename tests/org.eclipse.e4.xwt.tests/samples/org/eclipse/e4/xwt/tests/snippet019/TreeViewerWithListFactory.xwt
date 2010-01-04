@@ -22,7 +22,7 @@
 	</Composite>
 	
 	<TreeViewer name="TreeViewer" x:Style="FULL_SELECTION|BORDER" sseHashlookup="true"
-		 input="{Binding}" displayMemberPath="text" >
+		 input="{Binding}" bindingPath="text" >
 		<TreeViewer.contentProvider> 
 			<ObservableTreeContentProvider contentPath="list"/>
 		</TreeViewer.contentProvider> 

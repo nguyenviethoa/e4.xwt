@@ -8,13 +8,26 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.core;
+package org.eclipse.e4.xwt.tests.jface.tableviewer;
+
+import java.net.URL;
+
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
 
 /**
- * 
- * @author yyang (yves.yang@soyatec.com)
+ * @author jliu
  */
-public interface IBinding {
-	Object getValue();
-	void reset();
+public class TableViewerColumn_bindingPath {
+	public static void main(String[] args) {
+
+		URL url = TableViewerColumn_bindingPath.class
+				.getResource(TableViewerColumn_bindingPath.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

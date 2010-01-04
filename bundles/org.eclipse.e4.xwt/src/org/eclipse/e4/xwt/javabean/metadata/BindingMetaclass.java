@@ -44,7 +44,7 @@ public class BindingMetaclass extends Metaclass {
 		else if (parameters[0] instanceof Item)
 			newInstance.setControl((Item) parameters[0]);
 		else if (parameters[0] instanceof ViewerColumn) {
-			newInstance.setControl(((ViewerColumn) parameters[0]).getViewer());
+			newInstance.setControl((ViewerColumn) parameters[0]);
 		}
 		newInstance.setXWTLoader(xwtLoader);
 		return newInstance;

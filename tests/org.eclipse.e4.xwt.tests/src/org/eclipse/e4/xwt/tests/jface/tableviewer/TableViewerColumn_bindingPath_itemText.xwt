@@ -1,15 +1,18 @@
 <Composite xmlns="http://www.eclipse.org/xwt/presentation"
     xmlns:x="http://www.eclipse.org/xwt"
-    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.tableviewer.master.detail.list"
+    xmlns:j="clr-namespace:org.eclipse.e4.xwt.tests.jface.tableviewer"
     DataContext="{StaticResource myCompany}">
 	<Composite.layout>
-		<GridLayout numColumns="1"/>
+		<GridLayout numColumns="2"/>
 	</Composite.layout>
 	<Composite.Resources>
 		<j:Company x:Key="myCompany">
 			<j:Company.employees>
-				<j:Employee Name="Thomas" Age="32"/>
-				<j:Employee Name="Jin" Age="27"/>
+				<x:Array Type="j:Employee">
+					<j:Employee Name="Thomas" Age="32"/>
+					<j:Employee Name="Jin" Age="27"/>
+					<j:Employee Name="Susan" Age="27" sex="Female"/>
+				</x:Array>
 			</j:Company.employees>
 		</j:Company>
 	</Composite.Resources>
@@ -17,18 +20,11 @@
 		<TableViewer.columns>
 			<TableViewerColumn width="150" text="Name" bindingPath="name"/>
 			<TableViewerColumn width="150" text="Age" bindingPath="age"/>
+			<TableViewerColumn width="150" text="Sex" bindingPath="sex" itemImage="{Binding converter=j:SexToImage}" />
 		</TableViewer.columns>
-		<TableViewer.table HeaderVisible="true">
-		</TableViewer.table>
 		<TableViewer.control.layoutData>
 			<GridData horizontalAlignment="FILL"
          		grabExcessHorizontalSpace="true"/>
 		</TableViewer.control.layoutData>
 	</TableViewer>
-	<Label name="Label" text="{Binding ElementName=TableViewer,path=singleSelection.(j:Employee.name)}">
-		<Label.layoutData>
-			<GridData horizontalAlignment="FILL"
-         		grabExcessHorizontalSpace="true"/>
-		</Label.layoutData>
-	</Label>
 </Composite>

@@ -77,35 +77,9 @@ public class JFaceListViewer_CollectionTests extends XWTTestCase {
 		});
 	}
 
-	public void test_ListViewer_DisplayMemberPath() {
+	public void test_ListViewer_BindingPath() {
 		URL url = JFaceListViewer_CollectionTests.class
-				.getResource(ListViewer_DisplayMemberPath.class.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
-		runTest(url, new Runnable() {
-			public void run() {
-				Button button = (Button) XWT.findElementByName(root, "Button");
-				selectButton(button);
-			}
-		}, new Runnable() {
-			public void run() {
-				checkButton();
-			}
-
-			public void checkButton() {
-				org.eclipse.jface.viewers.ListViewer listView = (org.eclipse.jface.viewers.ListViewer) XWT
-						.findElementByName(root, "ListViewer");
-				assertTrue(listView.getInput() instanceof IObservableCollection);
-				IObservableCollection collection = (IObservableCollection) listView
-						.getInput();
-				assertTrue(collection.size() == 3);
-			}
-		});
-	}
-
-	public void test_ListViewer_LabelProvider_DisplayMemberPath() {
-		URL url = JFaceListViewer_CollectionTests.class
-				.getResource(ListViewer_LabelProvider_DisplayMemberPath.class
-						.getSimpleName()
+				.getResource(ListViewer_BindingPath.class.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {

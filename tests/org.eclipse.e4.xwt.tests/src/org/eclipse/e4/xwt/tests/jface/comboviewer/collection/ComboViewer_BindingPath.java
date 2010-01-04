@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.jface.listviewer.collection;
+package org.eclipse.e4.xwt.tests.jface.comboviewer.collection;
 
 import java.net.URL;
 
@@ -17,11 +17,12 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.widgets.Event;
 
-public class ListViewer_DisplayMemberPath {
+public class ComboViewer_BindingPath {
 	public static void main(String[] args) {
 
-		URL url = ListViewer_DisplayMemberPath.class
-				.getResource(ListViewer_DisplayMemberPath.class.getSimpleName()
+		URL url = ComboViewer_BindingPath.class
+				.getResource(ComboViewer_BindingPath.class
+						.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

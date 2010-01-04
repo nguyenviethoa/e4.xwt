@@ -14,10 +14,7 @@
 			</j:Company.employees>
 		</j:Company>
 	</Composite.resources>
-	<ListViewer name="ListViewer" input="{Binding Path=employees}">
-		<ListViewer.labelProvider>
-			<DefaultListViewerLabelProvider displayMemberPath="name"/>
-		</ListViewer.labelProvider>
+	<ListViewer name="ListViewer" input="{Binding Path=employees}" bindingPath="name">
 		<ListViewer.control.layoutData>
 			<GridData horizontalAlignment="FILL" verticalAlignment="FILL"
          		grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>

@@ -222,4 +222,10 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 	public void setValidators(IValidationRule[] valueValidators) {
 		this.valueValidators = valueValidators;
 	}
+	
+	public void reset() {
+		for (Binding binding : bindings) {
+			binding.reset();
+		}
+	}
 }

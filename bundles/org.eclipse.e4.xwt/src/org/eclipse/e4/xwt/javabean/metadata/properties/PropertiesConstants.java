@@ -25,7 +25,9 @@ public final class PropertiesConstants {
 	public static final String PROPERTY_TEXT = "text";
 	public static final String PROPERTY_URL = "url";
 	public static final String PROPERTY_WIDTH = "width";
-	public static final String PROPERTY_DISPLAY_MEMBER_PATH = "displayMemberPath";
+	public static final String PROPERTY_BINDING_PATH = "bindingPath";
+	public static final String PROPERTY_ITEM_TEXT = "itemText";
+	public static final String PROPERTY_ITEM_IMAGE = "itemImage";
 	public static final String PROPERTY_IMAGE = "image";
 	public static final String PROPERTY_COLUMNS = "columns";
 	public static final String PROPERTY_COLUMN_PROPERTIES = "columnProperties";

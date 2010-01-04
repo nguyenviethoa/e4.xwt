@@ -39,7 +39,7 @@ import org.xml.sax.helpers.DefaultHandler;
 class ElementHandler extends DefaultHandler implements ContentHandler {
 	private Stack<StringBuffer> bufferStack;
 	private static final String[] BINDING_PROPERTIES = new String[] {
-		"path", "validationRule"
+		"path", "validationRule", "converter"
 	};
 	
 	

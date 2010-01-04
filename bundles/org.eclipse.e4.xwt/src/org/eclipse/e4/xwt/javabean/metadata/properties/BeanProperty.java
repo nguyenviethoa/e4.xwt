@@ -15,8 +15,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.annotation.Containment;
 import org.eclipse.e4.xwt.core.IBinding;
@@ -64,11 +62,7 @@ public class BeanProperty extends AbstractProperty {
 				}
 				if (!ObjectUtil.isAssignableFrom(IBinding.class, propertyType)) {
 					if (value != null && type != value.getClass()) {
-						IConverter convertor = value == null ? null : XWT
-								.findConvertor(value.getClass(), type);
-						if (convertor != null) {
-							value = convertor.convert(value);
-						}
+						value = ObjectUtil.resolveValue(value, type, value);
 					}
 				}
 

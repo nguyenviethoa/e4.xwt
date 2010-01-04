@@ -14,14 +14,25 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.core.IBinding;
+import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.internal.core.Core;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 
 public class JFacesHelper {
 
@@ -101,10 +112,138 @@ public class JFacesHelper {
 				return propertyNames;
 			}
 		}
-		String path = (String)UserData.getLocalData(viewer, PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH);
+		String path = (String)UserData.getLocalData(viewer, PropertiesConstants.PROPERTY_BINDING_PATH);
 		if (path != null) {
 			return new String [] {path};
 		}
 		return Core.EMPTY_STRING_ARRAY;
+	}
+
+	public static Object getColumnObject(Object element, int columnIndex, Object[] properties) {
+		if (element == null) {
+			return null;
+		}
+		Object dataContext = element;
+		
+		if (properties != null) {
+			Object propertyElement = properties[columnIndex];
+			if (propertyElement != null) {
+				String propertyName = propertyElement.toString();
+				if (propertyName != null) {
+					try {
+						IMetaclass metaclass = XWT.getMetaclass(dataContext);
+						IProperty property = metaclass.findProperty(propertyName.toLowerCase());
+						if (property != null) {
+							dataContext = property.getValue(dataContext);
+							if (dataContext != null) {		
+								Class<?> type = dataContext.getClass();
+								Class<?> propertyType = property.getType();
+								if (propertyType != null && !propertyType.isAssignableFrom(type)) {
+									dataContext = ObjectUtil.resolveValue(dataContext, type, propertyType, dataContext);
+								}
+							}
+						}
+					} catch (Exception e) {
+						throw new XWTException(e);
+					}			
+				}
+			}
+		}
+		return dataContext;
+	}
+
+	public static String getColumnText(Viewer viewer, Object element, int columnIndex) {
+		String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
+		return getColumnText(viewer, element, columnIndex, propertyNames);
+	}
+
+	public static String getColumnText(Viewer viewer, Object element, int columnIndex, Object[] properties) {
+		Object value = getColumnObject(element, columnIndex, properties);
+
+		try {
+			if (viewer instanceof TableViewer) {
+				Table table = ((TableViewer)viewer).getTable();
+				TableColumn[] columns = table.getColumns();
+				TableColumn column = columns[columnIndex];
+				if (UserData.hasLocalData(column,
+						IUserDataConstants.XWT_PROPERTY_ITEM_TEXT_KEY)) {
+					Object userDataValue = UserData.getLocalData(column,
+							IUserDataConstants.XWT_PROPERTY_ITEM_TEXT_KEY);
+					if (userDataValue instanceof IBinding) {
+						IBinding binding = (IBinding) userDataValue;
+						binding.reset();
+						UserData.setDataContext(column, value);
+						value = binding.getValue();
+					} else {
+						value = userDataValue;
+					}
+				}
+				else if (UserData.hasLocalData(column,
+						IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY)) {
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			throw new XWTException(e);
+		}
+		if (value != null) {
+			return value.toString();
+		}
+		return "";
+	}
+	
+	public static Image getColumnImage(Viewer viewer, Object element, int columnIndex) {
+		String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
+		return getColumnImage(viewer, element, columnIndex, propertyNames);
+	}
+
+	public static Image getColumnImage(Viewer viewer, Object element, int columnIndex, Object[] properties) {
+		Object value = getColumnObject(element, columnIndex, properties);
+		if (value == null) {
+			return null;
+		}
+		try {
+			if (viewer instanceof TableViewer) {
+				Table table = ((TableViewer)viewer).getTable();
+				TableColumn[] columns = table.getColumns();
+				TableColumn column = columns[columnIndex];
+				if (UserData.hasLocalData(column,
+							IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY)) {
+					Object userDataValue = UserData.getLocalData(column,
+							IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY);
+					if (userDataValue instanceof IBinding) {
+						IBinding binding = (IBinding) userDataValue;
+						binding.reset();
+						UserData.setDataContext(column, value);
+						value = binding.getValue();
+					} else {
+						value = userDataValue;
+					}
+				}
+				else{
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			throw new XWTException(e);
+		}
+		if (value instanceof IObservableValue) {
+			IObservableValue observableValue = (IObservableValue) value;
+			value = observableValue.getValue();
+		}
+		if (value instanceof Image) {
+			return (Image) value;
+		} else if (value != null) {
+			value = ObjectUtil.resolveValue(value, Image.class, value);
+			if (value == null) {
+				return null;
+			}
+			if (value instanceof Image) {
+				return (Image) value;
+			}
+			throw new XWTException("Converter from " + value.getClass()
+					+ " to Image is missing.");
+		}
+		return null;
 	}
 }

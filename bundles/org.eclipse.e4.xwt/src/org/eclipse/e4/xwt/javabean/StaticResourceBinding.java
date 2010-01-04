@@ -41,4 +41,7 @@ public class StaticResourceBinding implements IBinding {
 		}
 		throw new XWTException("Key " + key + " is not found.");			
 	}
+	
+	public void reset() {
+	}
 }

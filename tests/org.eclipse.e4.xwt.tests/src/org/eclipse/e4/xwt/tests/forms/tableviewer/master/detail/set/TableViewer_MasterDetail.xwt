@@ -18,9 +18,9 @@
 		<TableViewer Name="TableViewer" input="{Binding Path=employees}">
 			<TableViewer.columns>
 				<TableViewerColumn width="150" text="Name"
-					displayMemberPath="name" />
+					bindingPath="name" />
 				<TableViewerColumn width="150" text="Age"
-					displayMemberPath="age" />
+					bindingPath="age" />
 			</TableViewer.columns>
 			<TableViewer.table HeaderVisible="true">
 			</TableViewer.table>

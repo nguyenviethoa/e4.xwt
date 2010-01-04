@@ -240,7 +240,15 @@ public class Binding extends DynamicBinding {
 		if (dataBinding != null) {
 			return dataBinding.getValue();
 		}
-		return dataContext;
+		return convertedValue(dataContext);
+	}
+
+	private Object convertedValue(Object value) {
+		IValueConverter converter = getConverter();
+		if (converter != null) {
+			value = converter.convert(value);
+		}
+		return value;
 	}
 
 	public boolean isSourcePropertyReadOnly() {
@@ -286,5 +294,9 @@ public class Binding extends DynamicBinding {
 	 */
 	public void setValidationRule(IValidationRule validationRule) {
 		this.validationRules = new IValidationRule[] { validationRule };
+	}
+	
+	public void reset() {
+		observableSource = null;
 	}
 }

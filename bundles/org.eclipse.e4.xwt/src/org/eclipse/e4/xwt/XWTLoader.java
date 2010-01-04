@@ -63,6 +63,7 @@ import org.eclipse.e4.xwt.converters.StringToDuration;
 import org.eclipse.e4.xwt.converters.StringToFont;
 import org.eclipse.e4.xwt.converters.StringToFormAttachment;
 import org.eclipse.e4.xwt.converters.StringToIValidationRule;
+import org.eclipse.e4.xwt.converters.StringToIValueConverter;
 import org.eclipse.e4.xwt.converters.StringToImage;
 import org.eclipse.e4.xwt.converters.StringToIntArray;
 import org.eclipse.e4.xwt.converters.StringToInteger;
@@ -74,6 +75,7 @@ import org.eclipse.e4.xwt.converters.StringToURL;
 import org.eclipse.e4.xwt.core.Condition;
 import org.eclipse.e4.xwt.core.DataTrigger;
 import org.eclipse.e4.xwt.core.EventTrigger;
+import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.MultiDataTrigger;
 import org.eclipse.e4.xwt.core.MultiTrigger;
@@ -114,17 +116,13 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.TableColumnEditorProperty
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableEditorDynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemEditorProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableItemProperty;
-import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnDisplayMemberPath;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnDynamicProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnImageProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnTextProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnWidthProperty;
-import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnsProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.ColumnViewerColumnsProperty;
 import org.eclipse.e4.xwt.jface.ComboBoxCellEditor;
 import org.eclipse.e4.xwt.jface.DefaultCellModifier;
-import org.eclipse.e4.xwt.jface.DefaultColumnViewerLabelProvider;
-import org.eclipse.e4.xwt.jface.DefaultComboViewerLabelProvider;
-import org.eclipse.e4.xwt.jface.DefaultListContentProvider;
-import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.JFaceInitializer;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.jface.ObservableTreeContentProvider;
@@ -453,7 +451,8 @@ public class XWTLoader implements IXWTLoader {
 	 * java.lang.String)
 	 */
 	public IBindingContext getBindingContext(Object element) {
-		IBindingContext dataBindingContext = UserData.getBindingContext(element);
+		IBindingContext dataBindingContext = UserData
+				.getBindingContext(element);
 		if (dataBindingContext == null) {
 			dataBindingContext = UserData.createBindingContext(element);
 		}
@@ -1247,6 +1246,7 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(StringToType.instance);
 		registerConvertor(StringToFormAttachment.instance);
 		registerConvertor(StringToIValidationRule.instance);
+		registerConvertor(StringToIValueConverter.instance);
 		registerConvertor(ListToIObservableCollection.instance);
 		registerConvertor(SetToIObservableCollection.instance);
 		registerConvertor(ObjectToISelection.instance);
@@ -1434,15 +1434,16 @@ public class XWTLoader implements IXWTLoader {
 			IProperty property = metaclass.findProperty("Input");
 
 			metaclass.addProperty(new InputBeanProperty(property));
-			metaclass.addProperty(new DataProperty(IConstants.XAML_DATA_CONTEXT,
+			metaclass.addProperty(new DataProperty(
+					IConstants.XAML_DATA_CONTEXT,
 					IUserDataConstants.XWT_DATACONTEXT_KEY));
 
 			metaclass.removeProperty("selection");
 
 			metaclass.addProperty(new DataProperty(
-					PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH,
+					PropertiesConstants.PROPERTY_BINDING_PATH,
 					String.class,
-					PropertiesConstants.PROPERTY_DISPLAY_MEMBER_PATH));
+					PropertiesConstants.PROPERTY_BINDING_PATH));
 			metaclass.addProperty(new SingleSelectionBeanProperty(
 					PropertiesConstants.PROPERTY_SINGLE_SELECTION));
 			metaclass.addProperty(new MultiSelectionBeanProperty(
@@ -1462,7 +1463,7 @@ public class XWTLoader implements IXWTLoader {
 		if (metaclass != null) {
 			metaclass.addProperty(new DynamicBeanProperty(type, String[].class,
 					PropertiesConstants.PROPERTY_COLUMN_PROPERTIES));
-			metaclass.addProperty(new TableViewerColumnsProperty());
+			metaclass.addProperty(new ColumnViewerColumnsProperty());
 
 			metaclass.addInitializer(new JFaceInitializer());
 		}
@@ -1482,15 +1483,23 @@ public class XWTLoader implements IXWTLoader {
 
 		metaclass = (IMetaclass) core.getMetaclass(type,
 				IConstants.XWT_NAMESPACE);
+		// 
+		// PROPERTY_DATA_KEY
+		//
 		metaclass.addProperty(new TableViewerColumnWidthProperty());
 		metaclass.addProperty(new TableViewerColumnTextProperty());
 		metaclass.addProperty(new TableViewerColumnImageProperty());
-		metaclass.addProperty(new TableViewerColumnDisplayMemberPath());
+		metaclass.addProperty(new TableViewerColumnDynamicProperty(
+				PropertiesConstants.PROPERTY_BINDING_PATH,
+				IUserDataConstants.XWT_PROPERTY_DATA_KEY, String.class));
+		metaclass.addProperty(new TableViewerColumnDynamicProperty(
+				PropertiesConstants.PROPERTY_ITEM_TEXT,
+				IUserDataConstants.XWT_PROPERTY_ITEM_TEXT_KEY, IBinding.class));
+		metaclass.addProperty(new TableViewerColumnDynamicProperty(
+				PropertiesConstants.PROPERTY_ITEM_IMAGE,
+				IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY, IBinding.class));
 
 		registerMetaclass(DefaultCellModifier.class);
-		registerMetaclass(DefaultListViewerLabelProvider.class);
-		registerMetaclass(DefaultComboViewerLabelProvider.class);
-		registerMetaclass(DefaultColumnViewerLabelProvider.class);
 		registerMetaclass(ViewerFilter.class);
 
 		// DataBinding stuff
@@ -1526,7 +1535,6 @@ public class XWTLoader implements IXWTLoader {
 
 		registerMetaclass(CollectionViewSource.class);
 
-		registerMetaclass(DefaultListContentProvider.class);
 		registerMetaclass(ObservableListContentProvider.class);
 		registerMetaclass(ObservableSetContentProvider.class);
 		registerMetaclass(ObservableTreeContentProvider.class);

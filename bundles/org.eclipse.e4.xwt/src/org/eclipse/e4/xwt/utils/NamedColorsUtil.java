@@ -15,8 +15,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -71,10 +70,7 @@ public class NamedColorsUtil {
 		}
 		String colorValue = getColorValue(name);
 		if (colorValue != null) {
-			IConverter c = XWT.findConvertor(String.class, Color.class);
-			if (c != null) {
-				return (Color) c.convert(colorValue);
-			}
+			return (Color) ObjectUtil.resolveValue(colorValue, Color.class, null);
 		}
 		return null;
 	}

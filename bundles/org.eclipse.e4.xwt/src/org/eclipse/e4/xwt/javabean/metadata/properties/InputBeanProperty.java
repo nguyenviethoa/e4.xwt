@@ -16,13 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservableCollection;
 import org.eclipse.core.databinding.observable.list.IObservableList;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.collection.CollectionViewSource;
-import org.eclipse.e4.xwt.jface.DefaultColumnViewerLabelProvider;
-import org.eclipse.e4.xwt.jface.DefaultListViewerLabelProvider;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
+import org.eclipse.e4.xwt.jface.DefaultViewerLabelProvider;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.jface.ObservableMapLabelProvider;
 import org.eclipse.e4.xwt.jface.ObservableTreeContentProvider;
@@ -126,19 +124,14 @@ public class InputBeanProperty extends DelegateProperty {
 		if (value instanceof CollectionViewSource) {
 			value = ((CollectionViewSource) value).getView();
 		} else if ((value instanceof Collection<?>) && !(value instanceof IObservableCollection)) {
-			IConverter converter = XWT.findConvertor(value.getClass(),
-					IObservableCollection.class);
-			if (converter != null) {
-				value = converter.convert(value);
-			}
+			value = ObjectUtil.resolveValue(value, IObservableCollection.class, value);
 		}
 		super.setValue(target, value);
 	}
 	
 	protected boolean hasDefaultLabelProvider(ContentViewer viewer ) {
 		IBaseLabelProvider labelProvider = viewer.getLabelProvider();
-		return (labelProvider == null || labelProvider.getClass() == DefaultColumnViewerLabelProvider.class ||
-				labelProvider.getClass() == DefaultListViewerLabelProvider.class);
+		return (labelProvider == null || labelProvider.getClass() == DefaultViewerLabelProvider.class);
 	}
 
 	protected Class<?> getElementType() {

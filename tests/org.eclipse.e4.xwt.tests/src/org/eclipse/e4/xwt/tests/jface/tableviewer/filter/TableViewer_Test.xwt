@@ -25,8 +25,8 @@
 		</TableViewer.filters>
 		
 		<TableViewer.columns>
-			<TableViewerColumn width="150" text="Name" displayMemberPath="name"/>
-			<TableViewerColumn width="150" text="Age" displayMemberPath="age"/>
+			<TableViewerColumn width="150" text="Name" bindingPath="name"/>
+			<TableViewerColumn width="150" text="Age" bindingPath="age"/>
 		</TableViewer.columns>
 		<TableViewer.table HeaderVisible="true"/>
 		<TableViewer.control.layoutData>

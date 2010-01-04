@@ -1,3 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Brad Reynolds - bug 164247
+ *     Brad Reynolds - bug 164134
+ *     yves yang     - port to XWT
+ *******************************************************************************/
 package org.eclipse.e4.xwt.jface;
 
 import java.util.Set;
@@ -26,10 +39,11 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 		ILabelProvider, ITableLabelProvider {
 
 	private final XWTObservableWrapper[] attributeMaps;
-
+	private Viewer viewer;
+	
 	private IMapChangeListener mapChangeListener = new IMapChangeListener() {
 		public void handleMapChange(MapChangeEvent event) {
-			Set affectedElements = event.diff.getChangedKeys();
+			Set<?> affectedElements = event.diff.getChangedKeys();
 			LabelProviderChangedEvent newEvent = new LabelProviderChangedEvent(
 					ObservableMapLabelProvider.this, affectedElements.toArray());
 			fireLabelProviderChanged(newEvent);
@@ -39,14 +53,15 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 	/**
 	 * @param attributeMaps
 	 */
-	public ObservableMapLabelProvider(Viewer columnViewer, IObservableSet domain,
+	public ObservableMapLabelProvider(Viewer viewer, IObservableSet domain,
 			String[] propertyNames) {
 		attributeMaps = new XWTObservableWrapper[propertyNames.length];
 		
 		for (int i = 0; i < attributeMaps.length; i++) {
-			attributeMaps[i] = new XWTObservableWrapper(domain, columnViewer, propertyNames[i]);
+			attributeMaps[i] = new XWTObservableWrapper(domain, viewer, propertyNames[i]);
 			attributeMaps[i].addMapChangeListener(mapChangeListener);
 		}
+		this.viewer = viewer;
 	}
 
 	public void dispose() {
@@ -57,6 +72,14 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 	}
 
 	public Image getImage(Object element) {
+		return getColumnImage(element, 0);
+	}
+	
+	public Image getColumnImage(Object element, int columnIndex) {
+		if (columnIndex < attributeMaps.length) {
+			Object result = attributeMaps[columnIndex].get(element);
+			return JFacesHelper.getColumnImage(viewer, result, columnIndex);
+		}
 		return null;
 	}
 
@@ -64,14 +87,10 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 		return getColumnText(element, 0);
 	}
 
-	public Image getColumnImage(Object element, int columnIndex) {
-		return null;
-	}
-
 	public String getColumnText(Object element, int columnIndex) {
 		if (columnIndex < attributeMaps.length) {
 			Object result = attributeMaps[columnIndex].get(element);
-			return result == null ? "" : result.toString(); //$NON-NLS-1$
+			return JFacesHelper.getColumnText(viewer, result, columnIndex);
 		}
 		return null;
 	}

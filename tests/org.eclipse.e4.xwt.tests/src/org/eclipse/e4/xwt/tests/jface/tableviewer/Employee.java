@@ -14,6 +14,16 @@ public class Employee {
 	protected String name;
 	protected int age;
 
+	protected Sex sex;
+	
+	public Sex getSex() {
+		return sex;
+	}
+
+	public void setSex(Sex sex) {
+		this.sex = sex;
+	}
+
 	public int getAge() {
 		return age;
 	}

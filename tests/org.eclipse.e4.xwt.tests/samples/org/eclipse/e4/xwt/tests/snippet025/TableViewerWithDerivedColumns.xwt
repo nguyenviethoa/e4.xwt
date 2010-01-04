@@ -7,13 +7,13 @@
 	</Shell.layout>
 	<TableViewer name="TableViewer" x:Style="FULL_SELECTION" input="{Binding Path=people}">
 		<TableViewer.columns headerVisible="true">
-			<TableViewerColumn width="100" text="Name" displayMemberPath="name"/>
-			<TableViewerColumn width="100" text="Mother" displayMemberPath="mother.name"/>
-			<TableViewerColumn width="100" text="Father" displayMemberPath="father.name"/>
-			<TableViewerColumn width="100" text="Maternal Grandmother" displayMemberPath="mother.mother.name"/>
-			<TableViewerColumn width="100" text="Maternal Grandfather" displayMemberPath="mother.father.name"/>
-			<TableViewerColumn width="100" text="Paternal Grandmother" displayMemberPath="father.mother.name"/>
-			<TableViewerColumn width="100" text="Paternal Grandfather" displayMemberPath="father.father.name"/>
+			<TableViewerColumn width="100" text="Name" bindingPath="name"/>
+			<TableViewerColumn width="100" text="Mother" bindingPath="mother.name"/>
+			<TableViewerColumn width="100" text="Father" bindingPath="father.name"/>
+			<TableViewerColumn width="100" text="Maternal Grandmother" bindingPath="mother.mother.name"/>
+			<TableViewerColumn width="100" text="Maternal Grandfather" bindingPath="mother.father.name"/>
+			<TableViewerColumn width="100" text="Paternal Grandmother" bindingPath="father.mother.name"/>
+			<TableViewerColumn width="100" text="Paternal Grandfather" bindingPath="father.father.name"/>
 		</TableViewer.columns>
 		<TableViewer.table headerVisible="true"/>
 	    <TableViewer.filters>
@@ -64,7 +64,7 @@
 	<ComboViewer x:Style="READ_ONLY"
 		input="{Binding path=people}"
 		singleSelection="{Binding ElementName=TableViewer,path=singleSelection.(j:TableViewerWithDerivedColumns.Person.mother)}" 
-		displayMemberPath="name">
+		bindingPath="name">
 	</ComboViewer>
 
 	<Label text="Father:">
@@ -72,6 +72,6 @@
 	<ComboViewer x:Style="READ_ONLY"
 		input="{Binding path=people}"
 		singleSelection="{Binding ElementName=TableViewer,path=singleSelection.(j:TableViewerWithDerivedColumns.Person.father)}" 
-		displayMemberPath="name">
+		bindingPath="name">
 	</ComboViewer>
 </Shell>

@@ -19,9 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTMaps;
+import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -62,23 +61,25 @@ public class ResourceManager {
 	}
 
 	public Image getImage(String imagePath) {
+		if (imagePath == null) {
+			return null;
+		}
 		try {
-			if (imagePath == null) {
-				return null;
-			}
-			URL file = new URL(imagePath);
-			Image image = key2Images.get(file);
-			if (image == null || image.isDisposed()) {
-				key2Images.put(file, image = ImageTool.getImage(file));
-			}
-			return image;
+			return getImage(new URL(imagePath));
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
-	public void dispose() {
+	public Image getImage(URL file) {
+		Image image = key2Images.get(file);
+		if (image == null || image.isDisposed()) {
+			key2Images.put(file, image = ImageTool.getImage(file));
+		}
+		return image;
+	}
 
+	public void dispose() {
 		// dispose colors.
 		Collection<Color> colors = key2Colors.values();
 		for (Color color : colors) {
@@ -182,10 +183,7 @@ public class ResourceManager {
 				while (stk.hasMoreTokens()) {
 					String token = stk.nextToken().trim();
 					if (token.equalsIgnoreCase("normal") || token.equalsIgnoreCase("blod") || token.equalsIgnoreCase("italic") || token.contains("|")) {
-						IConverter convertor = XWT.findConvertor(String.class, Integer.class);
-						if (convertor != null) {
-							style = (Integer) convertor.convert(token);
-						}
+						style = (Integer) ObjectUtil.resolveValue(token, Integer.class, style);
 					} else if (isInt(token)) {
 						height = Integer.parseInt(token);
 					} else {

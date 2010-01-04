@@ -17,6 +17,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.e4.xwt.XWT;
+
 /**
  * Object Tools.
  * 
@@ -111,6 +114,18 @@ public class ObjectUtil {
 		classes.add(Object.class);
 
 		return classes.toArray(EMPTY);
+	}
+
+	public static Object resolveValue(Object value, Class<?> targetType, Object defaultValue) {
+		return resolveValue(value, value.getClass(), targetType, defaultValue);
+	}
+
+	public static Object resolveValue(Object value, Class<?> sourceType, Class<?> targetType, Object defaultValue) {
+		IConverter converter = XWT.findConvertor(sourceType, targetType);
+		if (converter != null) {
+			return converter.convert(value);
+		}
+		return defaultValue;
 	}
 
 	/**

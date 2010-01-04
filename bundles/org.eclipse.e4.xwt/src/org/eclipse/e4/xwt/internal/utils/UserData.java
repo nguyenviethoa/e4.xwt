@@ -26,6 +26,7 @@ import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ControlEditor;
@@ -323,8 +324,11 @@ public class UserData {
 		UserData dataDictionary = (UserData) widget
 				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary != null) {
-			return (Widget) dataDictionary
+			widget = (Widget) dataDictionary
 					.getData(IUserDataConstants.XWT_PARENT_KEY);
+			if (widget != null) {
+				return widget;
+			}
 		}
 		return getParent(element);
 	}
@@ -472,6 +476,8 @@ public class UserData {
 			return JFacesHelper.getControl(target);
 		} else if (target instanceof Widget) {
 			return (Widget) target;
+		} else if (target instanceof TableViewerColumn) {
+			return ((TableViewerColumn) target).getColumn();
 		} else if (target instanceof ControlEditor) {
 			return ((ControlEditor) target).getEditor();
 		}
@@ -484,6 +490,10 @@ public class UserData {
 
 	public static Object getLocalDataContext(Object object) {
 		return getLocalData(object, IUserDataConstants.XWT_DATACONTEXT_KEY);
+	}
+
+	public static boolean hasLocalDataContext(Object object) {
+		return hasLocalData(object, IUserDataConstants.XWT_DATACONTEXT_KEY);
 	}
 
 	public static Object getLocalData(Object object, IProperty property) {
@@ -510,6 +520,19 @@ public class UserData {
 			return null;
 		}
 		return dataDictionary.getData(key);
+	}
+
+	public static boolean hasLocalData(Object object, String propertyName) {
+		Widget widget = getWidget(object);
+		if (widget == null) {
+			return false;
+		}
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		if (dataDictionary == null) {
+			return false;
+		}
+		return dataDictionary.containsKey(propertyName);
 	}
 
 	public static boolean hasLocalData(Object object, IProperty property) {

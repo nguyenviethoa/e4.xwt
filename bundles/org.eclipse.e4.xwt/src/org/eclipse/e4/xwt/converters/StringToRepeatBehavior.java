@@ -12,9 +12,7 @@
 package org.eclipse.e4.xwt.converters;
 
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.e4.xwt.animation.Duration;
 import org.eclipse.e4.xwt.animation.RepeatBehavior;
-import org.eclipse.e4.xwt.animation.TimeSpan;
 
 /**
  * Safely SWT context values, it used to avoid a NullPointerException when set text values to SWT Widgets.

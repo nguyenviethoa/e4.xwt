@@ -7,10 +7,10 @@
 	</Shell.layout>
 	<TableViewer name="TableViewer" x:Style="FULL_SELECTION" input="{Binding Path=people}">
 		<TableViewer.columns headerVisible="true">
-			<TableViewerColumn width="100" text="Name" displayMemberPath="name"/>
-			<TableViewerColumn width="100" text="Mother" displayMemberPath="mother.name"/>
-			<TableViewerColumn width="100" text="Father" displayMemberPath="father.name"/>
-			<TableViewerColumn width="100" text="Grand Mother" displayMemberPath="mother.mother.name"/>
+			<TableViewerColumn width="100" text="Name" bindingPath="name"/>
+			<TableViewerColumn width="100" text="Mother" bindingPath="mother.name"/>
+			<TableViewerColumn width="100" text="Father" bindingPath="father.name"/>
+			<TableViewerColumn width="100" text="Grand Mother" bindingPath="mother.mother.name"/>
 		</TableViewer.columns>
 		<TableViewer.table headerVisible="true"/>
 	    <TableViewer.filters>
@@ -41,7 +41,7 @@
 	<ComboViewer name="MotherCombo" x:Style="READ_ONLY"
 		input="{Binding path=people}"
 		singleSelection="{Binding ElementName=TableViewer,path=singleSelection.(j:Person.mother)}" 
-		displayMemberPath="name">
+		bindingPath="name">
 	</ComboViewer>
 
 	<Label text="Father:">
@@ -49,6 +49,6 @@
 	<ComboViewer name="FatherCombo" x:Style="READ_ONLY"
 		input="{Binding path=people}"
 		singleSelection="{Binding ElementName=TableViewer,path=singleSelection.(j:Person.father)}" 
-		displayMemberPath="name">
+		bindingPath="name">
 	</ComboViewer>
 </Shell>
