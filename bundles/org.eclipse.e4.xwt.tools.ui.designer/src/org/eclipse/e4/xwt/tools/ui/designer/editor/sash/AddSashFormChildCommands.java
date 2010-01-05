@@ -19,21 +19,15 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 	public static final String WIEGHTS_ATTR = "weights";
 	private EditPart host;
 	private int[] oldWeights;
-	private boolean after;
+	private boolean hasWeightsAttribute = false;
 
 	public AddSashFormChildCommands(EditPart parent, XamlNode child) {
-		this(parent, child, -1, false);
+		this(parent, child, -1);
 	}
 
 	public AddSashFormChildCommands(EditPart parent, XamlNode child, int index) {
-		this(parent, child, index, false);
-	}
-
-	public AddSashFormChildCommands(EditPart parent, XamlNode child, int index,
-			boolean after) {
 		super((XamlNode) parent.getModel(), child, index);
 		this.host = parent;
-		this.after = after;
 	}
 
 	@Override
@@ -52,8 +46,17 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 	@Override
 	public void execute() {
 		XamlNode sashForm = (XamlNode) host.getModel();
+		XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR,
+				IConstants.XWT_NAMESPACE);
 		SashFormEditPart sashFormEditPart = (SashFormEditPart) host;
 		SashForm form = (SashForm) sashFormEditPart.getWidget();
+
+		hasWeightsAttribute = (attribute != null);
+		if (!hasWeightsAttribute) {
+			super.execute();
+			return;
+		}
+		
 		oldWeights = form.getWeights();
 
 		int children = 0;
@@ -92,9 +95,7 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 
 			int index = getIndex();
 			if (index == -1) {
-				index = children - 1;
-			} else if (after) {
-				index--;
+				index = children;
 			}
 
 			int part1 = weights[index] / 2;
@@ -121,8 +122,6 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 				// update the weights after, since the Notifier as update it.
 				// Her we just override it.
 				String value = SashUtil.weightsValue(weights);
-				XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR,
-						IConstants.XWT_NAMESPACE);
 				if (attribute == null) {
 					attribute = XamlFactory.eINSTANCE.createAttribute(
 							WIEGHTS_ATTR, IConstants.XWT_NAMESPACE);
@@ -143,10 +142,12 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 	@Override
 	public void undo() {
 		super.undo();
-		XamlNode sashForm = (XamlNode) host.getModel();
-		String value = SashUtil.weightsValue(oldWeights);
-		XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR,
-				IConstants.XWT_NAMESPACE);
-		attribute.setValue(value);
+		if (hasWeightsAttribute) {
+			XamlNode sashForm = (XamlNode) host.getModel();
+			String value = SashUtil.weightsValue(oldWeights);
+			XamlAttribute attribute = sashForm.getAttribute(WIEGHTS_ATTR,
+					IConstants.XWT_NAMESPACE);
+			attribute.setValue(value);
+		}
 	}
 }

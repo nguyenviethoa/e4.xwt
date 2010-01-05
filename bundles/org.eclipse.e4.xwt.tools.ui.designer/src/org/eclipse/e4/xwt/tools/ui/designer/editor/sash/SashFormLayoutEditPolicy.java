@@ -49,10 +49,9 @@ import org.eclipse.gef.requests.SelectionRequest;
  */
 public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	static int WIDTH = 4;
-	static public final String INSERT_AFTER = "_INSERT_AFTER";
-	static public final String INSERT_INDEX = "_INSERT_INDEX";
 	private Polygon insertionLine;
 	
+	private int index = 0; 	
 
 	/*
 	 * (non-Javadoc)
@@ -62,40 +61,24 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 * .gef.requests.CreateRequest)
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
-		EditPart reference = getInsertionReference(request);
-		boolean after = false;
-		int index = -1;
-		if (reference instanceof SashEditPart) {
-			int i = 0;
-			EditPart previous = null;
-			for (Object child : getHost().getChildren()) {
-				if (child == reference) {
-					index = i;
-					break;
-				}
-				if (!(child instanceof SashEditPart)) {
-					previous = (EditPart) child;
-					i++;
-				}
-			}
-			if (previous != null) {
-				reference = previous;
-				after = true;
-			}
+		SashFormEditPart host = (SashFormEditPart) getHost();
+		List<ControlEditPart> children = CompositeEditPartHelper.getChildren(host);
+		EditPart reference;
+		int i;
+		if (index == -1) {
+			i = -1;
+			reference = null;
 		}
 		else {
-			Object value = request.getExtendedData().get(INSERT_AFTER);
-			if (value instanceof Boolean) {
-				after = (Boolean) value;
+			boolean after = !(index % 2 == 0);
+			i = index/2;
+			if (after) {
+				i++;
 			}
-			Object indexValue = request.getExtendedData().get(INSERT_INDEX);
-			if (indexValue instanceof Integer) {
-				index = (Integer) indexValue;
-				index = index / 2;
-			}
+			reference = children.get(i);
 		}
 		return new SashFormInsertCreateCommand(getHost(), reference, request,
-				index, after);
+				i);
 	}
 
 	protected Point getLocationFromRequest(Request request) {
@@ -165,7 +148,6 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			fb.setPoint(p3, 2);
 			fb.translateToRelative(p4);
 			fb.setPoint(p4, 3);
-			request.getExtendedData().put(INSERT_AFTER, false);
 			return;
 		} else if (children.size() == 1) {
 			Point p1 = new Point(parentBox.x + parentBox.width / 2, parentBox.y);
@@ -189,7 +171,6 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			fb.setPoint(p3, 2);
 			fb.translateToRelative(p4);
 			fb.setPoint(p4, 3);
-			request.getExtendedData().put(INSERT_AFTER, true);
 			return;
 		}
 
@@ -197,6 +178,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 		int epIndex = getFeedbackIndexFor(request);
 		Rectangle r = null;
 		GraphicalEditPart editPart;
+		index = epIndex;
 		if (epIndex == -1) {
 			before = false;
 			epIndex = children.size() - 1;
@@ -221,8 +203,6 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 						.t(getAbsoluteBounds((GraphicalEditPart) editPart));
 			}
 		}
-		request.getExtendedData().put(INSERT_AFTER, !before);
-		request.getExtendedData().put(INSERT_INDEX, epIndex);
 
 		int x = Integer.MIN_VALUE;
 		if (before) {

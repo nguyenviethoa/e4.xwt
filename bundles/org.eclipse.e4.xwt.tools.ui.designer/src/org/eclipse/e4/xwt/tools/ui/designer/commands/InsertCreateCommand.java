@@ -22,21 +22,15 @@ public class InsertCreateCommand extends AbstractCreateCommand {
 
 	private EditPart reference;
 	private int index = -1;
-	private boolean after = false;
 
-	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, int index, boolean after) {
+	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, int index) {
 		super(parent, createRequest);
 		this.reference = reference;
-		this.after = after;
 		this.index = index;
 	}
 
-	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest, int index) {
-		this(parent, reference, createRequest, index, false);
-	}
-
 	public InsertCreateCommand(EditPart parent, EditPart reference, CreateRequest createRequest) {
-		this(parent, reference, createRequest, -1, false);
+		this(parent, reference, createRequest, -1);
 	}
 
 	/*
@@ -56,22 +50,10 @@ public class InsertCreateCommand extends AbstractCreateCommand {
 	protected void preExecute(XamlNode newNode, CreateRequest createRequest) {
 		if (reference != null) {
 			index = getParentModel().getChildNodes().indexOf(reference.getModel());
-			if (after) {
-				int size = getParentModel().getChildNodes().size();
-				index++;
-				if (index >= size) {
-					index = - 1;
-				}
-			}
 		}
 	}
 
 	public int getIndex() {
 		return index;
 	}
-
-	public boolean isAfter() {
-		return after;
-	}
-
 }
