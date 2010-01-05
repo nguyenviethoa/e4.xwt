@@ -52,7 +52,7 @@ public class ThemeUtil {
 					InputStreamReader streamReader = new InputStreamReader(
 							stream);
 					engine.reset();
-					engine.parseStyleSheet(streamReader);
+//					engine.parseStyleSheet(streamReader);
 					stream.close();
 					streamReader.close();
 					

@@ -29,6 +29,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 
 public class SaveHandler {
+	public SaveHandler() {
+	}
 
 	public boolean canExecute(
 			@Named(IServiceConstants.ACTIVE_PART) MDirtyable dirtyable) {
