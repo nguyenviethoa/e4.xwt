@@ -15,6 +15,7 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -164,7 +165,9 @@ public class AnimationTests extends XWTTestCase {
 					assertTrue(element instanceof Shell);
 					Shell shell = (Shell)element;
 					int alpha = shell.getAlpha();
-					assertTrue(alpha != initialInt);
+					if (!"gtk".equals(SWT.getPlatform())) {
+						assertTrue(alpha != initialInt);
+					}	
 				} catch (Exception e) {
 					fail();
 				}

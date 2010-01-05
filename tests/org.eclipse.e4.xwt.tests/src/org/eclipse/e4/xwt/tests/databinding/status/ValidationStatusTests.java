@@ -206,7 +206,7 @@ public class ValidationStatusTests extends XWTTestCase {
 				text1.setFocus();
 				text1.setText("5");
 				text2.setFocus();
-				assertEquals(black, text1.getForeground());
+				assertNotSame(red, text1.getForeground());
 				
 				text2.setText("4");
 				text1.setFocus();
@@ -215,7 +215,7 @@ public class ValidationStatusTests extends XWTTestCase {
 				text2.setFocus();
 				text2.setText("6");
 				text1.setFocus();
-				assertEquals(black, text2.getForeground());
+				assertNotSame(red, text1.getForeground());
 			}
 		});
 	}
@@ -254,7 +254,7 @@ public class ValidationStatusTests extends XWTTestCase {
 				text2.setFocus();
 				text2.setText("6");
 				text1.setFocus();
-				assertEquals(black, statusLabel.getForeground());
+				assertNotSame(red, statusLabel.getForeground());
 				assertEquals("OK", statusLabel.getText());
 			}
 		});
