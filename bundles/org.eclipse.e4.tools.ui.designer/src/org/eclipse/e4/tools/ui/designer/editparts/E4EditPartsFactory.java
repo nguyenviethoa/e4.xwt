@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.parts;
+package org.eclipse.e4.tools.ui.designer.editparts;
 
 import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
 import org.eclipse.e4.ui.model.application.MApplication;

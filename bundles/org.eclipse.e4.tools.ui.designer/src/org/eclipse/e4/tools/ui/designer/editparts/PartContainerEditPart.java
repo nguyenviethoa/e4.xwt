@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.parts;
+package org.eclipse.e4.tools.ui.designer.editparts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +48,6 @@ public class PartContainerEditPart extends CompositeEditPart {
 			if (item != null) {
 				modelChildren.add(item);
 			}
-			MUIElement data = (MUIElement) item
-					.getData(AbstractPartRenderer.OWNING_ME);
-			if (data != null && data.getWidget() != null) {
-				modelChildren.add(data);
-			}
 		}
 		return modelChildren;
 	}
@@ -66,7 +61,10 @@ public class PartContainerEditPart extends CompositeEditPart {
 
 	protected EditPart createChild(Object model) {
 		if (model instanceof CTabItem) {
-			return new PartEditPart((CTabItem) model);
+			CTabItem item = (CTabItem) model;
+			MUIElement data = (MUIElement) item
+					.getData(AbstractPartRenderer.OWNING_ME);
+			return new PartEditPart((EObject) data, item);
 		}
 		return super.createChild(model);
 	}

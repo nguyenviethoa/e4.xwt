@@ -5,7 +5,7 @@
          point="org.eclipse.e4.workbench.rendererfactory">
       <factory
             class="org.eclipse.e4.tools.ui.designer.render.DesignerWorkbenchRendererFactory"
-            id="org.eclipse.e4.ui.workbench.renderers.default">
+            id="org.eclipse.e4.tools.ui.designer.renderers.default">
       </factory>
    </extension>
 

@@ -8,31 +8,38 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.parts.handlers;
+package org.eclipse.e4.tools.ui.designer.editparts.handlers;
 
-import org.eclipse.e4.tools.ui.designer.commands.MovePartCommand;
+import org.eclipse.e4.tools.ui.designer.editparts.SashEditPart;
+import org.eclipse.e4.tools.ui.designer.sashform.ChangeWeightsCommand;
+import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.DragEditPartsTracker;
+import org.eclipse.swt.graphics.Cursor;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class MovableTracker extends DragEditPartsTracker {
+public class DragSashTracker extends DragEditPartsTracker {
 
-	public MovableTracker(EditPart sourceEditPart) {
+	public DragSashTracker(SashEditPart sourceEditPart) {
 		super(sourceEditPart);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.tools.DragEditPartsTracker#getCommand()
-	 */
 	protected Command getCommand() {
 		ChangeBoundsRequest targetRequest = (ChangeBoundsRequest) getTargetRequest();
-		MovePartRequest moveReq = new MovePartRequest(targetRequest);
-		return new MovePartCommand(moveReq);
+		EditPart parent = getSourceEditPart().getParent();
+		if (parent instanceof SashFormEditPart) {
+			return new ChangeWeightsCommand((SashFormEditPart) parent,
+					targetRequest);
+		}
+		return super.getCommand();
+	}
+
+	protected Cursor getDefaultCursor() {
+		SashEditPart editPart = (SashEditPart) getSourceEditPart();
+		return editPart.getDefaultCursor();
 	}
 }

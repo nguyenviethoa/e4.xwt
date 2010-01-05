@@ -8,13 +8,23 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.parts.handlers;
+package org.eclipse.e4.tools.ui.designer.editparts;
+
+import org.eclipse.e4.tools.ui.designer.policies.ToolBarLayoutEditPolicy;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPolicy;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public enum MovePosition {
+public class ToolBarEditPart extends CompositeEditPart {
 
-	MoveToHeader, MoveToTop, MoveToBottom, MoveToLeft, MoveToRight
+	public ToolBarEditPart(EObject model) {
+		super(model);
+	}
 
+	protected void createEditPolicies() {
+		super.createEditPolicies();
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new ToolBarLayoutEditPolicy());
+	}
 }

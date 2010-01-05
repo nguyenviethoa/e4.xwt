@@ -8,11 +8,10 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.parts;
+package org.eclipse.e4.tools.ui.designer.editparts;
 
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.e4.tools.ui.designer.parts.handlers.MovableTracker;
-import org.eclipse.e4.ui.model.application.MApplicationFactory;
+import org.eclipse.e4.tools.ui.designer.editparts.handlers.MovableTracker;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.widgets.CTabItem;
 import org.eclipse.e4.ui.workbench.swt.internal.AbstractPartRenderer;
@@ -30,8 +29,8 @@ public class PartEditPart extends WidgetEditPart {
 
 	private CTabItem header;
 
-	public PartEditPart(CTabItem header) {
-		super((EObject) MApplicationFactory.eINSTANCE.createItem());
+	public PartEditPart(EObject model, CTabItem header) {
+		super(model);
 		this.header = header;
 	}
 
@@ -40,13 +39,6 @@ public class PartEditPart extends WidgetEditPart {
 			return new Rectangle();
 		}
 		return Draw2dTools.toDraw2d(header.getBounds());
-	}
-
-	public String toString() {
-		if (header != null && !header.isDisposed()) {
-			return "Header - \"" + header.getText() + "\"";
-		}
-		return super.toString();
 	}
 
 	public MUIElement getPartModel() {
@@ -63,4 +55,5 @@ public class PartEditPart extends WidgetEditPart {
 	public DragTracker getDragTracker(Request request) {
 		return new MovableTracker(this);
 	}
+
 }

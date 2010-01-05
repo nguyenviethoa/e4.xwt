@@ -61,8 +61,10 @@ public class SashFormInsertCreateCommand extends Command {
 
 	public void execute() {
 		EList<MUIElement> children = parentModel.getChildren();
+
 		if (reference != null) {
-			index = children.indexOf(reference.getModel());
+			Object model = reference.getModel();
+			index = children.indexOf(model);
 			if (after) {
 				index++;
 				if (index > children.size() - 1) {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
-import org.eclipse.e4.tools.ui.designer.parts.SashEditPart;
+import org.eclipse.e4.tools.ui.designer.editparts.SashEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.tools.SelectionTool;
 

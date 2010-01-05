@@ -13,6 +13,7 @@ package org.eclipse.e4.tools.ui.designer.palette;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.MUILabel;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -30,22 +31,30 @@ public class E4PaletteHelper {
 		}
 		Object type = entry.getType();
 		if (type != null && type instanceof EClass) {
-			EObject element = MApplicationFactory.eINSTANCE
-					.create((EClass) type);
-			if (element instanceof MUIElement) {
-				return verify(container, (MUIElement) element);
-			}
+			return createElement(container, (EClass) type);
 		}
 		return null;
 	}
 
 	private static MUIElement verify(MElementContainer container,
-			MUIElement element) {
+			MUIElement element, EClass type) {
 		// TODO: add some initialize values.
 		// if (container instanceof MPartSashContainer) {
 		// element.setContainerData("300");
 		// }
+		if (element instanceof MUILabel) {
+			((MUILabel) element).setLabel("New " + type.getName());
+		}
 		return element;
+	}
+
+	public static MUIElement createElement(MElementContainer container,
+			EClass type) {
+		EObject element = MApplicationFactory.eINSTANCE.create((EClass) type);
+		if (element instanceof MUIElement) {
+			return verify(container, (MUIElement) element, (EClass) type);
+		}
+		return null;
 	}
 
 	public static MUIElement createElement(MElementContainer container,

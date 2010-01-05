@@ -12,8 +12,8 @@ package org.eclipse.e4.tools.ui.designer.sashform;
 
 import java.util.List;
 
-import org.eclipse.e4.tools.ui.designer.parts.CompositeEditPart;
-import org.eclipse.e4.tools.ui.designer.parts.SashEditPart;
+import org.eclipse.e4.tools.ui.designer.editparts.CompositeEditPart;
+import org.eclipse.e4.tools.ui.designer.editparts.SashEditPart;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;

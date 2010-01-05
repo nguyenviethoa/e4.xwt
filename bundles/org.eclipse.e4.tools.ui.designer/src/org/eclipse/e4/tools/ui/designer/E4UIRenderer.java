@@ -12,10 +12,12 @@ package org.eclipse.e4.tools.ui.designer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.services.context.IEclipseContext;
+import org.eclipse.e4.tools.ui.designer.render.DesignerPartRenderingEngine;
 import org.eclipse.e4.tools.ui.designer.utils.ResourceUtiltities;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MUIElement;
@@ -67,6 +69,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		if (resource != null) {
 			try {
 				resource.save(null);
+				inputFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 			} catch (Exception e) {
 			}
 		}
@@ -102,12 +105,20 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		if (appModel == null) {
 			return Result.NONE;
 		}
+		// for compatibility layer: set the application in the OSGi service
+		// context (see Workbench#getInstance())
+		if (!E4Workbench.getServiceContext().containsKey(
+				MApplication.class.getName())) {
+			// first one wins.
+			E4Workbench.getServiceContext().set(MApplication.class.getName(),
+					appModel);
+		}
 		appContext = E4Application.createDefaultContext();
 
 		// Set the app's context after adding itself
 		appContext.set(MApplication.class.getName(), appModel);
 		appModel.setContext(appContext);
-
+		
 		// Parse out parameters from both the command line and/or the product
 		// definition (if any) and put them in the context
 		String xmiURI = getArgValue(E4Workbench.XMI_URI_ARG);
@@ -120,7 +131,8 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		// This is a default arg, if missing we use the default rendering engine
 		String presentationURI = getArgValue(E4Workbench.PRESENTATION_URI_ARG);
 		if (presentationURI == null) {
-			presentationURI = PartRenderingEngine.engineURI;
+//			presentationURI = PartRenderingEngine.engineURI;
+			presentationURI = DesignerPartRenderingEngine.engineURI;
 			appContext.set(E4Workbench.PRESENTATION_URI_ARG, presentationURI);
 		}
 		IProject project = inputFile.getProject();
@@ -162,6 +174,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 			for (Control child : composite.getChildren()) {
 				layout(child);
 			}
+			composite.getDisplay().update();
 		}
 	}
 

@@ -8,23 +8,23 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.parts;
+package org.eclipse.e4.tools.ui.designer.part;
 
-import org.eclipse.e4.tools.ui.designer.policies.ToolBarLayoutEditPolicy;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.EditPolicy;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class ToolBarEditPart extends CompositeEditPart {
+public class PartFeedback extends RectangleFigure {
 
-	public ToolBarEditPart(EObject model) {
-		super(model);
-	}
-
-	protected void createEditPolicies() {
-		super.createEditPolicies();
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new ToolBarLayoutEditPolicy());
+	public PartFeedback(Rectangle bounds) {
+		setLineWidth(3);
+		setFill(false);
+		setForegroundColor(ColorConstants.lightBlue);
+		if (bounds != null) {
+			setBounds(bounds);
+		}
 	}
 }

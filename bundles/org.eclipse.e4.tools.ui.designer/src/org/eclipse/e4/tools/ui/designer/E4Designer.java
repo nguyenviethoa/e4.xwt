@@ -11,8 +11,9 @@
 package org.eclipse.e4.tools.ui.designer;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
+import org.eclipse.e4.tools.ui.designer.palette.E4CreationTool;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
-import org.eclipse.e4.tools.ui.designer.parts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.properties.E4PropertySourceProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
@@ -68,7 +69,7 @@ public class E4Designer extends Designer {
 		domain.setDefaultTool(new E4SelectionTool());
 		domain.loadDefaultTool();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -129,7 +130,7 @@ public class E4Designer extends Designer {
 	 */
 	protected CustomPalettePage createPalettePage() {
 		return PaletteTools.createPalettePage(this, new E4PaletteProvider(),
-				null, E4SelectionTool.class);
+				E4CreationTool.class, E4SelectionTool.class);
 	}
 
 	/*

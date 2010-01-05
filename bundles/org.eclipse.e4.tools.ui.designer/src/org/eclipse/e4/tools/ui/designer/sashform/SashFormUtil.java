@@ -55,6 +55,22 @@ public class SashFormUtil {
 		if (element == null || element.getWidget() == null) {
 			return null;
 		}
+		Object widget = element.getWidget();
+		if (widget instanceof Control) {
+			MElementContainer<MUIElement> psc = element.getParent();
+			Object parent = psc.getWidget();
+			if (parent instanceof SashForm) {
+				int[] weights = ((SashForm) parent).getWeights();
+				int weightIndex = 0;
+				for (MUIElement pscElement : psc.getChildren()) {
+					if (pscElement == element) {
+						return weights[weightIndex];
+					} else if (pscElement.getWidget() instanceof Control) {
+						weightIndex++;
+					}
+				}
+			}
+		}
 		String containerData = element.getContainerData();
 		try {
 			return Integer.parseInt(containerData);
