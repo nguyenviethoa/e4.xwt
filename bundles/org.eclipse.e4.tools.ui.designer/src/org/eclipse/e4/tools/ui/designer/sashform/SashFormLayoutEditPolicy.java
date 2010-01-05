@@ -19,7 +19,6 @@ import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.e4.tools.ui.designer.commands.MoveChildCommand;
 import org.eclipse.e4.tools.ui.designer.commands.NoOpCommand;
 import org.eclipse.e4.tools.ui.designer.editparts.SashEditPart;
-import org.eclipse.e4.tools.ui.designer.policies.SashMoveableEditPolicy;
 import org.eclipse.e4.ui.model.application.MPartSashContainer;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;

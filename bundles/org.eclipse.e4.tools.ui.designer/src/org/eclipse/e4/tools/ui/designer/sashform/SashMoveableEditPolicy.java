@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.policies;
+package org.eclipse.e4.tools.ui.designer.sashform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.e4.tools.ui.designer.editparts.SashEditPart;
 import org.eclipse.e4.tools.ui.designer.editparts.handlers.DragSashTracker;
-import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.tools.SelectionHandle;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.SashUtil;
 import org.eclipse.gef.GraphicalEditPart;
@@ -98,7 +97,7 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 		rect.resize(request.getSizeDelta());
 		
 		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart.getParent();
-		List children = sashFormEditPart.getChildren();
+		List<?> children = sashFormEditPart.getChildren();
 		SashForm sashForm = (SashForm) sashFormEditPart.getWidget();
 		int[] weights = sashForm.getWeights();
 		GraphicalEditPart previous = null;
