@@ -248,7 +248,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 					}
 				}
 				// highlight changed one.
-				if (editPart != null) {
+				if (editPart != null && editPart.isSelectable()) {
 					isProcessHighlighting = true;
 					setViewerSelection(graphicalViewer,
 							new StructuredSelection(editPart));

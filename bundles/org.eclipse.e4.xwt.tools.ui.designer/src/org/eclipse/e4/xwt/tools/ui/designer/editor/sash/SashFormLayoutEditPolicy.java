@@ -65,7 +65,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 		List<ControlEditPart> children = CompositeEditPartHelper.getChildren(host);
 		EditPart reference;
 		int i;
-		if (index == -1) {
+		if (index == -1 || children.size() == 0) {
 			i = -1;
 			reference = null;
 		}
@@ -331,7 +331,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 				return null;
 			}
 			if (index == 0) {
-				return children.get(1);
+				return children.get(0);
 			}
 			GraphicalEditPart reference = (GraphicalEditPart) children
 					.get(index);

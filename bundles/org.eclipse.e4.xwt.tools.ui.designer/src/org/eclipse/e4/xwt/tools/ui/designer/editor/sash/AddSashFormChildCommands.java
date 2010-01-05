@@ -135,11 +135,6 @@ public class AddSashFormChildCommands extends AddNewChildCommand {
 	}
 
 	@Override
-	public boolean canUndo() {
-		return super.canUndo() && oldWeights != null;
-	}
-
-	@Override
 	public void undo() {
 		super.undo();
 		if (hasWeightsAttribute) {

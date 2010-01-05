@@ -77,6 +77,11 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 	public boolean validate() {
 		return widget != null && !widget.isDisposed();
 	}
+	
+	@Override
+	public boolean isSelectable() {
+		return validate() && getCastModel() != null && getCastModel().eContainer() != null && super.isSelectable();
+	}
 
 	/*
 	 * (non-Javadoc)
