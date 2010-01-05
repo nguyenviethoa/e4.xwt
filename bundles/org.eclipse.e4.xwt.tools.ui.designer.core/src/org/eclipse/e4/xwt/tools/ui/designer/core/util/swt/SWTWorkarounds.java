@@ -40,9 +40,71 @@ import org.eclipse.swt.widgets.TreeItem;
  * @author jliu (jin.liu@soyatec.com)
  */
 public class SWTWorkarounds {
+	static final Rectangle EMPTY = new Rectangle(0, 0, 0, 0);
 
 	/*************************** COMMON *****************************/
-	public static Rectangle getBounds(Object object) {
+	public static Rectangle getBounds(Object object) {		
+		if (SWTUtil.IsWindows) {
+			if (object instanceof TabItem) {
+				return win32_getBounds((TabItem)object);
+			}
+			if (object instanceof TableColumn) {
+				return win32_getBounds((TableColumn)object);
+			}
+			if (object instanceof TreeColumn) {
+				return win32_getBounds((TreeColumn)object);
+			}
+		}
+		if (SWTUtil.IsGTK) {
+			if (object instanceof TabItem) {
+				return gtk_getBounds((TabItem)object);
+			}
+			if (object instanceof TableColumn) {
+				return gtk_getBounds((TableColumn)object);
+			}
+			if (object instanceof TreeColumn) {
+				return gtk_getBounds((TreeColumn)object);
+			}
+		}
+		if (SWTUtil.IsMotif) {
+			if (object instanceof TabItem) {
+				return motif_getBounds((TabItem)object);
+			}
+			if (object instanceof TableColumn) {
+				return motif_getBounds((TableColumn)object);
+			}
+			if (object instanceof TreeColumn) {
+				return motif_getBounds((TreeColumn)object);
+			}
+		}
+		if (SWTUtil.IsCarbon) {
+			if (object instanceof TabItem) {
+				return carbon_getBounds((TabItem)object);
+			}
+			if (object instanceof TableColumn) {
+				return carbon_getBounds((TableColumn)object);
+			}
+			if (object instanceof TreeColumn) {
+				return carbon_getBounds((TreeColumn)object);
+			}
+			if (object instanceof Menu || object instanceof MenuItem) {
+				return EMPTY;
+			}
+		}
+		if (SWTUtil.IsCocoa) {
+			if (object instanceof TabItem) {
+				return cocoa_getBounds((TabItem)object);
+			}
+			if (object instanceof TableColumn) {
+				return cocoa_getBounds((TableColumn)object);
+			}
+			if (object instanceof TreeColumn) {
+				return cocoa_getBounds((TreeColumn)object);
+			}
+			if (object instanceof Menu || object instanceof MenuItem) {
+				return EMPTY;
+			}
+		}
 		Rectangle result = new Rectangle(0, 0, 0, 0);
 		try {
 			Method method = object.getClass().getDeclaredMethod("getBounds");
