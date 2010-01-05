@@ -116,10 +116,10 @@ public class XWTModelBuilder extends EContentAdapter implements IModelBuilder {
 		});
 		if (input != null) {
 			document = ModelCacheUtility.doLoadFromCache(input, monitor);
-			
 		}
 		if (document == null) {
 			document = XamlFactory.eINSTANCE.createXamlDocument();
+			ModelCacheUtility.doSaveCache(document, input, monitor);
 		}
 		IDOMDocument textDocument = getTextDocument(jfaceDom);
 		if (textDocument == null) {
@@ -187,9 +187,9 @@ public class XWTModelBuilder extends EContentAdapter implements IModelBuilder {
 		String nsURI = text.getNamespaceURI();
 		String prefix = text.getPrefix();
 		XamlElement rootElement = document.getRootElement();
-		
+
 		document.eResource().eAdapters().add(this);
-		
+
 		boolean isNew = false;
 		if (rootElement == null || !name.equals(rootElement.getName())) {
 			rootElement = XamlFactory.eINSTANCE.createElement(name, nsURI);
@@ -203,7 +203,7 @@ public class XWTModelBuilder extends EContentAdapter implements IModelBuilder {
 		createChild(rootElement, text, monitor);
 
 		map(rootElement, text);
-		//addAdapter(document);
+		// addAdapter(document);
 		if (isNew) {
 			document.setRootElement(rootElement);
 		}
@@ -639,8 +639,6 @@ public class XWTModelBuilder extends EContentAdapter implements IModelBuilder {
 		if (!text.getAdapters().contains(nodeAdapter)) {
 			text.addAdapter(nodeAdapter);
 		}
-		
-		
 	}
 
 	private String validatePrefix(XamlNode node) {
@@ -789,7 +787,7 @@ public class XWTModelBuilder extends EContentAdapter implements IModelBuilder {
 			designer.getCommandStack().stop();
 		}
 		super.notifyChanged(msg);
-		
+
 		IDOMDocument textDocument = getTextDocument(jfaceDom);
 		Object notifier = msg.getNotifier();
 		Object oldValue = msg.getOldValue();
