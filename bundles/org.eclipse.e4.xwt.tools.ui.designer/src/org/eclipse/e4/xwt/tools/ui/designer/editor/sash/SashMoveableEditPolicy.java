@@ -100,7 +100,7 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 
 		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart
 				.getParent();
-		List children = sashFormEditPart.getChildren();
+		List<?> children = sashFormEditPart.getChildren();
 		SashForm sashForm = (SashForm) sashFormEditPart.getWidget();
 		int[] weights = sashForm.getWeights();
 

@@ -50,8 +50,8 @@ import org.eclipse.gef.requests.SelectionRequest;
 public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	static int WIDTH = 4;
 	private Polygon insertionLine;
-	
-	private int index = 0; 	
+
+	private int index = 0;
 
 	/*
 	 * (non-Javadoc)
@@ -62,23 +62,22 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
 		SashFormEditPart host = (SashFormEditPart) getHost();
-		List<ControlEditPart> children = CompositeEditPartHelper.getChildren(host);
+		List<ControlEditPart> children = CompositeEditPartHelper
+				.getChildren(host);
 		EditPart reference;
 		int i;
 		if (index == -1 || children.size() == 0) {
 			i = -1;
 			reference = null;
-		}
-		else {
+		} else {
 			boolean after = !(index % 2 == 0);
-			i = index/2;
+			i = index / 2;
 			if (after) {
 				i++;
 			}
 			reference = children.get(i);
 		}
-		return new SashFormInsertCreateCommand(getHost(), reference, request,
-				i);
+		return new SashFormInsertCreateCommand(getHost(), reference, request, i);
 	}
 
 	protected Point getLocationFromRequest(Request request) {
@@ -183,10 +182,10 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			before = false;
 			epIndex = children.size() - 1;
 			editPart = children.get(epIndex);
-			r = transposer.t(getAbsoluteBounds((GraphicalEditPart) editPart));
+			r = transposer.t(getAbsoluteBounds(editPart));
 		} else {
 			editPart = children.get(epIndex);
-			r = transposer.t(getAbsoluteBounds((GraphicalEditPart) editPart));
+			r = transposer.t(getAbsoluteBounds(editPart));
 			Point p = transposer.t(getLocationFromRequest(request));
 			if (p.x <= r.x + (r.width / 2))
 				before = true;
@@ -199,8 +198,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 				before = false;
 				epIndex--;
 				editPart = children.get(epIndex);
-				r = transposer
-						.t(getAbsoluteBounds((GraphicalEditPart) editPart));
+				r = transposer.t(getAbsoluteBounds(editPart));
 			}
 		}
 
