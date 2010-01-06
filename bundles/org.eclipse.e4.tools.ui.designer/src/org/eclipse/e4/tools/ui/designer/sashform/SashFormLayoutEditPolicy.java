@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.sashform;
 
+import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Polygon;
 import org.eclipse.draw2d.Polyline;
@@ -104,18 +106,22 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 		Transposer transposer = new Transposer();
 		transposer.setEnabled(!isHorizontal());
 
+		SashFormEditPart host = (SashFormEditPart) getHost();
+		List<GraphicalEditPart> children = host.getChildren();
+		Rectangle parentBox = transposer.t(getAbsoluteBounds(host));
+
 		boolean before = true;
 		int epIndex = getFeedbackIndexFor(request);
 		Rectangle r = null;
 		GraphicalEditPart editPart;
 		if (epIndex == -1) {
 			before = false;
-			epIndex = getHost().getChildren().size() - 1;
-			editPart = (GraphicalEditPart) getHost().getChildren().get(epIndex);
-			r = transposer.t(getAbsoluteBounds((GraphicalEditPart) editPart));
+			epIndex = children.size() - 1;
+			editPart = children.get(epIndex);
+			r = transposer.t(getAbsoluteBounds(editPart));
 		} else {
-			editPart = (GraphicalEditPart) getHost().getChildren().get(epIndex);
-			r = transposer.t(getAbsoluteBounds((GraphicalEditPart) editPart));
+			editPart = children.get(epIndex);
+			r = transposer.t(getAbsoluteBounds(editPart));
 			Point p = transposer.t(getLocationFromRequest(request));
 			if (p.x <= r.x + (r.width / 2))
 				before = true;
@@ -127,12 +133,11 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 				 */
 				before = false;
 				epIndex--;
-				editPart = (GraphicalEditPart) getHost().getChildren().get(
-						epIndex);
-				r = transposer
-						.t(getAbsoluteBounds((GraphicalEditPart) editPart));
+				editPart = children.get(epIndex);
+				r = transposer.t(getAbsoluteBounds(editPart));
 			}
 		}
+
 		int x = Integer.MIN_VALUE;
 		if (before) {
 			/*
@@ -144,9 +149,8 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			 */
 			if (epIndex > 0) {
 				// Need to determine if a line break.
-				Rectangle boxPrev = transposer
-						.t(getAbsoluteBounds((GraphicalEditPart) getHost()
-								.getChildren().get(epIndex - 1)));
+				Rectangle boxPrev = transposer.t(getAbsoluteBounds(children
+						.get(epIndex - 1)));
 				int prevRight = boxPrev.right();
 				if (prevRight < r.x) {
 					// Not a line break
@@ -157,8 +161,6 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			}
 			if (x == Integer.MIN_VALUE) {
 				// It is a line break.
-				Rectangle parentBox = transposer
-						.t(getAbsoluteBounds((GraphicalEditPart) getHost()));
 				x = r.x - 5;
 				if (x < parentBox.x)
 					x = parentBox.x + (r.x - parentBox.x) / 2;
@@ -169,8 +171,6 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 			 * halfway between the right edge and the right edge of the parent,
 			 * but no more than 5 pixels.
 			 */
-			Rectangle parentBox = transposer
-					.t(getAbsoluteBounds((GraphicalEditPart) getHost()));
 			int rRight = r.x + r.width;
 			int pRight = parentBox.x + parentBox.width;
 			x = rRight + 5;
@@ -179,7 +179,7 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 		}
 		Point p1 = new Point(x, r.y);
 		p1 = transposer.t(p1);
-		Point p2 = new Point(x, r.y + r.height);
+		Point p2 = new Point(x, r.y + parentBox.height);
 		p2 = transposer.t(p2);
 
 		Point p3;
@@ -187,21 +187,19 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 
 		if (editPart instanceof SashEditPart) {
 			if (before) {
-				editPart = (GraphicalEditPart) getHost().getChildren().get(
-						epIndex - 1);
+				editPart = children.get(epIndex - 1);
 				before = false;
 			} else {
-				editPart = (GraphicalEditPart) getHost().getChildren().get(
-						epIndex + 1);
+				editPart = children.get(epIndex + 1);
 			}
 		}
 
 		Rectangle sibleBound = transposer.t(getAbsoluteBounds(editPart));
 		if (before) {
-			p3 = new Point(x + sibleBound.width / 2, r.y + r.height);
+			p3 = new Point(x + sibleBound.width / 2, r.y + parentBox.height);
 			p4 = new Point(x + sibleBound.width / 2, r.y);
 		} else {
-			p3 = new Point(x - sibleBound.width / 2, r.y + r.height);
+			p3 = new Point(x - sibleBound.width / 2, r.y + parentBox.height);
 			p4 = new Point(x - sibleBound.width / 2, r.y);
 		}
 		p3 = transposer.t(p3);

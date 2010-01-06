@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer.commands.part;
 
 import org.eclipse.e4.ui.model.application.MPartStack;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 
 /**
@@ -30,7 +31,9 @@ public abstract class AbstractPartCommand extends Command {
 	}
 
 	public boolean canExecute() {
-		if (model == null || partStack == null) {
+		if (model == null
+				|| partStack == null
+				|| (model instanceof EObject && ((EObject) model).eContainer() == partStack)) {
 			return false;
 		}
 		command = computeCommand();

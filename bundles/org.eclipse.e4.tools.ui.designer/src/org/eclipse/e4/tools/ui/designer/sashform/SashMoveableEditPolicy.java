@@ -17,7 +17,8 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.PrecisionRectangle;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.e4.tools.ui.designer.editparts.SashEditPart;
 import org.eclipse.e4.tools.ui.designer.editparts.handlers.DragSashTracker;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.tools.SelectionHandle;
@@ -47,15 +48,17 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 
 	/**
 	 * Creates the figure used for feedback.
+	 * 
 	 * @return the new feedback figure
 	 */
 	protected IFigure createDragSourceFeedbackFigure() {
 		label = new Label();
-		label.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+		label.setForegroundColor(Display.getDefault().getSystemColor(
+				SWT.COLOR_BLUE));
 		getFeedbackLayer().add(label);
 		return super.createDragSourceFeedbackFigure();
 	}
-	
+
 	@Override
 	protected void eraseChangeBoundsFeedback(ChangeBoundsRequest request) {
 		super.eraseChangeBoundsFeedback(request);
@@ -64,7 +67,7 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 		}
 		label = null;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -79,103 +82,91 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 		list.add(moveHandle);
 		return list;
 	}
-		
+
 	protected void showChangeBoundsFeedback(ChangeBoundsRequest request) {
 		IFigure feedback = getDragSourceFeedbackFigure();
-		
-		PrecisionRectangle rect = new PrecisionRectangle(getInitialFeedbackBounds());
+
+		Transposer transposer = new Transposer();
+		transposer.setEnabled(!editPart.isHorizontal());
+
+		Rectangle rect = getInitialFeedbackBounds().getCopy();
 		getHostFigure().translateToAbsolute(rect);
-		
+		rect = transposer.t(rect);
+
 		Point moveDelta = request.getMoveDelta();
-		if (editPart.isHorizontal()) {
-			rect.performTranslate(0, moveDelta.y);
-		}
-		else {
-			rect.performTranslate(moveDelta.x, 0);
-		}
-	
-		rect.resize(request.getSizeDelta());
-		
-		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart.getParent();
+		moveDelta = transposer.t(moveDelta);
+
+		rect.performTranslate(0, moveDelta.y);
+
+		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart
+				.getParent();
 		List<?> children = sashFormEditPart.getChildren();
 		SashForm sashForm = (SashForm) sashFormEditPart.getWidget();
 		int[] weights = sashForm.getWeights();
+		
 		GraphicalEditPart previous = null;
 		int previousIndex = 0;
 		GraphicalEditPart next = null;
 		int nextIndex = 0;
 		int i = 0;
 		for (Object object : children) {
-			if (!(object instanceof SashEditPart)){
+			if (!(object instanceof SashEditPart)) {
 				if (object instanceof GraphicalEditPart) {
 					if (next == null) {
 						previous = (GraphicalEditPart) object;
 						previousIndex = i;
-					}
-					else if (next == editPart) {
+					} else if (next == editPart) {
 						next = (GraphicalEditPart) object;
 						nextIndex = i;
-					}					
+					}
 				}
 				i++;
-			}
-			else if (object == editPart){
+			} else if (object == editPart) {
 				next = editPart;
 			}
 		}
 		int total = weights[previousIndex] + weights[nextIndex];
 
-		PrecisionRectangle previousBounds = null;
+		Rectangle previousBounds = null;
 		{
 			IFigure figure = previous.getFigure();
-			previousBounds = new PrecisionRectangle(figure.getBounds());
+			previousBounds = figure.getBounds().getCopy();
 			figure.translateToAbsolute(previousBounds);
+			previousBounds = transposer.t(previousBounds);
 		}
-		PrecisionRectangle nextBounds = null;
+		Rectangle nextBounds = null;
 		{
 			IFigure figure = next.getFigure();
-			nextBounds = new PrecisionRectangle(figure.getBounds());
+			nextBounds = figure.getBounds().getCopy();
 			figure.translateToAbsolute(nextBounds);
+			nextBounds = transposer.t(nextBounds);
 		}
-		
-		if (rect.x < previousBounds.x) {
-			rect.x = previousBounds.x;
-		}
-		if (rect.x + rect.width > (previousBounds.x + previousBounds.width + nextBounds.width)) {
-			rect.x = (previousBounds.x + previousBounds.width + nextBounds.width) - rect.width;
-		}
-		
+
 		if (rect.y < previousBounds.y) {
 			rect.y = previousBounds.y;
 		}
 		if (rect.y + rect.height > (previousBounds.y + previousBounds.height + nextBounds.height)) {
-			rect.y = (previousBounds.y + previousBounds.height + nextBounds.height) - rect.height;
+			rect.y = (previousBounds.y + previousBounds.height + nextBounds.height)
+					- rect.height;
 		}
+		rect = transposer.t(rect);
+		
 		feedback.translateToRelative(rect);
 
 		feedback.setBounds(rect);
+
+		int previousWeight = (int) ((rect.x - previousBounds.x) * total / (previousBounds.width
+				+ nextBounds.width - rect.width));
+		weights[previousIndex] = previousWeight;
+		weights[nextIndex] = total - previousWeight;
+		label.setText(SashUtil.weightsDisplayString(weights));
+		Dimension dimension = label.getPreferredSize();
+		label.setSize(dimension);
+		location.x = (int) rect.x + 10;
+		location.y = (int) rect.y + (rect.height - dimension.height) / 2;
 		
-		if (editPart.isHorizontal()) {
-			int previousWeight = (int)((rect.y - previousBounds.y) * total / (previousBounds.height + nextBounds.height - rect.height));
-			weights[previousIndex] = previousWeight;
-			weights[nextIndex] = total - previousWeight;
-			
-			label.setText(SashUtil.weightsDisplayString(weights));
-			Dimension dimension = label.getPreferredSize();
-			label.setSize(dimension);
-			location.x = (int)rect.x + (rect.width - dimension.width)/2;
-			location.y = (int)rect.y + 10;
-		}
-		else {
-			int previousWeight = (int)((rect.x - previousBounds.x) * total / (previousBounds.width + nextBounds.width - rect.width));
-			weights[previousIndex] = previousWeight;
-			weights[nextIndex] = total - previousWeight;
-			label.setText(SashUtil.weightsDisplayString(weights));
-			Dimension dimension = label.getPreferredSize();
-			label.setSize(dimension);		
-			location.x = (int)rect.x + 10;
-			location.y = (int)rect.y + (rect.height - dimension.height)/2;
-		}
+		location = transposer.t(location);
+		label.translateToRelative(location);
 		label.setLocation(location);
 	}
 }

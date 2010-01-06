@@ -72,7 +72,10 @@ public class PartContainerLayoutEditPolicy extends CompositeLayoutEditPolicy {
 
 		PartCreateRequest req = new PartCreateRequest(getHost(), request);
 		req.setLocation(location);
-		figure.setBounds(req.getBounds());
+		
+		Rectangle bounds = req.getBounds();
+		figure.translateToRelative(bounds);
+		figure.setBounds(bounds);
 	}
 
 	protected void eraseLayoutTargetFeedback(Request request) {

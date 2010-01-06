@@ -73,6 +73,7 @@ public class PartMovableEditPolicy extends NonResizableEditPolicy {
 			req.setLocation(request.getLocation());
 
 			Rectangle rect = req.getBounds();
+			feedback.translateToRelative(rect);
 			feedback.setBounds(rect);
 
 		} else {
