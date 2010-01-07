@@ -27,8 +27,8 @@ public abstract class CommandsFactory {
 		this.editPart = editPart;
 	}
 
-	public Command getCreateCommand(CreateRequest request, EditPart insertAfter) {
-		return new CreateCommand(editPart, request, insertAfter);
+	public Command getCreateCommand(CreateRequest request, EditPart insertAfter, Class<?> childType) {
+		return new CreateCommand(editPart, request, insertAfter, childType);
 	}
 
 	public Command getAddCommand(EditPart child, EditPart after) {

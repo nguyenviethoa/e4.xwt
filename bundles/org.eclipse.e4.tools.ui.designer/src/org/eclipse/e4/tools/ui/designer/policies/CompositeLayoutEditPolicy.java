@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer.policies;
 
 import org.eclipse.e4.tools.ui.designer.commands.factory.CommandsFactory;
 import org.eclipse.e4.tools.ui.designer.commands.factory.CompositeCommandsFactory;
+import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
@@ -31,7 +32,7 @@ public class CompositeLayoutEditPolicy extends XYLayoutEditPolicy {
 	}
 	
 	protected Command getCreateCommand(CreateRequest request) {
-		return factory.getCreateCommand(request, null);
+		return factory.getCreateCommand(request, null, MUIElement.class);
 	}
 
 	protected Command createChangeConstraintCommand(EditPart child,

@@ -30,19 +30,20 @@ public class CreateCommand extends Command {
 	private MUIElement creatingModel;
 	private int index = -1;
 	private boolean after;
-
+	private Class<?> childType;
 
 	public CreateCommand(EditPart parent, CreateRequest request,
-			EditPart reference) {
-		this(parent, request, reference, false);
+			EditPart reference, Class<?> childType) {
+		this(parent, request, reference, childType, false);
 	}
 
 	public CreateCommand(EditPart parent, CreateRequest request,
-			EditPart reference, boolean after) {
+			EditPart reference, Class<?> childType, boolean after) {
 		this.parent = parent;
 		this.request = request;
 		this.reference = reference;
 		this.after = after;
+		this.childType = childType;
 	}
 
 	public boolean canExecute() {
@@ -54,6 +55,9 @@ public class CreateCommand extends Command {
 			parentModel = (MElementContainer<MUIElement>) model;
 		}
 		creatingModel = E4PaletteHelper.createElement(parentModel, request);
+		if (childType != null && !childType.isInstance(creatingModel)) {
+			return false;
+		}
 		return parentModel != null && creatingModel != null;
 	}
 

@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer.policies;
 
 import org.eclipse.e4.tools.ui.designer.commands.factory.CommandsFactory;
 import org.eclipse.e4.tools.ui.designer.commands.factory.ToolBarCommandsFactory;
+import org.eclipse.e4.ui.model.application.MToolItem;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;
@@ -48,7 +49,7 @@ public class ToolBarLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
 		EditPart insertionReference = getInsertionReference(request);
-		return factory.getCreateCommand(request, insertionReference);
+		return factory.getCreateCommand(request, insertionReference, MToolItem.class);
 	}
 
 	/*
