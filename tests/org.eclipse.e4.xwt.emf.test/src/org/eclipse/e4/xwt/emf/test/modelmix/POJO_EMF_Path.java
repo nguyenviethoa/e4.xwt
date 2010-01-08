@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class POJO_EMF_Path {
 	static EClass bookClass;
 	
-	public static void main(String[] args) {
+	static {
 		EMFBinding.initialze();
 		XWT.addDataProviderFactory(EMFDataProviderFactory.EMF_DATA_PROVIDER_FACTORY, new EMFDataProviderFactory() {
 			@Override
@@ -49,7 +49,9 @@ public class POJO_EMF_Path {
 				});
 			}
 		});
-		
+	}
+
+	public static void main(String[] args) {
 		URL url = POJO_EMF_Path.class
 				.getResource(POJO_EMF_Path.class
 						.getSimpleName()
