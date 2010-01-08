@@ -63,17 +63,6 @@ public class WidgetLocator {
 
 	public static Rectangle getBounds(Widget w, boolean toDisplay) {
 		if (w instanceof Control) {
-			// if (w instanceof Decorations) {
-			// Rectangle bounds = ((Decorations) w).getBounds();
-			// Rectangle clientArea = ((Decorations) w).getClientArea();
-			// Rectangle calced = ((Decorations) w).computeTrim(bounds.x,
-			// bounds.y, clientArea.width,
-			// clientArea.height);
-			// Rectangle correct = new Rectangle(2 * bounds.x - calced.x, 2 *
-			// bounds.y - calced.y, clientArea.width, // bug workaround
-			// clientArea.height);
-			// return toDisplay(correct, ((Decorations) w));
-			// }
 			Control control = (Control) w;
 			Rectangle r = control.getBounds();
 			if (toDisplay) {
@@ -86,9 +75,6 @@ public class WidgetLocator {
 				Rectangle calced = parent.computeTrim(0, 0, 0, 0);
 				r.x += (- calced.x);
 				r.y += (- calced.y);
-				if (parent instanceof Shell && SWTUtil.IsCocoa) {
-					r.y += calced.height;
-				}
 			}
 			else if (SWTUtil.IsCocoa) {
 				if (parent instanceof Group) {
@@ -204,5 +190,4 @@ public class WidgetLocator {
 		}
 		return null;
 	}
-
 }

@@ -43,10 +43,6 @@ public class CompositeInfo extends ControlInfo {
 			bounds.height = clientArea.height;
 			bounds.x += -calced.x;
 			bounds.y += -calced.y;
-			if (SWTUtil.IsCocoa) {
-				// Bug 298424
-				bounds.y += calced.height;
-			}
 			return Draw2dTools.toDraw2d(bounds);
 		}
 		return super.getClientArea();
