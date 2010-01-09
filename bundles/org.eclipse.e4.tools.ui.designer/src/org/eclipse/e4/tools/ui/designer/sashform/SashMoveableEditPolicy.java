@@ -149,22 +149,23 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 			rect.y = (previousBounds.y + previousBounds.height + nextBounds.height)
 					- rect.height;
 		}
-		rect = transposer.t(rect);
-		
-		feedback.translateToRelative(rect);
 
-		feedback.setBounds(rect);
-
-		int previousWeight = (int) ((rect.x - previousBounds.x) * total / (previousBounds.width
-				+ nextBounds.width - rect.width));
+		int previousWeight = (int) ((rect.y - previousBounds.y) * total / (previousBounds.height
+				+ nextBounds.height - rect.height));
 		weights[previousIndex] = previousWeight;
 		weights[nextIndex] = total - previousWeight;
 		label.setText(SashUtil.weightsDisplayString(weights));
 		Dimension dimension = label.getPreferredSize();
 		label.setSize(dimension);
-		location.x = (int) rect.x + 10;
-		location.y = (int) rect.y + (rect.height - dimension.height) / 2;
-		
+		dimension = transposer.t(dimension);
+
+		location.y = (int) rect.y + 10;
+		location.x = (int) rect.x + (rect.width - dimension.width) / 2;
+
+		rect = transposer.t(rect);
+		feedback.translateToRelative(rect);
+		feedback.setBounds(rect);
+
 		location = transposer.t(location);
 		label.translateToRelative(location);
 		label.setLocation(location);
