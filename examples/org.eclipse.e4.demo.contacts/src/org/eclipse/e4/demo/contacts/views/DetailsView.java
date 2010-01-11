@@ -48,10 +48,10 @@ public class DetailsView extends XWTSaveablePart {
 	 * 
 	 */
 	protected void refresh(URL url, Object dataContext, ClassLoader loader) {
-		FadeAnimation animation = new FadeAnimation(getParent()); 
-		animation.setStep(10);
+//		FadeAnimation animation = new FadeAnimation(getParent()); 
+//		animation.setStep(10);
 		super.refresh(url, dataContext, loader);
-		animation.play();
+//		animation.play();
 	}
 	
 	public void doSave(@Optional IProgressMonitor monitor) throws IOException,

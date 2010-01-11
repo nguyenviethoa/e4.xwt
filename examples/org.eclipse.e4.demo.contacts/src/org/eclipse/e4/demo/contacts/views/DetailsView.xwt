@@ -35,7 +35,7 @@
 	            <Binding path="firstName"/>
 	            <Binding path="lastName"/>
 	        </MultiBinding>
-	    </Text.text>	
+	    </Text.text>
 		<Text.layoutData>
 			<GridData grabExcessHorizontalSpace="true"
 				horizontalAlignment="GridData.FILL" />

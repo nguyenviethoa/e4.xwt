@@ -91,10 +91,7 @@ public abstract class XWTAbstractPart implements IContentPart {
 	}
 
 	public Object getDataContext() {
-		if (dataContext != null) {
-			return dataContext;
-		}
-		return getContext();
+		return dataContext;
 	}
 	
 	public void setDataContext(Object dataContext) {

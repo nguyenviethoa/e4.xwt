@@ -14,8 +14,8 @@
     xmlns:j="clr-namespace:java.lang"
     name="TableViewer" x:Style="SWT.FULL_SELECTION" input="{Binding}">
 	<TableViewer.columns>
-		<TableViewerColumn width="80" text="{x:Static k:Messages.FirstName}" displayMemberPath="FirstName"/>
-		<TableViewerColumn width="80" text="{x:Static k:Messages.LastName}" displayMemberPath="LastName"/>
+		<TableViewerColumn width="80" text="{x:Static k:Messages.FirstName}" bindingPath="FirstName"/>
+		<TableViewerColumn width="80" text="{x:Static k:Messages.LastName}" bindingPath="LastName"/>
 	</TableViewer.columns>
 	<TableViewer.table HeaderVisible="true" SelectionEvent="selection"/>
 	<TableViewer.comparator>
