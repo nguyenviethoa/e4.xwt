@@ -38,16 +38,25 @@ public class LayoutDataSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection
+	 * #createControls(org.eclipse.swt.widgets.Composite,
+	 * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
 	 */
-	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+	public void createControls(Composite parent,
+			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		_createControls(parent, aTabbedPropertySheetPage);
-		ExpandableComposite expandable = getWidgetFactory().createExpandableComposite(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+		ExpandableComposite expandable = getWidgetFactory()
+				.createExpandableComposite(
+						parent,
+						ExpandableComposite.TWISTIE
+								| ExpandableComposite.EXPANDED);
 		expandable.setText("Values");
 		expandable.setExpanded(true);
 
 		ToolBar toolBar = new ToolBar(expandable, SWT.FLAT);
-		toolBar.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		toolBar.setBackground(parent.getDisplay().getSystemColor(
+				SWT.COLOR_WHITE));
 		ToolItem clearAction = new ToolItem(toolBar, SWT.PUSH);
 		clearAction.setImage(ImageShop.get(ImageShop.IMG_CLEAR_FILTER));
 		clearAction.setToolTipText("Clear setting values.");
@@ -73,18 +82,9 @@ public class LayoutDataSection extends AbstractAttributeSection {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
-	 */
-	public void refresh() {
-		if (!isNeedToRefresh()) {
-			return;
-		}
-		setNeedToRefresh(false);
-
-		LayoutDataType layoutDataType = LayoutsHelper.getLayoutDataType(getEditPart());
+	public void doRefresh() {
+		LayoutDataType layoutDataType = LayoutsHelper
+				.getLayoutDataType(getEditPart());
 		if (layoutDataType == LayoutDataType.Unknown) {
 			return;
 		}
@@ -103,7 +103,8 @@ public class LayoutDataSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createSection(Composite parent) {
 		return null;
@@ -112,7 +113,8 @@ public class LayoutDataSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getAttributeName()
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getAttributeName()
 	 */
 	protected String getAttributeName() {
 		return "layoutData";
@@ -121,7 +123,8 @@ public class LayoutDataSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getNewValue(org.eclipse.swt.widgets.Event)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getNewValue(org.eclipse.swt.widgets.Event)
 	 */
 	protected String getNewValue(Event event) {
 		return null;

@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer.commands.part;
 
 import org.eclipse.e4.tools.ui.designer.commands.AddChildCommand;
 import org.eclipse.e4.tools.ui.designer.commands.ChangeParentCommand;
+import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.ui.model.application.MPartStack;
 import org.eclipse.e4.ui.model.application.MUIElement;
@@ -44,7 +45,8 @@ public class MoveHeaderCommand extends AbstractPartCommand {
 		if (index < 0 || index > partStack.getChildren().size()) {
 			index = partStack.getChildren().size();
 		}
-		if (model.getParent() != null) {
+		MElementContainer<MUIElement> parent = model.getParent();
+		if (parent != null) {
 			cmdList.add(new ChangeParentCommand(partStack, model, index));
 		} else {
 			cmdList.add(new AddChildCommand(partStack, model, index));

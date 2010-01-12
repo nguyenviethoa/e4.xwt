@@ -71,7 +71,9 @@ public abstract class RefreshAdapter extends AdapterImpl {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.emf.common.notify.impl.AdapterImpl#notifyChanged(org.eclipse.emf.common.notify.Notification)
+	 * @see
+	 * org.eclipse.emf.common.notify.impl.AdapterImpl#notifyChanged(org.eclipse
+	 * .emf.common.notify.Notification)
 	 */
 	public final void notifyChanged(Notification msg) {
 		if (msg.isTouch()) {

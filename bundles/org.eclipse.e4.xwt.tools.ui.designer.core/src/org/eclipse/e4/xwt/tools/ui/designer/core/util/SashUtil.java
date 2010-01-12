@@ -13,7 +13,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.util;
 public class SashUtil {
 
 	public static String removeWeights(String weights, int index) {
-		String[] values = weights.split(",");
+		String[] values = weightsSplit(weights);
 		StringBuilder stringBuilder = new StringBuilder();
 		String value = null;
 		for (int i = 0; i < values.length; i++) {
@@ -49,6 +49,42 @@ public class SashUtil {
 
 	public static String weightsDisplayString(int[] weights) {
 		return "[" + weightsValue(weights) + "]";
+	}
+	
+	public static String[] weightsSplit(String value) {
+		return value.split(",");
+	}
+
+	public static int[] toWeights(String value) {
+		String[] segments = weightsSplit(value);
+		int [] weights = new int [segments.length];
+		for(int i = 0; i< segments.length; i++) {
+			try {
+				weights[i] = Integer.parseInt(segments[i]);
+			} catch (NumberFormatException e) {
+				weights[i] = 0;
+			}
+		}
+		return weights;
+	}
+
+	public static String updateWeightsLengh(int[] segments, int length) {
+		if (length == segments.length) {
+			return weightsValue(segments);			
+		}
+		
+		int[] values = new int[length];
+		if (length > segments.length) {
+			for(int i = 0; i< segments.length; i++) {
+				values[i] = segments[i];
+			}			
+		}
+		else if (length < segments.length) {
+			for(int i = 0; i< values.length; i++) {
+				values[i] = segments[i];
+			}
+		}
+		return weightsValue(values);			
 	}
 }
 

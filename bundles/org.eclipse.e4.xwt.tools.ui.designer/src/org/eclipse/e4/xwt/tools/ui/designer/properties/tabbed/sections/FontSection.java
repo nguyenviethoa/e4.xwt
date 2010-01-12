@@ -59,7 +59,8 @@ public class FontSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createSection(Composite parent) {
 		Composite fontGroup = getWidgetFactory().createComposite(parent);
@@ -67,21 +68,25 @@ public class FontSection extends AbstractAttributeSection {
 		layout.marginWidth = 1;
 		fontGroup.setLayout(layout);
 
-		fontFamilyCombo = getWidgetFactory().createCCombo(fontGroup, SWT.READ_ONLY);
+		fontFamilyCombo = getWidgetFactory().createCCombo(fontGroup,
+				SWT.READ_ONLY);
 		fontFamilyCombo.setItems(FontUtil.getFontNames());
 		fontFamilyCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		fontFamilyCombo.addListener(SWT.Selection, this);
 
-		fontSizeCombo = getWidgetFactory().createCCombo(fontGroup, SWT.READ_ONLY);
+		fontSizeCombo = getWidgetFactory().createCCombo(fontGroup,
+				SWT.READ_ONLY);
 		fontSizeCombo.setItems(FontUtil.getFontSizes());
 		fontSizeCombo.addListener(SWT.Selection, this);
 
-		fontBoldButton = getWidgetFactory().createButton(fontGroup, "", SWT.TOGGLE);
+		fontBoldButton = getWidgetFactory().createButton(fontGroup, "",
+				SWT.TOGGLE);
 		fontBoldButton.setImage(ImageShop.get(ImageShop.IMG_BOLD));
 		fontBoldButton.setToolTipText("font bold");
 		fontBoldButton.addListener(SWT.Selection, this);
 
-		fontItalicButton = getWidgetFactory().createButton(fontGroup, "", SWT.TOGGLE);
+		fontItalicButton = getWidgetFactory().createButton(fontGroup, "",
+				SWT.TOGGLE);
 		fontItalicButton.setImage(ImageShop.get(ImageShop.IMG_ITALIC));
 		fontItalicButton.setToolTipText("font italic");
 		fontItalicButton.addListener(SWT.Selection, this);
@@ -89,17 +94,7 @@ public class FontSection extends AbstractAttributeSection {
 		return fontGroup;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
-	 */
-	public void refresh() {
-		if (!isNeedToRefresh()) {
-			return;
-		}
-		setNeedToRefresh(false);
-
+	public void doRefresh() {
 		FontData fd = FontUtil.getFontData(getValue());
 		if (fd != null) {
 			fontName = fd.getName();
@@ -136,7 +131,8 @@ public class FontSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getNewValue()
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getNewValue()
 	 */
 	protected String getNewValue(Event event) {
 		Widget widget = event.widget;
@@ -167,7 +163,8 @@ public class FontSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getAttributeName()
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getAttributeName()
 	 */
 	protected String getAttributeName() {
 		return "font";

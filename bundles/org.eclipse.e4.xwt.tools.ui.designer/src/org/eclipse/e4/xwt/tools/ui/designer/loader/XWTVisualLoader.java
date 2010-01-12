@@ -28,7 +28,7 @@ import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTModelBuilder;
+import org.eclipse.e4.xwt.tools.ui.designer.editor.model.XWTModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.metadata.HeightProperty;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.metadata.WidthProperty;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument;

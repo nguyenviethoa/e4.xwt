@@ -11,10 +11,8 @@
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,8 +32,9 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePa
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineContentProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineLableProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.text.StructuredTextHelper;
+import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
+import org.eclipse.e4.xwt.tools.ui.designer.core.model.ModelChangeListener;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.RefreshContext;
-import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.root.DesignerRootEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.problems.ConfigurableProblemHandler;
 import org.eclipse.e4.xwt.tools.ui.designer.core.problems.ProblemHandler;
@@ -58,13 +57,11 @@ import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
-import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.gef.ui.views.palette.PalettePage;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRewriteTarget;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -104,7 +101,6 @@ import org.eclipse.wst.sse.core.internal.undo.StructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -121,7 +117,6 @@ public abstract class Designer extends MultiPageEditorPart implements
 	private CustomPalettePage palettePage;
 	private IPropertySheetPage propertyPage;
 	private ContentOutlinePage outlinePage;
-	private boolean isDispatching = false;
 	private ContextMenuProvider menuProvider;
 	private ProblemHandler problemHandler;
 
@@ -136,7 +131,6 @@ public abstract class Designer extends MultiPageEditorPart implements
 	private StructuredTextEditor fTextEditor;
 	private IPropertyListener fPropertyListener;
 	private DropTargetAdapter dropListener;
-	private boolean isProcessHighlighting = false;
 
 	private EObject documentRoot;
 	private IVisualRenderer visualsRender;
@@ -145,20 +139,15 @@ public abstract class Designer extends MultiPageEditorPart implements
 
 	private IModelBuilder modelBuilder;
 	private boolean installed = false;
-	private ModelBuildListener modelBuilderListener = new ModelBuildListener() {
-		public void notifyChanged(Notification event) {
-			if (installed) {
-				performModelChanged(event);
-			}
-		}
-	};
-
+	private ModelChangeListener modelBuilderListener;
 	protected Display display;
 	private LoadingFigureController loadingFigureController;
 
 	private EditPartFactory editPartFactory;
 
 	private KeyHandler fSharedKeyHandler;
+
+	private Refresher refresher;
 
 	/*
 	 * (non-Javadoc)
@@ -180,6 +169,12 @@ public abstract class Designer extends MultiPageEditorPart implements
 		getCommandStack().getCommandStack4GEF().addCommandStackListener(this);
 		createActions();
 		configureActions();
+
+		refresher = new Refresher(display);
+	}
+
+	public Refresher getRefresher() {
+		return refresher;
 	}
 
 	protected void configureActions() {
@@ -210,81 +205,68 @@ public abstract class Designer extends MultiPageEditorPart implements
 		super.setFocus();
 	}
 
-	/**
-	 * Perform model changed event.
-	 * 
-	 * @param event
-	 */
+	private void dispatchModelEvent(final Notification event) {
+		if (event.isTouch() || !installed) {
+			return;
+		}
+		if (display != null && display.getThread() == Thread.currentThread()) {
+			performModelChanged(event);
+		} else if (display != null) {
+			DisplayUtil.asyncExec(display, new Runnable() {
+				public void run() {
+					performModelChanged(event);
+				}
+			});
+		}
+	}
+
 	protected void performModelChanged(Notification event) {
-		if (visualsRender != null) {
-			if (event.isTouch()) {
-				return;
-			}
-			Result result;
-			try {
-				result = getVisualsRender().refreshVisuals(event);
-			} catch (Exception e) {
-				return;
-			}
-			if (result == null || !result.refreshed) {
-				return;
-			}
-			Object notifier = result.visuals;
-			// When the eventType is ADD, we need to refresh all children.
-			if (notifier == null) {
-				refreshUI(getGraphicalViewer().getRootEditPart());
-			} else {
-				EditPart editPart = getEditPart(notifier);
-				if (editPart != null) {
-					refreshUI(editPart.getParent());
-				} else {
-					while (notifier != null && notifier instanceof EObject) {
-						Object parentNode = ((EObject) notifier).eContainer();
-						while (getEditPart(parentNode) != null) {
-							refreshUI(getEditPart(parentNode).getParent());
-							break;
-						}
-						notifier = parentNode;
+		if (visualsRender == null || event.isTouch()) {
+			return;
+		}
+		Result result;
+		try {
+			result = getVisualsRender().refreshVisuals(event);
+		} catch (Exception e) {
+			return;
+		}
+		if (result == null || !result.refreshed) {
+			return;
+		}
+		EditPart toRefresh = null;
+		Object notifier = result.visuals;
+		// When the eventType is ADD, we need to refresh all children.
+		if (notifier == null) {
+			toRefresh = getGraphicalViewer().getRootEditPart();
+		} else {
+			toRefresh = getEditPart(notifier);
+			if (toRefresh == null) {
+				while (notifier != null && notifier instanceof EObject) {
+					Object parentNode = ((EObject) notifier).eContainer();
+					while (getEditPart(parentNode) != null) {
+						toRefresh = getEditPart(parentNode).getParent();
+						break;
 					}
-				}
-				// highlight changed one.
-				if (editPart != null && editPart.isSelectable()) {
-					isProcessHighlighting = true;
-					setViewerSelection(graphicalViewer,
-							new StructuredSelection(editPart));
-					isProcessHighlighting = false;
+					notifier = parentNode;
 				}
 			}
+		}
+		if (toRefresh == null) {
+			return;
+		}
+		refresher.refreshInJob(toRefresh);
+
+		getOutlinePage().refresh(toRefresh);
+
+		// highlight changed one.
+		if (toRefresh.isSelectable()) {
+			graphicalViewer.setSelection(new StructuredSelection(toRefresh));
 		}
 	}
 
 	public void refresh(EditPart editPart, RefreshContext context) {
-		if (editPart == null) {
-			return;
-		}
-		try {
-			if (editPart instanceof VisualEditPart) {
-				((VisualEditPart) editPart).refresh(context);
-			} else {
-				editPart.refresh();
-			}
-			getOutlinePage().refresh(editPart);
-			List children = editPart.getChildren();
-			for (Object object : children) {
-				refresh((EditPart) object, context);
-			}
-		} catch (Exception e) {
-		}
-	}
-
-	public void refreshUI(final EditPart editPart) {
-		if (editPart != null) {
-			DisplayUtil.asyncExec(new Runnable() {
-				public void run() {
-					refresh(editPart, RefreshContext.ALL());
-				}
-			});
-		}
+		refresher.refresh(editPart, context);
+		getOutlinePage().refresh(editPart);
 	}
 
 	public EditPart getEditPart(Object model) {
@@ -350,7 +332,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 		getGraphicalViewer().setContents(diagram);
 		loadingFigureController.showLoadingFigure(false);
 		if (diagram != null) {
-			refreshUI(diagram);
+			refresher.refreshAsynchronous(diagram);
 			installed = true;
 		}
 	}
@@ -390,8 +372,15 @@ public abstract class Designer extends MultiPageEditorPart implements
 		if (modelBuilder == null) {
 			modelBuilder = createModelBuilder();
 		}
+		if (modelBuilderListener == null) {
+			modelBuilderListener = new ModelChangeListener() {
+				public void notifyChanged(final Notification event) {
+					dispatchModelEvent(event);
+				}
+			};
+		}
 		if (!modelBuilder.hasListener(modelBuilderListener)) {
-			modelBuilder.addModelBuildListener(modelBuilderListener);
+			modelBuilder.addModelListener(modelBuilderListener);
 		}
 		return modelBuilder;
 	}
@@ -633,6 +622,9 @@ public abstract class Designer extends MultiPageEditorPart implements
 		} catch (PartInitException e) {
 			e.printStackTrace();
 		}
+		SourceSelectionProvider selectionProvider = new SourceSelectionProvider(
+				this, fTextEditor);
+		getSelectionSynchronizer().addViewer(selectionProvider);
 		fTextEditor.setAction(ITextEditorActionConstants.DELETE, null);
 		if (pageContainer != null) {
 			pageContainer.setWeights(new int[] { 1, 1 });
@@ -791,7 +783,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 	 * @see org.eclipse.ui.part.MultiPageEditorPart#dispose()
 	 */
 	public void dispose() {
-		getModelBuilder().removeModelBuildListener(modelBuilderListener);
+		getModelBuilder().removeModelListener(modelBuilderListener);
 		getModelBuilder().dispose();
 		getCommandStack().getCommandStack4GEF()
 				.removeCommandStackListener(this);
@@ -857,9 +849,9 @@ public abstract class Designer extends MultiPageEditorPart implements
 	private ContentOutlinePage getOutlinePage() {
 		if (outlinePage == null) {
 			outlinePage = createOutlinePage();
-		}
-		if (graphicalViewer != null) {
-			outlinePage.setSelection(graphicalViewer.getSelection());
+			if (outlinePage != null) {
+				getSelectionSynchronizer().addViewer(outlinePage);
+			}
 		}
 		return outlinePage;
 	}
@@ -875,9 +867,6 @@ public abstract class Designer extends MultiPageEditorPart implements
 				|| propertyPage.getControl().isDisposed()) {
 			propertyPage = createPropertyPage();
 		}
-		// if (graphicalViewer != null) {
-		// propertyPage.selectionChanged(this, graphicalViewer.getSelection());
-		// }
 		return propertyPage;
 	}
 
@@ -924,28 +913,6 @@ public abstract class Designer extends MultiPageEditorPart implements
 		return newPart;
 	}
 
-	private void setViewerSelection(GraphicalViewer viewer, ISelection selection) {
-		ArrayList<EditPart> result = new ArrayList<EditPart>();
-		Iterator<EditPart> iter = ((IStructuredSelection) selection).iterator();
-		while (iter.hasNext()) {
-			EditPart part = convert(viewer, iter.next());
-			if (part != null) {
-				result.add(part);
-			}
-		}
-		List existings = viewer.getSelectedEditParts();
-		if (existings != null && existings.size() == result.size()
-				&& existings.containsAll(result)) {
-			return;
-		}
-		if (!result.isEmpty()) {
-			viewer.setSelection(new StructuredSelection(result));
-			if (result.size() > 0) {
-				viewer.reveal((EditPart) result.get(result.size() - 1));
-			}
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -955,22 +922,14 @@ public abstract class Designer extends MultiPageEditorPart implements
 	 */
 	public final void selectionChanged(SelectionChangedEvent event) {
 		Object source = event.getSource();
-		if (outlinePage != null && source == outlinePage.getTreeViewer()) {
-			if (isDispatching) {
-				return;
-			}
-			isDispatching = true;
-			setViewerSelection(graphicalViewer, event.getSelection());
-			isDispatching = false;
-		} else {
-			// If not the active editor, ignore selection changed.
-			while (Display.getDefault().readAndDispatch())
-				;
-
-			IEditorPart activeEditor = getSite().getPage().getActiveEditor();
-			if (Designer.this.equals(activeEditor)) {
-				performSelectionChanged(event);
-			}
+		if (source == null) {
+			return;
+		}
+		while (Display.getDefault().readAndDispatch())
+			;
+		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
+		if (Designer.this.equals(activeEditor)) {
+			performSelectionChanged(event);
 		}
 	}
 
@@ -985,109 +944,27 @@ public abstract class Designer extends MultiPageEditorPart implements
 		if (selection.isEmpty()) {
 			return;
 		}
-
-		if (!isProcessHighlighting) {
-			selectEditPartsInCodeEditor(selection);
-		}
-
-		// if (propertyPage != null) {
-		// propertyPage.selectionChanged(this, selection);
-		// }
-		if (actionGroup != null) {
-			actionGroup.updateActions(ActionGroup.SELECTION_GRP);
-		}
-		if (outlinePage != null && !isDispatching) {
-			outlinePage.setSelection(selection);
-		}
-		ActionRegistry actionRegistry = getActionRegistry();
-		Iterator<?> actions = actionRegistry.getActions();
-		while (actions.hasNext()) {
-			Object object = (Object) actions.next();
-			if (object instanceof SelectionAction) {
-				((SelectionAction) object).update();
-			}
-		}
-	}
-
-	public void selectEditPartsInCodeEditor(IStructuredSelection selection) {
-		// 1. highlight TextEditor.
-		StyledText styledText = getTextWidget();
-		if (Display.getDefault().getFocusControl() == styledText) {
-			return;
-		}
-		String content = styledText.getText();
-		int startOffset = -1;
-		int endOffset = 0;
-
-		Object[] array = selection.toArray();
-		for (Object object : array) {
-			if (object instanceof EditPart) {
-				EditPart editPart = (EditPart) object;
-				Object model = editPart.getModel();
-				if (model instanceof EObject) {
-					EObject node = (EObject) model;
-					IDOMNode textNode = getModelBuilder().getTextNode(node);
-					if (textNode != null) {
-						int nodeStartOffset = textNode.getStartOffset();
-						int nodeEndOffset = textNode.getEndOffset();
-						if (startOffset == -1) {
-							startOffset = nodeStartOffset;
-							endOffset = nodeEndOffset;
-						} else {
-							if (nodeStartOffset > startOffset) {
-								if (nodeStartOffset < endOffset) {
-									continue;
-								}
-								String segment = content.substring(endOffset,
-										nodeStartOffset).trim();
-								if (segment.length() == 0) {
-									endOffset = nodeEndOffset;
-								} else {
-									startOffset = 0;
-									endOffset = 0;
-									break;
-								}
-							} else {
-								if (nodeEndOffset > startOffset) {
-									continue;
-								}
-								String segment = content.substring(
-										nodeEndOffset, startOffset).trim();
-								if (segment.length() == 0) {
-									startOffset = nodeStartOffset;
-								} else {
-									startOffset = 0;
-									endOffset = 0;
-									break;
-								}
-
-							}
-						}
+		DisplayUtil.asyncExec(new Runnable() {
+			public void run() {
+				if (actionGroup != null) {
+					actionGroup.updateActions(ActionGroup.SELECTION_GRP);
+				}
+				ActionRegistry actionRegistry = getActionRegistry();
+				Iterator<?> actions = actionRegistry.getActions();
+				while (actions.hasNext()) {
+					Object object = (Object) actions.next();
+					if (object instanceof SelectionAction) {
+						((SelectionAction) object).update();
 					}
 				}
 			}
-		}
-		if (startOffset == -1) {
-			startOffset = 0;
-		}
-		int length = endOffset - startOffset;
-
-		getTextViewer().setRangeIndication(startOffset, length, false);
-		StructuredTextEditor textEditor = getTextEditor();
-		textEditor.selectAndReveal(startOffset, length);
+		});
 	}
 
 	public void gotoDefinition(EObject node) {
-		if (isProcessHighlighting) {
-			return;
-		}
-		IDOMNode textNode = getModelBuilder().getTextNode(node);
-		if (textNode != null) {
-			int startOffset = textNode.getStartOffset();
-			int length = textNode.getEndOffset() - startOffset;
-			StructuredTextEditor textEditor = getTextEditor();
-			getTextViewer().setRangeIndication(startOffset, length, false);
-			textEditor.selectAndReveal(startOffset, length);
+		EditPart editPart = getEditPart(node);
+		if (editPart != null) {
+			graphicalViewer.setSelection(new StructuredSelection(editPart));
 		}
 	}
 

@@ -13,7 +13,6 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.parts;
 import java.util.Iterator;
 
 import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -77,7 +76,7 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	protected IFigure createContentPane() {
 		return new Label();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -173,13 +172,19 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	 * This method has declared to final, please use refresh(RefreshContext).
 	 */
 	protected final void refreshImage() {
-		getRootVisualEditPart().getVisualInfo().refreshImage();
+		VisualEditPart root = getRootVisualEditPart();
+		if (root.validateVisuals()) {
+			root.getVisualInfo().refreshImage();
+		}
 	}
 
 	/**
 	 * This method has declared to final, please use refresh(RefreshContext).
 	 */
 	protected final void refreshVisuals() {
+		if (!validateVisuals()) {
+			return;
+		}
 		IFigure figure = getFigure();
 		if (figure != null && figure.getParent() != null) {
 			Rectangle r = new Rectangle(getBounds());

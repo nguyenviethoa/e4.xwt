@@ -20,8 +20,6 @@ import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 
@@ -76,7 +74,7 @@ public class ImageCollector {
 					shell = control.getShell();
 					shell.pack();
 					shell.setLocation(0, 0);
-					while(control.getDisplay().readAndDispatch()) 
+					while (control.getDisplay().readAndDispatch())
 						;
 				}
 				bounds = control.getBounds();
@@ -86,8 +84,7 @@ public class ImageCollector {
 					if (!shell.isVisible()) {
 						shell.open();
 					}
-				}
-				else {
+				} else {
 					shell.moveBelow(null);
 					if (!shell.isVisible()) {
 						shell.setVisible(true);
@@ -96,13 +93,13 @@ public class ImageCollector {
 				if (control instanceof Shell) {
 					image = ImageCapture.getInstance().capture(control,
 							bounds.width, bounds.height, true);
-				}
-				else {
+				} else {
 					image = new Image(control.getDisplay(), bounds.width,
 							bounds.height);
 					GC gc = new GC(image);
 					control.print(gc);
-					// gc.dispose(); Not need since dispose of image disposes the gc
+					// gc.dispose(); Not need since dispose of image disposes
+					// the gc
 				}
 				shell.setVisible(false);
 			} else {
@@ -115,12 +112,22 @@ public class ImageCollector {
 			if (image != null) {
 				// saveImage(image, "/home/yyang/image" + (i++) + ".jpg");
 				imageRunnable.imageCollected(image);
-				final Image forDispose = image;
-				control.addListener(SWT.Dispose, new Listener() {
-					public void handleEvent(Event event) {
-						forDispose.dispose();
-					}
-				});
+				/*
+				 * Leave dispose to ImageFigure.
+				 */
+				// final Image forDispose = image;
+				// control.addListener(SWT.Dispose, new Listener() {
+				// public void handleEvent(Event event) {
+				// if (forDispose.isDisposed()) {
+				// return;
+				// }
+				// DisplayUtil.asyncExec(new Runnable() {
+				// public void run() {
+				// forDispose.dispose();
+				// }
+				// });
+				// }
+				// });
 			} else {
 				imageRunnable.imageNotCollected();
 			}

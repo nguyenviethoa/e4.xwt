@@ -11,6 +11,7 @@
 package org.eclipse.e4.tools.ui.designer.palette;
 
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
+import org.eclipse.e4.ui.model.application.MContribution;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MUILabel;
@@ -38,12 +39,12 @@ public class E4PaletteHelper {
 
 	private static MUIElement verify(MElementContainer container,
 			MUIElement element, EClass type) {
-		// TODO: add some initialize values.
-		// if (container instanceof MPartSashContainer) {
-		// element.setContainerData("300");
-		// }
 		if (element instanceof MUILabel) {
 			((MUILabel) element).setLabel("New " + type.getName());
+		}
+		if (element instanceof MContribution) {
+			((MContribution) element)
+					.setURI("platform:/plugin/org.eclipse.e4.tools.ui.designer/org.eclipse.e4.tools.ui.designer.E4Designer");
 		}
 		return element;
 	}

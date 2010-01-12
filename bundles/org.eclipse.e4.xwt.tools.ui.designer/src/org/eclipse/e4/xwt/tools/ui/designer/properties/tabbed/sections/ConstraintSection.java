@@ -54,7 +54,8 @@ public class ConstraintSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getAttributeName()
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getAttributeName()
 	 */
 	protected String getAttributeName() {
 		return "";
@@ -63,13 +64,19 @@ public class ConstraintSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection
+	 * #createControls(org.eclipse.swt.widgets.Composite,
+	 * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
 	 */
-	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+	public void createControls(Composite parent,
+			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
 		Composite comp = getWidgetFactory().createComposite(parent);
 		comp.setLayout(new GridLayout(2, false));
-		comp.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 3, 1));
+		comp
+				.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,
+						3, 1));
 		getWidgetFactory().createLabel(comp, "Increment of spinner:");
 		incrementSpinner = createSpinner(comp);
 		incrementSpinner.setIncrement(1);
@@ -81,7 +88,9 @@ public class ConstraintSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#createClearButton(org.eclipse.swt.widgets.Composite)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection
+	 * #createClearButton(org.eclipse.swt.widgets.Composite)
 	 */
 	protected void createClearButton(Composite parent) {
 		// remove the clear action.
@@ -90,12 +99,14 @@ public class ConstraintSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createSection(Composite parent) {
 		Composite control = getWidgetFactory().createComposite(parent);
 		control.setLayout(new GridLayout(2, false));
-		Group locationGroup = getWidgetFactory().createGroup(control, "Location");
+		Group locationGroup = getWidgetFactory().createGroup(control,
+				"Location");
 		locationGroup.setLayout(new GridLayout(4, false));
 		getWidgetFactory().createLabel(locationGroup, "x");
 		xSpinner = createSpinner(locationGroup);
@@ -121,37 +132,31 @@ public class ConstraintSection extends AbstractAttributeSection {
 		return spinner;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
-	 */
-	public void refresh() {
-		if (!isNeedToRefresh()) {
-			return;
-		}
-		setNeedToRefresh(false);
-
+	public void doRefresh() {
 		Rectangle r = getModelValue();
 		if (r == null) {
 			return;
 		}
-		if (xSpinner != null && !xSpinner.isDisposed() && r.x != xSpinner.getSelection()) {
+		if (xSpinner != null && !xSpinner.isDisposed()
+				&& r.x != xSpinner.getSelection()) {
 			xSpinner.removeListener(SWT.Selection, this);
 			xSpinner.setSelection(r.x);
 			xSpinner.addListener(SWT.Selection, this);
 		}
-		if (ySpinner != null && !ySpinner.isDisposed() && r.y != ySpinner.getSelection()) {
+		if (ySpinner != null && !ySpinner.isDisposed()
+				&& r.y != ySpinner.getSelection()) {
 			ySpinner.removeListener(SWT.Selection, this);
 			ySpinner.setSelection(r.y);
 			ySpinner.addListener(SWT.Selection, this);
 		}
-		if (widthSpinner != null && !widthSpinner.isDisposed() && r.width != widthSpinner.getSelection()) {
+		if (widthSpinner != null && !widthSpinner.isDisposed()
+				&& r.width != widthSpinner.getSelection()) {
 			widthSpinner.removeListener(SWT.Selection, this);
 			widthSpinner.setSelection(r.width);
 			widthSpinner.addListener(SWT.Selection, this);
 		}
-		if (heightSpinner != null && !heightSpinner.isDisposed() && r.height != heightSpinner.getSelection()) {
+		if (heightSpinner != null && !heightSpinner.isDisposed()
+				&& r.height != heightSpinner.getSelection()) {
 			heightSpinner.removeListener(SWT.Selection, this);
 			heightSpinner.setSelection(r.height);
 			heightSpinner.addListener(SWT.Selection, this);
@@ -159,7 +164,8 @@ public class ConstraintSection extends AbstractAttributeSection {
 		widthCache = r.width;
 		heightCache = r.height;
 		LayoutType containerLayout = getContainerLayout();
-		if (LayoutType.Unknown == containerLayout || LayoutType.NullLayout == containerLayout) {
+		if (LayoutType.Unknown == containerLayout
+				|| LayoutType.NullLayout == containerLayout) {
 			xSpinner.setEnabled(true);
 			ySpinner.setEnabled(true);
 		} else {
@@ -178,18 +184,21 @@ public class ConstraintSection extends AbstractAttributeSection {
 		if (LayoutType.NullLayout == containerLayout) {
 			XamlAttribute attribute = parent.getAttribute("bounds");
 			if (attribute != null && attribute.getValue() != null) {
-				org.eclipse.swt.graphics.Rectangle rect = (org.eclipse.swt.graphics.Rectangle) StringToRectangle.instance.convert(attribute.getValue());
+				org.eclipse.swt.graphics.Rectangle rect = (org.eclipse.swt.graphics.Rectangle) StringToRectangle.instance
+						.convert(attribute.getValue());
 				r.setLocation(rect.x, rect.y);
 				r.setSize(rect.width, rect.height);
 			} else {
 				attribute = parent.getAttribute("location");
 				if (attribute != null && attribute.getValue() != null) {
-					Point location = (Point) StringToPoint.instance.convert(attribute.getValue());
+					Point location = (Point) StringToPoint.instance
+							.convert(attribute.getValue());
 					r.setLocation(location.x, location.y);
 				}
 				attribute = parent.getAttribute("size");
 				if (attribute != null && attribute.getValue() != null) {
-					Point size = (Point) StringToPoint.instance.convert(attribute.getValue());
+					Point size = (Point) StringToPoint.instance
+							.convert(attribute.getValue());
 					r.setSize(size.x, size.y);
 				}
 			}
@@ -199,7 +208,8 @@ public class ConstraintSection extends AbstractAttributeSection {
 			IMetaclass metaclass = XWTUtility.getMetaclass(parent);
 			XamlAttribute widthAttr = parent.getAttribute("width");
 			if (widthAttr != null) {
-				r.width = (Integer) StringToInteger.instance.convert(widthAttr.getValue());
+				r.width = (Integer) StringToInteger.instance.convert(widthAttr
+						.getValue());
 			} else if (metaclass != null) {
 				try {
 					IProperty widthProperty = metaclass.findProperty("width");
@@ -211,7 +221,8 @@ public class ConstraintSection extends AbstractAttributeSection {
 			}
 			XamlAttribute heightAttr = parent.getAttribute("height");
 			if (heightAttr != null) {
-				r.height = (Integer) StringToInteger.instance.convert(heightAttr.getValue());
+				r.height = (Integer) StringToInteger.instance
+						.convert(heightAttr.getValue());
 			} else if (metaclass != null) {
 				try {
 					IProperty heightProperty = metaclass.findProperty("height");
@@ -236,7 +247,8 @@ public class ConstraintSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#handleEvent(org.eclipse.swt.widgets.Event)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#handleEvent(org.eclipse.swt.widgets.Event)
 	 */
 	public void handleEvent(Event event) {
 		if (event.widget == incrementSpinner) {
@@ -254,7 +266,8 @@ public class ConstraintSection extends AbstractAttributeSection {
 			r.y = ySpinner.getSelection();
 			r.width = widthCache = widthSpinner.getSelection();
 			r.height = heightCache = heightSpinner.getSelection();
-			ChangeConstraintCommand cmd = new ChangeConstraintCommand(getEditPart(), r);
+			ChangeConstraintCommand cmd = new ChangeConstraintCommand(
+					getEditPart(), r);
 			executeCommand(cmd);
 		} else if (LayoutType.Unknown != containerLayout) {
 			Dimension growth = new Dimension();
@@ -273,7 +286,8 @@ public class ConstraintSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getRefresher()
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getRefresher()
 	 */
 	protected RefreshAdapter getRefresher() {
 		RefreshAdapter refresher = super.getRefresher();
@@ -288,7 +302,8 @@ public class ConstraintSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getNewValue(org.eclipse.swt.widgets.Event)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getNewValue(org.eclipse.swt.widgets.Event)
 	 */
 	protected String getNewValue(Event event) {
 		return null;

@@ -8,12 +8,12 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.core.editor;
+package org.eclipse.e4.xwt.tools.ui.designer.core.model;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 
 /**
  * @author jliu jin.liu@soyatec.com
  */
-public abstract class ModelBuildListener extends AdapterImpl {
+public abstract class ModelChangeListener extends AdapterImpl {
 }

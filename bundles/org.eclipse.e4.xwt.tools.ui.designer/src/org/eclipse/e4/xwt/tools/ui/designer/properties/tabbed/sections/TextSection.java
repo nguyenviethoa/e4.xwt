@@ -37,22 +37,14 @@ public class TextSection extends AbstractAttributeSection {
 	protected TabbedPropertySheetPage tabbedPropertySheetPage;
 	private Text textWidget;
 	private Button externalizeButton;
+	private Runnable delayRunnable;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#_createControls(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
-	 */
-	protected void _createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+	protected void _createControls(Composite parent,
+			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super._createControls(parent, aTabbedPropertySheetPage);
 		this.tabbedPropertySheetPage = aTabbedPropertySheetPage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractSection#createSection(org.eclipse.swt.widgets.Composite)
-	 */
 	protected Control createSection(Composite parent) {
 		Composite control = getWidgetFactory().createComposite(parent);
 		control.setLayout(new GridLayout(2, false));
@@ -61,8 +53,10 @@ public class TextSection extends AbstractAttributeSection {
 		textWidget.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		textWidget.addListener(SWT.Modify, this);
 
-		externalizeButton = getWidgetFactory().createButton(control, "", SWT.PUSH);
-		externalizeButton.setImage(ImageShop.get(ImageShop.IMAGE_OBSERVE_CUSTOM));
+		externalizeButton = getWidgetFactory().createButton(control, "",
+				SWT.PUSH);
+		externalizeButton.setImage(ImageShop
+				.get(ImageShop.IMAGE_OBSERVE_CUSTOM));
 		externalizeButton.setToolTipText("Externalize String");
 		externalizeButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
@@ -76,45 +70,37 @@ public class TextSection extends AbstractAttributeSection {
 		if (getValue() != null) {
 			XWTDesigner designer = (XWTDesigner) getPart();
 			TextValueModel textValueEntrys = new TextValueModel();
-			textValueEntrys.add(new TextValueEntry(textWidget.getText(), "" + 0));
-			ExternalizeStringsWizard wizard = new ExternalizeStringsWizard(textValueEntrys, designer);
+			textValueEntrys
+					.add(new TextValueEntry(textWidget.getText(), "" + 0));
+			ExternalizeStringsWizard wizard = new ExternalizeStringsWizard(
+					textValueEntrys, designer);
 			wizard.init(PlatformUI.getWorkbench(), null);
-			WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+			WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getShell(), wizard);
 			dialog.open();
 		} else {
 			String dialogMessage = "No Strings to externalize found.";
 			String[] dialogButtonLabels = { "Ok" };
-			MessageDialog messageDialog = new MessageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Externalize Strings", null, dialogMessage, MessageDialog.INFORMATION, dialogButtonLabels, 0);
+			MessageDialog messageDialog = new MessageDialog(PlatformUI
+					.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					"Externalize Strings", null, dialogMessage,
+					MessageDialog.INFORMATION, dialogButtonLabels, 0);
 			messageDialog.open();
 		}
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
-	 */
-	public void refresh() {
-		if (textWidget == null || textWidget.isDisposed() || getAttribute() == null) {
+	public void doRefresh() {
+		if (textWidget == null || textWidget.isDisposed()
+				|| textWidget.isFocusControl() || getAttribute() == null) {
 			return;
 		}
-//		if (!isNeedToRefresh()) {
-//			return;
-//		}
-//		setNeedToRefresh(false);
-
 		textWidget.removeListener(SWT.Modify, this);
 		setTextValue(textWidget);
 		textWidget.addListener(SWT.Modify, this);
 		refreshTitleBar();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getNewValue()
-	 */
 	protected String getNewValue(Event event) {
 		if (textWidget == null || textWidget.isDisposed()) {
 			return null;
@@ -122,23 +108,8 @@ public class TextSection extends AbstractAttributeSection {
 		return textWidget.getText();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getAttributeName()
-	 */
 	protected String getAttributeName() {
 		return "text";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#handleEvent(org.eclipse.swt.widgets.Event)
-	 */
-	public void handleEvent(Event event) {
-		super.handleEvent(event);
-		refreshTitleBar();
 	}
 
 	private void refreshTitleBar() {
@@ -150,4 +121,46 @@ public class TextSection extends AbstractAttributeSection {
 			}
 		});
 	}
+
+	// public void handleEvent(final Event event) {
+	// if (System.currentTimeMillis() - lastEvent < 1000 && !delayed) {
+	// Runnable delayRunnable = new Runnable() {
+	// public void run() {
+	// TextSection.super.handleEvent(event);
+	// refreshTitleBar();
+	// delayed = false;
+	// lastEvent = -1;
+	// }
+	// };
+	// DisplayUtil.timerExec(display, 1000, delayRunnable);
+	// delayed = true;
+	// }
+	// lastEvent = System.currentTimeMillis();
+	// }
+	public void handleEvent(final Event event) {
+		if (!delayed) {
+			if (delayRunnable == null) {
+				delayRunnable = new Runnable() {
+					public void run() {
+						long current = System.currentTimeMillis();
+						if (current - lastEvent < 300) {
+							lastEvent = current;
+							DisplayUtil.timerExec(display, 300, delayRunnable);
+							return;
+						}
+						TextSection.super.handleEvent(event);
+						refreshTitleBar();
+						delayed = false;
+						lastEvent = -1;
+					}
+				};
+			}
+			DisplayUtil.timerExec(display, 300, delayRunnable);
+			delayed = true;
+		}
+		lastEvent = System.currentTimeMillis();
+	}
+
+	private long lastEvent = -1;
+	private boolean delayed = false;
 }

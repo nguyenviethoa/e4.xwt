@@ -37,13 +37,16 @@ public class ImageSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createSection(Composite parent) {
 		Composite control = getWidgetFactory().createComposite(parent);
 		control.setLayout(new GridLayout(2, false));
-		imageText = getWidgetFactory().createText(control, "", SWT.BORDER | SWT.READ_ONLY);
-		imageText.setBackground(control.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		imageText = getWidgetFactory().createText(control, "",
+				SWT.BORDER | SWT.READ_ONLY);
+		imageText.setBackground(control.getDisplay().getSystemColor(
+				SWT.COLOR_WHITE));
 		imageText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		imageText.addListener(SWT.Modify, this);
 
@@ -57,20 +60,10 @@ public class ImageSection extends AbstractAttributeSection {
 		return control;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
-	 */
-	public void refresh() {
+	public void doRefresh() {
 		if (imageText == null || imageText.isDisposed()) {
 			return;
 		}
-		if (!isNeedToRefresh()) {
-			return;
-		}
-		setNeedToRefresh(false);
-
 		String value = getValue();
 		imageText.removeListener(SWT.Modify, this);
 		imageText.setText(value == null ? "" : value);
@@ -93,7 +86,8 @@ public class ImageSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getAttributeName()
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getAttributeName()
 	 */
 	protected String getAttributeName() {
 		return "image";
@@ -102,7 +96,8 @@ public class ImageSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getNewValue(org.eclipse.swt.widgets.Event)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getNewValue(org.eclipse.swt.widgets.Event)
 	 */
 	protected String getNewValue(Event event) {
 		return imageText.getText();

@@ -15,16 +15,20 @@ import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.palette.E4CreationTool;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
 import org.eclipse.e4.tools.ui.designer.properties.E4PropertySourceProvider;
+import org.eclipse.e4.ui.model.application.MElementContainer;
+import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineLableProvider;
+import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -80,7 +84,25 @@ public class E4Designer extends Designer {
 	}
 
 	protected void performModelChanged(Notification event) {
-		super.performModelChanged(event);
+		Result result = getVisualsRender().refreshVisuals(event);
+		if (result == null || !result.isRefreshed()) {
+			return;
+		}
+		EditPart editPart = getEditPart(result.visuals);
+		EditPart toRefresh = null;
+		if (editPart != null) {
+			toRefresh = editPart.getParent();
+		}
+		if (toRefresh == null && result.visuals instanceof MUIElement) {
+			MElementContainer<MUIElement> parent = ((MUIElement) result.visuals)
+					.getParent();
+			toRefresh = getEditPart(parent);
+		}
+		if (toRefresh == null) {
+			return;
+		}
+		getRefresher().refreshInJob(toRefresh);
+
 		isDirty = true;
 		firePropertyChange(PROP_DIRTY);
 	}

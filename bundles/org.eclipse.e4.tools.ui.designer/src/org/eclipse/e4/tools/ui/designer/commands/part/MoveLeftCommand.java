@@ -11,6 +11,7 @@
 package org.eclipse.e4.tools.ui.designer.commands.part;
 
 import org.eclipse.e4.tools.ui.designer.commands.AddChildCommand;
+import org.eclipse.e4.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.tools.ui.designer.commands.ChangeParentCommand;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
 import org.eclipse.e4.ui.model.application.MElementContainer;
@@ -18,6 +19,7 @@ import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.ui.model.application.MPartSashContainer;
 import org.eclipse.e4.ui.model.application.MPartStack;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 
@@ -37,18 +39,26 @@ public class MoveLeftCommand extends AbstractPartCommand {
 
 		MPartSashContainer newSash = MApplicationFactory.eINSTANCE
 				.createPartSashContainer();
+		String preferData = partStack.getContainerData();
+		newSash.setContainerData(preferData);
 		newSash.setHorizontal(true);
 
 		if (model instanceof MPartStack) {
 			if (model.getParent() == null) {
+				model.setContainerData(preferData);
 				result.add(new AddChildCommand(newSash, model, 0));
 			} else {
 				result.add(new ChangeParentCommand(newSash, model, 0));
+				if (!preferData.equals(model.getContainerData())) {
+					result.add(new ApplyAttributeSettingCommand(
+							(EObject) model, "containerData", preferData));
+				}
 			}
 		} else if (model instanceof MPart) {
 			MPart part = (MPart) model;
 			MPartStack createPartStack = MApplicationFactory.eINSTANCE
 					.createPartStack();
+			createPartStack.setContainerData(preferData);
 			if (part.getParent() != null) {
 				result.add(new ChangeParentCommand(createPartStack, part, 0));
 			} else {

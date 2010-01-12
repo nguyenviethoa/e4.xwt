@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.editor;
+package org.eclipse.e4.xwt.tools.ui.designer.editor.model;
 
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;

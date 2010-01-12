@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline;
 
+import java.util.Iterator;
+
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.dnd.OutlineDragListener;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.dnd.OutlineDropListener;
@@ -27,11 +29,13 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public class ContentOutlinePage extends org.eclipse.ui.views.contentoutline.ContentOutlinePage {
+public class ContentOutlinePage extends
+		org.eclipse.ui.views.contentoutline.ContentOutlinePage {
 
 	private Designer designer;
 	private ITreeContentProvider contentProvider;
@@ -47,7 +51,8 @@ public class ContentOutlinePage extends org.eclipse.ui.views.contentoutline.Cont
 		this.designer = designer;
 	}
 
-	public ContentOutlinePage(Designer designer, ITreeContentProvider contentProvider, ILabelProvider labelProvider) {
+	public ContentOutlinePage(Designer designer,
+			ITreeContentProvider contentProvider, ILabelProvider labelProvider) {
 		this(designer);
 		this.setContentProvider(contentProvider);
 		this.setLabelProvider(labelProvider);
@@ -56,7 +61,9 @@ public class ContentOutlinePage extends org.eclipse.ui.views.contentoutline.Cont
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#createControl(org.eclipse.swt.widgets.Composite)
+	 * @see
+	 * org.eclipse.ui.views.contentoutline.ContentOutlinePage#createControl(
+	 * org.eclipse.swt.widgets.Composite)
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
@@ -87,17 +94,7 @@ public class ContentOutlinePage extends org.eclipse.ui.views.contentoutline.Cont
 			RootEditPart rootEditPart = graphicalViewer.getRootEditPart();
 			if (rootEditPart != null) {
 				treeViewer.setInput(rootEditPart);
-				rootEditPart.addEditPartListener(new EditPartListener.Stub() {
-					public void childAdded(EditPart child, int index) {
-						treeViewer.refresh();
-						treeViewer.expandAll();
-					}
-
-					public void removingChild(EditPart child, int index) {
-						treeViewer.refresh();
-						treeViewer.expandAll();
-					}
-				});
+				rootEditPart.addEditPartListener(new RefreshListener());
 			}
 		}
 		treeViewer.addSelectionChangedListener(designer);
@@ -111,14 +108,21 @@ public class ContentOutlinePage extends org.eclipse.ui.views.contentoutline.Cont
 			dropListener = new OutlineDropListener(treeViewer, getDropManager());
 		}
 
-		treeViewer.addDragSupport(DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_LINK, new Transfer[] { OutlineNodeTransfer.getTransfer() }, dragListener);
-		treeViewer.addDropSupport(DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_LINK, new Transfer[] { OutlineNodeTransfer.getTransfer() }, dropListener);
+		treeViewer.addDragSupport(
+				DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_LINK,
+				new Transfer[] { OutlineNodeTransfer.getTransfer() },
+				dragListener);
+		treeViewer.addDropSupport(
+				DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_LINK,
+				new Transfer[] { OutlineNodeTransfer.getTransfer() },
+				dropListener);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#getTreeViewer()
+	 * @see
+	 * org.eclipse.ui.views.contentoutline.ContentOutlinePage#getTreeViewer()
 	 */
 	public TreeViewer getTreeViewer() {
 		return super.getTreeViewer();
@@ -166,7 +170,12 @@ public class ContentOutlinePage extends org.eclipse.ui.views.contentoutline.Cont
 	public void refresh(EditPart editPart) {
 		TreeViewer treeViewer = getTreeViewer();
 		if (treeViewer != null) {
-			treeViewer.refresh(editPart, true);
+			Widget item = treeViewer.testFindItem(editPart);
+			if (item != null) {
+				treeViewer.refresh(editPart, true);
+			} else {
+				treeViewer.refresh();
+			}
 		}
 	}
 
@@ -203,5 +212,32 @@ public class ContentOutlinePage extends org.eclipse.ui.views.contentoutline.Cont
 	 */
 	public OutlineDropManager getDropManager() {
 		return dropManager;
+	}
+
+	private class RefreshListener extends EditPartListener.Stub {
+		public void childAdded(EditPart child, int index) {
+			child.removeEditPartListener(this);
+			child.addEditPartListener(this);
+			Iterator it = child.getChildren().iterator();
+			while (it.hasNext()) {
+				EditPart part = (EditPart) it.next();
+				part.removeEditPartListener(this);
+				part.addEditPartListener(this);
+			}
+			refresh(child.getParent());
+		}
+
+		public void removingChild(EditPart child, int index) {
+			child.removeEditPartListener(this);
+			Iterator it = child.getChildren().iterator();
+			while (it.hasNext()) {
+				EditPart part = (EditPart) it.next();
+				part.removeEditPartListener(this);
+			}
+			TreeViewer treeViewer = getTreeViewer();
+			if (treeViewer != null) {
+				treeViewer.remove(child);
+			}
+		}
 	}
 }

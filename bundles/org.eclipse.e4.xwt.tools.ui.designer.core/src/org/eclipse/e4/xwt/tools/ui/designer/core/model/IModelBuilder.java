@@ -8,9 +8,10 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.core.editor;
+package org.eclipse.e4.xwt.tools.ui.designer.core.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
@@ -18,7 +19,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
  * @author bo.zhou
  * @author jliu
  */
-public interface IModelBuilder {
+public interface IModelBuilder extends IModelNotify {
 
 	/**
 	 * Load model from given designer.
@@ -29,12 +30,6 @@ public interface IModelBuilder {
 	 * Return loaded {@link XamlDocument};
 	 */
 	public EObject getDocumentRoot();
-
-	public void addModelBuildListener(ModelBuildListener listener);
-
-	public boolean hasListener(ModelBuildListener listener);
-
-	public void removeModelBuildListener(ModelBuildListener listener);
 
 	public void doSave(IProgressMonitor monitor);
 

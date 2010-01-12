@@ -55,24 +55,29 @@ public abstract class ColorSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createSection(Composite parent) {
 		Composite control = getWidgetFactory().createComposite(parent);
 		control.setLayout(new GridLayout(3, false));
 
-		swtColorsCombo = getWidgetFactory().createCCombo(control, SWT.READ_ONLY);
+		swtColorsCombo = getWidgetFactory()
+				.createCCombo(control, SWT.READ_ONLY);
 		{
-			GridData gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+			GridData gridData = new GridData(GridData.FILL_HORIZONTAL
+					| GridData.GRAB_HORIZONTAL);
 			gridData.widthHint = 100;
 			swtColorsCombo.setLayoutData(gridData);
 		}
 		swtColorsCombo.setItems(XWTMaps.getColorKeys().toArray(new String[0]));
 		swtColorsCombo.addListener(SWT.Selection, this);
 
-		namedColorsCombo = getWidgetFactory().createCCombo(control, SWT.READ_ONLY);
+		namedColorsCombo = getWidgetFactory().createCCombo(control,
+				SWT.READ_ONLY);
 		{
-			GridData gridData = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
+			GridData gridData = new GridData(GridData.FILL_HORIZONTAL
+					| GridData.GRAB_HORIZONTAL);
 			gridData.widthHint = 100;
 			namedColorsCombo.setLayoutData(gridData);
 		}
@@ -120,16 +125,7 @@ public abstract class ColorSection extends AbstractAttributeSection {
 		colorSelector.setImage(fImage);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
-	 */
-	public void refresh() {
-		if (!isNeedToRefresh()) {
-			return;
-		}
-		setNeedToRefresh(false);
+	public void doRefresh() {
 		colorStr = getValue();
 		if (colorStr == null) {
 			colorStr = defaultColor();
@@ -140,13 +136,15 @@ public abstract class ColorSection extends AbstractAttributeSection {
 				swtColorsCombo.setText("");
 			}
 		} else {
-			if (swtColorsCombo != null && !swtColorsCombo.isDisposed() && swtColorsCombo.indexOf(colorStr) != -1) {
+			if (swtColorsCombo != null && !swtColorsCombo.isDisposed()
+					&& swtColorsCombo.indexOf(colorStr) != -1) {
 				swtColorsCombo.removeListener(SWT.Selection, this);
 				swtColorsCombo.select(swtColorsCombo.indexOf(colorStr));
 				swtColorsCombo.addListener(SWT.Selection, this);
 				namedColorsCombo.setText("");
 			}
-			if (namedColorsCombo != null && !namedColorsCombo.isDisposed() && namedColorsCombo.indexOf(colorStr) != -1) {
+			if (namedColorsCombo != null && !namedColorsCombo.isDisposed()
+					&& namedColorsCombo.indexOf(colorStr) != -1) {
 				namedColorsCombo.removeListener(SWT.Selection, this);
 				namedColorsCombo.select(namedColorsCombo.indexOf(colorStr));
 				namedColorsCombo.addListener(SWT.Selection, this);
@@ -158,7 +156,8 @@ public abstract class ColorSection extends AbstractAttributeSection {
 
 	private Point computeImageSize(Control window) {
 		GC gc = new GC(window);
-		Font f = JFaceResources.getFontRegistry().get(JFaceResources.DIALOG_FONT);
+		Font f = JFaceResources.getFontRegistry().get(
+				JFaceResources.DIALOG_FONT);
 		gc.setFont(f);
 		int height = gc.getFontMetrics().getHeight();
 		gc.dispose();
@@ -169,16 +168,19 @@ public abstract class ColorSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getNewValue()
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getNewValue()
 	 */
 	protected String getNewValue(Event event) {
 		if (event.widget == colorSelector) {
 			colorStr = chooseColor();
 		} else if (event.widget == swtColorsCombo) {
-			colorStr = swtColorsCombo.getItem(swtColorsCombo.getSelectionIndex());
+			colorStr = swtColorsCombo.getItem(swtColorsCombo
+					.getSelectionIndex());
 			namedColorsCombo.setText("");
 		} else if (event.widget == namedColorsCombo) {
-			colorStr = namedColorsCombo.getItem(namedColorsCombo.getSelectionIndex());
+			colorStr = namedColorsCombo.getItem(namedColorsCombo
+					.getSelectionIndex());
 			swtColorsCombo.setText("");
 		}
 		updateColorImage();

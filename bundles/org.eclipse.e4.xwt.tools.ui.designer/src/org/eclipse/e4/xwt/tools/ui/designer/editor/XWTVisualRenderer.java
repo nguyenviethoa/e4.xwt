@@ -152,8 +152,23 @@ public class XWTVisualRenderer extends AbstractRenderer {
 				if (attribute != null) {
 					String value = attribute.getValue();
 					if (value != null && value.length() > 0 ) {
-						value += ",0";
-						attribute.setValue(value);
+						int[] segments = SashUtil.toWeights(value);
+						
+						SashForm sashForm = (SashForm) parent;
+						Control[] children = sashForm.getChildren();
+						int c = 0;
+						for (int i = 0; i < children.length; i++) {
+							if (children[i] instanceof Sash) {
+								c++;
+							}
+						}
+						if (children.length > 0) {
+							c++;
+						}
+						if (c != segments.length) {
+							value = SashUtil.updateWeightsLengh(segments, c);
+							attribute.setValue(value);
+						}
 					}
 				}
 			}
@@ -207,11 +222,15 @@ public class XWTVisualRenderer extends AbstractRenderer {
 								if (removeWidget == children[i]) {
 									index = c;
 								}
-								if (!(children[i] instanceof Sash)) {
+								if (children[i] instanceof Sash) {
 									c++;
 								}
 							}
-							if (c <= 1) {
+							if (children.length > 0) {
+								c++;
+							}
+
+							if (c <= 2) {
 								updateObj.getAttributes().remove(attribute);
 							}
 							else {

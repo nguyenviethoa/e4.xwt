@@ -19,10 +19,16 @@ import org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart;
 
 public class CompositeEditPartHelper {
 
+	/**
+	 * Remove popup menus, just keep the ControlEditParts
+	 * 
+	 * @param compositeEditPart
+	 * @return
+	 */
 	public static List<ControlEditPart> getChildren(
 			CompositeEditPart compositeEditPart) {
 		List<ControlEditPart> collector = new ArrayList<ControlEditPart>();
-		for (Iterator iterator = compositeEditPart.getChildren().iterator(); iterator
+		for (Iterator<?> iterator = compositeEditPart.getChildren().iterator(); iterator
 				.hasNext();) {
 			Object element = iterator.next();
 			if (element instanceof ControlEditPart) {

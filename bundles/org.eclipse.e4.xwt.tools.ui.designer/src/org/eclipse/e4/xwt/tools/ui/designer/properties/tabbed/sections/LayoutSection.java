@@ -45,9 +45,11 @@ public class LayoutSection extends AbstractAttributeSection {
 	private StackLayout pageLayout;
 	private Label noneInfoLable;
 
-	private Map<Object, IAssistantPage> pages = AssistancePageFactory.newPages();
+	private Map<Object, IAssistantPage> pages = AssistancePageFactory
+			.newPages();
 
-	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+	public void createControls(Composite parent,
+			TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		_createControls(parent, aTabbedPropertySheetPage);
 		Composite composite = getWidgetFactory().createComposite(parent);
 		composite.setLayout(new GridLayout(3, false));
@@ -59,14 +61,19 @@ public class LayoutSection extends AbstractAttributeSection {
 
 		createClearButton(composite);
 
-		ExpandableComposite expandable = getWidgetFactory().createExpandableComposite(composite, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+		ExpandableComposite expandable = getWidgetFactory()
+				.createExpandableComposite(
+						composite,
+						ExpandableComposite.TWISTIE
+								| ExpandableComposite.EXPANDED);
 		expandable.setText("Values");
 		expandable.setExpanded(true);
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = 3;
 		expandable.setLayoutData(layoutData);
 		ToolBar toolBar = new ToolBar(expandable, SWT.FLAT);
-		toolBar.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		toolBar.setBackground(parent.getDisplay().getSystemColor(
+				SWT.COLOR_WHITE));
 		ToolItem clearAction = new ToolItem(toolBar, SWT.PUSH);
 		clearAction.setImage(ImageShop.get(ImageShop.IMG_CLEAR_FILTER));
 		clearAction.setToolTipText("Clear setting values.");
@@ -81,7 +88,8 @@ public class LayoutSection extends AbstractAttributeSection {
 		expandable.setClient(layoutPage);
 		pageLayout = new StackLayout();
 		layoutPage.setLayout(pageLayout);
-		noneInfoLable = getWidgetFactory().createLabel(layoutPage, "There is no layout values.", SWT.TOP | SWT.CENTER);
+		noneInfoLable = getWidgetFactory().createLabel(layoutPage,
+				"There is no layout values.", SWT.TOP | SWT.CENTER);
 	}
 
 	protected void clearValues() {
@@ -94,7 +102,8 @@ public class LayoutSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#createSection(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createSection(Composite parent) {
 		layoutCombo = getWidgetFactory().createCCombo(parent, SWT.READ_ONLY);
@@ -112,25 +121,17 @@ public class LayoutSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getAttributeName()
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getAttributeName()
 	 */
 	protected String getAttributeName() {
 		return "layout";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#refresh()
-	 */
-	public void refresh() {
+	public void doRefresh() {
 		if (layoutCombo == null || layoutCombo.isDisposed()) {
 			return;
 		}
-		if (!isNeedToRefresh()) {
-			return;
-		}
-		setNeedToRefresh(false);
 		LayoutType layoutType = LayoutsHelper.getLayoutType(getEditPart());
 		int index = layoutCombo.indexOf(layoutType.value());
 		if (index >= 0 && index != layoutCombo.getSelectionIndex()) {
@@ -159,7 +160,8 @@ public class LayoutSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#handleEvent(org.eclipse.swt.widgets.Event)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#handleEvent(org.eclipse.swt.widgets.Event)
 	 */
 	public void handleEvent(Event event) {
 		WidgetEditPart editPart = getEditPart();
@@ -174,7 +176,8 @@ public class LayoutSection extends AbstractAttributeSection {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AbstractAttributeSection#getNewValue(org.eclipse.swt.widgets.Event)
+	 * @seeorg.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.
+	 * AbstractAttributeSection#getNewValue(org.eclipse.swt.widgets.Event)
 	 */
 	protected String getNewValue(Event event) {
 		return null;

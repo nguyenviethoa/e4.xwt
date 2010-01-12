@@ -22,8 +22,10 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Transposer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.tools.SelectionHandle;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.SashUtil;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.SashFormEditPart;
+import org.eclipse.e4.xwt.tools.ui.designer.parts.misc.CompositeEditPartHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.misc.DragSashTracker;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
@@ -100,7 +102,7 @@ public class SashMoveableEditPolicy extends ResizableEditPolicy {
 
 		SashFormEditPart sashFormEditPart = (SashFormEditPart) editPart
 				.getParent();
-		List<?> children = sashFormEditPart.getChildren();
+		List<ControlEditPart> children = CompositeEditPartHelper.getChildren(sashFormEditPart);
 		SashForm sashForm = (SashForm) sashFormEditPart.getWidget();
 		int[] weights = sashForm.getWeights();
 

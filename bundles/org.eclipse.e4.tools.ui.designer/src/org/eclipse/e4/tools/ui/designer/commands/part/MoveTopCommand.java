@@ -11,14 +11,15 @@
 package org.eclipse.e4.tools.ui.designer.commands.part;
 
 import org.eclipse.e4.tools.ui.designer.commands.AddChildCommand;
+import org.eclipse.e4.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.tools.ui.designer.commands.ChangeParentCommand;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
 import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MPSCElement;
 import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.ui.model.application.MPartSashContainer;
 import org.eclipse.e4.ui.model.application.MPartStack;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 
@@ -38,27 +39,32 @@ public class MoveTopCommand extends AbstractPartCommand {
 
 		MPartSashContainer newSash = MApplicationFactory.eINSTANCE
 				.createPartSashContainer();
+		String preferData = partStack.getContainerData();
+		newSash.setContainerData(preferData);
 		newSash.setHorizontal(false);
 
 		if (model instanceof MPartStack) {
 			if (model.getParent() == null) {
-				// result.add(new AddChildCommand(newSash, model, 0));
-				newSash.getChildren().add(0, (MPSCElement) model);
+				model.setContainerData(preferData);
+				result.add(new AddChildCommand(newSash, model, 0));
 			} else {
 				result.add(new ChangeParentCommand(newSash, model, 0));
+				if (!preferData.equals(model.getContainerData())) {
+					result.add(new ApplyAttributeSettingCommand(
+							(EObject) model, "containerData", preferData));
+				}
 			}
 		} else if (model instanceof MPart) {
 			MPart part = (MPart) model;
 			MPartStack createPartStack = MApplicationFactory.eINSTANCE
 					.createPartStack();
+			createPartStack.setContainerData(preferData);
 			if (part.getParent() != null) {
 				result.add(new ChangeParentCommand(createPartStack, part, 0));
 			} else {
-				// result.add(new AddChildCommand(createPartStack, part, 0));
-				createPartStack.getChildren().add(part);
+				result.add(new AddChildCommand(createPartStack, part, 0));
 			}
-			// result.add(new AddChildCommand(newSash, createPartStack, 0));
-			newSash.getChildren().add(0, createPartStack);
+			result.add(new AddChildCommand(newSash, createPartStack, 0));
 		}
 
 		result.add(new ChangeParentCommand(newSash, partStack, 1));

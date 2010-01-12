@@ -37,6 +37,7 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
+import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.requests.DropRequest;
@@ -311,7 +312,8 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	public EditPart getTargetEditPart(Request request) {
 		if (request instanceof SelectionRequest) {
 			SashFormEditPart host = (SashFormEditPart) getHost();
-			List<EditPart> children = host.getChildren();
+			List<ControlEditPart> children = CompositeEditPartHelper
+					.getChildren(host);
 			if (children.size() == 0) {
 				return null;
 			}
@@ -388,10 +390,11 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	}
 
 	protected Command getDeleteDependantCommand(GroupRequest request) {
-		List editParts = request.getEditParts();
+		List<?> editParts = request.getEditParts();
 		if (!editParts.isEmpty()) {
 			List<XamlNode> deleteThems = new ArrayList<XamlNode>();
-			for (Iterator iterator = editParts.iterator(); iterator.hasNext();) {
+			for (Iterator<?> iterator = editParts.iterator(); iterator
+					.hasNext();) {
 				Object object = (Object) iterator.next();
 				if (object instanceof VisualEditPart) {
 					VisualEditPart part = (VisualEditPart) object;
@@ -430,6 +433,12 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	protected EditPolicy createChildEditPolicy(EditPart child) {
 		if (child instanceof SashEditPart) {
 			return new SashMoveableEditPolicy((SashEditPart) child);
+		}
+
+		List<ControlEditPart> children = CompositeEditPartHelper
+				.getChildren((SashFormEditPart) getHost());
+		if (children.size() < 2) {
+			return new NonResizableEditPolicy();
 		}
 		int directions = 0;
 		if (isHorizontal()) {

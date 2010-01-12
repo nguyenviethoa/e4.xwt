@@ -23,13 +23,12 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;
 import org.eclipse.e4.ui.workbench.swt.internal.E4Application;
-import org.eclipse.e4.ui.workbench.swt.internal.PartRenderingEngine;
 import org.eclipse.e4.workbench.ui.IResourceUtiltities;
 import org.eclipse.e4.workbench.ui.internal.Activator;
 import org.eclipse.e4.workbench.ui.internal.E4Workbench;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.AbstractModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
+import org.eclipse.e4.xwt.tools.ui.designer.core.model.AbstractModelBuilder;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.URI;
@@ -118,7 +117,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		// Set the app's context after adding itself
 		appContext.set(MApplication.class.getName(), appModel);
 		appModel.setContext(appContext);
-		
+
 		// Parse out parameters from both the command line and/or the product
 		// definition (if any) and put them in the context
 		String xmiURI = getArgValue(E4Workbench.XMI_URI_ARG);
@@ -131,7 +130,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		// This is a default arg, if missing we use the default rendering engine
 		String presentationURI = getArgValue(E4Workbench.PRESENTATION_URI_ARG);
 		if (presentationURI == null) {
-//			presentationURI = PartRenderingEngine.engineURI;
+			// presentationURI = PartRenderingEngine.engineURI;
 			presentationURI = DesignerPartRenderingEngine.engineURI;
 			appContext.set(E4Workbench.PRESENTATION_URI_ARG, presentationURI);
 		}
@@ -157,10 +156,10 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 						|| eventType == Notification.REMOVE) {
 					layout(getRoot());
 				}
-				fireChangeEvent(msg);
+				dispatchEvent(msg);
 			}
 		});
-		layout(getRoot());
+		// layout(getRoot());
 		return new Result(appModel.getWidget(), true);
 	}
 
@@ -170,7 +169,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 			if (composite.isDisposed()) {
 				return;
 			}
-			composite.layout(true, true);
+			composite.layout();
 			for (Control child : composite.getChildren()) {
 				layout(child);
 			}
