@@ -36,7 +36,9 @@ public abstract class AbstractPartCommand extends Command {
 				|| (model instanceof EObject && ((EObject) model).eContainer() == partStack)) {
 			return false;
 		}
-		command = computeCommand();
+		if (command == null) {
+			command = computeCommand();
+		}
 		return command != null && command.canExecute();
 	}
 

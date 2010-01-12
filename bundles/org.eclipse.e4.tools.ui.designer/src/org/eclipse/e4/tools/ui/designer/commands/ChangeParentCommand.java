@@ -21,6 +21,7 @@ public class ChangeParentCommand extends AddChildCommand {
 
 	private int oldIndex = -1;
 	private MElementContainer<?> oldParent;
+	private String containerData;
 
 	public ChangeParentCommand(MElementContainer<?> newParent,
 			MUIElement element, int index) {
@@ -31,15 +32,20 @@ public class ChangeParentCommand extends AddChildCommand {
 		if (!super.canExecute()) {
 			return false;
 		}
-		oldParent = newChild.getParent();
+		if (oldParent == null) {
+			oldParent = newChild.getParent();			
+		}
 		if (oldParent == null) {
 			return false;
 		}
-		oldIndex = oldParent.getChildren().indexOf(newChild);
+		if (oldIndex == -1) {
+			oldIndex = oldParent.getChildren().indexOf(newChild);
+		}
 		return true;
 	}
 
 	public void execute() {
+		containerData = newChild.getContainerData();
 		oldParent.getChildren().remove(newChild);
 		super.execute();
 	}
@@ -52,6 +58,12 @@ public class ChangeParentCommand extends AddChildCommand {
 		super.undo();
 		EList<MUIElement> children = (EList<MUIElement>) oldParent
 				.getChildren();
-		children.add(oldIndex, newChild);
+		if (oldIndex >= children.size()) {
+			children.add(newChild);
+		}
+		else {
+			children.add(oldIndex, newChild);
+		}
+		newChild.setContainerData(containerData);
 	}
 }

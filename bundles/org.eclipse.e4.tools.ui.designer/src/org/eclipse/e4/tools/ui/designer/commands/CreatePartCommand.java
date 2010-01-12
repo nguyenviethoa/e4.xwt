@@ -62,8 +62,10 @@ public class CreatePartCommand extends Command {
 			return false;
 		}
 
-		command = PartCommandFactory.createCommand(partReq.getPosition(),
-				creatingElement, partStack, header);
+		if (command == null) {
+			command = PartCommandFactory.createCommand(partReq.getPosition(),
+					creatingElement, partStack, header);			
+		}
 		return command != null && command.canExecute();
 	}
 
