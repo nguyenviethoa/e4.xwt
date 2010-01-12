@@ -54,7 +54,9 @@ public class CreateCommand extends Command {
 		if (model instanceof MElementContainer) {
 			parentModel = (MElementContainer<MUIElement>) model;
 		}
-		creatingModel = E4PaletteHelper.createElement(parentModel, request);
+		if (creatingModel == null) {
+			creatingModel = E4PaletteHelper.createElement(parentModel, request);
+		}
 		if (childType != null && !childType.isInstance(creatingModel)) {
 			return false;
 		}

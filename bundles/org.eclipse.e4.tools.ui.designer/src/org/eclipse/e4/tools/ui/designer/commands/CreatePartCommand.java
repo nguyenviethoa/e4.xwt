@@ -41,11 +41,16 @@ public class CreatePartCommand extends Command {
 		if (partReq == null) {
 			return false;
 		}
-		creationType = partReq.getCreationType();
+		if (creationType == null) {
+			creationType = partReq.getCreationType();
+		}
 		if (creationType == null) {
 			return false;
 		}
-		creatingElement = E4PaletteHelper.createElement(null, creationType);
+		
+		if (creatingElement == null) {
+			creatingElement = E4PaletteHelper.createElement(null, creationType);
+		}
 		EditPart targetEditPart = partReq.getTargetEditPart();
 		if (targetEditPart == null) {
 			return false;

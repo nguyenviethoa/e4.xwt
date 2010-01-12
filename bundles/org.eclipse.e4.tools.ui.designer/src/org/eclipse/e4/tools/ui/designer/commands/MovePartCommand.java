@@ -36,7 +36,9 @@ public class MovePartCommand extends Command {
 			return false;
 		}
 
-		command = createCommand();
+		if (command == null) {
+			command = createCommand();			
+		}
 		return command != null && command.canExecute();
 	}
 
