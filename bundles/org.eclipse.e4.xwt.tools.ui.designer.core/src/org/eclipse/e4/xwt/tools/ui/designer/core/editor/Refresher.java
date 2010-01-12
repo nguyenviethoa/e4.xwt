@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Jin Liu(jin.liu@soyatec.com)
  */
 public class Refresher {
-	static int TIMEOUT = 100;
+	static int TIMEOUT = 300;
 
 	private Display display;
 	private InternalJob job;
@@ -119,40 +119,55 @@ public class Refresher {
 
 		protected IStatus run(IProgressMonitor monitor) {
 			synchronized (refreshList) {
+				long localTimestamp = System.currentTimeMillis();
+				if (localTimestamp - timestamp < TIMEOUT) {
+					schedule(TIMEOUT);
+					timestamp = localTimestamp;
+					return Status.OK_STATUS;
+				}
+
 				List<EditPart> parts = new ArrayList<EditPart>();
 				List<EditPart> doingJobs = new ArrayList<EditPart>(refreshList);
-				for (EditPart ep : doingJobs) {
-					if (parts.isEmpty()) {
-						parts.add(ep);
-					} else {
-						boolean contains = false;
-						for (EditPart editPart : parts) {
-							if (isPosterity(editPart, ep)) {
-								contains = true;
-								break;
+				try {
+					for (EditPart ep : doingJobs) {
+						if (parts.isEmpty()) {
+							parts.add(ep);
+						} else {
+							boolean contains = false;
+							for (EditPart editPart : parts) {
+								if (isPosterity(editPart, ep)) {
+									contains = true;
+									break;
+								}
 							}
-						}
-						if (contains) {
-							continue;
-						}
-						for (Iterator<EditPart> iterator = parts.iterator(); iterator
-								.hasNext();) {
-							EditPart editPart = iterator.next();
-							if (isPosterity(ep, editPart)) {
-								iterator.remove();
+							if (contains) {
+								continue;
 							}
+							for (Iterator<EditPart> iterator = parts.iterator(); iterator
+									.hasNext();) {
+								EditPart editPart = iterator.next();
+								if (isPosterity(ep, editPart)) {
+									iterator.remove();
+								}
+							}
+							parts.add(ep);
 						}
-						parts.add(ep);
 					}
+				} finally {
+					refreshList.removeAll(doingJobs);
 				}
-				refreshList.removeAll(doingJobs);
 				if (!parts.isEmpty()) {
 					for (EditPart ep : parts) {
-						refreshAsynchronous(ep);
+						try {
+							refreshAsynchronous(ep);
+						} catch (Exception e) {
+						}
 					}
 				}
 				if (!refreshList.isEmpty()) {
 					schedule(TIMEOUT);
+					timestamp = System.currentTimeMillis();
+					return Status.OK_STATUS;
 				}
 			}
 			timestamp = -1;

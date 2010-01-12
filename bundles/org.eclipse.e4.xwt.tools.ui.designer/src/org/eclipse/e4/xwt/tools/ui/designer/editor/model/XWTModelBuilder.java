@@ -167,29 +167,32 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 		synchronized (synch) {
 			synch.setEventType(EventType.LoadingEvent);
 
-			String name = text.getLocalName();
-			String nsURI = text.getNamespaceURI();
-			String prefix = text.getPrefix();
-			XamlElement rootElement = document.getRootElement();
+			try {
+				String name = text.getLocalName();
+				String nsURI = text.getNamespaceURI();
+				String prefix = text.getPrefix();
+				XamlElement rootElement = document.getRootElement();
 
-			boolean isNew = false;
-			if (rootElement == null || !name.equals(rootElement.getName())) {
-				rootElement = XamlFactory.eINSTANCE.createElement(name, nsURI);
-				isNew = true;
-			}
-			if (monitor != null) {
-				monitor.subTask("Load element " + name);
-				monitor.worked(1);
-			}
-			rootElement.setPrefix(prefix);
-			createChild(rootElement, text, monitor);
+				boolean isNew = false;
+				if (rootElement == null || !name.equals(rootElement.getName())) {
+					rootElement = XamlFactory.eINSTANCE.createElement(name,
+							nsURI);
+					isNew = true;
+				}
+				if (monitor != null) {
+					monitor.subTask("Load element " + name);
+					monitor.worked(1);
+				}
+				rootElement.setPrefix(prefix);
+				createChild(rootElement, text, monitor);
 
-			fContext.map(rootElement, text);
-			if (isNew) {
-				document.setRootElement(rootElement);
+				fContext.map(rootElement, text);
+				if (isNew) {
+					document.setRootElement(rootElement);
+				}
+			} finally {
+				synch.setFree();
 			}
-
-			synch.setFree();
 		}
 	}
 
@@ -270,16 +273,19 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 		String name = child.getLocalName();
 		String prefix = child.getPrefix();
 		String ns = document.getDeclaredNamespace(prefix);
-		XamlElement e = parent.getChild(index);
-		if (e == null || e.getName() == null || e.getNamespace() == null
-				|| !e.getName().equals(name) || !e.getNamespace().equals(ns)) {
-			e = XamlFactory.eINSTANCE.createElement(normalizeName(name), ns);
-			e.setId(generateID(name));
+		XamlElement element = parent.getChild(index);
+		if (element == null || element.getName() == null
+				|| element.getNamespace() == null
+				|| !element.getName().equals(name)
+				|| !element.getNamespace().equals(ns)) {
+			element = XamlFactory.eINSTANCE.createElement(normalizeName(name),
+					ns);
+			element.setId(generateID(name));
 		}
-		fContext.map(e, child);
-		e.setPrefix(prefix);
-		createChild(e, child, null);
-		return addChild(parent, e, index);
+		fContext.map(element, child);
+		element.setPrefix(prefix);
+		createChild(element, child, null);
+		return addChild(parent, element, index);
 	}
 
 	protected XamlNode createAttribute(XamlNode parent, IDOMNode attr, int index) {
@@ -309,37 +315,38 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 			return null;
 		}
 
-		XamlAttribute a = getAttribute(parent, name, ns);
-		if (a == null) {
-			a = XamlFactory.eINSTANCE.createAttribute(normalizeName(name), ns);
-			a.setId(generateID(name));
+		XamlAttribute nameAttr = getAttribute(parent, name, ns);
+		if (nameAttr == null) {
+			nameAttr = XamlFactory.eINSTANCE.createAttribute(
+					normalizeName(name), ns);
+			nameAttr.setId(generateID(name));
 		}
 		// a.setGroupName(groupName);
 		if (attr instanceof IDOMElement) {
 			IDOMElement child = (IDOMElement) attr;
-			createChild(a, child, null);
+			createChild(nameAttr, child, null);
 		}
-		a.setPrefix(prefix);
+		nameAttr.setPrefix(prefix);
 		if (handleBraces(value)) {
-			XamlNode valueNode = getBraceHandler().parse(a, value);
+			XamlNode valueNode = getBraceHandler().parse(nameAttr, value);
 			if (valueNode != null && valueNode instanceof XamlElement) {
-				addChild(a, (XamlElement) valueNode, -1);
+				addChild(nameAttr, (XamlElement) valueNode, -1);
 			}
-			for (Iterator<XamlElement> iterator = a.getChildNodes().iterator(); iterator
-					.hasNext();) {
+			for (Iterator<XamlElement> iterator = nameAttr.getChildNodes()
+					.iterator(); iterator.hasNext();) {
 				if (iterator.next() != valueNode) {
 					iterator.remove();
 				}
 			}
-			a.setValue(null);
+			nameAttr.setValue(null);
 		} else {
-			a.setValue(value);
+			nameAttr.setValue(value);
 			if (value != null) {
-				a.getChildNodes().clear();
+				nameAttr.getChildNodes().clear();
 			}
 		}
-		fContext.map(a, attr);
-		return addAttribute(parent, a, index);
+		fContext.map(nameAttr, attr);
+		return addAttribute(parent, nameAttr, index);
 	}
 
 	private boolean handleBraces(String value) {
@@ -529,7 +536,6 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 			if (!synch.isFree()) {
 				return;
 			}
-			synch.setEventType(EventType.SourceEvent);
 			INodeNotifier notifier = msg.getNotifier();
 			final Object changedFeature = msg.getChangedFeature();
 			int eventType = msg.getEventType();
@@ -550,6 +556,7 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 						synch.setFree();
 					}
 				};
+				synch.setEventType(EventType.SourceEvent);
 				DisplayUtil.asyncExec(runnable);
 			} else if (eventType == INodeNotifier.REMOVE && parentNode != null
 					&& changedNode != null) {
@@ -563,6 +570,7 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 						synch.setFree();
 					}
 				};
+				synch.setEventType(EventType.SourceEvent);
 				DisplayUtil.asyncExec(runnable);
 			} else if (eventType == INodeNotifier.STRUCTURE_CHANGED) {
 				IJobManager jobManager = Job.getJobManager();

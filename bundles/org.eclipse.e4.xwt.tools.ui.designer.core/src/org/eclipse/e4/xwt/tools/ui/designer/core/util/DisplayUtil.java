@@ -59,6 +59,9 @@ public class DisplayUtil {
 	public static Display getDisplay() {
 		Display display = Display.getCurrent();
 		if (display == null) {
+			display = Display.getDefault();
+		}
+		if (display == null) {
 			display = new Display();
 		}
 		return display;

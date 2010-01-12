@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -49,6 +50,13 @@ public class SourceSelectionProvider implements ISelectionProvider {
 			selectionProvider
 					.addSelectionChangedListener(new ISelectionChangedListener() {
 						public void selectionChanged(SelectionChangedEvent event) {
+							Object selection = event.getSelection();
+							if (selection instanceof TextSelection) {
+								TextSelection textSelection = (TextSelection) selection;
+								if (textSelection.getOffset() == 0) {
+									return;
+								}
+							}
 							handleTextSelection(event);
 						}
 					});
