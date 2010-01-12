@@ -16,6 +16,7 @@ package org.eclipse.e4.xwt.jface;
 import java.util.Set;
 
 import org.eclipse.core.databinding.observable.map.IMapChangeListener;
+import org.eclipse.core.databinding.observable.map.IObservableMap;
 import org.eclipse.core.databinding.observable.map.MapChangeEvent;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -38,7 +39,8 @@ import org.eclipse.swt.graphics.Image;
 public class ObservableMapLabelProvider extends LabelProvider implements
 		ILabelProvider, ITableLabelProvider {
 
-	private final XWTObservableWrapper[] attributeMaps;
+	private final IObservableMap[] textMaps;
+	private IObservableMap[] imageMaps;
 	private Viewer viewer;
 	
 	private IMapChangeListener mapChangeListener = new IMapChangeListener() {
@@ -51,22 +53,22 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 	};
 	
 	/**
-	 * @param attributeMaps
+	 * @param textMaps
 	 */
 	public ObservableMapLabelProvider(Viewer viewer, IObservableSet domain,
 			String[] propertyNames) {
-		attributeMaps = new XWTObservableWrapper[propertyNames.length];
+		textMaps = new XWTObservableWrapper[propertyNames.length];
 		
-		for (int i = 0; i < attributeMaps.length; i++) {
-			attributeMaps[i] = new XWTObservableWrapper(domain, viewer, propertyNames[i]);
-			attributeMaps[i].addMapChangeListener(mapChangeListener);
+		for (int i = 0; i < textMaps.length; i++) {
+			textMaps[i] = new XWTObservableWrapper(domain, viewer, propertyNames[i]);
+			textMaps[i].addMapChangeListener(mapChangeListener);
 		}
 		this.viewer = viewer;
 	}
 
 	public void dispose() {
-		for (int i = 0; i < attributeMaps.length; i++) {
-			attributeMaps[i].removeMapChangeListener(mapChangeListener);
+		for (int i = 0; i < textMaps.length; i++) {
+			textMaps[i].removeMapChangeListener(mapChangeListener);
 		}
 		super.dispose();
 	}
@@ -76,8 +78,8 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 	}
 	
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (columnIndex < attributeMaps.length) {
-			Object result = attributeMaps[columnIndex].get(element);
+		if (columnIndex < textMaps.length) {
+			Object result = textMaps[columnIndex].get(element);
 			return JFacesHelper.getColumnImage(viewer, result, columnIndex);
 		}
 		return null;
@@ -88,8 +90,8 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		if (columnIndex < attributeMaps.length) {
-			Object result = attributeMaps[columnIndex].get(element);
+		if (columnIndex < textMaps.length) {
+			Object result = textMaps[columnIndex].get(element);
 			return JFacesHelper.getColumnText(viewer, result, columnIndex);
 		}
 		return null;

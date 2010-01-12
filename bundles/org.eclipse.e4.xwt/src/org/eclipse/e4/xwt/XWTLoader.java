@@ -1311,7 +1311,7 @@ public class XWTLoader implements IXWTLoader {
 				PropertiesConstants.PROPERTY_URL));
 		IMetaclass buttonMetaclass = (IMetaclass) registerMetaclass(Button.class);
 		buttonMetaclass.addProperty(new DataProperty(IConstants.XAML_COMMAND,
-				ICommand.class, IUserDataConstants.XWT_COMMAND_KEY));
+				IUserDataConstants.XWT_COMMAND_KEY, ICommand.class));
 
 		registerMetaclass(org.eclipse.swt.widgets.Canvas.class);
 		registerMetaclass(org.eclipse.swt.widgets.Caret.class);
@@ -1335,7 +1335,7 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(Menu.class);
 		IMetaclass menuItemMetaclass = (IMetaclass) registerMetaclass(MenuItem.class);
 		menuItemMetaclass.addProperty(new DataProperty(IConstants.XAML_COMMAND,
-				ICommand.class, IUserDataConstants.XWT_COMMAND_KEY));
+				IUserDataConstants.XWT_COMMAND_KEY, ICommand.class));
 
 		registerMetaclass(org.eclipse.swt.widgets.MessageBox.class);
 		registerMetaclass(org.eclipse.swt.widgets.ProgressBar.class);
@@ -1410,7 +1410,7 @@ public class XWTLoader implements IXWTLoader {
 		metaclass.addProperty(new DataProperty(IConstants.XAML_BINDING_CONTEXT,
 				IUserDataConstants.XWT_BINDING_CONTEXT_KEY));
 		metaclass.addProperty(new DataProperty(IConstants.XAML_TRIGGERS,
-				TriggerBase[].class, IUserDataConstants.XWT_TRIGGERS_KEY));
+				IUserDataConstants.XWT_TRIGGERS_KEY, TriggerBase[].class));
 		metaclass.addProperty(new StyleProperty());
 		registerEventGroup(type, new RadioEventGroup(IEventConstants.KEY_GROUP));
 		registerEventGroup(type, new RadioEventGroup(
@@ -1442,8 +1442,14 @@ public class XWTLoader implements IXWTLoader {
 
 			metaclass.addProperty(new DataProperty(
 					PropertiesConstants.PROPERTY_BINDING_PATH,
-					String.class,
-					PropertiesConstants.PROPERTY_BINDING_PATH));
+					IUserDataConstants.XWT_PROPERTY_DATA_KEY, 
+					String.class));
+			metaclass.addProperty(new DataProperty(
+					PropertiesConstants.PROPERTY_ITEM_TEXT,
+					IUserDataConstants.XWT_PROPERTY_ITEM_TEXT_KEY, IBinding.class));
+			metaclass.addProperty(new DataProperty(
+					PropertiesConstants.PROPERTY_ITEM_IMAGE,
+					IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY, IBinding.class));
 			metaclass.addProperty(new SingleSelectionBeanProperty(
 					PropertiesConstants.PROPERTY_SINGLE_SELECTION));
 			metaclass.addProperty(new MultiSelectionBeanProperty(

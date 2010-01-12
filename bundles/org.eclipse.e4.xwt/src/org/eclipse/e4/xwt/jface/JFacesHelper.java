@@ -112,7 +112,7 @@ public class JFacesHelper {
 				return propertyNames;
 			}
 		}
-		String path = (String)UserData.getLocalData(viewer, PropertiesConstants.PROPERTY_BINDING_PATH);
+		String path = (String)UserData.getLocalData(viewer, IUserDataConstants.XWT_PROPERTY_DATA_KEY);
 		if (path != null) {
 			return new String [] {path};
 		}

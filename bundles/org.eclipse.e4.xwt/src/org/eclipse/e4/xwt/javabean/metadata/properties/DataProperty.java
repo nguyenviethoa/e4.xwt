@@ -23,14 +23,14 @@ public class DataProperty extends AbstractProperty {
 	protected Object defaultValue;
 
 	public DataProperty(String name, String key) {
-		this(name, Object.class, key, null);
+		this(name, key, Object.class, null);
 	}
 
-	public DataProperty(String name, Class<?> propertyType, String key) {
-		this(name, propertyType, key, null);
+	public DataProperty(String name, String key, Class<?> propertyType) {
+		this(name, key, propertyType, null);
 	}
 
-	public DataProperty(String name, Class<?> propertyType, String key, Object defaultValue) {
+	public DataProperty(String name, String key, Class<?> propertyType, Object defaultValue) {
 		super(name, propertyType);
 		this.key = key;
 		this.defaultValue = defaultValue;

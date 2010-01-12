@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.jface;
 
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
@@ -104,7 +105,7 @@ public class DefaultViewerLabelProvider implements ITableLabelProvider, ILabelPr
 		}
 		String path = bindingPath;
 		if (path == null) {
-			path = (String) UserData.getLocalData(getViewer(), PropertiesConstants.PROPERTY_BINDING_PATH);
+			path = (String) UserData.getLocalData(getViewer(), IUserDataConstants.XWT_PROPERTY_DATA_KEY);
 		}
 		if (path == null) {
 			return Core.EMPTY_ARRAY;

@@ -178,8 +178,7 @@ public abstract class AbstractMetaclass implements IMetaclass {
 					.getEventPropertyName(name);
 			String eventDataName = IEventConstants
 					.getEventPropertyDataName(name);
-			addProperty(new EventProperty(eventPropertyName, typedEvent,
-					eventDataName));
+			addProperty(new EventProperty(eventPropertyName, eventDataName, typedEvent));
 		}
 	}
 
@@ -652,8 +651,7 @@ public abstract class AbstractMetaclass implements IMetaclass {
 						.getEventPropertyName(eventSetDescriptor.getName());
 				String propertyDataName = IEventConstants
 						.getEventPropertyDataName(eventSetDescriptor.getName());
-				addProperty(new EventProperty(propertyName, event,
-						propertyDataName));
+				addProperty(new EventProperty(propertyName, propertyDataName, event));
 			}
 			if (isWidgetType(type)) {
 				routedEventCache.put(normalize(IEventConstants.XWT_LOADED),

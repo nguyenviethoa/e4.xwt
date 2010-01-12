@@ -20,8 +20,8 @@ import org.eclipse.e4.xwt.metadata.IEvent;
 public class EventProperty extends DataProperty {
 	protected IEvent event;
 	
-	public EventProperty(String name, IEvent event, String key) {
-		super(name, Boolean.class, key, false);
+	public EventProperty(String name, String key, IEvent event) {
+		super(name, key, Boolean.class, false);
 		this.event = event;
 	}
 
