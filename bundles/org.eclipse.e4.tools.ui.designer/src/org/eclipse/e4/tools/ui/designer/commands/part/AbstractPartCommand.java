@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands.part;
 
+import org.eclipse.e4.ui.model.application.MGenericStack;
 import org.eclipse.e4.ui.model.application.MPartStack;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.emf.ecore.EObject;
@@ -55,4 +56,14 @@ public abstract class AbstractPartCommand extends Command {
 	}
 
 	protected abstract Command computeCommand();
+	
+	protected MGenericStack<MUIElement> findParentStack() {
+		if (model.getParent() instanceof MGenericStack<?>) {
+			MGenericStack<MUIElement> stack = (MGenericStack<MUIElement>) model.getParent();
+			if (stack.getChildren().size() == 1) {
+				return stack;
+			}
+		}
+		return null;
+	}
 }

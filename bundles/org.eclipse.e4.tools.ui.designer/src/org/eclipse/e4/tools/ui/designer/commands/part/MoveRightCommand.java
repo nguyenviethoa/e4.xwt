@@ -15,6 +15,7 @@ import org.eclipse.e4.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.tools.ui.designer.commands.ChangeParentCommand;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
 import org.eclipse.e4.ui.model.application.MElementContainer;
+import org.eclipse.e4.ui.model.application.MGenericStack;
 import org.eclipse.e4.ui.model.application.MGenericTile;
 import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.ui.model.application.MPartSashContainer;
@@ -39,9 +40,14 @@ public class MoveRightCommand extends AbstractPartCommand {
 		MElementContainer<MUIElement> parent = partStack.getParent();
 		EList<MUIElement> children = parent.getChildren();
 		int index = children.indexOf(partStack);
-		if (parent instanceof MGenericTile) {
-			MGenericTile genericTile = (MGenericTile) parent;
-			if (index == 0 && children.size() == 2 && genericTile.isHorizontal()) {
+		if (parent instanceof MGenericTile<?>) {
+			MGenericTile<?> genericTile = (MGenericTile<?>) parent;
+			int modelIndex = children.indexOf(model);
+			if (modelIndex == -1) {
+				MGenericStack<MUIElement> partStack = findParentStack();
+				modelIndex = children.indexOf(partStack);
+			}
+			if (index == 0 && modelIndex == 1 && children.size() == 2 && genericTile.isHorizontal()) {
 				return UnexecutableCommand.INSTANCE;
 			}			
 		}
