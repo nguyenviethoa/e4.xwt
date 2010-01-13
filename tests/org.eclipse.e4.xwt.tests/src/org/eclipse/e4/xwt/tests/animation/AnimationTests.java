@@ -69,7 +69,7 @@ public class AnimationTests extends XWTTestCase {
 					assertTrue(element instanceof Label);
 					Label label = (Label)element;
 					Color color = label.getBackground();
-					assertEquals(initialColor, color);
+					assertNotSame(initialColor, color);
 				} catch (Exception e) {
 					fail();
 				}
@@ -117,7 +117,7 @@ public class AnimationTests extends XWTTestCase {
 					assertTrue(element instanceof Label);
 					Label label = (Label)element;
 					Color color = label.getForeground();
-					assertEquals(initialColor, color);
+					assertNotSame(initialColor, color);
 				} catch (Exception e) {
 					fail();
 				}
@@ -215,7 +215,7 @@ public class AnimationTests extends XWTTestCase {
 					assertTrue(element instanceof Shell);
 					Shell shell = (Shell)element;
 					Point location = shell.getLocation();
-					assertEquals(initialLocation, location);
+					assertNotSame(initialLocation, location);
 				} catch (Exception e) {
 					fail();
 				}
@@ -263,7 +263,7 @@ public class AnimationTests extends XWTTestCase {
 					assertTrue(element instanceof Shell);
 					Shell shell = (Shell)element;
 					Point size = shell.getSize();
-					assertEquals(initialSize, size);
+					assertNotSame(initialSize, size);
 				} catch (Exception e) {
 					fail();
 				}
@@ -311,7 +311,7 @@ public class AnimationTests extends XWTTestCase {
 					assertTrue(element instanceof Shell);
 					Shell shell = (Shell)element;
 					Rectangle rectangle = shell.getBounds();
-					assertEquals(initialBounds, rectangle);
+					assertNotSame(initialBounds, rectangle);
 				} catch (Exception e) {
 					fail();
 				}
