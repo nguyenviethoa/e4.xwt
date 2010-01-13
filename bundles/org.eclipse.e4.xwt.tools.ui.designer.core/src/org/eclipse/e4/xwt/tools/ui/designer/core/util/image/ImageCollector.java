@@ -98,8 +98,7 @@ public class ImageCollector {
 							bounds.height);
 					GC gc = new GC(image);
 					control.print(gc);
-					// gc.dispose(); Not need since dispose of image disposes
-					// the gc
+					gc.dispose(); 
 				}
 				shell.setVisible(false);
 			} else {
@@ -107,27 +106,11 @@ public class ImageCollector {
 						bounds.height);
 				GC gc = new GC(image);
 				control.print(gc);
-				// gc.dispose(); Not need since dispose of image disposes the gc
+				gc.dispose();
 			}
 			if (image != null) {
 				// saveImage(image, "/home/yyang/image" + (i++) + ".jpg");
 				imageRunnable.imageCollected(image);
-				/*
-				 * Leave dispose to ImageFigure.
-				 */
-				// final Image forDispose = image;
-				// control.addListener(SWT.Dispose, new Listener() {
-				// public void handleEvent(Event event) {
-				// if (forDispose.isDisposed()) {
-				// return;
-				// }
-				// DisplayUtil.asyncExec(new Runnable() {
-				// public void run() {
-				// forDispose.dispose();
-				// }
-				// });
-				// }
-				// });
 			} else {
 				imageRunnable.imageNotCollected();
 			}

@@ -11,7 +11,6 @@
 package org.eclipse.e4.xwt.tools.ui.designer.parts.direct;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.e4.xwt.ui.utils.DisposeUtil;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gef.tools.DirectEditManager;
@@ -57,7 +56,7 @@ public class ElementDirectEditManager extends DirectEditManager {
 						.length());
 				GC gc = new GC(text);
 				Point size = gc.textExtent(leftText + event.text + rightText);
-				DisposeUtil.dispose(gc);
+				gc.dispose();
 				// if (size.x != 0) {
 				size = text.computeSize(50, SWT.DEFAULT);
 				// }

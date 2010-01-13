@@ -17,7 +17,6 @@ import java.util.Map;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTMaps;
-import org.eclipse.e4.xwt.ui.utils.DisposeUtil;
 import org.eclipse.e4.xwt.utils.NamedColorsUtil;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.jface.dialogs.Dialog;
@@ -162,7 +161,7 @@ public class ColorChooser extends Dialog {
 			GC gc = new GC(image);
 			gc.setBackground(color);
 			gc.fillRectangle(0, 0, 18, 18);
-			DisposeUtil.dispose(gc);
+			gc.dispose();
 			colorLabel.setImage(image);
 		}
 		final Display display = getShell().getDisplay();
@@ -223,7 +222,7 @@ public class ColorChooser extends Dialog {
 			GC gc = new GC(image);
 			gc.setBackground(color);
 			gc.fillRectangle(0, 0, 18, 18);
-			DisposeUtil.dispose(gc);
+			gc.dispose();
 			colorLabel.setImage(image);
 		}
 		final Display display = getShell().getDisplay();

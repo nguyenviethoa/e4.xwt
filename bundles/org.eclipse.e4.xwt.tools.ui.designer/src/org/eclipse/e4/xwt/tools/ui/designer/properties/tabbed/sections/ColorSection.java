@@ -13,7 +13,6 @@ package org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.converters.StringToColor;
 import org.eclipse.e4.xwt.tools.ui.designer.dialogs.ColorChooser;
-import org.eclipse.e4.xwt.ui.utils.DisposeUtil;
 import org.eclipse.e4.xwt.utils.NamedColorsUtil;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.window.Window;
@@ -90,7 +89,7 @@ public abstract class ColorSection extends AbstractAttributeSection {
 		GC gc = new GC(fImage);
 		gc.setBackground(colorSelector.getBackground());
 		gc.fillRectangle(0, 0, fExtent.x, fExtent.y);
-		DisposeUtil.dispose(gc);
+		gc.dispose();
 		colorSelector.setImage(fImage);
 		colorSelector.addListener(SWT.Selection, this);
 		colorSelector.addListener(SWT.Dispose, new Listener() {
@@ -121,7 +120,7 @@ public abstract class ColorSection extends AbstractAttributeSection {
 			gc.setBackground(fColor);
 		}
 		gc.fillRectangle(1, 3, fExtent.x - 2, fExtent.y - 5);
-		DisposeUtil.dispose(gc);
+		gc.dispose();
 		colorSelector.setImage(fImage);
 	}
 
