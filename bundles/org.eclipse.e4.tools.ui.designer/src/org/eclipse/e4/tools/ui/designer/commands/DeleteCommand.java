@@ -42,6 +42,11 @@ public class DeleteCommand extends Command {
 	}
 
 	public void undo() {
-		container.getChildren().add(index, eObject);
+		if (index >= container.getChildren().size()) {			
+			container.getChildren().add(eObject);
+		}
+		else {
+			container.getChildren().add(index, eObject);
+		}
 	}
 }

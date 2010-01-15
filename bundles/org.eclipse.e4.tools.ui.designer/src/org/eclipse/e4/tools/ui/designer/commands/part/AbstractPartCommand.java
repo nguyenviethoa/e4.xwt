@@ -34,7 +34,9 @@ public abstract class AbstractPartCommand extends Command {
 	public boolean canExecute() {
 		if (model == null
 				|| partStack == null
-				|| (model instanceof EObject && ((EObject) model).eContainer() == partStack)) {
+				|| (model instanceof EObject
+						&& partStack.getChildren().size() == 1 && ((EObject) model)
+						.eContainer() == partStack)) {
 			return false;
 		}
 		if (command == null) {
@@ -56,10 +58,11 @@ public abstract class AbstractPartCommand extends Command {
 	}
 
 	protected abstract Command computeCommand();
-	
+
 	protected MGenericStack<MUIElement> findParentStack() {
 		if (model.getParent() instanceof MGenericStack<?>) {
-			MGenericStack<MUIElement> stack = (MGenericStack<MUIElement>) model.getParent();
+			MGenericStack<MUIElement> stack = (MGenericStack<MUIElement>) model
+					.getParent();
 			if (stack.getChildren().size() == 1) {
 				return stack;
 			}

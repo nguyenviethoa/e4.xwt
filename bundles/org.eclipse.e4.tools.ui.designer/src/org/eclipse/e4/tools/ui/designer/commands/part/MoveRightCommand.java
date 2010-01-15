@@ -36,17 +36,22 @@ public class MoveRightCommand extends AbstractPartCommand {
 		super(model, partStack);
 	}
 
-	protected Command computeCommand() {		
+	protected Command computeCommand() {
+		MUIElement selectedPart = model;
+		
+		if (selectedPart instanceof MPart) {
+			MGenericStack<MUIElement> partStack = findParentStack();
+			if (partStack != null) {
+				selectedPart = partStack;
+			}
+		}
+
 		MElementContainer<MUIElement> parent = partStack.getParent();
 		EList<MUIElement> children = parent.getChildren();
 		int index = children.indexOf(partStack);
 		if (parent instanceof MGenericTile<?>) {
 			MGenericTile<?> genericTile = (MGenericTile<?>) parent;
-			int modelIndex = children.indexOf(model);
-			if (modelIndex == -1) {
-				MGenericStack<MUIElement> partStack = findParentStack();
-				modelIndex = children.indexOf(partStack);
-			}
+			int modelIndex = children.indexOf(selectedPart);
 			if (index == 0 && modelIndex == 1 && children.size() == 2 && genericTile.isHorizontal()) {
 				return UnexecutableCommand.INSTANCE;
 			}			
@@ -59,19 +64,19 @@ public class MoveRightCommand extends AbstractPartCommand {
 		newSash.setContainerData(preferData);
 		newSash.setHorizontal(true);
 
-		if (model instanceof MPartStack) {
-			if (model.getParent() == null) {
-				model.setContainerData(preferData);
-				result.add(new AddChildCommand(newSash, model, 1));
+		if (selectedPart instanceof MPartStack) {
+			if (selectedPart.getParent() == null) {
+				selectedPart.setContainerData(preferData);
+				result.add(new AddChildCommand(newSash, selectedPart, 1));
 			} else {
-				result.add(new ChangeParentCommand(newSash, model, 1));
-				if (!preferData.equals(model.getContainerData())) {
+				result.add(new ChangeParentCommand(newSash, selectedPart, 1));
+				if (!preferData.equals(selectedPart.getContainerData())) {
 					result.add(new ApplyAttributeSettingCommand(
-							(EObject) model, "containerData", preferData));
+							(EObject) selectedPart, "containerData", preferData));
 				}
 			}
-		} else if (model instanceof MPart) {
-			MPart part = (MPart) model;
+		} else if (selectedPart instanceof MPart) {
+			MPart part = (MPart) selectedPart;
 			MPartStack createPartStack = MApplicationFactory.eINSTANCE
 					.createPartStack();
 			createPartStack.setContainerData(preferData);
