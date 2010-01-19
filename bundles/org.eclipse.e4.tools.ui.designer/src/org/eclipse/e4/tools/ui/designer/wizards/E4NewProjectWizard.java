@@ -60,7 +60,6 @@ import org.eclipse.pde.internal.ui.wizards.IProjectProvider;
 import org.eclipse.pde.internal.ui.wizards.plugin.NewPluginProjectWizard;
 import org.eclipse.pde.internal.ui.wizards.plugin.NewProjectCreationOperation;
 import org.eclipse.pde.internal.ui.wizards.plugin.NewProjectCreationPage;
-import org.eclipse.pde.internal.ui.wizards.plugin.PluginContentPage;
 import org.eclipse.pde.internal.ui.wizards.plugin.PluginFieldData;
 import org.eclipse.ui.IWorkingSet;
 import org.osgi.framework.Bundle;
@@ -73,6 +72,7 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 	private PluginFieldData fPluginData;
 	private NewApplicationWizardPage fApplicationPage;
 	private IProjectProvider fProjectProvider;
+	private PluginContentPage fContentPage;
 
 	public E4NewProjectWizard() {
 		fPluginData = new PluginFieldData();
