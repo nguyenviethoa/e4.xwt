@@ -22,7 +22,9 @@ import org.eclipse.pde.internal.ui.wizards.IProjectProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -44,23 +46,21 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author jin.liu (jin.liu@soyatec.com)
  */
 public class NewApplicationWizardPage extends WizardPage {
-
-	private static final String APPLICATION_XMI_PROPERTY = "applicationXMI";
-	private static final String APPLICATION_CSS_PROPERTY = "applicationCSS";
+	public static final String E4_APPLICATION = "org.eclipse.e4.ui.workbench.swt.E4Application";
+	public static final String APPLICATION_XMI_PROPERTY = "applicationXMI";
+	public static final String APPLICATION_CSS_PROPERTY = "applicationCSS";
 	public static final String PRODUCT_NAME = "productName";
 	public static final String APPLICATION = "application";
-	private static String[] PROPERTIES = new String[] {
-			IProductConstants.APP_NAME, APPLICATION_XMI_PROPERTY,
-			APPLICATION_CSS_PROPERTY, IProductConstants.ABOUT_TEXT,
-			IProductConstants.STARTUP_FOREGROUND_COLOR,
-			IProductConstants.STARTUP_MESSAGE_RECT,
-			IProductConstants.STARTUP_PROGRESS_RECT,
-			IProductConstants.PREFERENCE_CUSTOMIZATION };
 
 	private final Map<String, String> data;
 
 	private IProject project;
 	private IProjectProvider projectProvider;
+	private Text proNameText;
+	private Text proApplicationText;
+	private Group propertyGroup;
+
+	private PropertyData[] PROPERTIES;
 
 	protected NewApplicationWizardPage(IProjectProvider projectProvider) {
 		super("New Application Wizard Page");
@@ -95,10 +95,41 @@ public class NewApplicationWizardPage extends WizardPage {
 		Group productGroup = createProductGroup(control);
 		productGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Group propertyGroup = createPropertyGroup(control);
+		propertyGroup = createPropertyGroup(control);
 		propertyGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		setControl(control);
+	}
+
+	static class PropertyData {
+		private String name;
+		private String value;
+		private Class<?> type;
+		private boolean editable;
+
+		public PropertyData(String name, String value, Class<?> type,
+				boolean editable) {
+			this.name = name;
+			this.value = value;
+			this.type = type;
+			this.editable = editable;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public Class<?> getType() {
+			return type;
+		}
+
+		public boolean isEditable() {
+			return editable;
+		}
 	}
 
 	private Group createPropertyGroup(Composite control) {
@@ -107,24 +138,19 @@ public class NewApplicationWizardPage extends WizardPage {
 
 		group.setLayout(new GridLayout(2, false));
 
-		for (String property : PROPERTIES) {
-			createPropertyItem(group, property);
-		}
-
 		return group;
 	}
 
 	private void createPropertyItem(final Composite parent,
-			final String property) {
+			final PropertyData property) {
 		Hyperlink propertyLink = new Hyperlink(parent, SWT.NONE);
-		propertyLink.setText(property);
+		propertyLink.setText(property.getName());
 		propertyLink.setUnderlined(true);
 
 		final Text valueText = new Text(parent, SWT.BORDER);
+		valueText.setText(property.getValue());
 		valueText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		if (property.equals(IProductConstants.STARTUP_FOREGROUND_COLOR)
-				|| property.equals(IProductConstants.STARTUP_MESSAGE_RECT)
-				|| property.equals(IProductConstants.STARTUP_PROGRESS_RECT)) {
+		if (!property.isEditable()) {
 			valueText.setEditable(false);
 		}
 
@@ -144,39 +170,30 @@ public class NewApplicationWizardPage extends WizardPage {
 
 		valueText.addListener(SWT.Modify, new Listener() {
 			public void handleEvent(Event event) {
-				handleTextEvent(property, valueText);
+				handleTextEvent(property.getName(), valueText);
 			}
 		});
+		
+		data.put(property.getName(), property.getValue());
 	}
 
-	private void handleLinkEvent(String property, Text valueText, Shell shell) {
+	private void handleLinkEvent(PropertyData property, Text valueText,
+			Shell shell) {
 		if (property == null || valueText == null || valueText.isDisposed()) {
 			return;
 		}
-		if (property.equals(APPLICATION_XMI_PROPERTY)) {
-			// valueText.setText("Application.xmi");
-		} else if (property.equals(APPLICATION_CSS_PROPERTY)) {
-			// valueText.setText("css/default.css");
-		} else if (property.equals(IProductConstants.APP_NAME)) {
-			// valueText.setText("New Product");
-		} else if (property.equals(IProductConstants.ABOUT_TEXT)) {
-			// valueText.setText("About Product.");
-		} else if (property.equals(IProductConstants.PREFERENCE_CUSTOMIZATION)) {
-			// valueText.setText("plugin_customization.ini");
-		} else if (property.equals(IProductConstants.STARTUP_FOREGROUND_COLOR)) {
+		if (property.getType() == Color.class) {
 			ColorDialog colorDialog = new ColorDialog(shell);
 			RGB selectRGB = colorDialog.open();
-			valueText.setText((this.hexColorConvert(Integer
-					.toHexString(selectRGB.blue))
-					+ this
-							.hexColorConvert(Integer
-									.toHexString(selectRGB.green)) + this
-					.hexColorConvert(Integer.toHexString(selectRGB.red)))
-					.toUpperCase());
-		} else if (property.equals(IProductConstants.STARTUP_MESSAGE_RECT)) {
-			this.createRectDialog(shell, valueText).open();
-
-		} else if (property.equals(IProductConstants.STARTUP_PROGRESS_RECT)) {
+			if (selectRGB != null) {
+				valueText.setText((this.hexColorConvert(Integer
+						.toHexString(selectRGB.blue))
+						+ this.hexColorConvert(Integer
+								.toHexString(selectRGB.green)) + this
+						.hexColorConvert(Integer.toHexString(selectRGB.red)))
+						.toUpperCase());
+			}
+		} else if (property.getType() == Rectangle.class) {
 			this.createRectDialog(shell, valueText).open();
 		}
 	}
@@ -308,8 +325,9 @@ public class NewApplicationWizardPage extends WizardPage {
 		Label proNameLabel = new Label(proGroup, SWT.NONE);
 		proNameLabel.setText("Name*");
 
-		final Text proNameText = new Text(proGroup, SWT.BORDER);
+		proNameText = new Text(proGroup, SWT.BORDER);
 		proNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
 		proNameText.addListener(SWT.Modify, new Listener() {
 			public void handleEvent(Event event) {
 				handleTextEvent(PRODUCT_NAME, proNameText);
@@ -319,7 +337,7 @@ public class NewApplicationWizardPage extends WizardPage {
 		Label proApplicationLabel = new Label(proGroup, SWT.NONE);
 		proApplicationLabel.setText("Application");
 
-		final Text proApplicationText = new Text(proGroup, SWT.BORDER);
+		proApplicationText = new Text(proGroup, SWT.BORDER);
 		proApplicationText
 				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		proApplicationText.addListener(SWT.Modify, new Listener() {
@@ -330,10 +348,59 @@ public class NewApplicationWizardPage extends WizardPage {
 		return proGroup;
 	}
 
+	protected PropertyData[] getPropertyData() {
+		if (PROPERTIES == null) {
+			PROPERTIES = new PropertyData[] {
+					new PropertyData(IProductConstants.APP_NAME,
+							projectProvider.getProjectName(), String.class,
+							true),
+					new PropertyData(APPLICATION_XMI_PROPERTY,
+							"Application.e4xmi", String.class, true),
+					new PropertyData(APPLICATION_CSS_PROPERTY,
+							"css/default.css", String.class, true),
+					new PropertyData(IProductConstants.ABOUT_TEXT, "",
+							String.class, true),
+					new PropertyData(
+							IProductConstants.STARTUP_FOREGROUND_COLOR, "",
+							Color.class, false),
+					new PropertyData(IProductConstants.STARTUP_MESSAGE_RECT,
+							"", Rectangle.class, false),
+					new PropertyData(IProductConstants.STARTUP_PROGRESS_RECT,
+							"", Rectangle.class, false),
+					new PropertyData(
+							IProductConstants.PREFERENCE_CUSTOMIZATION, "",
+							String.class, true) }; // plugin_customization.ini
+		}
+		return PROPERTIES;
+	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		if (visible && PROPERTIES == null) {
+			proNameText.setText(projectProvider.getProjectName());
+
+			proApplicationText.setText(E4_APPLICATION);
+
+			for (PropertyData property : getPropertyData()) {
+				createPropertyItem(propertyGroup, property);
+			}
+			propertyGroup.getParent().layout();
+		}
+		super.setVisible(visible);
+	}
+
 	/**
 	 * @return the data
 	 */
 	public Map<String, String> getData() {
+		if (PROPERTIES == null) {
+			for (PropertyData property : getPropertyData()) {
+				data.put(property.getName(), property.getValue());
+			}
+			
+			data.put(PRODUCT_NAME, projectProvider.getProjectName());
+			data.put(APPLICATION, E4_APPLICATION);
+		}
 		return data;
 	}
 }

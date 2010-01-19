@@ -63,7 +63,6 @@ import org.eclipse.pde.internal.ui.wizards.plugin.NewProjectCreationPage;
 import org.eclipse.pde.internal.ui.wizards.plugin.PluginContentPage;
 import org.eclipse.pde.internal.ui.wizards.plugin.PluginFieldData;
 import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 
 /**
