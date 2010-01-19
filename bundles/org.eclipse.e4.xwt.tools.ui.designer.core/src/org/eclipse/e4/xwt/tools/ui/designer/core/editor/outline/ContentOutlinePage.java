@@ -25,6 +25,7 @@ import org.eclipse.gef.RootEditPart;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
@@ -40,6 +41,7 @@ public class ContentOutlinePage extends
 	private Designer designer;
 	private ITreeContentProvider contentProvider;
 	private ILabelProvider labelProvider;
+	private ViewerFilter[] viewerFilters;
 
 	private ContextMenuProvider contextMenuProvider;
 
@@ -53,9 +55,26 @@ public class ContentOutlinePage extends
 
 	public ContentOutlinePage(Designer designer,
 			ITreeContentProvider contentProvider, ILabelProvider labelProvider) {
+		this(designer, contentProvider, labelProvider, null);
+	}
+
+	public ContentOutlinePage(Designer designer,
+			ITreeContentProvider contentProvider, ILabelProvider labelProvider, ViewerFilter[] viewerFilters) {
 		this(designer);
 		this.setContentProvider(contentProvider);
 		this.setLabelProvider(labelProvider);
+		this.setViewerFilters(viewerFilters);
+	}
+
+	public ViewerFilter[] getViewerFilters() {
+		return viewerFilters;
+	}
+
+	public void setViewerFilters(ViewerFilter[] viewerFilters) {
+		this.viewerFilters = viewerFilters;
+		if (getTreeViewer() != null && viewerFilters != null) {
+			getTreeViewer().setFilters(viewerFilters);
+		}
 	}
 
 	/*
@@ -82,6 +101,9 @@ public class ContentOutlinePage extends
 		}
 		if (getLabelProvider() != null) {
 			treeViewer.setLabelProvider(getLabelProvider());
+		}
+		if (getViewerFilters() != null) {
+			treeViewer.setFilters(getViewerFilters());
 		}
 
 		setupDnD(treeViewer);
@@ -215,29 +237,36 @@ public class ContentOutlinePage extends
 	}
 
 	private class RefreshListener extends EditPartListener.Stub {
-		public void childAdded(EditPart child, int index) {
-			child.removeEditPartListener(this);
-			child.addEditPartListener(this);
-			Iterator it = child.getChildren().iterator();
-			while (it.hasNext()) {
-				EditPart part = (EditPart) it.next();
-				part.removeEditPartListener(this);
-				part.addEditPartListener(this);
-			}
+		public void childAdded(EditPart child, int index) {			
+			updateEditPartListener(child);
 			refresh(child.getParent());
 		}
 
 		public void removingChild(EditPart child, int index) {
-			child.removeEditPartListener(this);
-			Iterator it = child.getChildren().iterator();
-			while (it.hasNext()) {
-				EditPart part = (EditPart) it.next();
-				part.removeEditPartListener(this);
-			}
+			removeEditPartListener(child);
 			TreeViewer treeViewer = getTreeViewer();
 			if (treeViewer != null) {
 				treeViewer.remove(child);
 			}
+		}
+		
+		protected void removeEditPartListener(EditPart child) {
+			child.removeEditPartListener(this);
+			Iterator<?> it = child.getChildren().iterator();
+			while (it.hasNext()) {
+				EditPart part = (EditPart) it.next();
+				removeEditPartListener(part);
+			}			
+		}
+		
+		protected void updateEditPartListener(EditPart child) {
+			child.removeEditPartListener(this);
+			child.addEditPartListener(this);
+			Iterator<?> it = child.getChildren().iterator();
+			while (it.hasNext()) {
+				EditPart part = (EditPart) it.next();
+				updateEditPartListener(part);
+			}			
 		}
 	}
 }

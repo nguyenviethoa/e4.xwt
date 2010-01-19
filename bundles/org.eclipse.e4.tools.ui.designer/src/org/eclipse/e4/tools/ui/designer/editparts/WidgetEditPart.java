@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
+import org.eclipse.e4.tools.ui.designer.commands.DeleteCommandFactory;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MUILabel;
@@ -87,14 +87,15 @@ public class WidgetEditPart extends VisualEditPart {
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy() {
 			protected Command createDeleteCommand(GroupRequest deleteRequest) {
-				List editParts = deleteRequest.getEditParts();
+				List<?> editParts = deleteRequest.getEditParts();
 				CompoundCommand command = new CompoundCommand();
-				for (Iterator iterator = editParts.iterator(); iterator
+				for (Iterator<?> iterator = editParts.iterator(); iterator
 						.hasNext();) {
 					EditPart editPart = (EditPart) iterator.next();
 					Object model = editPart.getModel();
-					if (model instanceof MUIElement) {
-						command.add(new DeleteCommand((MUIElement) model));
+					Command deleteCommand = DeleteCommandFactory.createDeleteCommand(model);
+					if (deleteCommand != null) {
+						command.add(deleteCommand);
 					}
 				}
 				return command.unwrap();

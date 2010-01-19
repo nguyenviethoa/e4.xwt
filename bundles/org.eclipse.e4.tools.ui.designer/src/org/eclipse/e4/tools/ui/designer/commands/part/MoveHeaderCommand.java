@@ -12,7 +12,7 @@ package org.eclipse.e4.tools.ui.designer.commands.part;
 
 import org.eclipse.e4.tools.ui.designer.commands.AddChildCommand;
 import org.eclipse.e4.tools.ui.designer.commands.ChangeParentCommand;
-import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
+import org.eclipse.e4.tools.ui.designer.commands.DeleteCommandFactory;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.ui.model.application.MPartStack;
@@ -50,7 +50,10 @@ public class MoveHeaderCommand extends AbstractPartCommand {
 		if (parent != null) {
 			cmdList.add(new ChangeParentCommand(partStack, model, index));
 			if (parent.getChildren().size() == 1) {
-				cmdList.add(new DeleteCommand(parent));				
+				Command deleteCommand = DeleteCommandFactory.createDeleteCommand(parent);
+				if (deleteCommand != null ) {
+					cmdList.add(deleteCommand);
+				}
 			}
 		} else {
 			cmdList.add(new AddChildCommand(partStack, model, index));

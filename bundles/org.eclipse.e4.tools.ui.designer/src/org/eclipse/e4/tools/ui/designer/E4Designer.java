@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
+import org.eclipse.e4.tools.ui.designer.outline.OutlinePageDropManager;
 import org.eclipse.e4.tools.ui.designer.palette.E4CreationTool;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
 import org.eclipse.e4.tools.ui.designer.properties.E4PropertySourceProvider;
@@ -28,8 +29,11 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -179,8 +183,24 @@ public class E4Designer extends Designer {
 		E4DesignerOutlineContentProvider contentProvider = new E4DesignerOutlineContentProvider();
 		OutlineLableProvider lableProvider = new OutlineLableProvider();
 		ContentOutlinePage outlinePage = new ContentOutlinePage(this,
-				contentProvider, lableProvider);
+				contentProvider, lableProvider,
+				new ViewerFilter[] { new ViewerFilter() {
+					@Override
+					public boolean select(Viewer viewer, Object parentElement,
+							Object element) {
+						if (element instanceof EditPart) {
+							EditPart editpart = (EditPart) element;
+							Object model = editpart.getModel();
+							if (model instanceof EObject) {	
+								return ((EObject) model).eContainer() != null;
+							}
+						}
+						return false;
+					}
+				} });
 		outlinePage.setContextMenuProvider(getContextMenuProvider());
+		outlinePage.setDropManager(new OutlinePageDropManager(getEditDomain()
+				.getCommandStack()));
 		return outlinePage;
 	}
 }

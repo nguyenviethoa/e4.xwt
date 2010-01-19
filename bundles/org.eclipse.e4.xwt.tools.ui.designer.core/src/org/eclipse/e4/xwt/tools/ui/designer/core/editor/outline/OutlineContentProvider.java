@@ -30,7 +30,8 @@ public class OutlineContentProvider implements ITreeContentProvider {
 	 */
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof EditPart) {
-			return ((EditPart) parentElement).getChildren().toArray(EMPTY);
+			EditPart part = (EditPart) parentElement;
+			return part.getChildren().toArray(EMPTY);
 		}
 		return EMPTY;
 	}

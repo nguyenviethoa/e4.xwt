@@ -46,7 +46,8 @@ public class Refresher {
 		try {
 			if (editPart instanceof VisualEditPart) {
 				((VisualEditPart) editPart).refresh(context);
-			} else {
+			} 
+			else {
 				editPart.refresh();
 			}
 			List<?> children = editPart.getChildren();
