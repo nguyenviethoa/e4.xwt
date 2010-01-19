@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Soyatec - port to e4
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.wizards;
 
@@ -40,9 +41,6 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  * Content wizard page for the New Plugin Project wizard (page 2)
  */
 public class PluginContentPage extends ContentPage {
-	static final String PluginContentPage_e4Group = "e4 Application";
-	static final String PluginContentPage_appQuestion = "Would you like to create an e4 Application?";
-	
 	private Text fClassText;
 	protected Button fGenerateActivator;
 	protected Button fUIPlugin;
@@ -50,9 +48,6 @@ public class PluginContentPage extends ContentPage {
 	private Label fEELabel;
 	private Button fExeEnvButton;
 	private Combo fEEChoice;
-	private Group fRCPGroup;
-	protected Button fYesButton;
-	protected Button fNoButton;
 
 	/**
 	 * Button to enable API analysis for the project during project creation
@@ -103,7 +98,6 @@ public class PluginContentPage extends ContentPage {
 
 		createPluginPropertiesGroup(container);
 		createPluginClassGroup(container);
-		createRCPQuestion(container, 2);
 
 		Dialog.applyDialogFont(container);
 		setControl(container);
@@ -242,56 +236,13 @@ public class PluginContentPage extends ContentPage {
 		data.setClassname(fClassText.getText().trim());
 		data.setUIPlugin(fUIPlugin.getSelection());
 		data.setDoGenerateClass(fGenerateActivator.getSelection());
-		data.setRCPApplicationPlugin(!fData.isSimple() && !isPureOSGi() && fYesButton.getSelection());
+		data.setRCPApplicationPlugin(!fData.isSimple() && !isPureOSGi());
 		data.setEnableAPITooling(fApiAnalysisButton.getSelection());
 		if (fEEChoice.isEnabled() && !fEEChoice.getText().equals(NO_EXECUTION_ENVIRONMENT)) {
 			fData.setExecutionEnvironment(fEEChoice.getText().trim());
 		} else {
 			fData.setExecutionEnvironment(null);
 		}
-	}
-
-	/**
-	 * Creates the RCP questions 
-	 * @param parent
-	 * @param horizontalSpan
-	 */
-	protected void createRCPQuestion(Composite parent, int horizontalSpan) {
-		fRCPGroup = SWTFactory.createGroup(parent, PluginContentPage_e4Group, 2, 1, GridData.FILL_HORIZONTAL);
-		Composite comp = new Composite(fRCPGroup, SWT.NONE);
-		GridLayout layout = new GridLayout(3, false);
-		layout.marginHeight = layout.marginWidth = 0;
-		comp.setLayout(layout);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = horizontalSpan;
-		comp.setLayoutData(gd);
-
-		Label label = new Label(comp, SWT.NONE);
-		label.setText(PluginContentPage_appQuestion);
-		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		IDialogSettings settings = getDialogSettings();
-		boolean rcpApp = (settings != null) ? settings.getBoolean(S_RCP_PLUGIN) : false;
-
-		fYesButton = new Button(comp, SWT.RADIO);
-		fYesButton.setText(PDEUIMessages.PluginContentPage_yes);
-		fYesButton.setSelection(rcpApp);
-		gd = new GridData();
-		gd.widthHint = SWTFactory.getButtonWidthHint(fYesButton, 50);
-		fYesButton.setLayoutData(gd);
-		fYesButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				updateData();
-				getContainer().updateButtons();
-			}
-		});
-
-		fNoButton = new Button(comp, SWT.RADIO);
-		fNoButton.setText(PDEUIMessages.PluginContentPage_no);
-		fNoButton.setSelection(!rcpApp);
-		gd = new GridData();
-		gd.widthHint = SWTFactory.getButtonWidthHint(fNoButton, 50);
-		fNoButton.setLayoutData(gd);
 	}
 
 	/* (non-Javadoc)
@@ -333,8 +284,6 @@ public class PluginContentPage extends ContentPage {
 			} else {
 				fApiAnalysisButton.setSelection(false);
 			}
-
-			fRCPGroup.setVisible(!fData.isSimple() && !isPureOSGi());
 		}
 		super.setVisible(visible);
 	}
@@ -384,7 +333,7 @@ public class PluginContentPage extends ContentPage {
 		if (fApiAnalysisButton.isEnabled()) {
 			settings.put(S_API_ANALYSIS, fApiAnalysisButton.getSelection());
 		}
-		settings.put(S_RCP_PLUGIN, fYesButton.getSelection());
+		settings.put(S_RCP_PLUGIN, true);
 	}
 
 	/* (non-Javadoc)

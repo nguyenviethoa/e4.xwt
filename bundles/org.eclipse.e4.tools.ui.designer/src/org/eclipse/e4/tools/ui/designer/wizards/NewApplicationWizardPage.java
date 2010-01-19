@@ -65,10 +65,10 @@ public class NewApplicationWizardPage extends WizardPage {
 	private PropertyData[] PROPERTIES;
 
 	protected NewApplicationWizardPage(IProjectProvider projectProvider) {
-		super("New Application Wizard Page");
+		super("New e4 Application Wizard Page");
 		this.projectProvider = projectProvider;
 		data = new HashMap<String, String>();
-		setTitle("Application");
+		setTitle("e4 Application");
 		setMessage("Configure application with special values.");
 	}
 
