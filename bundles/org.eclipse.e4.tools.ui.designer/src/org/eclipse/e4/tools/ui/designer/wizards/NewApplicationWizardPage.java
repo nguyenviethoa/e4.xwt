@@ -40,9 +40,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.branding.IProductConstants;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
  * @author jin.liu (jin.liu@soyatec.com)
