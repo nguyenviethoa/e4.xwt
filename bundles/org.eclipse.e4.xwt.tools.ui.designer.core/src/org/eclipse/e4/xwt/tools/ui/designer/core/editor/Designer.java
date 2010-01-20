@@ -846,7 +846,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 	/**
 	 * @return
 	 */
-	private ContentOutlinePage getOutlinePage() {
+	protected ContentOutlinePage getOutlinePage() {
 		if (outlinePage == null) {
 			outlinePage = createOutlinePage();
 			if (outlinePage != null) {

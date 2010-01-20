@@ -256,7 +256,7 @@ public class ContentOutlinePage extends
 			while (it.hasNext()) {
 				EditPart part = (EditPart) it.next();
 				removeEditPartListener(part);
-			}			
+			}
 		}
 		
 		protected void updateEditPartListener(EditPart child) {

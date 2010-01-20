@@ -107,6 +107,8 @@ public class E4Designer extends Designer {
 		}
 		getRefresher().refreshInJob(toRefresh);
 
+		getOutlinePage().refresh(toRefresh);
+
 		isDirty = true;
 		firePropertyChange(PROP_DIRTY);
 	}
