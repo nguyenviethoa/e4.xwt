@@ -18,6 +18,7 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.Decorations;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Menu;
@@ -110,9 +111,8 @@ public class SWTWorkarounds {
 			Method method = object.getClass().getDeclaredMethod("getBounds");
 			method.setAccessible(true);
 			result = (Rectangle) method.invoke(object);
-		} catch (Throwable th) {
-			th.printStackTrace();
-			// TODO - decide what should happen when the method is unavailable
+		} catch (Throwable e) {
+			throw new UnsupportedOperationException(e);
 		}
 		return result;
 	}
@@ -131,7 +131,22 @@ public class SWTWorkarounds {
 	}
 
 	public static Rectangle getBounds(Menu menu) {
-		return getBounds((Object) menu);
+		Rectangle result = getBounds((Object) menu);
+		Decorations parent = menu.getParent();
+		Rectangle bounds = parent.getBounds();
+		if (!result.isEmpty() && parent != null) {
+			return new Rectangle(result.x - bounds.x, result.y - bounds.y,
+					result.width, result.height);
+		} else if (SWTTools.checkStyle(menu, SWT.BAR)) {
+			if (menu.getItemCount() == 0) {
+				Point offset = SWTTools.getOffset(parent);
+				return new Rectangle(offset.x, offset.y - 19, bounds.width - offset.x * 2, 1);				
+			}
+			int y = SWTTools.getOffset(parent).y;
+			int x = SWTTools.getOffset(parent).x;
+			return new Rectangle(x, y - 19, bounds.width - x * 2, 19);
+		}
+		return result;
 	}
 
 	public static Rectangle getBounds(ScrollBar bar) {
@@ -163,7 +178,7 @@ public class SWTWorkarounds {
 			Object[] args = new Object[] { new Integer(hWnd), new Integer(Msg), new Integer(wParam), lParam, };
 			result = ((Integer) method.invoke(clazz, args)).intValue();
 		} catch (Throwable e) {
-			// TODO - decide what should happen when the method is unavailable
+			throw new UnsupportedOperationException(e);
 		}
 		return result;
 	}

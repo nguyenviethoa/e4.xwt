@@ -69,7 +69,6 @@ public class MoveOnCommand extends MoveCommand {
 				}
 			}
 		}
-
 		return true;
 	}
 

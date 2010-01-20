@@ -75,6 +75,14 @@ public class WidgetLocator {
 				Rectangle calced = parent.computeTrim(0, 0, 0, 0);
 				r.x += (- calced.x);
 				r.y += (- calced.y);
+				if (parent instanceof Shell && SWTUtil.IsWindows) {
+					Shell shell = (Shell) parent;
+					Menu menu = shell.getMenuBar();
+					// Bug 300170 - Shell computeTrim returns a wrong result
+					if (menu != null && menu.getItemCount() == 0) {
+						r.y -= 19;						
+					}
+				}
 			}
 			else if (SWTUtil.IsCocoa) {
 				if (parent instanceof Group) {
@@ -88,18 +96,7 @@ public class WidgetLocator {
 		if (w instanceof Menu) {
 			Menu menu = (Menu) w;
 			menu.getDisplay().update();
-			Rectangle result = SWTWorkarounds.getBounds(menu);
-			Decorations parent = menu.getParent();
-			Rectangle bounds = parent.getBounds();
-			if (!result.isEmpty() && parent != null) {
-				return new Rectangle(result.x - bounds.x, result.y - bounds.y,
-						result.width, result.height);
-			} else if (SWTTools.checkStyle(menu, SWT.BAR)) {
-				int y = SWTTools.getOffset(parent).y;
-				int x = SWTTools.getOffset(parent).x;
-				return new Rectangle(x, y - 19, bounds.width - x * 2, 19);
-			}
-			return result;
+			return SWTWorkarounds.getBounds(menu);
 		}
 		if (w instanceof CTabItem) {
 			return SWTWorkarounds.getBounds((CTabItem) w);

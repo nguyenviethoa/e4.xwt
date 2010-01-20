@@ -35,7 +35,7 @@ public class MoveBeforeCommand extends MoveCommand {
 
 	@Override
 	public boolean canExecute() {
-		if (!super.canExecute() || getTarget().getParent() != null) {
+		if (!super.canExecute() || getTarget().getParent() == null) {
 			return false;
 		}
 		
@@ -50,7 +50,6 @@ public class MoveBeforeCommand extends MoveCommand {
 		}
 		return true;
 	}
-
 
 	/*
 	 * (non-Javadoc)

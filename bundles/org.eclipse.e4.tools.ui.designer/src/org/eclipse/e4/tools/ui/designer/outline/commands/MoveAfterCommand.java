@@ -36,7 +36,7 @@ public class MoveAfterCommand extends MoveCommand {
 
 	@Override
 	public boolean canExecute() {
-		if (!super.canExecute() || getTarget().getParent() != null) {
+		if (!super.canExecute() || getTarget().getParent() == null) {
 			return false;
 		}
 		
