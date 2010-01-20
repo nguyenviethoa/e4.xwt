@@ -10,15 +10,30 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
+import java.util.Collection;
+
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MMenu;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MWindow;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 
 public class CommandFactory {
 
 	static public Command createDeleteCommand(Object element) {
+		if (element instanceof EditPart) {
+			element = ((EditPart) element).getModel();
+		}
+		if (element instanceof Collection) {
+			Collection<?> elements = (Collection<?>) element;
+			CompoundCommand command = new CompoundCommand();
+			for (Object object : elements) {
+				command.add(createDeleteCommand(object));
+			}
+			return command;
+		}
 		if (element instanceof MMenu && ((MMenu) element).getParent() == null) {
 			return new MenuDeleteCommand((MMenu) element);
 		} else if (element instanceof MUIElement) {

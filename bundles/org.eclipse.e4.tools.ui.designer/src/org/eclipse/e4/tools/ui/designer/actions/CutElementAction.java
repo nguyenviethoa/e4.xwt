@@ -8,17 +8,19 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.editor.actions;
+package org.eclipse.e4.tools.ui.designer.actions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
+import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
+import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.ui.actions.Clipboard;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.swt.SWT;
@@ -27,22 +29,29 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.WorkbenchMessages;
 
-public class CopyElementAction extends SelectionAction {
-	private XWTDesigner editorPart;
-	private EditPart editpart;
+public class CutElementAction extends SelectionAction {
+	private Designer editorPart;
 
-	public CopyElementAction(IWorkbenchPart part) {
+	/**
+	 * @param part
+	 */
+	public CutElementAction(IWorkbenchPart part) {
 		super(part);
-		this.editorPart = (XWTDesigner) part;
-		setText(WorkbenchMessages.Workbench_copy);
-		setToolTipText(WorkbenchMessages.Workbench_copyToolTip);
-		setId(ActionFactory.COPY.getId());
-		setAccelerator(SWT.MOD1 | 'c');
+		this.editorPart = (Designer) part;
+		this.setText(WorkbenchMessages.Workbench_cut);
+		this.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);
+		this.setId(ActionFactory.CUT.getId());
+		this.setAccelerator(SWT.MOD1 | 'x');
 		ISharedImages sharedImages = part.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
-		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
+		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gef.ui.actions.WorkbenchPartAction#calculateEnabled()
+	 */
 	protected boolean calculateEnabled() {
 		if (editorPart == null) {
 			return false;
@@ -68,26 +77,28 @@ public class CopyElementAction extends SelectionAction {
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.action.Action#run()
+	 */
 	public void run() {
 		List<?> selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
-		List<XamlElement> selectResult = new ArrayList<XamlElement>();
-		if (selectedEditParts == null || selectedEditParts.isEmpty()) {
-			// Diagram directly...
-		} else {
-			for (int i = 0; i < selectedEditParts.size(); i++) {
-				editpart = (EditPart) selectedEditParts.get(i);
-				Object model = this.editpart.getModel();
-				Object parentModel = this.editpart.getParent().getModel();
-				if (model instanceof XamlElement && parentModel instanceof XamlElement) {
-					XamlElement copymodel = (XamlElement) EcoreUtil.copy((XamlElement) model);
-					selectResult.add(copymodel);
-
-				}
+		List<MUIElement> selectResult = new ArrayList<MUIElement>();
+		for (Iterator<?> iterator = selectedEditParts.iterator(); iterator.hasNext();) {
+			EditPart part = (EditPart) iterator.next();
+			Object model = part.getModel();
+			if (model instanceof MUIElement) {
+				MUIElement copymodel = (MUIElement) EcoreUtil.copy((EObject) model);
+				selectResult.add(copymodel);
 			}
-
 		}
-		if (selectResult != null && selectResult.size() != 0)
-			Clipboard.getDefault().setContents(selectResult);
-		super.run();
+		if (selectResult != null && selectResult.size() != 0) {
+			Command command = CommandFactory.createDeleteCommand(selectedEditParts);
+			if (command != null && command.canExecute()) {
+				Clipboard.getDefault().setContents(selectResult);				
+				editorPart.getEditDomain().getCommandStack().execute(command);
+			}
+		}		
 	}
 }

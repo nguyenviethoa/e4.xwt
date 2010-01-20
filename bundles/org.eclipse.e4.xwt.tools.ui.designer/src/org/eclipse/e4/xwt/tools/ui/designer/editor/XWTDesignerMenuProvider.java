@@ -13,7 +13,6 @@ package org.eclipse.e4.xwt.tools.ui.designer.editor;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.BindingLayerAction;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.ChangeTextAction;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.LayoutAssistantAction;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.OpenBindingDialogAction;
@@ -21,7 +20,6 @@ import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.OpenExternalizeString
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.PreviewAction;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.StyleAction;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.SurroundWithAction;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.menus.BindingsMenuManager;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.menus.EventMenuManager;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.menus.LayoutMenuManager;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
@@ -69,7 +67,7 @@ public class XWTDesignerMenuProvider extends DesignerMenuProvider {
 		super.buildContextMenu(menu);
 		ActionRegistry actionRegistry = getActionRegistry();
 		// menu.appendToGroup(BINDINGS, actionRegistry.getAction(BindingLayerAction.ID));
-		List selectedEditParts = getViewer().getSelectedEditParts();
+		List<?> selectedEditParts = getViewer().getSelectedEditParts();
 		if (selectedEditParts == null || selectedEditParts.isEmpty()) {
 			// Diagram directly...
 		} else {
@@ -102,6 +100,5 @@ public class XWTDesignerMenuProvider extends DesignerMenuProvider {
 		}
 		// add by xrchen 2009/9/22
 		menu.appendToGroup(EXTERNALIZE, actionRegistry.getAction(OpenExternalizeStringsAction.ID));
-
 	}
 }

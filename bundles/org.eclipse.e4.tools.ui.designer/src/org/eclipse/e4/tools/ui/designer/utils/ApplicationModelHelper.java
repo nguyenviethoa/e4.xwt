@@ -13,6 +13,7 @@ package org.eclipse.e4.tools.ui.designer.utils;
 import org.eclipse.e4.ui.model.application.MApplicationPackage;
 import org.eclipse.e4.ui.model.application.MMenu;
 import org.eclipse.e4.ui.model.application.MMenuItem;
+import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.ui.model.application.MToolBar;
 import org.eclipse.e4.ui.model.application.MToolItem;
 import org.eclipse.e4.ui.model.application.MUIElement;
@@ -27,6 +28,10 @@ import org.eclipse.emf.ecore.EClass;
 public class ApplicationModelHelper {
 
 	public static boolean canAddedChild(Entry entry, MUIElement target) {
+		if (target instanceof MPart) {
+			return false;
+		}
+		
 		EClass eClass = (EClass) entry.getType();
 		if ((eClass == MApplicationPackage.eINSTANCE.getMenu())
 				&& (target instanceof MMenu)) {
@@ -51,6 +56,10 @@ public class ApplicationModelHelper {
 	}
 
 	public static boolean canAddedChild(MUIElement element, MUIElement target) {
+		if (target instanceof MPart) {
+			return false;
+		}
+
 		if (element instanceof MMenu && target instanceof MMenu) {
 			return false;
 		}

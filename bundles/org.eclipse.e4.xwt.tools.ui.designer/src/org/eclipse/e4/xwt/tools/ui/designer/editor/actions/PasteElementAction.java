@@ -70,7 +70,7 @@ public class PasteElementAction extends SelectionAction {
 			return false;
 		}
 
-		List parts = part.getGraphicalViewer().getSelectedEditParts();
+		List<?> parts = part.getGraphicalViewer().getSelectedEditParts();
 		if (parts == null || parts.isEmpty()) {
 			return false;
 		}

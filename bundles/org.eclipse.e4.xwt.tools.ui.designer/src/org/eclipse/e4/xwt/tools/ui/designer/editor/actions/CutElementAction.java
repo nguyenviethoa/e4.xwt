@@ -58,10 +58,10 @@ public class CutElementAction extends SelectionAction {
 		if (editorPart.getGraphicalViewer() == null) {
 			return false;
 		}
-		List selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
+		List<?> selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
 		boolean result = selectedEditParts != null && !selectedEditParts.isEmpty();
 		if (result) {
-			for (Iterator iterator = selectedEditParts.iterator(); iterator
+			for (Iterator<?> iterator = selectedEditParts.iterator(); iterator
 					.hasNext();) {
 				EditPart editPart = (EditPart) iterator.next();
 				Object object = editPart.getModel();
@@ -82,9 +82,9 @@ public class CutElementAction extends SelectionAction {
 	 * @see org.eclipse.jface.action.Action#run()
 	 */
 	public void run() {
-		List selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
+		List<?> selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
 		List<XamlElement> selectResult = new ArrayList<XamlElement>();
-		for (Iterator iterator = selectedEditParts.iterator(); iterator.hasNext();) {
+		for (Iterator<?> iterator = selectedEditParts.iterator(); iterator.hasNext();) {
 			EditPart part = (EditPart) iterator.next();
 			Object model = part.getModel();
 			if (model instanceof XamlElement) {

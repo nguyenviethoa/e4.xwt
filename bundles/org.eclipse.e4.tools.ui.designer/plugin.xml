@@ -26,7 +26,8 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.eclipse.e4.tools.ui.designer.E4Designer"
-            default="false"
+            contributorClass="org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionBarContributor"
+            default="true"
             extensions="xmi"
             filenames="Application"
             id="org.eclipse.e4.tools.ui.designer.E4Designer"
@@ -37,7 +38,8 @@
          point="org.eclipse.ui.editors">
       <editor
             class="org.eclipse.e4.tools.ui.designer.E4Designer"
-            default="false"
+            contributorClass="org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionBarContributor"
+            default="true"
             extensions="e4xmi"
             filenames="Application"
             id="org.eclipse.e4.tools.ui.designer.E4Designer"

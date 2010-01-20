@@ -11,6 +11,9 @@
 package org.eclipse.e4.tools.ui.designer;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.tools.ui.designer.actions.CopyElementAction;
+import org.eclipse.e4.tools.ui.designer.actions.CutElementAction;
+import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.outline.OutlinePageDropManager;
 import org.eclipse.e4.tools.ui.designer.palette.E4CreationTool;
@@ -30,8 +33,11 @@ import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.IEditorInput;
@@ -56,6 +62,14 @@ public class E4Designer extends Designer {
 	 */
 	protected IModelBuilder createModelBuilder() {
 		return uiRenderer;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createMenuProvider()
+	 */
+	protected ContextMenuProvider createMenuProvider() {
+		return new E4DesignerMenuProvider(this);
 	}
 
 	/*
@@ -87,6 +101,18 @@ public class E4Designer extends Designer {
 		return isDirty;
 	}
 
+	protected void createActions() {
+		super.createActions();
+		ActionRegistry registry = getActionRegistry();
+		IAction action;
+		action = new CopyElementAction(this);
+		registry.registerAction(action);
+		action = new PasteElementAction(this);
+		registry.registerAction(action);
+		action = new CutElementAction(this);
+		registry.registerAction(action);
+	}
+		
 	protected void performModelChanged(Notification event) {
 		Result result = getVisualsRender().refreshVisuals(event);
 		if (result == null || !result.isRefreshed()) {

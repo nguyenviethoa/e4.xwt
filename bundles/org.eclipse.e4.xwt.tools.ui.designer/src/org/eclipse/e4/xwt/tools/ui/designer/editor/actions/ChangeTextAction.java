@@ -115,7 +115,7 @@ public class ChangeTextAction extends SelectionAction {
 	 * @see org.eclipse.gef.ui.actions.WorkbenchPartAction#calculateEnabled()
 	 */
 	protected boolean calculateEnabled() {
-		List selectedObjects = getSelectedObjects();
+		List<?> selectedObjects = getSelectedObjects();
 		if (selectedObjects.size() != 1) {
 			return false;
 		}

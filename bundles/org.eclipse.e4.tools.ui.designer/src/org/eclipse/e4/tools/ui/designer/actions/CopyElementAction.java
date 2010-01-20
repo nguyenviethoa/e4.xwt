@@ -8,14 +8,14 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.designer.editor.actions;
+package org.eclipse.e4.tools.ui.designer.actions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
-import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
+import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
@@ -28,12 +28,12 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.WorkbenchMessages;
 
 public class CopyElementAction extends SelectionAction {
-	private XWTDesigner editorPart;
+	private Designer editorPart;
 	private EditPart editpart;
 
 	public CopyElementAction(IWorkbenchPart part) {
 		super(part);
-		this.editorPart = (XWTDesigner) part;
+		this.editorPart = (Designer) part;
 		setText(WorkbenchMessages.Workbench_copy);
 		setToolTipText(WorkbenchMessages.Workbench_copyToolTip);
 		setId(ActionFactory.COPY.getId());
@@ -70,7 +70,7 @@ public class CopyElementAction extends SelectionAction {
 
 	public void run() {
 		List<?> selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
-		List<XamlElement> selectResult = new ArrayList<XamlElement>();
+		List<MUIElement> selectResult = new ArrayList<MUIElement>();
 		if (selectedEditParts == null || selectedEditParts.isEmpty()) {
 			// Diagram directly...
 		} else {
@@ -78,10 +78,9 @@ public class CopyElementAction extends SelectionAction {
 				editpart = (EditPart) selectedEditParts.get(i);
 				Object model = this.editpart.getModel();
 				Object parentModel = this.editpart.getParent().getModel();
-				if (model instanceof XamlElement && parentModel instanceof XamlElement) {
-					XamlElement copymodel = (XamlElement) EcoreUtil.copy((XamlElement) model);
+				if (model instanceof MUIElement && parentModel instanceof MUIElement) {
+					MUIElement copymodel = (MUIElement) EcoreUtil.copy((EObject) model);
 					selectResult.add(copymodel);
-
 				}
 			}
 
