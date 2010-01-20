@@ -11,18 +11,37 @@
 package org.eclipse.e4.tools.ui.designer.commands;
 
 import org.eclipse.e4.ui.model.application.MMenu;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.gef.commands.Command;
 
-public class DeleteCommandFactory {
+/**
+ * @author Jin Liu(jin.liu@soyatec.com)
+ */
+public class AddMenuChildCommand extends Command {
 
-	static public Command createDeleteCommand(Object element) {
-		if (element instanceof MMenu && ((MMenu)element).getParent() == null) {
-			return new MenuDeleteCommand((MMenu) element);
-		}
-		else if (element instanceof MUIElement) {
-			return new DeleteCommand((MUIElement) element);
-		}
-		throw new UnsupportedOperationException(element.getClass().getName());
+	protected MWindow parent;
+	protected MMenu newChild;
+	protected MMenu oldChild;
+
+	public AddMenuChildCommand(MWindow parent, MMenu newChild) {
+		this.parent = parent;
+		this.newChild = newChild;
+	}
+
+	public boolean canExecute() {
+		return parent != null && newChild != null;
+	}
+
+	public void execute() {
+		oldChild = parent.getMainMenu();
+		parent.setMainMenu(newChild);
+	}
+
+	public boolean canUndo() {
+		return parent != null;
+	}
+
+	public void undo() {
+		parent.setMainMenu(oldChild);
 	}
 }

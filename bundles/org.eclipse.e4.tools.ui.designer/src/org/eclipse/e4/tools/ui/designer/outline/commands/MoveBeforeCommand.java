@@ -12,9 +12,10 @@ package org.eclipse.e4.tools.ui.designer.outline.commands;
 
 import java.util.Iterator;
 
-import org.eclipse.e4.tools.ui.designer.commands.AddChildCommand;
+import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteHelper;
+import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
@@ -34,8 +35,22 @@ public class MoveBeforeCommand extends MoveCommand {
 
 	@Override
 	public boolean canExecute() {
-		return super.canExecute() && getTarget().getParent() != null;
+		if (!super.canExecute() || getTarget().getParent() != null) {
+			return false;
+		}
+		
+		MUIElement target = getTarget().getParent();
+		for (Iterator<?> iterator = getSource().iterator(); iterator.hasNext();) {
+			Object element = iterator.next();
+			if (element instanceof Entry) {
+				if (!ApplicationModelHelper.canAddedChild((Entry)element, target)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -69,7 +84,7 @@ public class MoveBeforeCommand extends MoveCommand {
 				newNode = sourceNode;
 			}
 	
-			command.add(new AddChildCommand(parent, newNode, index++));
+			command.add(CommandFactory.createAddChildCommand(parent, newNode, index++));
 	
 			if (isMove() && sourceNode.getParent() != null) {
 				command.add(new DeleteCommand(sourceNode));

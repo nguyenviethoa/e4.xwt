@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands.part;
 
-import org.eclipse.e4.tools.ui.designer.commands.AddChildCommand;
 import org.eclipse.e4.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.tools.ui.designer.commands.ChangeParentCommand;
+import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MGenericStack;
@@ -68,7 +68,7 @@ public class MoveTopCommand extends AbstractPartCommand {
 		if (selectedPart instanceof MPartStack) {
 			if (selectedPart.getParent() == null) {
 				selectedPart.setContainerData(preferData);
-				result.add(new AddChildCommand(newSash, selectedPart, 0));
+				result.add(CommandFactory.createAddChildCommand(newSash, selectedPart, 0));
 			} else {
 				result.add(new ChangeParentCommand(newSash, selectedPart, 0));
 				if (!preferData.equals(selectedPart.getContainerData())) {
@@ -84,14 +84,14 @@ public class MoveTopCommand extends AbstractPartCommand {
 			if (part.getParent() != null) {
 				result.add(new ChangeParentCommand(createPartStack, part, 0));
 			} else {
-				result.add(new AddChildCommand(createPartStack, part, 0));
+				result.add(CommandFactory.createAddChildCommand(createPartStack, part, 0));
 			}
-			result.add(new AddChildCommand(newSash, createPartStack, 0));
+			result.add(CommandFactory.createAddChildCommand(newSash, createPartStack, 0));
 		}
 
 		result.add(new ChangeParentCommand(newSash, partStack, 1));
 
-		result.add(new AddChildCommand(parent, newSash, index));
+		result.add(CommandFactory.createAddChildCommand(parent, newSash, index));
 		return result.unwrap();
 	}
 

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.e4.tools.ui.designer.commands.DeleteCommandFactory;
+import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MUILabel;
@@ -93,7 +93,7 @@ public class WidgetEditPart extends VisualEditPart {
 						.hasNext();) {
 					EditPart editPart = (EditPart) iterator.next();
 					Object model = editPart.getModel();
-					Command deleteCommand = DeleteCommandFactory.createDeleteCommand(model);
+					Command deleteCommand = CommandFactory.createDeleteCommand(model);
 					if (deleteCommand != null) {
 						command.add(deleteCommand);
 					}
