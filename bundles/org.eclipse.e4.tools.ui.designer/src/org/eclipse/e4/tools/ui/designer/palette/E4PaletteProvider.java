@@ -137,6 +137,7 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		Entry entry = createEntry(container, className);
 		entry.setId(pkgName + "." + className);
 		entry.setType(eClass);
+		entry.setIcon("platform:/plugin/org.eclipse.e4.ui.model.workbench.edit/icons/full/obj16/" + className + ".gif");
 		return entry;
 	}
 
