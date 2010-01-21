@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.workbench.ui.UIEvents;
-import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -35,13 +34,11 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
  */
 public class E4PropertySource implements IPropertySource {
 
-	private VisualEditPart editPart;
 	private EObject model;
 	private IPropertyDescriptor[] descriptors;
 
-	public E4PropertySource(VisualEditPart editPart) {
-		this.editPart = editPart;
-		model = editPart.getCastModel();
+	public E4PropertySource(EObject model) {
+		this.model = model;
 	}
 
 	/*

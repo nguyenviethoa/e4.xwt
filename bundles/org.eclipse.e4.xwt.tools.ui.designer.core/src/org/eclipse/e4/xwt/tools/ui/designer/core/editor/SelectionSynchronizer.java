@@ -26,18 +26,20 @@ import org.eclipse.jface.viewers.StructuredSelection;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class SelectionSynchronizer implements ISelectionChangedListener {
+public class SelectionSynchronizer implements ISelectionChangedListener,
+		ISelectionSynchronizer {
 
 	private List<ISelectionProvider> viewers = new ArrayList<ISelectionProvider>();
 	private boolean isDispatching = false;
 	private int disabled = 0;
 	private ISelectionProvider pendingSelection;
 
-	/**
-	 * Adds a viewer to the set of synchronized viewers
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param viewer
-	 *            the viewer
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer
+	 * #addViewer(org.eclipse.jface.viewers.ISelectionProvider)
 	 */
 	public void addViewer(ISelectionProvider viewer) {
 		viewer.addSelectionChangedListener(this);
@@ -64,11 +66,12 @@ public class SelectionSynchronizer implements ISelectionChangedListener {
 		return newPart;
 	}
 
-	/**
-	 * Removes the viewer from the set of synchronized viewers
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param viewer
-	 *            the viewer to remove
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer
+	 * #removeViewer(org.eclipse.jface.viewers.ISelectionProvider)
 	 */
 	public void removeViewer(ISelectionProvider viewer) {
 		viewer.removeSelectionChangedListener(this);
@@ -77,12 +80,12 @@ public class SelectionSynchronizer implements ISelectionChangedListener {
 			pendingSelection = null;
 	}
 
-	/**
-	 * Receives notification from one viewer, and maps selection to all other
-	 * members.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param event
-	 *            the selection event
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer
+	 * #selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
 		if (isDispatching)
@@ -101,18 +104,18 @@ public class SelectionSynchronizer implements ISelectionChangedListener {
 		for (int i = 0; i < viewers.size(); i++) {
 			if (viewers.get(i) != source) {
 				ISelectionProvider viewer = viewers.get(i);
-				setViewerSelection(viewer, selection);
+				setViewerSelection(source, viewer, selection);
 			}
 		}
 		isDispatching = false;
 	}
 
-	/**
-	 * Enables or disabled synchronization between viewers.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @since 3.1
-	 * @param value
-	 *            <code>true</code> if synchronization should occur
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer
+	 * #setEnabled(boolean)
 	 */
 	public void setEnabled(boolean value) {
 		if (!value)
@@ -123,21 +126,21 @@ public class SelectionSynchronizer implements ISelectionChangedListener {
 		}
 	}
 
-	private void setViewerSelection(ISelectionProvider viewer,
+	protected void setViewerSelection(ISelectionProvider source, ISelectionProvider viewer,
 			ISelection selection) {
 		ArrayList<EditPart> result = new ArrayList<EditPart>();
-		Iterator iter = ((IStructuredSelection) selection).iterator();
+		Iterator<?> iter = ((IStructuredSelection) selection).iterator();
 		while (iter.hasNext()) {
 			EditPart part = convert(viewer, (EditPart) iter.next());
 			if (part != null)
 				result.add(part);
 		}
 		viewer.setSelection(new StructuredSelection(result));
-		if (result.size() > 0)
+		if (result.size() > 0) {
 			if (viewer instanceof EditPartViewer) {
 				((EditPartViewer) viewer).reveal((EditPart) result.get(result
 						.size() - 1));
 			}
+		}
 	}
-
 }

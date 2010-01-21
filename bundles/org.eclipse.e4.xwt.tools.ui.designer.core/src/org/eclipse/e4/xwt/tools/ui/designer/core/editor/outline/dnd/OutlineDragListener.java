@@ -48,6 +48,9 @@ public class OutlineDragListener implements DragSourceListener {
 			if (element instanceof EditPart) {
 				collector.add(((EditPart) element).getModel());
 			}
+			else {
+				collector.add(element);				
+			}
 		}
 		return new StructuredSelection(collector.toArray());
 	}

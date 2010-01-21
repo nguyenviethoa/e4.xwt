@@ -11,6 +11,7 @@
 package org.eclipse.e4.tools.ui.designer.properties;
 
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
@@ -25,9 +26,11 @@ public class E4PropertySourceProvider implements IPropertySourceProvider {
 	 */
 	public IPropertySource getPropertySource(Object object) {
 		if (object instanceof VisualEditPart) {
-			return new E4PropertySource((VisualEditPart) object);
+			object = ((VisualEditPart) object).getCastModel();
+		}
+		if (object instanceof EObject) {
+			return new E4PropertySource((EObject)object);
 		}
 		return null;
 	}
-
 }

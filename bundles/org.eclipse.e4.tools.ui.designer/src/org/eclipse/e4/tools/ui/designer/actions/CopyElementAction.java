@@ -15,12 +15,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.Clipboard;
 import org.eclipse.gef.ui.actions.SelectionAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
@@ -28,62 +29,66 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.WorkbenchMessages;
 
 public class CopyElementAction extends SelectionAction {
-	private Designer editorPart;
-	private EditPart editpart;
 
 	public CopyElementAction(IWorkbenchPart part) {
 		super(part);
-		this.editorPart = (Designer) part;
 		setText(WorkbenchMessages.Workbench_copy);
 		setToolTipText(WorkbenchMessages.Workbench_copyToolTip);
 		setId(ActionFactory.COPY.getId());
 		setAccelerator(SWT.MOD1 | 'c');
-		ISharedImages sharedImages = part.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
-		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
+		ISharedImages sharedImages = part.getSite().getWorkbenchWindow()
+				.getWorkbench().getSharedImages();
+		setImageDescriptor(sharedImages
+				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		setDisabledImageDescriptor(sharedImages
+				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
 	}
 
 	protected boolean calculateEnabled() {
-		if (editorPart == null) {
-			return false;
-		}
-		if (editorPart.getGraphicalViewer() == null) {
-			return false;
-		}
-		List<?> selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
-		boolean result = selectedEditParts != null && !selectedEditParts.isEmpty();
-		if (result) {
-			for (Iterator<?> iterator = selectedEditParts.iterator(); iterator
+		ISelection selection = getSelection();
+		if (!selection.isEmpty()) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			for (Iterator<?> iterator = structuredSelection.iterator(); iterator
 					.hasNext();) {
-				EditPart editPart = (EditPart) iterator.next();
-				Object object = editPart.getModel();
-				if (object instanceof EObject) {
-					EObject eObject = (EObject) object;
+				Object element = iterator.next();
+				if (element instanceof EditPart) {
+					EditPart editPart = (EditPart) element;
+					element = editPart.getModel();
+				}
+				if (element instanceof EObject) {
+					EObject eObject = (EObject) element;
 					if (eObject.eContainer() == null) {
 						return false;
 					}
 				}
 			}
 		}
-		return result;
+		return true;
 	}
 
 	public void run() {
-		List<?> selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
+		IStructuredSelection structuredSelection = (IStructuredSelection) getSelection();
 		List<MUIElement> selectResult = new ArrayList<MUIElement>();
-		if (selectedEditParts == null || selectedEditParts.isEmpty()) {
+		if (structuredSelection.isEmpty()) {
 			// Diagram directly...
 		} else {
-			for (int i = 0; i < selectedEditParts.size(); i++) {
-				editpart = (EditPart) selectedEditParts.get(i);
-				Object model = this.editpart.getModel();
-				Object parentModel = this.editpart.getParent().getModel();
-				if (model instanceof MUIElement && parentModel instanceof MUIElement) {
-					MUIElement copymodel = (MUIElement) EcoreUtil.copy((EObject) model);
-					selectResult.add(copymodel);
+			for (Iterator<?> iterator = structuredSelection.iterator(); iterator
+					.hasNext();) {
+				Object element = iterator.next();
+				if (element instanceof EditPart) {
+					EditPart editPart = (EditPart) element;
+					element = editPart.getModel();
+				}
+				if (element instanceof EObject) {
+					EObject parentModel = ((EObject) element).eContainer();
+					if (element instanceof MUIElement
+							&& parentModel instanceof MUIElement) {
+						MUIElement copymodel = (MUIElement) EcoreUtil
+								.copy((EObject) element);
+						selectResult.add(copymodel);
+					}
 				}
 			}
-
 		}
 		if (selectResult != null && selectResult.size() != 0)
 			Clipboard.getDefault().setContents(selectResult);

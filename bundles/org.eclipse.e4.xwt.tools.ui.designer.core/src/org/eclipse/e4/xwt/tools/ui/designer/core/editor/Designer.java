@@ -123,7 +123,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 	// GEF editor.
 	private GraphicalViewer graphicalViewer;
 	private EditDomain editDomain;
-	private SelectionSynchronizer selectionSynchronizer;
+	private ISelectionSynchronizer selectionSynchronizer;
 	private ActionRegistry actionRegistry;
 	private ActionGroup actionGroup;
 
@@ -329,12 +329,16 @@ public abstract class Designer extends MultiPageEditorPart implements
 					IVisualRenderer.KEY, vr);
 		}
 		EditPart diagram = getDiagramEditPart();
-		getGraphicalViewer().setContents(diagram);
+		setContent(diagram);
 		loadingFigureController.showLoadingFigure(false);
 		if (diagram != null) {
 			refresher.refreshAsynchronous(diagram);
 			installed = true;
 		}
+	}
+	
+	protected void setContent(EditPart diagram) {
+		getGraphicalViewer().setContents(diagram);		
 	}
 
 	public IVisualRenderer getVisualsRender() {
@@ -519,11 +523,15 @@ public abstract class Designer extends MultiPageEditorPart implements
 	 * 
 	 * @return
 	 */
-	public SelectionSynchronizer getSelectionSynchronizer() {
+	public ISelectionSynchronizer getSelectionSynchronizer() {
 		if (selectionSynchronizer == null) {
-			selectionSynchronizer = new SelectionSynchronizer();
+			selectionSynchronizer = createSelectionSynchronizer();
 		}
 		return selectionSynchronizer;
+	}
+	
+	protected ISelectionSynchronizer createSelectionSynchronizer() {
+		return new SelectionSynchronizer();
 	}
 
 	/**

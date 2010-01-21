@@ -23,6 +23,8 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.ui.actions.Clipboard;
 import org.eclipse.gef.ui.actions.SelectionAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
@@ -30,21 +32,22 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.WorkbenchMessages;
 
 public class CutElementAction extends SelectionAction {
-	private Designer editorPart;
 
 	/**
 	 * @param part
 	 */
 	public CutElementAction(IWorkbenchPart part) {
 		super(part);
-		this.editorPart = (Designer) part;
 		this.setText(WorkbenchMessages.Workbench_cut);
 		this.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);
 		this.setId(ActionFactory.CUT.getId());
 		this.setAccelerator(SWT.MOD1 | 'x');
-		ISharedImages sharedImages = part.getSite().getWorkbenchWindow().getWorkbench().getSharedImages();
-		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
+		ISharedImages sharedImages = part.getSite().getWorkbenchWindow()
+				.getWorkbench().getSharedImages();
+		setImageDescriptor(sharedImages
+				.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
+		setDisabledImageDescriptor(sharedImages
+				.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
 	}
 
 	/*
@@ -53,28 +56,25 @@ public class CutElementAction extends SelectionAction {
 	 * @see org.eclipse.gef.ui.actions.WorkbenchPartAction#calculateEnabled()
 	 */
 	protected boolean calculateEnabled() {
-		if (editorPart == null) {
-			return false;
-		}
-		if (editorPart.getGraphicalViewer() == null) {
-			return false;
-		}
-		List<?> selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
-		boolean result = selectedEditParts != null && !selectedEditParts.isEmpty();
-		if (result) {
-			for (Iterator<?> iterator = selectedEditParts.iterator(); iterator
+		ISelection selection = getSelection();
+		if (!selection.isEmpty()) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			for (Iterator<?> iterator = structuredSelection.iterator(); iterator
 					.hasNext();) {
-				EditPart editPart = (EditPart) iterator.next();
-				Object object = editPart.getModel();
-				if (object instanceof EObject) {
-					EObject eObject = (EObject) object;
+				Object element = iterator.next();
+				if (element instanceof EditPart) {
+					EditPart editPart = (EditPart) element;
+					element = editPart.getModel();
+				}
+				if (element instanceof EObject) {
+					EObject eObject = (EObject) element;
 					if (eObject.eContainer() == null) {
 						return false;
 					}
 				}
 			}
 		}
-		return result;
+		return true;
 	}
 
 	/*
@@ -83,22 +83,28 @@ public class CutElementAction extends SelectionAction {
 	 * @see org.eclipse.jface.action.Action#run()
 	 */
 	public void run() {
-		List<?> selectedEditParts = this.editorPart.getGraphicalViewer().getSelectedEditParts();
+		IStructuredSelection structuredSelection = (IStructuredSelection) getSelection();
 		List<MUIElement> selectResult = new ArrayList<MUIElement>();
-		for (Iterator<?> iterator = selectedEditParts.iterator(); iterator.hasNext();) {
-			EditPart part = (EditPart) iterator.next();
-			Object model = part.getModel();
-			if (model instanceof MUIElement) {
-				MUIElement copymodel = (MUIElement) EcoreUtil.copy((EObject) model);
+		for (Iterator<?> iterator = structuredSelection.iterator(); iterator
+				.hasNext();) {
+			Object element = iterator.next();
+			if (element instanceof EditPart) {
+				EditPart editPart = (EditPart) element;
+				element = editPart.getModel();
+			}
+			if (element instanceof MUIElement) {
+				MUIElement copymodel = (MUIElement) EcoreUtil
+						.copy((EObject) element);
 				selectResult.add(copymodel);
 			}
 		}
 		if (selectResult != null && selectResult.size() != 0) {
-			Command command = CommandFactory.createDeleteCommand(selectedEditParts);
+			Command command = CommandFactory.createDeleteCommand(selectResult);
 			if (command != null && command.canExecute()) {
-				Clipboard.getDefault().setContents(selectResult);				
+				Clipboard.getDefault().setContents(selectResult);
+				Designer editorPart = (Designer) getWorkbenchPart();
 				editorPart.getEditDomain().getCommandStack().execute(command);
 			}
-		}		
+		}
 	}
 }

@@ -21,18 +21,24 @@ import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
 import org.eclipse.e4.tools.ui.designer.properties.E4PropertySourceProvider;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.provider.ApplicationItemProviderAdapterFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineLableProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -63,15 +69,20 @@ public class E4Designer extends Designer {
 	protected IModelBuilder createModelBuilder() {
 		return uiRenderer;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createMenuProvider()
 	 */
 	protected ContextMenuProvider createMenuProvider() {
 		return new E4DesignerMenuProvider(this);
 	}
 
+	protected ISelectionSynchronizer createSelectionSynchronizer() {
+		return new E4SelectionSynchronizer(getGraphicalViewer());
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -112,7 +123,7 @@ public class E4Designer extends Designer {
 		action = new CutElementAction(this);
 		registry.registerAction(action);
 	}
-		
+
 	protected void performModelChanged(Notification event) {
 		Result result = getVisualsRender().refreshVisuals(event);
 		if (result == null || !result.isRefreshed()) {
@@ -200,6 +211,12 @@ public class E4Designer extends Designer {
 		return propertyPage;
 	}
 
+	@Override
+	protected void setContent(EditPart diagram) {
+		super.setContent(diagram);
+		getOutlinePage().getTreeViewer().setInput(diagram.getModel());
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -208,20 +225,25 @@ public class E4Designer extends Designer {
 	 * ()
 	 */
 	protected ContentOutlinePage createOutlinePage() {
-		E4DesignerOutlineContentProvider contentProvider = new E4DesignerOutlineContentProvider();
-		OutlineLableProvider lableProvider = new OutlineLableProvider();
-		ContentOutlinePage outlinePage = new ContentOutlinePage(this,
-				contentProvider, lableProvider,
+		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+
+		adapterFactory
+				.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+		adapterFactory
+				.addAdapterFactory(new ApplicationItemProviderAdapterFactory());
+		adapterFactory
+				.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+
+		ContentOutlinePage outlinePage = new E4ContentOutlinePage(this,
+				new AdapterFactoryContentProvider(adapterFactory),
+				new AdapterFactoryLabelProvider(adapterFactory),
 				new ViewerFilter[] { new ViewerFilter() {
 					@Override
 					public boolean select(Viewer viewer, Object parentElement,
 							Object element) {
-						if (element instanceof EditPart) {
-							EditPart editpart = (EditPart) element;
-							Object model = editpart.getModel();
-							if (model instanceof EObject) {	
-								return ((EObject) model).eContainer() != null;
-							}
+						if (element instanceof EObject) {
+							return ((EObject) element).eContainer() != null;
 						}
 						return false;
 					}
