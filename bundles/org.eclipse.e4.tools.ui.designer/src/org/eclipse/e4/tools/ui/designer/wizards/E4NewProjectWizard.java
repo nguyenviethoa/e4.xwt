@@ -38,6 +38,8 @@ import org.eclipse.e4.ui.model.application.MMenuItem;
 import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.ui.model.application.MPartSashContainer;
 import org.eclipse.e4.ui.model.application.MPartStack;
+import org.eclipse.e4.ui.model.application.MPerspective;
+import org.eclipse.e4.ui.model.application.MPerspectiveStack;
 import org.eclipse.e4.ui.model.application.MToolBar;
 import org.eclipse.e4.ui.model.application.MToolItem;
 import org.eclipse.e4.ui.model.application.MWindow;
@@ -185,6 +187,11 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 				if (it != null) {
 					while (it.hasNext()) {
 						Entry<String, String> entry = it.next();
+						String value = entry.getValue();
+						if (value == null || value.trim().length() == 0) {
+							continue;							
+						}
+						
 						if (entry.getKey().equals(
 								NewApplicationWizardPage.PRODUCT_NAME)
 								|| entry.getKey().equals(
@@ -195,7 +202,7 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 								.createElement(productElement);
 						element.setName("property");
 						element.setAttribute("name", entry.getKey());
-						element.setAttribute("value", entry.getValue());
+						element.setAttribute("value", value);
 						productElement.add(element);
 					}
 				}
@@ -293,40 +300,53 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 					}
 				}
 
-				// WindowTrim
+				// PerspectiveStack
 				{
-					MWindowTrim windowTrim = MApplicationFactory.eINSTANCE
-							.createWindowTrim();
-					mainWindow.getChildren().add(windowTrim);
+					MPerspectiveStack perspectiveStack = MApplicationFactory.eINSTANCE
+							.createPerspectiveStack();
+					mainWindow.getChildren().add(perspectiveStack);
 
-					MToolBar toolBar = MApplicationFactory.eINSTANCE
-							.createToolBar();
-					windowTrim.getChildren().add(toolBar);
+					MPerspective perspective = MApplicationFactory.eINSTANCE
+							.createPerspective();
+					perspectiveStack.getChildren().add(perspective);
+					{
+						// Part Container
+						MPartSashContainer partSashContainer = MApplicationFactory.eINSTANCE
+								.createPartSashContainer();
+						perspective.getChildren().add(partSashContainer);
 
-					MToolItem toolItemOpen = MApplicationFactory.eINSTANCE
-							.createToolItem();
-					toolBar.getChildren().add(toolItemOpen);
-					toolItemOpen.setIconURI("platform:/plugin/"
-							+ project.getName() + "/icons/sample.gif");
+						MPartStack partStack = MApplicationFactory.eINSTANCE
+								.createPartStack();
+						partSashContainer.getChildren().add(partStack);
 
-					MToolItem toolItemSave = MApplicationFactory.eINSTANCE
-							.createToolItem();
-					toolBar.getChildren().add(toolItemSave);
-					toolItemSave.setIconURI("platform:/plugin/"
-							+ project.getName() + "/icons/save_edit.gif");
+						MPart part = MApplicationFactory.eINSTANCE.createPart();
+						partStack.getChildren().add(part);
+						part.setLabel("Main");
+					}
+
+					// WindowTrim
+					{
+						MWindowTrim windowTrim = MApplicationFactory.eINSTANCE
+								.createWindowTrim();
+						mainWindow.getChildren().add(windowTrim);
+
+						MToolBar toolBar = MApplicationFactory.eINSTANCE
+								.createToolBar();
+						windowTrim.getChildren().add(toolBar);
+
+						MToolItem toolItemOpen = MApplicationFactory.eINSTANCE
+								.createToolItem();
+						toolBar.getChildren().add(toolItemOpen);
+						toolItemOpen.setIconURI("platform:/plugin/"
+								+ project.getName() + "/icons/sample.gif");
+
+						MToolItem toolItemSave = MApplicationFactory.eINSTANCE
+								.createToolItem();
+						toolBar.getChildren().add(toolItemSave);
+						toolItemSave.setIconURI("platform:/plugin/"
+								+ project.getName() + "/icons/save_edit.gif");
+					}
 				}
-
-				// Part Container
-				MPartSashContainer partSashContainer = MApplicationFactory.eINSTANCE
-						.createPartSashContainer();
-				mainWindow.getChildren().add(partSashContainer);
-				MPartStack partStack = MApplicationFactory.eINSTANCE
-						.createPartStack();
-				partSashContainer.getChildren().add(partStack);
-
-				MPart part = MApplicationFactory.eINSTANCE.createPart();
-				partStack.getChildren().add(part);
-				part.setLabel("Main");
 			}
 			Map<Object, Object> options = new HashMap<Object, Object>();
 			options.put(XMLResource.OPTION_ENCODING, "UTF-8");
