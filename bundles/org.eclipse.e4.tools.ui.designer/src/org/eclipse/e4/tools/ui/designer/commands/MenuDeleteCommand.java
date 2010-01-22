@@ -13,17 +13,17 @@ package org.eclipse.e4.tools.ui.designer.commands;
 import org.eclipse.e4.ui.model.application.MMenu;
 import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.commands.Command;
 
 /**
  * @author jin.liu(jin.liu@soyatec.com)
  */
-public class MenuDeleteCommand extends Command {
+public class MenuDeleteCommand extends AbstractDeleteCommand {
 
 	private MMenu menu;
 	private MWindow window;
 
 	public MenuDeleteCommand(MMenu menu) {
+		super((EObject)menu);
 		this.menu = menu;
 		if (menu instanceof EObject) {
 			EObject object = (EObject) menu;
@@ -35,10 +35,10 @@ public class MenuDeleteCommand extends Command {
 	}
 
 	public boolean canExecute() {
-		return menu != null && window != null;
+		return super.canExecute() && window != null;
 	}
 
-	public void execute() {
+	public void doExecute() {
 		window.setMainMenu(null);
 	}
 
@@ -46,7 +46,7 @@ public class MenuDeleteCommand extends Command {
 		return window != null && menu != null;
 	}
 
-	public void undo() {
+	public void doUndo() {
 		window.setMainMenu(menu);
 	}
 }

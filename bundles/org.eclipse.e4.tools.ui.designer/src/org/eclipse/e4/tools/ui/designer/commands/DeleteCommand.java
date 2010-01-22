@@ -12,40 +12,36 @@ package org.eclipse.e4.tools.ui.designer.commands;
 
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.gef.commands.Command;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author jin.liu(jin.liu@soyatec.com)
  */
-public class DeleteCommand extends Command {
+public class DeleteCommand extends AbstractDeleteCommand {
 
 	private MUIElement eObject;
 	private MElementContainer<MUIElement> container;
 	private int index = -1;
 
 	public DeleteCommand(MUIElement eObject) {
+		super((EObject)eObject);
 		this.eObject = eObject;
 	}
 
-	public boolean canExecute() {
-		return eObject != null && eObject.getParent() != null;
-	}
-
-	public void execute() {
+	public void doExecute() {
 		container = eObject.getParent();
 		index = container.getChildren().indexOf(eObject);
 		container.getChildren().remove(eObject);
 	}
 
 	public boolean canUndo() {
-		return container != null && eObject != null;
+		return container != null;
 	}
 
-	public void undo() {
-		if (index >= container.getChildren().size()) {			
+	public void doUndo() {
+		if (index >= container.getChildren().size()) {
 			container.getChildren().add(eObject);
-		}
-		else {
+		} else {
 			container.getChildren().add(index, eObject);
 		}
 	}
