@@ -25,7 +25,7 @@ import org.eclipse.gef.requests.CreateRequest;
  */
 public class E4PaletteHelper {
 
-	public static MUIElement createElement(MElementContainer container,
+	public static MUIElement createElement(Object container,
 			Entry entry) {
 		if (container == null || entry == null) {
 			return null;
@@ -37,7 +37,7 @@ public class E4PaletteHelper {
 		return null;
 	}
 
-	private static MUIElement verify(MElementContainer container,
+	private static MUIElement verify(Object container,
 			MUIElement element, EClass type) {
 		if (element instanceof MUILabel) {
 			((MUILabel) element).setLabel("New " + type.getName());
@@ -49,7 +49,7 @@ public class E4PaletteHelper {
 		return element;
 	}
 
-	public static MUIElement createElement(MElementContainer container,
+	public static MUIElement createElement(Object container,
 			EClass type) {
 		EObject element = MApplicationFactory.eINSTANCE.create((EClass) type);
 		if (element instanceof MUIElement) {

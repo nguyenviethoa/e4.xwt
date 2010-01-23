@@ -17,13 +17,13 @@ import org.eclipse.gef.commands.Command;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class AddMenuChildCommand extends Command {
+public class AddWindowMenuChildCommand extends Command {
 
 	protected MWindow parent;
 	protected MMenu newChild;
 	protected MMenu oldChild;
 
-	public AddMenuChildCommand(MWindow parent, MMenu newChild) {
+	public AddWindowMenuChildCommand(MWindow parent, MMenu newChild) {
 		this.parent = parent;
 		this.newChild = newChild;
 	}

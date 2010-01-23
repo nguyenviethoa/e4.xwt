@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MMenu;
+import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.gef.EditPart;
@@ -45,12 +46,15 @@ public class CommandFactory {
 	static public Command createAddChildCommand(Object container, Object child,
 			int index) {
 		if (child instanceof MMenu && container instanceof MWindow) {
-			return new AddMenuChildCommand((MWindow) container, (MMenu) child);
+			return new AddWindowMenuChildCommand((MWindow) container,
+					(MMenu) child);
 		} else if (container instanceof MElementContainer
 				&& child instanceof MUIElement) {
 			return new AddChildCommand(
 					(MElementContainer<MUIElement>) container,
 					(MUIElement) child, index);
+		} else if (container instanceof MPart && child instanceof MMenu) {
+			return new AddPartMenuChildCommand((MPart) container, (MMenu) child);
 		}
 		throw new UnsupportedOperationException(container.getClass().getName()
 				+ " " + child.getClass().getName());

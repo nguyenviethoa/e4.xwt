@@ -14,6 +14,8 @@ import org.eclipse.e4.ui.model.application.MApplicationPackage;
 import org.eclipse.e4.ui.model.application.MMenu;
 import org.eclipse.e4.ui.model.application.MMenuItem;
 import org.eclipse.e4.ui.model.application.MPart;
+import org.eclipse.e4.ui.model.application.MPerspective;
+import org.eclipse.e4.ui.model.application.MPerspectiveStack;
 import org.eclipse.e4.ui.model.application.MToolBar;
 import org.eclipse.e4.ui.model.application.MToolItem;
 import org.eclipse.e4.ui.model.application.MUIElement;
@@ -28,35 +30,47 @@ import org.eclipse.emf.ecore.EClass;
 public class ApplicationModelHelper {
 
 	public static boolean canAddedChild(Entry entry, MUIElement target) {
-		if (target instanceof MPart) {
-			return false;
-		}
-		
 		EClass eClass = (EClass) entry.getType();
-		if ((eClass == MApplicationPackage.eINSTANCE.getMenu())
-				&& (target instanceof MMenu)) {
+		EClass toolBarClass = MApplicationPackage.eINSTANCE.getToolBar();
+		EClass menuClass = MApplicationPackage.eINSTANCE.getMenu();
+		if (target instanceof MPart
+				&& !((toolBarClass.isSuperTypeOf(eClass) || toolBarClass == eClass) || (menuClass
+						.isSuperTypeOf(eClass) || menuClass == eClass))) {
 			return false;
 		}
 
-		if ((eClass == MApplicationPackage.eINSTANCE.getMenu())
-				&& !(target instanceof MWindow)) {
+		if ((eClass == menuClass) && (target instanceof MMenu)) {
 			return false;
 		}
 
+		if ((eClass == menuClass)
+				&& (!(target instanceof MWindow || target instanceof MPart))) {
+			return false;
+		}
+
+		// accept only MMenuItem by MMenu
 		if ((eClass == MApplicationPackage.eINSTANCE.getMenuItem())
 				&& !(target instanceof MMenu)) {
 			return false;
 		}
 
+		// accept only MToolItem by MToolBar
 		if ((eClass == MApplicationPackage.eINSTANCE.getToolItem())
 				&& !(target instanceof MToolBar)) {
+			return false;
+		}
+
+		// accept only MPerspective by MPerspectiveStack
+		if (eClass == MApplicationPackage.eINSTANCE.getPerspective()
+				&& !(target instanceof MPerspectiveStack)) {
 			return false;
 		}
 		return true;
 	}
 
 	public static boolean canAddedChild(MUIElement element, MUIElement target) {
-		if (target instanceof MPart) {
+		if (target instanceof MPart
+				&& !((element instanceof MToolBar) || (element instanceof MMenu))) {
 			return false;
 		}
 
@@ -64,15 +78,24 @@ public class ApplicationModelHelper {
 			return false;
 		}
 
-		if (element instanceof MMenu && !(target instanceof MWindow)) {
+		if (element instanceof MMenu
+				&& !(target instanceof MWindow || target instanceof MPart)) {
 			return false;
 		}
 
+		// accept only MMenuItem by MMenu
 		if (element instanceof MMenuItem && !(target instanceof MMenu)) {
 			return false;
 		}
 
+		// accept only MToolItem by MToolBar
 		if (element instanceof MToolItem && !(target instanceof MToolBar)) {
+			return false;
+		}
+
+		// accept only MPerspective by MPerspectiveStack
+		if (element instanceof MPerspective
+				&& !(target instanceof MPerspectiveStack)) {
 			return false;
 		}
 		return true;
