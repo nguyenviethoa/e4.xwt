@@ -214,7 +214,10 @@ public class E4Designer extends Designer {
 	@Override
 	protected void setContent(EditPart diagram) {
 		super.setContent(diagram);
-		getOutlinePage().getTreeViewer().setInput(diagram.getModel());
+		EObject eObject = (EObject)diagram.getModel();
+		if (eObject != null) {
+			getOutlinePage().getTreeViewer().setInput(eObject.eResource());
+		}
 	}
 
 	/*
@@ -243,7 +246,7 @@ public class E4Designer extends Designer {
 					public boolean select(Viewer viewer, Object parentElement,
 							Object element) {
 						if (element instanceof EObject) {
-							return ((EObject) element).eContainer() != null;
+							return ((EObject) element).eResource() != null;
 						}
 						return false;
 					}
