@@ -47,9 +47,12 @@ public class CreatePartCommand extends Command {
 		if (creationType == null) {
 			return false;
 		}
-		
+
 		if (creatingElement == null) {
-			creatingElement = E4PaletteHelper.createElement(null, creationType);
+			Object element = E4PaletteHelper.createElement(null, creationType);
+			if (element instanceof MUIElement) {
+				creatingElement = (MUIElement) element;
+			}
 		}
 		EditPart targetEditPart = partReq.getTargetEditPart();
 		if (targetEditPart == null) {
@@ -69,7 +72,7 @@ public class CreatePartCommand extends Command {
 
 		if (command == null) {
 			command = PartCommandFactory.createCommand(partReq.getPosition(),
-					creatingElement, partStack, header);			
+					creatingElement, partStack, header);
 		}
 		return command != null && command.canExecute();
 	}

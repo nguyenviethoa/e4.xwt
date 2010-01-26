@@ -17,6 +17,7 @@ import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteHelper;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
+import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MMenu;
 import org.eclipse.e4.ui.model.application.MPart;
@@ -86,10 +87,10 @@ public class MoveOnCommand extends MoveCommand {
 	 */
 	protected void collectCommands(CompoundCommand command) {
 		IStructuredSelection sourceNodes = getSource();
-		MUIElement target = getTarget();
+		MApplicationElement target = getTarget();
 		for (Iterator<?> iterator = sourceNodes.iterator(); iterator.hasNext();) {
 			Object element = iterator.next();
-			MUIElement sourceNode = null;
+			MApplicationElement sourceNode = null;
 			if (element instanceof Entry) {
 				sourceNode = E4PaletteHelper.createElement(target,
 						(Entry) element);
@@ -97,8 +98,8 @@ public class MoveOnCommand extends MoveCommand {
 				sourceNode = (MUIElement) element;
 			}
 			if (target instanceof MElementContainer) {
-				MUIElement newChild = null;
-				if (sourceNode.getParent() != null) {
+				MApplicationElement newChild = null;
+				if (ApplicationModelHelper.isLive(sourceNode)) {
 					newChild = (MUIElement) EcoreUtil
 							.copy((EObject) sourceNode);
 				} else {
@@ -106,16 +107,16 @@ public class MoveOnCommand extends MoveCommand {
 				}
 				command.add(CommandFactory.createAddChildCommand(target,
 						newChild, -1));
-				if (isMove() && sourceNode.getParent() != null) {
-					command.add(new DeleteCommand(sourceNode));
+				if (isMove() && ApplicationModelHelper.isLive(sourceNode)
+						&& sourceNode instanceof MUIElement) {
+					command.add(new DeleteCommand((MUIElement) sourceNode));
 				}
 			} else if (sourceNode instanceof MToolBar
 					&& target instanceof MPart) {
 				Command cmd = new ApplyAttributeSettingCommand(
 						(EObject) target, "toolbar", sourceNode);
 				command.add(cmd);
-			} else if (sourceNode instanceof MMenu
-					&& target instanceof MPart) {
+			} else if (sourceNode instanceof MMenu && target instanceof MPart) {
 				command.add(CommandFactory.createAddChildCommand(target,
 						sourceNode, -1));
 			} else {

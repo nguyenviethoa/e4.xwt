@@ -55,7 +55,10 @@ public class SashFormInsertCreateCommand extends Command {
 			parentModel = (MGenericTile<MUIElement>) model;
 		}
 
-		creatingModel = E4PaletteHelper.createElement(parentModel, request);
+		Object element = E4PaletteHelper.createElement(parentModel, request);
+		if (element instanceof MUIElement) {
+			creatingModel = (MUIElement) element;
+		}
 		return parentModel != null && creatingModel != null;
 	}
 

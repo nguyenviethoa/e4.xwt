@@ -16,6 +16,7 @@ import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteHelper;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
+import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
@@ -62,10 +63,10 @@ public class MoveBeforeCommand extends MoveCommand {
 		MElementContainer<MUIElement> parent = targetNode.getParent();
 		int index = parent.getChildren().indexOf(targetNode);
 
-		MUIElement newNode = null;
+		MApplicationElement newNode = null;
 		for (Iterator<?> iterator = sourceNodes.iterator(); iterator.hasNext();) {
 			Object element = iterator.next();
-			MUIElement sourceNode = null;
+			MApplicationElement sourceNode = null;
 			if (element instanceof Entry) {
 				sourceNode = E4PaletteHelper.createElement(parent, (Entry) element);
 			}
@@ -77,16 +78,15 @@ public class MoveBeforeCommand extends MoveCommand {
 				continue;
 			}
 			
-			if (sourceNode.getParent() != null) {
-				newNode = (MUIElement) EcoreUtil.copy((EObject)sourceNode);
+			if (ApplicationModelHelper.isLive(sourceNode)) {
+				newNode = (MApplicationElement) EcoreUtil.copy((EObject)sourceNode);
 			} else {
 				newNode = sourceNode;
 			}
 	
 			command.add(CommandFactory.createAddChildCommand(parent, newNode, index++));
-	
-			if (isMove() && sourceNode.getParent() != null) {
-				command.add(new DeleteCommand(sourceNode));
+			if (isMove() && ApplicationModelHelper.isLive(sourceNode) && sourceNode instanceof MUIElement) {
+				command.add(new DeleteCommand((MUIElement)sourceNode));
 			}
 		}
 	}

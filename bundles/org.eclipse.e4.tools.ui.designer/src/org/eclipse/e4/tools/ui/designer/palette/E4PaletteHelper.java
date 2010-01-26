@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.palette;
 
+import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
 import org.eclipse.e4.ui.model.application.MContribution;
 import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MUILabel;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.emf.ecore.EClass;
@@ -25,7 +25,7 @@ import org.eclipse.gef.requests.CreateRequest;
  */
 public class E4PaletteHelper {
 
-	public static MUIElement createElement(Object container,
+	public static MApplicationElement createElement(Object container,
 			Entry entry) {
 		if (container == null || entry == null) {
 			return null;
@@ -37,8 +37,8 @@ public class E4PaletteHelper {
 		return null;
 	}
 
-	private static MUIElement verify(Object container,
-			MUIElement element, EClass type) {
+	private static MApplicationElement verify(Object container,
+			MApplicationElement element, EClass type) {
 		if (element instanceof MUILabel) {
 			((MUILabel) element).setLabel("New " + type.getName());
 		}
@@ -49,16 +49,16 @@ public class E4PaletteHelper {
 		return element;
 	}
 
-	public static MUIElement createElement(Object container,
+	public static MApplicationElement createElement(Object container,
 			EClass type) {
 		EObject element = MApplicationFactory.eINSTANCE.create((EClass) type);
-		if (element instanceof MUIElement) {
-			return verify(container, (MUIElement) element, (EClass) type);
+		if (element instanceof MApplicationElement) {
+			return verify(container, (MApplicationElement) element, (EClass) type);
 		}
 		return null;
 	}
 
-	public static MUIElement createElement(MElementContainer container,
+	public static MApplicationElement createElement(MElementContainer container,
 			CreateRequest request) {
 		if (container == null || request == null) {
 			return null;

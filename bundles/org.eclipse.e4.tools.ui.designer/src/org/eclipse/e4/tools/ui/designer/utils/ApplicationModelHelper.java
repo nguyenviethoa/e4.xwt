@@ -22,13 +22,22 @@ import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * 
  * @author yyang <yves.yang@soyatec.com>
  */
 public class ApplicationModelHelper {
-
+	
+	public static boolean isLive(Object element) {
+		if (!(element instanceof EObject)) {
+			return false;
+		}
+		EObject eObject = (EObject) element;
+		return (eObject != null && eObject.eResource() != null);
+	}
+	
 	public static boolean canAddedChild(Entry entry, MUIElement target) {
 		EClass eClass = (EClass) entry.getType();
 		EClass toolBarClass = MApplicationPackage.eINSTANCE.getToolBar();

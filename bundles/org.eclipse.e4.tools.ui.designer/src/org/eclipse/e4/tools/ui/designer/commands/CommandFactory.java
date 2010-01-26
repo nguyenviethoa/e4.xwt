@@ -12,6 +12,8 @@ package org.eclipse.e4.tools.ui.designer.commands;
 
 import java.util.Collection;
 
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.MCommand;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MMenu;
 import org.eclipse.e4.ui.model.application.MPart;
@@ -45,7 +47,11 @@ public class CommandFactory {
 
 	static public Command createAddChildCommand(Object container, Object child,
 			int index) {
-		if (child instanceof MMenu && container instanceof MWindow) {
+		if (child instanceof MCommand && container instanceof MApplication) {
+			return new AddApplicationCommandChildCommand((MApplication) container,
+					(MCommand) child, -1);
+		}
+		else if (child instanceof MMenu && container instanceof MWindow) {
 			return new AddWindowMenuChildCommand((MWindow) container,
 					(MMenu) child);
 		} else if (container instanceof MElementContainer
