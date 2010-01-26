@@ -15,8 +15,11 @@ import java.util.Collection;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MCommand;
 import org.eclipse.e4.ui.model.application.MElementContainer;
+import org.eclipse.e4.ui.model.application.MHandler;
+import org.eclipse.e4.ui.model.application.MKeyBinding;
 import org.eclipse.e4.ui.model.application.MMenu;
 import org.eclipse.e4.ui.model.application.MPart;
+import org.eclipse.e4.ui.model.application.MPartDescriptor;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.gef.EditPart;
@@ -47,11 +50,24 @@ public class CommandFactory {
 
 	static public Command createAddChildCommand(Object container, Object child,
 			int index) {
-		if (child instanceof MCommand && container instanceof MApplication) {
-			return new AddApplicationCommandChildCommand((MApplication) container,
-					(MCommand) child, -1);
-		}
-		else if (child instanceof MMenu && container instanceof MWindow) {
+		if (container instanceof MApplication) {
+			if (child instanceof MCommand) {
+				return new AddApplicationCommandChildCommand(
+						(MApplication) container, (MCommand) child, -1);
+			} else if (child instanceof MKeyBinding) {
+				return new AddApplicationKeyBindingChildCommand(
+						(MApplication) container, (MKeyBinding) child, -1);
+			} else if (child instanceof MHandler) {
+				return new AddApplicationHandlerChildCommand(
+						(MApplication) container, (MHandler) child, -1);
+			} else if (child instanceof MPartDescriptor) {
+				return new AddApplicationPartDescriptorChildCommand(
+						(MApplication) container, (MPartDescriptor) child, -1);
+			} else if (child instanceof MUIElement) {
+				return new AddChildCommand((MApplication) container,
+						(MUIElement) child, -1);
+			}
+		} else if (child instanceof MMenu && container instanceof MWindow) {
 			return new AddWindowMenuChildCommand((MWindow) container,
 					(MMenu) child);
 		} else if (container instanceof MElementContainer
