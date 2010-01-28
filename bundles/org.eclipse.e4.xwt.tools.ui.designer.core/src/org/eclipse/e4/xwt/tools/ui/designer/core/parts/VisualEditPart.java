@@ -135,7 +135,15 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 		// Do nothing here, sub class can add some other refreshes.
 	}
 
+	protected boolean isVisualInfoObsolate() {
+		return false;
+	}
+	
 	public final void refresh(RefreshContext context) {
+		if (isVisualInfoObsolate()) {
+			visualInfo = null; // to create a new one
+		}
+		
 		if (context == null) {
 			return;
 		}
@@ -202,6 +210,7 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	}
 
 	protected Display getUIDisplay() {
+		IVisualInfo visualInfo = getVisualInfo();
 		if (visualInfo instanceof WidgetInfo) {
 			return ((WidgetInfo) visualInfo).getDisplay();
 		}
@@ -246,6 +255,7 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 		if (imageFigureController != null) {
 			imageFigureController.deactivate();
 		}
+		IVisualInfo visualInfo = getVisualInfo();
 		if (imageListener != null && visualInfo != null) {
 			visualInfo.removeImageListener(imageListener);
 		}
@@ -300,6 +310,7 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 	 * @see org.eclipse.gef.editparts.AbstractEditPart#toString()
 	 */
 	public String toString() {
+		IVisualInfo visualInfo = getVisualInfo();
 		if (visualInfo != null && visualInfo.getVisualObject() != null) {
 			return "EditPart("
 					+ visualInfo.getVisualObject().getClass().getSimpleName()

@@ -29,6 +29,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editpolicies.ComponentEditPolicy;
 import org.eclipse.gef.requests.GroupRequest;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author jin.liu(jin.liu@soyatec.com)
@@ -40,6 +41,19 @@ public class WidgetEditPart extends VisualEditPart {
 	 */
 	public WidgetEditPart(EObject model) {
 		super(model);
+	}
+
+	protected boolean isVisualInfoObsolate() {
+		Object uiElmeent = getMuiElement().getWidget();
+		IVisualInfo visualInfo = getVisualInfo();
+		Object visualObject = visualInfo.getVisualObject();
+		if (visualObject instanceof Widget) {
+			Widget widget = (Widget) visualObject;
+			if (widget.isDisposed() && uiElmeent != widget) {
+				return true;
+			}
+		}
+		return super.isVisualInfoObsolate();
 	}
 
 	/*
@@ -93,7 +107,8 @@ public class WidgetEditPart extends VisualEditPart {
 						.hasNext();) {
 					EditPart editPart = (EditPart) iterator.next();
 					Object model = editPart.getModel();
-					Command deleteCommand = CommandFactory.createDeleteCommand(model);
+					Command deleteCommand = CommandFactory
+							.createDeleteCommand(model);
 					if (deleteCommand != null) {
 						command.add(deleteCommand);
 					}
