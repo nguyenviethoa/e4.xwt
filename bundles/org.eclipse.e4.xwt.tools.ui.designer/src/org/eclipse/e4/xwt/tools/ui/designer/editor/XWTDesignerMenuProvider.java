@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.editor;
 
 import java.util.List;
 
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.ChangeTextAction;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.LayoutAssistantAction;
@@ -47,14 +48,14 @@ public class XWTDesignerMenuProvider extends DesignerMenuProvider {
 	 * @see org.eclipse.gef.ContextMenuProvider#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void menuAboutToShow(IMenuManager menu) {
-		menu.add(new Separator(ActionConstants.UNDO));
-		menu.add(new Separator(ActionConstants.DELETE));
-		menu.add(new Separator(ActionConstants.PRINT));
-		menu.add(new Separator(ActionConstants.COPY));
-		menu.add(new Separator(ActionConstants.EDIT));
+		menu.add(new Separator(DesignerActionConstants.UNDO));
+		menu.add(new Separator(DesignerActionConstants.DELETE));
+		menu.add(new Separator(DesignerActionConstants.PRINT));
+		menu.add(new Separator(DesignerActionConstants.COPY));
+		menu.add(new Separator(DesignerActionConstants.EDIT));
 		menu.add(new Separator(BINDINGS));
 		menu.add(new Separator(EXTERNALIZE)); // add by xrchen 2009/9/22
-		menu.add(new Separator(ActionConstants.ADDITIONS));
+		menu.add(new Separator(DesignerActionConstants.ADDITIONS));
 		super.menuAboutToShow(menu);
 	}
 
@@ -72,7 +73,7 @@ public class XWTDesignerMenuProvider extends DesignerMenuProvider {
 			// Diagram directly...
 		} else {
 			if (selectedEditParts.size() == 1) {
-				menu.appendToGroup(ActionConstants.PRINT, actionRegistry.getAction(PreviewAction.ACTION_ID));
+				menu.appendToGroup(DesignerActionConstants.PRINT, actionRegistry.getAction(PreviewAction.ACTION_ID));
 
 				EditPart editPart = (EditPart) selectedEditParts.get(0);
 				if (((XWTDesigner) designer).getEventHandler() != null) {
@@ -81,7 +82,7 @@ public class XWTDesignerMenuProvider extends DesignerMenuProvider {
 					menu.add(new Separator());
 				}
 				LayoutMenuManager layoutPopMenu = new LayoutMenuManager(editPart, "Set Layout");
-				menu.appendToGroup(ActionConstants.EDIT, actionRegistry.getAction(ChangeTextAction.ID));
+				menu.appendToGroup(DesignerActionConstants.EDIT, actionRegistry.getAction(ChangeTextAction.ID));
 				menu.add(layoutPopMenu);
 
 				menu.add(actionRegistry.getAction(LayoutAssistantAction.ID));
@@ -90,13 +91,13 @@ public class XWTDesignerMenuProvider extends DesignerMenuProvider {
 				menu.appendToGroup(BINDINGS, actionRegistry.getAction(OpenBindingDialogAction.ID));
 
 				if (editPart instanceof WidgetEditPart) {
-					menu.appendToGroup(ActionConstants.EDIT, new StyleAction((WidgetEditPart) editPart));
+					menu.appendToGroup(DesignerActionConstants.EDIT, new StyleAction((WidgetEditPart) editPart));
 				}
 				// Single selection...
 			} else {
 				// Multi-Selection.
 			}
-			menu.appendToGroup(ActionConstants.ADDITIONS, actionRegistry.getAction(SurroundWithAction.ID));
+			menu.appendToGroup(DesignerActionConstants.ADDITIONS, actionRegistry.getAction(SurroundWithAction.ID));
 		}
 		// add by xrchen 2009/9/22
 		menu.appendToGroup(EXTERNALIZE, actionRegistry.getAction(OpenExternalizeStringsAction.ID));

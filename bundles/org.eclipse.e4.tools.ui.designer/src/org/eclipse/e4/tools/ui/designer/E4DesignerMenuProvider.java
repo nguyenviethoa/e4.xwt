@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer;
 
 import java.util.List;
 
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider;
 import org.eclipse.gef.ui.actions.ActionRegistry;
@@ -37,14 +38,14 @@ public class E4DesignerMenuProvider extends DesignerMenuProvider {
 	 * @see org.eclipse.gef.ContextMenuProvider#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void menuAboutToShow(IMenuManager menu) {
-		menu.add(new Separator(ActionConstants.UNDO));
-		menu.add(new Separator(ActionConstants.DELETE));
-		menu.add(new Separator(ActionConstants.PRINT));
-		menu.add(new Separator(ActionConstants.COPY));
-		menu.add(new Separator(ActionConstants.EDIT));
+		menu.add(new Separator(DesignerActionConstants.UNDO));
+		menu.add(new Separator(DesignerActionConstants.DELETE));
+		menu.add(new Separator(DesignerActionConstants.PRINT));
+		menu.add(new Separator(DesignerActionConstants.COPY));
+		menu.add(new Separator(DesignerActionConstants.EDIT));
 		menu.add(new Separator(BINDINGS));
 		menu.add(new Separator(EXTERNALIZE)); // add by xrchen 2009/9/22
-		menu.add(new Separator(ActionConstants.ADDITIONS));
+		menu.add(new Separator(DesignerActionConstants.ADDITIONS));
 		super.menuAboutToShow(menu);
 	}
 

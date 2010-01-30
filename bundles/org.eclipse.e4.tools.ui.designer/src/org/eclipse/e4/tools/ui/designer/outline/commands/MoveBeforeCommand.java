@@ -63,7 +63,6 @@ public class MoveBeforeCommand extends MoveCommand {
 		MElementContainer<MUIElement> parent = targetNode.getParent();
 		int index = parent.getChildren().indexOf(targetNode);
 
-		MApplicationElement newNode = null;
 		for (Iterator<?> iterator = sourceNodes.iterator(); iterator.hasNext();) {
 			Object element = iterator.next();
 			MApplicationElement sourceNode = null;
@@ -78,16 +77,14 @@ public class MoveBeforeCommand extends MoveCommand {
 				continue;
 			}
 			
-			if (ApplicationModelHelper.isLive(sourceNode)) {
+			MApplicationElement newNode = sourceNode;
+			if (!isMove() && ApplicationModelHelper.isLive(sourceNode)) {
 				newNode = (MApplicationElement) EcoreUtil.copy((EObject)sourceNode);
-			} else {
-				newNode = sourceNode;
 			}
-	
+			if (isMove() && ApplicationModelHelper.isLive(newNode) && newNode instanceof MUIElement) {
+				command.add(new DeleteCommand((MUIElement)newNode));
+			}
 			command.add(CommandFactory.createAddChildCommand(parent, newNode, index++));
-			if (isMove() && ApplicationModelHelper.isLive(sourceNode) && sourceNode instanceof MUIElement) {
-				command.add(new DeleteCommand((MUIElement)sourceNode));
-			}
 		}
 	}
 }

@@ -73,7 +73,7 @@
          <action
                class="org.eclipse.e4.tools.ui.designer.actions.SetActivePartAction"
                id="org.eclipse.e4.tools.ui.designer.setActivePart"
-               menubarPath="actions"
+               menubarPath="group.actions"
                label="%action.label.0">
          </action>
       </objectContribution>
@@ -87,7 +87,7 @@
          <action
                class="org.eclipse.e4.tools.ui.designer.actions.SetActivePerspectiveAction"
                id="org.eclipse.e4.tools.ui.designer.actions.SetActivePerspectiveAction"
-               menubarPath="actions"
+               menubarPath="group.actions"
                label="%action.label.1">
          </action>
       </objectContribution>
@@ -101,7 +101,7 @@
          <action
                class="org.eclipse.e4.tools.ui.designer.actions.CompactPartSashContainerAction"
                id="org.eclipse.e4.tools.ui.designer.actions.CompactPartSashContainerAction"
-               menubarPath="actions"
+               menubarPath="group.actions"
                label="%action.label.2">
          </action>
       </objectContribution>
