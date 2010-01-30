@@ -41,12 +41,13 @@ public class DesignerMenuProvider extends ContextMenuProvider {
 	 * @see org.eclipse.gef.ContextMenuProvider#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void menuAboutToShow(IMenuManager menu) {
-		menu.add(new Separator(ActionConstants.UNDO));
-		menu.add(new Separator(ActionConstants.DELETE));
-		menu.add(new Separator(ActionConstants.PRINT));
-		menu.add(new Separator(ActionConstants.COPY));
-		menu.add(new Separator(ActionConstants.EDIT));
-		menu.add(new Separator(ActionConstants.ADDITIONS));
+		menu.add(new Separator(DesignerActionConstants.UNDO));
+		menu.add(new Separator(DesignerActionConstants.DELETE));
+		menu.add(new Separator(DesignerActionConstants.PRINT));
+		menu.add(new Separator(DesignerActionConstants.COPY));
+		menu.add(new Separator(DesignerActionConstants.EDIT));
+		menu.add(new Separator(DesignerActionConstants.ACTIONS));
+		menu.add(new Separator(DesignerActionConstants.ADDITIONS));
 		super.menuAboutToShow(menu);
 	}
 
@@ -62,43 +63,32 @@ public class DesignerMenuProvider extends ContextMenuProvider {
 		ActionRegistry actionRegistry = getActionRegistry();
 		IAction action = actionRegistry.getAction(ActionFactory.REDO.getId());
 		if (action != null) {
-			menu.appendToGroup(ActionConstants.UNDO, action);
+			menu.appendToGroup(DesignerActionConstants.UNDO, action);
 		}
 		action = actionRegistry.getAction(ActionFactory.UNDO.getId());
 		if (action != null) {
-			menu.appendToGroup(ActionConstants.UNDO, action);
+			menu.appendToGroup(DesignerActionConstants.UNDO, action);
 		}
 		action = actionRegistry.getAction(ActionFactory.DELETE.getId());
 		if (action != null) {
-			menu.appendToGroup(ActionConstants.DELETE, action);
+			menu.appendToGroup(DesignerActionConstants.DELETE, action);
 		}
 		action = actionRegistry.getAction(ActionFactory.COPY.getId());
 		if (action != null) {
-			menu.appendToGroup(ActionConstants.COPY, action);
+			menu.appendToGroup(DesignerActionConstants.COPY, action);
 		}
 		action = actionRegistry.getAction(ActionFactory.PASTE.getId());
 		if (action != null) {
-			menu.appendToGroup(ActionConstants.COPY, action);
+			menu.appendToGroup(DesignerActionConstants.COPY, action);
 		}
 		action = actionRegistry.getAction(ActionFactory.CUT.getId());
 		if (action != null) {
-			menu.appendToGroup(ActionConstants.COPY, action);
+			menu.appendToGroup(DesignerActionConstants.COPY, action);
 		}
 		action = actionRegistry.getAction(ActionFactory.SELECT_ALL.getId());
 		if (action != null) {
-			menu.appendToGroup(ActionConstants.EDIT, action);
+			menu.appendToGroup(DesignerActionConstants.EDIT, action);
 		}
-	}
-
-	public interface ActionConstants {
-		String UNDO = "group.undo";
-		String COPY = "copyelement";
-		String EDIT = "group.edit";
-		String PRINT = "group.print";
-		String ADDITIONS = "group.additions";
-		String DELETE = "group.delete";
-		String PASTE = "group.paste";
-		String CUT = "group.cut";
 	}
 
 }

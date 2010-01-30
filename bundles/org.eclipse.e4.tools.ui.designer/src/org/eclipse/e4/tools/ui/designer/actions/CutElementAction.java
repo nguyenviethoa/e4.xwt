@@ -57,7 +57,7 @@ public class CutElementAction extends SelectionAction {
 	 */
 	protected boolean calculateEnabled() {
 		ISelection selection = getSelection();
-		if (!selection.isEmpty()) {
+		if (selection != null && !selection.isEmpty()) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			for (Iterator<?> iterator = structuredSelection.iterator(); iterator
 					.hasNext();) {

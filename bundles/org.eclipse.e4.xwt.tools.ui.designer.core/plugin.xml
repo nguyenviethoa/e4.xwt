@@ -66,5 +66,4 @@
       <super type="org.eclipse.core.resources.problemmarker"/> 
       <super type="org.eclipse.wst.xml.core.validationMarker"/> 
    </extension>
-
 </plugin>

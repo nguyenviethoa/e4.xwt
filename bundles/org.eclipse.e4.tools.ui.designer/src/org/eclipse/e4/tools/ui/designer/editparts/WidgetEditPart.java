@@ -55,7 +55,7 @@ public class WidgetEditPart extends VisualEditPart {
 		}
 		return super.isVisualInfoObsolate();
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -84,9 +84,7 @@ public class WidgetEditPart extends VisualEditPart {
 				if (!(object instanceof MUIElement)) {
 					continue;
 				}
-				if (((MUIElement) object).getWidget() != null) {
-					children.add(object);
-				}
+				children.add(object);
 			}
 		}
 		return children;

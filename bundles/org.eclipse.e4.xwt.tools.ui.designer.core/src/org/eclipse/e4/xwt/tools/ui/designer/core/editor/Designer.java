@@ -111,6 +111,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 
 	public static final String DESIGNER_INPUT = "DESIGNER INPUT";
 	public static final String DESIGNER_TEXT_EDITOR = "DESIGNER TEXT EDITOR";
+	public static final String DEFAULT_DESIGNER_CONTEXT_MENU_ID = "#DesignerContext"; //$NON-NLS-1$
 
 	// UI editor.
 	protected CustomSashForm pageContainer;
@@ -336,9 +337,9 @@ public abstract class Designer extends MultiPageEditorPart implements
 			installed = true;
 		}
 	}
-	
+
 	protected void setContent(EditPart diagram) {
-		getGraphicalViewer().setContents(diagram);		
+		getGraphicalViewer().setContents(diagram);
 	}
 
 	public IVisualRenderer getVisualsRender() {
@@ -465,6 +466,10 @@ public abstract class Designer extends MultiPageEditorPart implements
 		ContextMenuProvider menuProvider = getContextMenuProvider();
 		if (menuProvider != null) {
 			graphicalViewer.setContextMenu(menuProvider);
+			menuProvider.setRemoveAllWhenShown(true);
+			getSite()
+					.registerContextMenu(
+							getClass().getSimpleName() + ".contextMenu", menuProvider, graphicalViewer); //$NON-NLS-1$
 		}
 
 		DesignerRootEditPart rootEditPart = new DesignerRootEditPart();
@@ -529,7 +534,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 		}
 		return selectionSynchronizer;
 	}
-	
+
 	protected ISelectionSynchronizer createSelectionSynchronizer() {
 		return new SelectionSynchronizer();
 	}

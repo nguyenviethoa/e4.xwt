@@ -8,17 +8,21 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer;
+package org.eclipse.e4.tools.ui.designer.outline;
 
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Widget;
 
+/**
+ * @yyang <yves.yang@soyatec.com>
+ */
 public class E4ContentOutlinePage extends ContentOutlinePage {
 
 	public E4ContentOutlinePage(Designer designer) {
@@ -33,6 +37,8 @@ public class E4ContentOutlinePage extends ContentOutlinePage {
 	public E4ContentOutlinePage(Designer designer,
 			ITreeContentProvider contentProvider, ILabelProvider labelProvider, ViewerFilter[] viewerFilters) {
 		super(designer, contentProvider, labelProvider, viewerFilters);
+		
+		setContextMenuProvider(designer.getContextMenuProvider());
 	}
 
 	/**
@@ -52,5 +58,10 @@ public class E4ContentOutlinePage extends ContentOutlinePage {
 				treeViewer.refresh();
 			}
 		}
+	}
+		
+	@Override
+	public void setSelection(ISelection selection) {
+		super.setSelection(selection);
 	}
 }

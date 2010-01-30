@@ -33,9 +33,6 @@
             id="org.eclipse.e4.tools.ui.designer.E4Designer"
             name="%editor.name">
       </editor>
-   </extension>
-   <extension
-         point="org.eclipse.ui.editors">
       <editor
             class="org.eclipse.e4.tools.ui.designer.E4Designer"
             contributorClass="org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionBarContributor"
@@ -63,5 +60,50 @@
             name="%wizard.name"
             project="true">
       </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.e4.tools.ui.designer.partContribution"
+            objectClass="org.eclipse.gef.EditPart">
+         <filter
+               name="ModelType"
+               value="org.eclipse.e4.ui.model.application.MPart">
+         </filter>
+         <action
+               class="org.eclipse.e4.tools.ui.designer.actions.SetActivePartAction"
+               id="org.eclipse.e4.tools.ui.designer.setActivePart"
+               menubarPath="actions"
+               label="%action.label.0">
+         </action>
+      </objectContribution>
+      <objectContribution
+            id="org.eclipse.e4.tools.ui.designer.perspectiveContribution"
+            objectClass="org.eclipse.gef.EditPart">
+         <filter
+               name="ModelType"
+               value="org.eclipse.e4.ui.model.application.MPerspective">
+         </filter>
+         <action
+               class="org.eclipse.e4.tools.ui.designer.actions.SetActivePerspectiveAction"
+               id="org.eclipse.e4.tools.ui.designer.actions.SetActivePerspectiveAction"
+               menubarPath="actions"
+               label="%action.label.1">
+         </action>
+      </objectContribution>
+      <objectContribution
+            id="org.eclipse.e4.tools.ui.designer.partSashContainerContribution"
+            objectClass="org.eclipse.e4.tools.ui.designer.editparts.WidgetEditPart">
+         <filter
+               name="ModelType"
+               value="org.eclipse.e4.ui.model.application.MPartSashContainer">
+         </filter>
+         <action
+               class="org.eclipse.e4.tools.ui.designer.actions.CompactPartSashContainerAction"
+               id="org.eclipse.e4.tools.ui.designer.actions.CompactPartSashContainerAction"
+               menubarPath="actions"
+               label="%action.label.2">
+         </action>
+      </objectContribution>
    </extension>
 </plugin>

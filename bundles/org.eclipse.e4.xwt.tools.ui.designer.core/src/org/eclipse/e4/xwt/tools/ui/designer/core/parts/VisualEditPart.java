@@ -24,6 +24,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.figures.OutlineBorder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.images.IImageListener;
 import org.eclipse.e4.xwt.tools.ui.designer.core.images.ImageFigureController;
 import org.eclipse.e4.xwt.tools.ui.designer.core.policies.DefaultComponentEditPolicy;
+import org.eclipse.e4.xwt.tools.ui.designer.core.util.JavaModelUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.WidgetInfo;
 import org.eclipse.emf.ecore.EObject;
@@ -32,11 +33,12 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IActionFilter;
 
 /**
  * @author jliu jin.liu@soyatec.com
  */
-public abstract class VisualEditPart extends AbstractGraphicalEditPart {
+public abstract class VisualEditPart extends AbstractGraphicalEditPart implements IActionFilter {
 
 	private boolean useBorder = false;
 	private boolean transparent;
@@ -48,6 +50,17 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart {
 		setModel(model);
 	}
 
+	public boolean testAttribute(Object target, String name, String value) {
+		if (ActionFilterConstants.MODEL_TYPE.equals(name)) {
+			Object model = getModel();
+			if (model != null) {
+				Class<?> type = model.getClass();
+				return JavaModelUtil.isKindOf(type, value);
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
 	 */

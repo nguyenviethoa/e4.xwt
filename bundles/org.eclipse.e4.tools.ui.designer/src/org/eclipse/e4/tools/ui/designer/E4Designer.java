@@ -15,6 +15,7 @@ import org.eclipse.e4.tools.ui.designer.actions.CopyElementAction;
 import org.eclipse.e4.tools.ui.designer.actions.CutElementAction;
 import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
+import org.eclipse.e4.tools.ui.designer.outline.E4ContentOutlinePage;
 import org.eclipse.e4.tools.ui.designer.outline.OutlinePageDropManager;
 import org.eclipse.e4.tools.ui.designer.palette.E4CreationTool;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
@@ -82,7 +83,7 @@ public class E4Designer extends Designer {
 	protected ISelectionSynchronizer createSelectionSynchronizer() {
 		return new E4SelectionSynchronizer(getGraphicalViewer());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -214,7 +215,7 @@ public class E4Designer extends Designer {
 	@Override
 	protected void setContent(EditPart diagram) {
 		super.setContent(diagram);
-		EObject eObject = (EObject)diagram.getModel();
+		EObject eObject = (EObject) diagram.getModel();
 		if (eObject != null) {
 			getOutlinePage().getTreeViewer().setInput(eObject.eResource());
 		}
@@ -251,7 +252,6 @@ public class E4Designer extends Designer {
 						return false;
 					}
 				} });
-		outlinePage.setContextMenuProvider(getContextMenuProvider());
 		outlinePage.setDropManager(new OutlinePageDropManager(getEditDomain()
 				.getCommandStack()));
 		return outlinePage;

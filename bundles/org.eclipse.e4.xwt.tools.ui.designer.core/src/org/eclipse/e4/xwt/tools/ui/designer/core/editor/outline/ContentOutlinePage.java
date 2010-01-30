@@ -22,6 +22,8 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.RootEditPart;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -31,6 +33,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.part.IPageSite;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -53,13 +56,18 @@ public class ContentOutlinePage extends
 		this.designer = designer;
 	}
 
+	public Designer getDesigner() {
+		return designer;
+	}
+
 	public ContentOutlinePage(Designer designer,
 			ITreeContentProvider contentProvider, ILabelProvider labelProvider) {
 		this(designer, contentProvider, labelProvider, null);
 	}
 
 	public ContentOutlinePage(Designer designer,
-			ITreeContentProvider contentProvider, ILabelProvider labelProvider, ViewerFilter[] viewerFilters) {
+			ITreeContentProvider contentProvider, ILabelProvider labelProvider,
+			ViewerFilter[] viewerFilters) {
 		this(designer);
 		this.setContentProvider(contentProvider);
 		this.setLabelProvider(labelProvider);
@@ -87,6 +95,17 @@ public class ContentOutlinePage extends
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		configureViewer();
+	}
+
+	@Override
+	public void init(IPageSite pageSite) {
+		super.init(pageSite);
+
+		getContextMenuProvider().addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fireSelectionChanged(getSelection());
+			}
+		});
 	}
 
 	private void configureViewer() {
@@ -237,7 +256,7 @@ public class ContentOutlinePage extends
 	}
 
 	private class RefreshListener extends EditPartListener.Stub {
-		public void childAdded(EditPart child, int index) {			
+		public void childAdded(EditPart child, int index) {
 			updateEditPartListener(child);
 			refresh(child.getParent());
 		}
@@ -249,7 +268,7 @@ public class ContentOutlinePage extends
 				treeViewer.remove(child);
 			}
 		}
-		
+
 		protected void removeEditPartListener(EditPart child) {
 			child.removeEditPartListener(this);
 			Iterator<?> it = child.getChildren().iterator();
@@ -258,7 +277,7 @@ public class ContentOutlinePage extends
 				removeEditPartListener(part);
 			}
 		}
-		
+
 		protected void updateEditPartListener(EditPart child) {
 			child.removeEditPartListener(this);
 			child.addEditPartListener(this);
@@ -266,7 +285,7 @@ public class ContentOutlinePage extends
 			while (it.hasNext()) {
 				EditPart part = (EditPart) it.next();
 				updateEditPartListener(part);
-			}			
+			}
 		}
 	}
 }

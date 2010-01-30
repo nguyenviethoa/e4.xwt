@@ -38,7 +38,7 @@ public class E4EditPartsFactory implements EditPartFactory {
 			MUIElement elementImpl = (MUIElement) model;
 			Object widget = ((MUIElement) model).getWidget();
 			if (widget == null) {
-				return null;
+				return new InvisibleEditPart(model);
 			}
 			if (widget instanceof Shell) {
 				return new ShellEditPart((EObject) elementImpl);
