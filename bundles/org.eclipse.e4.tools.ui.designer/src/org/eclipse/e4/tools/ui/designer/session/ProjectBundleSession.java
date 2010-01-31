@@ -8,8 +8,8 @@
  * Contributors:
  * IBM Corporation - initial API and implementation
  */
-
 package org.eclipse.e4.tools.ui.designer.session;
+
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +37,6 @@ import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.FrameworkEvent;
-import org.osgi.framework.FrameworkListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.packageadmin.PackageAdmin;
 
