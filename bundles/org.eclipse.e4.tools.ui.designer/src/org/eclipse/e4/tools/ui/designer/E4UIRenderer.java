@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -23,8 +29,10 @@ import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.tools.ui.designer.render.DesignerPartRenderingEngine;
 import org.eclipse.e4.tools.ui.designer.session.ProjectBundleSession;
 import org.eclipse.e4.tools.ui.designer.utils.ResourceUtiltities;
+import org.eclipse.e4.ui.css.core.engine.CSSEngine;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;
 import org.eclipse.e4.ui.workbench.swt.internal.E4Application;
 import org.eclipse.e4.workbench.ui.IResourceUtiltities;
@@ -40,8 +48,11 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
@@ -148,7 +159,13 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 			presentationURI = DesignerPartRenderingEngine.engineURI;
 			appContext.set(E4Workbench.PRESENTATION_URI_ARG, presentationURI);
 		}
+		if (cssURI == null) {
+			cssURI = cssResourcesURI;
+		}
 		IProject project = inputFile.getProject();
+		if (cssURI != null) {
+			applyStyle(appModel, project, cssURI);
+		}
 		// take over the resource resolution
 		appContext.set(IResourceUtiltities.class.getName(),
 				new ResourceUtiltities(project, Activator.getDefault()
@@ -175,6 +192,46 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		});
 		// layout(getRoot());
 		return new Result(appModel.getWidget(), true);
+	}
+
+	public static void applyStyle(MApplication application,
+			final IProject project, final String css) {
+		MWindow window = application.getActiveChild();
+		final Shell shell = (Shell) window.getWidget();
+		if (shell == null) {
+			return;
+		}
+
+		Display display = shell.getDisplay();
+		final CSSEngine engine = (CSSEngine) display
+				.getData("org.eclipse.e4.ui.css.core.engine");
+
+		display.syncExec(new Runnable() {
+			public void run() {
+				try {
+					IFile file = project.getFile(css);
+					if (file == null || !file.exists()) {
+						return;
+					}
+
+					InputStream stream = file.getContents();
+					InputStreamReader streamReader = new InputStreamReader(
+							stream);
+					engine.reset();
+					stream.close();
+					streamReader.close();
+
+					try {
+						shell.setRedraw(false);
+						shell.reskin(SWT.ALL);
+					} finally {
+						shell.setRedraw(true);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	private void layout(Object widget) {
