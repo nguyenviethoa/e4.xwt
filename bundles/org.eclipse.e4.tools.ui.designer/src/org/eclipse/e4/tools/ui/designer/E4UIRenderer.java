@@ -13,11 +13,15 @@ package org.eclipse.e4.tools.ui.designer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.RegistryFactory;
+import org.eclipse.e4.core.services.IContributionFactory;
 import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.tools.ui.designer.render.DesignerPartRenderingEngine;
+import org.eclipse.e4.tools.ui.designer.session.ProjectBundleSession;
 import org.eclipse.e4.tools.ui.designer.utils.ResourceUtiltities;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MUIElement;
@@ -26,6 +30,7 @@ import org.eclipse.e4.ui.workbench.swt.internal.E4Application;
 import org.eclipse.e4.workbench.ui.IResourceUtiltities;
 import org.eclipse.e4.workbench.ui.internal.Activator;
 import org.eclipse.e4.workbench.ui.internal.E4Workbench;
+import org.eclipse.e4.workbench.ui.internal.ReflectionContributionFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.AbstractModelBuilder;
@@ -114,6 +119,15 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		}
 		appContext = E4Application.createDefaultContext();
 
+		IExtensionRegistry registry = RegistryFactory.getRegistry();
+
+		ProjectBundleSession projectBundleSession = new ProjectBundleSession(
+				Activator.getDefault().getContext());
+		DesignerReflectionContributionFactory contributionFactory = new DesignerReflectionContributionFactory(
+				registry, projectBundleSession);
+		appContext.set(IContributionFactory.class.getName(),
+				contributionFactory);
+
 		// Set the app's context after adding itself
 		appContext.set(MApplication.class.getName(), appModel);
 		appModel.setContext(appContext);
@@ -138,7 +152,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		// take over the resource resolution
 		appContext.set(IResourceUtiltities.class.getName(),
 				new ResourceUtiltities(project, Activator.getDefault()
-						.getBundleAdmin()));
+						.getBundleAdmin(), projectBundleSession));
 
 		workbench = new E4WorkbenchProxy(appModel, appContext);
 		workbench.createAndRunUI();
@@ -259,5 +273,4 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		}
 		return visual;
 	}
-
 }

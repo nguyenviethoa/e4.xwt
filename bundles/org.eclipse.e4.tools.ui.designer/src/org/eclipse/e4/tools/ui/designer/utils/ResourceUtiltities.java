@@ -20,9 +20,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.e4.tools.ui.designer.session.ProjectBundleSession;
 import org.eclipse.e4.ui.workbench.swt.util.ISWTResourceUtiltities;
+import org.eclipse.e4.workbench.ui.internal.Activator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.resource.ColorDescriptor;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -44,9 +47,12 @@ public class ResourceUtiltities implements ISWTResourceUtiltities {
 
 	private final IProject project;
 	
-	public ResourceUtiltities(IProject project, PackageAdmin packageAdmin) {
+	private final ProjectBundleSession projectBundleSession;
+	
+	public ResourceUtiltities(IProject project, PackageAdmin packageAdmin, ProjectBundleSession projectBundleSession) {
+		this.project = project;
 		this.packageAdmin = packageAdmin;
-		this.project = project;		
+		this.projectBundleSession = projectBundleSession;
 	}
 
 	protected ImageRegistry getImageRegistry() {
@@ -74,6 +80,11 @@ public class ResourceUtiltities implements ISWTResourceUtiltities {
 	}
 
 	private Bundle getBundle(String bundleName) {
+		try {
+			return projectBundleSession.getBundle(bundleName);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 		Bundle[] bundles = packageAdmin.getBundles(bundleName, null);
 		if (bundles == null)
 			return null;
