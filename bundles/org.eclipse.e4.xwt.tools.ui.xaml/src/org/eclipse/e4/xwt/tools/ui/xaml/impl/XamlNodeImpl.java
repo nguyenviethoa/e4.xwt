@@ -392,6 +392,9 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		XamlDocument ownerDocument = getOwnerDocument();
 		if (ownerDocument != null) {
 			String namespace = ownerDocument.getDeclaredNamespaces().get(null);
+			if (namespace == null) {
+				return null;
+			}
 			return getAttribute(name, namespace);
 		}
 		return null;

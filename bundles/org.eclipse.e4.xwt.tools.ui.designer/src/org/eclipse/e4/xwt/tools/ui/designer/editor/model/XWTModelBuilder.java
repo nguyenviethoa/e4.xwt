@@ -198,9 +198,27 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 
 	protected void createChild(XamlNode parent, IDOMElement text,
 			IProgressMonitor monitor) {
+		NamedNodeMap attrMap = text.getAttributes();
+		if (attrMap != null) {
+			int length = attrMap.getLength();
+			for (int i = 0; i < length; i++) {
+				IDOMAttr item = (IDOMAttr) attrMap.item(i);
+				String localName = item.getLocalName();
+				String value = item.getNodeValue();
+				String prefix = item.getPrefix();
+				if ("xmlns".equals(localName)) {
+					handleDeclaredNamespaces(null, value);
+				}
+				if ("xmlns".equals(prefix)) {
+					handleDeclaredNamespaces(localName, value);
+				}
+			}
+		}
+
 		List<IDOMNode> attributes = fContext.getAttributes(text);
 		List<XamlAttribute> oldAttrs = new ArrayList<XamlAttribute>(parent
 				.getAttributes());
+
 		for (int i = 0; i < attributes.size(); i++) {
 			IDOMNode attr = attributes.get(i);
 			oldAttrs.remove(createAttribute(parent, attr, i));
