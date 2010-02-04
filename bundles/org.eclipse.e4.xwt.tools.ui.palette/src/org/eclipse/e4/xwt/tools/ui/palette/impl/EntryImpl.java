@@ -45,6 +45,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.impl.EntryImpl#getScope <em>Scope</em>}</li>
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.impl.EntryImpl#isVisible <em>Visible</em>}</li>
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.impl.EntryImpl#getType <em>Type</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.impl.EntryImpl#getInitializer <em>Initializer</em>}</li>
  * </ul>
  * </p>
  *
@@ -241,6 +242,26 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	 * @ordered
 	 */
 	protected Object type = TYPE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getInitializer() <em>Initializer</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInitializer()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String INITIALIZER_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getInitializer() <em>Initializer</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInitializer()
+	 * @generated
+	 * @ordered
+	 */
+	protected String initializer = INITIALIZER_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -463,6 +484,27 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getInitializer() {
+		return initializer;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setInitializer(String newInitializer) {
+		String oldInitializer = initializer;
+		initializer = newInitializer;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__INITIALIZER, oldInitializer, initializer));
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -504,6 +546,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 				return isVisible();
 			case PalettePackage.ENTRY__TYPE:
 				return getType();
+			case PalettePackage.ENTRY__INITIALIZER:
+				return getInitializer();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -550,6 +594,9 @@ public class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__TYPE:
 				setType(newValue);
 				return;
+			case PalettePackage.ENTRY__INITIALIZER:
+				setInitializer((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -594,6 +641,9 @@ public class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__TYPE:
 				setType(TYPE_EDEFAULT);
 				return;
+			case PalettePackage.ENTRY__INITIALIZER:
+				setInitializer(INITIALIZER_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -627,6 +677,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 				return visible != VISIBLE_EDEFAULT;
 			case PalettePackage.ENTRY__TYPE:
 				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
+			case PalettePackage.ENTRY__INITIALIZER:
+				return INITIALIZER_EDEFAULT == null ? initializer != null : !INITIALIZER_EDEFAULT.equals(initializer);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -660,6 +712,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 		result.append(visible);
 		result.append(", type: ");
 		result.append(type);
+		result.append(", initializer: ");
+		result.append(initializer);
 		result.append(')');
 		return result.toString();
 	}

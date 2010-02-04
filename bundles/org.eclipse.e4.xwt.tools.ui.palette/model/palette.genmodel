@@ -31,6 +31,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/scope"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/visible"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/initializer"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

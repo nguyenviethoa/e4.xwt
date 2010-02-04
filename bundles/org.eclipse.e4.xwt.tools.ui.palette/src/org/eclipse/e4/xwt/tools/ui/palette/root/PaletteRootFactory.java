@@ -10,11 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.palette.root;
 
+import java.util.Collection;
+
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteContentProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteLabelProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteResourceProvider;
-import org.eclipse.e4.xwt.tools.ui.palette.page.resources.URIResourceProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.request.EntryCreationFactory;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gef.Tool;
@@ -33,19 +34,22 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class PaletteRootFactory {
 
-	private IPaletteResourceProvider resourceProvider;
+	private Collection<IPaletteResourceProvider> resourceProviders;
 	private Class<? extends Tool> creationToolClass;
 	private Class<? extends Tool> selectionToolClass;
 
-	public PaletteRootFactory(IPaletteResourceProvider resourceProvider, Class<? extends Tool> creationToolClass, Class<? extends Tool> selectionToolClass) {
-		this.resourceProvider = resourceProvider;
+	public PaletteRootFactory(
+			Collection<IPaletteResourceProvider> resourceProviders,
+			Class<? extends Tool> creationToolClass,
+			Class<? extends Tool> selectionToolClass) {
+		this.resourceProviders = resourceProviders;
 		this.creationToolClass = creationToolClass;
 		this.selectionToolClass = selectionToolClass;
 	}
 
 	public PaletteRoot createPaletteRoot() {
 		PaletteRoot palette = new PaletteRoot();
-		if (resourceProvider == null) {
+		if (resourceProviders == null) {
 			return palette;
 		}
 		{// create selection group.
@@ -58,33 +62,41 @@ public class PaletteRootFactory {
 			}
 
 			MarqueeToolEntry marqueeToolEntry = new MarqueeToolEntry();
-			marqueeToolEntry.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);
+			marqueeToolEntry.setToolProperty(
+					AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);
 			paletteGroup.add(marqueeToolEntry);
 
 			palette.add(paletteGroup);
 			palette.setDefaultEntry(selectionToolEntry);
 		}
-		Resource resource = resourceProvider.getPaletteResource();
-		if (resource != null) {
-			PaletteContainer rootDrawer = createRootDrawer(resource);
-			palette.addAll(rootDrawer.getChildren());
-		}
 
+		for (IPaletteResourceProvider resourceProvider : resourceProviders) {
+			Resource resource = resourceProvider.getPaletteResource();
+			if (resource != null) {
+				PaletteContainer rootDrawer = createRootDrawer(resource, resourceProvider);
+				palette.addAll(rootDrawer.getChildren());
+			}
+		}
 		return palette;
 	}
 
-	private PaletteContainer createRootDrawer(Resource resource) {
+	private PaletteContainer createRootDrawer(Resource resource,
+			IPaletteResourceProvider provider) {
 		PaletteDrawer rootDrawer = createPaletteDrawer("Root");
-		if (resourceProvider != null) {
-			IPaletteContentProvider contentProvider = resourceProvider.getContentProvider();
-			IPaletteLabelProvider labelProvider = resourceProvider.getLabelProvider();
-			createPaletteStructure(rootDrawer, contentProvider, labelProvider, resource);
-		}
+		IPaletteContentProvider contentProvider = provider
+				.getContentProvider();
+		IPaletteLabelProvider labelProvider = provider
+				.getLabelProvider();
+		createPaletteStructure(rootDrawer, contentProvider, labelProvider,
+				resource);
 		return rootDrawer;
 	}
 
-	private void createPaletteStructure(PaletteDrawer parent, IPaletteContentProvider contentProvider, IPaletteLabelProvider labelProvider, Object source) {
-		if (parent == null || contentProvider == null || labelProvider == null || source == null) {
+	private void createPaletteStructure(PaletteDrawer parent,
+			IPaletteContentProvider contentProvider,
+			IPaletteLabelProvider labelProvider, Object source) {
+		if (parent == null || contentProvider == null || labelProvider == null
+				|| source == null) {
 			return;
 		}
 		Object[] children = contentProvider.getChildren(source);
@@ -95,8 +107,11 @@ public class PaletteRootFactory {
 
 		if (name != null && source instanceof Entry) {
 			if (children.length == 0) {
-				EntryCreationFactory creationFactory = new EntryCreationFactory((Entry) source);
-				CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(name, description, source, creationFactory, iconSmall, iconLarge);
+				EntryCreationFactory creationFactory = new EntryCreationFactory(
+						(Entry) source);
+				CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(
+						name, description, source, creationFactory, iconSmall,
+						iconLarge);
 				if (creationToolClass != null) {
 					component.setToolClass(creationToolClass);
 				}
@@ -115,19 +130,21 @@ public class PaletteRootFactory {
 		for (Object child : children) {
 			Object[] childNodes = contentProvider.getChildren(child);
 			if (childNodes == null || childNodes.length == 0) {
-				createPaletteStructure(parent, contentProvider, labelProvider, child);
+				createPaletteStructure(parent, contentProvider, labelProvider,
+						child);
 			}
 		}
 		for (Object child : children) {
 			Object[] childNodes = contentProvider.getChildren(child);
 			if (childNodes != null && childNodes.length != 0) {
-				createPaletteStructure(parent, contentProvider, labelProvider, child);
+				createPaletteStructure(parent, contentProvider, labelProvider,
+						child);
 			}
 		}
 	}
 
 	/**
-	 *Create a default Drawer.
+	 * Create a default Drawer.
 	 */
 	private PaletteDrawer createPaletteDrawer(String name) {
 		PaletteDrawer componentsDrawer = new PaletteDrawerEx(name);

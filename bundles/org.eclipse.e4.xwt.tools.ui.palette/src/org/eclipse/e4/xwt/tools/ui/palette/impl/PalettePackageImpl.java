@@ -225,6 +225,15 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEntry_Initializer() {
+		return (EAttribute)entryEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -273,6 +282,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 		createEAttribute(entryEClass, ENTRY__SCOPE);
 		createEAttribute(entryEClass, ENTRY__VISIBLE);
 		createEAttribute(entryEClass, ENTRY__TYPE);
+		createEAttribute(entryEClass, ENTRY__INITIALIZER);
 
 		// Create enums
 		contextTypeEEnum = createEEnum(CONTEXT_TYPE);
@@ -322,6 +332,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 		initEAttribute(getEntry_Scope(), ecorePackage.getEString(), "scope", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEntry_Visible(), ecorePackage.getEBoolean(), "visible", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEntry_Type(), ecorePackage.getEJavaObject(), "type", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEntry_Initializer(), ecorePackage.getEString(), "initializer", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(contextTypeEEnum, ContextType.class, "ContextType");

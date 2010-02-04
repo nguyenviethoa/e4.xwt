@@ -18,7 +18,8 @@
       </annotation>
       <complexType>
          <sequence>
-            <element ref="provider"/>
+            <element ref="provider" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="resource" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -59,7 +60,29 @@
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="editor Id" type="string">
+         <attribute name="editorId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="identifier"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="resource">
+      <complexType>
+         <attribute name="uri" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="editorId" type="string" use="required">
             <annotation>
                <documentation>
                   

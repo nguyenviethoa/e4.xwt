@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getScope <em>Scope</em>}</li>
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#isVisible <em>Visible</em>}</li>
  *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>Initializer</em>}</li>
  * </ul>
  * </p>
  *
@@ -300,5 +301,31 @@ public interface Entry extends EObject {
 	 * @generated
 	 */
 	void setType(Object value);
+
+	/**
+	 * Returns the value of the '<em><b>Initializer</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Initializer</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Initializer</em>' attribute.
+	 * @see #setInitializer(String)
+	 * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getEntry_Initializer()
+	 * @model
+	 * @generated
+	 */
+	String getInitializer();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>Initializer</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Initializer</em>' attribute.
+	 * @see #getInitializer()
+	 * @generated
+	 */
+	void setInitializer(String value);
 
 } // Entry

@@ -17,7 +17,7 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://www.eclipse.org/e4/xwt/tools/palette"
+            uri="http://www.eclipse.org/e4/xwt/tools/palette.xmi"
             class="org.eclipse.e4.xwt.tools.ui.palette.PalettePackage"
             genModel="model/palette.genmodel"/>
    </extension>

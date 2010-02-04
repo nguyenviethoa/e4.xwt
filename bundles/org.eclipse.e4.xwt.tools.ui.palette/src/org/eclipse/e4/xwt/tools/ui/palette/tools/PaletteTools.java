@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.palette.tools;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPaletteViewerProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.ExtensionRegistry;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteResourceProvider;
-import org.eclipse.e4.xwt.tools.ui.palette.page.resources.URIResourceProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.root.PaletteRootFactory;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditDomain;
@@ -36,10 +38,18 @@ public class PaletteTools {
 		if (editDomain == null) {
 			editDomain = new DefaultEditDomain(editorPart);
 		}
-		if (resourceProvider == null) {
-			resourceProvider = ExtensionRegistry.loadFromExtensions(editorPart);
+		List<IPaletteResourceProvider> resourceProviders = ExtensionRegistry
+				.allResourceExtensions(editorPart);
+		if (resourceProvider != null) {
+			if (!resourceProviders.isEmpty()) {
+				resourceProviders.add(0, resourceProvider);
+			}
+			else {
+				resourceProviders.add(resourceProvider);				
+			}
 		}
-		PaletteRoot paletteRoot = createPaletteRoot(resourceProvider,
+
+		PaletteRoot paletteRoot = createPaletteRoot(resourceProviders,
 				creationToolClass, selectionToolClass);
 		if (paletteRoot != null) {
 			editDomain.setPaletteRoot(paletteRoot);
@@ -50,10 +60,10 @@ public class PaletteTools {
 	}
 
 	private static PaletteRoot createPaletteRoot(
-			IPaletteResourceProvider resourceProvider,
+			Collection<IPaletteResourceProvider> resourceProviders,
 			Class<? extends Tool> createToolClass,
 			Class<? extends Tool> selectionToolClass) {
-		PaletteRootFactory factory = new PaletteRootFactory(resourceProvider,
+		PaletteRootFactory factory = new PaletteRootFactory(resourceProviders,
 				createToolClass, selectionToolClass);
 		return factory.createPaletteRoot();
 	}

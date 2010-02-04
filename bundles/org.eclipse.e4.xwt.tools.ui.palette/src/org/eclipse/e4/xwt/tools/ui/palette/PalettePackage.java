@@ -190,12 +190,21 @@ public interface PalettePackage extends EPackage {
 	int ENTRY__TYPE = 10;
 
 	/**
+	 * The feature id for the '<em><b>Initializer</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENTRY__INITIALIZER = 11;
+
+	/**
 	 * The number of structural features of the '<em>Entry</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ENTRY_FEATURE_COUNT = 11;
+	int ENTRY_FEATURE_COUNT = 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.e4.xwt.tools.ui.palette.ContextType <em>Context Type</em>}' enum.
@@ -356,6 +365,17 @@ public interface PalettePackage extends EPackage {
 	EAttribute getEntry_Type();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>Initializer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Initializer</em>'.
+	 * @see org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer()
+	 * @see #getEntry()
+	 * @generated
+	 */
+	EAttribute getEntry_Initializer();
+
+	/**
 	 * Returns the meta object for enum '{@link org.eclipse.e4.xwt.tools.ui.palette.ContextType <em>Context Type</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for enum '<em>Context Type</em>'.
@@ -493,6 +513,14 @@ public interface PalettePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ENTRY__TYPE = eINSTANCE.getEntry_Type();
+
+		/**
+		 * The meta object literal for the '<em><b>Initializer</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ENTRY__INITIALIZER = eINSTANCE.getEntry_Initializer();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.e4.xwt.tools.ui.palette.ContextType <em>Context Type</em>}' enum.
