@@ -41,8 +41,8 @@ public class SetActivePerspectiveCommand extends Command {
 
 	@Override
 	public void execute() {
-		this.oldPerspective = perspectiveStack.getActiveChild();
-		perspectiveStack.setActiveChild(perspective);
+		this.oldPerspective = perspectiveStack.getSelectedElement();
+		perspectiveStack.setSelectedElement(perspective);
 	}
 
 	@Override
@@ -52,6 +52,6 @@ public class SetActivePerspectiveCommand extends Command {
 
 	@Override
 	public void undo() {
-		perspectiveStack.setActiveChild(oldPerspective);
+		perspectiveStack.setSelectedElement(oldPerspective);
 	}
 }

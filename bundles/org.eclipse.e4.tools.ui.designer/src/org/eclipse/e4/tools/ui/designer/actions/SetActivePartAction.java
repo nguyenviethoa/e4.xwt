@@ -50,7 +50,7 @@ public class SetActivePartAction implements IObjectActionDelegate {
 				Object parent = selectedPart.getParent();
 				if (parent instanceof MPartStack) {
 					MPartStack parentContainer = (MPartStack) parent;
-					if (parentContainer.getActiveChild() != selectedPart) {
+					if (parentContainer.getSelectedElement() != selectedPart) {
 						command = new SetActivePartCommand(selectedPart,
 								parentContainer);
 					}

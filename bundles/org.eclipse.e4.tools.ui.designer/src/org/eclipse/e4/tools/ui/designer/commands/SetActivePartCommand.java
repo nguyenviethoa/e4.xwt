@@ -41,8 +41,8 @@ public class SetActivePartCommand extends Command {
 
 	@Override
 	public void execute() {
-		this.oldPart = partStack.getActiveChild();
-		partStack.setActiveChild(part);
+		this.oldPart = partStack.getSelectedElement();
+		partStack.setSelectedElement(part);
 	}
 
 	@Override
@@ -52,6 +52,6 @@ public class SetActivePartCommand extends Command {
 
 	@Override
 	public void undo() {
-		partStack.setActiveChild(oldPart);
+		partStack.setSelectedElement(oldPart);
 	}
 }

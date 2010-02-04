@@ -50,7 +50,7 @@ public class SetActivePerspectiveAction implements IObjectActionDelegate {
 				Object parent = selectedPerspective.getParent();
 				if (parent instanceof MPerspectiveStack) {
 					MPerspectiveStack perspectiveStack = (MPerspectiveStack) parent;
-					if (perspectiveStack.getActiveChild() != selectedPerspective) {
+					if (perspectiveStack.getSelectedElement() != selectedPerspective) {
 						command = new SetActivePerspectiveCommand(selectedPerspective, perspectiveStack);
 					}
 				}

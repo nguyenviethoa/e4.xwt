@@ -192,7 +192,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 
 	public static void applyStyle(MApplication application,
 			final IProject project, final String css) {
-		MWindow window = application.getActiveChild();
+		MWindow window = application.getSelectedElement();
 		final Shell shell = (Shell) window.getWidget();
 		if (shell == null) {
 			return;

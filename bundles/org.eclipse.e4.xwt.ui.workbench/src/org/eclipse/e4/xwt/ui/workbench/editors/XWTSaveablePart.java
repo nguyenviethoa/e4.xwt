@@ -20,7 +20,6 @@ import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.services.annotations.Optional;
 import org.eclipse.e4.ui.model.application.MDirtyable;
-import org.eclipse.e4.ui.model.application.MSaveablePart;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
 import org.eclipse.jface.databinding.swt.ISWTObservable;
@@ -35,8 +34,6 @@ import org.eclipse.swt.widgets.Control;
 public abstract class XWTSaveablePart extends XWTStaticPart {
 	private final MDirtyable dirtyable;
 	
-	@Inject
-	private MSaveablePart saveablePart;
 	
 	private DirtyManager dirtyManager = new DirtyManager();
 	
@@ -90,13 +87,6 @@ public abstract class XWTSaveablePart extends XWTStaticPart {
 		}
 	}
 	
-	public MSaveablePart getSaveablePart() {
-		return saveablePart;
-	}
-
-	protected void updatePartTitle(String title) {
-		saveablePart.setLabel(title);
-	}
 		
 	public boolean isDirty() {
 		return dirtyable.isDirty();
