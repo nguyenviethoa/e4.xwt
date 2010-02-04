@@ -20,10 +20,10 @@ import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.services.annotations.Optional;
 import org.eclipse.e4.ui.model.application.MDirtyable;
+import org.eclipse.e4.ui.model.application.MUILabel;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
 import org.eclipse.jface.databinding.swt.ISWTObservable;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
@@ -32,8 +32,11 @@ import org.eclipse.swt.widgets.Control;
  * @author yyang <yves.yang@soyatec.com>
  */
 public abstract class XWTSaveablePart extends XWTStaticPart {
-	private final MDirtyable dirtyable;
+	@Inject
+	private MDirtyable dirtyable;
 	
+	@Inject
+	private MUILabel uiItem;
 	
 	private DirtyManager dirtyManager = new DirtyManager();
 	
@@ -51,14 +54,7 @@ public abstract class XWTSaveablePart extends XWTStaticPart {
 
 	public abstract void doSave(@Optional IProgressMonitor monitor) throws IOException,
 	InterruptedException;
- 
-	
-	@Inject
-	public XWTSaveablePart(Composite parent, MDirtyable dirtyable) {
-		setParent(parent);
-		this.dirtyable = dirtyable;
-	}
-	
+ 	
 	public boolean isSaveOnCloseNeeded() {
 		return true;
 	}
@@ -87,6 +83,9 @@ public abstract class XWTSaveablePart extends XWTStaticPart {
 		}
 	}
 	
+	protected void updatePartTitle(String title) {
+		uiItem.setLabel(title.toString());
+	}
 		
 	public boolean isDirty() {
 		return dirtyable.isDirty();

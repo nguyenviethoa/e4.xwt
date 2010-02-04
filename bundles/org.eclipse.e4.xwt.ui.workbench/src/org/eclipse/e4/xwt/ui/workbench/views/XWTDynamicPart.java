@@ -42,6 +42,9 @@ public abstract class XWTDynamicPart extends XWTAbstractPart {
 	}
 
 	public void refresh(Object dataContext) {
+		if (isConstructing()) {
+			return;
+		}
 		Composite parent = getParent();
 		parent.setVisible(false);
 		for (Control child : parent.getChildren()) {

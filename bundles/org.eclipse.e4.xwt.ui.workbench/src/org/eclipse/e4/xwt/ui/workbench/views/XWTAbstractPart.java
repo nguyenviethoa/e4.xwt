@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.services.annotations.PostConstruct;
 import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.e4.xwt.XWT;
@@ -41,7 +42,9 @@ import org.eclipse.swt.widgets.Shell;
 public abstract class XWTAbstractPart implements IContentPart {
 	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(
 			this);
-
+	
+	private boolean constructing = true;
+	
 	@Inject
 	private Composite parent;
 
@@ -76,6 +79,19 @@ public abstract class XWTAbstractPart implements IContentPart {
 			return;
 		}
 		this.context = context;
+	}
+
+	/*
+	 * Called by injection engine
+	 */
+	@SuppressWarnings("unused")
+	@PostConstruct
+	final private void partPostConstruct() {
+		constructing = false;
+	}
+		
+	public boolean isConstructing() {
+		return constructing;
 	}
 	
 	public IStylingEngine getStyleEngine() {
@@ -129,7 +145,7 @@ public abstract class XWTAbstractPart implements IContentPart {
 	}
 
 	protected void refresh(URL url, Object dataContext, ClassLoader loader) {
-		if (parent == null) {
+		if (parent == null || isConstructing()) {
 			return;
 		}
 		parent.setVisible(false);

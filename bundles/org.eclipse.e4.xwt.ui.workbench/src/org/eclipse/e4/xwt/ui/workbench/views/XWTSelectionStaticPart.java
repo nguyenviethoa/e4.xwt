@@ -29,6 +29,9 @@ public class XWTSelectionStaticPart extends XWTStaticPart {
 	@Inject
 	public void setSelection(@Optional @Named(IServiceConstants.SELECTION) Object selection) {
 		dataContext = selection;
+		if (isConstructing()) {
+			return;
+		}
 		refresh();
 	}
 }

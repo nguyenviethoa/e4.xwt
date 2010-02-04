@@ -31,6 +31,9 @@ public class XWTStaticPart extends XWTAbstractPart implements IStaticPart {
 	}
 
 	protected void refresh() {
+		if (isConstructing()) {
+			return;
+		}
 		refresh(getURL(), getDataContext(), getClassLoader());
 	}
 
@@ -45,7 +48,9 @@ public class XWTStaticPart extends XWTAbstractPart implements IStaticPart {
 	public void setDataContext(Object dataContext) {
 		super.setDataContext(dataContext);
 		try {
-			refresh();
+			if (!isConstructing()) {
+				refresh();
+			}
 		} catch (Exception e) {
 		}
 	}
