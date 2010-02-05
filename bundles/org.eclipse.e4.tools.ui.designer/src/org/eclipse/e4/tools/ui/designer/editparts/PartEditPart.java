@@ -13,6 +13,7 @@ package org.eclipse.e4.tools.ui.designer.editparts;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.tools.ui.designer.editparts.handlers.MovableTracker;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.widgets.CTabFolder;
 import org.eclipse.e4.ui.widgets.CTabItem;
 import org.eclipse.e4.ui.widgets.ETabFolder;
 import org.eclipse.e4.ui.workbench.swt.internal.AbstractPartRenderer;
@@ -23,24 +24,47 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
 public class PartEditPart extends WidgetEditPart {
 
-	private CTabItem header;
+	private Widget header;
 
-	public PartEditPart(EObject model, CTabItem header) {
+	public PartEditPart(EObject model, Widget header) {
 		super(model);
 		this.header = header;
 	}
 
 	protected Rectangle getBounds() {
-		if (!validateVisuals() || !header.isShowing()) {
+		if (!validateVisuals() || !isHeaderShowing()) {
 			return new Rectangle();
 		}
-		return Draw2dTools.toDraw2d(header.getBounds());
+		return Draw2dTools.toDraw2d(getHeaderBounds());
+	}
+
+	protected boolean isHeaderShowing() {
+		if (header instanceof CTabItem) {
+			CTabItem tabItem = (CTabItem) header;
+			return tabItem.isShowing();
+		} else if (header instanceof org.eclipse.swt.custom.CTabItem) {
+			org.eclipse.swt.custom.CTabItem tabItem = (org.eclipse.swt.custom.CTabItem) header;
+			return tabItem.isShowing();
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	protected org.eclipse.swt.graphics.Rectangle getHeaderBounds() {
+		if (header instanceof CTabItem) {
+			CTabItem tabItem = (CTabItem) header;
+			return tabItem.getBounds();
+		} else if (header instanceof org.eclipse.swt.custom.CTabItem) {
+			org.eclipse.swt.custom.CTabItem tabItem = (org.eclipse.swt.custom.CTabItem) header;
+			return tabItem.getBounds();
+		}
+		throw new UnsupportedOperationException();
 	}
 
 	public MUIElement getPartModel() {
@@ -54,12 +78,32 @@ public class PartEditPart extends WidgetEditPart {
 		if (header == null || header.isDisposed()) {
 			Control widget = (Control) getMuiElement().getWidget();
 			if (widget != null && !widget.isDisposed()) {
-				ETabFolder parent = (ETabFolder) widget.getParent();
-				CTabItem[] items = parent.getItems();
-				for (CTabItem item : items) {
-					if (widget == item.getControl()) {
-						header = item;
-						break;
+				Object container = widget.getParent();
+				if (container instanceof ETabFolder) {
+					ETabFolder parent = (ETabFolder) widget.getParent();
+					for (CTabItem item : parent.getItems()) {
+						if (widget == item.getControl()) {
+							header = item;
+							break;
+						}
+					}
+				}
+				else if (container instanceof CTabFolder) {
+					CTabFolder parent = (CTabFolder) widget.getParent();
+					for (CTabItem item : parent.getItems()) {
+						if (widget == item.getControl()) {
+							header = item;
+							break;
+						}
+					}
+				}
+				else if (container instanceof org.eclipse.swt.custom.CTabFolder) {
+					org.eclipse.swt.custom.CTabFolder parent = (org.eclipse.swt.custom.CTabFolder) widget.getParent();
+					for (org.eclipse.swt.custom.CTabItem item : parent.getItems()) {
+						if (widget == item.getControl()) {
+							header = item;
+							break;
+						}
 					}
 				}
 			}

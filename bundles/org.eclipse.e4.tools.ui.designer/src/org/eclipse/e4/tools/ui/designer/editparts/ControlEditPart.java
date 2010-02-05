@@ -17,6 +17,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.ControlInfo;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 
@@ -42,8 +43,11 @@ public class ControlEditPart extends WidgetEditPart {
 
 	protected org.eclipse.draw2d.geometry.Rectangle getBounds() {
 		Control control = (Control) getWidget();
-		if (control != null && !control.isDisposed()
-				&& control.getParent() instanceof ETabFolder) {
+		if (control != null
+				&& !control.isDisposed()
+				&& (control.getParent() instanceof ETabFolder
+						|| control.getParent() instanceof CTabFolder || control
+						.getParent() instanceof org.eclipse.e4.ui.widgets.CTabFolder)) {
 			return Draw2dTools.toDraw2d(control.getBounds());
 		}
 		EditPart parentEp = getParent();

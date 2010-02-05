@@ -12,8 +12,11 @@ package org.eclipse.e4.tools.ui.designer.editparts;
 
 import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.MPartSashContainer;
+import org.eclipse.e4.ui.model.application.MPartStack;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;
+import org.eclipse.e4.ui.widgets.CTabFolder;
 import org.eclipse.e4.ui.widgets.ETabFolder;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -40,13 +43,18 @@ public class E4EditPartsFactory implements EditPartFactory {
 			if (widget == null) {
 				return new InvisibleEditPart(model);
 			}
+			if (model instanceof MPartSashContainer) {
+				return new SashFormEditPart((EObject) elementImpl);
+			} else if (model instanceof MPartStack) {
+				return new PartContainerEditPart((EObject) elementImpl);
+			}
 			if (widget instanceof Shell) {
 				return new ShellEditPart((EObject) elementImpl);
 			} else if (widget instanceof ToolBar) {
 				return new ToolBarEditPart((EObject) elementImpl);
 			} else if (widget instanceof SashForm) {
 				return new SashFormEditPart((EObject) elementImpl);
-			} else if (widget instanceof ETabFolder) {
+			} else if (widget instanceof ETabFolder || widget instanceof CTabFolder || widget instanceof org.eclipse.swt.custom.CTabFolder) {
 				return new PartContainerEditPart((EObject) elementImpl);
 			} else if (widget instanceof Composite) {
 				return new CompositeEditPart((EObject) elementImpl);
