@@ -65,7 +65,7 @@ public class ExtensionRegistry {
 				}
 			}
 		}
-		providers.addAll(providers);
+		providers.addAll(registry);
 		return providers;
 	}
 
