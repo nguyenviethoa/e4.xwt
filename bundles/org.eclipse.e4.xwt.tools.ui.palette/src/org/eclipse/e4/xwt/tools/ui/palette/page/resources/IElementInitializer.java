@@ -8,16 +8,8 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.workbench.palette.initializer;
+package org.eclipse.e4.xwt.tools.ui.palette.page.resources;
 
-import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IElementInitializer;
-
-/**
- * 
- * @author yyang <yves.yang@soyatec.com>
- */
-public class PartInitializer implements IElementInitializer {
-	public void initialize(Object element) {
-
-	}
+public interface IElementInitializer {
+	void initialize(Object element);
 }
