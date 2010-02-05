@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.e4.xwt.tools.ui.palette.resourceProvider">
+      <resource
+            editorId="org.eclipse.e4.tools.ui.designer.E4Designer"
+            uri="palette/e4XWT.palette">
+      </resource>
+   </extension>
+</plugin>

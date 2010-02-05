@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<palette:Palette xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:palette="http://www.eclipse.org/e4/xwt/tools/palette.xmi">
+  <entries name="XWT">
+    <entries toolTip="Create a Static Part." name="Static Part" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.workbench/icons/full/obj16/Part.gif" 
+    	scope="MPartStack" initializer="org.eclipse.e4.xwt.tools.ui.workbench.palette.initializer.PartInitializer"/>
+    <entries toolTip="Create a Dynamic Part." name="Dynamic Part" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.workbench/icons/full/obj16/Part.gif" 
+    	scope="MPartStack" initializer="org.eclipse.e4.xwt.tools.ui.workbench.palette.initializer.PartInitializer"/>
+    <entries toolTip="Create a Saveable Part." name="Saveable Part" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.workbench/icons/full/obj16/SaveablePart.gif" 
+    	scope="MPartStack" initializer="org.eclipse.e4.xwt.tools.ui.workbench.palette.initializer.PartInitializer"/>
+  </entries>
+</palette:Palette>
