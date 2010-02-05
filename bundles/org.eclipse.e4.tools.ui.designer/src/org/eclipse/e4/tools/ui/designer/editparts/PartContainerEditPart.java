@@ -17,7 +17,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.tools.ui.designer.policies.PartContainerLayoutEditPolicy;
 import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.e4.ui.widgets.ETabFolder;
 import org.eclipse.e4.ui.workbench.swt.internal.AbstractPartRenderer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -53,23 +52,6 @@ public class PartContainerEditPart extends CompositeEditPart {
 				}
 			}
 		}
-		if (widget instanceof org.eclipse.e4.ui.widgets.CTabFolder) {
-			org.eclipse.e4.ui.widgets.CTabFolder tabFolder = (org.eclipse.e4.ui.widgets.CTabFolder) muiElement.getWidget();
-			for (org.eclipse.e4.ui.widgets.CTabItem item :  tabFolder.getItems()) {
-				if (item != null) {
-					modelChildren.add(item);
-				}
-			}
-		}
-		if (widget instanceof ETabFolder) {
-			ETabFolder tabFolder = (ETabFolder) muiElement.getWidget();
-			org.eclipse.e4.ui.widgets.CTabItem[] items = tabFolder.getItems();
-			for (org.eclipse.e4.ui.widgets.CTabItem item : items) {
-				if (item != null) {
-					modelChildren.add(item);
-				}
-			}
-		}
 		return modelChildren;
 	}
 
@@ -83,12 +65,6 @@ public class PartContainerEditPart extends CompositeEditPart {
 	protected EditPart createChild(Object model) {
 		if (model instanceof CTabItem) {
 			CTabItem item = (CTabItem) model;
-			MUIElement data = (MUIElement) item
-					.getData(AbstractPartRenderer.OWNING_ME);
-			return new PartEditPart((EObject) data, item);
-		}
-		else if (model instanceof org.eclipse.e4.ui.widgets.CTabItem) {
-			org.eclipse.e4.ui.widgets.CTabItem item = (org.eclipse.e4.ui.widgets.CTabItem) model;
 			MUIElement data = (MUIElement) item
 					.getData(AbstractPartRenderer.OWNING_ME);
 			return new PartEditPart((EObject) data, item);

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.editparts;
 
-import org.eclipse.e4.ui.widgets.ETabFolder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.Draw2dTools;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.WidgetLocator;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
@@ -45,9 +44,7 @@ public class ControlEditPart extends WidgetEditPart {
 		Control control = (Control) getWidget();
 		if (control != null
 				&& !control.isDisposed()
-				&& (control.getParent() instanceof ETabFolder
-						|| control.getParent() instanceof CTabFolder || control
-						.getParent() instanceof org.eclipse.e4.ui.widgets.CTabFolder)) {
+				&& (control.getParent() instanceof CTabFolder)) {
 			return Draw2dTools.toDraw2d(control.getBounds());
 		}
 		EditPart parentEp = getParent();

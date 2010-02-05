@@ -13,9 +13,6 @@ package org.eclipse.e4.tools.ui.designer.editparts;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.tools.ui.designer.editparts.handlers.MovableTracker;
 import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.e4.ui.widgets.CTabFolder;
-import org.eclipse.e4.ui.widgets.CTabItem;
-import org.eclipse.e4.ui.widgets.ETabFolder;
 import org.eclipse.e4.ui.workbench.swt.internal.AbstractPartRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.Draw2dTools;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
@@ -23,6 +20,8 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.WidgetInfo;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.Request;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
 
@@ -49,9 +48,6 @@ public class PartEditPart extends WidgetEditPart {
 		if (header instanceof CTabItem) {
 			CTabItem tabItem = (CTabItem) header;
 			return tabItem.isShowing();
-		} else if (header instanceof org.eclipse.swt.custom.CTabItem) {
-			org.eclipse.swt.custom.CTabItem tabItem = (org.eclipse.swt.custom.CTabItem) header;
-			return tabItem.isShowing();
 		}
 		throw new UnsupportedOperationException();
 	}
@@ -59,9 +55,6 @@ public class PartEditPart extends WidgetEditPart {
 	protected org.eclipse.swt.graphics.Rectangle getHeaderBounds() {
 		if (header instanceof CTabItem) {
 			CTabItem tabItem = (CTabItem) header;
-			return tabItem.getBounds();
-		} else if (header instanceof org.eclipse.swt.custom.CTabItem) {
-			org.eclipse.swt.custom.CTabItem tabItem = (org.eclipse.swt.custom.CTabItem) header;
 			return tabItem.getBounds();
 		}
 		throw new UnsupportedOperationException();
@@ -79,27 +72,9 @@ public class PartEditPart extends WidgetEditPart {
 			Control widget = (Control) getMuiElement().getWidget();
 			if (widget != null && !widget.isDisposed()) {
 				Object container = widget.getParent();
-				if (container instanceof ETabFolder) {
-					ETabFolder parent = (ETabFolder) widget.getParent();
-					for (CTabItem item : parent.getItems()) {
-						if (widget == item.getControl()) {
-							header = item;
-							break;
-						}
-					}
-				}
-				else if (container instanceof CTabFolder) {
+				if (container instanceof CTabFolder) {
 					CTabFolder parent = (CTabFolder) widget.getParent();
 					for (CTabItem item : parent.getItems()) {
-						if (widget == item.getControl()) {
-							header = item;
-							break;
-						}
-					}
-				}
-				else if (container instanceof org.eclipse.swt.custom.CTabFolder) {
-					org.eclipse.swt.custom.CTabFolder parent = (org.eclipse.swt.custom.CTabFolder) widget.getParent();
-					for (org.eclipse.swt.custom.CTabItem item : parent.getItems()) {
 						if (widget == item.getControl()) {
 							header = item;
 							break;

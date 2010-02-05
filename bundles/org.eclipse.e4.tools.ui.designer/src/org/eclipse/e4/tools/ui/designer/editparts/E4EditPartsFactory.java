@@ -16,12 +16,11 @@ import org.eclipse.e4.ui.model.application.MPartSashContainer;
 import org.eclipse.e4.ui.model.application.MPartStack;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;
-import org.eclipse.e4.ui.widgets.CTabFolder;
-import org.eclipse.e4.ui.widgets.ETabFolder;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -54,7 +53,7 @@ public class E4EditPartsFactory implements EditPartFactory {
 				return new ToolBarEditPart((EObject) elementImpl);
 			} else if (widget instanceof SashForm) {
 				return new SashFormEditPart((EObject) elementImpl);
-			} else if (widget instanceof ETabFolder || widget instanceof CTabFolder || widget instanceof org.eclipse.swt.custom.CTabFolder) {
+			} else if (widget instanceof CTabFolder) {
 				return new PartContainerEditPart((EObject) elementImpl);
 			} else if (widget instanceof Composite) {
 				return new CompositeEditPart((EObject) elementImpl);
