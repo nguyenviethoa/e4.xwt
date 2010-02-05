@@ -16,7 +16,7 @@ import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IElementInitializer;
  * 
  * @author yyang <yves.yang@soyatec.com>
  */
-public class PartInitializer implements IElementInitializer {
+public class EditorPartInitializer implements IElementInitializer {
 	public void initialize(Object element) {
 
 	}

@@ -5,7 +5,7 @@
     	scope="MPartStack" initializer="org.eclipse.e4.xwt.tools.ui.workbench.palette.initializer.PartInitializer"/>
     <entries toolTip="Create a Dynamic Part." name="Dynamic Part" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.workbench/icons/full/obj16/Part.gif" 
     	scope="MPartStack" initializer="org.eclipse.e4.xwt.tools.ui.workbench.palette.initializer.PartInitializer"/>
-    <entries toolTip="Create a Saveable Part." name="Saveable Part" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.workbench/icons/full/obj16/SaveablePart.gif" 
+    <entries toolTip="Create a Editor Part." name="Editor Part" icon="platform:/plugin/org.eclipse.e4.xwt.tools.ui.workbench/icons/full/obj16/Editor.gif" 
     	scope="MPartStack" initializer="org.eclipse.e4.xwt.tools.ui.workbench.palette.initializer.PartInitializer"/>
   </entries>
 </palette:Palette>
