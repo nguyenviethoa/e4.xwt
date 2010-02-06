@@ -20,13 +20,34 @@ import org.eclipse.swt.widgets.Button;
 /**
  * 
  * @author yyang
- *
+ * 
  */
 public class EventsLoadedTests extends XWTTestCase {
 
 	public void testLoaded() throws Exception {
 		URL url = org.eclipse.e4.xwt.tests.events.loaded.Button.class
 				.getResource(org.eclipse.e4.xwt.tests.events.loaded.Button.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Object element = XWT.findElementByName(root, "Button");
+				assertTrue(element instanceof Button);
+				Button button = (Button) element;
+				assertEquals(
+						button.getText(),
+						org.eclipse.e4.xwt.tests.events.loaded.ButtonHandler.Message);
+			}
+		});
+	}
+
+	public void testLoaded_Prefix() throws Exception {
+		URL url = org.eclipse.e4.xwt.tests.events.loaded.Button_prefix.class
+				.getResource(org.eclipse.e4.xwt.tests.events.loaded.Button_prefix.class
 						.getSimpleName()
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
