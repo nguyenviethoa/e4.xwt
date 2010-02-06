@@ -30,31 +30,13 @@ public interface WorkbenchFactory extends EFactory {
 	WorkbenchFactory eINSTANCE = org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Static Part Initializer</em>'.
+	 * Returns a new object of class '<em>XWT Part Initializer</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Static Part Initializer</em>'.
+	 * @return a new object of class '<em>XWT Part Initializer</em>'.
 	 * @generated
 	 */
-	StaticPartInitializer createStaticPartInitializer();
-
-	/**
-	 * Returns a new object of class '<em>Dynamic Part Initializer</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Dynamic Part Initializer</em>'.
-	 * @generated
-	 */
-	DynamicPartInitializer createDynamicPartInitializer();
-
-	/**
-	 * Returns a new object of class '<em>Editor Part Initializer</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Editor Part Initializer</em>'.
-	 * @generated
-	 */
-	EditorPartInitializer createEditorPartInitializer();
+	XWTPartInitializer createXWTPartInitializer();
 
 	/**
 	 * Returns the package supported by this factory.

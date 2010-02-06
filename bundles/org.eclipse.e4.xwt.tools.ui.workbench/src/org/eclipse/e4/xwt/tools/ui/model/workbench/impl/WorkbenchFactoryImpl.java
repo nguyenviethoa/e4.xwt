@@ -64,9 +64,7 @@ public class WorkbenchFactoryImpl extends EFactoryImpl implements WorkbenchFacto
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case WorkbenchPackage.STATIC_PART_INITIALIZER: return createStaticPartInitializer();
-			case WorkbenchPackage.DYNAMIC_PART_INITIALIZER: return createDynamicPartInitializer();
-			case WorkbenchPackage.EDITOR_PART_INITIALIZER: return createEditorPartInitializer();
+			case WorkbenchPackage.XWT_PART_INITIALIZER: return createXWTPartInitializer();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -77,29 +75,9 @@ public class WorkbenchFactoryImpl extends EFactoryImpl implements WorkbenchFacto
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StaticPartInitializer createStaticPartInitializer() {
-		StaticPartInitializerImpl staticPartInitializer = new StaticPartInitializerImpl();
-		return staticPartInitializer;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DynamicPartInitializer createDynamicPartInitializer() {
-		DynamicPartInitializerImpl dynamicPartInitializer = new DynamicPartInitializerImpl();
-		return dynamicPartInitializer;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EditorPartInitializer createEditorPartInitializer() {
-		EditorPartInitializerImpl editorPartInitializer = new EditorPartInitializerImpl();
-		return editorPartInitializer;
+	public XWTPartInitializer createXWTPartInitializer() {
+		XWTPartInitializerImpl xwtPartInitializer = new XWTPartInitializerImpl();
+		return xwtPartInitializer;
 	}
 
 	/**

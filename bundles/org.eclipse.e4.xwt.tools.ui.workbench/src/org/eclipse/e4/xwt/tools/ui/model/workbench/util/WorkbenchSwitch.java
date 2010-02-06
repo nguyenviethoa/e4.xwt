@@ -93,24 +93,10 @@ public class WorkbenchSwitch<T> {
 	 */
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case WorkbenchPackage.STATIC_PART_INITIALIZER: {
-				StaticPartInitializer staticPartInitializer = (StaticPartInitializer)theEObject;
-				T result = caseStaticPartInitializer(staticPartInitializer);
-				if (result == null) result = caseInitializer(staticPartInitializer);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case WorkbenchPackage.DYNAMIC_PART_INITIALIZER: {
-				DynamicPartInitializer dynamicPartInitializer = (DynamicPartInitializer)theEObject;
-				T result = caseDynamicPartInitializer(dynamicPartInitializer);
-				if (result == null) result = caseInitializer(dynamicPartInitializer);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case WorkbenchPackage.EDITOR_PART_INITIALIZER: {
-				EditorPartInitializer editorPartInitializer = (EditorPartInitializer)theEObject;
-				T result = caseEditorPartInitializer(editorPartInitializer);
-				if (result == null) result = caseInitializer(editorPartInitializer);
+			case WorkbenchPackage.XWT_PART_INITIALIZER: {
+				XWTPartInitializer xwtPartInitializer = (XWTPartInitializer)theEObject;
+				T result = caseXWTPartInitializer(xwtPartInitializer);
+				if (result == null) result = caseInitializer(xwtPartInitializer);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -119,47 +105,17 @@ public class WorkbenchSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Static Part Initializer</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>XWT Part Initializer</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Static Part Initializer</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>XWT Part Initializer</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStaticPartInitializer(StaticPartInitializer object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Dynamic Part Initializer</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Dynamic Part Initializer</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDynamicPartInitializer(DynamicPartInitializer object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Editor Part Initializer</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Editor Part Initializer</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseEditorPartInitializer(EditorPartInitializer object) {
+	public T caseXWTPartInitializer(XWTPartInitializer object) {
 		return null;
 	}
 

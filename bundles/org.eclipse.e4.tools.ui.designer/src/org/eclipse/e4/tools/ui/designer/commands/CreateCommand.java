@@ -36,7 +36,6 @@ public class CreateCommand extends Command {
 	private int index = -1;
 	private boolean after;
 	private Class<?> childType;
-	private Initializer initializer;
 
 	public CreateCommand(EditPart parent, CreateRequest request,
 			EditPart reference, Class<?> childType) {
@@ -50,15 +49,6 @@ public class CreateCommand extends Command {
 		this.reference = reference;
 		this.after = after;
 		this.childType = childType;
-		if (request instanceof PaletteCreateRequest) {
-			PaletteCreateRequest paletteCreateRequest = (PaletteCreateRequest) request;
-			CreationFactory creationFactory = paletteCreateRequest.getFactory();
-			if (creationFactory instanceof EntryCreationFactory) {
-				EntryCreationFactory entryCreationFactory = (EntryCreationFactory) creationFactory;
-				Entry entry = entryCreationFactory.getEntry();
-				Initializer type = entry.getInitializer();
-			}
-		}
 	}
 
 	public boolean canExecute() {
@@ -90,11 +80,6 @@ public class CreateCommand extends Command {
 			parentModel.getChildren().add(index, creatingModel);
 		} else {
 			parentModel.getChildren().add(creatingModel);
-		}
-		if (initializer != null) {
-			if (!initializer.initialize(creatingModel)) {
-				undo();
-			}
 		}
 	}
 

@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.tools.ui.model.workbench;
 
 import org.eclipse.e4.xwt.tools.ui.palette.PalettePackage;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -64,92 +65,53 @@ public interface WorkbenchPackage extends EPackage {
 	WorkbenchPackage eINSTANCE = org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.impl.StaticPartInitializerImpl <em>Static Part Initializer</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.impl.XWTPartInitializerImpl <em>XWT Part Initializer</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.StaticPartInitializerImpl
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchPackageImpl#getStaticPartInitializer()
+	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.XWTPartInitializerImpl
+	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchPackageImpl#getXWTPartInitializer()
 	 * @generated
 	 */
-	int STATIC_PART_INITIALIZER = 0;
+	int XWT_PART_INITIALIZER = 0;
 
 	/**
-	 * The number of structural features of the '<em>Static Part Initializer</em>' class.
+	 * The feature id for the '<em><b>Content Form</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STATIC_PART_INITIALIZER_FEATURE_COUNT = PalettePackage.INITIALIZER_FEATURE_COUNT + 0;
+	int XWT_PART_INITIALIZER__CONTENT_FORM = PalettePackage.INITIALIZER_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.impl.DynamicPartInitializerImpl <em>Dynamic Part Initializer</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.DynamicPartInitializerImpl
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchPackageImpl#getDynamicPartInitializer()
-	 * @generated
-	 */
-	int DYNAMIC_PART_INITIALIZER = 1;
-
-	/**
-	 * The number of structural features of the '<em>Dynamic Part Initializer</em>' class.
+	 * The number of structural features of the '<em>XWT Part Initializer</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DYNAMIC_PART_INITIALIZER_FEATURE_COUNT = PalettePackage.INITIALIZER_FEATURE_COUNT + 0;
+	int XWT_PART_INITIALIZER_FEATURE_COUNT = PalettePackage.INITIALIZER_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.impl.EditorPartInitializerImpl <em>Editor Part Initializer</em>}' class.
+	 * Returns the meta object for class '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.XWTPartInitializer <em>XWT Part Initializer</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.EditorPartInitializerImpl
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchPackageImpl#getEditorPartInitializer()
+	 * @return the meta object for class '<em>XWT Part Initializer</em>'.
+	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.XWTPartInitializer
 	 * @generated
 	 */
-	int EDITOR_PART_INITIALIZER = 2;
+	EClass getXWTPartInitializer();
 
 	/**
-	 * The number of structural features of the '<em>Editor Part Initializer</em>' class.
+	 * Returns the meta object for the attribute '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.XWTPartInitializer#getContentForm <em>Content Form</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EDITOR_PART_INITIALIZER_FEATURE_COUNT = PalettePackage.INITIALIZER_FEATURE_COUNT + 0;
-
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.StaticPartInitializer <em>Static Part Initializer</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Static Part Initializer</em>'.
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.StaticPartInitializer
+	 * @return the meta object for the attribute '<em>Content Form</em>'.
+	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.XWTPartInitializer#getContentForm()
+	 * @see #getXWTPartInitializer()
 	 * @generated
 	 */
-	EClass getStaticPartInitializer();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.DynamicPartInitializer <em>Dynamic Part Initializer</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Dynamic Part Initializer</em>'.
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.DynamicPartInitializer
-	 * @generated
-	 */
-	EClass getDynamicPartInitializer();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.EditorPartInitializer <em>Editor Part Initializer</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Editor Part Initializer</em>'.
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.EditorPartInitializer
-	 * @generated
-	 */
-	EClass getEditorPartInitializer();
+	EAttribute getXWTPartInitializer_ContentForm();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -174,34 +136,22 @@ public interface WorkbenchPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.impl.StaticPartInitializerImpl <em>Static Part Initializer</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.impl.XWTPartInitializerImpl <em>XWT Part Initializer</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.StaticPartInitializerImpl
-		 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchPackageImpl#getStaticPartInitializer()
+		 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.XWTPartInitializerImpl
+		 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchPackageImpl#getXWTPartInitializer()
 		 * @generated
 		 */
-		EClass STATIC_PART_INITIALIZER = eINSTANCE.getStaticPartInitializer();
+		EClass XWT_PART_INITIALIZER = eINSTANCE.getXWTPartInitializer();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.impl.DynamicPartInitializerImpl <em>Dynamic Part Initializer</em>}' class.
+		 * The meta object literal for the '<em><b>Content Form</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.DynamicPartInitializerImpl
-		 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchPackageImpl#getDynamicPartInitializer()
 		 * @generated
 		 */
-		EClass DYNAMIC_PART_INITIALIZER = eINSTANCE.getDynamicPartInitializer();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.impl.EditorPartInitializerImpl <em>Editor Part Initializer</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.EditorPartInitializerImpl
-		 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.impl.WorkbenchPackageImpl#getEditorPartInitializer()
-		 * @generated
-		 */
-		EClass EDITOR_PART_INITIALIZER = eINSTANCE.getEditorPartInitializer();
+		EAttribute XWT_PART_INITIALIZER__CONTENT_FORM = eINSTANCE.getXWTPartInitializer_ContentForm();
 
 	}
 

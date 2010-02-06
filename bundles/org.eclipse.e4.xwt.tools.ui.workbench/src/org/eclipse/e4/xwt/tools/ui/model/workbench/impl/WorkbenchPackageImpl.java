@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.model.workbench.impl;
 
-import org.eclipse.e4.xwt.tools.ui.model.workbench.DynamicPartInitializer;
-import org.eclipse.e4.xwt.tools.ui.model.workbench.EditorPartInitializer;
-import org.eclipse.e4.xwt.tools.ui.model.workbench.StaticPartInitializer;
 import org.eclipse.e4.xwt.tools.ui.model.workbench.WorkbenchFactory;
 import org.eclipse.e4.xwt.tools.ui.model.workbench.WorkbenchPackage;
 
+import org.eclipse.e4.xwt.tools.ui.model.workbench.XWTPartInitializer;
 import org.eclipse.e4.xwt.tools.ui.palette.PalettePackage;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -35,21 +34,7 @@ public class WorkbenchPackageImpl extends EPackageImpl implements WorkbenchPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass staticPartInitializerEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass dynamicPartInitializerEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass editorPartInitializerEClass = null;
+	private EClass xwtPartInitializerEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -120,8 +105,8 @@ public class WorkbenchPackageImpl extends EPackageImpl implements WorkbenchPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getStaticPartInitializer() {
-		return staticPartInitializerEClass;
+	public EClass getXWTPartInitializer() {
+		return xwtPartInitializerEClass;
 	}
 
 	/**
@@ -129,17 +114,8 @@ public class WorkbenchPackageImpl extends EPackageImpl implements WorkbenchPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getDynamicPartInitializer() {
-		return dynamicPartInitializerEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getEditorPartInitializer() {
-		return editorPartInitializerEClass;
+	public EAttribute getXWTPartInitializer_ContentForm() {
+		return (EAttribute)xwtPartInitializerEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -170,11 +146,8 @@ public class WorkbenchPackageImpl extends EPackageImpl implements WorkbenchPacka
 		isCreated = true;
 
 		// Create classes and their features
-		staticPartInitializerEClass = createEClass(STATIC_PART_INITIALIZER);
-
-		dynamicPartInitializerEClass = createEClass(DYNAMIC_PART_INITIALIZER);
-
-		editorPartInitializerEClass = createEClass(EDITOR_PART_INITIALIZER);
+		xwtPartInitializerEClass = createEClass(XWT_PART_INITIALIZER);
+		createEAttribute(xwtPartInitializerEClass, XWT_PART_INITIALIZER__CONTENT_FORM);
 	}
 
 	/**
@@ -208,16 +181,11 @@ public class WorkbenchPackageImpl extends EPackageImpl implements WorkbenchPacka
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		staticPartInitializerEClass.getESuperTypes().add(thePalettePackage.getInitializer());
-		dynamicPartInitializerEClass.getESuperTypes().add(thePalettePackage.getInitializer());
-		editorPartInitializerEClass.getESuperTypes().add(thePalettePackage.getInitializer());
+		xwtPartInitializerEClass.getESuperTypes().add(thePalettePackage.getInitializer());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(staticPartInitializerEClass, StaticPartInitializer.class, "StaticPartInitializer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(dynamicPartInitializerEClass, DynamicPartInitializer.class, "DynamicPartInitializer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(editorPartInitializerEClass, EditorPartInitializer.class, "EditorPartInitializer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(xwtPartInitializerEClass, XWTPartInitializer.class, "XWTPartInitializer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getXWTPartInitializer_ContentForm(), ecorePackage.getEString(), "contentForm", null, 0, 1, XWTPartInitializer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -78,16 +78,8 @@ public class WorkbenchAdapterFactory extends AdapterFactoryImpl {
 	protected WorkbenchSwitch<Adapter> modelSwitch =
 		new WorkbenchSwitch<Adapter>() {
 			@Override
-			public Adapter caseStaticPartInitializer(StaticPartInitializer object) {
-				return createStaticPartInitializerAdapter();
-			}
-			@Override
-			public Adapter caseDynamicPartInitializer(DynamicPartInitializer object) {
-				return createDynamicPartInitializerAdapter();
-			}
-			@Override
-			public Adapter caseEditorPartInitializer(EditorPartInitializer object) {
-				return createEditorPartInitializerAdapter();
+			public Adapter caseXWTPartInitializer(XWTPartInitializer object) {
+				return createXWTPartInitializerAdapter();
 			}
 			@Override
 			public Adapter caseInitializer(Initializer object) {
@@ -114,44 +106,16 @@ public class WorkbenchAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.StaticPartInitializer <em>Static Part Initializer</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.XWTPartInitializer <em>XWT Part Initializer</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.StaticPartInitializer
+	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.XWTPartInitializer
 	 * @generated
 	 */
-	public Adapter createStaticPartInitializerAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.DynamicPartInitializer <em>Dynamic Part Initializer</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.DynamicPartInitializer
-	 * @generated
-	 */
-	public Adapter createDynamicPartInitializerAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.model.workbench.EditorPartInitializer <em>Editor Part Initializer</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.e4.xwt.tools.ui.model.workbench.EditorPartInitializer
-	 * @generated
-	 */
-	public Adapter createEditorPartInitializerAdapter() {
+	public Adapter createXWTPartInitializerAdapter() {
 		return null;
 	}
 
