@@ -8,16 +8,27 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.workbench.palette.initializer;
+package org.eclipse.e4.xwt.tools.ui.palette;
 
-import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IElementInitializer;
+import org.eclipse.emf.ecore.EObject;
 
 /**
- * 
- * @author yyang <yves.yang@soyatec.com>
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Initializer</b></em>'.
+ * <!-- end-user-doc -->
+ *
+ *
+ * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getInitializer()
+ * @model abstract="true"
+ * @generated
  */
-public class StaticPartInitializer implements IElementInitializer {
-	public void initialize(Object element) {
+public interface Initializer extends EObject {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void initialize(Object element);
 
-	}
-}
+} // Initializer

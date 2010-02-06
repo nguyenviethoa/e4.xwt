@@ -17,7 +17,6 @@ import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.outline.E4ContentOutlinePage;
 import org.eclipse.e4.tools.ui.designer.outline.OutlinePageDropManager;
-import org.eclipse.e4.tools.ui.designer.palette.E4CreationTool;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
 import org.eclipse.e4.tools.ui.designer.properties.E4PropertySourceProvider;
 import org.eclipse.e4.ui.model.application.MElementContainer;
@@ -32,6 +31,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
+import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteCreationTool;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -196,7 +196,7 @@ public class E4Designer extends Designer {
 	 */
 	protected CustomPalettePage createPalettePage() {
 		return PaletteTools.createPalettePage(this, new E4PaletteProvider(),
-				E4CreationTool.class, E4SelectionTool.class);
+				PaletteCreationTool.class, E4SelectionTool.class);
 	}
 
 	/*

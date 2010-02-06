@@ -13,9 +13,14 @@ package org.eclipse.e4.tools.ui.designer.commands;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteHelper;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.xwt.tools.ui.palette.Entry;
+import org.eclipse.e4.xwt.tools.ui.palette.Initializer;
+import org.eclipse.e4.xwt.tools.ui.palette.request.EntryCreationFactory;
+import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteCreateRequest;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.requests.CreationFactory;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -31,6 +36,7 @@ public class CreateCommand extends Command {
 	private int index = -1;
 	private boolean after;
 	private Class<?> childType;
+	private Initializer initializer;
 
 	public CreateCommand(EditPart parent, CreateRequest request,
 			EditPart reference, Class<?> childType) {
@@ -44,6 +50,15 @@ public class CreateCommand extends Command {
 		this.reference = reference;
 		this.after = after;
 		this.childType = childType;
+		if (request instanceof PaletteCreateRequest) {
+			PaletteCreateRequest paletteCreateRequest = (PaletteCreateRequest) request;
+			CreationFactory creationFactory = paletteCreateRequest.getFactory();
+			if (creationFactory instanceof EntryCreationFactory) {
+				EntryCreationFactory entryCreationFactory = (EntryCreationFactory) creationFactory;
+				Entry entry = entryCreationFactory.getEntry();
+				Initializer type = entry.getInitializer();
+			}
+		}
 	}
 
 	public boolean canExecute() {
@@ -75,6 +90,9 @@ public class CreateCommand extends Command {
 			parentModel.getChildren().add(index, creatingModel);
 		} else {
 			parentModel.getChildren().add(creatingModel);
+		}
+		if (initializer != null) {
+			initializer.initialize(creatingModel);
 		}
 	}
 

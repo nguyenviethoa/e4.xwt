@@ -12,12 +12,15 @@ package org.eclipse.e4.xwt.tools.ui.palette.impl;
 
 import org.eclipse.e4.xwt.tools.ui.palette.ContextType;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
+import org.eclipse.e4.xwt.tools.ui.palette.Initializer;
 import org.eclipse.e4.xwt.tools.ui.palette.Palette;
 import org.eclipse.e4.xwt.tools.ui.palette.PaletteFactory;
 import org.eclipse.e4.xwt.tools.ui.palette.PalettePackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EOperation;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
@@ -38,6 +41,13 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * @generated
 	 */
 	private EClass entryEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass initializerEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -220,8 +230,8 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getEntry_Type() {
-		return (EAttribute)entryEClass.getEStructuralFeatures().get(10);
+	public EReference getEntry_Initializer() {
+		return (EReference)entryEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -229,8 +239,17 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getEntry_Initializer() {
-		return (EAttribute)entryEClass.getEStructuralFeatures().get(11);
+	public EClass getInitializer() {
+		return initializerEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getEntry_Type() {
+		return (EReference)entryEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -281,8 +300,10 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 		createEAttribute(entryEClass, ENTRY__CONTEXT);
 		createEAttribute(entryEClass, ENTRY__SCOPE);
 		createEAttribute(entryEClass, ENTRY__VISIBLE);
-		createEAttribute(entryEClass, ENTRY__TYPE);
-		createEAttribute(entryEClass, ENTRY__INITIALIZER);
+		createEReference(entryEClass, ENTRY__TYPE);
+		createEReference(entryEClass, ENTRY__INITIALIZER);
+
+		initializerEClass = createEClass(INITIALIZER);
 
 		// Create enums
 		contextTypeEEnum = createEEnum(CONTEXT_TYPE);
@@ -331,8 +352,13 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 		initEAttribute(getEntry_Context(), this.getContextType(), "context", "", 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEntry_Scope(), ecorePackage.getEString(), "scope", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEntry_Visible(), ecorePackage.getEBoolean(), "visible", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getEntry_Type(), ecorePackage.getEJavaObject(), "type", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getEntry_Initializer(), ecorePackage.getEString(), "initializer", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEntry_Type(), ecorePackage.getEClass(), null, "type", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEntry_Initializer(), this.getInitializer(), null, "initializer", null, 0, 1, Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(initializerEClass, Initializer.class, "Initializer", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		EOperation op = addEOperation(initializerEClass, null, "initialize", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEJavaObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(contextTypeEEnum, ContextType.class, "ContextType");

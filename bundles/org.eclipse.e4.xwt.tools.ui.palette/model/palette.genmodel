@@ -30,8 +30,13 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/context"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/scope"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/visible"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/initializer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference palette.ecore#//Entry/type"/>
+      <genFeatures children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//Entry/initializer"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="palette.ecore#//Initializer">
+      <genOperations ecoreOperation="palette.ecore#//Initializer/initialize">
+        <genParameters ecoreParameter="palette.ecore#//Initializer/initialize/element"/>
+      </genOperations>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

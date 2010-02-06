@@ -95,7 +95,7 @@ public class PartCreateRequest extends PartRequest {
 		}
 		Entry newObject = (Entry) request.getNewObject();
 		if (newObject != null) {
-			return (EClass) newObject.getType();
+			return newObject.getType();
 		}
 		return null;
 	}

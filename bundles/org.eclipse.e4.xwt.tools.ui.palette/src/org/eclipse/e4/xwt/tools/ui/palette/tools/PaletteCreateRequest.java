@@ -8,8 +8,13 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.palette.page.resources;
+package org.eclipse.e4.xwt.tools.ui.palette.tools;
 
-public interface IElementInitializer {
-	void initialize(Object element);
+import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.requests.CreationFactory;
+
+public class PaletteCreateRequest extends CreateRequest {
+	public CreationFactory getFactory() {
+		return super.getFactory();
+	}
 }

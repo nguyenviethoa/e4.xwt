@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.tools.ui.palette;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -277,55 +278,55 @@ public interface Entry extends EObject {
 	void setVisible(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Type</em>' attribute.
-	 * @see #setType(Object)
-	 * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getEntry_Type()
-	 * @model
-	 * @generated
-	 */
-	Object getType();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Type</em>' attribute.
-	 * @see #getType()
-	 * @generated
-	 */
-	void setType(Object value);
-
-	/**
-	 * Returns the value of the '<em><b>Initializer</b></em>' attribute.
+	 * Returns the value of the '<em><b>Initializer</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Initializer</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Initializer</em>' attribute.
-	 * @see #setInitializer(String)
+	 * @return the value of the '<em>Initializer</em>' containment reference.
+	 * @see #setInitializer(Initializer)
 	 * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getEntry_Initializer()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
-	String getInitializer();
+	Initializer getInitializer();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>Initializer</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>Initializer</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Initializer</em>' attribute.
+	 * @param value the new value of the '<em>Initializer</em>' containment reference.
 	 * @see #getInitializer()
 	 * @generated
 	 */
-	void setInitializer(String value);
+	void setInitializer(Initializer value);
+
+	/**
+	 * Returns the value of the '<em><b>Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Type</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Type</em>' reference.
+	 * @see #setType(EClass)
+	 * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getEntry_Type()
+	 * @model
+	 * @generated
+	 */
+	EClass getType();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Type</em>' reference.
+	 * @see #getType()
+	 * @generated
+	 */
+	void setType(EClass value);
 
 } // Entry

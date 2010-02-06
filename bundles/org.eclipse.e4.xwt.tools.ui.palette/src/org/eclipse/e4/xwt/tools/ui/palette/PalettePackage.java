@@ -181,7 +181,7 @@ public interface PalettePackage extends EPackage {
 	int ENTRY__VISIBLE = 9;
 
 	/**
-	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * The feature id for the '<em><b>Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -190,7 +190,7 @@ public interface PalettePackage extends EPackage {
 	int ENTRY__TYPE = 10;
 
 	/**
-	 * The feature id for the '<em><b>Initializer</b></em>' attribute.
+	 * The feature id for the '<em><b>Initializer</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -207,13 +207,32 @@ public interface PalettePackage extends EPackage {
 	int ENTRY_FEATURE_COUNT = 12;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl <em>Initializer</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl
+	 * @see org.eclipse.e4.xwt.tools.ui.palette.impl.PalettePackageImpl#getInitializer()
+	 * @generated
+	 */
+	int INITIALIZER = 2;
+
+	/**
+	 * The number of structural features of the '<em>Initializer</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INITIALIZER_FEATURE_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.e4.xwt.tools.ui.palette.ContextType <em>Context Type</em>}' enum.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.e4.xwt.tools.ui.palette.ContextType
 	 * @see org.eclipse.e4.xwt.tools.ui.palette.impl.PalettePackageImpl#getContextType()
 	 * @generated
 	 */
-	int CONTEXT_TYPE = 2;
+	int CONTEXT_TYPE = 3;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.e4.xwt.tools.ui.palette.Palette <em>Palette</em>}'.
@@ -354,26 +373,36 @@ public interface PalettePackage extends EPackage {
 	EAttribute getEntry_Visible();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>Initializer</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see org.eclipse.e4.xwt.tools.ui.palette.Entry#getType()
-	 * @see #getEntry()
-	 * @generated
-	 */
-	EAttribute getEntry_Type();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>Initializer</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Initializer</em>'.
+	 * @return the meta object for the containment reference '<em>Initializer</em>'.
 	 * @see org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer()
 	 * @see #getEntry()
 	 * @generated
 	 */
-	EAttribute getEntry_Initializer();
+	EReference getEntry_Initializer();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.e4.xwt.tools.ui.palette.Initializer <em>Initializer</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Initializer</em>'.
+	 * @see org.eclipse.e4.xwt.tools.ui.palette.Initializer
+	 * @generated
+	 */
+	EClass getInitializer();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Type</em>'.
+	 * @see org.eclipse.e4.xwt.tools.ui.palette.Entry#getType()
+	 * @see #getEntry()
+	 * @generated
+	 */
+	EReference getEntry_Type();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.e4.xwt.tools.ui.palette.ContextType <em>Context Type</em>}'.
@@ -507,20 +536,30 @@ public interface PalettePackage extends EPackage {
 		EAttribute ENTRY__VISIBLE = eINSTANCE.getEntry_Visible();
 
 		/**
-		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Initializer</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ENTRY__TYPE = eINSTANCE.getEntry_Type();
+		EReference ENTRY__INITIALIZER = eINSTANCE.getEntry_Initializer();
 
 		/**
-		 * The meta object literal for the '<em><b>Initializer</b></em>' attribute feature.
+		 * The meta object literal for the '{@link org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl <em>Initializer</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl
+		 * @see org.eclipse.e4.xwt.tools.ui.palette.impl.PalettePackageImpl#getInitializer()
+		 * @generated
+		 */
+		EClass INITIALIZER = eINSTANCE.getInitializer();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ENTRY__INITIALIZER = eINSTANCE.getEntry_Initializer();
+		EReference ENTRY__TYPE = eINSTANCE.getEntry_Type();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.e4.xwt.tools.ui.palette.ContextType <em>Context Type</em>}' enum.

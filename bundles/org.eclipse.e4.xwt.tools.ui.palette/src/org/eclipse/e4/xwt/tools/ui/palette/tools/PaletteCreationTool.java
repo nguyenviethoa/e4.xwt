@@ -8,13 +8,20 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.palette;
+package org.eclipse.e4.xwt.tools.ui.palette.tools;
 
+import org.eclipse.gef.Request;
+import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gef.tools.CreationTool;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class E4CreationTool extends CreationTool {
-
+public class PaletteCreationTool extends CreationTool {	
+	@Override
+	protected Request createTargetRequest() {
+		CreateRequest request = new PaletteCreateRequest();
+		request.setFactory(getFactory());
+		return request;
+	}
 }

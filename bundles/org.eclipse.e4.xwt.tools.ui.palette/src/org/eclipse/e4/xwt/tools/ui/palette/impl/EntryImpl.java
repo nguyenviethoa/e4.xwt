@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.eclipse.e4.xwt.tools.ui.palette.ContextType;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
+import org.eclipse.e4.xwt.tools.ui.palette.Initializer;
 import org.eclipse.e4.xwt.tools.ui.palette.PalettePackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -224,44 +225,24 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	protected boolean visible = VISIBLE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * The cached value of the '{@link #getType() <em>Type</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getType()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Object TYPE_EDEFAULT = null;
+	protected EClass type;
 
 	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getType()
-	 * @generated
-	 * @ordered
-	 */
-	protected Object type = TYPE_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getInitializer() <em>Initializer</em>}' attribute.
+	 * The cached value of the '{@link #getInitializer() <em>Initializer</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getInitializer()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String INITIALIZER_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getInitializer() <em>Initializer</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getInitializer()
-	 * @generated
-	 * @ordered
-	 */
-	protected String initializer = INITIALIZER_EDEFAULT;
+	protected Initializer initializer;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -467,28 +448,7 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getType() {
-		return type;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setType(Object newType) {
-		Object oldType = type;
-		type = newType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__TYPE, oldType, type));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getInitializer() {
+	public Initializer getInitializer() {
 		return initializer;
 	}
 
@@ -497,11 +457,71 @@ public class EntryImpl extends EObjectImpl implements Entry {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setInitializer(String newInitializer) {
-		String oldInitializer = initializer;
+	public NotificationChain basicSetInitializer(Initializer newInitializer, NotificationChain msgs) {
+		Initializer oldInitializer = initializer;
 		initializer = newInitializer;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__INITIALIZER, oldInitializer, newInitializer);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setInitializer(Initializer newInitializer) {
+		if (newInitializer != initializer) {
+			NotificationChain msgs = null;
+			if (initializer != null)
+				msgs = ((InternalEObject)initializer).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - PalettePackage.ENTRY__INITIALIZER, null, msgs);
+			if (newInitializer != null)
+				msgs = ((InternalEObject)newInitializer).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - PalettePackage.ENTRY__INITIALIZER, null, msgs);
+			msgs = basicSetInitializer(newInitializer, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__INITIALIZER, newInitializer, newInitializer));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getType() {
+		if (type != null && type.eIsProxy()) {
+			InternalEObject oldType = (InternalEObject)type;
+			type = (EClass)eResolveProxy(oldType);
+			if (type != oldType) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, PalettePackage.ENTRY__TYPE, oldType, type));
+			}
+		}
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass basicGetType() {
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setType(EClass newType) {
+		EClass oldType = type;
+		type = newType;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__INITIALIZER, oldInitializer, initializer));
+			eNotify(new ENotificationImpl(this, Notification.SET, PalettePackage.ENTRY__TYPE, oldType, type));
 	}
 
 	/**
@@ -513,6 +533,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 		switch (featureID) {
 			case PalettePackage.ENTRY__ENTRIES:
 				return ((InternalEList<?>)getEntries()).basicRemove(otherEnd, msgs);
+			case PalettePackage.ENTRY__INITIALIZER:
+				return basicSetInitializer(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -545,7 +567,8 @@ public class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__VISIBLE:
 				return isVisible();
 			case PalettePackage.ENTRY__TYPE:
-				return getType();
+				if (resolve) return getType();
+				return basicGetType();
 			case PalettePackage.ENTRY__INITIALIZER:
 				return getInitializer();
 		}
@@ -592,10 +615,10 @@ public class EntryImpl extends EObjectImpl implements Entry {
 				setVisible((Boolean)newValue);
 				return;
 			case PalettePackage.ENTRY__TYPE:
-				setType(newValue);
+				setType((EClass)newValue);
 				return;
 			case PalettePackage.ENTRY__INITIALIZER:
-				setInitializer((String)newValue);
+				setInitializer((Initializer)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -639,10 +662,10 @@ public class EntryImpl extends EObjectImpl implements Entry {
 				setVisible(VISIBLE_EDEFAULT);
 				return;
 			case PalettePackage.ENTRY__TYPE:
-				setType(TYPE_EDEFAULT);
+				setType((EClass)null);
 				return;
 			case PalettePackage.ENTRY__INITIALIZER:
-				setInitializer(INITIALIZER_EDEFAULT);
+				setInitializer((Initializer)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -676,9 +699,9 @@ public class EntryImpl extends EObjectImpl implements Entry {
 			case PalettePackage.ENTRY__VISIBLE:
 				return visible != VISIBLE_EDEFAULT;
 			case PalettePackage.ENTRY__TYPE:
-				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
+				return type != null;
 			case PalettePackage.ENTRY__INITIALIZER:
-				return INITIALIZER_EDEFAULT == null ? initializer != null : !INITIALIZER_EDEFAULT.equals(initializer);
+				return initializer != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -710,10 +733,6 @@ public class EntryImpl extends EObjectImpl implements Entry {
 		result.append(scope);
 		result.append(", visible: ");
 		result.append(visible);
-		result.append(", type: ");
-		result.append(type);
-		result.append(", initializer: ");
-		result.append(initializer);
 		result.append(')');
 		return result.toString();
 	}

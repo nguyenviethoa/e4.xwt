@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.e4.xwt.tools.ui.workbench/src"
+    modelPluginID="org.eclipse.e4.xwt.tools.ui.workbench" modelName="Workbench" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false" usedGenPackages="../../org.eclipse.e4.xwt.tools.ui.palette/model/palette.genmodel#//palette">
+  <foreignModel>workbench.ecore</foreignModel>
+  <genPackages prefix="Workbench" basePackage="org.eclipse.e4.xwt.tools.ui.model"
+      disposableProviderFactory="true" ecorePackage="workbench.ecore#/">
+    <genClasses ecoreClass="workbench.ecore#//StaticPartInitializer"/>
+    <genClasses ecoreClass="workbench.ecore#//DynamicPartInitializer"/>
+    <genClasses ecoreClass="workbench.ecore#//EditorPartInitializer"/>
+  </genPackages>
+</genmodel:GenModel>
