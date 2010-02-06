@@ -45,5 +45,9 @@ public class EditorPartInitializerImpl extends InitializerImpl implements Editor
 	protected EClass eStaticClass() {
 		return WorkbenchPackage.Literals.EDITOR_PART_INITIALIZER;
 	}
-
+	
+	@Override
+	public boolean initialize(Object element) {
+		return true;
+	}
 } //EditorPartInitializerImpl

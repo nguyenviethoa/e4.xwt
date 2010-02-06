@@ -35,7 +35,7 @@
     <eLiterals name="none"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Initializer" abstract="true">
-    <eOperations name="initialize">
+    <eOperations name="initialize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eParameters name="element" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
     </eOperations>
   </eClassifiers>

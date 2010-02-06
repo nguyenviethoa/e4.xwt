@@ -92,7 +92,9 @@ public class CreateCommand extends Command {
 			parentModel.getChildren().add(creatingModel);
 		}
 		if (initializer != null) {
-			initializer.initialize(creatingModel);
+			if (!initializer.initialize(creatingModel)) {
+				undo();
+			}
 		}
 	}
 

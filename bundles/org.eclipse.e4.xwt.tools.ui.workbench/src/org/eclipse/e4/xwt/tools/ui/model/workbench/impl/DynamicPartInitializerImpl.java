@@ -45,5 +45,9 @@ public class DynamicPartInitializerImpl extends InitializerImpl implements Dynam
 	protected EClass eStaticClass() {
 		return WorkbenchPackage.Literals.DYNAMIC_PART_INITIALIZER;
 	}
-
+	
+	@Override
+	public boolean initialize(Object element) {
+		return true;
+	}
 } //DynamicPartInitializerImpl

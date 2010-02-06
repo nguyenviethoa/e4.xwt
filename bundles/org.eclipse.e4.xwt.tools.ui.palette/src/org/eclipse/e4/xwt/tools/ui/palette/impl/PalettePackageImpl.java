@@ -357,7 +357,7 @@ public class PalettePackageImpl extends EPackageImpl implements PalettePackage {
 
 		initEClass(initializerEClass, Initializer.class, "Initializer", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		EOperation op = addEOperation(initializerEClass, null, "initialize", 0, 1, IS_UNIQUE, IS_ORDERED);
+		EOperation op = addEOperation(initializerEClass, ecorePackage.getEBoolean(), "initialize", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, ecorePackage.getEJavaObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals

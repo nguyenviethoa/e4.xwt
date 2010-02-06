@@ -29,6 +29,6 @@ public interface Initializer extends EObject {
 	 * @model
 	 * @generated
 	 */
-	void initialize(Object element);
+	boolean initialize(Object element);
 
 } // Initializer
