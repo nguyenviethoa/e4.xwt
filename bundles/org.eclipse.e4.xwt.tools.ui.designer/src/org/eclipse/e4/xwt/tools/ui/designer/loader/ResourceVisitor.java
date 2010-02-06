@@ -158,7 +158,8 @@ public class ResourceVisitor {
 			doInject(targetObject, name, null);
 		}
 
-		protected void doInject(Object targetObject, String name, Object previousClr) {
+		protected void doInject(Object targetObject, String name,
+				Object previousClr) {
 			Class<?> filedType = targetObject.getClass();
 			if (clr != null && (previousClr != clr || previousClr == null)) {
 				for (Field field : clr.getClass().getDeclaredFields()) {
@@ -168,7 +169,8 @@ public class ResourceVisitor {
 							continue;
 						}
 						String annotationValue = annotation.value();
-						if (annotationValue == null || annotationValue.length() == 0) {
+						if (annotationValue == null
+								|| annotationValue.length() == 0) {
 							if (field.getName().equals(name)) {
 								field.setAccessible(true);
 								try {
@@ -177,14 +179,13 @@ public class ResourceVisitor {
 								} catch (Exception e) {
 								}
 							}
-						}
-						else if (annotationValue.equals(name)) {
+						} else if (annotationValue.equals(name)) {
 							field.setAccessible(true);
 							try {
 								field.set(clr, targetObject);
 								break;
 							} catch (Exception e) {
-							}							
+							}
 						}
 					}
 				}
@@ -193,7 +194,7 @@ public class ResourceVisitor {
 				parent.doInject(targetObject, name, clr);
 			}
 		}
-		
+
 		public Collection<IStyle> getStyles() {
 			return styles;
 		}
@@ -368,6 +369,8 @@ public class ResourceVisitor {
 		ResourceDictionary dico = (ResourceDictionary) options
 				.get(IXWTLoader.RESOURCE_DICTIONARY_PROPERTY);
 		Object dataContext = options.get(IXWTLoader.DATACONTEXT_PROPERTY);
+		Object bindingContext = options
+				.get(IXWTLoader.BINDING_CONTEXT_PROPERTY);
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)) {
@@ -425,8 +428,14 @@ public class ResourceVisitor {
 			if (metaclass.getType() != Shell.class) {
 				shell.setLayout(new FillLayout());
 				return doCreate(targetObject, element, constraintType, options);
-			} else if (dataContext != null) {
-				setDataContext(metaclass, targetObject, dico, dataContext);
+			} else {
+				if (bindingContext != null) {
+					setBindingContext(metaclass, targetObject, dico,
+							bindingContext);
+				}
+				if (dataContext != null) {
+					setDataContext(metaclass, targetObject, dico, dataContext);
+				}
 			}
 			pushStack(parent);
 
@@ -451,8 +460,13 @@ public class ResourceVisitor {
 				if (parent instanceof Composite) {
 					Object childDataContext = getDataContext(element,
 							(Widget) parent);
+					Object childBindingContext = getBindingContext(element,
+							(Widget) parent);
 					if (dataContext != null) {
 						childDataContext = dataContext;
+					}
+					if (bindingContext != null) {
+						childBindingContext = bindingContext;
 					}
 					Map<String, Object> nestedOptions = new HashMap<String, Object>();
 					nestedOptions.put(IXWTLoader.CONTAINER_PROPERTY, parent);
@@ -462,6 +476,10 @@ public class ResourceVisitor {
 					}
 					nestedOptions.put(IXWTLoader.DATACONTEXT_PROPERTY,
 							childDataContext);
+					if (childBindingContext != null) {
+						nestedOptions.put(IXWTLoader.DATACONTEXT_PROPERTY,
+								childBindingContext);
+					}
 					nestedOptions.put(RESOURCE_LOADER_PROPERTY, this);
 					targetObject = loader.loadWithOptions(file, nestedOptions);
 					if (targetObject == null) {
@@ -531,6 +549,9 @@ public class ResourceVisitor {
 		}
 		// set first data context and resource dictionary
 		setDataContext(metaclass, targetObject, dico, dataContext);
+		if (bindingContext != null) {
+			setBindingContext(metaclass, targetObject, dico, bindingContext);
+		}
 
 		applyStyles(element, targetObject);
 
@@ -559,6 +580,7 @@ public class ResourceVisitor {
 			if (IXWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key)
+					|| IXWTLoader.BINDING_CONTEXT_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.RESOURCE_DICTIONARY_PROPERTY
 							.equalsIgnoreCase(key)
 					|| IXWTLoader.CLASS_PROPERTY.equalsIgnoreCase(key)
@@ -641,7 +663,7 @@ public class ResourceVisitor {
 		}
 	}
 
-	private void setDataContext(IMetaclass metaclass, Object targetObject,
+	protected void setDataContext(IMetaclass metaclass, Object targetObject,
 			ResourceDictionary dico, Object dataContext)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
@@ -678,7 +700,44 @@ public class ResourceVisitor {
 		}
 	}
 
-	private void applyStyles(XamlElement element, Object targetObject)
+	protected void setBindingContext(IMetaclass metaclass, Object targetObject,
+			ResourceDictionary dico, Object bindingContext)
+			throws IllegalAccessException, InvocationTargetException,
+			NoSuchFieldException {
+		Object control = null;
+		IMetaclass widgetMetaclass = metaclass;
+		if (JFacesHelper.isViewer(targetObject)) {
+			Widget widget = JFacesHelper.getControl(targetObject);
+			widgetMetaclass = loader.getMetaclass(widget.getClass());
+			control = targetObject;
+		} else if (targetObject instanceof Widget) {
+			control = targetObject;
+		} else {
+			control = loadData.getCurrentWidget();
+		}
+		if (control != null) {
+			if (targetObject instanceof IDynamicBinding) {
+				IDynamicBinding dynamicBinding = (IDynamicBinding) targetObject;
+				dynamicBinding.setControl(control);
+				dynamicBinding.setHost(loadData.getHost());
+			}
+			if (dico != null) {
+				UserData.setResources(control, dico);
+			}
+			if (bindingContext != null) {
+				IProperty property = widgetMetaclass
+						.findProperty(IConstants.XAML_BINDING_CONTEXT);
+				if (property != null) {
+					property.setValue(UserData.getWidget(control), bindingContext);
+				} else {
+					throw new XWTException("BindingContext is missing in "
+							+ widgetMetaclass.getType().getName());
+				}
+			}
+		}
+	}
+
+	protected void applyStyles(XamlElement element, Object targetObject)
 			throws Exception {
 		if (targetObject instanceof Widget) {
 			Widget widget = (Widget) targetObject;
@@ -744,7 +803,7 @@ public class ResourceVisitor {
 		}
 	}
 
-	private int getColumnIndex(XamlElement columnElement) {
+	protected int getColumnIndex(XamlElement columnElement) {
 		String name = columnElement.getName();
 		String namespace = columnElement.getNamespace();
 		IMetaclass metaclass = loader.getMetaclass(name, namespace);
@@ -763,7 +822,7 @@ public class ResourceVisitor {
 	/**
 	 * @param tableItem
 	 */
-	private void installTableEditors(TableItem tableItem) {
+	protected void installTableEditors(TableItem tableItem) {
 		Table table = tableItem.getParent();
 		TableColumn[] columns = table.getColumns();
 		if (columns == null || columns.length == 0) {
@@ -790,12 +849,12 @@ public class ResourceVisitor {
 		}
 	}
 
-	private Object getDataContext(XamlElement element, Widget swtObject) {
+	protected Object getDataContext(XamlElement element, Widget swtObject) {
 		// x:DataContext
 		try {
 			{
 				XamlAttribute dataContextAttribute = element.getAttribute(
-						"DataContext", IConstants.XWT_NAMESPACE);
+						IConstants.XAML_DATA_CONTEXT, IConstants.XWT_NAMESPACE);
 				if (dataContextAttribute != null) {
 					Widget composite = (Widget) swtObject;
 					XamlNode documentObject = dataContextAttribute
@@ -823,18 +882,51 @@ public class ResourceVisitor {
 		return null;
 	}
 
-	private void pushStack(Object host) {
+	protected Object getBindingContext(XamlElement element, Widget swtObject) {
+		// x:DataContext
+		try {
+			{
+				XamlAttribute dataContextAttribute = element.getAttribute(
+						IConstants.XAML_BINDING_CONTEXT, IConstants.XWT_NAMESPACE);
+				if (dataContextAttribute != null) {
+					Widget composite = (Widget) swtObject;
+					XamlNode documentObject = dataContextAttribute
+							.getChildNodes().get(0);
+					if (IConstants.XAML_STATICRESOURCES.equals(documentObject
+							.getName())
+							|| IConstants.XAML_DYNAMICRESOURCES
+									.equals(documentObject.getName())) {
+						String key = documentObject.getValue();
+						return new StaticResourceBinding(composite, key);
+					} else if (IConstants.XAML_BINDING.equals(documentObject
+							.getName())) {
+						return doCreate(swtObject,
+								(XamlElement) documentObject, null, EMPTY_MAP);
+					} else {
+						LoggerManager.log(new UnsupportedOperationException(
+								documentObject.getName()));
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerManager.log(e);
+		}
+
+		return null;
+	}
+
+	protected void pushStack(Object host) {
 		loadData = new LoadingData(loadData, host);
 	}
 
-	private void popStack() {
+	protected void popStack() {
 		LoadingData previous = loadData;
 		loadData = previous.getParent();
 
 		previous.end();
 	}
 
-	private Integer getStyleValue(XamlElement element, int styles) {
+	protected Integer getStyleValue(XamlElement element, int styles) {
 		XamlAttribute attribute = element.getAttribute(IConstants.XAML_STYLE,
 				IConstants.XWT_X_NAMESPACE);
 		if (attribute == null) {
@@ -852,7 +944,7 @@ public class ResourceVisitor {
 						.convert(attribute.getValue());
 	}
 
-	private void init(IMetaclass metaclass, Object targetObject,
+	protected void init(IMetaclass metaclass, Object targetObject,
 			XamlNode element, List<String> delayedAttributes) throws Exception {
 		// editors for TableItem,
 		if (targetObject instanceof TableItem) {
@@ -892,12 +984,13 @@ public class ResourceVisitor {
 
 		XamlAttribute nameAttr = element.getAttribute(IConstants.XAML_X_NAME);
 		if (nameAttr == null) {
-			nameAttr = element.getAttribute(IConstants.XAML_X_NAME, IConstants.XWT_X_NAMESPACE);
+			nameAttr = element.getAttribute(IConstants.XAML_X_NAME,
+					IConstants.XWT_X_NAMESPACE);
 		}
 		if (nameAttr != null && UserData.getWidget(targetObject) != null) {
 			String value = nameAttr.getValue();
 			loadData.inject(targetObject, value);
-			
+
 			nameScoped.addNamedObject(value, targetObject);
 			done.add(IConstants.XAML_X_NAME);
 		}
@@ -973,7 +1066,7 @@ public class ResourceVisitor {
 		}
 	}
 
-	private Object getArrayProperty(Class<?> type, Object swtObject,
+	protected Object getArrayProperty(Class<?> type, Object swtObject,
 			XamlNode element, String attrName) throws IllegalAccessException,
 			InvocationTargetException, NoSuchFieldException {
 		if (!type.isArray()) {
@@ -1003,7 +1096,7 @@ public class ResourceVisitor {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Object getCollectionProperty(Class<?> type, Object swtObject,
+	protected Object getCollectionProperty(Class<?> type, Object swtObject,
 			XamlNode element, String attrName) throws IllegalAccessException,
 			InvocationTargetException, NoSuchFieldException {
 		Collection<Object> collector = null;
@@ -1032,7 +1125,7 @@ public class ResourceVisitor {
 		return collector;
 	}
 
-	private String findNamespace(XamlNode context, String prefix) {
+	protected String findNamespace(XamlNode context, String prefix) {
 		while (context != null && !(context instanceof XamlElement)) {
 			context = (XamlNode) context.eContainer();
 		}
@@ -1053,7 +1146,7 @@ public class ResourceVisitor {
 		return findNamespace(parent, prefix);
 	}
 
-	private Object createInstance(Object swtObject, XamlElement element) {
+	protected Object createInstance(Object swtObject, XamlElement element) {
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)
@@ -1128,7 +1221,7 @@ public class ResourceVisitor {
 		return 0;
 	}
 
-	private void loadShellCLR(String className, Shell shell) {
+	protected void loadShellCLR(String className, Shell shell) {
 		Class<?> type = ClassLoaderUtil.loadClass(loader.getLoadingContext(),
 				className);
 		if (type == null) {
@@ -1143,7 +1236,7 @@ public class ResourceVisitor {
 		}
 	}
 
-	private Object loadCLR(String className, Object[] parameters,
+	protected Object loadCLR(String className, Object[] parameters,
 			Class<?> currentTagType, Map<String, Object> options) {
 		Class<?> type = ClassLoaderUtil.loadClass(loader.getLoadingContext(),
 				className);
@@ -1210,7 +1303,7 @@ public class ResourceVisitor {
 				namespace, attrName);
 	}
 
-	private void addCommandExecuteListener(String commandName,
+	protected void addCommandExecuteListener(String commandName,
 			final Widget targetButton) {
 		final ICommand commandObj = loader.getCommand(commandName);
 		if (commandObj != null) {
@@ -1222,7 +1315,7 @@ public class ResourceVisitor {
 		}
 	}
 
-	private void initSegmentAttribute(IMetaclass metaclass,
+	protected void initSegmentAttribute(IMetaclass metaclass,
 			String propertyName, Object target, XamlNode element,
 			String namespace, String attrName) throws Exception {
 		XamlAttribute attribute = element.getAttribute(attrName, namespace);
@@ -1487,7 +1580,7 @@ public class ResourceVisitor {
 	 * @param contentValue
 	 * @return
 	 */
-	private String getSourceURL(String contentValue) {
+	protected String getSourceURL(String contentValue) {
 		URL url = null;
 		try {
 			url = new URL(contentValue);
@@ -1511,7 +1604,7 @@ public class ResourceVisitor {
 		return contentValue;
 	}
 
-	private Class<?> getJavaType(XamlNode element) {
+	protected Class<?> getJavaType(XamlNode element) {
 		if (!(element instanceof XamlElement)) {
 			return null;
 		}
@@ -1528,7 +1621,7 @@ public class ResourceVisitor {
 		return metaclass.getType();
 	}
 
-	private boolean isAssignableFrom(XamlNode element, Class<?> type) {
+	protected boolean isAssignableFrom(XamlNode element, Class<?> type) {
 		Class<?> targetType = getJavaType(element);
 		if (targetType == null) {
 			return false;
@@ -1536,7 +1629,7 @@ public class ResourceVisitor {
 		return targetType.isAssignableFrom(type);
 	}
 
-	private Object getStaticValue(XamlNode child) {
+	protected Object getStaticValue(XamlNode child) {
 		XamlNode[] children = child.getChildNodes().toArray(new XamlNode[0]);
 		if (children.length == 1) {
 			XamlElement element = (XamlElement) children[0];
@@ -1548,7 +1641,7 @@ public class ResourceVisitor {
 		return null;
 	}
 
-	private String getImagePath(XamlAttribute attribute, String contentValue) {
+	protected String getImagePath(XamlAttribute attribute, String contentValue) {
 		try {
 			File file = new File(contentValue);
 			if (file.exists()) {
@@ -1575,7 +1668,7 @@ public class ResourceVisitor {
 		}
 	}
 
-	private String removeSubString(String str, String subString) {
+	protected String removeSubString(String str, String subString) {
 		StringBuffer stringBuffer = new StringBuffer();
 		int lenOfsource = str.length();
 		int i;
@@ -1590,7 +1683,7 @@ public class ResourceVisitor {
 		return stringBuffer.toString();
 	}
 
-	private String getContentValue(String text) {
+	protected String getContentValue(String text) {
 		StringBuffer stringBuffer = new StringBuffer();
 		String subString = "SWT.";
 		String str = XWTMaps.getCombAccelerator(text);

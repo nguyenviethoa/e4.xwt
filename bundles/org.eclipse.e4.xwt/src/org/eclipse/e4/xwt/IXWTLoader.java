@@ -72,6 +72,12 @@ public interface IXWTLoader {
 	String DATACONTEXT_PROPERTY = "XWT.DataContext";
 
 	/**
+	 * The BindingContext to setup in root element
+	 * 
+	 */
+	String BINDING_CONTEXT_PROPERTY = "XWT.BindingContext";
+
+	/**
 	 * The DataContext to setup in root element
 	 * 
 	 */

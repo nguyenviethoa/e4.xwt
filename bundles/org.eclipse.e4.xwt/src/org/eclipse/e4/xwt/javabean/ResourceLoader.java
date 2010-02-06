@@ -11,7 +11,6 @@
 package org.eclipse.e4.xwt.javabean;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -288,7 +287,13 @@ public class ResourceLoader implements IVisualElementLoader {
 				event.doit = true;
 				event.widget = hostCLRWidget;
 				try {
-					loadedMethod.invoke(loadedObject, new Object[] { event });
+					if (loadedMethod.getParameterTypes().length == 1) {
+						loadedMethod.invoke(loadedObject,
+								new Object[] { event });
+					} else if (loadedMethod.getParameterTypes().length == 2) {
+						loadedMethod.invoke(loadedObject, new Object[] {
+								loadedObject, event });
+					}
 				} catch (Exception e) {
 					throw new XWTException("");
 				}
@@ -374,9 +379,8 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private Object doCreate(Object parent, Element element,
-			Class<?> constraintType, Map<String, Object> options)
-			throws Exception {
+	Object doCreate(Object parent, Element element, Class<?> constraintType,
+			Map<String, Object> options) throws Exception {
 		int styles = -1;
 		if (options.containsKey(IXWTLoader.INIT_STYLE_PROPERTY)) {
 			styles = (Integer) options.get(IXWTLoader.INIT_STYLE_PROPERTY);
@@ -385,6 +389,8 @@ public class ResourceLoader implements IVisualElementLoader {
 		ResourceDictionary dico = (ResourceDictionary) options
 				.get(IXWTLoader.RESOURCE_DICTIONARY_PROPERTY);
 		Object dataContext = options.get(IXWTLoader.DATACONTEXT_PROPERTY);
+		Object bindingContext = options
+				.get(IXWTLoader.BINDING_CONTEXT_PROPERTY);
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)) {
@@ -440,8 +446,14 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (metaclass.getType() != Shell.class) {
 				shell.setLayout(new FillLayout());
 				return doCreate(targetObject, element, constraintType, options);
-			} else if (dataContext != null) {
-				setDataContext(metaclass, targetObject, dico, dataContext);
+			} else {
+				if (bindingContext != null) {
+					setBindingContext(metaclass, targetObject, dico,
+							bindingContext);
+				}
+				if (dataContext != null) {
+					setDataContext(metaclass, targetObject, dico, dataContext);
+				}
 			}
 			pushStack(parent);
 
@@ -466,8 +478,13 @@ public class ResourceLoader implements IVisualElementLoader {
 				if (parent instanceof Composite) {
 					Object childDataContext = getDataContext(element,
 							(Widget) parent);
+					Object childBindingContext = getBindingContext(element,
+							(Widget) parent);
 					if (dataContext != null) {
 						childDataContext = dataContext;
+					}
+					if (bindingContext != null) {
+						childBindingContext = bindingContext;
 					}
 					Map<String, Object> nestedOptions = new HashMap<String, Object>();
 					nestedOptions.put(IXWTLoader.CONTAINER_PROPERTY, parent);
@@ -477,6 +494,8 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					nestedOptions.put(IXWTLoader.DATACONTEXT_PROPERTY,
 							childDataContext);
+					nestedOptions.put(IXWTLoader.BINDING_CONTEXT_PROPERTY,
+							childBindingContext);
 					nestedOptions.put(RESOURCE_LOADER_PROPERTY, this);
 					targetObject = loader.loadWithOptions(file, nestedOptions);
 					if (targetObject == null) {
@@ -544,6 +563,9 @@ public class ResourceLoader implements IVisualElementLoader {
 
 		// set first data context and resource dictionary
 		setDataContext(metaclass, targetObject, dico, dataContext);
+		if (bindingContext != null) {
+			setBindingContext(metaclass, targetObject, dico, bindingContext);
+		}
 
 		applyStyles(element, targetObject);
 
@@ -568,6 +590,8 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (IXWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key)
+					|| IXWTLoader.BINDING_CONTEXT_PROPERTY
+							.equalsIgnoreCase(key)
 					|| IXWTLoader.RESOURCE_DICTIONARY_PROPERTY
 							.equalsIgnoreCase(key)
 					|| IXWTLoader.CLASS_PROPERTY.equalsIgnoreCase(key)
@@ -651,7 +675,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private void setDataContext(IMetaclass metaclass, Object targetObject,
+	protected void setDataContext(IMetaclass metaclass, Object targetObject,
 			ResourceDictionary dico, Object dataContext)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
@@ -688,8 +712,45 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private void applyStyles(Element element, Object targetObject)
-			throws Exception {
+	protected void setBindingContext(IMetaclass metaclass, Object targetObject,
+			ResourceDictionary dico, Object bindingContext)
+			throws IllegalAccessException, InvocationTargetException,
+			NoSuchFieldException {
+		Object control = null;
+		IMetaclass widgetMetaclass = metaclass;
+		if (JFacesHelper.isViewer(targetObject)) {
+			Widget widget = JFacesHelper.getControl(targetObject);
+			widgetMetaclass = loader.getMetaclass(widget.getClass());
+			control = targetObject;
+		} else if (targetObject instanceof Widget) {
+			control = (Widget) targetObject;
+		} else {
+			control = loadData.getCurrentWidget();
+		}
+		if (control != null) {
+			if (targetObject instanceof IDynamicBinding) {
+				IDynamicBinding dynamicBinding = (IDynamicBinding) targetObject;
+				dynamicBinding.setControl(control);
+				dynamicBinding.setHost(loadData.getHost());
+			}
+			if (dico != null) {
+				UserData.setResources(control, dico);
+			}
+			if (bindingContext != null) {
+				IProperty property = widgetMetaclass
+						.findProperty(IConstants.XAML_BINDING_CONTEXT);
+				if (property != null) {
+					property.setValue(UserData.getWidget(control),
+							bindingContext);
+				} else {
+					throw new XWTException("DataContext is missing in "
+							+ widgetMetaclass.getType().getName());
+				}
+			}
+		}
+	}
+
+	void applyStyles(Element element, Object targetObject) throws Exception {
 		if (targetObject instanceof Widget) {
 			Widget widget = (Widget) targetObject;
 			Map<String, Object> dico = UserData.getLocalResources(widget);
@@ -754,7 +815,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private int getColumnIndex(Element columnElement) {
+	int getColumnIndex(Element columnElement) {
 		String name = columnElement.getName();
 		String namespace = columnElement.getNamespace();
 		IMetaclass metaclass = loader.getMetaclass(name, namespace);
@@ -773,7 +834,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	/**
 	 * @param tableItem
 	 */
-	private void installTableEditors(TableItem tableItem) {
+	void installTableEditors(TableItem tableItem) {
 		Table table = tableItem.getParent();
 		TableColumn[] columns = table.getColumns();
 		if (columns == null || columns.length == 0) {
@@ -800,7 +861,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private Object getDataContext(Element element, Widget swtObject) {
+	Object getDataContext(Element element, Widget swtObject) {
 		// x:DataContext
 		try {
 			{
@@ -833,18 +894,51 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	private void pushStack(Object host) {
+	Object getBindingContext(Element element, Widget swtObject) {
+		// x:DataContext
+		try {
+			{
+				Attribute dataContextAttribute = element
+						.getAttribute(IConstants.XAML_BINDING_CONTEXT);
+				if (dataContextAttribute != null) {
+					Widget composite = (Widget) swtObject;
+					DocumentObject documentObject = dataContextAttribute
+							.getChildren()[0];
+					if (IConstants.XAML_STATICRESOURCES.equals(documentObject
+							.getName())
+							|| IConstants.XAML_DYNAMICRESOURCES
+									.equals(documentObject.getName())) {
+						String key = documentObject.getContent();
+						return new StaticResourceBinding(composite, key);
+					} else if (IConstants.XAML_BINDING.equals(documentObject
+							.getName())) {
+						return doCreate(swtObject, (Element) documentObject,
+								null, EMPTY_MAP);
+					} else {
+						LoggerManager.log(new UnsupportedOperationException(
+								documentObject.getName()));
+					}
+				}
+			}
+		} catch (Exception e) {
+			LoggerManager.log(e);
+		}
+
+		return null;
+	}
+
+	void pushStack(Object host) {
 		loadData = new LoadingData(loadData, host);
 	}
 
-	private void popStack() {
+	void popStack() {
 		LoadingData previous = loadData;
 		loadData = previous.getParent();
 
 		previous.end();
 	}
 
-	private Integer getStyleValue(Element element, int styles) {
+	Integer getStyleValue(Element element, int styles) {
 		Attribute attribute = element.getAttribute(IConstants.XWT_X_NAMESPACE,
 				IConstants.XAML_STYLE);
 		if (attribute == null) {
@@ -862,8 +956,8 @@ public class ResourceLoader implements IVisualElementLoader {
 						.convert(attribute.getContent());
 	}
 
-	private void init(IMetaclass metaclass, Object targetObject,
-			Element element, List<String> delayedAttributes) throws Exception {
+	void init(IMetaclass metaclass, Object targetObject, Element element,
+			List<String> delayedAttributes) throws Exception {
 		// editors for TableItem,
 		if (targetObject instanceof TableItem) {
 			installTableEditors((TableItem) targetObject);
@@ -1014,7 +1108,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private Object getArrayProperty(Class<?> type, Object swtObject,
+	Object getArrayProperty(Class<?> type, Object swtObject,
 			DocumentObject element, String attrName)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
@@ -1048,7 +1142,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Object getCollectionProperty(Class<?> type, Object swtObject,
+	Object getCollectionProperty(Class<?> type, Object swtObject,
 			DocumentObject element, String attrName)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
@@ -1081,7 +1175,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return collector;
 	}
 
-	private String findNamespace(DocumentObject context, String prefix) {
+	String findNamespace(DocumentObject context, String prefix) {
 		while (context != null && !(context instanceof Element)) {
 			context = context.getParent();
 		}
@@ -1102,7 +1196,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return findNamespace(parent, prefix);
 	}
 
-	private Object createInstance(Object swtObject, Element element) {
+	Object createInstance(Object swtObject, Element element) {
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)
@@ -1179,7 +1273,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return 0;
 	}
 
-	private void loadShellCLR(String className, Shell shell) {
+	void loadShellCLR(String className, Shell shell) {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(),
 				className);
 		try {
@@ -1191,7 +1285,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private Object loadCLR(String className, Object[] parameters,
+	Object loadCLR(String className, Object[] parameters,
 			Class<?> currentTagType, Map<String, Object> options) {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(),
 				className);
@@ -1228,7 +1322,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	private void initAttribute(IMetaclass metaclass, Object targetObject,
+	void initAttribute(IMetaclass metaclass, Object targetObject,
 			Element element, String namespace, String attrName)
 			throws Exception {
 		if (attrName.indexOf('.') != -1) {
@@ -1259,8 +1353,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				namespace, attrName);
 	}
 
-	private void addCommandExecuteListener(String commandName,
-			final Widget targetButton) {
+	void addCommandExecuteListener(String commandName, final Widget targetButton) {
 		final ICommand commandObj = loader.getCommand(commandName);
 		if (commandObj != null) {
 			targetButton.addListener(SWT.Selection, new Listener() {
@@ -1271,9 +1364,9 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private void initSegmentAttribute(IMetaclass metaclass,
-			String propertyName, Object target, Element element,
-			String namespace, String attrName) throws Exception {
+	void initSegmentAttribute(IMetaclass metaclass, String propertyName,
+			Object target, Element element, String namespace, String attrName)
+			throws Exception {
 		Attribute attribute = namespace == null ? element
 				.getAttribute(attrName) : element.getAttribute(namespace,
 				attrName);
@@ -1329,14 +1422,12 @@ public class ResourceLoader implements IVisualElementLoader {
 			Attribute attributeAccelerator = element
 					.getAttribute("Accelerator");
 			if (attributeAccelerator != null) {
-				contentValue = contentValue
-						+ '\t'
+				contentValue = contentValue + '\t'
 						+ getContentValue(attributeAccelerator.getContent());
 			}
 		}
 
-		if (contentValue != null
-				&& "Accelerator".equalsIgnoreCase(attrName)) {
+		if (contentValue != null && "Accelerator".equalsIgnoreCase(attrName)) {
 			contentValue = XWTMaps.getCombAccelerator(contentValue);
 			if (contentValue.contains("'")) {
 				contentValue = removeSubString(contentValue, "'");
@@ -1356,8 +1447,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (contentValue == null) {
 			Class<?> type = property.getType();
 			if (Collection.class.isAssignableFrom(type)) {
-				value = getCollectionProperty(type, target, attribute,
-						attrName);
+				value = getCollectionProperty(type, target, attribute, attrName);
 			} else {
 				Object directTarget = null;
 				if (TableViewerColumn.class.isAssignableFrom(type)
@@ -1412,13 +1502,13 @@ public class ResourceLoader implements IVisualElementLoader {
 							&& attribute.getContent() != null) {
 						value = attribute.getContent();
 					} else {
-						value = doCreate(directTarget, (Element) child,
-								type, EMPTY_MAP);
+						value = doCreate(directTarget, (Element) child, type,
+								EMPTY_MAP);
 						if (value == null
 								&& type != null
 								&& !(type == Table.class
-										&& "TableColumn".equals(child
-												.getName()) && Table.class
+										&& "TableColumn"
+												.equals(child.getName()) && Table.class
 										.isInstance(directTarget))) {
 							throw new XWTException(child.getName()
 									+ " cannot be a content of "
@@ -1460,19 +1550,15 @@ public class ResourceLoader implements IVisualElementLoader {
 								&& orginalValue instanceof IBinding
 								&& !propertyType.isAssignableFrom(value
 										.getClass())) {
-							converter = loader.findConvertor(value
-									.getClass(), propertyType);
+							converter = loader.findConvertor(value.getClass(),
+									propertyType);
 							if (converter != null) {
 								value = converter.convert(value);
 							} else {
-								LoggerManager.log(new XWTException(
-										"Convertor "
-												+ value.getClass()
-														.getSimpleName()
-												+ "->"
-												+ propertyType
-														.getSimpleName()
-												+ " is not found"));
+								LoggerManager.log(new XWTException("Convertor "
+										+ value.getClass().getSimpleName()
+										+ "->" + propertyType.getSimpleName()
+										+ " is not found"));
 							}
 						}
 					} else {
@@ -1530,7 +1616,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	 * @param contentValue
 	 * @return
 	 */
-	private String getSourceURL(String contentValue) {
+	String getSourceURL(String contentValue) {
 		URL url = null;
 		try {
 			url = new URL(contentValue);
@@ -1554,7 +1640,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return contentValue;
 	}
 
-	private Class<?> getJavaType(DocumentObject element) {
+	Class<?> getJavaType(DocumentObject element) {
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)
@@ -1568,7 +1654,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return metaclass.getType();
 	}
 
-	private boolean isAssignableFrom(DocumentObject element, Class<?> type) {
+	boolean isAssignableFrom(DocumentObject element, Class<?> type) {
 		Class<?> targetType = getJavaType(element);
 		if (targetType == null) {
 			return false;
@@ -1576,7 +1662,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return targetType.isAssignableFrom(type);
 	}
 
-	private Object getStaticValue(DocumentObject child) {
+	Object getStaticValue(DocumentObject child) {
 		DocumentObject[] children = child.getChildren();
 		if (children.length == 1) {
 			Element element = (Element) children[0];
@@ -1588,7 +1674,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	private String getImagePath(Attribute attribute, String contentValue) {
+	String getImagePath(Attribute attribute, String contentValue) {
 		String value = contentValue;
 		try {
 			File file = new File(contentValue);
@@ -1620,7 +1706,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	private String removeSubString(String str, String subString) {
+	String removeSubString(String str, String subString) {
 		StringBuffer stringBuffer = new StringBuffer();
 		int lenOfsource = str.length();
 		int i;
@@ -1635,7 +1721,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return stringBuffer.toString();
 	}
 
-	private String getContentValue(String text) {
+	String getContentValue(String text) {
 		StringBuffer stringBuffer = new StringBuffer();
 		String subString = "SWT.";
 		String str = XWTMaps.getCombAccelerator(text);

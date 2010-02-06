@@ -583,10 +583,14 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 			}
 		}
 		if (element instanceof Attribute
-				&& IConstants.XWT_X_NAMESPACE.equals(element.getNamespace())
-				&& IConstants.XAML_STYLE.equalsIgnoreCase(element.getName())) {
-			// handle the expansion of x:Style = "(j:class).variable"
-			text = expandNamespaces(element, text);
+				&& IConstants.XWT_X_NAMESPACE.equals(element.getNamespace())) {
+			if (IConstants.XAML_STYLE.equalsIgnoreCase(element.getName())
+					|| IConstants.XAML_X_CLASS.equalsIgnoreCase(element
+							.getName())) {
+				// handle the expansion of x:Style = "(j:class).variable"
+				// and handle the expansion of x:Class = "(j:class).variable"
+				text = expandNamespaces(element, text);
+			}
 		}
 		element.setContent(text);
 	}

@@ -39,11 +39,9 @@ public abstract class AbstractDialog extends Dialog {
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		try {
-			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+			Thread.currentThread().setContextClassLoader(getClassLoader());
 			HashMap<String, Object> newOptions = new HashMap<String, Object>();
-			newOptions.put(XWTLoader.CONTAINER_PROPERTY, parent);
-			newOptions.put(XWTLoader.DATACONTEXT_PROPERTY, dataContext);
-			newOptions.put(XWTLoader.CLASS_PROPERTY, this);
+			initOptions(parent, newOptions);
 			Control control = XWT.loadWithOptions(getContentURL(), newOptions);
 			GridLayoutFactory.fillDefaults().generateLayout(parent);
 			parent.layout(true, true);
@@ -57,5 +55,20 @@ public abstract class AbstractDialog extends Dialog {
 		return null;
 	}
 
+	protected void initOptions(Composite parent,
+			HashMap<String, Object> newOptions) {
+		newOptions.put(XWTLoader.CONTAINER_PROPERTY, parent);
+		newOptions.put(XWTLoader.DATACONTEXT_PROPERTY, dataContext);
+		newOptions.put(XWTLoader.CLASS_PROPERTY, geCLR());
+	}
+
 	protected abstract URL getContentURL();
+	
+	protected ClassLoader getClassLoader() {
+		return this.getClass().getClassLoader();
+	}
+	
+	protected Object geCLR() {
+		return this;
+	}
 }
