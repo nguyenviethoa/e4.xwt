@@ -107,11 +107,13 @@ public class E4PaletteProvider extends EntryResourceProvider {
 			allClasses = new ArrayList<EClass>();
 		}
 		Field[] fields = MApplicationPackage.Literals.class.getFields();
+		EClass applicationElementClass = MApplicationPackage.eINSTANCE.getApplicationElement();
+		
 		for (int i = 0; i < fields.length; i++) {
 			Object value = fields[i].get(null);
 			if (value instanceof EClass) {
 				EClass eClass = (EClass) value;
-				if (!eClass.isAbstract() && !eClass.isInterface()) {
+				if (!eClass.isAbstract() && !eClass.isInterface() && applicationElementClass.isSuperTypeOf(eClass)) {
 					allClasses.add(eClass);
 				}
 			}
