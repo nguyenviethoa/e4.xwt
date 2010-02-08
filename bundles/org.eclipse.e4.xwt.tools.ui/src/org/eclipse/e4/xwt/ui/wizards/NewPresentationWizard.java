@@ -15,11 +15,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbench;
 
 public class NewPresentationWizard extends NewElementWizard {
 
@@ -36,12 +40,22 @@ public class NewPresentationWizard extends NewElementWizard {
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 		setWindowTitle("New Data Presentation in XWT");
 	}
-
+	
+	public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
+		Object element = currentSelection.getFirstElement();
+		if ((element instanceof ICompilationUnit) || (element instanceof IType)) {
+			super.init(workbench, currentSelection);			
+		}
+		MessageDialog.openError(getShell(), "Error", "Please select a Java class.");
+		throw new IllegalStateException("Select a class."); // TODO this raises an exception in Error View. Need to find a better solution to disable the action.
+	}	
+	
 	public void addPages() {
 		fPage = new NewPresentationWizardPage();
 		fPage.init(getSelection());
 		addPage(fPage);
 	}
+	
 
 	public boolean performFinish() {
 		warnAboutTypeCommentDeprecation();
