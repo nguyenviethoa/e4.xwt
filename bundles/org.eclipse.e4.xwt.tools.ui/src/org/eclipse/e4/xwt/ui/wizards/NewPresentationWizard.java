@@ -41,16 +41,18 @@ public class NewPresentationWizard extends NewElementWizard {
 		setWindowTitle("New Data Presentation in XWT");
 	}
 	
-	public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
-		Object element = currentSelection.getFirstElement();
-		if ((element instanceof ICompilationUnit) || (element instanceof IType)) {
-			super.init(workbench, currentSelection);			
-		}
-		MessageDialog.openError(getShell(), "Error", "Please select a Java class.");
-		throw new IllegalStateException("Select a class."); // TODO this raises an exception in Error View. Need to find a better solution to disable the action.
-	}	
-	
 	public void addPages() {
+		Object element = getSelection().getFirstElement();
+		if (!(element instanceof ICompilationUnit) && !(element instanceof IType)) {
+			getShell().setAlpha(0);
+			MessageDialog.openError(getShell(), "Error", "Please select a Java class.");
+			getShell().getDisplay().asyncExec(new Runnable() {				
+				public void run() {
+					getShell().close();
+				}
+			});
+			return;
+		}
 		fPage = new NewPresentationWizardPage();
 		fPage.init(getSelection());
 		addPage(fPage);
