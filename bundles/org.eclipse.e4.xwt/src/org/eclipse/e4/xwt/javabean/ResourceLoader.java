@@ -441,6 +441,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			Display display = Display.getDefault();
 			shell = new Shell(display, styleValue);
 			targetObject = shell;
+			postCreation0(element, targetObject);
 			loadData.setCurrentWidget(shell);
 
 			if (metaclass.getType() != Shell.class) {
@@ -533,6 +534,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
+						postCreation0(element, targetObject);
 						Widget widget = UserData.getWidget(targetObject);
 						if (widget != null) {
 							Object clr = loadData.getClr();
@@ -656,7 +658,23 @@ public class ResourceLoader implements IVisualElementLoader {
 		popStack();
 		return targetObject;
 	}
-
+	
+	/**
+	 * This method is invoked directly after creation of component instance, but
+	 * before applying its attributes and creating children.
+	 * 
+	 * @param element
+	 *            the source element in XML.
+	 * @param targetObject
+	 *            the created visual object.
+	 */
+	protected void postCreation0(Element element, Object targetObject) {
+	}
+	
+	/**
+	 * This method is invoked after full creation of component, i.e. after
+	 * creating its instance, applying its attributes and creating children.
+	 */
 	protected void postCreation(Object target) {
 		Widget widget = UserData.getWidget(target);
 		if (widget == null) {

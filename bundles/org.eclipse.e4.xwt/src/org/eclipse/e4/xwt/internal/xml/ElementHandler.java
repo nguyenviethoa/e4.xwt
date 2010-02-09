@@ -48,6 +48,8 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	 */
 	private Stack<DocumentObject> elementStack;
 
+	private Stack<Integer> elementIndexStack;
+	
 	private Stack<Boolean> switchStack;
 
 	private StringBuffer textBuffer;
@@ -342,6 +344,8 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	 */
 	@Override
 	public void startDocument() throws SAXException {
+		elementIndexStack = new Stack<Integer>();
+		elementIndexStack.push(0);
 		switchStack = new Stack<Boolean>();
 		defaultNamespace = IConstants.XWT_NAMESPACE;
 	}
@@ -446,6 +450,8 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		} else {
 			preElement(uri, localName, attrs);
 		}
+
+		elementIndexStack.push(0);
 	}
 
 	/*
@@ -455,6 +461,8 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
+
+		elementIndexStack.pop();
 
 		uri = normalizeNamespace(uri);
 
@@ -519,7 +527,9 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		}
 
 		// Create or reference element.
-		Element element = new Element(namespace, name, attributes, namespaceMapping);
+		int originalIndex = elementIndexStack.pop();
+		elementIndexStack.push(originalIndex + 1);
+		Element element = new Element(namespace, name, originalIndex, attributes, namespaceMapping);
 		element.setId(id);
 
 		// Add current node to stack
@@ -654,7 +664,9 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 				collection.add(attr);
 			}
 
-			Attribute attribute = new Attribute(normalizeAttrNamespace(namespace), attributeName, elementId, collection);
+			int originalIndex = elementIndexStack.pop();
+			elementIndexStack.push(originalIndex + 1);
+			Attribute attribute = new Attribute(normalizeAttrNamespace(namespace), attributeName, originalIndex, elementId, collection);
 			elementStack.push(attribute);
 			bufferStack.push(textBuffer);
 			textBuffer = null;
