@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +35,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
+import org.eclipse.e4.ui.model.application.MCommand;
+import org.eclipse.e4.ui.model.application.MHandledMenuItem;
+import org.eclipse.e4.ui.model.application.MHandledToolItem;
+import org.eclipse.e4.ui.model.application.MHandler;
+import org.eclipse.e4.ui.model.application.MKeyBinding;
 import org.eclipse.e4.ui.model.application.MMenu;
 import org.eclipse.e4.ui.model.application.MMenuItem;
 import org.eclipse.e4.ui.model.application.MPart;
@@ -41,7 +48,6 @@ import org.eclipse.e4.ui.model.application.MPartStack;
 import org.eclipse.e4.ui.model.application.MPerspective;
 import org.eclipse.e4.ui.model.application.MPerspectiveStack;
 import org.eclipse.e4.ui.model.application.MToolBar;
-import org.eclipse.e4.ui.model.application.MToolItem;
 import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.e4.ui.model.application.MWindowTrim;
 import org.eclipse.emf.common.util.URI;
@@ -50,9 +56,18 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.pde.core.plugin.IPluginBase;
 import org.eclipse.pde.core.plugin.IPluginElement;
 import org.eclipse.pde.core.plugin.IPluginExtension;
+import org.eclipse.pde.core.plugin.IPluginImport;
+import org.eclipse.pde.core.plugin.IPluginReference;
 import org.eclipse.pde.internal.core.ICoreConstants;
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
 import org.eclipse.pde.internal.core.plugin.WorkspacePluginModelBase;
@@ -61,10 +76,10 @@ import org.eclipse.pde.internal.ui.PDEUIMessages;
 import org.eclipse.pde.internal.ui.wizards.IProjectProvider;
 import org.eclipse.pde.internal.ui.wizards.plugin.NewPluginProjectWizard;
 import org.eclipse.pde.internal.ui.wizards.plugin.NewProjectCreationOperation;
-import org.eclipse.pde.internal.ui.wizards.plugin.NewProjectCreationPage;
 import org.eclipse.pde.internal.ui.wizards.plugin.PluginFieldData;
 import org.eclipse.ui.IWorkingSet;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 /**
  * @author jin.liu (jin.liu@soyatec.com)
@@ -127,7 +142,56 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 					false,
 					true,
 					new NewProjectCreationOperation(fPluginData,
-							fProjectProvider, null));
+							fProjectProvider, null) {
+						private WorkspacePluginModelBase model;
+
+						@Override
+						protected void adjustManifests(
+								IProgressMonitor monitor, IProject project,
+								IPluginBase bundle) throws CoreException {
+							super.adjustManifests(monitor, project, bundle);
+							IPluginBase pluginBase = model.getPluginBase();
+							String[] dependencyId = new String[] {
+									"javax.inject",
+									"org.eclipse.core.resources",
+									"org.eclipse.core.runtime",
+									"org.eclipse.swt",
+									"org.eclipse.core.databinding",
+									"org.eclipse.core.databinding.beans",
+									"org.eclipse.jface",
+									"org.eclipse.jface.databinding",
+									"org.eclipse.e4.ui.services",
+									"org.eclipse.e4.ui.workbench",
+									"org.eclipse.e4.core.services",
+									"org.eclipse.e4.ui.workbench.swt",
+									"org.eclipse.core.databinding.property",
+									"org.eclipse.e4.ui.css.core",
+									"org.w3c.css.sac",
+									"org.eclipse.e4.core.commands",
+									"org.eclipse.e4.ui.bindings" };
+							for (String id : dependencyId) {
+								Bundle dependency = Platform.getBundle(id);
+
+								IPluginImport iimport = model
+										.getPluginFactory().createImport();
+								iimport.setId(id);
+								Version version = dependency.getVersion();
+								String versionString = version.getMajor() + "."
+										+ version.getMinor() + "."
+										+ version.getMicro();
+								iimport.setVersion(versionString);
+								pluginBase.add(iimport);
+							}
+						}
+
+						@Override
+						protected void setPluginLibraries(
+								WorkspacePluginModelBase model)
+								throws CoreException {
+							this.model = model;
+							super.setPluginLibraries(model);
+						}
+					});
 
 			IWorkingSet[] workingSets = fMainPage.getSelectedWorkingSets();
 			if (workingSets.length > 0)
@@ -168,7 +232,23 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 			String applicationName = map
 					.get(NewApplicationWizardPage.APPLICATION);
 
+			String xmiPath = map
+					.get(NewApplicationWizardPage.APPLICATION_XMI_PROPERTY);
+			if (xmiPath != null) {
+				xmiPath = productName + "/" + xmiPath;
+				map.put(NewApplicationWizardPage.APPLICATION_XMI_PROPERTY,
+						xmiPath);
+			}
+			String cssValue = map
+					.get(NewApplicationWizardPage.APPLICATION_CSS_PROPERTY);
+			if (cssValue != null) {
+				cssValue = "platform:/plugin/" + productName + "/" + cssValue;
+				map.put(NewApplicationWizardPage.APPLICATION_CSS_PROPERTY,
+						cssValue);
+			}
+
 			extension.setPoint("org.eclipse.core.runtime.products");
+			extension.setId("product");
 			IPluginElement productElement = fmodel.getFactory().createElement(
 					extension);
 
@@ -189,9 +269,9 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 						Entry<String, String> entry = it.next();
 						String value = entry.getValue();
 						if (value == null || value.trim().length() == 0) {
-							continue;							
+							continue;
 						}
-						
+
 						if (entry.getKey().equals(
 								NewApplicationWizardPage.PRODUCT_NAME)
 								|| entry.getKey().equals(
@@ -233,6 +313,18 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 		String xmiPath = map
 				.get(NewApplicationWizardPage.APPLICATION_XMI_PROPERTY);
 
+		IJavaProject javaProject = JavaCore.create(project);
+		IPackageFragment fragment = null;
+		try {
+			for (IPackageFragment element : javaProject.getPackageFragments()) {
+				if (element.getKind() == IPackageFragmentRoot.K_SOURCE) {
+					fragment = element;
+				}
+			}
+		} catch (JavaModelException e1) {
+			e1.printStackTrace();
+		}
+
 		if (xmiPath != null && xmiPath.trim().length() > 0) {
 			// Create a resource set
 			//
@@ -251,6 +343,20 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 					.createApplication();
 			resource.getContents().add((EObject) application);
 
+			// Create Quit command
+			MCommand quitCommand = createCommand("quitCommand", "QuitHandler",
+					"Ctrl+Q", projectName, fragment, application);
+
+			MCommand openCommand = createCommand("openCommand", "OpenHandler",
+					"Ctrl+O", projectName, fragment, application);
+
+			MCommand saveCommand = createCommand("saveCommand", "SaveHandler",
+					"Ctrl+S", projectName, fragment, application);
+
+			MCommand aboutCommand = createCommand("aboutCommand",
+					"AboutHandler", "Ctrl+A", projectName, fragment,
+					application);
+
 			MWindow mainWindow = MApplicationFactory.eINSTANCE.createWindow();
 			application.getChildren().add(mainWindow);
 			{
@@ -268,24 +374,27 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 					menu.getChildren().add(fileMenuItem);
 					fileMenuItem.setLabel("File");
 					{
-						MMenuItem menuItemOpen = MApplicationFactory.eINSTANCE
-								.createMenuItem();
+						MHandledMenuItem menuItemOpen = MApplicationFactory.eINSTANCE
+								.createHandledMenuItem();
 						fileMenuItem.getChildren().add(menuItemOpen);
 						menuItemOpen.setLabel("Open");
 						menuItemOpen.setIconURI("platform:/plugin/"
 								+ project.getName() + "/icons/sample.gif");
+						menuItemOpen.setCommand(openCommand);
 
-						MMenuItem menuItemSave = MApplicationFactory.eINSTANCE
-								.createMenuItem();
+						MHandledMenuItem menuItemSave = MApplicationFactory.eINSTANCE
+								.createHandledMenuItem();
 						fileMenuItem.getChildren().add(menuItemSave);
 						menuItemSave.setLabel("Save");
 						menuItemSave.setIconURI("platform:/plugin/"
 								+ project.getName() + "/icons/save_edit.gif");
+						menuItemSave.setCommand(saveCommand);
 
-						MMenuItem menuItemQuit = MApplicationFactory.eINSTANCE
-								.createMenuItem();
+						MHandledMenuItem menuItemQuit = MApplicationFactory.eINSTANCE
+								.createHandledMenuItem();
 						fileMenuItem.getChildren().add(menuItemQuit);
 						menuItemQuit.setLabel("Quit");
+						menuItemQuit.setCommand(quitCommand);
 					}
 
 					MMenuItem helpMenuItem = MApplicationFactory.eINSTANCE
@@ -293,10 +402,11 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 					menu.getChildren().add(helpMenuItem);
 					helpMenuItem.setLabel("Help");
 					{
-						MMenuItem menuItemAbout = MApplicationFactory.eINSTANCE
-								.createMenuItem();
+						MHandledMenuItem menuItemAbout = MApplicationFactory.eINSTANCE
+								.createHandledMenuItem();
 						helpMenuItem.getChildren().add(menuItemAbout);
 						menuItemAbout.setLabel("About");
+						menuItemAbout.setCommand(aboutCommand);
 					}
 				}
 
@@ -334,17 +444,19 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 								.createToolBar();
 						windowTrim.getChildren().add(toolBar);
 
-						MToolItem toolItemOpen = MApplicationFactory.eINSTANCE
-								.createToolItem();
+						MHandledToolItem toolItemOpen = MApplicationFactory.eINSTANCE
+								.createHandledToolItem();
 						toolBar.getChildren().add(toolItemOpen);
 						toolItemOpen.setIconURI("platform:/plugin/"
 								+ project.getName() + "/icons/sample.gif");
+						toolItemOpen.setCommand(openCommand);
 
-						MToolItem toolItemSave = MApplicationFactory.eINSTANCE
-								.createToolItem();
+						MHandledToolItem toolItemSave = MApplicationFactory.eINSTANCE
+								.createHandledToolItem();
 						toolBar.getChildren().add(toolItemSave);
 						toolItemSave.setIconURI("platform:/plugin/"
 								+ project.getName() + "/icons/save_edit.gif");
+						toolItemSave.setCommand(saveCommand);
 					}
 				}
 			}
@@ -364,29 +476,83 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 
 			try {
 				prepareFolder(file.getParent(), monitor);
-				file.create(new ByteArrayInputStream(new byte[0]), true,
-						monitor);
-			} catch (CoreException e) {
+
+				URL corePath = ResourceLocator
+						.getProjectTemplateFiles("css/default.css");
+				file.create(corePath.openStream(), true, monitor);
+			} catch (Exception e) {
 				PDEPlugin.logException(e);
 			}
 		}
 
-		IFolder folder = project.getFolder("icons");
-		try {
-			folder.create(true, true, monitor);
-			Bundle bundle = Platform
-					.getBundle("org.eclipse.e4.tools.ui.designer");
+		// IFolder folder = project.getFolder("icons");
+		// try {
+		// folder.create(true, true, monitor);
+		// Bundle bundle = Platform
+		// .getBundle("org.eclipse.e4.tools.ui.designer");
+		//
+		// for (String fileName : new String[] { "sample.gif", "save_edit.gif"
+		// }) {
+		// URL sampleUrl = bundle.getEntry("resources/icons/" + fileName);
+		// sampleUrl = FileLocator.resolve(sampleUrl);
+		// InputStream inputStream = sampleUrl.openStream();
+		// IFile file = folder.getFile(fileName);
+		// file.create(inputStream, true, monitor);
+		// }
+		// } catch (Exception e) {
+		// PDEPlugin.logException(e);
+		// }
 
-			for (String fileName : new String[] { "sample.gif", "save_edit.gif" }) {
-				URL sampleUrl = bundle.getEntry("resources/icons/" + fileName);
-				sampleUrl = FileLocator.resolve(sampleUrl);
-				InputStream inputStream = sampleUrl.openStream();
-				IFile file = folder.getFile(fileName);
-				file.create(inputStream, true, monitor);
-			}
+		String template_id = "common";
+		Set<String> binaryExtentions = new HashSet<String>();
+		binaryExtentions.add(".gif");
+		binaryExtentions.add(".png");
+
+		Map<String, String> keys = new HashMap<String, String>();
+		keys.put("projectName", projectName);
+		keys.put("packageName", fragment.getElementName() + ".handlers");
+
+		try {
+			URL corePath = ResourceLocator.getProjectTemplateFiles(template_id);
+			IRunnableWithProgress op = new TemplateOperation(corePath, project,
+					keys, binaryExtentions);
+			getContainer().run(false, true, op);
 		} catch (Exception e) {
 			PDEPlugin.logException(e);
 		}
+
+		try {
+			URL corePath = ResourceLocator.getProjectTemplateFiles("src");
+			IRunnableWithProgress op = new TemplateOperation(corePath,
+					(IContainer) fragment.getResource(), keys, binaryExtentions);
+			getContainer().run(false, true, op);
+		} catch (Exception e) {
+			PDEPlugin.logException(e);
+		}
+	}
+
+	private MCommand createCommand(String name, String className,
+			String keyBinding, String projectName, IPackageFragment fragment,
+			MApplication application) {
+		MCommand command = MApplicationFactory.eINSTANCE.createCommand();
+		command.setCommandName(name);
+		application.getCommands().add(command);
+		{
+			// Create Quit handler for command
+			MHandler quitHandler = MApplicationFactory.eINSTANCE
+					.createHandler();
+			quitHandler.setCommand(command);
+			quitHandler.setURI("platform:/plugin/" + projectName + "/"
+					+ fragment.getElementName() + ".handlers." + className);
+			application.getHandlers().add(quitHandler);
+
+			MKeyBinding binding = MApplicationFactory.eINSTANCE
+					.createKeyBinding();
+			binding.setKeySequence(keyBinding);
+			binding.setCommand(command);
+			application.getBindings().add(binding);
+		}
+		return command;
 	}
 
 	private void prepareFolder(IContainer container, IProgressMonitor monitor)

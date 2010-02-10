@@ -410,6 +410,8 @@ public class NewApplicationWizardPage extends WizardPage {
 			data.put(PRODUCT_NAME, projectProvider.getProjectName());
 			data.put(APPLICATION, E4_APPLICATION);
 		}
-		return data;
+		Map<String, String> map = new HashMap<String, String>();
+		map.putAll(data);
+		return map;
 	}
 }
