@@ -70,7 +70,13 @@ public class ImageCapture extends org.eclipse.e4.xwt.vex.swt.ImageCapture {
 			Class<?> NSAffineTransformClass = Class.forName("org.eclipse.swt.internal.cocoa.NSAffineTransform"); //$NON-NLS-1$
 			NSAffineTransform_transform = NSAffineTransformClass.getMethod("transform");
 			NSAffineTransform_translateXBy = NSAffineTransformClass.getMethod("translateXBy", double.class, double.class);
+			if (NSAffineTransform_translateXBy == null) {
+				NSAffineTransform_translateXBy = NSAffineTransformClass.getMethod("translateXBy", float.class, float.class);
+			}
 			NSAffineTransform_scaleXBy = NSAffineTransformClass.getMethod("scaleXBy", double.class, double.class);
+			if (NSAffineTransform_scaleXBy == null) {
+				NSAffineTransform_scaleXBy = NSAffineTransformClass.getMethod("scaleXBy", float.class, float.class);
+			}
 			NSAffineTransform_concat = NSAffineTransformClass.getMethod("concat");
 			
 			Class<?> NSRectClass = Class.forName("org.eclipse.swt.internal.cocoa.NSRect"); //$NON-NLS-1$
