@@ -29,7 +29,6 @@ import org.eclipse.e4.tools.ui.designer.utils.ResourceUtiltities;
 import org.eclipse.e4.ui.css.core.engine.CSSEngine;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;
 import org.eclipse.e4.ui.workbench.swt.internal.E4Application;
 import org.eclipse.e4.workbench.ui.IResourceUtiltities;
@@ -159,9 +158,6 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 			cssURI = cssResourcesURI;
 		}
 		IProject project = inputFile.getProject();
-		if (cssURI != null) {
-			applyStyle(appModel, project, cssURI);
-		}
 		// take over the resource resolution
 		appContext.set(IResourceUtiltities.class.getName(),
 				new ResourceUtiltities(project, Activator.getDefault()
@@ -169,6 +165,10 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 
 		workbench = new E4WorkbenchProxy(appModel, appContext);
 		workbench.createAndRunUI();
+		if (cssURI != null) {
+			applyStyle((Control)workbench.getRoot(), project, cssURI);
+		}
+		
 		E4UIEventPublisher globalDistahcher = workbench.getGlobalDistahcher();
 		globalDistahcher.addPublishedAdapter(new AdapterImpl() {
 			public void notifyChanged(Notification msg) {
@@ -190,10 +190,9 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		return new Result(appModel.getWidget(), true);
 	}
 
-	public static void applyStyle(MApplication application,
+	public static void applyStyle(Control control,
 			final IProject project, final String css) {
-		MWindow window = application.getSelectedElement();
-		final Shell shell = (Shell) window.getWidget();
+		final Shell shell = (Shell) control.getShell();
 		if (shell == null) {
 			return;
 		}
