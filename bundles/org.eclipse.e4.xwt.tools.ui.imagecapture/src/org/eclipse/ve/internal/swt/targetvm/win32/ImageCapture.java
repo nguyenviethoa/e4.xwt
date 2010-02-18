@@ -22,7 +22,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
@@ -38,6 +37,7 @@ import org.eclipse.swt.widgets.Tree;
 public class ImageCapture extends org.eclipse.e4.xwt.tools.ui.imagecapture.swt.ImageCapture {
 
 	static Field Control_handler;
+	static Field GC_handler;
 	static Class<?> OleFrameClass;
 
 	static Method GetParent;
@@ -52,7 +52,9 @@ public class ImageCapture extends org.eclipse.e4.xwt.tools.ui.imagecapture.swt.I
 			GetParent = osClass.getDeclaredMethod("GetParent", int.class);
 
 			Control_handler = Control.class.getField("handle");
-
+			GC_handler = GC.class.getField("handle");
+			GC_handler.setAccessible(true);
+			
 			SendMessage = osClass.getDeclaredMethod("SendMessage", int.class, int.class, int.class, int.class);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -170,7 +172,8 @@ public class ImageCapture extends org.eclipse.e4.xwt.tools.ui.imagecapture.swt.I
 					print_bits |= PRF_CHILDREN;
 				}
 			}
-			SendMessage.invoke(null, hwnd, WM_PRINT, gc.handle, print_bits);
+			Object handle = GC_handler.get(gc);
+			SendMessage.invoke(null, hwnd, WM_PRINT, handle, print_bits);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
