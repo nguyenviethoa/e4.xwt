@@ -379,7 +379,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	Object doCreate(Object parent, Element element, Class<?> constraintType,
+	protected Object doCreate(Object parent, Element element, Class<?> constraintType,
 			Map<String, Object> options) throws Exception {
 		int styles = -1;
 		if (options.containsKey(IXWTLoader.INIT_STYLE_PROPERTY)) {
@@ -768,7 +768,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	void applyStyles(Element element, Object targetObject) throws Exception {
+	protected void applyStyles(Element element, Object targetObject) throws Exception {
 		if (targetObject instanceof Widget) {
 			Widget widget = (Widget) targetObject;
 			Map<String, Object> dico = UserData.getLocalResources(widget);
@@ -833,7 +833,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	int getColumnIndex(Element columnElement) {
+	protected int getColumnIndex(Element columnElement) {
 		String name = columnElement.getName();
 		String namespace = columnElement.getNamespace();
 		IMetaclass metaclass = loader.getMetaclass(name, namespace);
@@ -852,7 +852,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	/**
 	 * @param tableItem
 	 */
-	void installTableEditors(TableItem tableItem) {
+	protected void installTableEditors(TableItem tableItem) {
 		Table table = tableItem.getParent();
 		TableColumn[] columns = table.getColumns();
 		if (columns == null || columns.length == 0) {
@@ -879,7 +879,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	Object getDataContext(Element element, Widget swtObject) {
+	protected Object getDataContext(Element element, Widget swtObject) {
 		// x:DataContext
 		try {
 			{
@@ -912,7 +912,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	Object getBindingContext(Element element, Widget swtObject) {
+	protected Object getBindingContext(Element element, Widget swtObject) {
 		// x:DataContext
 		try {
 			{
@@ -945,18 +945,18 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	void pushStack(Object host) {
+	protected void pushStack(Object host) {
 		loadData = new LoadingData(loadData, host);
 	}
 
-	void popStack() {
+	protected void popStack() {
 		LoadingData previous = loadData;
 		loadData = previous.getParent();
 
 		previous.end();
 	}
 
-	Integer getStyleValue(Element element, int styles) {
+	protected Integer getStyleValue(Element element, int styles) {
 		Attribute attribute = element.getAttribute(IConstants.XWT_X_NAMESPACE,
 				IConstants.XAML_STYLE);
 		if (attribute == null) {
@@ -974,7 +974,7 @@ public class ResourceLoader implements IVisualElementLoader {
 						.convert(attribute.getContent());
 	}
 
-	void init(IMetaclass metaclass, Object targetObject, Element element,
+	protected void init(IMetaclass metaclass, Object targetObject, Element element,
 			List<String> delayedAttributes) throws Exception {
 		// editors for TableItem,
 		if (targetObject instanceof TableItem) {
@@ -1126,7 +1126,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	Object getArrayProperty(Class<?> type, Object swtObject,
+	protected Object getArrayProperty(Class<?> type, Object swtObject,
 			DocumentObject element, String attrName)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
@@ -1160,7 +1160,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	}
 
 	@SuppressWarnings("unchecked")
-	Object getCollectionProperty(Class<?> type, Object swtObject,
+	protected Object getCollectionProperty(Class<?> type, Object swtObject,
 			DocumentObject element, String attrName)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
@@ -1193,7 +1193,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return collector;
 	}
 
-	String findNamespace(DocumentObject context, String prefix) {
+	protected String findNamespace(DocumentObject context, String prefix) {
 		while (context != null && !(context instanceof Element)) {
 			context = context.getParent();
 		}
@@ -1214,7 +1214,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return findNamespace(parent, prefix);
 	}
 
-	Object createInstance(Object swtObject, Element element) {
+	protected Object createInstance(Object swtObject, Element element) {
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)
@@ -1291,7 +1291,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return 0;
 	}
 
-	void loadShellCLR(String className, Shell shell) {
+	protected void loadShellCLR(String className, Shell shell) {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(),
 				className);
 		try {
@@ -1303,7 +1303,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	Object loadCLR(String className, Object[] parameters,
+	protected Object loadCLR(String className, Object[] parameters,
 			Class<?> currentTagType, Map<String, Object> options) {
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(),
 				className);
@@ -1340,7 +1340,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	void initAttribute(IMetaclass metaclass, Object targetObject,
+	protected void initAttribute(IMetaclass metaclass, Object targetObject,
 			Element element, String namespace, String attrName)
 			throws Exception {
 		if (attrName.indexOf('.') != -1) {
@@ -1371,7 +1371,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				namespace, attrName);
 	}
 
-	void addCommandExecuteListener(String commandName, final Widget targetButton) {
+	protected void addCommandExecuteListener(String commandName, final Widget targetButton) {
 		final ICommand commandObj = loader.getCommand(commandName);
 		if (commandObj != null) {
 			targetButton.addListener(SWT.Selection, new Listener() {
@@ -1382,7 +1382,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	void initSegmentAttribute(IMetaclass metaclass, String propertyName,
+	protected void initSegmentAttribute(IMetaclass metaclass, String propertyName,
 			Object target, Element element, String namespace, String attrName)
 			throws Exception {
 		Attribute attribute = namespace == null ? element
@@ -1634,7 +1634,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	 * @param contentValue
 	 * @return
 	 */
-	String getSourceURL(String contentValue) {
+	protected String getSourceURL(String contentValue) {
 		URL url = null;
 		try {
 			url = new URL(contentValue);
@@ -1658,7 +1658,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return contentValue;
 	}
 
-	Class<?> getJavaType(DocumentObject element) {
+	protected Class<?> getJavaType(DocumentObject element) {
 		String name = element.getName();
 		String namespace = element.getNamespace();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)
@@ -1672,7 +1672,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return metaclass.getType();
 	}
 
-	boolean isAssignableFrom(DocumentObject element, Class<?> type) {
+	protected boolean isAssignableFrom(DocumentObject element, Class<?> type) {
 		Class<?> targetType = getJavaType(element);
 		if (targetType == null) {
 			return false;
@@ -1680,7 +1680,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return targetType.isAssignableFrom(type);
 	}
 
-	Object getStaticValue(DocumentObject child) {
+	protected Object getStaticValue(DocumentObject child) {
 		DocumentObject[] children = child.getChildren();
 		if (children.length == 1) {
 			Element element = (Element) children[0];
@@ -1692,7 +1692,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	String getImagePath(Attribute attribute, String contentValue) {
+	protected String getImagePath(Attribute attribute, String contentValue) {
 		String value = contentValue;
 		try {
 			File file = new File(contentValue);
@@ -1724,7 +1724,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	String removeSubString(String str, String subString) {
+	protected String removeSubString(String str, String subString) {
 		StringBuffer stringBuffer = new StringBuffer();
 		int lenOfsource = str.length();
 		int i;
@@ -1739,7 +1739,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return stringBuffer.toString();
 	}
 
-	String getContentValue(String text) {
+	protected String getContentValue(String text) {
 		StringBuffer stringBuffer = new StringBuffer();
 		String subString = "SWT.";
 		String str = XWTMaps.getCombAccelerator(text);

@@ -34,9 +34,9 @@ public class Element extends DocumentObject {
 	private String[] xmlnsMapping;
 	
 	/**
-	 * @return the index of this element is its parent element, as specified in source XML.
+	 * @return the index of this element in its parent element, as specified in source XML.
 	 */
-	public int getOriginalIndex1() {
+	public int getOriginalIndex() {
 		return originalIndex;
 	}
 
@@ -225,7 +225,7 @@ public class Element extends DocumentObject {
 	}
 	
 	/**
-	 * Set attribute without nodify event.
+	 * Set attribute without notifying event.
 	 * 
 	 * @param attribute
 	 *            the modified attribute.
