@@ -29,29 +29,22 @@ import org.eclipse.e4.core.services.annotations.Optional;
 import org.eclipse.e4.demo.contacts.handlers.FadeAnimation;
 import org.eclipse.e4.demo.contacts.handlers.ThemeUtil;
 import org.eclipse.e4.demo.contacts.model.Contact;
-import org.eclipse.e4.ui.model.application.MDirtyable;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.xwt.ui.workbench.editors.XWTSaveablePart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Composite;
 
 public class DetailsView extends XWTSaveablePart {
-	@Inject
-	public DetailsView(Composite parent, MDirtyable dirtyable) {
-		super(parent, dirtyable);
-	}
-
 	/**
 	 * switch the content change with fade animation. 
 	 * 
 	 */
 	protected void refresh(URL url, Object dataContext, ClassLoader loader) {
-//		FadeAnimation animation = new FadeAnimation(getParent()); 
-//		animation.setStep(10);
+		FadeAnimation animation = new FadeAnimation(getParent()); 
+		animation.setStep(10);
 		super.refresh(url, dataContext, loader);
-//		animation.play();
+		animation.play();
 	}
 	
 	public void doSave(@Optional IProgressMonitor monitor) throws IOException,
@@ -82,7 +75,7 @@ public class DetailsView extends XWTSaveablePart {
 		return builder.toString();
 	}
 
-	private void saveAsVCard(Contact contact, String fileName)
+	protected void saveAsVCard(Contact contact, String fileName)
 			throws IOException {
 		String charSet = "CHARSET=" + Charset.defaultCharset().name();
 		String vCard = "BEGIN:VCARD" + "\nVERSION:2.1" + "\n"
@@ -110,7 +103,7 @@ public class DetailsView extends XWTSaveablePart {
 		out.close();
 	}
 
-	private void updatePartTitle(Contact contact) {
+	protected void updatePartTitle(Contact contact) {
 		StringBuffer title = new StringBuffer("Details of ");
 		title.append(contact.getFirstName()).append(' ').append(
 				contact.getLastName());

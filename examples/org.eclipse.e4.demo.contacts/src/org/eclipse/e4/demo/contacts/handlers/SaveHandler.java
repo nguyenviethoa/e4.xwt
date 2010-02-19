@@ -20,27 +20,25 @@ import org.eclipse.e4.core.services.annotations.Optional;
 import org.eclipse.e4.core.services.context.EclipseContextFactory;
 import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.core.services.context.spi.ContextInjectionFactory;
-import org.eclipse.e4.ui.model.application.MContribution;
-import org.eclipse.e4.ui.model.application.MDirtyable;
+import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.services.IStylingEngine;
+import org.eclipse.e4.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 
 public class SaveHandler {
-	public SaveHandler() {
-	}
 
-	public boolean canExecute(
-			@Named(IServiceConstants.ACTIVE_PART) MDirtyable dirtyable) {
-		return dirtyable.isDirty();
+	public boolean canExecute(EPartService partService) {
+		MPart details = partService.findPart("DetailsView");
+		return details.isDirty();
 	}
 
 	public void execute(
 			IEclipseContext context, @Optional IStylingEngine engine,
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
-			@Named(IServiceConstants.ACTIVE_PART) final MContribution contribution)
+			final EPartService partService)
 			throws InvocationTargetException, InterruptedException {
 		final IEclipseContext pmContext = EclipseContextFactory.create(context,
 				null);
@@ -54,7 +52,8 @@ public class SaveHandler {
 			public void run(IProgressMonitor monitor)
 					throws InvocationTargetException, InterruptedException {
 				pmContext.set(IProgressMonitor.class.getName(), monitor);
-				Object clientObject = contribution.getObject();
+				MPart details = partService.findPart("DetailsView");
+				Object clientObject = details.getObject();
 				ContextInjectionFactory.invoke(clientObject, "doSave", //$NON-NLS-1$
 						pmContext, null);
 			}
@@ -64,5 +63,4 @@ public class SaveHandler {
 			((IDisposable) pmContext).dispose();
 		}
 	}
-
 }

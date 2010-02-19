@@ -46,13 +46,11 @@ public class ThemeUtil {
 							"platform:/plugin/org.eclipse.e4.demo.contacts/css/"
 									+ css));
 
-					FadeAnimation fadeAnimation = new FadeAnimation(shell);
-
 					InputStream stream = url.openStream();
 					InputStreamReader streamReader = new InputStreamReader(
 							stream);
 					engine.reset();
-//					engine.parseStyleSheet(streamReader);
+					engine.parseStyleSheet(streamReader);
 					stream.close();
 					streamReader.close();
 					
@@ -62,8 +60,6 @@ public class ThemeUtil {
 					} finally {
 						shell.setRedraw(true);
 					}
-					
-					fadeAnimation.play();
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
