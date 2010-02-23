@@ -52,6 +52,10 @@ public class ApplicationModelHelper {
 			return false;
 		}
 
+		if ((eClass == toolBarClass) && (target instanceof MToolBar)) {
+			return false;
+		}
+
 		if ((eClass == menuClass)
 				&& (!(target instanceof MWindow || target instanceof MPart))) {
 			return false;
@@ -81,6 +85,14 @@ public class ApplicationModelHelper {
 		if (target instanceof MPart
 				&& !((element instanceof MToolBar) || (element instanceof MMenu))) {
 			return false;
+		}
+
+		if (element instanceof MToolItem && target instanceof MToolBar) {
+			return true;
+		}
+
+		if (element instanceof MMenuItem && target instanceof MMenu) {
+			return true;
 		}
 
 		if (element instanceof MMenu && target instanceof MMenu) {

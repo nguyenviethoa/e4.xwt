@@ -85,6 +85,8 @@ public class CopyElementAction extends SelectionAction {
 							&& parentModel instanceof MUIElement) {
 						MUIElement copymodel = (MUIElement) EcoreUtil
 								.copy((EObject) element);
+						copymodel.setId(EcoreUtil.generateUUID());
+						copymodel.setWidget(null);
 						selectResult.add(copymodel);
 					}
 				}

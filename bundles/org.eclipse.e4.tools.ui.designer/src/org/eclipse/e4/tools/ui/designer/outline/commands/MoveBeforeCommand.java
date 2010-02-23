@@ -80,6 +80,11 @@ public class MoveBeforeCommand extends MoveCommand {
 			MApplicationElement newNode = sourceNode;
 			if (!isMove() && ApplicationModelHelper.isLive(sourceNode)) {
 				newNode = (MApplicationElement) EcoreUtil.copy((EObject)sourceNode);
+				newNode.setId(EcoreUtil.generateUUID());
+				if (newNode instanceof MUIElement) {
+					MUIElement uiElement = (MUIElement) newNode;
+					uiElement.setWidget(null);
+				}
 			}
 			if (isMove() && ApplicationModelHelper.isLive(newNode) && newNode instanceof MUIElement) {
 				command.add(new DeleteCommand((MUIElement)newNode));

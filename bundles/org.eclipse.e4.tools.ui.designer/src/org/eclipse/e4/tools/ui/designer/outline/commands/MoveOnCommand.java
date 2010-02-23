@@ -102,6 +102,11 @@ public class MoveOnCommand extends MoveCommand {
 				if (ApplicationModelHelper.isLive(sourceNode)) {
 					newChild = (MUIElement) EcoreUtil
 							.copy((EObject) sourceNode);
+					newChild.setId(EcoreUtil.generateUUID());
+					if (newChild instanceof MUIElement) {
+						MUIElement uiElement = (MUIElement) newChild;
+						uiElement.setWidget(null);
+					}
 				} else {
 					newChild = sourceNode;
 				}

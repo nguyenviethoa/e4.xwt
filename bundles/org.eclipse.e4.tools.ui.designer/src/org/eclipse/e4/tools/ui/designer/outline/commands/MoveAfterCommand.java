@@ -85,6 +85,11 @@ public class MoveAfterCommand extends MoveCommand {
 			if (ApplicationModelHelper.isLive(sourceNode)) {
 				newNode = (MApplicationElement) EcoreUtil
 						.copy((EObject) sourceNode);
+				newNode.setId(EcoreUtil.generateUUID());
+				if (newNode instanceof MUIElement) {
+					MUIElement uiElement = (MUIElement) newNode;
+					uiElement.setWidget(null);
+				}
 			} else {
 				newNode = sourceNode;
 			}
