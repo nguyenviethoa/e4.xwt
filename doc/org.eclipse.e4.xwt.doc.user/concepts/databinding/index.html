@@ -29,7 +29,7 @@
 <p>Data Binding is the process that establishes a connection between
 the application UI and business logic. If the binding has the correct
 settings and the data provides the proper notifications, then, when the
-data changes its value, the elements that bound to the data reflect
+data changes its value, the elements bound to the data reflect
 changes automatically. Data binding can also mean that if an outer
 representation of the data in an element changes, then the underlying
 data can be automatically updated to reflect the change. For example, if
@@ -275,8 +275,7 @@ the following codes.</p>
 	class="XMLElementTag">&gt;</span>
 </pre>
 
-<p>Note: Notice the code above, the Path value <tt>name</tt> is
-declared in the Person class.</p>
+<p>Notice that the Path value <tt>name</tt> is declared in the Person class.</p>
 
 <!--  
 <p>Click preview to view the UI or right click DataBinding.xwt,
@@ -297,7 +296,7 @@ binding source directly. But in some case, the binding source is not the
 associated class, in XWT, there is a another solutions: specifying the
 path expression of the data binding.</p>
 
-<p>For example, in a application we associate a Company object in
+<p>For example, in an application we associate a Company object in
 Shell to a key "myData".</p>
 
 <pre>
@@ -343,9 +342,9 @@ initialized in Person constructor.</p>
 }
 </pre>
 
-<p>Now, if the user want create a Text in Shell and binding the
-value to the city member. XWT supplied a simple way for this case that
-only need to set the Path value as <tt>manager.address.city</tt>, See
+<p>Now, if the user wants to create a Text in Shell and bind the
+value to the city member, XWT supplies a simple way of path expression 
+to set in the Path property value of Binding as <tt>manager.address.city</tt>, See
 the code below.</p>
 
 <pre>
