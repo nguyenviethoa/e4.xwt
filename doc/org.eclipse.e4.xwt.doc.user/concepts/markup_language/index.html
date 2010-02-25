@@ -20,7 +20,7 @@ declarative Eclipse application programming.</p>
 	<li><a href="#language_03">Setting Properties</a></li>
 	<li><a href="#language_06">Reference Values and Markup
 	Extensions</li>
-	<li><a href="#language_07">Case and Whitespace in XAML</a></li>
+	<li><a href="#language_07">Case and Whitespace</a></li>
 
 	<li><a href="#language_04">XWT Root Elements and XML
 	Namespaces</a></li>
@@ -124,14 +124,14 @@ the Button.</p>
 
 <h3><a name="language_06"></a>Reference Values and Markup
 Extensions</h3>
-<p>Markup extensions are a XWT concept. In attribute syntax, curly
-brace ({ and }) indicate a markup extension usage. This usage directs
+<p>Markup extensions are an XWT concept. In attribute syntax, curly
+braces ({ and }) indicate a markup extension usage. This usage directs
 the XWT processing to escape from the general treatment of attribute
 values are either a literal string or directly string-convertible value.</p>
 
 <p>When properties take a reference type value, these properties
 will often require either property element syntax (which always creates
-a new instance) or an obejct reference through a markup extension. A
+a new instance) or an object reference through a markup extension. A
 markup extension usage can potentially return an existing instance, and
 thus can be more versatile or might incur less object overhead.</p>
 
@@ -141,7 +141,7 @@ backing class for the relevant markup extension. The most common markup
 extensions used in XWT application programming are <b>Binding</b>, used
 for data binding expressions and the resource reference <b>StaticResource</b>
 and <b>DynamicResource</b>. By using markup extension, you can use
-attribute syntax to provide refernece values for properties even if that
+attribute syntax to provide reference values for properties even if that
 the property does not support an attribute syntax for direct object
 instantiation, or enable specific behavior that defers the general
 behavior of the requirement that XAML properties must be filled by
@@ -183,30 +183,28 @@ property using attribute syntax. The text binds a Person class.</p>
 <span class="XMLElementTag">&lt;/Shell&gt;</span>
 </pre>
 
+<h3><a name="language_07"></a>Case and Whitespace</h3>
+<p>XWT is in general case sensitive. Object elements and property elements must all be specified by using the proper case when
+compared by name to the underlying type in programming language, or to a member
+of a type. There is one exception for attribute name. The first letter and only the first letter of attribute name is not case-sensitive.</p>
 
-<h3><a name="language_07"></a>Case and Whitespace in XAML</h3>
-<p>XWT is case sensitive. Object elements, property elements, and
-attribute names must all be specified by using the proper casing when
-compared by name to the underlying type in the assembly, or to a member
-of a type. The values for attributes are not always case sensitive. Case
+<p>The values for attributes are not always case sensitive. Case
 sensitivity for values will depend on the type converter behavior
 associated with the property that takes the value, or the property value
-type. For instance, properties that take the Boolean type can take
+type. For instance, properties that take Boolean type can take
 either true or True as equivalent values, but only because the default
 string type conversion for Boolean already permits these as equivalents.
 </p>
 
 <p>XWT processors and serializers will ignore or drop all
-nonsignificant whitespace, and will normalize any significant
+non-significant whitespace, and will normalize any significant
 whitespace. This behavior is generally only of consequence when you
 specify strings within XWT content properties. In simplest terms, XWT
-converts space, linefeed and tab characters into spaces and then
+converts space, line feed and tab characters into spaces and then
 preserves one space if found at either end of a contiguous string.</p>
 
-
-
 <h3><a name="language_04"></a>XWT Root Elements and XML Namespaces</h3>
-<p>A XWT file must have only one root element, in order to be both a
+<p>An XWT file must have only one root element, in order to be both a
 well-formed XML file and a valid XWT file. Typically you should choose
 an element that is part of the application model. The following example
 shows the root element of a typical XWT file with the root element
@@ -224,7 +222,7 @@ Composite.</p>
 </pre>
 
 <p>The root element also contains the attributes <b>xmlns</b> and <b>xmlns:x</b>.
-These attributes indicate to a XWT processor which XML namespaces
+These attributes indicate to an XWT processor which XML namespaces
 contain the element definitions for elements that the markup will
 reference. The <b>xmlns</b> attribute specifically indicates the default
 XML namespace. Within the default XML namespace, object elements in the
@@ -249,13 +247,13 @@ common x:prefix namespace programming constructs you will use:</p>
 <ul>
 	<li>x:Key: Sets a unique key for each resource in a DataContext.</li>
 	<li>x:Class: Specifies the CLR namespace and class name for the
-	class that provides code-behind for a XWT page. You must have such a
+	class that provides code-behind for an XWT page. You must have such a
 	class to support code-behind, and it is for this reason that you almost
 	always see x: mapped, even if there are no resources.</li>
 	<li>x:Name: Specifies a object name for the instance.</li>
 	<li>x:Null: <strong>null</strong> in Java.</li>
 	<li>x:Static: Enables a value reference that gets a static value
-	that is not otherwise a XWT-compatible property.</li>
+	that is not otherwise an XWT-compatible property.</li>
 	<li>x:Type: Constructs a Type reference based on a type name.</li>
 	<li>x:Array: Provides general support for arrays of objects in
 	XWT.</li>
@@ -265,7 +263,7 @@ common x:prefix namespace programming constructs you will use:</p>
 <h3><a name="language_05"></a>Events and XWT Code-behind</h3>
 <p>Most XWT applications consist of both markup and code-behind.
 Within a project, the XWT is written as .xwt file and a synchronized
-java class is used to write a code-behind file. When a XWT file is
+java class is used to write a code-behind file. When an XWT file is
 loaded, the location of the XWT code-behind file for each XWT page is
 identified by specifying a namespace and class as the x:Class attribute
 of the root element of the XWT page.</p>
