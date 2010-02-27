@@ -18,7 +18,6 @@ import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.outline.E4ContentOutlinePage;
 import org.eclipse.e4.tools.ui.designer.outline.OutlinePageDropManager;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
-import org.eclipse.e4.tools.ui.designer.properties.E4PropertySourceProvider;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.provider.ApplicationItemProviderAdapterFactory;
@@ -45,10 +44,14 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetPage;
@@ -60,9 +63,10 @@ public class E4Designer extends Designer {
 
 	private boolean isDirty = false;
 	private E4UIRenderer uiRenderer = new E4UIRenderer();
+	private ComposedAdapterFactory adapterFactory;
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc)Property
 	 * 
 	 * @see
 	 * org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createModelBuilder()
@@ -102,6 +106,16 @@ public class E4Designer extends Designer {
 		EditDomain domain = getEditDomain();
 		domain.setDefaultTool(new E4SelectionTool());
 		domain.loadDefaultTool();
+	}
+
+	protected ComposedAdapterFactory getAdapterFactory() {
+		if (adapterFactory == null) {
+			adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+			adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+			adapterFactory.addAdapterFactory(new ApplicationItemProviderAdapterFactory());
+			adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+		}
+		return adapterFactory;
 	}
 
 	/*
@@ -207,8 +221,25 @@ public class E4Designer extends Designer {
 	 * ()
 	 */
 	protected IPropertySheetPage createPropertyPage() {
-		PropertySheetPage propertyPage = new PropertySheetPage();
-		propertyPage.setPropertySourceProvider(new E4PropertySourceProvider());
+		PropertySheetPage propertyPage = new PropertySheetPage() {
+			@Override
+			public void selectionChanged(IWorkbenchPart part,
+					ISelection selection) {
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+					Object[] objects = structuredSelection.toArray();
+					for (int i = 0; i < objects.length; i++) {
+						if (objects[i] instanceof EditPart) {
+							EditPart editPart = (EditPart) objects[i];
+							objects[i] = editPart.getModel();
+						}
+					}
+					selection = new StructuredSelection(objects);
+				}
+				super.selectionChanged(part, selection);
+			}
+		};
+		propertyPage.setPropertySourceProvider(new AdapterFactoryContentProvider(getAdapterFactory()));
 		return propertyPage;
 	}
 
@@ -229,15 +260,7 @@ public class E4Designer extends Designer {
 	 * ()
 	 */
 	protected ContentOutlinePage createOutlinePage() {
-		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
-				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-
-		adapterFactory
-				.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-		adapterFactory
-				.addAdapterFactory(new ApplicationItemProviderAdapterFactory());
-		adapterFactory
-				.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+		ComposedAdapterFactory adapterFactory = getAdapterFactory();
 
 		ContentOutlinePage outlinePage = new E4ContentOutlinePage(this,
 				new AdapterFactoryContentProvider(adapterFactory),
