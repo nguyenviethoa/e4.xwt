@@ -4,14 +4,18 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.emf.EMFBinding;
+import org.eclipse.e4.xwt.emf.test.books.BooksFactory;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 public class EMFTestCase extends XWTTestCase {
 	public EMFTestCase() {
 		EMFBinding.initialze();
+		EPackage.Registry.INSTANCE.put("org.eclipse.e4.xwt.emf/books.ecore",
+				BooksFactory.eINSTANCE);
 	}
-	
+
 	public void testEMFDataProvider_DataContext() {
 		URL url = EMFTestCase.class
 				.getResource(EMFDataProvider_DataContext.class.getSimpleName()
