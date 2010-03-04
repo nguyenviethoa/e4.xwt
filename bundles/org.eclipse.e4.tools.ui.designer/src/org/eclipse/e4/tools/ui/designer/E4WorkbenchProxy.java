@@ -37,7 +37,6 @@ import org.eclipse.e4.workbench.ui.internal.E4Workbench;
 import org.eclipse.e4.workbench.ui.internal.ModelExtensionProcessor;
 import org.eclipse.e4.workbench.ui.internal.Parameter;
 import org.eclipse.e4.workbench.ui.internal.Policy;
-import org.eclipse.e4.workbench.ui.internal.Workbench;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -105,7 +104,7 @@ public class E4WorkbenchProxy {
 		extProcessor.addModelExtensions();
 
 		// Do a top level processHierarchy for the application?
-		Workbench.processHierarchy(appElement);
+		E4Workbench.processHierarchy(appElement);
 	}
 
 	public void createAndRunUI() {

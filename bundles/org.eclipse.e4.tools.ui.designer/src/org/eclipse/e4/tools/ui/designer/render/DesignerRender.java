@@ -18,7 +18,7 @@ import org.eclipse.e4.core.services.context.IEclipseContext;
 import org.eclipse.e4.core.services.context.spi.IContextConstants;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MWindow;
-import org.eclipse.e4.workbench.ui.internal.Workbench;
+import org.eclipse.e4.workbench.ui.internal.E4Workbench;
 import org.eclipse.e4.workbench.ui.renderers.swt.TrimmedPartLayout;
 import org.eclipse.e4.workbench.ui.renderers.swt.WBWRenderer;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -64,7 +64,7 @@ public class DesignerRender extends WBWRenderer {
 
 		// Add the shell into the WBW's context
 		localContext.set(Shell.class.getName(), wbwShell);
-		localContext.set(Workbench.LOCAL_ACTIVE_SHELL, wbwShell);
+		localContext.set(E4Workbench.LOCAL_ACTIVE_SHELL, wbwShell);
 
 		if (element instanceof MWindow) {
 			TrimmedPartLayout tl = new TrimmedPartLayout(wbwShell);
