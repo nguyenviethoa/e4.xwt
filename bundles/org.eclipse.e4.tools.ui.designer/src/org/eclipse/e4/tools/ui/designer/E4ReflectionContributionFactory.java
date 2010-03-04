@@ -26,6 +26,7 @@ import org.eclipse.e4.workbench.ui.internal.ReflectionContributionFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.osgi.framework.Bundle;
 
 public class E4ReflectionContributionFactory implements IContributionFactory {
 
@@ -218,5 +219,10 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public Bundle getBundle(String uriString) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
