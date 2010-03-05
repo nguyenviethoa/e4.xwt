@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Soyatec - adapt for e4 Designer
+ ******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
 import java.lang.reflect.InvocationTargetException;
@@ -221,8 +232,12 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 		}
 	}
 
+	protected Bundle getBundle(URI platformURI) {
+		return Activator.getDefault().getBundleForName(platformURI.segment(1));
+	}
+
 	public Bundle getBundle(String uriString) {
-		// TODO Auto-generated method stub
-		return null;
+		URI uri = URI.createURI(uriString);
+		return getBundle(uri);
 	}
 }
