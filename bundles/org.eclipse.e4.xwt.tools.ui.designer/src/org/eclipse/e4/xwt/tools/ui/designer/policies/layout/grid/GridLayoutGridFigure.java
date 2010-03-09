@@ -239,12 +239,13 @@ public class GridLayoutGridFigure extends Figure {
 				int upperRow = i - 1;
 				int lowerRow = i;
 				int xPos = xMin;
-				int lastCol = cellContents.length - 1;
+				int length = Math.min(cellContents.length, columnWidths.length);
+				int lastCol = length - 1;
 				int rowSegsNdx = 0; // This will always point to the start index of the next segment.
 				rowSegs[rowSegsNdx] = xMin; // Will always start at xMin.
 				boolean prevSpan = true; // Previous was a span. (We treat first one as previous span so as not to close off an empty segment)
 				// Walk each column comparing upper row and lower to see if spanned.
-				for (int j = 0; j < cellContents.length; j++) {
+				for (int j = 0; j < length; j++) {
 					int trueColWidth = columnWidths[j];
 					if (j == 0)
 						trueColWidth += marginWidth;

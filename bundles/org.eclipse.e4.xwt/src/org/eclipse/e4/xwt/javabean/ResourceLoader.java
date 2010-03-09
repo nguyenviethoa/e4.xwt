@@ -124,6 +124,15 @@ public class ResourceLoader implements IVisualElementLoader {
 		private Widget hostCLRWidget = null;
 		private Object currentWidget = null;
 		private Object host = null;
+		private Object dataContext = null;
+
+		public Object getDataContext() {
+			return dataContext;
+		}
+
+		public void setDataContext(Object dataContext) {
+			this.dataContext = dataContext;
+		}
 
 		public Object getHost() {
 			return host;
@@ -152,6 +161,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			this.styles = loadingData.styles;
 			this.clr = loadingData.clr;
 			this.currentWidget = loadingData.currentWidget;
+			this.dataContext = loadingData.dataContext;
 			this.host = host;
 		}
 
@@ -882,6 +892,10 @@ public class ResourceLoader implements IVisualElementLoader {
 	protected Object getDataContext(Element element, Widget swtObject) {
 		// x:DataContext
 		try {
+			Object dataContext = loadData.getDataContext();
+			if (dataContext != null) {
+				return dataContext;
+			}
 			{
 				Attribute dataContextAttribute = element
 						.getAttribute(IConstants.XAML_DATA_CONTEXT);
@@ -894,11 +908,15 @@ public class ResourceLoader implements IVisualElementLoader {
 							|| IConstants.XAML_DYNAMICRESOURCES
 									.equals(documentObject.getName())) {
 						String key = documentObject.getContent();
-						return new StaticResourceBinding(composite, key);
+						dataContext = new StaticResourceBinding(composite, key);
+						loadData.setDataContext(dataContext);
+						return dataContext;
 					} else if (IConstants.XAML_BINDING.equals(documentObject
 							.getName())) {
-						return doCreate(swtObject, (Element) documentObject,
+						dataContext = doCreate(swtObject, (Element) documentObject,
 								null, EMPTY_MAP);
+						loadData.setDataContext(dataContext);
+						return dataContext;
 					} else {
 						LoggerManager.log(new UnsupportedOperationException(
 								documentObject.getName()));
@@ -982,7 +1000,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 
 		// x:DataContext
-		{
+		if (loadData.getDataContext() == null) {
 			Attribute dataContextAttribute = element
 					.getAttribute(IConstants.XAML_DATA_CONTEXT);
 			if (dataContextAttribute != null) {

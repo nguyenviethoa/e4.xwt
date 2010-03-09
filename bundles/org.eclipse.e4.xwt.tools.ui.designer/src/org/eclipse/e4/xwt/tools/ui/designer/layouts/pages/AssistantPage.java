@@ -41,6 +41,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 
 /**
@@ -131,7 +132,17 @@ public abstract class AssistantPage implements IAssistantPage, FieldEditorListen
 			String fieldName = editor.getFieldName();
 			RefreshAdapter refresher = new RefreshAdapter(model, fieldName) {
 				protected void performRefresh(Notification msg) {
-					editor.apply(getAssistant());
+					Display display = editor.getEditor().getDisplay();
+					if (Display.getCurrent() == display) {
+						editor.apply(getAssistant());						
+					}
+					else {
+						display.asyncExec(new Runnable() {
+							public void run() {
+								editor.apply(getAssistant());						
+							}
+						});
+					}
 				}
 			};
 			getRefreshers(editor).add(refresher);

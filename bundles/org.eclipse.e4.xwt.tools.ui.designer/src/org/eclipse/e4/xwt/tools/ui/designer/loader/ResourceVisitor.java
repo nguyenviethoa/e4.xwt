@@ -66,6 +66,7 @@ import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
+import org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.e4.xwt.utils.PathHelper;
@@ -123,6 +124,15 @@ public class ResourceVisitor {
 		private Widget hostCLRWidget = null;
 		private Object currentWidget = null;
 		private Object host = null;
+		private Object dataContext = null;
+
+		public Object getDataContext() {
+			return dataContext;
+		}
+
+		public void setDataContext(Object dataContext) {
+			this.dataContext = dataContext;
+		}
 
 		public Object getHost() {
 			return host;
@@ -151,6 +161,7 @@ public class ResourceVisitor {
 			this.styles = loadingData.styles;
 			this.clr = loadingData.clr;
 			this.currentWidget = loadingData.currentWidget;
+			this.dataContext = loadingData.dataContext;
 			this.host = host;
 		}
 
@@ -289,9 +300,15 @@ public class ResourceVisitor {
 				event.doit = true;
 				event.widget = hostCLRWidget;
 				try {
-					loadedMethod.invoke(loadedObject, new Object[] { event });
+					if (loadedMethod.getParameterTypes().length == 1) {
+						loadedMethod.invoke(loadedObject,
+								new Object[] { event });
+					} else if (loadedMethod.getParameterTypes().length == 2) {
+						loadedMethod.invoke(loadedObject,
+								new Object[] { hostCLRWidget, event });
+					}
 				} catch (Exception e) {
-					throw new XWTException("");
+					LoggerManager.log(e);
 				}
 				loadedObject = null;
 				loadedMethod = null;
@@ -356,6 +373,16 @@ public class ResourceVisitor {
 		} catch (Exception e) {
 			throw new XWTException(e);
 		}
+	}
+
+	protected String expandNamespace(XamlNode node, String name) {
+		int index = name.lastIndexOf(':');
+		if (index != -1) {
+			String prefix = name.substring(0, index);
+			name = findPackageName(node, prefix) + "."
+					+ name.substring(index + 1);
+		}
+		return name;
 	}
 
 	public Object doCreate(Object parent, XamlElement element,
@@ -445,6 +472,7 @@ public class ResourceVisitor {
 					IConstants.XAML_X_CLASS, IConstants.XWT_X_NAMESPACE);
 			if (classAttribute != null) {
 				String className = classAttribute.getValue();
+				className = expandNamespace(classAttribute, className);
 				loadShellCLR(className, shell);
 			}
 
@@ -511,6 +539,7 @@ public class ResourceVisitor {
 									IConstants.XWT_X_NAMESPACE);
 					if (classAttribute != null) {
 						String className = classAttribute.getValue();
+						className = expandNamespace(classAttribute, className);
 						targetObject = loadCLR(className, parameters, metaclass
 								.getType(), options);
 					} else {
@@ -582,7 +611,8 @@ public class ResourceVisitor {
 			if (IXWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key)
-					|| IXWTLoader.BINDING_CONTEXT_PROPERTY.equalsIgnoreCase(key)
+					|| IXWTLoader.BINDING_CONTEXT_PROPERTY
+							.equalsIgnoreCase(key)
 					|| IXWTLoader.RESOURCE_DICTIONARY_PROPERTY
 							.equalsIgnoreCase(key)
 					|| IXWTLoader.CLASS_PROPERTY.equalsIgnoreCase(key)
@@ -646,7 +676,7 @@ public class ResourceVisitor {
 		popStack();
 		return targetObject;
 	}
-	
+
 	/**
 	 * This method is invoked directly after creation of component instance, but
 	 * before applying its attributes and creating children.
@@ -658,7 +688,7 @@ public class ResourceVisitor {
 	 */
 	protected void postCreation0(XamlElement element, Object targetObject) {
 	}
-	
+
 	/**
 	 * This method is invoked after full creation of component, i.e. after
 	 * creating its instance, applying its attributes and creating children.
@@ -746,7 +776,8 @@ public class ResourceVisitor {
 				IProperty property = widgetMetaclass
 						.findProperty(IConstants.XAML_BINDING_CONTEXT);
 				if (property != null) {
-					property.setValue(UserData.getWidget(control), bindingContext);
+					property.setValue(UserData.getWidget(control),
+							bindingContext);
 				} else {
 					throw new XWTException("BindingContext is missing in "
 							+ widgetMetaclass.getType().getName());
@@ -870,6 +901,10 @@ public class ResourceVisitor {
 	protected Object getDataContext(XamlElement element, Widget swtObject) {
 		// x:DataContext
 		try {
+			Object dataContext = loadData.getDataContext();
+			if (dataContext != null) {
+				return dataContext;
+			}
 			{
 				XamlAttribute dataContextAttribute = element.getAttribute(
 						IConstants.XAML_DATA_CONTEXT, IConstants.XWT_NAMESPACE);
@@ -882,11 +917,15 @@ public class ResourceVisitor {
 							|| IConstants.XAML_DYNAMICRESOURCES
 									.equals(documentObject.getName())) {
 						String key = documentObject.getValue();
-						return new StaticResourceBinding(composite, key);
+						dataContext = new StaticResourceBinding(composite, key);
+						loadData.setDataContext(dataContext);
+						return dataContext;
 					} else if (IConstants.XAML_BINDING.equals(documentObject
 							.getName())) {
-						return doCreate(swtObject,
+						dataContext = doCreate(swtObject,
 								(XamlElement) documentObject, null, EMPTY_MAP);
+						loadData.setDataContext(dataContext);
+						return dataContext;
 					} else {
 						LoggerManager.log(new UnsupportedOperationException(
 								documentObject.getName()));
@@ -905,7 +944,8 @@ public class ResourceVisitor {
 		try {
 			{
 				XamlAttribute dataContextAttribute = element.getAttribute(
-						IConstants.XAML_BINDING_CONTEXT, IConstants.XWT_NAMESPACE);
+						IConstants.XAML_BINDING_CONTEXT,
+						IConstants.XWT_NAMESPACE);
 				if (dataContextAttribute != null) {
 					Widget composite = (Widget) swtObject;
 					XamlNode documentObject = dataContextAttribute
@@ -970,7 +1010,7 @@ public class ResourceVisitor {
 		}
 
 		// x:DataContext
-		{
+		if (loadData.getDataContext() == null) {
 			XamlAttribute dataContextAttribute = element
 					.getAttribute(IConstants.XAML_DATA_CONTEXT);
 			if (dataContextAttribute != null) {
@@ -1143,7 +1183,7 @@ public class ResourceVisitor {
 		return collector;
 	}
 
-	protected String findNamespace(XamlNode context, String prefix) {
+	protected String findPackageName(XamlNode context, String prefix) {
 		while (context != null && !(context instanceof XamlElement)) {
 			context = (XamlNode) context.eContainer();
 		}
@@ -1156,12 +1196,22 @@ public class ResourceVisitor {
 			prefix = (prefix.length() == 0 ? null : prefix);
 		}
 
-		String namespace = element.getNamespace();
-		if (namespace != null) {
-			return namespace;
+		if (prefix == null) {
+			String namespace = element.getNamespace();
+			if (namespace != null) {
+				return namespace;
+			}
+		} else {
+			XamlDocument document = element.getOwnerDocument();
+			String value = document.getDeclaredNamespace(prefix);
+			if (value.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO)) {
+				return value.substring(IConstants.XAML_CLR_NAMESPACE_PROTO
+						.length());
+			}
 		}
+
 		XamlNode parent = (XamlNode) element.eContainer();
-		return findNamespace(parent, prefix);
+		return findPackageName(parent, prefix);
 	}
 
 	protected Object createInstance(Object swtObject, XamlElement element) {
@@ -1498,12 +1548,7 @@ public class ResourceVisitor {
 			if (contentValue != null && value == null
 					&& !IConstants.XAML_COMMAND.equalsIgnoreCase(propertyName)) {
 				if (property.getType().isInstance(Class.class)) {
-					int index = contentValue.lastIndexOf(':');
-					if (index != -1) {
-						String prefix = contentValue.substring(0, index);
-						contentValue = findNamespace(attribute, prefix)
-								+ contentValue.substring(index);
-					}
+					contentValue = expandNamespace(attribute, contentValue);
 				}
 				value = loader.convertFrom(property.getType(), contentValue);
 			}
