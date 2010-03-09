@@ -104,9 +104,16 @@ public class PasteElementAction extends SelectionAction {
 	}
 
 	public Boolean canPaste(MUIElement parent) {
-		List<MUIElement> contents = (List<MUIElement>) Clipboard.getDefault().getContents();
-		for (MUIElement element : contents) {
-			if (!ApplicationModelHelper.canAddedChild(element, parent))
+		Object content = Clipboard.getDefault().getContents();
+		if (!(content instanceof List<?>)) {
+			return false;
+		}
+		List<?> contents = (List<?>) content;
+		for (Object element : contents) {
+			if (!(element instanceof MUIElement)) {
+				return false;
+			}
+			if (!ApplicationModelHelper.canAddedChild((MUIElement)element, parent))
 				return false;
 		}
 		return true;
