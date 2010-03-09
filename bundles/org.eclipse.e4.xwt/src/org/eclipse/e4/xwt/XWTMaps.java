@@ -11,13 +11,10 @@
 
 package org.eclipse.e4.xwt;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.swt.SWT;
 
 /**

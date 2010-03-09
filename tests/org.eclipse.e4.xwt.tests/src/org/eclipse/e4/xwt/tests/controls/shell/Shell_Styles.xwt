@@ -9,6 +9,8 @@
 			<GridLayout numColumns="1"/>
 	    </Group.layout>
 		<Button x:style="CHECK" text="SWT.NO_TRIM"/>
+		<Button x:style="CHECK" text="SWT.SHELL_TRIM"/>
+		<Button x:style="CHECK" text="SWT.DIALOG_TRIM"/>
 		<Button x:style="CHECK" text="SWT.CLOSE"/>
         <Button x:style="CHECK" text="SWT.TITLE"/>
         <Button x:style="CHECK" text="SWT.MIN"/>

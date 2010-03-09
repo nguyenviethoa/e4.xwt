@@ -76,6 +76,10 @@ public class Shell_Styles {
 					continue;
 				} else if ("SWT.NO_TRIM".equals(str)) {
 					style |= SWT.NO_TRIM;
+				} else if ("SWT.SHELL_TRIM".equals(str)) {
+					style |= SWT.SHELL_TRIM;
+				} else if ("SWT.DIALOG_TRIM".equals(str)) {
+					style |= SWT.DIALOG_TRIM;
 				} else if ("SWT.CLOSE".equals(str)) {
 					style |= SWT.CLOSE;
 				} else if ("SWT.MIN".equals(str)) {
