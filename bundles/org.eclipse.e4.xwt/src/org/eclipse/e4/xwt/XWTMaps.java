@@ -11,10 +11,13 @@
 
 package org.eclipse.e4.xwt;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.swt.SWT;
 
 /**
@@ -74,6 +77,9 @@ public class XWTMaps {
 		styles.put("SWT.SHADOW_NONE", SWT.SHADOW_NONE);
 		styles.put("SWT.SHADOW_OUT", SWT.SHADOW_OUT);
 		styles.put("SWT.NO_TRIM", SWT.NO_TRIM);
+		styles.put("SWT.SHELL_TRIM", SWT.SHELL_TRIM);
+		styles.put("SWT.DIALOG_TRIM", SWT.DIALOG_TRIM);
+		
 		styles.put("SWT.CLOSE", SWT.CLOSE);
 		styles.put("SWT.MIN", SWT.MIN);
 		styles.put("SWT.MAX", SWT.MAX);
