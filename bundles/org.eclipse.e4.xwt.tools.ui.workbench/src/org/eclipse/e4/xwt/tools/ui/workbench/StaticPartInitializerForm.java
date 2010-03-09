@@ -16,9 +16,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
-public class PartInitializerForm extends Composite {
+public class StaticPartInitializerForm extends Composite {
 
-	public PartInitializerForm(Composite parent, int style) {
+	public StaticPartInitializerForm(Composite parent, int style) {
 		super(parent, style);
 	}
 	
