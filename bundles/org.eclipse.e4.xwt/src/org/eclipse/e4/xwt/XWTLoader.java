@@ -635,7 +635,7 @@ public class XWTLoader implements IXWTLoader {
 	}
 
 	protected Map<String, Object> prepareOptions(Map<String, Object> options) {
-		Boolean disabledStyle = (Boolean) options.get(DISBALE_STYLES_PROPERTY);
+		Boolean disabledStyle = (Boolean) options.get(DISABLE_STYLES_PROPERTY);
 		if (!Boolean.TRUE.equals(disabledStyle)) {
 			Collection<IStyle> defaultStyles = getDefaultStyles();
 			Object styles = options.get(DEFAULT_STYLES_PROPERTY);

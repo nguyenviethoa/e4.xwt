@@ -64,7 +64,7 @@ public interface IXWTLoader {
 	 * Enabled or disabled the styles. By default, it is enabled
 	 * 
 	 */
-	String DISBALE_STYLES_PROPERTY = "XWT.DisabledStyles";
+	String DISABLE_STYLES_PROPERTY = "XWT.DisabledStyles";
 	/**
 	 * The DataContext to setup in root element
 	 * 
