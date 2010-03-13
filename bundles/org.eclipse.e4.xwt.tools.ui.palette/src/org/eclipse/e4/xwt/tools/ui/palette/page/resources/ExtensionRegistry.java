@@ -33,24 +33,20 @@ public class ExtensionRegistry {
 
 	private static List<IPaletteResourceProvider> registry = new ArrayList<IPaletteResourceProvider>();
 
-	public static List<IPaletteResourceProvider> allResourceExtensions(
-			IEditorPart editorPart) {
+	public static List<IPaletteResourceProvider> allResourceExtensions(IEditorPart editorPart) {
 		String id = editorPart.getSite().getId();
 
 		List<IPaletteResourceProvider> providers = new ArrayList<IPaletteResourceProvider>();
-		IConfigurationElement[] configurationElements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						EXTENSION_ID);
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(EXTENSION_ID);
 		for (IConfigurationElement element : configurationElements) {
 			String editorId = element.getAttribute(EDITOR_ID);
 			if (id == null || id.equals(editorId)) {
 				if (PROVIDER.equals(element.getName())) {
 					try {
-						Object executable = element
-								.createExecutableExtension(CLASS);
+						Object executable = element.createExecutableExtension(CLASS);
 						if (executable instanceof IPaletteResourceProvider) {
-							providers
-									.add((IPaletteResourceProvider) executable);
+							providers.add((IPaletteResourceProvider) executable);
 						}
 					} catch (CoreException e) {
 					}
@@ -59,8 +55,7 @@ public class ExtensionRegistry {
 
 					String npId = element.getNamespaceIdentifier();
 
-					ResourceContentProvider provider = new ResourceContentProvider(
-							uri, npId);
+					ResourceContentProvider provider = new ResourceContentProvider(uri, npId);
 					providers.add(provider);
 				}
 			}
@@ -69,8 +64,7 @@ public class ExtensionRegistry {
 		return providers;
 	}
 
-	public static void registerPaletteResourceProvider(
-			IPaletteResourceProvider provider) {
+	public static void registerPaletteResourceProvider(IPaletteResourceProvider provider) {
 		registry.add(provider);
 	}
 }

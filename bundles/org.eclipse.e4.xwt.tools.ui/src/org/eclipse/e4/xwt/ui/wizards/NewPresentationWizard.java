@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
+import org.eclipse.e4.xwt.ui.utils.ProjectUtil;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
@@ -64,6 +65,7 @@ public class NewPresentationWizard extends NewElementWizard {
 		boolean res = super.performFinish();
 		if (res) {
 			tryToOpenResource();
+			ProjectUtil.updateXWTDataBindingDependencies(getCreatedElement().getResource().getProject());
 		}
 		XWTUIPlugin.getDefault().openXWTPerspective();
 		return res;

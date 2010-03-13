@@ -37,7 +37,9 @@ public class EntryLabelProvider implements IPaletteLabelProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getContent(java.lang.Object)
+	 * @see
+	 * org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getContent
+	 * (java.lang.Object)
 	 */
 	public String getContent(Object obj) {
 		if (obj instanceof Entry) {
@@ -49,7 +51,9 @@ public class EntryLabelProvider implements IPaletteLabelProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getLargeIcon(java.lang.Object)
+	 * @see
+	 * org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getLargeIcon
+	 * (java.lang.Object)
 	 */
 	public ImageDescriptor getLargeIcon(Object obj) {
 		if (obj instanceof Entry) {
@@ -64,7 +68,9 @@ public class EntryLabelProvider implements IPaletteLabelProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getName(java.lang.Object)
+	 * @see
+	 * org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getName
+	 * (java.lang.Object)
 	 */
 	public String getName(Object obj) {
 		if (obj instanceof Entry) {
@@ -76,7 +82,9 @@ public class EntryLabelProvider implements IPaletteLabelProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getSmallIcon(java.lang.Object)
+	 * @see
+	 * org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getSmallIcon
+	 * (java.lang.Object)
 	 */
 	public ImageDescriptor getSmallIcon(Object obj) {
 		if (obj instanceof Entry) {
@@ -91,7 +99,9 @@ public class EntryLabelProvider implements IPaletteLabelProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getTooltip(java.lang.Object)
+	 * @see
+	 * org.soyatec.tools.palette.page.resources.IPaletteLabelProvider#getTooltip
+	 * (java.lang.Object)
 	 */
 	public String getToolTip(Object obj) {
 		if (obj instanceof Entry) {

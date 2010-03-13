@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
+import org.eclipse.e4.xwt.ui.utils.ProjectUtil;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -48,6 +49,7 @@ public class NewE4StaticPartWizard extends NewElementWizard {
 		boolean res = super.performFinish();
 		if (res) {
 			tryToOpenResource();
+			ProjectUtil.updateXWTWorkbenchDependencies(getCreatedElement().getResource().getProject());
 		}
 		XWTUIPlugin.getDefault().openXWTPerspective();
 		return res;

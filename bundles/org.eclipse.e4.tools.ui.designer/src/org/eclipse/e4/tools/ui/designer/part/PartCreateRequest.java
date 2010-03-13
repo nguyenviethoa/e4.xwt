@@ -28,6 +28,9 @@ public class PartCreateRequest extends PartRequest {
 
 	public PartCreateRequest(EditPart host, CreateRequest request) {
 		super(host, request, RequestConstants.REQ_CREATE);
+		if (request != null && request.getLocation() != null) {
+			apply(request.getLocation());
+		}
 	}
 
 	protected void apply(Point location) {

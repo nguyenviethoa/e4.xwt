@@ -22,7 +22,9 @@ public class EditPartFactory extends PaletteEditPartFactory {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.ui.palette.PaletteEditPartFactory#createDrawerEditPart(org.eclipse.gef.EditPart, java.lang.Object)
+	 * @see
+	 * org.eclipse.gef.ui.palette.PaletteEditPartFactory#createDrawerEditPart
+	 * (org.eclipse.gef.EditPart, java.lang.Object)
 	 */
 	protected EditPart createDrawerEditPart(EditPart parentEditPart, Object model) {
 		return new PaletteDrawerEditPart((PaletteDrawer) model);

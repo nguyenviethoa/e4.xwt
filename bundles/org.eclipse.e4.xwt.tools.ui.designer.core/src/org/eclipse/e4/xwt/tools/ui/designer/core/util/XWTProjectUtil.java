@@ -8,20 +8,20 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tools.ui.palette.tools;
+package org.eclipse.e4.xwt.tools.ui.designer.core.util;
 
-import org.eclipse.gef.Request;
-import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gef.tools.CreationTool;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.e4.xwt.ui.utils.ProjectUtil;
 
 /**
- * @author Jin Liu(jin.liu@soyatec.com)
+ * To minimize the dependency in e4 Visual Designer
+ * 
+ * TODO remove the direct dependency between e4/XWT
+ * 
+ * @author yyang
  */
-public class PaletteCreationTool extends CreationTool {
-	@Override
-	protected Request createTargetRequest() {
-		CreateRequest request = new PaletteCreateRequest();
-		request.setFactory(getFactory());
-		return request;
+public class XWTProjectUtil {
+	public static void updateXWTWorkbenchDependencies(IProject project) {
+		ProjectUtil.updateXWTWorkbenchDependencies(project);
 	}
 }

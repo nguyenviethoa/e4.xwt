@@ -30,11 +30,9 @@ import org.eclipse.ui.IEditorPart;
 public class PaletteTools {
 
 	public static CustomPalettePage createPalettePage(IEditorPart editorPart,
-			IPaletteResourceProvider resourceProvider,
-			Class<? extends Tool> creationToolClass,
+			IPaletteResourceProvider resourceProvider, Class<? extends Tool> creationToolClass,
 			Class<? extends Tool> selectionToolClass) {
-		EditDomain editDomain = (EditDomain) editorPart
-				.getAdapter(EditDomain.class);
+		EditDomain editDomain = (EditDomain) editorPart.getAdapter(EditDomain.class);
 		if (editDomain == null) {
 			editDomain = new DefaultEditDomain(editorPart);
 		}
@@ -43,28 +41,25 @@ public class PaletteTools {
 		if (resourceProvider != null) {
 			if (!resourceProviders.isEmpty()) {
 				resourceProviders.add(0, resourceProvider);
-			}
-			else {
-				resourceProviders.add(resourceProvider);				
+			} else {
+				resourceProviders.add(resourceProvider);
 			}
 		}
 
-		PaletteRoot paletteRoot = createPaletteRoot(resourceProviders,
-				creationToolClass, selectionToolClass);
+		PaletteRoot paletteRoot = createPaletteRoot(resourceProviders, creationToolClass,
+				selectionToolClass);
 		if (paletteRoot != null) {
 			editDomain.setPaletteRoot(paletteRoot);
 		}
-		CustomPaletteViewerProvider provider = new CustomPaletteViewerProvider(
-				editDomain);
+		CustomPaletteViewerProvider provider = new CustomPaletteViewerProvider(editDomain);
 		return new CustomPalettePage(provider);
 	}
 
 	private static PaletteRoot createPaletteRoot(
 			Collection<IPaletteResourceProvider> resourceProviders,
-			Class<? extends Tool> createToolClass,
-			Class<? extends Tool> selectionToolClass) {
-		PaletteRootFactory factory = new PaletteRootFactory(resourceProviders,
-				createToolClass, selectionToolClass);
+			Class<? extends Tool> createToolClass, Class<? extends Tool> selectionToolClass) {
+		PaletteRootFactory factory = new PaletteRootFactory(resourceProviders, createToolClass,
+				selectionToolClass);
 		return factory.createPaletteRoot();
 	}
 }

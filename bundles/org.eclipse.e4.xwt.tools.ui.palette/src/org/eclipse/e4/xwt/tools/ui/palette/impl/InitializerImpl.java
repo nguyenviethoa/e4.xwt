@@ -12,24 +12,21 @@ package org.eclipse.e4.xwt.tools.ui.palette.impl;
 
 import org.eclipse.e4.xwt.tools.ui.palette.Initializer;
 import org.eclipse.e4.xwt.tools.ui.palette.PalettePackage;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Initializer</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Initializer</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class InitializerImpl extends EObjectImpl implements Initializer {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected InitializerImpl() {
@@ -37,8 +34,8 @@ public abstract class InitializerImpl extends EObjectImpl implements Initializer
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -47,10 +44,17 @@ public abstract class InitializerImpl extends EObjectImpl implements Initializer
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public abstract boolean initialize(Object element);
 
-} //InitializerImpl
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public abstract Object parse();
+
+} // InitializerImpl

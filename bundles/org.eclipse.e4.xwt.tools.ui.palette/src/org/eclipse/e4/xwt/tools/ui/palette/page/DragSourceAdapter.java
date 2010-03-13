@@ -39,7 +39,8 @@ public class DragSourceAdapter extends AbstractTransferDragSourceListener {
 	}
 
 	/**
-	 * Get the <i>template</i> from the selected {@link PaletteTemplateEntry} and sets it as the event data to be dropped.
+	 * Get the <i>template</i> from the selected {@link PaletteTemplateEntry}
+	 * and sets it as the event data to be dropped.
 	 * 
 	 * @param event
 	 *            the DragSourceEvent
@@ -49,7 +50,8 @@ public class DragSourceAdapter extends AbstractTransferDragSourceListener {
 	}
 
 	/**
-	 * Cancels the drag if the selected item does not represent a PaletteTemplateEntry.
+	 * Cancels the drag if the selected item does not represent a
+	 * PaletteTemplateEntry.
 	 * 
 	 * @see org.eclipse.swt.dnd.DragSourceListener#dragStart(DragSourceEvent)
 	 */
@@ -64,7 +66,8 @@ public class DragSourceAdapter extends AbstractTransferDragSourceListener {
 	}
 
 	/**
-	 * A helper method that returns <code>null</code> or the <i>template</i> Object from the currently selected EditPart.
+	 * A helper method that returns <code>null</code> or the <i>template</i>
+	 * Object from the currently selected EditPart.
 	 * 
 	 * @return the template
 	 */

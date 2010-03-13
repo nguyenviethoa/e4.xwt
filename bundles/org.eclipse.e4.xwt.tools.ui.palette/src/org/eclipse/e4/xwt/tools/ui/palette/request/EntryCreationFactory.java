@@ -44,7 +44,7 @@ public class EntryCreationFactory implements CreationFactory {
 	public Object getObjectType() {
 		return entry != null ? entry.getScope() : null;
 	}
-	
+
 	public Entry getEntry() {
 		return entry;
 	}

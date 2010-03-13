@@ -106,4 +106,21 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.e4.xwt.tools.ui.palette.paletteContribution">
+      <Contribution
+            targetId="org.eclipse.e4.tools.ui.designer.E4Designer">
+         <Resource
+               provider="org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider">
+         </Resource>
+         <Tool
+               class="org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteCreationTool"
+               type="creation">
+         </Tool>
+         <Tool
+               class="org.eclipse.e4.tools.ui.designer.E4SelectionTool"
+               type="selection">
+         </Tool>
+      </Contribution>
+   </extension>
 </plugin>

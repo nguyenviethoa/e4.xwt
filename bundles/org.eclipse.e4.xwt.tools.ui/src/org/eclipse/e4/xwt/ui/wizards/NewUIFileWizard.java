@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ui.ExceptionHandle;
 import org.eclipse.e4.xwt.ui.XWTUIPlugin;
+import org.eclipse.e4.xwt.ui.utils.ProjectUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -63,8 +64,9 @@ public class NewUIFileWizard extends Wizard implements INewWizard {
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					doFinish(containerName, fileName, monitor);
+					IFile file = doFinish(containerName, fileName, monitor);
 					tryToOpenPerspective();
+					ProjectUtil.updateXWTCoreDependencies(file.getProject());
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -96,7 +98,7 @@ public class NewUIFileWizard extends Wizard implements INewWizard {
 	 * The worker method. It will find the container, create the file if missing or just replace its nameMap, and open the editor on the newly created file.
 	 */
 
-	private void doFinish(String containerName, String fileName, IProgressMonitor monitor) throws CoreException {
+	private IFile doFinish(String containerName, String fileName, IProgressMonitor monitor) throws CoreException {
 		// create a sample file
 		monitor.beginTask("Creating " + fileName, 2);
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -128,6 +130,7 @@ public class NewUIFileWizard extends Wizard implements INewWizard {
 			}
 		});
 		monitor.worked(1);
+		return file;
 	}
 
 	/**

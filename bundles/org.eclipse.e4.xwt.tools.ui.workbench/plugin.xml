@@ -14,5 +14,5 @@
             uri="http://www.eclipse.org/e4/xwt/workbench/desiger"
             class="org.eclipse.e4.xwt.tools.ui.model.workbench.WorkbenchPackage"
             genModel="model/workbench.genmodel"/>
-   </extension>   
+   </extension>
 </plugin>

@@ -28,23 +28,21 @@ import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.OpenExternalizeString
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.PasteElementAction;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.PreviewAction;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.SurroundWithAction;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.dnd.EntryCreationTool;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.dnd.XWTDropContext;
+import org.eclipse.e4.xwt.tools.ui.designer.editor.dnd.XWTGraphicalViewerDropListener;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.event.EventHandler;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.model.XWTModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.outline.OutlinePageContentProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.outline.OutlinePageDropManager;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.outline.OutlinePageLabelProvider;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.palette.XWTPaletteProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTVisualLoader;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.XWTEditPartFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
-import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
-import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument;
 import org.eclipse.e4.xwt.ui.XWTPerspectiveFactory;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -77,7 +75,8 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  * @author jliu (jin.liu@soyatec.com)
  */
 @SuppressWarnings("restriction")
-public class XWTDesigner extends Designer implements ITabbedPropertySheetPageContributor {
+public class XWTDesigner extends Designer implements
+		ITabbedPropertySheetPageContributor {
 
 	public static final String EDITOR_ID = "org.eclipse.e4.xwt.tools.ui.designer.XWTDesigner";
 
@@ -88,6 +87,7 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
 	 */
 	protected void setInput(IEditorInput input) {
@@ -99,7 +99,7 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 			XWTLoaderManager.setActive(xwtLoader, true);
 		}
 	}
-	
+
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
@@ -111,6 +111,7 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.Designer#dispose()
 	 */
 	public void dispose() {
@@ -123,6 +124,7 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#initializeActions()
 	 */
 	protected void createActions() {
@@ -162,14 +164,7 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createPalettePage()
-	 */
-	protected CustomPalettePage createPalettePage() {
-		return PaletteTools.createPalettePage(this, new XWTPaletteProvider(), EntryCreationTool.class, XWTSelectionTool.class);
-	}
-
-	/*
-	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.Designer#createModelBuilder()
 	 */
 	protected IModelBuilder createModelBuilder() {
@@ -178,21 +173,31 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#setupGraphicalViewer()
+	 * 
+	 * @see
+	 * org.soyatec.tools.designer.editor.XAMLDesigner#setupGraphicalViewer()
 	 */
 	protected void setupGraphicalViewer() {
-		((XWTEditPartFactory) getEditPartFactory()).setVisualFactory(getVisualsRender());
+		((XWTEditPartFactory) getEditPartFactory())
+				.setVisualFactory(getVisualsRender());
 		super.setupGraphicalViewer();
 		setupJavaEditor();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.tools.designer.editor.Designer#configureGraphicalViewer()
+	 * 
+	 * @see
+	 * org.soyatec.tools.designer.editor.Designer#configureGraphicalViewer()
 	 */
 	protected void configureGraphicalViewer() {
 		super.configureGraphicalViewer();
-		getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, true);
+		getGraphicalViewer().setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED,
+				true);
+	}
+
+	protected void setupGraphicalViewerDropCreation(GraphicalViewer viewer) {
+		viewer.addDropTargetListener(new XWTGraphicalViewerDropListener(viewer));
 	}
 
 	/**
@@ -205,9 +210,11 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 			IType type = javaEditor.getType();
 			if (type != null) {
 				try {
-					int javaPageIndex = addPage(javaEditor, javaEditor.getEditorInput());
+					int javaPageIndex = addPage(javaEditor, javaEditor
+							.getEditorInput());
 					setPageText(javaPageIndex, "Java");
-					setPageImage(javaPageIndex, JavaPluginImages.get(JavaPluginImages.IMG_OBJS_CLASS));
+					setPageImage(javaPageIndex, JavaPluginImages
+							.get(JavaPluginImages.IMG_OBJS_CLASS));
 					eventHandler = new EventHandler(this, type);
 
 					if (generateTool != null && !generateTool.isDisposed()) {
@@ -236,16 +243,23 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 	protected ToolBar createToolBar(Composite parent) {
 		ToolBar toolbar = new ToolBar(parent, SWT.FLAT);
 		final ToolBarManager toolBarManager = new ToolBarManager(toolbar);
-		toolBarManager.add(getActionRegistry().getAction(ActionFactory.COPY.getId()));
-		toolBarManager.add(getActionRegistry().getAction(ActionFactory.PASTE.getId()));
-		toolBarManager.add(getActionRegistry().getAction(ActionFactory.CUT.getId()));
-		toolBarManager.add(getActionRegistry().getAction(ActionFactory.DELETE.getId()));
+		toolBarManager.add(getActionRegistry().getAction(
+				ActionFactory.COPY.getId()));
+		toolBarManager.add(getActionRegistry().getAction(
+				ActionFactory.PASTE.getId()));
+		toolBarManager.add(getActionRegistry().getAction(
+				ActionFactory.CUT.getId()));
+		toolBarManager.add(getActionRegistry().getAction(
+				ActionFactory.DELETE.getId()));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(getActionRegistry().getAction(PreviewAction.ACTION_ID));
+		toolBarManager.add(getActionRegistry().getAction(
+				PreviewAction.ACTION_ID));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(getActionRegistry().getAction(LayoutAssistantAction.ID));
+		toolBarManager.add(getActionRegistry().getAction(
+				LayoutAssistantAction.ID));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(getActionRegistry().getAction(OpenBindingDialogAction.ID));
+		toolBarManager.add(getActionRegistry().getAction(
+				OpenBindingDialogAction.ID));
 		toolBarManager.update(true);
 		toolbar.pack();
 
@@ -254,7 +268,10 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#configureContainerToolBar(org.eclipse.swt.widgets.ToolBar)
+	 * 
+	 * @see
+	 * org.soyatec.tools.designer.editor.XAMLDesigner#configureContainerToolBar
+	 * (org.eclipse.swt.widgets.ToolBar)
 	 */
 	protected void configureContainerToolBar(ToolBar toolBar) {
 		ToolItem previewTool = new ToolItem(toolBar, SWT.PUSH);
@@ -267,7 +284,8 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 		});
 
 		generateTool = new ToolItem(toolBar, SWT.PUSH);
-		generateTool.setImage(JavaPluginImages.get(JavaPluginImages.IMG_OBJS_CLASS));
+		generateTool.setImage(JavaPluginImages
+				.get(JavaPluginImages.IMG_OBJS_CLASS));
 		generateTool.setToolTipText("Create event handlers");
 		generateTool.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
@@ -281,6 +299,7 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createMenuProvider()
 	 */
 	protected ContextMenuProvider createMenuProvider() {
@@ -289,7 +308,9 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createEditPartFactory()
+	 * 
+	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#
+	 * createEditPartFactory()
 	 */
 	protected EditPartFactory createEditPartFactory() {
 		return new XWTEditPartFactory();
@@ -297,19 +318,23 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createOutlinePage()
 	 */
 	protected ContentOutlinePage createOutlinePage() {
-		ContentOutlinePage outlinePage = (ContentOutlinePage) super.createOutlinePage();
+		ContentOutlinePage outlinePage = (ContentOutlinePage) super
+				.createOutlinePage();
 		outlinePage.setContentProvider(new OutlinePageContentProvider());
 		outlinePage.setLabelProvider(new OutlinePageLabelProvider());
 		outlinePage.setContextMenuProvider(getContextMenuProvider());
-		outlinePage.setDropManager(new OutlinePageDropManager(getEditDomain().getCommandStack()));
+		outlinePage.setDropManager(new OutlinePageDropManager(getEditDomain()
+				.getCommandStack()));
 		return outlinePage;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#getDropContext()
 	 */
 	protected DropContext getDropContext() {
@@ -329,13 +354,15 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 		if (window == null) {
 			window = workbench.getWorkbenchWindows()[0];
 		}
-		IPerspectiveDescriptor pers = workbench.getPerspectiveRegistry().findPerspectiveWithId(
-				XWTPerspectiveFactory.XWT_PERSPECTIVE_ID);
+		IPerspectiveDescriptor pers = workbench
+				.getPerspectiveRegistry()
+				.findPerspectiveWithId(XWTPerspectiveFactory.XWT_PERSPECTIVE_ID);
 		if (pers == null) {
 			return;
 		}
 		try {
-			workbench.showPerspective(XWTPerspectiveFactory.XWT_PERSPECTIVE_ID, window);
+			workbench.showPerspective(XWTPerspectiveFactory.XWT_PERSPECTIVE_ID,
+					window);
 		} catch (WorkbenchException e) {
 			e.printStackTrace();
 		}
@@ -343,25 +370,32 @@ public class XWTDesigner extends Designer implements ITabbedPropertySheetPageCon
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createPropertyPage()
 	 */
 	protected IPropertySheetPage createPropertyPage() {
 		TabbedPropertySheetPage propertyPage = new TabbedPropertySheetPage(this);
-		// propertyPage.setPropertySourceProvider(new XWTPropertySourceProvider(getEditDomain(), propertyPage));
+		// propertyPage.setPropertySourceProvider(new
+		// XWTPropertySourceProvider(getEditDomain(), propertyPage));
 		return propertyPage;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createVisualsRender()
 	 */
 	protected IVisualRenderer createVisualsRender() {
-		return new XWTVisualRenderer(getInputFile(), (XamlDocument) getDocumentRoot());
+		return new XWTVisualRenderer(getInputFile(),
+				(XamlDocument) getDocumentRoot());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor#getContributorId()
+	 * 
+	 * @see
+	 * org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor
+	 * #getContributorId()
 	 */
 	public String getContributorId() {
 		return getSite().getId();

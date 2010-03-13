@@ -13,22 +13,29 @@ package org.eclipse.e4.xwt.tools.ui.palette;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Initializer</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '
+ * <em><b>Initializer</b></em>'. <!-- end-user-doc -->
+ * 
+ * 
  * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getInitializer()
  * @model abstract="true"
  * @generated
  */
 public interface Initializer extends EObject {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @model
 	 * @generated
 	 */
 	boolean initialize(Object element);
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @model
+	 * @generated
+	 */
+	Object parse();
 
 } // Initializer

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
+import org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.requests.CreateRequest;
@@ -22,7 +23,7 @@ import org.eclipse.gef.requests.CreateRequest;
 /**
  * @author jliu jin.liu@soyatec.com
  */
-public class EntryHelper {
+public class EntryHelper extends InitializerImpl {
 
 	public static final String CURSOR_CONSTANTS = "${cursor}";
 	public static final String ANN_CURSOR_DATA = "CURSOR_DATA_ANN";
@@ -42,7 +43,7 @@ public class EntryHelper {
 				// LoggerManager.log(e);
 			}
 		}
-		return (MUIElement) EcoreUtil.copy((EObject)node);
+		return (MUIElement) EcoreUtil.copy((EObject) node);
 	}
 
 	public static MUIElement getNode(CreateRequest createReq) {
@@ -58,5 +59,26 @@ public class EntryHelper {
 			return null;
 		}
 		return null;
+	}
+
+	public boolean initialize(Object element) {
+		return false;
+	}
+
+	public Object parse() {
+		return getNode(getEntry());
+	}
+
+	public Entry getEntry() {
+		EObject parent = eContainer();
+		Entry entry = null;
+		while (parent != null) {
+			if (parent instanceof Entry) {
+				entry = (Entry) parent;
+				break;
+			}
+			parent = parent.eContainer();
+		}
+		return entry;
 	}
 }

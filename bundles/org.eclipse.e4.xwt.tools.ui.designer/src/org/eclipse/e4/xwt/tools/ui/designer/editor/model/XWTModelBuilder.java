@@ -161,7 +161,7 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 	}
 
 	protected void loadingModel(IDOMElement text, IProgressMonitor monitor) {
-		if (!synch.isFree()) {
+		if (text == null || !synch.isFree()) {
 			return;
 		}
 		synchronized (synch) {

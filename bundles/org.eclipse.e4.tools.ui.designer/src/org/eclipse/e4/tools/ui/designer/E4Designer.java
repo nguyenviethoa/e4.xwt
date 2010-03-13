@@ -17,7 +17,6 @@ import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.outline.E4ContentOutlinePage;
 import org.eclipse.e4.tools.ui.designer.outline.OutlinePageDropManager;
-import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.provider.ApplicationItemProviderAdapterFactory;
@@ -29,9 +28,6 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
-import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
-import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteCreationTool;
-import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteTools;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -42,6 +38,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -108,12 +105,27 @@ public class E4Designer extends Designer {
 		domain.loadDefaultTool();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#
+	 * setupGraphicalViewerDropCreation(org.eclipse.gef.GraphicalViewer)
+	 */
+	protected void setupGraphicalViewerDropCreation(GraphicalViewer viewer) {
+		viewer.addDropTargetListener(new E4GraphicalViewerDropCreationListener(
+				viewer));
+	}
+
 	protected ComposedAdapterFactory getAdapterFactory() {
 		if (adapterFactory == null) {
-			adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-			adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-			adapterFactory.addAdapterFactory(new ApplicationItemProviderAdapterFactory());
-			adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+			adapterFactory = new ComposedAdapterFactory(
+					ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+			adapterFactory
+					.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+			adapterFactory
+					.addAdapterFactory(new ApplicationItemProviderAdapterFactory());
+			adapterFactory
+					.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		}
 		return adapterFactory;
 	}
@@ -206,17 +218,6 @@ public class E4Designer extends Designer {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createPalettePage()
-	 */
-	protected CustomPalettePage createPalettePage() {
-		return PaletteTools.createPalettePage(this, new E4PaletteProvider(),
-				PaletteCreationTool.class, E4SelectionTool.class);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createPropertyPage
 	 * ()
 	 */
@@ -239,7 +240,9 @@ public class E4Designer extends Designer {
 				super.selectionChanged(part, selection);
 			}
 		};
-		propertyPage.setPropertySourceProvider(new AdapterFactoryContentProvider(getAdapterFactory()));
+		propertyPage
+				.setPropertySourceProvider(new AdapterFactoryContentProvider(
+						getAdapterFactory()));
 		return propertyPage;
 	}
 

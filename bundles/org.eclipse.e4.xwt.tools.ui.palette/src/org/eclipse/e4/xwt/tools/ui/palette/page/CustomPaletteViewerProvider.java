@@ -32,7 +32,9 @@ public class CustomPaletteViewerProvider extends PaletteViewerProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.ui.palette.PaletteViewerProvider#createPaletteViewer(org.eclipse.swt.widgets.Composite)
+	 * @see
+	 * org.eclipse.gef.ui.palette.PaletteViewerProvider#createPaletteViewer(
+	 * org.eclipse.swt.widgets.Composite)
 	 */
 	public PaletteViewer createPaletteViewer(Composite parent) {
 		PaletteViewer pViewer = new PaletteViewer();
@@ -45,7 +47,9 @@ public class CustomPaletteViewerProvider extends PaletteViewerProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.ui.palette.PaletteViewerProvider#configurePaletteViewer(org.eclipse.gef.ui.palette.PaletteViewer)
+	 * @see
+	 * org.eclipse.gef.ui.palette.PaletteViewerProvider#configurePaletteViewer
+	 * (org.eclipse.gef.ui.palette.PaletteViewer)
 	 */
 	protected void configurePaletteViewer(PaletteViewer viewer) {
 		super.configurePaletteViewer(viewer);

@@ -52,10 +52,11 @@ public class PartContainerLayoutEditPolicy extends CompositeLayoutEditPolicy {
 	protected Command getCreateCommand(CreateRequest request) {
 		PartCreateRequest partReq = (PartCreateRequest) PartReqHelper
 				.unwrap(request);
-		if (partReq != null) {
-			return new CreatePartCommand(partReq);
+		if (partReq == null) {
+			partReq = new PartCreateRequest(getHost(), request);
 		}
-		return super.getCreateCommand(request);
+		return new CreatePartCommand(partReq);
+		// return super.getCreateCommand(request);
 	}
 
 	protected void showLayoutTargetFeedback(Request request) {
@@ -72,7 +73,7 @@ public class PartContainerLayoutEditPolicy extends CompositeLayoutEditPolicy {
 
 		PartCreateRequest req = new PartCreateRequest(getHost(), request);
 		req.setLocation(location);
-		
+
 		Rectangle bounds = req.getBounds();
 		figure.translateToRelative(bounds);
 		figure.setBounds(bounds);

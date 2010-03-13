@@ -107,13 +107,15 @@ public class E4PaletteProvider extends EntryResourceProvider {
 			allClasses = new ArrayList<EClass>();
 		}
 		Field[] fields = MApplicationPackage.Literals.class.getFields();
-		EClass applicationElementClass = MApplicationPackage.eINSTANCE.getApplicationElement();
-		
+		EClass applicationElementClass = MApplicationPackage.eINSTANCE
+				.getApplicationElement();
+
 		for (int i = 0; i < fields.length; i++) {
 			Object value = fields[i].get(null);
 			if (value instanceof EClass) {
 				EClass eClass = (EClass) value;
-				if (!eClass.isAbstract() && !eClass.isInterface() && applicationElementClass.isSuperTypeOf(eClass)) {
+				if (!eClass.isAbstract() && !eClass.isInterface()
+						&& applicationElementClass.isSuperTypeOf(eClass)) {
 					allClasses.add(eClass);
 				}
 			}
@@ -134,20 +136,33 @@ public class E4PaletteProvider extends EntryResourceProvider {
 	}
 
 	private Entry createEntry(EList<Entry> container, EClass eClass) {
-		String pkgName = eClass.getEPackage().getName();
-		String className = eClass.getName();
-		Entry entry = createEntry(container, className);
-		entry.setId(pkgName + "." + className);
-		entry.setType(eClass);
-		entry.setIcon("platform:/plugin/org.eclipse.e4.ui.model.workbench.edit/icons/full/obj16/" + className + ".gif");
+		Entry entry = createEntry(eClass);
+		container.add(entry);
 		return entry;
 	}
 
 	private Entry createEntry(EList<Entry> container, String name) {
+		Entry entry = createEntry(name);
+		container.add(entry);
+		return entry;
+	}
+
+	public static Entry createEntry(String name) {
 		Entry entry = PaletteFactory.eINSTANCE.createEntry();
 		entry.setName(name);
-		container.add(entry);
-		entry.setIcon("platform:/plugin/org.eclipse.e4.ui.model.workbench.edit/icons/full/obj16/" + name + ".gif");
+		entry.setIcon("platform:/plugin/org.eclipse.e4.ui.model.workbench.edit/icons/full/obj16/"
+				+ name + ".gif");
+		return entry;
+	}
+
+	public static Entry createEntry(EClass eClass) {
+		String pkgName = eClass.getEPackage().getName();
+		String className = eClass.getName();
+		Entry entry = createEntry(className);
+		entry.setId(pkgName + "." + className);
+		entry.setType(eClass);
+		entry.setIcon("platform:/plugin/org.eclipse.e4.ui.model.workbench.edit/icons/full/obj16/"
+				+ className + ".gif");
 		return entry;
 	}
 }

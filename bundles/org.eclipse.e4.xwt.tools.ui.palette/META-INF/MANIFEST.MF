@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.e4.xwt.tools.activator,
  org.eclipse.e4.xwt.tools.ui.palette,
+ org.eclipse.e4.xwt.tools.ui.palette.contribution,
  org.eclipse.e4.xwt.tools.ui.palette.impl,
  org.eclipse.e4.xwt.tools.ui.palette.page,
  org.eclipse.e4.xwt.tools.ui.palette.page.editparts,

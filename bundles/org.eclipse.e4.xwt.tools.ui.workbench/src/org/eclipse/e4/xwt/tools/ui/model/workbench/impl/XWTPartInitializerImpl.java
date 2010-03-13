@@ -12,15 +12,11 @@ package org.eclipse.e4.xwt.tools.ui.model.workbench.impl;
 
 import org.eclipse.e4.xwt.tools.ui.model.workbench.WorkbenchPackage;
 import org.eclipse.e4.xwt.tools.ui.model.workbench.XWTPartInitializer;
-
-import org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl;
 import org.eclipse.e4.xwt.tools.ui.workbench.PartInitializerAction;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '
@@ -36,7 +32,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * 
  * @generated
  */
-public class XWTPartInitializerImpl extends InitializerImpl implements
+public class XWTPartInitializerImpl extends EObjectImpl implements
 		XWTPartInitializer {
 	private PartInitializerAction action;
 
@@ -178,12 +174,22 @@ public class XWTPartInitializerImpl extends InitializerImpl implements
 		return result.toString();
 	}
 
-	@Override
 	public boolean initialize(Object element) {
 		if (action == null) {
 			action = new PartInitializerAction(loadClass());
 		}
 		return action.run(element);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Object parse() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
 	}
 
 	protected Class<?> loadClass() {

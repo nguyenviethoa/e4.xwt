@@ -14,6 +14,7 @@
 
 <plugin>
    <extension-point id="resourceProvider" name="Palette Resource Provider" schema="schema/resourceProvider.exsd"/>
+   <extension-point id="paletteContribution" name="Palette Contribution" schema="schema/paletteContribution.exsd"/>
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package

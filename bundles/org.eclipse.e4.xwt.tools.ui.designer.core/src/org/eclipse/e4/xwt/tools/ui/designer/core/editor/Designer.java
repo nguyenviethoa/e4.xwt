@@ -27,6 +27,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.commandstack.CombinedCommandStack;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropTargetAdapter;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.GraphicalViewerDropCreationListener;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.palette.PaletteDropAdapter;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineContentProvider;
@@ -39,6 +40,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.parts.root.DesignerRootEditPart
 import org.eclipse.e4.xwt.tools.ui.designer.core.problems.ConfigurableProblemHandler;
 import org.eclipse.e4.xwt.tools.ui.designer.core.problems.ProblemHandler;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
+import org.eclipse.e4.xwt.tools.ui.palette.page.ContributePalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -478,6 +480,8 @@ public abstract class Designer extends MultiPageEditorPart implements
 		graphicalViewer.setKeyHandler(new GraphicalViewerKeyHandler(
 				graphicalViewer).setParent(getCommonKeyHandler()));
 
+		setupGraphicalViewerDropCreation(graphicalViewer);
+
 		Iterator<?> actions = getActionRegistry().getActions();
 		while (actions.hasNext()) {
 			Object object = (Object) actions.next();
@@ -486,6 +490,11 @@ public abstract class Designer extends MultiPageEditorPart implements
 						.setSelectionProvider(graphicalViewer);
 			}
 		}
+	}
+
+	protected void setupGraphicalViewerDropCreation(GraphicalViewer viewer) {
+		viewer.addDropTargetListener(new GraphicalViewerDropCreationListener(
+				viewer));
 	}
 
 	/**
@@ -892,7 +901,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 	 */
 	private CustomPalettePage getPalettePage() {
 		if (palettePage == null) {
-			palettePage = createPalettePage();
+			palettePage = new ContributePalettePage(this, editDomain);
 		}
 		return palettePage;
 	}
@@ -1032,11 +1041,6 @@ public abstract class Designer extends MultiPageEditorPart implements
 	 * @return
 	 */
 	protected abstract DropContext getDropContext();
-
-	/**
-	 * Create PalettePage.
-	 */
-	protected abstract CustomPalettePage createPalettePage();
 
 	/**
 	 * Internal IPropertyListener

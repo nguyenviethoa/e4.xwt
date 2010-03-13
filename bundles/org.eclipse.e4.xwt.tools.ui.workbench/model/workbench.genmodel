@@ -7,9 +7,6 @@
   <foreignModel>workbench.ecore</foreignModel>
   <genPackages prefix="Workbench" basePackage="org.eclipse.e4.xwt.tools.ui.model"
       disposableProviderFactory="true" ecorePackage="workbench.ecore#/">
-    <genClasses ecoreClass="workbench.ecore#//StaticPartInitializer"/>
-    <genClasses ecoreClass="workbench.ecore#//DynamicPartInitializer"/>
-    <genClasses ecoreClass="workbench.ecore#//EditorPartInitializer"/>
     <genClasses image="false" ecoreClass="workbench.ecore#//XWTPartInitializer">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workbench.ecore#//XWTPartInitializer/contentForm"/>
     </genClasses>

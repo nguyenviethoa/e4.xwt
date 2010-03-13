@@ -25,6 +25,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initializer" eType="#//Initializer"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataContext" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ContextType">
     <eLiterals name="xml_tag" value="5"/>
@@ -38,5 +39,11 @@
     <eOperations name="initialize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eParameters name="element" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
     </eOperations>
+    <eOperations name="parse" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CompoundInitializer" eSuperTypes="#//Initializer">
+    <eOperations name="unwrap" eType="#//Initializer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="initializers" upperBound="-1"
+        eType="#//Initializer" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

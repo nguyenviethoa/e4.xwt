@@ -38,10 +38,8 @@ public class PaletteRootFactory {
 	private Class<? extends Tool> creationToolClass;
 	private Class<? extends Tool> selectionToolClass;
 
-	public PaletteRootFactory(
-			Collection<IPaletteResourceProvider> resourceProviders,
-			Class<? extends Tool> creationToolClass,
-			Class<? extends Tool> selectionToolClass) {
+	public PaletteRootFactory(Collection<IPaletteResourceProvider> resourceProviders,
+			Class<? extends Tool> creationToolClass, Class<? extends Tool> selectionToolClass) {
 		this.resourceProviders = resourceProviders;
 		this.creationToolClass = creationToolClass;
 		this.selectionToolClass = selectionToolClass;
@@ -62,8 +60,7 @@ public class PaletteRootFactory {
 			}
 
 			MarqueeToolEntry marqueeToolEntry = new MarqueeToolEntry();
-			marqueeToolEntry.setToolProperty(
-					AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);
+			marqueeToolEntry.setToolProperty(AbstractTool.PROPERTY_UNLOAD_WHEN_FINISHED, true);
 			paletteGroup.add(marqueeToolEntry);
 
 			palette.add(paletteGroup);
@@ -80,23 +77,18 @@ public class PaletteRootFactory {
 		return palette;
 	}
 
-	private PaletteContainer createRootDrawer(Resource resource,
-			IPaletteResourceProvider provider) {
+	private PaletteContainer createRootDrawer(Resource resource, IPaletteResourceProvider provider) {
 		PaletteDrawer rootDrawer = createPaletteDrawer("Root");
-		IPaletteContentProvider contentProvider = provider
-				.getContentProvider();
-		IPaletteLabelProvider labelProvider = provider
-				.getLabelProvider();
-		createPaletteStructure(rootDrawer, contentProvider, labelProvider,
-				resource);
+		IPaletteContentProvider contentProvider = provider.getContentProvider();
+		IPaletteLabelProvider labelProvider = provider.getLabelProvider();
+		createPaletteStructure(rootDrawer, contentProvider, labelProvider, resource);
 		return rootDrawer;
 	}
 
 	private void createPaletteStructure(PaletteDrawer parent,
-			IPaletteContentProvider contentProvider,
-			IPaletteLabelProvider labelProvider, Object source) {
-		if (parent == null || contentProvider == null || labelProvider == null
-				|| source == null) {
+			IPaletteContentProvider contentProvider, IPaletteLabelProvider labelProvider,
+			Object source) {
+		if (parent == null || contentProvider == null || labelProvider == null || source == null) {
 			return;
 		}
 		Object[] children = contentProvider.getChildren(source);
@@ -107,11 +99,9 @@ public class PaletteRootFactory {
 
 		if (name != null && source instanceof Entry) {
 			if (children.length == 0) {
-				EntryCreationFactory creationFactory = new EntryCreationFactory(
-						(Entry) source);
-				CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(
-						name, description, source, creationFactory, iconSmall,
-						iconLarge);
+				EntryCreationFactory creationFactory = new EntryCreationFactory((Entry) source);
+				CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(name,
+						description, source, creationFactory, iconSmall, iconLarge);
 				if (creationToolClass != null) {
 					component.setToolClass(creationToolClass);
 				}
@@ -130,15 +120,13 @@ public class PaletteRootFactory {
 		for (Object child : children) {
 			Object[] childNodes = contentProvider.getChildren(child);
 			if (childNodes == null || childNodes.length == 0) {
-				createPaletteStructure(parent, contentProvider, labelProvider,
-						child);
+				createPaletteStructure(parent, contentProvider, labelProvider, child);
 			}
 		}
 		for (Object child : children) {
 			Object[] childNodes = contentProvider.getChildren(child);
 			if (childNodes != null && childNodes.length != 0) {
-				createPaletteStructure(parent, contentProvider, labelProvider,
-						child);
+				createPaletteStructure(parent, contentProvider, labelProvider, child);
 			}
 		}
 	}

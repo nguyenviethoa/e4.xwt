@@ -10,12 +10,13 @@ import org.osgi.framework.Bundle;
 public class DesignerReflectionContributionFactory extends
 		ReflectionContributionFactory {
 	private ProjectBundleSession projectBundleSession;
-	
-	public DesignerReflectionContributionFactory(IExtensionRegistry registry, ProjectBundleSession projectBundleSession) {
+
+	public DesignerReflectionContributionFactory(IExtensionRegistry registry,
+			ProjectBundleSession projectBundleSession) {
 		super(registry);
 		this.projectBundleSession = projectBundleSession;
 	}
-	
+
 	@Override
 	protected Bundle getBundle(URI platformURI) {
 		String id = platformURI.segment(1);
@@ -25,5 +26,20 @@ public class DesignerReflectionContributionFactory extends
 			e.printStackTrace();
 		}
 		return super.getBundle(platformURI);
+	}
+
+	public Bundle getBundle(String uriString) {
+		Bundle bundle = null;
+		if (uriString != null) {
+			try {
+				bundle = super.getBundle(uriString);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if (bundle == null) {
+			bundle = this.projectBundleSession.getBundleContext().getBundle();
+		}
+		return bundle;
 	}
 }
