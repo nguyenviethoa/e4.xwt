@@ -194,6 +194,9 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 	 * org.eclipse.e4.xwt.dataproviders.IDataProvider#getData(java.lang.String)
 	 */
 	public Object getData(String path) {
+		if (path == null) {
+			return getTarget();
+		}
 		return getData(getTarget(), path);
 	}
 

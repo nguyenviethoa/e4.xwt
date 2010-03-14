@@ -12,11 +12,13 @@ package org.eclipse.e4.xwt.internal.core;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.databinding.observable.DecoratingObservable;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.observable.value.DecoratingObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.IDataProvider;
@@ -231,6 +233,13 @@ public class ScopeManager {
 						type = dataProvider.getModelService().loadModelType(
 								className);
 						if (type == null) {
+							type = dataProvider.getModelService()
+									.loadModelType(path);
+							if (type != null) {
+								segment = null;
+							}
+						}
+						if (type == null) {
 							throw new XWTException("Class " + className
 									+ " not found");
 						}
@@ -240,7 +249,7 @@ public class ScopeManager {
 			}
 			if (currentPath == null) {
 				currentPath = segment;
-			} else {
+			} else if (segment != null) {
 				currentPath = currentPath + '.' + segment;
 			}
 
@@ -248,17 +257,25 @@ public class ScopeManager {
 					value, currentPath);
 			try {
 				if (segmentValue == null) {
-					segmentValue = createValueProperty(dataValue, segment, type);
-					if (segmentValue == null) {
-						throw new XWTException(" Property " + segment
-								+ " is not found in "
-								+ expressionPath.getFullPath());
-						// maybe to
-						// raise an
-						// exception
+					if (segment != null) {
+						segmentValue = createValueProperty(dataValue, segment,
+								type);
+						if (segmentValue == null) {
+							throw new XWTException(" Property " + segment
+									+ " is not found in "
+									+ expressionPath.getFullPath());
+							// maybe to
+							// raise an
+							// exception
+						}
+						scopeManager.addObservableValue(widget, value,
+								currentPath, segmentValue);
+					} else  if (dataValue instanceof IObservable){
+						segmentValue = (IObservable)dataValue;
 					}
-					scopeManager.addObservableValue(widget, value, currentPath,
-							segmentValue);
+				}
+				else if (segment == null && segmentValue instanceof IObservableValue) {
+					segmentValue = new TypedDecoratingObservableValue((IObservableValue)segmentValue, type, true);					
 				}
 			} catch (IllegalArgumentException e) {
 				// Property is not found
@@ -383,6 +400,21 @@ public class ScopeManager {
 				updateSourceTrigger);
 	}
 
+	static class TypedDecoratingObservableValue extends DecoratingObservableValue {
+		private Object type;
+		
+		public TypedDecoratingObservableValue(IObservableValue decorated, Object type,
+				boolean disposeDecoratedOnDispose) {
+			super(decorated, disposeDecoratedOnDispose);
+			this.type = type;
+		}
+		
+		@Override
+		public Object getValueType() {
+			return type;
+		}
+	}
+	
 	public static IObservable observe(Object control, Object value,
 			String fullPath, UpdateSourceTrigger updateSourceTrigger,
 			int observeKind) {
