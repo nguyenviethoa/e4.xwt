@@ -37,9 +37,9 @@ public class AddApplicationKeyBindingChildCommand extends Command {
 
 	public void execute() {
 		if (index < 0 || index > parent.getChildren().size()) {
-			index = parent.getBindings().size();
+			index = parent.getBindingTables().get(0).getBindings().size();
 		}
-		EList<MKeyBinding> commands = (EList<MKeyBinding>) parent.getBindings();
+		EList<MKeyBinding> commands = (EList<MKeyBinding>) parent.getBindingTables().get(0).getBindings();
 		commands.add(index, newChild);
 	}
 
@@ -48,6 +48,6 @@ public class AddApplicationKeyBindingChildCommand extends Command {
 	}
 
 	public void undo() {
-		parent.getBindings().remove(newChild);
+		parent.getBindingTables().get(0).getBindings().remove(newChild);
 	}
 }

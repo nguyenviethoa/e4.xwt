@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
+import org.eclipse.e4.ui.model.application.MBindingTable;
 import org.eclipse.e4.ui.model.application.MCommand;
 import org.eclipse.e4.ui.model.application.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.MHandledToolItem;
@@ -50,6 +51,7 @@ import org.eclipse.e4.ui.model.application.MPerspectiveStack;
 import org.eclipse.e4.ui.model.application.MToolBar;
 import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.e4.ui.model.application.MWindowTrim;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -550,7 +552,13 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 					.createKeyBinding();
 			binding.setKeySequence(keyBinding);
 			binding.setCommand(command);
-			application.getBindings().add(binding);
+			EList<MBindingTable> tables = application.getBindingTables();
+			if (tables.size()==0) {
+				MBindingTable table = MApplicationFactory.eINSTANCE.createBindingTable();
+				table.setBindingContextId("org.eclipse.ui.contexts.dialogAndWindow");
+				tables.add(table);
+			}
+			tables.get(0).getBindings().add(binding);
 		}
 		return command;
 	}
