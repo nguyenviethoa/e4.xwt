@@ -19,6 +19,8 @@ import java.lang.reflect.Method;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.property.value.SimpleValueProperty;
+import org.eclipse.core.internal.databinding.property.value.SimplePropertyObservableValue;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
@@ -287,6 +289,18 @@ public class JFaceXWTDataBinding {
 	protected static IObservable observePropertyValue(Object object,
 			String propertyName, UpdateSourceTrigger updateSourceTrigger) {
 		if (object instanceof Viewer) {
+			if ("input".equals(propertyName)) {
+				Viewer viewer = (Viewer) object;
+				SimpleValueProperty property = (SimpleValueProperty) ViewerProperties.input();
+				IObservableValue observableValue = new SimplePropertyObservableValue(XWT.getRealm(), viewer, property);
+				return new TypedViewerObservableValueDecorator(observableValue, viewer);
+			}
+			else if ("singleSelection".equals(propertyName)) {
+				Viewer viewer = (Viewer) object;
+				SimpleValueProperty property = (SimpleValueProperty) ViewerProperties.singleSelection();
+				IObservableValue observableValue = new SimplePropertyObservableValue(XWT.getRealm(), viewer, property);
+				return new TypedViewerObservableValueDecorator(observableValue, viewer);
+			}
 			return observePropertyValue((Viewer) object, propertyName, updateSourceTrigger);
 		} else if (object instanceof MenuItem) {
 			//

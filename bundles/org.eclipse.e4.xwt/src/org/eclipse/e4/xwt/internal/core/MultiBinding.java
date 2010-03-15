@@ -95,12 +95,11 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		return false;
 	}
 
-	public Object getValue() {
-
+	public Object getValue(Class<?> targetType) {
 		if (observableValue == null) {
 			IObservableValue[] values = new IObservableValue[bindings.length];
 			for (int i = 0; i < values.length; i++) {
-				bindings[i].getValue();
+				bindings[i].getValue(targetType);
 				IObservable observable = bindings[i].getObservableSource();
 				if (observable instanceof IObservableValue) {
 					values[i] = (IObservableValue) observable;
@@ -119,7 +118,6 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 
 		IDataProvider dataProvider = getDataProvider();
 		if (dataProvider != null) {
-
 			BindingGate bindingGate = getBindingGate();
 			if (bindingGate != null) {
 				Object target = getControl();
@@ -152,7 +150,10 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 			bindingGate.bind(observableValue, observableWidget, this);
 		}
 
-		return observableValue.getValue();
+		if (targetType == null || !targetType.isInstance(observableValue)) {
+			return observableValue.getValue();			
+		}
+		return observableValue;
 	}
 
 	private BindingGate getBindingGate() {

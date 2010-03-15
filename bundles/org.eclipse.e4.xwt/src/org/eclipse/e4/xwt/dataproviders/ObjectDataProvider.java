@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.dataproviders;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.databinding.beans.BeanProperties;
@@ -272,7 +273,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 			return true;
 		}
 		if (target instanceof IBinding) {
-			target = ((IBinding) target).getValue();
+			target = ((IBinding) target).getValue(null);
 		}
 		Class<?> type = JFaceXWTDataBinding.toType(target);
 		int index = path.indexOf(".");

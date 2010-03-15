@@ -91,7 +91,7 @@ public class MultiDataTrigger extends TriggerBase {
 					IDynamicBinding dynamicBinding = (IDynamicBinding) binding;
 					bindingTarget = dynamicBinding.createBoundSource();
 				} else {
-					bindingTarget = binding.getValue();
+					bindingTarget = binding.getValue(null);
 				}
 			} else {
 				Object sourceObject = getElementByName(target, sourceName);

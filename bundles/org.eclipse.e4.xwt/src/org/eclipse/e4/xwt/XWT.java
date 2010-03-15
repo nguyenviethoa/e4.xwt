@@ -262,10 +262,15 @@ public class XWT {
 	 * @param context
 	 * @return
 	 */
-	public static Object getDataContext(Object element, boolean resolved) {
+	public static Object getDataContext(Object element, Class<?> targetType) {
 		Object value = XWTLoaderManager.getActive().getDataContext(element);
-		if (resolved && value instanceof IBinding) {
-			return ((IBinding) value).getValue();
+		if (targetType == null || !targetType.isInstance(value)) {
+			if (value instanceof IBinding) {
+				return ((IBinding) value).getValue(targetType);
+			}
+			if (value instanceof IObservableValue) {
+				return ((IObservableValue) value).getValue();
+			}
 		}
 		return value;
 	}
@@ -297,7 +302,7 @@ public class XWT {
 	 * @return
 	 */
 	public static Object getDataContext(Object element) {
-		return getDataContext(element, true);
+		return getDataContext(element, null);
 	}
 
 	/**

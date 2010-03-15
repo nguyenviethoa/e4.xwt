@@ -23,7 +23,7 @@ public class BindingToObject implements IConverter {
 
 	public Object convert(Object fromObject) {
 		IBinding binding = (IBinding) fromObject;
-		return binding.getValue();
+		return binding.getValue(null);
 	}
 
 	public Object getFromType() {

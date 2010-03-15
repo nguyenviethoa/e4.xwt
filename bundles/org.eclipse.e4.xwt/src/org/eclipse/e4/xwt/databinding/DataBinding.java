@@ -52,7 +52,7 @@ public class DataBinding extends AbstractDataBinding {
 	/**
 	 * Get bind value of two bindings.
 	 */
-	public Object getValue() {
+	public Object getValue(Class<?> targetType) {
 		IObservable observableWidget = getObservableWidget();
 		IObservable observableSource = getObservableSource(ScopeManager.VALUE);
 
@@ -65,6 +65,11 @@ public class DataBinding extends AbstractDataBinding {
 				// TODO should raise an exception
 				return null;
 			}
+			if (targetType != null && !targetType.isInstance(observableSource)) {
+				return observableSource;			
+			}
+			
+			// convert to final value
 			Object value = observableSource;
 			if (observableSource instanceof IObservableValue) {
 				value = ((IObservableValue) observableSource).getValue();
@@ -104,6 +109,11 @@ public class DataBinding extends AbstractDataBinding {
 			bindingContext.bind(observableSource, observableWidget, this);
 		}
 
+		if (targetType != null && !targetType.isInstance(observableSource)) {
+			return observableSource;			
+		}
+
+		// convert to final value
 		Object value = observableSource;
 		while (value instanceof IObservableValue) {
 			value = ((IObservableValue) value).getValue();

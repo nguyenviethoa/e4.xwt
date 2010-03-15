@@ -11,22 +11,23 @@
 package org.eclipse.e4.xwt.internal.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
-import org.eclipse.core.databinding.observable.DecoratingObservable;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
-import org.eclipse.core.databinding.observable.value.DecoratingObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.databinding.EventPropertyObservableValue;
 import org.eclipse.e4.xwt.databinding.JFaceXWTDataBinding;
 import org.eclipse.e4.xwt.databinding.ListToArrayObservableValue;
+import org.eclipse.e4.xwt.databinding.TypedViewerObservableValueDecorator;
 import org.eclipse.e4.xwt.dataproviders.IObjectDataProvider;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
@@ -185,7 +186,19 @@ public class ScopeManager {
 				if (observeKind == COLLECTION) {
 					// if the first is viewers' property
 					if (!JFaceXWTDataBinding.isViewerProperty(segments[0])) {
-						observeKind = VALUE;
+						int kindValue = VALUE;
+						Object targetValueType = dataValue;
+						if (dataValue instanceof IObservableValue) {
+							targetValueType = ((IObservableValue) dataValue).getValueType();
+						}
+						Object propertyType = dataProvider.getModelService().toModelPropertyType(targetValueType, segments[0]);
+						if (propertyType instanceof Class<?>) {
+							Class<?> propertyTypeClass = (Class<?>) propertyType;
+							if (Collection.class.isAssignableFrom(propertyTypeClass) || propertyTypeClass.isArray()) {
+								kindValue = COLLECTION;
+							}
+						}
+						observeKind = kindValue;
 					}
 				}
 				int size = segments.length;
@@ -274,8 +287,11 @@ public class ScopeManager {
 						segmentValue = (IObservable)dataValue;
 					}
 				}
-				else if (segment == null && segmentValue instanceof IObservableValue) {
-					segmentValue = new TypedDecoratingObservableValue((IObservableValue)segmentValue, type, true);					
+				else if (segment == null && type != null) {
+					if (segmentValue instanceof TypedViewerObservableValueDecorator) {
+						TypedViewerObservableValueDecorator typedViewerObservableValueDecorator = (TypedViewerObservableValueDecorator) segmentValue;
+						typedViewerObservableValueDecorator.setElementType(type);
+					}
 				}
 			} catch (IllegalArgumentException e) {
 				// Property is not found
@@ -398,21 +414,6 @@ public class ScopeManager {
 			UpdateSourceTrigger updateSourceTrigger) {
 		return new ObservableFactory(control, expressionPath,
 				updateSourceTrigger);
-	}
-
-	static class TypedDecoratingObservableValue extends DecoratingObservableValue {
-		private Object type;
-		
-		public TypedDecoratingObservableValue(IObservableValue decorated, Object type,
-				boolean disposeDecoratedOnDispose) {
-			super(decorated, disposeDecoratedOnDispose);
-			this.type = type;
-		}
-		
-		@Override
-		public Object getValueType() {
-			return type;
-		}
 	}
 	
 	public static IObservable observe(Object control, Object value,

@@ -173,7 +173,7 @@ public class JFacesHelper {
 						IBinding binding = (IBinding) userDataValue;
 						binding.reset();
 						UserData.setDataContext(column, value);
-						value = binding.getValue();
+						value = binding.getValue(null);
 					} else {
 						value = userDataValue;
 					}
@@ -215,7 +215,7 @@ public class JFacesHelper {
 						IBinding binding = (IBinding) userDataValue;
 						binding.reset();
 						UserData.setDataContext(column, value);
-						value = binding.getValue();
+						value = binding.getValue(null);
 					} else {
 						value = userDataValue;
 					}

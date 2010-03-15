@@ -123,7 +123,7 @@ public class Condition {
 				}
 			}
 		} else if (binding != null) {
-			Object existingValue = binding.getValue();
+			Object existingValue = binding.getValue(null);
 			if (existingValue == null) {
 				return false;
 			}

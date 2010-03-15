@@ -36,7 +36,7 @@ public class ControlDataBinding extends AbstractDataBinding {
 	/**
 	 * Get bind value of two bindings.
 	 */
-	public Object getValue() {
+	public Object getValue(Class<?> targetType) {
 		IObservableValue targetWidget = null;
 		Object target = getControl();
 		if (target != null) {
@@ -64,6 +64,9 @@ public class ControlDataBinding extends AbstractDataBinding {
 
 		if (targetWidget == null) {
 			if (sourceWidget != null) {
+				if (targetType != null && !targetType.isInstance(sourceWidget)) {
+					return sourceWidget;			
+				}
 				Object value = sourceWidget.getValue();
 				while(value instanceof IObservableValue) {
 					value = ((IObservableValue)value).getValue();
@@ -81,6 +84,10 @@ public class ControlDataBinding extends AbstractDataBinding {
 		BindingGate bindingGate = new BindingGate(dataBindingContext);
 		bindingGate.bind(sourceWidget, targetWidget, this);
 		if (sourceWidget != null) {
+			if (targetType != null && !targetType.isInstance(sourceWidget)) {
+				return sourceWidget;			
+			}
+			// convert to final value
 			Object value = sourceWidget.getValue();
 			while(value instanceof IObservableValue) {
 				value = ((IObservableValue)value).getValue();

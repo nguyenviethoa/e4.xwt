@@ -26,14 +26,14 @@ public class StaticResourceBinding implements IBinding {
 		this.key = key;
 	}
 
-	public Object getValue() {
+	public Object getValue(Class<?> targetType) {
 		Widget parent = UserData.getWidget(widget);
 		while (parent != null) {
 			Map<String, Object> dico = UserData.getLocalResources(parent);
 			if (dico != null && dico.containsKey(key)) {
 				Object data = dico.get(key);
 				if (data instanceof IBinding) {
-					return ((IBinding) data).getValue();
+					return ((IBinding) data).getValue(targetType);
 				}
 				return data;
 			}

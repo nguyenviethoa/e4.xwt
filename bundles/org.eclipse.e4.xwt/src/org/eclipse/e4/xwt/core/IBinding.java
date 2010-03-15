@@ -15,6 +15,11 @@ package org.eclipse.e4.xwt.core;
  * @author yyang (yves.yang@soyatec.com)
  */
 public interface IBinding {
-	Object getValue();
+	/**
+	 * The argument is used to determine the filtering. If type is null, no filtering
+	 * 
+	 * @return
+	 */
+	Object getValue(Class<?> type);
 	void reset();
 }

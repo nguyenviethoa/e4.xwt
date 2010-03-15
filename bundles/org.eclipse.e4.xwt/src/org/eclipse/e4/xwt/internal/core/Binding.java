@@ -130,7 +130,7 @@ public class Binding extends DynamicBinding {
 		Object control = getControl();
 		Object source = getSourceObject();
 		if (source == null) {
-			source = XWT.getDataContext(control);
+			source = XWT.getDataContext(control, IDynamicBinding.class);
 			Object localDataContext = UserData.getLocalDataContext(control);
 			if (localDataContext == this) {
 				return source;
@@ -171,7 +171,7 @@ public class Binding extends DynamicBinding {
 			return ((IDynamicBinding) source).isSourceControl();
 		}
 		if (source instanceof IBinding) {
-			source = ((IBinding) source).getValue();
+			source = ((IBinding) source).getValue(null);
 		}
 
 		if (path == null) {
@@ -199,7 +199,7 @@ public class Binding extends DynamicBinding {
 		return false;
 	}
 
-	public Object getValue() {
+	public Object getValue(Class<?> targetType) {
 		Object dataContext = getSourceObject();
 		if (dataContext == null) {
 			Object dataContextHost = getDataContextHost();
@@ -217,7 +217,7 @@ public class Binding extends DynamicBinding {
 
 		// direct binding
 		if (dataContext instanceof IBinding) {
-			dataContext = ((IBinding) dataContext).getValue();
+			dataContext = ((IBinding) dataContext).getValue(null);
 		}
 
 		IDataProvider dataProvider = getDataProvider(dataContext);
@@ -226,7 +226,7 @@ public class Binding extends DynamicBinding {
 			if (isSourceControl()) {
 				ControlDataBinding controlDataBinding = new ControlDataBinding(
 						dataContext, this, dataProvider);
-				return controlDataBinding.getValue();
+				return controlDataBinding.getValue(targetType);
 			}
 		} catch (XWTException e) {
 			// in case the property cannot be bound. return value
@@ -238,7 +238,7 @@ public class Binding extends DynamicBinding {
 			dataBinding = new DataBinding(this, dataProvider);
 		}
 		if (dataBinding != null) {
-			return dataBinding.getValue();
+			return dataBinding.getValue(targetType);
 		}
 		return convertedValue(dataContext);
 	}

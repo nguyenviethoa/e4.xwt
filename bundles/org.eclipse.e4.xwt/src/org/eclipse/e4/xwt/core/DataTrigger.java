@@ -79,7 +79,7 @@ public class DataTrigger extends TriggerBase {
 			if (widget == null) {
 				return;
 			}
-			Object currentValue = binding.getValue();
+			Object currentValue = binding.getValue(null);
 			if (currentValue == null) {
 				return;
 			}
@@ -202,7 +202,7 @@ public class DataTrigger extends TriggerBase {
 				bindingTarget = dynamicBinding.createBoundSource();
 			}
 			else {
-				bindingTarget = binding.getValue();
+				bindingTarget = binding.getValue(null);
 			}			
 		}
 		else {
