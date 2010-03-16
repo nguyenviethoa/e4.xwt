@@ -133,7 +133,7 @@ public class DataBindingTrack {
 				path = attr.getValue();
 			Object dataContext2 = null;
 			try {
-				dataContext2 = newInstance.getValue();
+				dataContext2 = newInstance.getValue(null);
 				if (path != null && path.length() > 0) {
 					String[] paths = path.trim().split("\\.");
 					if (paths.length > 1) {
