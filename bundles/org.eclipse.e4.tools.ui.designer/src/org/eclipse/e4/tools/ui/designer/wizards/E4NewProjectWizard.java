@@ -343,6 +343,8 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 
 			MApplication application = MApplicationFactory.eINSTANCE
 					.createApplication();
+			
+			application.setId("org.eclipse.e4.ide.application");
 			resource.getContents().add((EObject) application);
 
 			// Create Quit command
@@ -370,6 +372,7 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 				{
 					MMenu menu = MApplicationFactory.eINSTANCE.createMenu();
 					mainWindow.setMainMenu(menu);
+					menu.setId("menu:org.eclipse.ui.main.menu");
 
 					MMenuItem fileMenuItem = MApplicationFactory.eINSTANCE
 							.createMenuItem();
@@ -444,6 +447,7 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 
 						MToolBar toolBar = MApplicationFactory.eINSTANCE
 								.createToolBar();
+						toolBar.setId("toolbar:org.eclipse.ui.main.toolbar");
 						windowTrim.getChildren().add(toolBar);
 
 						MHandledToolItem toolItemOpen = MApplicationFactory.eINSTANCE
