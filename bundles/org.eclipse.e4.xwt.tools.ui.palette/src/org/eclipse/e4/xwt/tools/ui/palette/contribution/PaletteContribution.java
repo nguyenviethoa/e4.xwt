@@ -12,8 +12,10 @@ package org.eclipse.e4.xwt.tools.ui.palette.contribution;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -46,6 +48,8 @@ public class PaletteContribution implements IExecutableExtension {
 	public static final String RESOURCE_PROVIDER = "provider";
 	public static final String INITIALIZER = "Initializer";
 	public static final String INITIALIZER_TARGET = "target";
+	public static final String INITIALIZER_TARGET_ID = "id";
+	public static final String INITIALIZER_TARGET_OVERRIDE_ID = "overrideId";
 	public static final String INITIALIZER_TARGET_GLOBAL = "*";
 	public static final String INITIALIZER_CLASS = "class";
 	public static final String TOOL = "Tool";
@@ -57,7 +61,7 @@ public class PaletteContribution implements IExecutableExtension {
 	private String editorId;
 	private Resource resource;
 	private String resourceURI;
-	private Map<String, List<Initializer>> initializersMap;
+	private Map<String, Initializer> initializersMap;
 	private List<IPaletteResourceProvider> resourceProviders;
 
 	private Class<? extends Tool> creationTool;
@@ -71,8 +75,9 @@ public class PaletteContribution implements IExecutableExtension {
 	}
 
 	private void loadFromExtensions() {
-		IConfigurationElement[] configurations = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(EXTENSION_POINT_ID);
+		IConfigurationElement[] configurations = Platform
+				.getExtensionRegistry().getConfigurationElementsFor(
+						EXTENSION_POINT_ID);
 		for (IConfigurationElement ctrib : configurations) {
 			String targetId = ctrib.getAttribute(CONTRIBUTION_TARGET_ID);
 			if (!editorId.equals(targetId)) {
@@ -98,6 +103,7 @@ public class PaletteContribution implements IExecutableExtension {
 						.createExecutableExtension(RESOURCE_PROVIDER);
 				resourceProviders.add(provider);
 			} catch (CoreException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -106,26 +112,91 @@ public class PaletteContribution implements IExecutableExtension {
 		if (initializers == null || initializers.length == 0) {
 			return;
 		}
-		if (initializersMap == null) {
-			initializersMap = new HashMap<String, List<Initializer>>();
-		}
+
 		for (IConfigurationElement initConfig : initializers) {
-			String target = initConfig.getAttribute(INITIALIZER_TARGET);
-			if (target == null || "".equals(target)) {
-				target = INITIALIZER_TARGET_GLOBAL;
-			}
-			List<Initializer> inits = initializersMap.get(target);
-			if (inits == null) {
-				initializersMap.put(target, inits = new ArrayList<Initializer>());
-			}
+			String target = normalizeTarget(initConfig
+					.getAttribute(INITIALIZER_TARGET));
+			String id = initConfig.getAttribute(INITIALIZER_TARGET_ID);
+			String overrideId = initConfig
+					.getAttribute(INITIALIZER_TARGET_OVERRIDE_ID);
+			Initializer initializer = null;
 			try {
-				Initializer initializer = (Initializer) initConfig
+				initializer = (Initializer) initConfig
 						.createExecutableExtension(INITIALIZER_CLASS);
-				inits.add(initializer);
+
 			} catch (CoreException e) {
 				continue;
 			}
+			addInitializer(target, id, overrideId, initializer);
 		}
+	}
+
+	private void addInitializer(String target, String id, String overrideId,
+			Initializer initializer) {
+		if (id == null || initializer == null) {
+			return;
+		}
+		initializer.setId(id);
+
+		if (initializersMap == null) {
+			initializersMap = new HashMap<String, Initializer>();
+		}
+		// 1. quick fix orveride.
+		if (overrideId != null && findInitializerById(overrideId) != null) {
+			Initializer idOfInit = findInitializerById(overrideId);
+			if (idOfInit.equals(initializersMap.get(target))) {
+				initializersMap.put(target, initializer);
+			} else {
+				for (String key : new ArrayList<String>(initializersMap
+						.keySet())) {
+					if (idOfInit.equals(initializersMap.get(key))) {
+						initializersMap.put(key, initializer);
+					}
+				}
+			}
+		} else {
+			if (target != null && target.indexOf(",") != -1) {
+				StringTokenizer stk = new StringTokenizer(target, ",");
+				while (stk.hasMoreTokens()) {
+					addInitializer(stk.nextToken().trim(), id, null,
+							initializer);
+				}
+				return;
+			}
+			target = normalizeTarget(target);
+			Initializer oldInit = initializersMap.get(target);
+			if (oldInit == null) {
+				initializersMap.put(target, initializer);
+			} else if (oldInit instanceof CompoundInitializer) {
+				((CompoundInitializer) oldInit).getInitializers().add(
+						initializer);
+			} else {
+				CompoundInitializer newInit = PaletteFactory.eINSTANCE
+						.createCompoundInitializer();
+				newInit.getInitializers().add(oldInit);
+				newInit.getInitializers().add(initializer);
+				initializersMap.put(target, newInit);
+			}
+		}
+	}
+
+	public Initializer findInitializerById(String id) {
+		if (id == null || initializersMap == null) {
+			return null;
+		}
+		for (Initializer init : initializersMap.values()) {
+			if (id.equals(init.getId())) {
+				return init;
+			}
+		}
+		return null;
+	}
+
+	private String normalizeTarget(String target) {
+		if (target == null || "".equals(target)) {
+			target = INITIALIZER_TARGET_GLOBAL;
+		}
+		return target.toUpperCase();
 	}
 
 	private void loadTools(IConfigurationElement[] tools) {
@@ -135,7 +206,8 @@ public class PaletteContribution implements IExecutableExtension {
 		for (IConfigurationElement toolConfig : tools) {
 			String type = toolConfig.getAttribute(TOOL_TYPE);
 			try {
-				Tool tool = (Tool) toolConfig.createExecutableExtension(TOOL_CLASS);
+				Tool tool = (Tool) toolConfig
+						.createExecutableExtension(TOOL_CLASS);
 				if (TOOL_TYPE_CREATION.equals(type)) {
 					creationTool = tool.getClass();
 				} else if (TOOL_TYPE_SELECTION.equals(type)) {
@@ -163,48 +235,53 @@ public class PaletteContribution implements IExecutableExtension {
 		if (initializersMap == null) {
 			return null;
 		}
-		if (type == null || "".equals(type)) {
-			type = INITIALIZER_TARGET_GLOBAL;
-		}
-		List<Initializer> list = initializersMap.get(type);
-		if (list == null || list.isEmpty()) {
-			return null;
-		}
-		CompoundInitializer initializer = PaletteFactory.eINSTANCE.createCompoundInitializer();
-		initializer.getInitializers().addAll(list);
-		return initializer.unwrap();
+		type = normalizeTarget(type);
+		return initializersMap.get(type);
 	}
 
 	public void applyInitializer(Entry entry) {
-		if (entry == null) {
+		if (entry == null || !entry.getEntries().isEmpty()) {
 			return;
 		}
-		CompoundInitializer initializer = PaletteFactory.eINSTANCE.createCompoundInitializer();
+
+		List<Initializer> initializers = new ArrayList<Initializer>();
 
 		// get from NAME.
 		String name = entry.getName();
-		List<Initializer> list = initializersMap.get(name);
-		EList<Initializer> initializers = initializer.getInitializers();
-		if (list != null && !list.isEmpty()) {
-			initializers.addAll(list);
+		if (name != null) {
+			merge(initializersMap.get(name.toUpperCase()), initializers);
 		}
 		// get from ID.
 		String id = entry.getId();
-		list = initializersMap.get(id);
-		if (list != null && !list.isEmpty()) {
-			initializers.addAll(list);
+		if (id != null) {
+			merge(initializersMap.get(id.toUpperCase()), initializers);
 		}
 		// add old initializer.
 		Initializer oldInitializer = entry.getInitializer();
 		if (oldInitializer != null) {
-			initializers.add(oldInitializer);
+			merge(oldInitializer, initializers);
 		}
 		Initializer globalInitializer = getGlobalInitializer();
-		if (initializers.isEmpty() && globalInitializer != null) {
-			initializers.add(oldInitializer);
+		if (globalInitializer != null) {
+			merge(globalInitializer, initializers);
 		}
 		if (!initializers.isEmpty()) {
+			CompoundInitializer initializer = PaletteFactory.eINSTANCE
+					.createCompoundInitializer();
+			initializer.getInitializers().addAll(initializers);
 			entry.setInitializer(initializer.unwrap());
+		}
+	}
+
+	private void merge(Initializer initializer, List<Initializer> initList) {
+		if (initializer == null || initList == null) {
+			return;
+		}
+		if (initializer instanceof CompoundInitializer) {
+			initList.addAll(((CompoundInitializer) initializer)
+					.getInitializers());
+		} else {
+			initList.add(initializer);
 		}
 	}
 
@@ -228,19 +305,21 @@ public class PaletteContribution implements IExecutableExtension {
 		return resourceProviders;
 	}
 
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
-			throws CoreException {
+	public void setInitializationData(IConfigurationElement config,
+			String propertyName, Object data) throws CoreException {
 
 	}
 
-	public CustomPalettePage createPalette(String editorId, EditDomain editDomain) {
-		PaletteRootFactory factory = new PaletteRootFactory(resourceProviders, creationTool,
-				selectionTool);
+	public CustomPalettePage createPalette(String editorId,
+			EditDomain editDomain) {
+		PaletteRootFactory factory = new PaletteRootFactory(resourceProviders,
+				creationTool, selectionTool);
 		PaletteRoot paletteRoot = factory.createPaletteRoot();
 		if (paletteRoot != null) {
 			editDomain.setPaletteRoot(paletteRoot);
 		}
-		CustomPaletteViewerProvider provider = new CustomPaletteViewerProvider(editDomain);
+		CustomPaletteViewerProvider provider = new CustomPaletteViewerProvider(
+				editDomain);
 		return new CustomPalettePage(provider);
 	}
 

@@ -18,10 +18,10 @@ import org.eclipse.gef.requests.CreateRequest;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class CreationCommand extends Command {
+public abstract class CreationCommand extends Command {
 
 	private CreateRequest createReq;
-	private Object newObject;
+	private Entry entry;
 
 	public CreationCommand(CreateRequest createRequest) {
 		this.createReq = createRequest;
@@ -31,30 +31,42 @@ public class CreationCommand extends Command {
 		if (createReq == null) {
 			return false;
 		}
-		return (newObject = createReq.getNewObject()) != null;
+		return (entry = (Entry) createReq.getNewObject()) != null;
 	}
 
 	final public void execute() {
-		doCreate(preExecute());
+		Initializer initializer = entry.getInitializer();
+		if (initializer != null) {
+			Object newObject = initializer.parse(entry);
+			if (initializer.initialize(entry, newObject)) {
+				doCreate(entry, newObject);
+			}
+		} else {
+			doCreate(entry, null);
+		}
 	}
 
 	/**
 	 * Doing command here.
 	 */
-	protected void doCreate(Object newObject) {
+	protected abstract void doCreate(Entry entry, Object newObject);
 
+	public Entry getEntry() {
+		return entry;
 	}
 
 	/**
 	 * Doing something before command execute.
 	 */
-	protected Object preExecute() {
-		if (newObject instanceof Entry) {
-			Initializer initializer = ((Entry) newObject).getInitializer();
-			if (initializer != null) {
-				return initializer.initialize(initializer.parse());
-			}
+	protected boolean preExecute() {
+		if (entry == null) {
+			return false;
 		}
-		return newObject;
+		Initializer initializer = entry.getInitializer();
+		if (initializer != null) {
+			Object parse = initializer.parse(entry);
+			return initializer.initialize(parse);
+		}
+		return false;
 	}
 }

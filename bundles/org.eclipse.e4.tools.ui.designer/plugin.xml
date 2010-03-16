@@ -121,6 +121,15 @@
                class="org.eclipse.e4.tools.ui.designer.E4SelectionTool"
                type="selection">
          </Tool>
+         <Initializer
+               class="org.eclipse.e4.tools.ui.designer.palette.E4PartInitializer"
+               id="org.eclipse.e4.tools.ui.designer.palette.E4PartInitializer"
+               target="PART,INPUTPART">
+         </Initializer>
+         <Initializer
+               class="org.eclipse.e4.tools.ui.designer.palette.E4PaletteInitializer"
+               id="org.eclipse.e4.tools.ui.designer.palette.E4PaletteInitializer">
+         </Initializer>
       </Contribution>
    </extension>
 </plugin>

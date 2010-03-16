@@ -24,6 +24,7 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
+import org.eclipse.e4.xwt.internal.core.Binding;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
@@ -124,7 +125,7 @@ public class DataBindingTrack {
 		String bindingMessage = "";
 		if (swtObject instanceof IDynamicBinding) {
 			String error = "";
-			IDynamicBinding newInstance = (IDynamicBinding) swtObject;
+			Binding newInstance = (Binding) swtObject;
 			String path = null;
 			XamlAttribute attr = element.getAttribute("Path", IConstants.XWT_NAMESPACE);
 			if (null == attr)

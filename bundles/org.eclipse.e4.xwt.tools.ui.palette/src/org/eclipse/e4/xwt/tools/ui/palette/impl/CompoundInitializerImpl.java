@@ -2,18 +2,20 @@
  * <copyright>
  * </copyright>
  *
- * $Id$
+ * $Id: CompoundInitializerImpl.java,v 1.1 2010/03/13 10:59:47 yvyang Exp $
  */
 package org.eclipse.e4.xwt.tools.ui.palette.impl;
 
 import java.util.Collection;
 
 import org.eclipse.e4.xwt.tools.ui.palette.CompoundInitializer;
+import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.Initializer;
 import org.eclipse.e4.xwt.tools.ui.palette.PalettePackage;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -24,12 +26,10 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>
- * {@link org.eclipse.e4.xwt.tools.ui.palette.impl.CompoundInitializerImpl#getInitializers
- * <em>Initializers</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.impl.CompoundInitializerImpl#getInitializers <em>Initializers</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class CompoundInitializerImpl extends InitializerImpl implements CompoundInitializer {
@@ -46,7 +46,6 @@ public class CompoundInitializerImpl extends InitializerImpl implements Compound
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected CompoundInitializerImpl() {
@@ -55,7 +54,6 @@ public class CompoundInitializerImpl extends InitializerImpl implements Compound
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -65,13 +63,11 @@ public class CompoundInitializerImpl extends InitializerImpl implements Compound
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<Initializer> getInitializers() {
 		if (initializers == null) {
-			initializers = new EObjectContainmentEList<Initializer>(Initializer.class, this,
-					PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS);
+			initializers = new EObjectResolvingEList<Initializer>(Initializer.class, this, PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS);
 		}
 		return initializers;
 	}
@@ -107,10 +103,10 @@ public class CompoundInitializerImpl extends InitializerImpl implements Compound
 	 * 
 	 * @generated NOT
 	 */
-	public Object parse() {
+	public Object parse(Entry entry) {
 		EList<Initializer> initializers = getInitializers();
 		for (Initializer initializer : initializers) {
-			Object parse = initializer.parse();
+			Object parse = initializer.parse(entry);
 			if (parse != null) {
 				return parse;
 			}
@@ -120,77 +116,74 @@ public class CompoundInitializerImpl extends InitializerImpl implements Compound
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID,
-			NotificationChain msgs) {
-		switch (featureID) {
-		case PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS:
-			return ((InternalEList<?>) getInitializers()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS:
-			return getInitializers();
+			case PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS:
+				return getInitializers();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS:
-			getInitializers().clear();
-			getInitializers().addAll((Collection<? extends Initializer>) newValue);
-			return;
+			case PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS:
+				getInitializers().clear();
+				getInitializers().addAll((Collection<? extends Initializer>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS:
-			getInitializers().clear();
-			return;
+			case PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS:
+				getInitializers().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS:
-			return initializers != null && !initializers.isEmpty();
+			case PalettePackage.COMPOUND_INITIALIZER__INITIALIZERS:
+				return initializers != null && !initializers.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl#initialize(org
+	 * .eclipse.e4.xwt.tools.ui.palette.Entry, java.lang.Object)
+	 */
+	public boolean initialize(Entry entry, Object newObject) {
+		boolean result = initializers.size() > 0;
+		EList<Initializer> initializers = getInitializers();
+		for (Initializer initializer : initializers) {
+			result &= initializer.initialize(entry, newObject);
+		}
+		return result;
 	}
 
 } // CompoundInitializerImpl

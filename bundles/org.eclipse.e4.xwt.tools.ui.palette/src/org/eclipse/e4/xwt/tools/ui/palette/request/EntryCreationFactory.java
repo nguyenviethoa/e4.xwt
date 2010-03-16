@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.tools.ui.palette.request;
 
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gef.requests.CreationFactory;
 
 /**
@@ -42,7 +43,14 @@ public class EntryCreationFactory implements CreationFactory {
 	 * @see org.eclipse.gef.requests.CreationFactory#getObjectType()
 	 */
 	public Object getObjectType() {
-		return entry != null ? entry.getScope() : null;
+		if (entry == null) {
+			return null;
+		}
+		EClass type = entry.getType();
+		if (type != null) {
+			return type;
+		}
+		return entry.getScope();
 	}
 
 	public Entry getEntry() {

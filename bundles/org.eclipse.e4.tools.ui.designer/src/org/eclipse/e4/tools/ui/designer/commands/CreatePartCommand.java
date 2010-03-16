@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.e4.tools.ui.designer.commands.part.PartCommandFactory;
-import org.eclipse.e4.tools.ui.designer.palette.E4PaletteHelper;
 import org.eclipse.e4.tools.ui.designer.part.PartCreateRequest;
 import org.eclipse.e4.tools.ui.designer.wizards.NewPartWizard;
 import org.eclipse.e4.ui.model.application.MPart;
@@ -21,10 +19,10 @@ import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
-import org.eclipse.e4.xwt.tools.ui.palette.Initializer;
+import org.eclipse.e4.xwt.tools.ui.palette.contribution.CreationCommand;
+import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.jface.window.Window;
@@ -35,7 +33,7 @@ import org.eclipse.ui.IFileEditorInput;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class CreatePartCommand extends Command {
+public class CreatePartCommand extends CreationCommand {
 
 	private PartCreateRequest partReq;
 	private EClass creationType;
@@ -46,11 +44,12 @@ public class CreatePartCommand extends Command {
 	private Command command;
 
 	public CreatePartCommand(PartCreateRequest partReq) {
+		super((CreateRequest) partReq.getRequest());
 		this.partReq = partReq;
 	}
 
 	public boolean canExecute() {
-		if (partReq == null) {
+		if (!super.canExecute()) {
 			return false;
 		}
 		if (creationType == null) {
@@ -61,7 +60,7 @@ public class CreatePartCommand extends Command {
 		}
 
 		if (creatingElement == null) {
-			Object element = E4PaletteHelper.createElement(null, creationType);
+			Object element = EntryHelper.getNewObject((CreateRequest) partReq.getRequest());
 			if (element instanceof MUIElement) {
 				creatingElement = (MUIElement) element;
 			}
@@ -83,38 +82,42 @@ public class CreatePartCommand extends Command {
 		}
 
 		if (command == null) {
-			command = PartCommandFactory.createCommand(partReq.getPosition(),
-					creatingElement, partStack, header);
+			command = PartCommandFactory.createCommand(partReq.getPosition(), creatingElement,
+					partStack, header);
 		}
 		return command != null && command.canExecute();
 	}
 
-	public void execute() {
-		Object dataContext = null;
-		Entry entry = null;
-		Request request = partReq.getRequest();
-		if (request instanceof CreateRequest) {
-			Object newObject = ((CreateRequest) request).getNewObject();
-			if (newObject instanceof Entry) {
-				entry = (Entry) newObject;
-			}
-		}
-		if (entry != null) {
-			Initializer initializer = entry.getInitializer();
-			if (initializer != null) {
-				try {
-					if (!initializer.initialize(creatingElement)) {
-						return;
-					}
-				} catch (Exception e) {
-					return;
-				}
-			}
-			dataContext = entry.getDataContext();
-		}
-		if (!promptInitPart(dataContext)) {
-			return;
-		}
+	// public void execute() {
+	// Object dataContext = null;
+	// Entry entry = null;
+	// Request request = partReq.getRequest();
+	// if (request instanceof CreateRequest) {
+	// Object newObject = ((CreateRequest) request).getNewObject();
+	// if (newObject instanceof Entry) {
+	// entry = (Entry) newObject;
+	// }
+	// }
+	// if (entry != null) {
+	// Initializer initializer = entry.getInitializer();
+	// if (initializer != null) {
+	// try {
+	// if (!initializer.initialize(creatingElement)) {
+	// return;
+	// }
+	// } catch (Exception e) {
+	// return;
+	// }
+	// }
+	// dataContext = entry.getDataContext();
+	// }
+	// if (!promptInitPart(dataContext)) {
+	// return;
+	// }
+	// command.execute();
+	// }
+
+	protected void doCreate(Entry entry, Object newObject) {
 		command.execute();
 	}
 
@@ -122,16 +125,14 @@ public class CreatePartCommand extends Command {
 		if (creatingElement == null || !(creatingElement instanceof MPart)) {
 			return false;
 		}
-		EditDomain editDomain = EditDomain.getEditDomain(partReq
-				.getTargetEditPart());
-		IFileEditorInput input = (IFileEditorInput) editDomain
-				.getData(Designer.DESIGNER_INPUT);
+		EditDomain editDomain = EditDomain.getEditDomain(partReq.getTargetEditPart());
+		IFileEditorInput input = (IFileEditorInput) editDomain.getData(Designer.DESIGNER_INPUT);
 		if (input == null) {
 			return false;
 		}
-		
-		NewPartWizard newWizard = new NewPartWizard(input.getFile(),
-				(MPart) creatingElement, dataContext);
+
+		NewPartWizard newWizard = new NewPartWizard(input.getFile(), (MPart) creatingElement,
+				dataContext);
 		WizardDialog dialog = new WizardDialog(new Shell(), newWizard);
 		return Window.OK == dialog.open();
 	}

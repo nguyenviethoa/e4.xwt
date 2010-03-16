@@ -11,6 +11,8 @@
 package org.eclipse.e4.tools.ui.designer.palette;
 
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.xwt.tools.ui.palette.Entry;
+import org.eclipse.e4.xwt.tools.ui.palette.Initializer;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -30,7 +32,17 @@ public class CreateReqHelper {
 	}
 
 	public MUIElement getNewObject() {
-		return EntryHelper.getNode(createReq);
+		Object newObject = createReq.getNewObject();
+		if (newObject instanceof Entry) {
+			Initializer initializer = ((Entry) newObject).getInitializer();
+			if (initializer != null) {
+				newObject = initializer.parse((Entry) newObject);
+			}
+		}
+		if (newObject instanceof MUIElement) {
+			return (MUIElement) newObject;
+		}
+		return null;
 	}
 
 	public String getNewObjectType() {
@@ -42,7 +54,7 @@ public class CreateReqHelper {
 	}
 
 	public static boolean canCreate(MUIElement parent, MUIElement child) {
-		EObject container = (EObject) parent;		
+		EObject container = (EObject) parent;
 		for (EReference reference : container.eClass().getEReferences()) {
 			EClassifier classifier = reference.getEType();
 			if (classifier.isInstance(child)) {

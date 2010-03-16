@@ -25,6 +25,7 @@ import org.eclipse.pde.core.plugin.IPluginImport;
 import org.eclipse.pde.core.plugin.IPluginModel;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginModelFactory;
+import org.eclipse.pde.core.plugin.ISharedExtensionsModel;
 import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.eclipse.pde.internal.core.bundle.BundlePluginBase;
 import org.eclipse.pde.internal.core.bundle.BundlePluginModelBase;
@@ -33,6 +34,7 @@ import org.eclipse.pde.internal.core.ibundle.IBundle;
 import org.eclipse.pde.internal.core.ibundle.IBundlePluginModelBase;
 import org.eclipse.pde.internal.core.plugin.AbstractPluginModelBase;
 import org.eclipse.pde.internal.core.plugin.PluginBase;
+import org.eclipse.pde.internal.core.plugin.WorkspaceExtensionsModel;
 import org.eclipse.pde.internal.core.text.plugin.PluginBaseNode;
 import org.eclipse.pde.internal.core.text.plugin.PluginDocumentNodeFactory;
 import org.eclipse.pde.internal.core.util.VersionUtil;
@@ -120,8 +122,15 @@ public class DependencyBuilder extends AbstractBuilder {
 			WorkspaceBundleModel bundleModel = (WorkspaceBundleModel) model.getBundleModel();
 			synchronized (bundleModel) {
 				bundleModel.load();
-				bundleModel.setEditable(true);
-
+				boolean isBundleEditable = bundleModel.isEditable();
+				if (!isBundleEditable){
+					bundleModel.setEditable(true);
+				}
+				ISharedExtensionsModel extensionsModel = model.getExtensionsModel();
+				if (extensionsModel != null && extensionsModel instanceof WorkspaceExtensionsModel){
+					((WorkspaceExtensionsModel)extensionsModel).setEditable(true);
+				}
+				
 				IPluginImport[] imports = new IPluginImport[pluginImports.size()];
 				for (int i = 0; i < pluginImports.size(); i++) {
 					IPluginModel candidate = (IPluginModel) pluginImports.get(i);
@@ -133,7 +142,12 @@ public class DependencyBuilder extends AbstractBuilder {
 				addImports(pluginBase, imports);
 
 				bundleModel.save();
-				bundleModel.setEditable(false);
+				if (!isBundleEditable){
+					bundleModel.setEditable(false);
+				}
+				if (extensionsModel != null && extensionsModel instanceof WorkspaceExtensionsModel){
+					((WorkspaceExtensionsModel)extensionsModel).setEditable(false);
+				}
 			}
 			buildClean();
 		} catch (Exception e) {

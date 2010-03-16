@@ -11,6 +11,7 @@
 package org.eclipse.e4.tools.ui.designer;
 
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
+import org.eclipse.e4.tools.ui.designer.palette.E4PartInitializer;
 import org.eclipse.e4.ui.model.application.MApplicationPackage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.GraphicalViewerDropCreationListener;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
@@ -22,8 +23,9 @@ import org.eclipse.jdt.core.ICompilationUnit;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class E4GraphicalViewerDropCreationListener extends
-		GraphicalViewerDropCreationListener {
+public class E4GraphicalViewerDropCreationListener
+		extends
+			GraphicalViewerDropCreationListener {
 
 	public E4GraphicalViewerDropCreationListener(EditPartViewer viewer) {
 		super(viewer);
@@ -35,6 +37,7 @@ public class E4GraphicalViewerDropCreationListener extends
 			if (classType != null) {
 				Entry entry = E4PaletteProvider
 						.createEntry(MApplicationPackage.Literals.PART);
+				entry.setInitializer(new E4PartInitializer());
 				entry.setDataContext(classType);
 				return new EntryCreationFactory(entry);
 			}

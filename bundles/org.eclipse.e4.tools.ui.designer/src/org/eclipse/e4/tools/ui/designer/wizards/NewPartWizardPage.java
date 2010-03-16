@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -105,7 +106,7 @@ public class NewPartWizardPage extends NewClassWizardPage {
 	public NewPartWizardPage(String superClass, Object dataContext) {
 		this.superClassName = superClass;
 		this.dataContext = dataContext;
-		if (dataContext != null) {
+		if (dataContext != null || superClassName != null) {
 			usingXWT = true;
 		}
 		setTitle("New Part Creation");
@@ -156,6 +157,20 @@ public class NewPartWizardPage extends NewClassWizardPage {
 		GridData gdLabel = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		label.setLayoutData(gdLabel);
 
+		xwtOptionButton = new Button(composite, SWT.CHECK);
+		xwtOptionButton.setText("Choose to create new Part with XWT templates");
+		xwtOptionButton.setLayoutData(GridDataFactory.fillDefaults().span(3, 1)
+				.create());
+		xwtOptionButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				usingXWT = xwtOptionButton.getSelection();
+				setOptionsEnabled(usingXWT);
+			}
+		});
+		xwtOptionButton.setSelection(usingXWT);
+		
+		new Label(composite, SWT.NONE);
+		
 		final Composite xwtOptions = new Composite(composite, SWT.NONE);
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = nColumns - 1;
@@ -166,19 +181,6 @@ public class NewPartWizardPage extends NewClassWizardPage {
 		ly.marginHeight = 0;
 		xwtOptions.setLayout(ly);
 
-		xwtOptionButton = new Button(xwtOptions, SWT.CHECK);
-		xwtOptionButton.setText("Choose to create new Part with XWT templates");
-		xwtOptionButton.setLayoutData(GridDataFactory.fillDefaults().span(3, 1)
-				.create());
-
-		xwtOptionButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				usingXWT = xwtOptionButton.getSelection();
-				setOptionsEnabled(usingXWT);
-			}
-		});
-		xwtOptionButton.setEnabled(usingXWT);
-
 		if (superClassName == null) {
 			createOptionsControls(xwtOptions, 4);
 		}
@@ -188,6 +190,10 @@ public class NewPartWizardPage extends NewClassWizardPage {
 		setOptionsEnabled(usingXWT);
 	}
 
+	public boolean isUsingXWT(){
+		return usingXWT;
+	}
+	
 	protected void setOptionsEnabled(boolean enabled) {
 		if (dataContextField != null) {
 			dataContextField.setEnabled(enabled);
@@ -401,6 +407,10 @@ public class NewPartWizardPage extends NewClassWizardPage {
 
 	public void createType(IProgressMonitor monitor) throws CoreException,
 			InterruptedException {
+		if (usingXWT){
+			IProject project = getJavaProject().getProject();
+			XWTProjectUtil.updateXWTWorkbenchDependencies(project);
+		}
 		super.createType(monitor);
 
 		if (usingXWT && creatingFile) {
@@ -414,8 +424,6 @@ public class NewPartWizardPage extends NewClassWizardPage {
 				file.create(getContentStream(), IResource.FORCE
 						| IResource.KEEP_HISTORY, monitor);
 
-				XWTProjectUtil.updateXWTWorkbenchDependencies(resource
-						.getProject());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

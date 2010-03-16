@@ -33,6 +33,7 @@ import org.eclipse.e4.ui.workbench.swt.internal.CSSStylingSupport;
 import org.eclipse.e4.workbench.ui.IPresentationEngine;
 import org.eclipse.e4.workbench.ui.IWorkbench;
 import org.eclipse.e4.workbench.ui.internal.Activator;
+import org.eclipse.e4.workbench.ui.internal.E4CommandProcessor;
 import org.eclipse.e4.workbench.ui.internal.E4Workbench;
 import org.eclipse.e4.workbench.ui.internal.ModelExtensionProcessor;
 import org.eclipse.e4.workbench.ui.internal.Parameter;
@@ -105,6 +106,10 @@ public class E4WorkbenchProxy {
 
 		// Do a top level processHierarchy for the application?
 		E4Workbench.processHierarchy(appElement);
+		
+		//init commands and bindings here.
+		E4CommandProcessor.processCommands(appContext, appElement.getCommands());
+		E4CommandProcessor.processBindings(appContext, appElement);
 	}
 
 	public void createAndRunUI() {

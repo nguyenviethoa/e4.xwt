@@ -10,17 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
-import org.eclipse.e4.tools.ui.designer.palette.E4PaletteHelper;
 import org.eclipse.e4.ui.model.application.MElementContainer;
 import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.e4.xwt.tools.ui.palette.Entry;
-import org.eclipse.e4.xwt.tools.ui.palette.Initializer;
-import org.eclipse.e4.xwt.tools.ui.palette.request.EntryCreationFactory;
-import org.eclipse.e4.xwt.tools.ui.palette.tools.PaletteCreateRequest;
+import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gef.requests.CreationFactory;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -37,13 +32,13 @@ public class CreateCommand extends Command {
 	private boolean after;
 	private Class<?> childType;
 
-	public CreateCommand(EditPart parent, CreateRequest request,
-			EditPart reference, Class<?> childType) {
+	public CreateCommand(EditPart parent, CreateRequest request, EditPart reference,
+			Class<?> childType) {
 		this(parent, request, reference, childType, false);
 	}
 
-	public CreateCommand(EditPart parent, CreateRequest request,
-			EditPart reference, Class<?> childType, boolean after) {
+	public CreateCommand(EditPart parent, CreateRequest request, EditPart reference,
+			Class<?> childType, boolean after) {
 		this.parent = parent;
 		this.request = request;
 		this.reference = reference;
@@ -60,8 +55,7 @@ public class CreateCommand extends Command {
 			parentModel = (MElementContainer<MUIElement>) model;
 		}
 		if (creatingModel == null) {
-			Object element = E4PaletteHelper
-					.createElement(parentModel, request);
+			Object element = EntryHelper.getNewObject(request);
 			if (element instanceof MUIElement) {
 				creatingModel = (MUIElement) element;
 			}

@@ -20,7 +20,6 @@ import org.eclipse.e4.ui.model.application.MToolBar;
 import org.eclipse.e4.ui.model.application.MToolItem;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MWindow;
-import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -29,7 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * @author yyang <yves.yang@soyatec.com>
  */
 public class ApplicationModelHelper {
-	
+
 	public static boolean isLive(Object element) {
 		if (!(element instanceof EObject)) {
 			return false;
@@ -37,9 +36,9 @@ public class ApplicationModelHelper {
 		EObject eObject = (EObject) element;
 		return (eObject != null && eObject.eResource() != null);
 	}
-	
-	public static boolean canAddedChild(Entry entry, MUIElement target) {
-		EClass eClass = (EClass) entry.getType();
+
+	public static boolean canAddedChild(EClass eClass, MUIElement target) {
+		// EClass eClass = (EClass) entry.getType();
 		EClass toolBarClass = MApplicationPackage.eINSTANCE.getToolBar();
 		EClass menuClass = MApplicationPackage.eINSTANCE.getMenu();
 		if (target instanceof MPart
@@ -56,14 +55,12 @@ public class ApplicationModelHelper {
 			return false;
 		}
 
-		if ((eClass == menuClass)
-				&& (!(target instanceof MWindow || target instanceof MPart))) {
+		if ((eClass == menuClass) && (!(target instanceof MWindow || target instanceof MPart))) {
 			return false;
 		}
 
 		// accept only MMenuItem by MMenu
-		if ((eClass == MApplicationPackage.eINSTANCE.getMenuItem())
-				&& !(target instanceof MMenu)) {
+		if ((eClass == MApplicationPackage.eINSTANCE.getMenuItem()) && !(target instanceof MMenu)) {
 			return false;
 		}
 
@@ -99,8 +96,7 @@ public class ApplicationModelHelper {
 			return false;
 		}
 
-		if (element instanceof MMenu
-				&& !(target instanceof MWindow || target instanceof MPart)) {
+		if (element instanceof MMenu && !(target instanceof MWindow || target instanceof MPart)) {
 			return false;
 		}
 
@@ -115,8 +111,7 @@ public class ApplicationModelHelper {
 		}
 
 		// accept only MPerspective by MPerspectiveStack
-		if (element instanceof MPerspective
-				&& !(target instanceof MPerspectiveStack)) {
+		if (element instanceof MPerspective && !(target instanceof MPerspectiveStack)) {
 			return false;
 		}
 		return true;

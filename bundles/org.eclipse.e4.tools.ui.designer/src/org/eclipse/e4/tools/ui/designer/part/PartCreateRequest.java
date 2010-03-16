@@ -103,8 +103,12 @@ public class PartCreateRequest extends PartRequest {
 		return null;
 	}
 
-	private Position buildPartPosition(PrecisionRectangle rect,
-			PartContainerEditPart editPart, Point pt) {
+	public Object getNewObject() {
+		return ((CreateRequest) getRequest()).getNewObject();
+	}
+
+	private Position buildPartPosition(PrecisionRectangle rect, PartContainerEditPart editPart,
+			Point pt) {
 		// 1. Move_to_header
 		Rectangle[] headers = editPart.getHeaders();
 		for (int i = 0; i < headers.length; i++) {

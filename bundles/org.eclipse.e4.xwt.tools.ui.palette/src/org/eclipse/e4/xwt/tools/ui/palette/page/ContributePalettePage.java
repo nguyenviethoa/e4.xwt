@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.tools.ui.palette.page;
 import java.util.List;
 
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
+import org.eclipse.e4.xwt.tools.ui.palette.Palette;
 import org.eclipse.e4.xwt.tools.ui.palette.contribution.PaletteContribution;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteResourceProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.root.PaletteRootFactory;
@@ -59,11 +60,13 @@ public class ContributePalettePage extends CustomPalettePage {
 				}
 				EList<EObject> contents = res.getContents();
 				for (EObject eObject : contents) {
-					if (!(eObject instanceof Entry)) {
+					if (!(eObject instanceof Palette)) {
 						continue;
 					}
-					Entry entry = (Entry) eObject;
-					contribution.applyInitializer(entry);
+					Palette palette = (Palette) eObject;
+					for (Entry entry : palette.getEntries()) {
+						applyInitializer(contribution, entry);
+					}
 				}
 			}
 		}
@@ -75,5 +78,12 @@ public class ContributePalettePage extends CustomPalettePage {
 		PaletteRoot paletteRoot = factory.createPaletteRoot();
 		editDomain.setPaletteRoot(paletteRoot);
 
+	}
+
+	private void applyInitializer(PaletteContribution contribution, Entry entry) {
+		contribution.applyInitializer(entry);
+		for (Entry child : entry.getEntries()) {
+			applyInitializer(contribution, child);
+		}
 	}
 }

@@ -23,33 +23,32 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!--
  * end-user-doc -->
- * 
  * @generated
  */
 public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 	/**
-	 * Creates the default factory implementation. <!-- begin-user-doc --> <!--
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public static PaletteFactory init() {
 		try {
-			PaletteFactory thePaletteFactory = (PaletteFactory) EPackage.Registry.INSTANCE
-					.getEFactory("http://www.eclipse.org/e4/xwt/tools/palette.xmi");
+			PaletteFactory thePaletteFactory = (PaletteFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/e4/xwt/tools/palette.xmi"); 
 			if (thePaletteFactory != null) {
 				return thePaletteFactory;
 			}
-		} catch (Exception exception) {
+		}
+		catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new PaletteFactoryImpl();
 	}
 
 	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!--
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public PaletteFactoryImpl() {
@@ -58,59 +57,49 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-		case PalettePackage.PALETTE:
-			return createPalette();
-		case PalettePackage.ENTRY:
-			return createEntry();
-		case PalettePackage.COMPOUND_INITIALIZER:
-			return createCompoundInitializer();
-		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName()
-					+ "' is not a valid classifier");
+			case PalettePackage.PALETTE: return createPalette();
+			case PalettePackage.ENTRY: return createEntry();
+			case PalettePackage.COMPOUND_INITIALIZER: return createCompoundInitializer();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-		case PalettePackage.CONTEXT_TYPE:
-			return createContextTypeFromString(eDataType, initialValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName()
-					+ "' is not a valid classifier");
+			case PalettePackage.CONTEXT_TYPE:
+				return createContextTypeFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-		case PalettePackage.CONTEXT_TYPE:
-			return convertContextTypeToString(eDataType, instanceValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName()
-					+ "' is not a valid classifier");
+			case PalettePackage.CONTEXT_TYPE:
+				return convertContextTypeToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Palette createPalette() {
@@ -120,7 +109,6 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Entry createEntry() {
@@ -130,7 +118,6 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public CompoundInitializer createCompoundInitializer() {
@@ -140,20 +127,16 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ContextType createContextTypeFromString(EDataType eDataType, String initialValue) {
 		ContextType result = ContextType.get(initialValue);
-		if (result == null)
-			throw new IllegalArgumentException("The value '" + initialValue
-					+ "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertContextTypeToString(EDataType eDataType, Object instanceValue) {
@@ -162,16 +145,14 @@ public class PaletteFactoryImpl extends EFactoryImpl implements PaletteFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public PalettePackage getPalettePackage() {
-		return (PalettePackage) getEPackage();
+		return (PalettePackage)getEPackage();
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @deprecated
 	 * @generated
 	 */

@@ -99,6 +99,13 @@
 
    <element name="Initializer">
       <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The identifier of Initializer.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="target" type="string">
             <annotation>
                <documentation>
@@ -112,7 +119,17 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.e4.xwt.tools.ui.palette.Initializer"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl:org.eclipse.e4.xwt.tools.ui.palette.Initializer"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="overrideId" type="string">
+            <annotation>
+               <documentation>
+                  Give a id of existing Initializer, so that, the new Initializer will overrite it.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.e4.xwt.tools.ui.palette.paletteContribution/Contribution/Initializer/@id"/>
                </appInfo>
             </annotation>
          </attribute>

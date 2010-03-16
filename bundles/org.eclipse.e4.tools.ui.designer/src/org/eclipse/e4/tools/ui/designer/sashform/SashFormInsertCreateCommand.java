@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.sashform;
 
-import org.eclipse.e4.tools.ui.designer.palette.E4PaletteHelper;
 import org.eclipse.e4.ui.model.application.MGenericTile;
 import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
@@ -33,13 +33,13 @@ public class SashFormInsertCreateCommand extends Command {
 	private boolean after;
 	private Integer weight;
 
-	public SashFormInsertCreateCommand(SashFormEditPart parent,
-			CreateRequest request, EditPart reference) {
+	public SashFormInsertCreateCommand(SashFormEditPart parent, CreateRequest request,
+			EditPart reference) {
 		this(parent, request, reference, false);
 	}
 
-	public SashFormInsertCreateCommand(SashFormEditPart parent,
-			CreateRequest request, EditPart reference, boolean after) {
+	public SashFormInsertCreateCommand(SashFormEditPart parent, CreateRequest request,
+			EditPart reference, boolean after) {
 		this.parent = parent;
 		this.request = request;
 		this.reference = reference;
@@ -55,7 +55,7 @@ public class SashFormInsertCreateCommand extends Command {
 			parentModel = (MGenericTile<MUIElement>) model;
 		}
 
-		Object element = E4PaletteHelper.createElement(parentModel, request);
+		Object element = EntryHelper.getNewObject(request);
 		if (element instanceof MUIElement) {
 			creatingModel = (MUIElement) element;
 		}
@@ -96,8 +96,7 @@ public class SashFormInsertCreateCommand extends Command {
 
 	public void undo() {
 		parentModel.getChildren().remove(creatingModel);
-		if (weight != null && index >= 0
-				&& index < parentModel.getChildren().size() - 1) {
+		if (weight != null && index >= 0 && index < parentModel.getChildren().size() - 1) {
 			MUIElement muiElement = parentModel.getChildren().get(index);
 			muiElement.setContainerData(weight.toString());
 		}

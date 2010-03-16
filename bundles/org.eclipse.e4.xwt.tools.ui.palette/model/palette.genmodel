@@ -35,10 +35,17 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Entry/dataContext"/>
     </genClasses>
     <genClasses image="false" ecoreClass="palette.ecore#//Initializer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute palette.ecore#//Initializer/id"/>
       <genOperations ecoreOperation="palette.ecore#//Initializer/initialize">
         <genParameters ecoreParameter="palette.ecore#//Initializer/initialize/element"/>
       </genOperations>
-      <genOperations ecoreOperation="palette.ecore#//Initializer/parse"/>
+      <genOperations ecoreOperation="palette.ecore#//Initializer/parse">
+        <genParameters ecoreParameter="palette.ecore#//Initializer/parse/entry"/>
+      </genOperations>
+      <genOperations ecoreOperation="palette.ecore#//Initializer/initialize.1">
+        <genParameters ecoreParameter="palette.ecore#//Initializer/initialize.1/entry"/>
+        <genParameters ecoreParameter="palette.ecore#//Initializer/initialize.1/newObject"/>
+      </genOperations>
     </genClasses>
     <genClasses ecoreClass="palette.ecore#//CompoundInitializer">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference palette.ecore#//CompoundInitializer/initializers"/>

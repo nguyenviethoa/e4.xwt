@@ -18,35 +18,26 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * <!-- begin-user-doc --> A representation of the model object '
  * <em><b>Entry</b></em>'. <!-- end-user-doc -->
- * 
+ *
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getToolTip <em>Tool Tip
- * </em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getLargeIcon <em>Large
- * Icon</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getContent <em>Content
- * </em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getName <em>Name</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getEntries <em>Entries
- * </em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getId <em>Id</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getIcon <em>Icon</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getContext <em>Context
- * </em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getScope <em>Scope</em>}
- * </li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#isVisible <em>Visible
- * </em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>
- * Initializer</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getDataContext <em>Data
- * Context</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getToolTip <em>Tool Tip</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getLargeIcon <em>Large Icon</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getContent <em>Content</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getEntries <em>Entries</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getIcon <em>Icon</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getContext <em>Context</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getScope <em>Scope</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#isVisible <em>Visible</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>Initializer</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getDataContext <em>Data Context</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getEntry()
  * @model
  * @generated
@@ -100,13 +91,10 @@ public interface Entry extends EObject {
 	String getLargeIcon();
 
 	/**
-	 * Sets the value of the '
-	 * {@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getLargeIcon
-	 * <em>Large Icon</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getLargeIcon <em>Large Icon</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Large Icon</em>' attribute.
+	 * @param value the new value of the '<em>Large Icon</em>' attribute.
 	 * @see #getLargeIcon()
 	 * @generated
 	 */
@@ -160,28 +148,24 @@ public interface Entry extends EObject {
 	String getName();
 
 	/**
-	 * Sets the value of the '
-	 * {@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getName <em>Name</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Name</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Entries</b></em>' containment reference
-	 * list. The list contents are of type
-	 * {@link org.eclipse.e4.xwt.tools.ui.palette.Entry}. <!-- begin-user-doc
+	 * Returns the value of the '<em><b>Entries</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.e4.xwt.tools.ui.palette.Entry}.
+	 * <!-- begin-user-doc
 	 * -->
 	 * <p>
 	 * If the meaning of the '<em>Entries</em>' containment reference list isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Entries</em>' containment reference list.
 	 * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getEntry_Entries()
 	 * @model containment="true"
@@ -190,14 +174,14 @@ public interface Entry extends EObject {
 	EList<Entry> getEntries();
 
 	/**
-	 * Returns the value of the '<em><b>Id</b></em>' attribute. The default
-	 * value is <code>"\"\""</code>. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * The default value is <code>"\"\""</code>.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really
 	 * should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getEntry_Id()
@@ -207,12 +191,9 @@ public interface Entry extends EObject {
 	String getId();
 
 	/**
-	 * Sets the value of the '
-	 * {@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getId <em>Id</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Id</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getId <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id</em>' attribute.
 	 * @see #getId()
 	 * @generated
 	 */
@@ -236,12 +217,9 @@ public interface Entry extends EObject {
 	String getIcon();
 
 	/**
-	 * Sets the value of the '
-	 * {@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getIcon <em>Icon</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Icon</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getIcon <em>Icon</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Icon</em>' attribute.
 	 * @see #getIcon()
 	 * @generated
 	 */
@@ -299,12 +277,9 @@ public interface Entry extends EObject {
 	String getScope();
 
 	/**
-	 * Sets the value of the '
-	 * {@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getScope <em>Scope</em>}
-	 * ' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Scope</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getScope <em>Scope</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Scope</em>' attribute.
 	 * @see #getScope()
 	 * @generated
 	 */
@@ -341,31 +316,26 @@ public interface Entry extends EObject {
 	void setVisible(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Initializer</b></em>' containment
-	 * reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Initializer</b></em>' reference.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Initializer</em>' attribute isn't clear, there
 	 * really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Initializer</em>' containment reference.
+	 * @return the value of the '<em>Initializer</em>' reference.
 	 * @see #setInitializer(Initializer)
 	 * @see org.eclipse.e4.xwt.tools.ui.palette.PalettePackage#getEntry_Initializer()
-	 * @model containment="true"
+	 * @model
 	 * @generated
 	 */
 	Initializer getInitializer();
 
 	/**
-	 * Sets the value of the '
-	 * {@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer
-	 * <em>Initializer</em>}' containment reference. <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getInitializer <em>Initializer</em>}' reference.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Initializer</em>' containment
-	 *            reference.
+	 * @param value the new value of the '<em>Initializer</em>' reference.
 	 * @see #getInitializer()
 	 * @generated
 	 */
@@ -389,13 +359,10 @@ public interface Entry extends EObject {
 	Object getDataContext();
 
 	/**
-	 * Sets the value of the '
-	 * {@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getDataContext
-	 * <em>Data Context</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getDataContext <em>Data Context</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Data Context</em>' attribute.
+	 * @param value the new value of the '<em>Data Context</em>' attribute.
 	 * @see #getDataContext()
 	 * @generated
 	 */
@@ -419,12 +386,9 @@ public interface Entry extends EObject {
 	EClass getType();
 
 	/**
-	 * Sets the value of the '
-	 * {@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Type</em>' reference.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.palette.Entry#getType <em>Type</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Type</em>' reference.
 	 * @see #getType()
 	 * @generated
 	 */
