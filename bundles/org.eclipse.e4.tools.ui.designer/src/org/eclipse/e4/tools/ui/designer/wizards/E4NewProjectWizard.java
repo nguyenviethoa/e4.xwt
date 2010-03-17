@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
+import org.eclipse.e4.ui.model.application.MBindingContext;
 import org.eclipse.e4.ui.model.application.MBindingTable;
 import org.eclipse.e4.ui.model.application.MCommand;
 import org.eclipse.e4.ui.model.application.MHandledMenuItem;
@@ -345,6 +346,24 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 					.createApplication();
 			
 			application.setId("org.eclipse.e4.ide.application");
+			
+			MBindingContext rootContext = MApplicationFactory.eINSTANCE.createBindingContext();
+			rootContext.setId("org.eclipse.ui.contexts.dialogAndWindow");
+			rootContext.setName("In Dialog and Windows");
+			
+			MBindingContext childContext = MApplicationFactory.eINSTANCE.createBindingContext();
+			childContext.setId("org.eclipse.ui.contexts.window");
+			childContext.setName("In Windows");
+			rootContext.getChildren().add(childContext);
+			
+			childContext = MApplicationFactory.eINSTANCE.createBindingContext();
+			childContext.setId("org.eclipse.ui.contexts.dialog");
+			childContext.setName("In Dialogs");
+			rootContext.getChildren().add(childContext);
+			
+			application.setRootContext(rootContext);
+			application.getBindingContexts().add("org.eclipse.ui.contexts.dialogAndWindow");
+			
 			resource.getContents().add((EObject) application);
 
 			// Create Quit command
