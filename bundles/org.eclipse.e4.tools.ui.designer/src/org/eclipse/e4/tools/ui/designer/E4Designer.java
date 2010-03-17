@@ -251,7 +251,7 @@ public class E4Designer extends Designer {
 		super.setContent(diagram);
 		EObject eObject = (EObject) diagram.getModel();
 		if (eObject != null) {
-//			getOutlinePage().getTreeViewer().setInput(eObject.eResource());
+			getOutlinePage().getTreeViewer().setInput(eObject.eResource());
 		}
 	}
 
