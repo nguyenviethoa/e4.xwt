@@ -38,7 +38,7 @@ public class ValidationStatusTests extends XWTTestCase {
 				
 				text2.setText("6");
 				text1.setFocus();
-				assertEquals("OK", status.getText());
+				assertEquals("", status.getText());
 			}
 		});
 	}
@@ -69,7 +69,7 @@ public class ValidationStatusTests extends XWTTestCase {
 				text2.setFocus();
 				text2.setText("6");
 				text1.setFocus();
-				assertEquals("OK", status.getText());
+				assertEquals("", status.getText());
 			}
 		});
 	}
@@ -145,8 +145,8 @@ public class ValidationStatusTests extends XWTTestCase {
 				
 				text2.setText("6");
 				text1.setFocus();
-				assertEquals("OK", text2.getToolTipText());
-				assertEquals("OK", text1.getToolTipText());
+				assertEquals("", text2.getToolTipText());
+				assertEquals("", text1.getToolTipText());
 			}
 		});
 	}
@@ -179,8 +179,8 @@ public class ValidationStatusTests extends XWTTestCase {
 				text2.setFocus();
 				text2.setText("6");
 				text1.setFocus();
-				assertEquals("OK", text1.getToolTipText());
-				assertEquals("OK", text2.getToolTipText());
+				assertEquals("", text1.getToolTipText());
+				assertEquals("", text2.getToolTipText());
 			}
 		});
 	}
@@ -255,7 +255,7 @@ public class ValidationStatusTests extends XWTTestCase {
 				text2.setText("6");
 				text1.setFocus();
 				assertNotSame(red, statusLabel.getForeground());
-				assertEquals("OK", statusLabel.getText());
+				assertEquals("", statusLabel.getText());
 			}
 		});
 	}

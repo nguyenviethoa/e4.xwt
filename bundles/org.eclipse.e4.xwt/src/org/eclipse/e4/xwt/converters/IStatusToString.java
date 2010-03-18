@@ -30,6 +30,9 @@ public class IStatusToString implements IConverter {
 	 */
 	public Object convert(Object fromObject) {
 		IStatus status = (IStatus) fromObject;
+		if (status.isOK()) {
+			return "";
+		}
 		return status.getMessage();
 	}
 
