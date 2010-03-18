@@ -452,10 +452,10 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 						MPartStack partStack = MApplicationFactory.eINSTANCE
 								.createPartStack();
 						partSashContainer.getChildren().add(partStack);
-
-						MPart part = MApplicationFactory.eINSTANCE.createPart();
-						partStack.getChildren().add(part);
-						part.setLabel("Main");
+//
+//						MPart part = MApplicationFactory.eINSTANCE.createPart();
+//						partStack.getChildren().add(part);
+//						part.setLabel("Main");
 					}
 
 					// WindowTrim
