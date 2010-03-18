@@ -28,6 +28,14 @@ public class StringToEnum implements IConverter {
 	 * @see org.eclipse.core.databinding.conversion.IConverter#convert(java.lang.Object)
 	 */
 	public Object convert(Object fromObject) {
+		if (fromObject == null || "".equals(fromObject)) {
+			Class<?> type = (Class<?>) getToType();
+			Object[] values = type.getEnumConstants();
+			if (values != null && values.length > 0) {
+				return values[0];
+			}
+		}
+		
 		return Enum.valueOf((Class) getToType(), (String)fromObject);
 	}
 
