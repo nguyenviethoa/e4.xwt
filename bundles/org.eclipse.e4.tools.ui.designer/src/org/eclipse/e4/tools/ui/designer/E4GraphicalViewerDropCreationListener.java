@@ -10,12 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.e4.tools.ui.designer.palette.E4EClassPartInitializer;
 import org.eclipse.e4.tools.ui.designer.palette.E4PaletteProvider;
 import org.eclipse.e4.tools.ui.designer.palette.E4PartInitializer;
 import org.eclipse.e4.ui.model.application.MApplicationPackage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.GraphicalViewerDropCreationListener;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.request.EntryCreationFactory;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -41,6 +43,12 @@ public class E4GraphicalViewerDropCreationListener
 				entry.setDataContext(classType);
 				return new EntryCreationFactory(entry);
 			}
+		} else if (selection instanceof EClass) {
+			Entry entry = E4PaletteProvider
+					.createEntry(MApplicationPackage.Literals.PART);
+			entry.setInitializer(new E4EClassPartInitializer());
+			entry.setDataContext(selection);
+			return new EntryCreationFactory(entry);
 		}
 		return super.createCreationFactory(selection);
 	}

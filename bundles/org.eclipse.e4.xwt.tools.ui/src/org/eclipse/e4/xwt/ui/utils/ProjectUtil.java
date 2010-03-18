@@ -27,21 +27,25 @@ import org.eclipse.pde.core.plugin.PluginRegistry;
  */
 public class ProjectUtil {
 
-	static String[] WORKBENCH_BUNDLES = new String[] {
+	static String[] WORKBENCH_BUNDLES = new String[]{
 			"org.eclipse.e4.ui.services", "org.eclipse.e4.ui.workbench",
 			"org.eclipse.e4.core.services", "org.eclipse.e4.ui.workbench.swt",
 			"org.eclipse.e4.ui.css.core", "org.w3c.css.sac",
 			"org.eclipse.e4.core.commands", "org.eclipse.e4.ui.bindings",
 			"org.eclipse.e4.xwt.css", "org.eclipse.e4.xwt.ui.workbench",
-			"javax.inject" };
+			"javax.inject"};
 
-	static String[] XWT_CORE_BUNDLES = new String[] { "org.eclipse.e4.xwt",
+	static String[] XWT_CORE_BUNDLES = new String[]{"org.eclipse.e4.xwt",
 			"org.eclipse.jface.databinding", "org.eclipse.swt",
-			"org.eclipse.jface", "org.eclipse.core.databinding", "com.ibm.icu" };
+			"org.eclipse.jface", "org.eclipse.core.databinding", "com.ibm.icu"};
 
-	static String[] XWT_DATABINING_BUNDLES = new String[] {
+	static String[] XWT_DATABINING_BUNDLES = new String[]{
 			"org.eclipse.core.databinding.beans",
-			"org.eclipse.core.databinding.property" };
+			"org.eclipse.core.databinding.property"};
+
+	static String[] XWT_EMF_BUNDLES = new String[]{"org.eclipse.e4.xwt.emf",
+			"org.eclipse.emf.databinding",
+			"org.eclipse.core.databinding.property"};
 
 	public static void updateXWTCoreDependencies(IProject project) {
 		addDependencies(project, XWT_CORE_BUNDLES);
@@ -55,7 +59,9 @@ public class ProjectUtil {
 		addDependencies(project, XWT_CORE_BUNDLES, XWT_DATABINING_BUNDLES,
 				WORKBENCH_BUNDLES);
 	}
-
+	public static void updateXWTEMFDependencies(IProject project) {
+		addDependencies(project, XWT_CORE_BUNDLES, XWT_EMF_BUNDLES);
+	}
 	public static IStatus addDependencies(IProject project,
 			String[]... pluginIds) {
 		IPluginModelBase[] dependencies = getDependencies(project, true,
