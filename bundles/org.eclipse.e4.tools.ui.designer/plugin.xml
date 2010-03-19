@@ -130,6 +130,9 @@
                class="org.eclipse.e4.tools.ui.designer.palette.E4PaletteInitializer"
                id="org.eclipse.e4.tools.ui.designer.palette.E4PaletteInitializer">
          </Initializer>
+         <Resource
+               provider="org.eclipse.e4.tools.ui.designer.palette.E4PartContribution">
+         </Resource>
       </Contribution>
    </extension>
 </plugin>

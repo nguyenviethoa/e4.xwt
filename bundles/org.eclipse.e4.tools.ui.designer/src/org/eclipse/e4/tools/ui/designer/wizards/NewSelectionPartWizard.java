@@ -14,45 +14,40 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.ui.model.application.MPart;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class NewDataPartWizard extends WizardNewPart {
+public class NewSelectionPartWizard extends WizardNewPart {
 
-	private EObject dataContext;
+	private NewSelectionPartDataContextPage fSelectionPage;
+	private NewSelectionPartWizardPage fTypePage;
 
-	private NewDataPartWizardPage fDataPage;
-
-	public NewDataPartWizard(IFile selectedFile, MPart part, EObject dataContext) {
-		super(selectedFile, part);
-		this.dataContext = dataContext;
-		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
-		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-		setWindowTitle("New Part");
+	public NewSelectionPartWizard(IFile file, MPart part) {
+		super(file, part);
+		setWindowTitle("Selection Part Initialization");
 	}
 
 	public void addPages() {
-		EClass eClass = dataContext.eClass();
-		fDataPage = new NewDataPartWizardPage(eClass.getEPackage(), dataContext);
-		fDataPage.init(new StructuredSelection(fFile.getProject()));
-		fDataPage.setDataContext(dataContext);
-		addPage(fDataPage);
+
+		fTypePage = new NewSelectionPartWizardPage();
+		fSelectionPage = new NewSelectionPartDataContextPage(fTypePage);
+
+		addPage(fSelectionPage);
+
+		fTypePage.init(new StructuredSelection(fFile));
+		addPage(fTypePage);
 	}
 
 	protected void finishPage(IProgressMonitor monitor)
 			throws InterruptedException, CoreException {
-		fDataPage.createType(monitor);
+		fTypePage.createType(monitor);
 	}
 
 	public IJavaElement getCreatedElement() {
-		return fDataPage.getCreatedType();
+		return fTypePage.getCreatedType();
 	}
 
 }

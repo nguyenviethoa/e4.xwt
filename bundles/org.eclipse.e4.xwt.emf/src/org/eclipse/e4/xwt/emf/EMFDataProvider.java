@@ -206,7 +206,9 @@ public class EMFDataProvider extends AbstractDataProvider {
 		EClass eObj = null;
 		if (instance instanceof EObjectObservableValue) {
 			EObjectObservableValue observableValue = (EObjectObservableValue) instance;
-			eObj = (EClass) observableValue.getValueType();
+			EStructuralFeature valueType = (EStructuralFeature) observableValue
+					.getValueType();
+			eObj = valueType.eClass();
 		} else if (instance instanceof EClass) {
 			eObj = (EClass) instance;
 		} else if (instance instanceof EObject) {

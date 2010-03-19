@@ -10,26 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.wizards;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.tools.ui.designer.utils.ProjectLoader;
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.tools.ui.designer.core.util.XWTProjectUtil;
 import org.eclipse.e4.xwt.ui.workbench.editors.XWTSaveablePart;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTAbstractPart;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTDynamicPart;
@@ -45,15 +28,12 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
-import org.eclipse.jdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.jdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.IStringButtonAdapter;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.jdt.ui.CodeGeneration;
-import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -66,22 +46,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class NewPartWizardPage extends NewClassWizardPage {
+public class NewPartWizardPage extends WizardCreatePartPage {
+
 	private String superClassName = null;
-	// private static final List<Class> SUPER_CLASSES = new ArrayList<Class>();
-	// static {
-	// SUPER_CLASSES.add(XWTStaticPart.class);
-	// SUPER_CLASSES.add(XWTDynamicPart.class);
-	// SUPER_CLASSES.add(XWTSaveablePart.class);
-	// SUPER_CLASSES.add(XWTSelectionStaticPart.class);
-	// SUPER_CLASSES.add(XWTAbstractPart.class);
-	// // SUPER_CLASSES.add(XWTInputPart.class);
-	// }
 
 	public static final String OPT_STATIC = "Static";
 	public static final String OPT_SELECTION = "Selection";
@@ -98,59 +69,20 @@ public class NewPartWizardPage extends NewClassWizardPage {
 	private Button customButton;
 
 	private boolean creatingFile = true;
-	private boolean usingXWT = false;
-	private Object dataContext = null;
 	private StringButtonDialogField dataContextField;
 	private Button xwtOptionButton;
 
 	public NewPartWizardPage(String superClass, Object dataContext) {
 		this.superClassName = superClass;
-		this.dataContext = dataContext;
+		setDataContext(dataContext);
 		if (dataContext != null || superClassName != null) {
-			usingXWT = true;
 		}
+		setUsingXWT(dataContext != null || superClassName != null);
 		setTitle("New Part Creation");
 		setDescription("This wizard creates a Part");
 	}
 
-	public void createControl(Composite parent) {
-		initializeDialogUnits(parent);
-
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setFont(parent.getFont());
-
-		int nColumns = 4;
-
-		GridLayout layout = new GridLayout();
-		layout.numColumns = nColumns;
-		composite.setLayout(layout);
-
-		// pick & choose the wanted UI components
-
-		createContainerControls(composite, nColumns);
-		createPackageControls(composite, nColumns);
-		createTypeNameControls(composite, nColumns);
-
-		createSeparator(composite, nColumns);
-
-		// TODO should be separated in an extension point
-		createXWTOptionsControls(composite, nColumns);
-
-		createSeparator(composite, nColumns);
-
-		createCommentControls(composite, nColumns);
-		enableCommentControl(true);
-
-		createSeparator(composite, nColumns);
-
-		setControl(composite);
-
-		Dialog.applyDialogFont(composite);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite,
-				IJavaHelpContextIds.NEW_CLASS_WIZARD_PAGE);
-	}
-
-	private void createXWTOptionsControls(Composite composite, int nColumns) {
+	protected void createAdditionalControl(Composite composite, int nColumns) {
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("XWT");
 		label.setToolTipText("Using XWT to create new Part.");
@@ -163,14 +95,14 @@ public class NewPartWizardPage extends NewClassWizardPage {
 				.create());
 		xwtOptionButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				usingXWT = xwtOptionButton.getSelection();
-				setOptionsEnabled(usingXWT);
+				setUsingXWT(xwtOptionButton.getSelection());
+				setOptionsEnabled(isUsingXWT());
 			}
 		});
-		xwtOptionButton.setSelection(usingXWT);
-		
+		xwtOptionButton.setSelection(isUsingXWT());
+
 		new Label(composite, SWT.NONE);
-		
+
 		final Composite xwtOptions = new Composite(composite, SWT.NONE);
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = nColumns - 1;
@@ -187,13 +119,9 @@ public class NewPartWizardPage extends NewClassWizardPage {
 
 		createDataContextControls(xwtOptions, 4);
 
-		setOptionsEnabled(usingXWT);
+		setOptionsEnabled(isUsingXWT());
 	}
 
-	public boolean isUsingXWT(){
-		return usingXWT;
-	}
-	
 	protected void setOptionsEnabled(boolean enabled) {
 		if (dataContextField != null) {
 			dataContextField.setEnabled(enabled);
@@ -235,7 +163,7 @@ public class NewPartWizardPage extends NewClassWizardPage {
 				Button button = getChangeControl(parent);
 				button.setLayoutData(gridDataForButton(button, 1));
 
-				return new Control[] { label, text, button };
+				return new Control[]{label, text, button};
 			}
 
 		};
@@ -246,17 +174,17 @@ public class NewPartWizardPage extends NewClassWizardPage {
 
 		if (dataContext != null) {
 			if (dataContext instanceof Class<?>) {
-				setDataContext((Class<?>) dataContext);
+				setDataContextType((Class<?>) dataContext);
 			} else if (dataContext instanceof EClass) {
 				EClass dataContextType = (EClass) dataContext;
 				dataContextField.setText(dataContextType.getInstanceTypeName());
 			} else {
-				setDataContext(dataContext.getClass());
+				setDataContextType(dataContext.getClass());
 			}
 		}
 	}
 
-	protected void setDataContext(Class<?> dataContextType) {
+	public void setDataContextType(Class<?> dataContextType) {
 		IJavaProject project = getJavaProject();
 		try {
 			IType type = project.findType(dataContextType.getName());
@@ -273,7 +201,7 @@ public class NewPartWizardPage extends NewClassWizardPage {
 			return null;
 		}
 
-		IJavaElement[] elements = new IJavaElement[] { project };
+		IJavaElement[] elements = new IJavaElement[]{project};
 		IJavaSearchScope scope = SearchEngine.createJavaSearchScope(elements);
 
 		FilteredTypesSelectionDialog dialog = new FilteredTypesSelectionDialog(
@@ -370,64 +298,11 @@ public class NewPartWizardPage extends NewClassWizardPage {
 		customButton.addListener(SWT.Selection, listener);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.ui.wizards.NewTypeWizardPage#getSuperClass()
-	 */
 	public String getSuperClass() {
-		if (superClassName == null || !usingXWT) {
+		if (superClassName == null || !isUsingXWT) {
 			return "java.lang.Object";
 		}
 		return superClassName;
-	}
-
-	public int getModifiers() {
-		return F_PUBLIC;
-	}
-
-	/**
-	 * Returns the chosen super interfaces.
-	 * 
-	 * @return a list of chosen super interfaces. The list's elements are of
-	 *         type <code>String</code>
-	 */
-	public List getSuperInterfaces() {
-		return Collections.EMPTY_LIST;
-	}
-
-	/**
-	 * Returns the current selection state of the 'Create Main' checkbox.
-	 * 
-	 * @return the selection state of the 'Create Main' checkbox
-	 */
-	public boolean isCreateMain() {
-		return false;
-	}
-
-	public void createType(IProgressMonitor monitor) throws CoreException,
-			InterruptedException {
-		if (usingXWT){
-			IProject project = getJavaProject().getProject();
-			XWTProjectUtil.updateXWTWorkbenchDependencies(project);
-		}
-		super.createType(monitor);
-
-		if (usingXWT && creatingFile) {
-			IResource resource = getModifiedResource();
-			IPath resourcePath = resource.getProjectRelativePath()
-					.removeFileExtension();
-			resourcePath = resourcePath
-					.addFileExtension(IConstants.XWT_EXTENSION);
-			try {
-				IFile file = resource.getProject().getFile(resourcePath);
-				file.create(getContentStream(), IResource.FORCE
-						| IResource.KEEP_HISTORY, monitor);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	protected Class<?> getDataContextJavaType() {
@@ -442,16 +317,11 @@ public class NewPartWizardPage extends NewClassWizardPage {
 		}
 		return null;
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jdt.ui.wizards.NewClassWizardPage#createTypeMembers(org.eclipse
-	 * .jdt.core.IType,
-	 * org.eclipse.jdt.ui.wizards.NewTypeWizardPage.ImportsManager,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+
+	protected boolean isCreatingFiles() {
+		return super.isCreatingFiles() && creatingFile;
+	}
+
 	protected void createTypeMembers(IType type, ImportsManager imports,
 			IProgressMonitor monitor) throws CoreException {
 		super.createTypeMembers(type, imports, monitor);
@@ -481,153 +351,6 @@ public class NewPartWizardPage extends NewClassWizardPage {
 		}
 	}
 
-	private InputStream getContentStream() {
-		IType type = getCreatedType();
-		String hostClassName = type.getFullyQualifiedName();
-		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-		PrintStream printStream = new PrintStream(arrayOutputStream);
-
-		printStream.println("<Composite xmlns=\"" + IConstants.XWT_NAMESPACE
-				+ "\"");
-
-		printStream
-				.println("\t xmlns:x=\"" + IConstants.XWT_X_NAMESPACE + "\"");
-		String packageName = type.getPackageFragment().getElementName();
-		if (packageName != null/* && packageName.length() > 0 */) {
-			printStream.println("\t xmlns:c=\""
-					+ IConstants.XAML_CLR_NAMESPACE_PROTO + packageName + "\"");
-		}
-		printStream.println("\t xmlns:j=\""
-				+ IConstants.XAML_CLR_NAMESPACE_PROTO + "java.lang\"");
-		printStream.println("\t x:Class=\"" + hostClassName + "\">");
-		printStream.println("\t <Composite.layout>");
-		printStream.println("\t\t <GridLayout " + " numColumns=\"4\" />");
-		printStream.println("\t </Composite.layout>");
-
-		if (dataContext != null) {
-			appendBeanContent(printStream);
-		} else {
-			printStream.println("\t <Label text=\" New "
-					+ type.getElementName() + " Part\"/>");
-		}
-
-		printStream.println("</Composite>");
-
-		try {
-			byte[] content = arrayOutputStream.toByteArray();
-			printStream.close();
-			arrayOutputStream.close();
-			return new ByteArrayInputStream(content);
-		} catch (Exception e) {
-		}
-		return new ByteArrayInputStream(new byte[] {});
-	}
-
-	private void appendBeanContent(PrintStream printStream) {
-		Class<?> type = getDataContextJavaType();
-		if (type == null) {
-			return;
-		}
-		try {
-			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
-			PropertyDescriptor[] propertyDescriptors = beanInfo
-					.getPropertyDescriptors();
-			for (PropertyDescriptor pd : propertyDescriptors) {
-				String name = pd.getName();
-				if (name == null || "class".equals(name)) {
-					continue;
-				}
-				Class<?> propertyType = pd.getPropertyType();
-				if (propertyType.isPrimitive() || propertyType == String.class
-						|| propertyType == URL.class) {
-					printStream.println("\t <Label text=\""
-							+ pd.getDisplayName() + "\"/>");
-					printStream
-							.println("\t <Text x:Style=\"Border\" text=\"{Binding path="
-									+ pd.getName() + "}\">");
-					printStream.println("\t\t <Text.layoutData>");
-					printStream
-							.println("\t\t\t <GridData grabExcessHorizontalSpace=\"true\"");
-					printStream
-							.println("\t\t\t\t horizontalAlignment=\"GridData.FILL\" widthHint=\"100\"/>");
-					printStream.println("\t\t </Text.layoutData>");
-					printStream.println("\t </Text>");
-				} else if (propertyType.isEnum()) {
-					printStream.println("\t <Label text=\""
-							+ pd.getDisplayName() + "\"/>");
-					printStream.println("\t <Combo text=\"{Binding path="
-							+ pd.getName() + "}\">");
-					printStream.println("\t\t <Combo.layoutData>");
-					printStream
-							.println("\t\t\t <GridData grabExcessHorizontalSpace=\"true\"");
-					printStream
-							.println("\t\t\t\t horizontalAlignment=\"GridData.FILL\" widthHint=\"100\"/>");
-					printStream.println("\t\t </Combo.layoutData>");
-
-					printStream.println("\t\t <Combo.items>");
-					for (Object object : propertyType.getEnumConstants()) {
-						printStream.println("\t\t\t <j:String>"
-								+ object.toString() + "</j:String>");
-					}
-					printStream.println("\t\t </Combo.items>");
-					printStream.println("\t </Combo>");
-
-				} else {
-					printStream.println("\t <Group text=\""
-							+ pd.getDisplayName() + "\">");
-					printStream.println("\t\t <Group.layout>");
-					printStream.println("\t\t\t <FillLayout/>");
-					printStream.println("\t\t </Group.layout>");
-
-					String elementType = propertyType.getSimpleName();
-					printStream.println("\t\t <c:" + elementType
-							+ " DataContext=\"{Binding path=" + pd.getName()
-							+ "}\"/>");
-
-					printStream.println("\t\t <Group.layoutData>");
-					printStream
-							.println("\t\t\t <GridData grabExcessHorizontalSpace=\"true\" horizontalSpan=\"4\"");
-					printStream
-							.println("\t\t\t\t horizontalAlignment=\"GridData.FILL\" widthHint=\"200\"/>");
-					printStream.println("\t\t </Group.layoutData>");
-
-					printStream.println("\t </Group>");
-				}
-			}
-		} catch (IntrospectionException e) {
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.ui.wizards.NewTypeWizardPage#getTypeName()
-	 */
-	public String getTypeName() {
-		String typeName = super.getTypeName();
-		if (typeName == null || typeName.equals("")) {
-			return typeName;
-		}
-		/*
-		 * Make sure the first character of the new Class name is a upperCase
-		 * one. Because the Element parser of the XWT file convert the top
-		 * element to this format.
-		 */
-		return Character.toUpperCase(typeName.charAt(0))
-				+ typeName.substring(1);
-	}
-
-	/**
-	 * Returns the current selection state of the 'Create inherited abstract
-	 * methods' checkbox.
-	 * 
-	 * @return the selection state of the 'Create inherited abstract methods'
-	 *         checkbox
-	 */
-	public boolean isCreateInherited() {
-		return true;
-	}
-
 	public void validateDataContext(String dataContext) {
 		String newMessage = "Invalid Java Type for initializing DataContext.";
 		String errorMessage = getErrorMessage();
@@ -653,8 +376,10 @@ public class NewPartWizardPage extends NewClassWizardPage {
 		setPageComplete(getErrorMessage() == null);
 	}
 
-	private class DataContextFieldAdapter implements IStringButtonAdapter,
-			IDialogFieldListener {
+	private class DataContextFieldAdapter
+			implements
+				IStringButtonAdapter,
+				IDialogFieldListener {
 
 		// -------- IStringButtonAdapter
 		public void changeControlPressed(DialogField field) {
