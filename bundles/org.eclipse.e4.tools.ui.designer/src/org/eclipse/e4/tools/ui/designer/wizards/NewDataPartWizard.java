@@ -14,24 +14,30 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.ui.model.application.MPart;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
+import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class NewDataPartWizard extends WizardNewPart {
+public class NewDataPartWizard extends NewElementWizard {
 
+	private IFile selectedFile;
+	private MPart fPart;
 	private EObject dataContext;
 
 	private NewDataPartWizardPage fDataPage;
 
 	public NewDataPartWizard(IFile selectedFile, MPart part, EObject dataContext) {
-		super(selectedFile, part);
+		this.selectedFile = selectedFile;
+		this.fPart = part;
 		this.dataContext = dataContext;
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
@@ -40,8 +46,8 @@ public class NewDataPartWizard extends WizardNewPart {
 
 	public void addPages() {
 		EClass eClass = dataContext.eClass();
-		fDataPage = new NewDataPartWizardPage(eClass.getEPackage(), dataContext);
-		fDataPage.init(new StructuredSelection(fFile.getProject()));
+		fDataPage = new NewDataPartWizardPage(eClass.getEPackage());
+		fDataPage.init(new StructuredSelection(selectedFile.getProject()));
 		fDataPage.setDataContext(dataContext);
 		addPage(fDataPage);
 	}
@@ -55,4 +61,17 @@ public class NewDataPartWizard extends WizardNewPart {
 		return fDataPage.getCreatedType();
 	}
 
+	public boolean performFinish() {
+		boolean performFinish = super.performFinish();
+		if (performFinish) {
+			IType type = (IType) getCreatedElement();
+			String elementName = type.getFullyQualifiedName();
+			String projectName = type.getJavaProject().getElementName();
+			String partURI = URI.createPlatformPluginURI(
+					projectName + "/" + elementName, true).toString();
+			fPart.setURI(partURI);
+			fPart.setLabel(type.getElementName());
+		}
+		return performFinish;
+	}
 }
