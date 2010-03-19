@@ -87,12 +87,24 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 				buf.append(comment);
 				buf.append(lineDelim);
 			}
+			buf.append("public EClass getDataContextType() {"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			
+			String content = EMFCodegen.genDynamicModel(imports, ePackage,
+					(EObject) getDataContext(), true, monitor);
+			if (content != null && content.length() != 0)
+				buf.append(content);
+			
+			buf.append(lineDelim);
+			buf.append("}"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			
 			buf.append("public Object getDataContext() {"); //$NON-NLS-1$
 			buf.append(lineDelim);
 			// final String content = "    return new "
 			// + dataContextType.getSimpleName() + "();";
 
-			String content = EMFCodegen.genDynamicContents(imports, ePackage,
+			content = EMFCodegen.genDynamicContents(imports, ePackage,
 					(EObject) getDataContext(), true, monitor);
 
 			if (content != null && content.length() != 0)
@@ -101,6 +113,7 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 			buf.append("}"); //$NON-NLS-1$
 			type.createMethod(buf.toString(), null, false, null);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

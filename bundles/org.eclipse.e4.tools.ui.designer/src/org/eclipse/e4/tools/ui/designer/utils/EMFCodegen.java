@@ -33,25 +33,21 @@ import org.eclipse.jdt.ui.wizards.NewTypeWizardPage.ImportsManager;
  */
 public class EMFCodegen {
 
-	public static String genDynamicContents(ImportsManager imports,
+	public static String genDynamicModel(ImportsManager imports,
 			EPackage ePackage, EObject initializeObj, boolean appendReturn,
 			IProgressMonitor monitor) {
 		if (ePackage == null) {
 			return null;
 		}
-		EClass initializeType = null;
-		if (initializeObj != null) {
-			initializeType = initializeObj.eClass();
-		}
+		EClass initializeType = initializeObj.eClass();
 
 		StringBuffer buf = new StringBuffer();
 		String lineDelim = "\n";
 		String packageName = ePackage.getName() + "Package";
 		appendLine(buf, "EPackage " + packageName
-				+ " = EcoreFactory.eINSTANCE.createEPackage();",
+				+ " = EcoreFactory.eINSTANCE.createEPackage();", lineDelim);
+		appendLine(buf, packageName + ".setName(\"" + packageName + "\");",
 				lineDelim);
-		appendLine(buf, packageName + ".setName(\"" + packageName
-				+ "\");", lineDelim);
 		appendLine(buf, "", lineDelim);
 
 		if (imports != null) {
@@ -64,6 +60,7 @@ public class EMFCodegen {
 			imports.addImport(EObject.class.getName());
 			imports.addImport(EcoreUtil.class.getName());
 		}
+
 		// Create dynamic classes.
 		for (EClassifier eClassifier : ePackage.getEClassifiers()) {
 			if (!(eClassifier instanceof EClass)) {
@@ -114,9 +111,25 @@ public class EMFCodegen {
 			}
 			appendLine(buf, "", lineDelim);
 		}
+		String targetClassName = normalClassName(initializeType.getName())
+				+ "Class";
+
+		appendLine(buf, "return " + targetClassName + ";", lineDelim);
+		return buf.toString();
+	}
+
+	public static String genDynamicContents(ImportsManager imports,
+			EPackage ePackage, EObject initializeObj, boolean appendReturn,
+			IProgressMonitor monitor) {
+		StringBuffer buf = new StringBuffer();
+		String lineDelim = "\n";
+
+		EClass initializeType = initializeObj.eClass();
+
 		// Initialize objects.
-		genDynamicInitializeContents(initializeObj, initializeType, buf,
+		genDynamicInitializeContents(null, initializeObj, initializeType, buf,
 				lineDelim);
+
 		appendLine(buf, "", lineDelim);
 		if (appendReturn && initializeType != null) {
 			appendLine(buf, "return "
@@ -126,37 +139,68 @@ public class EMFCodegen {
 		return buf.toString();
 	}
 
-	private static void genDynamicInitializeContents(EObject initializeObj,
+	private static void genDynamicInitializeContents(String parentType, EObject initializeObj,
 			EClass initializeType, StringBuffer buf, String lineDelim) {
-		if (initializeObj != null && initializeType != null) {
+		if (initializeType != null) {
 			String name = normalClassName(initializeType.getName());
+			String objectNameType = name + "ObjectType";
 			String objectName = name + "Object";
-			appendLine(buf, "EObject " + objectName + " = EcoreUtil.create("
-					+ name + "Class);", lineDelim);
+			if (parentType == null) {
+				appendLine(buf, "EClass " + objectNameType + " = getDataContextType();", lineDelim);
+				appendLine(buf, "EObject " + objectName + " = EcoreUtil.create(" + objectNameType + ");", lineDelim);
+			}
+			else {
+				objectNameType = name + "Class";
+				// String parentType = normalClassName(initializeObj.eClass().getName()) + "Object";
+				appendLine(buf, "EClass " + objectNameType + " = (EClass)" + parentType + ".eClass().getEPackage().getEClassifier(\"" + initializeType.getName() + "\");", lineDelim);				
+				appendLine(buf, "EObject " + objectName + " = EcoreUtil.create("
+					+ objectNameType + ");", lineDelim);
+			}
 			EList<EStructuralFeature> features = initializeType
 					.getEStructuralFeatures();
 			for (EStructuralFeature sf : features) {
-				if (!initializeObj.eIsSet(sf)) {
-					continue;
-				}
 				String attrName = sf.getName();
-				Object value = initializeObj.eGet(sf);
-				if (value instanceof EObject) {
-					EObject eObj = (EObject) value;
-					EClass valueType = eObj.eClass();
-					String valueName = normalClassName(valueType.getName())
-							+ "Object";
-					genDynamicInitializeContents(eObj, valueType, buf,
-							lineDelim);
-					appendLine(buf, objectName + ".eSet(" + attrName + ", "
-							+ valueName + ");", lineDelim);
-				} else {
-					String appendValue = value.toString();
-					if (value instanceof String) {
-						appendValue = "\"" + value + "\"";
+				String attrVarName = attrName + "Attribute";
+				if (initializeObj != null && initializeObj.eIsSet(sf)) {
+					Object value = initializeObj.eGet(sf);
+					if (value instanceof EObject) {
+						EObject eObj = (EObject) value;
+						EClass valueType = eObj.eClass();
+						String valueName = normalClassName(valueType.getName())
+								+ "Object";
+						genDynamicInitializeContents(objectName, eObj, valueType, buf,
+								lineDelim);
+						appendLine(buf, "EStructuralFeature " + attrVarName + " = "
+								+ objectNameType + ".getEStructuralFeature(\"" + attrName + "\");", lineDelim);
+						appendLine(buf, objectName + ".eSet(" + attrVarName + ", "
+								+ valueName + ");", lineDelim);
+					} else {
+						String appendValue = value.toString();
+						if (value instanceof String) {
+							appendValue = "\"" + value + "\"";
+						}
+						appendLine(buf, "EStructuralFeature " + attrVarName + " = "
+								+ objectNameType + ".getEStructuralFeature(\"" + attrName + "\");", lineDelim);
+						appendLine(buf, objectName + ".eSet(" + attrVarName + ", "
+								+ appendValue + ");", lineDelim);
 					}
-					appendLine(buf, objectName + ".eSet(" + attrName + ", "
-							+ appendValue + ");", lineDelim);
+				} else if (sf instanceof EReference) {
+					EReference reference = (EReference) sf;
+					EClassifier classifier = reference.getEType();
+					if (classifier instanceof EClass) {
+						EClass type = (EClass) classifier;
+						if (!type.isAbstract()) {
+							String valueName = normalClassName(type
+									.getName())
+									+ "Object";
+							genDynamicInitializeContents(objectName, null, type, buf,
+									lineDelim);
+							appendLine(buf, "EStructuralFeature " + attrVarName + " = "
+									+ objectNameType + ".getEStructuralFeature(\"" + attrName + "\");", lineDelim);
+							appendLine(buf, objectName + ".eSet(" + attrVarName
+									+ ", " + valueName + ");", lineDelim);
+						}
+					}
 				}
 			}
 		}
