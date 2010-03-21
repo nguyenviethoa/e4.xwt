@@ -34,7 +34,7 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 	private EPackage ePackage;
 
 	public NewDataPartWizardPage(EPackage ePackage, EObject dataContext) {
-		this.ePackage = ePackage;
+		this.setEPackage(ePackage);
 		setDataContext(dataContext);
 	}
 
@@ -90,7 +90,7 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 			buf.append("public EClass getDataContextType() {"); //$NON-NLS-1$
 			buf.append(lineDelim);
 			
-			String content = EMFCodegen.genDynamicModel(imports, ePackage,
+			String content = EMFCodegen.genDynamicModel(imports, getEPackage(),
 					(EObject) getDataContext(), true, monitor);
 			if (content != null && content.length() != 0)
 				buf.append(content);
@@ -104,7 +104,7 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 			// final String content = "    return new "
 			// + dataContextType.getSimpleName() + "();";
 
-			content = EMFCodegen.genDynamicContents(imports, ePackage,
+			content = EMFCodegen.genDynamicContents(imports, getEPackage(),
 					(EObject) getDataContext(), true, monitor);
 
 			if (content != null && content.length() != 0)
@@ -119,5 +119,13 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 
 	public String getSuperClass() {
 		return XWTStaticPart.class.getName();
+	}
+
+	public void setEPackage(EPackage ePackage) {
+		this.ePackage = ePackage;
+	}
+
+	public EPackage getEPackage() {
+		return ePackage;
 	}
 }
