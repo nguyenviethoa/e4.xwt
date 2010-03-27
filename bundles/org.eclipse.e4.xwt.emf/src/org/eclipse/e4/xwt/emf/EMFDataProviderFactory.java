@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.emf;
 
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IDataProviderFactory;
 import org.eclipse.emf.databinding.EObjectObservableList;
 import org.eclipse.emf.databinding.EObjectObservableMap;
 import org.eclipse.emf.databinding.EObjectObservableValue;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -48,6 +48,13 @@ public class EMFDataProviderFactory implements IDataProviderFactory {
 				EMFDataProvider dataProvider = createEMFDataProvider();
 				return dataProvider;
 			}	
+		} else if (dataContext instanceof IObservableValue) {
+			Object valueType = ((IObservableValue) dataContext).getValueType();
+			if (valueType instanceof EObject) {
+				EMFDataProvider dataProvider = createEMFDataProvider();
+				dataProvider.setObjectInstance(dataContext);
+				return dataProvider;
+			}
 		}
 		
 		return null;

@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.ui.model.application.MPart;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.viewers.StructuredSelection;
 
@@ -50,4 +51,13 @@ public class NewSelectionPartWizard extends WizardNewPart {
 		return fTypePage.getCreatedType();
 	}
 
+	public boolean performFinish() {
+		boolean performFinish = super.performFinish();
+		if (performFinish) {
+			// try to add this variable, so that, the selection event of all
+			// children EclipseContext are coming.
+			fPart.getVariables().add(IServiceConstants.SELECTION);
+		}
+		return performFinish;
+	}
 }

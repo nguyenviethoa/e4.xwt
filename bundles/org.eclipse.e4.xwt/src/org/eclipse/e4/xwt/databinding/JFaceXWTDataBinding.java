@@ -221,7 +221,12 @@ public class JFaceXWTDataBinding {
 		Class<?> type = null;
 		if (target instanceof IObservableValue) {
 			IObservableValue value = (IObservableValue) target;
-			type = (Class<?>) value.getValueType();
+			Object valueType = value.getValueType();
+			if (valueType instanceof Class<?>) {
+				type = (Class<?>) valueType;
+			} else {
+				System.out.println();
+			}
 		}
 		else if (target instanceof Class<?>) {
 			type = (Class<?>)target;			

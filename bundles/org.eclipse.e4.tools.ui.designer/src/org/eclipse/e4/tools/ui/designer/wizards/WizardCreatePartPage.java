@@ -98,11 +98,16 @@ public class WizardCreatePartPage extends NewClassWizardPage {
 		resourcePath = resourcePath.addFileExtension(IConstants.XWT_EXTENSION);
 		try {
 			IFile file = resource.getProject().getFile(resourcePath);
-			XWTCodegen.createFile(getCreatedType(), file, dataContext);
+			XWTCodegen.createFile(getCreatedType(), file, dataContext,
+					getDataContextProperties());
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected List<Object> getDataContextProperties() {
+		return null;
 	}
 
 	protected void checkDependencies() {

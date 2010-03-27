@@ -40,31 +40,32 @@ import org.eclipse.swt.widgets.Label;
  */
 public class NewSelectionPartDataContextPage extends WizardPage {
 
-	private TreeViewer treeViewer;
+	private TreeViewer javaTypeTreeViewer;
 	private Label detailLabel;
 
 	private IType selectionType;
 	private NewSelectionPartWizardPage fTypePage;
 
-	protected NewSelectionPartDataContextPage(NewSelectionPartWizardPage typePage) {
+	protected NewSelectionPartDataContextPage(
+			NewSelectionPartWizardPage typePage) {
 		super("DataContextSelectionPage");
 		this.fTypePage = typePage;
 		setTitle("Data Context Selection");
 		setMessage("Choose a Model as data context to create part.");
 	}
-
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		Composite control = new Composite(parent, SWT.NONE);
 		control.setLayout(new GridLayout());
 
-		treeViewer = new TreeViewer(control);
-		treeViewer.getTree().setLayoutData(
+		javaTypeTreeViewer = new TreeViewer(control);
+		javaTypeTreeViewer.getTree().setLayoutData(
 				GridDataFactory.fillDefaults().grab(true, true).create());
-		treeViewer.setContentProvider(new StandardJavaElementContentProvider());
-		treeViewer.setLabelProvider(new JavaElementLabelProvider(
+		javaTypeTreeViewer
+				.setContentProvider(new StandardJavaElementContentProvider());
+		javaTypeTreeViewer.setLabelProvider(new JavaElementLabelProvider(
 				JavaElementLabelProvider.SHOW_DEFAULT));
-		treeViewer.addFilter(new ViewerFilter() {
+		javaTypeTreeViewer.addFilter(new ViewerFilter() {
 			public boolean select(Viewer viewer, Object parentElement,
 					Object element) {
 				try {
@@ -83,13 +84,14 @@ public class NewSelectionPartDataContextPage extends WizardPage {
 				return false;
 			}
 		});
-		treeViewer.setInput(JavaCore.create(ResourcesPlugin.getWorkspace()
-				.getRoot()));
-		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				handleSelection();
-			}
-		});
+		javaTypeTreeViewer.setInput(JavaCore.create(ResourcesPlugin
+				.getWorkspace().getRoot()));
+		javaTypeTreeViewer
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent event) {
+						handleSelection();
+					}
+				});
 
 		detailLabel = new Label(control, SWT.NONE);
 		detailLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true,
@@ -101,7 +103,7 @@ public class NewSelectionPartDataContextPage extends WizardPage {
 	}
 
 	protected void handleSelection() {
-		IStructuredSelection selection = (IStructuredSelection) treeViewer
+		IStructuredSelection selection = (IStructuredSelection) javaTypeTreeViewer
 				.getSelection();
 		Object firstElement = selection.getFirstElement();
 

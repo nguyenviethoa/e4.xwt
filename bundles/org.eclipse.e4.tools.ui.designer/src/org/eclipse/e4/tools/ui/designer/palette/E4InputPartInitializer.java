@@ -13,6 +13,7 @@ package org.eclipse.e4.tools.ui.designer.palette;
 import org.eclipse.e4.tools.ui.designer.E4Designer;
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.tools.ui.designer.wizards.NewFileInputPartWizard;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
@@ -32,6 +33,7 @@ public class E4InputPartInitializer extends E4PartInitializer {
 			return false;
 		}
 		IFileEditorInput input = null;
+		MApplication application = null;
 		try {
 			E4Designer designer = (E4Designer) E4DesignerPlugin.getDefault()
 					.getWorkbench().getActiveWorkbenchWindow().getActivePage()
@@ -39,6 +41,7 @@ public class E4InputPartInitializer extends E4PartInitializer {
 			EditDomain editDomain = designer.getEditDomain();
 			input = (IFileEditorInput) editDomain
 					.getData(Designer.DESIGNER_INPUT);
+			application = (MApplication) designer.getDocumentRoot();
 		} catch (Exception e) {
 		}
 		if (input == null) {
@@ -46,7 +49,7 @@ public class E4InputPartInitializer extends E4PartInitializer {
 		}
 
 		NewFileInputPartWizard newWizard = new NewFileInputPartWizard(input
-				.getFile(), (MPart) newObject);
+				.getFile(), (MPart) newObject, application);
 		WizardDialog dialog = new WizardDialog(new Shell(), newWizard);
 		return Window.OK == dialog.open();
 	}

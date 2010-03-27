@@ -34,6 +34,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
@@ -63,6 +65,8 @@ import org.eclipse.swt.widgets.Text;
  * @author Jin Liu(jin.liu@soyatec.com)
  */
 public class XWTCodegen {
+
+	public static final String EMF_FEATURE_MASTER_KEY = "emfobjectfeaturemasterkey";
 
 	public static final String JAVA_LANG_PREFIX = "j";
 	public static final String EMBED_XWT_PREFIX = "p";
@@ -105,8 +109,22 @@ public class XWTCodegen {
 			}
 		}
 	}
-
 	public static void createFile(IType host, IFile file, Object dataContext) {
+		createFile(host, file, dataContext, null);
+	}
+
+	/**
+	 * An new parameter <code>dataContextProperties</code> is added for creating
+	 * <code>dataContext</code> components, if this dataContextProperties is not
+	 * null, all items of dataContext which contains dataContextProperties will
+	 * be generated.
+	 * 
+	 * For a EMF dataContext, all properties are EStructuredFeatures; and for a
+	 * common bean dataContext, all properties are name of each
+	 * PropertyDescriptor.
+	 */
+	public static void createFile(IType host, IFile file, Object dataContext,
+			List<Object> dataContextProperties) {
 		String hostClassName = host.getFullyQualifiedName();
 		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 		PrintStream printStream = new PrintStream(arrayOutputStream);
@@ -123,8 +141,8 @@ public class XWTCodegen {
 		}
 		PrintResult result = XWTCodegen.printRoot(printStream, Composite.class,
 				hostClassName, imports.toArray(new String[0]), namespaces,
-				dataContext, GridLayoutFactory.swtDefaults().numColumns(4)
-						.create());
+				dataContext, dataContextProperties, GridLayoutFactory
+						.swtDefaults().numColumns(2).create());
 		if (result.hasExternalContents()) {
 			Map<String, Object> externalContents = result.getExternalContents();
 			for (String key : externalContents.keySet()) {
@@ -149,7 +167,7 @@ public class XWTCodegen {
 				IContainer parent = file.getParent();
 				IFile embedFile = parent.getFile(new Path(typeName
 						+ IConstants.XWT_EXTENSION_SUFFIX));
-				createFile(embededType, embedFile, object);
+				createFile(embededType, embedFile, object, null);
 			}
 		}
 		try {
@@ -209,22 +227,26 @@ public class XWTCodegen {
 	}
 
 	public static PrintResult printDataContext(PrintStream printStream,
-			Object dataContext, String prefixOffset) {
+			Object dataContext, List<Object> dataContextProperties,
+			String prefixOffset) {
 		if (dataContext instanceof EObject) {
 			EClass eClass = (dataContext instanceof EClass)
 					? (EClass) dataContext
 					: ((EObject) dataContext).eClass();
-			return printDataContextEMF(printStream, eClass, prefixOffset);
+			return printDataContextEMF(printStream, eClass,
+					dataContextProperties, prefixOffset);
 		} else {
 			Class<?> type = (dataContext instanceof Class<?>)
 					? (Class<?>) dataContext
 					: dataContext.getClass();
-			return printDataContextBean(printStream, type, prefixOffset);
+			return printDataContextBean(printStream, type,
+					dataContextProperties, prefixOffset);
 		}
 	}
 
 	public static PrintResult printDataContextBean(PrintStream printStream,
-			Class<?> dataContextType, String prefixOffset) {
+			Class<?> dataContextType, List<Object> dataContextProperties,
+			String prefixOffset) {
 		if (dataContextType == null) {
 			return PrintResult.FAILED;
 		}
@@ -237,7 +259,7 @@ public class XWTCodegen {
 			if (propertyDescriptors == null) {
 				return PrintResult.FAILED;
 			}
-			
+
 			for (PropertyDescriptor pd : propertyDescriptors) {
 				String name = pd.getName();
 				if (name == null || "class".equals(name)) {
@@ -249,7 +271,10 @@ public class XWTCodegen {
 				} catch (Exception e) {
 					continue;
 				}
-
+				if (dataContextProperties != null
+						&& !dataContextProperties.contains(name)) {
+					continue;
+				}
 				Class<?> propertyType = pd.getPropertyType();
 				if (propertyType.isPrimitive() || propertyType == String.class
 						|| propertyType == URL.class) {
@@ -278,7 +303,8 @@ public class XWTCodegen {
 	}
 
 	public static PrintResult printDataContextEMF(PrintStream printStream,
-			EClass dataContextType, String prefixOffset) {
+			EClass dataContextType, List<Object> dataContextProperties,
+			String prefixOffset) {
 		if (dataContextType == null) {
 			return PrintResult.FAILED;
 		}
@@ -289,8 +315,28 @@ public class XWTCodegen {
 			if (name == null) {
 				continue;
 			}
+			if (dataContextProperties != null
+					&& !dataContextProperties.contains(feature)) {
+				continue;
+			}
 			EClassifier propertyType = feature.getEType();
-			if (propertyType instanceof EEnum) {
+			if (feature.isMany()) {
+				try {
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					PrintStream ps = new PrintStream(out);
+					printTableEMF(ps, feature, null, prefixOffset);
+					byte[] bytes = out.toByteArray();
+					String content = new String(bytes);
+					printSurroundWithGroup(printStream, feature.getName(),
+							content, new FillLayout(), GridDataFactory
+									.fillDefaults().grab(true, false)
+									.span(2, 1).create(), prefixOffset);
+					ps.close();
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else if (propertyType instanceof EEnum) {
 				List<String> items = new ArrayList<String>();
 				for (EEnumLiteral object : ((EEnum) propertyType)
 						.getELiterals()) {
@@ -298,8 +344,7 @@ public class XWTCodegen {
 				}
 				result.merge(printLabelCombo(printStream, name, name, items
 						.toArray(new String[0]), prefixOffset));
-			}
-			if (propertyType instanceof EDataType) {
+			} else if (propertyType instanceof EDataType) {
 				result.merge(printLabelText(printStream, name, name,
 						prefixOffset));
 			} else {
@@ -308,22 +353,97 @@ public class XWTCodegen {
 						+ " DataContext=\"{Binding path=" + name + "}\"/>";
 				result.merge(printSurroundWithGroup(printStream, name, content,
 						new FillLayout(), GridDataFactory.fillDefaults().span(
-								4, 1).create(), prefixOffset));
+								2, 1).create(), prefixOffset));
 				result.getExternalContents().put(elementType, propertyType);
 			}
 		}
 		return result;
 	}
+
+	public static PrintResult printTableEMF(PrintStream printStream,
+			EStructuralFeature feature, Object layoutData, String prefixOffset) {
+		if (feature == null || !feature.isMany()) {
+			return PrintResult.FAILED;
+		}
+		if (prefixOffset == null) {
+			prefixOffset = "";
+		}
+		String nextOffset = prefixOffset + "\t";
+		String name = feature.getName();
+		printStream
+				.println(prefixOffset
+						+ "<TableViewer Name=\""
+						+ name
+						+ "TableViewer\" x:style=\"SWT.FULL_SELECTION\" input=\"{Binding Path="
+						+ name + "}\">");
+		EClassifier eType = feature.getEType();
+		if (eType != null && eType instanceof EClass) {
+			printStream.println(nextOffset + "<TableViewer.columns>");
+			EList<EStructuralFeature> features = ((EClass) eType)
+					.getEStructuralFeatures();
+			for (EStructuralFeature sf : features) {
+				EClassifier columnFeatureType = sf.getEType();
+				if (!(columnFeatureType instanceof EDataType)) {
+					continue;
+				}
+				printTableColumn(printStream, sf.getName(), sf.getName(), 100,
+						nextOffset + "\t");
+			}
+			printStream.println(nextOffset + "</TableViewer.columns>");
+		}
+
+		String eventHandler = "";
+		EAnnotation eAnnotation = feature
+				.getEAnnotation(EMF_FEATURE_MASTER_KEY);
+		if (eAnnotation != null) {
+			eventHandler = "SelectionEvent=\"handleSelectionEvent\"";
+		}
+		printStream.println(nextOffset
+				+ "<TableViewer.table HeaderVisible=\"true\" " + eventHandler
+				+ "/>");
+		if (layoutData != null) {
+			printStream
+					.println(nextOffset + "<TableViewer.control.layoutData>");
+			printlayoutData(printStream, nextOffset, layoutData);
+			printStream.println(nextOffset
+					+ "</TableViewer.control.layoutData>");
+		}
+
+		printStream.println(prefixOffset + "</TableViewer>");
+		return PrintResult.OK;
+	}
+
+	public static PrintResult printTableColumn(PrintStream printStream,
+			String displayName, String displayMemberPath, int width,
+			String prefixOffset) {
+		if (prefixOffset == null) {
+			prefixOffset = "";
+		}
+
+		if (displayName == null) {
+			displayName = "Column";
+		}
+		String memberContents = "";
+		if (displayMemberPath != null) {
+			memberContents = " bindingPath=\"" + displayMemberPath + "\"";
+		}
+		printStream.println(prefixOffset + "<TableViewerColumn width=\""
+				+ width + "\" text=\"" + displayName + "\"" + memberContents
+				+ "/>");
+		return PrintResult.OK;
+	}
 	public static PrintResult printRoot(PrintStream printStream,
 			Class<?> rootType, String clr, String[] imports,
-			Map<String, String> namespaces, Object dataContext, Layout layout) {
+			Map<String, String> namespaces, Object dataContext,
+			List<Object> dataContextProperties, Layout layout) {
 		PrintResult result = new PrintResult();
 		String content = null;
 		if (dataContext != null) {
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				PrintStream ps = new PrintStream(out);
-				result.merge(printDataContext(ps, dataContext, "\t"));
+				result.merge(printDataContext(ps, dataContext,
+						dataContextProperties, "\t"));
 				byte[] bytes = out.toByteArray();
 				content = new String(bytes);
 				ps.close();

@@ -19,12 +19,15 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.EContentsEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage.ImportsManager;
 
@@ -32,6 +35,10 @@ import org.eclipse.jdt.ui.wizards.NewTypeWizardPage.ImportsManager;
  * @author Jin Liu(jin.liu@soyatec.com)
  */
 public class EMFCodegen {
+
+	private static final String CLASS_NAME_SUFFIX = "Class";
+	private static final String ENUM_NAME_SUFFIX = "Enum";
+	private static final String DATATYPE_NAME_SUFFIX = "DataType";
 
 	public static String genDynamicModel(ImportsManager imports,
 			EPackage ePackage, EObject initializeObj, boolean appendReturn,
@@ -48,6 +55,17 @@ public class EMFCodegen {
 				+ " = EcoreFactory.eINSTANCE.createEPackage();", lineDelim);
 		appendLine(buf, packageName + ".setName(\"" + packageName + "\");",
 				lineDelim);
+		String nsPrefix = ePackage.getNsPrefix();
+		if (nsPrefix != null) {
+			appendLine(buf,
+					packageName + ".setNsPrefix(\"" + nsPrefix + "\");",
+					lineDelim);
+		}
+		String nsURI = ePackage.getNsURI();
+		if (nsURI != null) {
+			appendLine(buf, packageName + ".setNsURI(\"" + nsURI + "\");",
+					lineDelim);
+		}
 		appendLine(buf, "", lineDelim);
 
 		if (imports != null) {
@@ -59,24 +77,83 @@ public class EMFCodegen {
 			imports.addImport(EcorePackage.class.getName());
 			imports.addImport(EObject.class.getName());
 			imports.addImport(EcoreUtil.class.getName());
+			imports.addImport(EContentsEList.class.getName());
 		}
 
 		// Create dynamic classes.
 		for (EClassifier eClassifier : ePackage.getEClassifiers()) {
-			if (!(eClassifier instanceof EClass)) {
-				System.out.println("FIXME");
-				continue;
+			if (eClassifier instanceof EClass) {
+				EClass eClass = (EClass) eClassifier;
+				String name = eClass.getName();
+				String className = normalClassName(name) + CLASS_NAME_SUFFIX;
+				appendLine(buf, "EClass " + className
+						+ " = EcoreFactory.eINSTANCE.createEClass();",
+						lineDelim);
+				appendLine(buf, className + ".setName(\"" + name + "\");",
+						lineDelim);
+				appendLine(buf, packageName + ".getEClassifiers().add("
+						+ className + ");", lineDelim);
+				appendLine(buf, "", lineDelim);
+			} else if (eClassifier instanceof EEnum) {
+				imports.addImport(EEnum.class.getName());
+				EEnum eEnum = (EEnum) eClassifier;
+				String name = eEnum.getName();
+				String enumName = normalClassName(name) + ENUM_NAME_SUFFIX;
+				appendLine(buf, "EEnum " + enumName
+						+ " = EcoreFactory.eINSTANCE.createEEnum();", lineDelim);
+				appendLine(buf, enumName + ".setName(\"" + name + "\");",
+						lineDelim);
+				appendLine(buf, packageName + ".getEClassifiers().add("
+						+ enumName + ");", lineDelim);
+				appendLine(buf, "", lineDelim);
+
+				for (EEnumLiteral literal : eEnum.getELiterals()) {
+					imports.addImport(EEnumLiteral.class.getName());
+					String literalName = literal.getName();
+					String literalFieldName = normalClassName(literalName)
+							+ "Literal";
+					appendLine(
+							buf,
+							"EEnumLiteral "
+									+ literalFieldName
+									+ " = EcoreFactory.eINSTANCE.createEEnumLiteral();",
+							lineDelim);
+					appendLine(buf, literalFieldName + ".setName(\""
+							+ literalName + "\");", lineDelim);
+					appendLine(buf, literalFieldName + ".setLiteral(\""
+							+ literal.getLiteral() + "\");", lineDelim);
+					appendLine(buf, enumName + ".getELiterals().add("
+							+ literalFieldName + ");", lineDelim);
+					appendLine(buf, "", lineDelim);
+				}
+
+			} else if (eClassifier instanceof EDataType) {
+				imports.addImport(EDataType.class.getName());
+				EDataType dataType = (EDataType) eClassifier;
+				String name = dataType.getName();
+				String dataTypeName = normalClassName(name)
+						+ DATATYPE_NAME_SUFFIX;
+				String instanceClassName = dataType.getInstanceClassName();
+				String instanceTypeName = dataType.getInstanceTypeName();
+
+				appendLine(buf, "EDataType " + dataTypeName
+						+ " = EcoreFactory.eINSTANCE.createEDataType();",
+						lineDelim);
+				appendLine(buf, dataTypeName + ".setName(\"" + name + "\");",
+						lineDelim);
+
+				if (instanceClassName != null) {
+					appendLine(buf, dataTypeName + ".setInstanceClassName(\""
+							+ instanceClassName + "\");", lineDelim);
+				}
+				if (instanceTypeName != null) {
+					appendLine(buf, dataTypeName + ".setInstanceTypeName(\""
+							+ instanceTypeName + "\");", lineDelim);
+				}
+				appendLine(buf, packageName + ".getEClassifiers().add("
+						+ dataTypeName + ");", lineDelim);
+				appendLine(buf, "", lineDelim);
 			}
-			EClass eClass = (EClass) eClassifier;
-			String name = eClass.getName();
-			String className = normalClassName(name) + "Class";
-			appendLine(buf, "EClass " + className
-					+ " = EcoreFactory.eINSTANCE.createEClass();", lineDelim);
-			appendLine(buf, className + ".setName(\"" + name + "\");",
-					lineDelim);
-			appendLine(buf, packageName + ".getEClassifiers().add(" + className
-					+ ");", lineDelim);
-			appendLine(buf, "", lineDelim);
 		}
 
 		List<String> existingNames = new ArrayList<String>();
@@ -95,12 +172,18 @@ public class EMFCodegen {
 				while (existingNames.contains(attrName)) {
 					attrName = attrName + (i++);
 				}
+				int lowerBound = attr.getLowerBound();
+				int upperBound = attr.getUpperBound();
 				existingNames.add(attrName);
 				appendLine(buf, "EAttribute " + attrName
 						+ " = EcoreFactory.eINSTANCE.createEAttribute();",
 						lineDelim);
 				appendLine(buf, attrName + ".setName(\"" + attr.getName()
 						+ "\");", lineDelim);
+				appendLine(buf, attrName + ".setLowerBound(" + lowerBound
+						+ ");", lineDelim);
+				appendLine(buf, attrName + ".setUpperBound(" + upperBound
+						+ ");", lineDelim);
 				appendLine(buf, attrName + ".setEType("
 						+ getETypeStr(ePackage, attr.getEType()) + ");",
 						lineDelim);
@@ -127,8 +210,10 @@ public class EMFCodegen {
 		EClass initializeType = initializeObj.eClass();
 
 		// Initialize objects.
-		genDynamicInitializeContents(null, initializeObj, initializeType, buf,
-				lineDelim);
+		List<EClass> generatedTypes = new ArrayList<EClass>();
+		List<String> fieldNames = new ArrayList<String>();
+		genDynamicInitializeContents(null, initializeObj, initializeType,
+				generatedTypes, fieldNames, buf, lineDelim);
 
 		appendLine(buf, "", lineDelim);
 		if (appendReturn && initializeType != null) {
@@ -139,28 +224,49 @@ public class EMFCodegen {
 		return buf.toString();
 	}
 
-	private static void genDynamicInitializeContents(String parentType, EObject initializeObj,
-			EClass initializeType, StringBuffer buf, String lineDelim) {
+	private static void genDynamicInitializeContents(String parentType,
+			EObject initializeObj, EClass initializeType,
+			List<EClass> generatedTypes, List<String> fieldNames,
+			StringBuffer buf, String lineDelim) {
+		if (generatedTypes.contains(initializeType)) {
+			return;
+		}
+		generatedTypes.add(initializeType);
 		if (initializeType != null) {
 			String name = normalClassName(initializeType.getName());
 			String objectNameType = name + "ObjectType";
 			String objectName = name + "Object";
 			if (parentType == null) {
-				appendLine(buf, "EClass " + objectNameType + " = getDataContextType();", lineDelim);
-				appendLine(buf, "EObject " + objectName + " = EcoreUtil.create(" + objectNameType + ");", lineDelim);
-			}
-			else {
+				appendLine(buf, "EClass " + objectNameType
+						+ " = getDataContextType();", lineDelim);
+				appendLine(buf, "EObject " + objectName
+						+ " = EcoreUtil.create(" + objectNameType + ");",
+						lineDelim);
+			} else {
 				objectNameType = name + "Class";
-				// String parentType = normalClassName(initializeObj.eClass().getName()) + "Object";
-				appendLine(buf, "EClass " + objectNameType + " = (EClass)" + parentType + ".eClass().getEPackage().getEClassifier(\"" + initializeType.getName() + "\");", lineDelim);				
-				appendLine(buf, "EObject " + objectName + " = EcoreUtil.create("
-					+ objectNameType + ");", lineDelim);
+				// String parentType =
+				// normalClassName(initializeObj.eClass().getName()) + "Object";
+				appendLine(buf, "EClass " + objectNameType + " = (EClass)"
+						+ parentType
+						+ ".eClass().getEPackage().getEClassifier(\""
+						+ initializeType.getName() + "\");", lineDelim);
+				appendLine(buf, "EObject " + objectName
+						+ " = EcoreUtil.create(" + objectNameType + ");",
+						lineDelim);
 			}
 			EList<EStructuralFeature> features = initializeType
 					.getEStructuralFeatures();
 			for (EStructuralFeature sf : features) {
 				String attrName = sf.getName();
 				String attrVarName = attrName + "Attribute";
+				int i = 0;
+				while (fieldNames.contains(attrVarName)) {
+					attrVarName = attrName + "Attribute" + (i++);
+				}
+				if (sf.isMany()) {
+					System.out.println();
+				}
+				fieldNames.add(attrVarName);
 				if (initializeObj != null && initializeObj.eIsSet(sf)) {
 					Object value = initializeObj.eGet(sf);
 					if (value instanceof EObject) {
@@ -168,21 +274,26 @@ public class EMFCodegen {
 						EClass valueType = eObj.eClass();
 						String valueName = normalClassName(valueType.getName())
 								+ "Object";
-						genDynamicInitializeContents(objectName, eObj, valueType, buf,
+						genDynamicInitializeContents(objectName, eObj,
+								valueType, generatedTypes, fieldNames, buf,
 								lineDelim);
-						appendLine(buf, "EStructuralFeature " + attrVarName + " = "
-								+ objectNameType + ".getEStructuralFeature(\"" + attrName + "\");", lineDelim);
-						appendLine(buf, objectName + ".eSet(" + attrVarName + ", "
-								+ valueName + ");", lineDelim);
+						appendLine(buf, "EStructuralFeature " + attrVarName
+								+ " = " + objectNameType
+								+ ".getEStructuralFeature(\"" + attrName
+								+ "\");", lineDelim);
+						appendLine(buf, objectName + ".eSet(" + attrVarName
+								+ ", " + valueName + ");", lineDelim);
 					} else {
 						String appendValue = value.toString();
 						if (value instanceof String) {
 							appendValue = "\"" + value + "\"";
 						}
-						appendLine(buf, "EStructuralFeature " + attrVarName + " = "
-								+ objectNameType + ".getEStructuralFeature(\"" + attrName + "\");", lineDelim);
-						appendLine(buf, objectName + ".eSet(" + attrVarName + ", "
-								+ appendValue + ");", lineDelim);
+						appendLine(buf, "EStructuralFeature " + attrVarName
+								+ " = " + objectNameType
+								+ ".getEStructuralFeature(\"" + attrName
+								+ "\");", lineDelim);
+						appendLine(buf, objectName + ".eSet(" + attrVarName
+								+ ", " + appendValue + ");", lineDelim);
 					}
 				} else if (sf instanceof EReference) {
 					EReference reference = (EReference) sf;
@@ -190,15 +301,27 @@ public class EMFCodegen {
 					if (classifier instanceof EClass) {
 						EClass type = (EClass) classifier;
 						if (!type.isAbstract()) {
-							String valueName = normalClassName(type
-									.getName())
+							String valueName = normalClassName(type.getName())
 									+ "Object";
-							genDynamicInitializeContents(objectName, null, type, buf,
+							genDynamicInitializeContents(objectName, null,
+									type, generatedTypes, fieldNames, buf,
 									lineDelim);
-							appendLine(buf, "EStructuralFeature " + attrVarName + " = "
-									+ objectNameType + ".getEStructuralFeature(\"" + attrName + "\");", lineDelim);
-							appendLine(buf, objectName + ".eSet(" + attrVarName
-									+ ", " + valueName + ");", lineDelim);
+							appendLine(buf, "EStructuralFeature " + attrVarName
+									+ " = " + objectNameType
+									+ ".getEStructuralFeature(\"" + attrName
+									+ "\");", lineDelim);
+							if (sf.isMany()) {
+								appendLine(buf, objectName + ".eSet("
+										+ attrVarName + ", new "
+										+ EContentsEList.class.getSimpleName()
+										+ "("
+										+ valueName + "));", lineDelim);
+							} else {
+								appendLine(buf,
+										objectName + ".eSet(" + attrVarName
+												+ ", " + valueName + ");",
+										lineDelim);
+							}
 						}
 					}
 				}
@@ -214,8 +337,13 @@ public class EMFCodegen {
 
 	public static String getETypeStr(EPackage ePackage, EClassifier type) {
 		if (ePackage.getEClassifiers().contains(type)) {
-			String name = ((EClassifier) type).getName();
-			return normalClassName(name) + "Class";
+			String name = normalClassName(((EClassifier) type).getName());
+			if (type instanceof EEnum) {
+				return name + ENUM_NAME_SUFFIX;
+			} else if (type instanceof EDataType) {
+				return name + DATATYPE_NAME_SUFFIX;
+			}
+			return name + CLASS_NAME_SUFFIX;
 		} else if (type instanceof EDataType) {
 			String name = ((EDataType) type).getName();
 			return "EcorePackage.eINSTANCE.get" + name + "()";

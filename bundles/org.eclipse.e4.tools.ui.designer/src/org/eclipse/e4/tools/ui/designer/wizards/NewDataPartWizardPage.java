@@ -11,16 +11,27 @@
 package org.eclipse.e4.tools.ui.designer.wizards;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.services.annotations.Optional;
 import org.eclipse.e4.tools.ui.designer.utils.EMFCodegen;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.xwt.emf.EMFBinding;
 import org.eclipse.e4.xwt.ui.utils.ProjectUtil;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
@@ -47,11 +58,68 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 		}
 	}
 
+	protected List<Object> getDataContextProperties() {
+		// Should be removed: Quick fixed: only generate simple attribute.
+		List<Object> features = new ArrayList<Object>();
+		EClass eClass = getDataContextType();
+		if (eClass == null) {
+			return null;
+		}
+		for (EStructuralFeature feature : eClass
+				.getEStructuralFeatures()) {
+			EClassifier eType = feature.getEType();
+			if (eType instanceof EDataType) {
+				features.add(feature);
+			}
+		}
+		return features;
+	}
+
+	protected EClass getDataContextType() {
+		Object data = getDataContext();
+		EClass eClass = null;
+		if (data instanceof EClass) {
+			eClass = (EClass) data;
+		} else if (data instanceof EObject) {
+			eClass = ((EObject) data).eClass();
+		}
+		return eClass;
+	}
+
 	protected void createTypeMembers(IType type, ImportsManager imports,
 			IProgressMonitor monitor) throws CoreException {
 		super.createTypeMembers(type, imports, monitor);
 		createGetDataContextMethod(type, imports, monitor);
+		createSetSelectionMethod(type, imports, monitor);
 		overrideRefreshMethod(type, imports, monitor);
+	}
+
+	protected void createSetSelectionMethod(IType type, ImportsManager imports,
+			IProgressMonitor monitor) {
+		try {
+			final String lineDelim = "\n"; // OK, since content is formatted afterwards //$NON-NLS-1$
+			StringBuffer buf = new StringBuffer();
+
+			buf.append("@Inject");
+			buf.append(lineDelim);
+			buf.append("public void setSelection(@Optional @Named(IServiceConstants.SELECTION) Object dataContext) {");
+			buf.append(lineDelim);
+			buf.append("\tif (dataContext instanceof EObject && ((EObject)dataContext).eClass().getName().equals(getDataContextType().getName())) {");
+			buf.append(lineDelim);
+			buf.append("\t\tsetDataContext(dataContext);");
+			buf.append(lineDelim);
+			buf.append("\t}");
+			buf.append(lineDelim);
+			buf.append("}");
+
+			imports.addImport(Inject.class.getName());
+			imports.addImport(Optional.class.getName());
+			imports.addImport(Named.class.getName());
+			imports.addImport(IServiceConstants.class.getName());
+			imports.addImport(EObject.class.getName());
+			type.createMethod(buf.toString(), null, false, null);
+		} catch (Exception e) {
+		}
 	}
 
 	private void overrideRefreshMethod(IType type, ImportsManager imports,
@@ -101,16 +169,32 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 			
 			buf.append("public Object getDataContext() {"); //$NON-NLS-1$
 			buf.append(lineDelim);
-			// final String content = "    return new "
-			// + dataContextType.getSimpleName() + "();";
+			buf.append("\tObject dataContext = super.getDataContext();"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			buf.append("\tif (dataContext == null){"); //$NON-NLS-1$
+			buf.append(lineDelim);
 
+			buf.append("\t\t setDataContext(createDataContext());"); //$NON-NLS-1$
+			buf.append(lineDelim);
+
+			buf.append("\t}"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			buf.append("\treturn super.getDataContext();");
+			buf.append(lineDelim);
+			buf.append("}"); //$NON-NLS-1$
+			buf.append(lineDelim);
+
+			buf.append("public Object createDataContext() {"); //$NON-NLS-1$
+			buf.append(lineDelim);
 			content = EMFCodegen.genDynamicContents(imports, getEPackage(),
 					(EObject) getDataContext(), true, monitor);
 
 			if (content != null && content.length() != 0)
 				buf.append(content);
+
 			buf.append(lineDelim);
-			buf.append("}"); //$NON-NLS-1$
+			buf.append("}");
+
 			type.createMethod(buf.toString(), null, false, null);
 		} catch (Exception e) {
 			e.printStackTrace();

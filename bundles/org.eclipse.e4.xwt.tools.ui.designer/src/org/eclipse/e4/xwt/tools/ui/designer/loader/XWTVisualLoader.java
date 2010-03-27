@@ -109,7 +109,7 @@ public class XWTVisualLoader extends XWTLoader {
 						if (pRoot.getKind() == IPackageFragmentRoot.K_SOURCE) {
 							IFolder resource = (IFolder) pRoot.getResource();
 							IFile sourceFile = resource.getFile(new Path(fileSourcePath));
-							if (sourceFile != null) {
+							if (sourceFile != null && sourceFile.exists()) {
 								file = sourceFile;
 								break;
 							}

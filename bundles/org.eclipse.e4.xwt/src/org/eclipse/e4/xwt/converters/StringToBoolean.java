@@ -23,7 +23,10 @@ public class StringToBoolean implements IConverter {
 
 	public Object convert(Object fromObject) {
 		String str = (String) fromObject;
-		if ("true".equalsIgnoreCase(str)) {
+		if (str == null || "".equalsIgnoreCase(str)) {
+			return false;
+		}
+		else if ("true".equalsIgnoreCase(str)) {
 			return true;
 		}
 		else if ("false".equalsIgnoreCase(str)) {

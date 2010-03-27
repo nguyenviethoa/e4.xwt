@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IDataBindingInfo;
+import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IValueConverter;
 import org.eclipse.e4.xwt.IValidationRule;
 import org.eclipse.e4.xwt.InverseValueConverter;
@@ -408,11 +409,13 @@ public class BindingGate {
 			}
 
 			// Add converter to UpdateValueStrategy.
-			Object sourceValueType = source.getValueType();
+			IDataProvider sourceDataProvider = XWT.findDataProvider(source);
+			Object sourceValueType = sourceDataProvider.getDataType(null);
 			if (sourceValueType == null) {
 				sourceValueType = Object.class;
 			}
-			Object targetValueType = target.getValueType();
+			IDataProvider targetDataProvider = XWT.findDataProvider(target);
+			Object targetValueType = targetDataProvider.getDataType(null);
 			if (targetValueType == null) {
 				targetValueType = Object.class;
 			}

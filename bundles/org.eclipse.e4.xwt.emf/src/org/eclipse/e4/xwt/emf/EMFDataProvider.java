@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.emf;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
+import org.eclipse.core.internal.databinding.observable.masterdetail.DetailObservableValue;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.dataproviders.AbstractDataProvider;
@@ -217,6 +218,10 @@ public class EMFDataProvider extends AbstractDataProvider {
 		} else if (instance instanceof EObject) {
 			EObject object = (EObject) instance;
 			eObj = object.eClass();
+		} else if (instance instanceof DetailObservableValue) {
+			EObject eObject = (EObject) ((DetailObservableValue) instance)
+					.getValueType();
+			eObj = eObject.eClass();
 		} else {
 			if (typeURI != null) {
 				EObject element = getResourceSet().getEObject(typeURI, true);
@@ -321,5 +326,26 @@ public class EMFDataProvider extends AbstractDataProvider {
 			dataModelService = createDataModelService();
 		}
 		return dataModelService;
+	}
+
+	public IValueProperty createValueProperty(Object type, String fullPath) {
+		if (type == null || fullPath == null) {
+			return null;
+		}
+		EClass eClass = null;
+		if (type instanceof EClass) {
+			eClass = (EClass) type;
+		} else if (type instanceof EObject) {
+			eClass = ((EObject) type).eClass();
+		}
+
+		if (eClass == null) {
+			return null;
+		}
+		EStructuralFeature feature = eClass.getEStructuralFeature(fullPath);
+		if (feature != null) {
+			return EMFProperties.value(feature);
+		}
+		return null;
 	}
 }
