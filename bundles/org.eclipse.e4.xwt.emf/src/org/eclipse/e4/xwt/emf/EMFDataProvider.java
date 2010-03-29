@@ -212,6 +212,9 @@ public class EMFDataProvider extends AbstractDataProvider {
 			EClassifier classifier = valueType.getEType();
 			if (classifier instanceof EClass) {
 				eObj = (EClass) classifier;				
+			} else {// EDataType, maybe we should change the return type to
+					// access EDataType.
+				return null;
 			}
 		} else if (instance instanceof EClass) {
 			eObj = (EClass) instance;

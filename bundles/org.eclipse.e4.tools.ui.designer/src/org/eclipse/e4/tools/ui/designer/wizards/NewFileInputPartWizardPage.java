@@ -239,15 +239,17 @@ public class NewFileInputPartWizardPage extends NewDataPartWizardPage {
 		}
 		return super.getEPackage();
 	}
-	protected List<Object> getDataContextProperties() {
+	protected List<String> getDataContextProperties() {
 		if (inputData != null) {
 			List<EStructuralFeature> features = inputData.getFeatures();
 			if (!features.isEmpty()) {
-				List<Object> result = new ArrayList<Object>();
-				result.addAll(features);
-				return result;
+				List<String> dataProperties = new ArrayList<String>();
+				for (EStructuralFeature sf : features) {
+					dataProperties.add(sf.getName());
+				}
+				return dataProperties;
 			}
 		}
-		return null;
+		return super.getDataContextProperties();
 	}
 }

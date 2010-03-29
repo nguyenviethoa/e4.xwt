@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.wizards;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,6 +39,8 @@ import org.eclipse.ui.PlatformUI;
 public class WizardCreatePartPage extends NewClassWizardPage {
 
 	protected Object dataContext;
+	private List<String> dataContextProperties;
+
 	protected boolean isUsingXWT = true;
 
 	public void createControl(Composite parent) {
@@ -106,8 +109,33 @@ public class WizardCreatePartPage extends NewClassWizardPage {
 		}
 	}
 
-	protected List<Object> getDataContextProperties() {
-		return null;
+	protected List<String> getDataContextProperties() {
+		if (dataContextProperties == null) {
+			dataContextProperties = new ArrayList<String>();
+			computeDataContextProperties();
+		}
+		return dataContextProperties;
+	}
+
+	protected void computeDataContextProperties() {
+
+	}
+
+	protected Object getDataContextType() {
+		Object dc = getDataContext();
+		if (dc == null) {
+			return null;
+		}
+		if (dc instanceof Class<?> || dc instanceof EClass) {
+			return dc;
+		} else if (dc instanceof EObject) {
+			return ((EObject) dc).eClass();
+		}
+		return dc.getClass();
+	}
+
+	public void setDataContextProperties(List<String> dataContextProperties) {
+		this.dataContextProperties = dataContextProperties;
 	}
 
 	protected void checkDependencies() {

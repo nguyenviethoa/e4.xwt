@@ -58,10 +58,9 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 		}
 	}
 
-	protected List<Object> getDataContextProperties() {
-		// Should be removed: Quick fixed: only generate simple attribute.
-		List<Object> features = new ArrayList<Object>();
-		EClass eClass = getDataContextType();
+	protected List<String> getDataContextProperties() {
+		List<String> features = new ArrayList<String>();
+		EClass eClass = (EClass) getDataContextType();
 		if (eClass == null) {
 			return null;
 		}
@@ -69,21 +68,10 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 				.getEStructuralFeatures()) {
 			EClassifier eType = feature.getEType();
 			if (eType instanceof EDataType) {
-				features.add(feature);
+				features.add(feature.getName());
 			}
 		}
 		return features;
-	}
-
-	protected EClass getDataContextType() {
-		Object data = getDataContext();
-		EClass eClass = null;
-		if (data instanceof EClass) {
-			eClass = (EClass) data;
-		} else if (data instanceof EObject) {
-			eClass = ((EObject) data).eClass();
-		}
-		return eClass;
 	}
 
 	protected void createTypeMembers(IType type, ImportsManager imports,

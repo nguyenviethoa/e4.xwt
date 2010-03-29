@@ -124,7 +124,7 @@ public class XWTCodegen {
 	 * PropertyDescriptor.
 	 */
 	public static void createFile(IType host, IFile file, Object dataContext,
-			List<Object> dataContextProperties) {
+			List<String> dataContextProperties) {
 		String hostClassName = host.getFullyQualifiedName();
 		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 		PrintStream printStream = new PrintStream(arrayOutputStream);
@@ -167,7 +167,8 @@ public class XWTCodegen {
 				IContainer parent = file.getParent();
 				IFile embedFile = parent.getFile(new Path(typeName
 						+ IConstants.XWT_EXTENSION_SUFFIX));
-				createFile(embededType, embedFile, object, null);
+				createFile(embededType, embedFile, object,
+						computeDataContextProperties(object, false));
 			}
 		}
 		try {
@@ -183,6 +184,59 @@ public class XWTCodegen {
 			}
 		} catch (Exception e) {
 		}
+	}
+
+	public static List<String> computeDataContextProperties(Object dataContext,
+			boolean all) {
+		if (dataContext == null) {
+			return null;
+		}
+		List<String> dataContextProperties = new ArrayList<String>();
+		if (dataContext instanceof EObject) {
+			EClass eClass = (dataContext instanceof EClass)
+					? (EClass) dataContext
+					: ((EObject) dataContext).eClass();
+			for (EStructuralFeature feature : eClass.getEStructuralFeatures()) {
+				if (all) {
+					dataContextProperties.add(feature.getName());
+				} else {
+					if (feature.isMany()) {
+						continue;
+					}
+					EClassifier eType = feature.getEType();
+					if (eType == null || eType instanceof EEnum
+							|| eType instanceof EDataType) {
+						dataContextProperties.add(feature.getName());
+					}
+				}
+			}
+		} else {
+			try {
+				Class<?> type = (dataContext instanceof Class<?>)
+						? (Class<?>) dataContext
+						: dataContext.getClass();
+				BeanInfo beanInfo = all
+						? Introspector.getBeanInfo(type)
+						: Introspector.getBeanInfo(type, type.getSuperclass());
+				PropertyDescriptor[] propertyDescriptors = beanInfo
+						.getPropertyDescriptors();
+				for (PropertyDescriptor pd : propertyDescriptors) {
+					if (all) {
+						dataContextProperties.add(pd.getName());
+					} else {
+						Class<?> propertyType = pd.getPropertyType();
+						if (propertyType.isPrimitive()
+								|| propertyType == String.class
+								|| propertyType == URL.class
+								|| propertyType.isEnum()) {
+							dataContextProperties.add(pd.getName());
+						}
+					}
+				}
+			} catch (Exception e) {
+			}
+		}
+		return dataContextProperties;
 	}
 
 	public static List<Object> computeEmbededTypes(Object dataContext) {
@@ -215,7 +269,8 @@ public class XWTCodegen {
 					if (propertyType.isPrimitive()
 							|| propertyType == String.class
 							|| propertyType == URL.class
-							|| propertyType.isEnum()) {
+							|| propertyType.isEnum()
+							|| propertyType == Object.class) {
 						continue;
 					}
 					embededTypes.add(propertyType);
@@ -227,7 +282,7 @@ public class XWTCodegen {
 	}
 
 	public static PrintResult printDataContext(PrintStream printStream,
-			Object dataContext, List<Object> dataContextProperties,
+			Object dataContext, List<String> dataContextProperties,
 			String prefixOffset) {
 		if (dataContext instanceof EObject) {
 			EClass eClass = (dataContext instanceof EClass)
@@ -245,9 +300,9 @@ public class XWTCodegen {
 	}
 
 	public static PrintResult printDataContextBean(PrintStream printStream,
-			Class<?> dataContextType, List<Object> dataContextProperties,
+			Class<?> dataContextType, List<String> dataContextProperties,
 			String prefixOffset) {
-		if (dataContextType == null) {
+		if (dataContextType == null || dataContextProperties == null) {
 			return PrintResult.FAILED;
 		}
 		PrintResult result = new PrintResult();
@@ -263,12 +318,6 @@ public class XWTCodegen {
 			for (PropertyDescriptor pd : propertyDescriptors) {
 				String name = pd.getName();
 				if (name == null || "class".equals(name)) {
-					continue;
-				}
-				try {
-					// Try to only generate self properties.
-					dataContextType.getDeclaredField(name);
-				} catch (Exception e) {
 					continue;
 				}
 				if (dataContextProperties != null
@@ -303,9 +352,9 @@ public class XWTCodegen {
 	}
 
 	public static PrintResult printDataContextEMF(PrintStream printStream,
-			EClass dataContextType, List<Object> dataContextProperties,
+			EClass dataContextType, List<String> dataContextProperties,
 			String prefixOffset) {
-		if (dataContextType == null) {
+		if (dataContextType == null || dataContextProperties == null) {
 			return PrintResult.FAILED;
 		}
 		PrintResult result = new PrintResult();
@@ -315,8 +364,7 @@ public class XWTCodegen {
 			if (name == null) {
 				continue;
 			}
-			if (dataContextProperties != null
-					&& !dataContextProperties.contains(feature)) {
+			if (!dataContextProperties.contains(name)) {
 				continue;
 			}
 			EClassifier propertyType = feature.getEType();
@@ -435,7 +483,7 @@ public class XWTCodegen {
 	public static PrintResult printRoot(PrintStream printStream,
 			Class<?> rootType, String clr, String[] imports,
 			Map<String, String> namespaces, Object dataContext,
-			List<Object> dataContextProperties, Layout layout) {
+			List<String> dataContextProperties, Layout layout) {
 		PrintResult result = new PrintResult();
 		String content = null;
 		if (dataContext != null) {

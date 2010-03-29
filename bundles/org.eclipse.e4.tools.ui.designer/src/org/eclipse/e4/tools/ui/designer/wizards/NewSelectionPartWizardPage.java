@@ -18,6 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.services.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.ui.CodeGeneration;
@@ -38,18 +40,42 @@ public class NewSelectionPartWizardPage extends WizardCreatePartPage {
 
 	private void createSetSelectionMethod(IType type, ImportsManager imports,
 			IProgressMonitor monitor) {
-		Class<?> dataContextType = (Class<?>) getDataContext();
+		Object dataContextType = getDataContextType();
+		if (dataContextType == null) {
+			return;
+		}
+		String dataContextName = null;
+		if (dataContextType instanceof Class<?>) {
+			dataContextName = ((Class<?>) dataContextType).getSimpleName();
+		} else if (dataContextType instanceof EClass) {
+			dataContextName = ((EClass) dataContextType).getName();
+		}
 		try {
 			final String lineDelim = "\n"; // OK, since content is formatted afterwards //$NON-NLS-1$
-			String dataContextName = dataContextType.getSimpleName();
 			StringBuffer buf = new StringBuffer();
 
 			buf.append("@Inject");
 			buf.append(lineDelim);
-			buf.append("public void setSelection(@Optional @Named(IServiceConstants.SELECTION) "
-					+ dataContextName + " dataContext) {");
+			buf.append("public void setSelection(@Optional @Named(IServiceConstants.SELECTION) Object dataContext) {");
 			buf.append(lineDelim);
-			buf.append("	setDataContext(dataContext);");
+			if (dataContextType instanceof Class<?>) {
+				buf.append("\tif (dataContext instanceof " + dataContextName
+						+ "){");
+				buf.append(lineDelim);
+				buf.append("\t\tsetDataContext(dataContext);");
+				buf.append(lineDelim);
+				buf.append("\t}");
+				imports.addImport(((Class<?>) dataContextType).getName());
+			} else {
+				buf.append("\tif (dataContext instanceof EObject && \""
+						+ dataContextName
+						+ "\".equals(((EObject)dataContext).eClass().getName())){");
+				buf.append(lineDelim);
+				buf.append("\t\tsetDataContext(dataContext);");
+				buf.append(lineDelim);
+				buf.append("\t}");
+				imports.addImport(EObject.class.getName());
+			}
 			buf.append(lineDelim);
 			buf.append("}");
 
@@ -57,7 +83,6 @@ public class NewSelectionPartWizardPage extends WizardCreatePartPage {
 			imports.addImport(Optional.class.getName());
 			imports.addImport(Named.class.getName());
 			imports.addImport(IServiceConstants.class.getName());
-			imports.addImport(dataContextType.getName());
 			type.createMethod(buf.toString(), null, false, null);
 		} catch (Exception e) {
 		}
@@ -102,7 +127,7 @@ public class NewSelectionPartWizardPage extends WizardCreatePartPage {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	public String getSuperClass() {
 		return XWTStaticPart.class.getName();
 	}
