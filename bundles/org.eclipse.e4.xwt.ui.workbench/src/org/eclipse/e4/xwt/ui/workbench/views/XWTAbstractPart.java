@@ -20,8 +20,8 @@ import javax.inject.Inject;
 
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
-import org.eclipse.e4.core.services.annotations.PostConstruct;
-import org.eclipse.e4.core.services.context.IEclipseContext;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.PostConstruct;
 import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;

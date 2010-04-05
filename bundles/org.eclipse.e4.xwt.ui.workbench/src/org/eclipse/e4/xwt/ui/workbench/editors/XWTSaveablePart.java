@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.core.services.annotations.Optional;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.MDirtyable;
 import org.eclipse.e4.ui.model.application.MUILabel;
 import org.eclipse.e4.xwt.XWT;

@@ -12,7 +12,7 @@ package org.eclipse.e4.xwt.ui.workbench.views;
 
 import java.util.HashMap;
 
-import org.eclipse.e4.core.services.annotations.PostConstruct;
+import org.eclipse.e4.core.di.annotations.PostConstruct;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.ui.workbench.IPartContentProvider;

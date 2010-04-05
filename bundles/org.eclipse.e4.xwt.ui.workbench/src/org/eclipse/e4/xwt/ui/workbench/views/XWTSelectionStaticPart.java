@@ -13,7 +13,7 @@ package org.eclipse.e4.xwt.ui.workbench.views;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.eclipse.e4.core.services.annotations.Optional;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
 
 /**
