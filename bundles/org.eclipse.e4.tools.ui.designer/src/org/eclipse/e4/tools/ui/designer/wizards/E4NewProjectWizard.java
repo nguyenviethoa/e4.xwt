@@ -166,6 +166,8 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 									"org.eclipse.e4.ui.services",
 									"org.eclipse.e4.ui.workbench",
 									"org.eclipse.e4.core.services",
+									"org.eclipse.e4.core.di",
+									"org.eclipse.e4.core.contexts",
 									"org.eclipse.e4.ui.workbench.swt",
 									"org.eclipse.core.databinding.property",
 									"org.eclipse.e4.ui.css.core",

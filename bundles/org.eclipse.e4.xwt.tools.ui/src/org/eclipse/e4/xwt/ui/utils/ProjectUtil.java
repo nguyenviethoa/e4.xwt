@@ -29,6 +29,7 @@ public class ProjectUtil {
 
 	static String[] WORKBENCH_BUNDLES = new String[]{
 			"org.eclipse.e4.ui.services", "org.eclipse.e4.ui.workbench",
+			"org.eclipse.e4.core.di", "org.eclipse.e4.core.contexts",
 			"org.eclipse.e4.core.services", "org.eclipse.e4.ui.workbench.swt",
 			"org.eclipse.e4.ui.css.core", "org.w3c.css.sac",
 			"org.eclipse.e4.core.commands", "org.eclipse.e4.ui.bindings",
