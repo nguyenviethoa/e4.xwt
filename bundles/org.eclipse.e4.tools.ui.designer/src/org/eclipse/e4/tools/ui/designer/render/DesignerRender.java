@@ -15,7 +15,7 @@ import java.net.URL;
 
 import org.eclipse.e4.core.contexts.IContextConstants;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.Logger;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.ui.model.application.MWindow;
 import org.eclipse.e4.workbench.ui.internal.E4Workbench;

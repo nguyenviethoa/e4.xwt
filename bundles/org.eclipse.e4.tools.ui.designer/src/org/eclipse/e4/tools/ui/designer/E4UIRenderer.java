@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.RegistryFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.IContributionFactory;
+import org.eclipse.e4.core.services.contributions.IContributionFactory;
 import org.eclipse.e4.tools.ui.designer.render.DesignerPartRenderingEngine;
 import org.eclipse.e4.tools.ui.designer.session.ProjectBundleSession;
 import org.eclipse.e4.tools.ui.designer.utils.ResourceUtiltities;
