@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.wizards;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,35 +18,22 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.e4.xwt.ui.utils.ProjectContext;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.ENamedElement;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.ETypedElement;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -67,8 +52,7 @@ public class NewSelectionPartDataContextPage extends WizardPage {
 	private SingleCheckBoxTreeViewer dataContextTypeViewer;
 	private NewSelectionPartWizardPage fTypePage;
 	private Text sourceText;
-	private boolean displaySuperTypes = true;
-	private boolean displayComplexTypes = false;
+	private CommonContentProvider contentProvider;
 
 	protected NewSelectionPartDataContextPage(
 			NewSelectionPartWizardPage typePage) {
@@ -102,8 +86,9 @@ public class NewSelectionPartDataContextPage extends WizardPage {
 		dataContextTypeViewer.getTree().setLayoutData(
 				GridDataFactory.fillDefaults().span(3, 1).grab(true, true)
 						.create());
-		dataContextTypeViewer.setContentProvider(new ContentProvider());
-		dataContextTypeViewer.setLabelProvider(new LabelProviderEx());
+		contentProvider = new CommonContentProvider(true, false);
+		dataContextTypeViewer.setContentProvider(contentProvider);
+		dataContextTypeViewer.setLabelProvider(new CommonLabelProvider());
 		dataContextTypeViewer.setInput(JavaCore.create(ResourcesPlugin
 				.getWorkspace().getRoot()));
 		dataContextTypeViewer.addCheckStateListener(new ICheckStateListener() {
@@ -116,11 +101,13 @@ public class NewSelectionPartDataContextPage extends WizardPage {
 		hideSuperTypesButton.setText("Hide properties of super types");
 		hideSuperTypesButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				displaySuperTypes = !hideSuperTypesButton.getSelection();
+				contentProvider.setDisplaySuperTypes(!hideSuperTypesButton
+						.getSelection());
 				dataContextTypeViewer.refresh();
 			}
 		});
-		hideSuperTypesButton.setSelection(!displaySuperTypes);
+		hideSuperTypesButton.setSelection(!contentProvider
+				.isDisplaySuperTypes());
 		hideSuperTypesButton.setLayoutData(GridDataFactory.fillDefaults().span(
 				3, 1).create());
 
@@ -128,11 +115,13 @@ public class NewSelectionPartDataContextPage extends WizardPage {
 		hideComplexTypesButton.setText("Hide complex properties of types");
 		hideComplexTypesButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				displayComplexTypes = !hideComplexTypesButton.getSelection();
+				contentProvider.setDisplayComplexTypes(!hideComplexTypesButton
+						.getSelection());
 				dataContextTypeViewer.refresh();
 			}
 		});
-		hideComplexTypesButton.setSelection(!displayComplexTypes);
+		hideComplexTypesButton.setSelection(!contentProvider
+				.isDisplayComplexTypes());
 		hideComplexTypesButton.setLayoutData(GridDataFactory.fillDefaults()
 				.span(3, 1).create());
 
@@ -245,147 +234,4 @@ public class NewSelectionPartDataContextPage extends WizardPage {
 		return null;
 	}
 
-	private class LabelProviderEx extends LabelProvider {
-		public String getText(Object element) {
-			if (element instanceof IJavaElement) {
-				return ((IJavaElement) element).getElementName();
-			} else if (element instanceof PropertyDescriptor) {
-				String displayName = ((PropertyDescriptor) element).getName();
-				Class<?> propertyType = ((PropertyDescriptor) element)
-						.getPropertyType();
-				if (propertyType != null) {
-					String typeName = propertyType.getSimpleName();
-					return displayName + " - " + typeName;
-				}
-				return displayName;
-			} else if (element instanceof ETypedElement) {
-				String typeName = ((ETypedElement) element).getEType()
-						.getName();
-				String name = ((ETypedElement) element).getName();
-				return name + " - " + typeName;
-			} else if (element instanceof ENamedElement) {
-				return ((ENamedElement) element).getName();
-			} else if (element instanceof Class<?>) {
-				return ((Class<?>) element).getSimpleName();
-			}
-			return super.getText(element);
-		}
-		public Image getImage(Object element) {
-			if (element instanceof PropertyDescriptor
-					|| element instanceof EStructuralFeature) {
-				return JavaPluginImages.get(JavaPluginImages.IMG_FIELD_PUBLIC);
-			} else {
-				return JavaPluginImages.get(JavaPluginImages.IMG_OBJS_CLASS);
-			}
-		}
-	}
-
-	private class ContentProvider implements ITreeContentProvider {
-
-		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof ICompilationUnit) {
-				IType type = ((ICompilationUnit) inputElement)
-						.findPrimaryType();
-				if (type != null) {
-					return new Object[]{type};
-				}
-			} else if (inputElement instanceof Resource) {
-				EList<EObject> contents = ((Resource) inputElement)
-						.getContents();
-				EPackage ePackage = null;
-				for (EObject eObject : contents) {
-					if (eObject instanceof EPackage) {
-						ePackage = (EPackage) eObject;
-					} else if (eObject instanceof EClass) {
-						ePackage = ((EClass) eObject).getEPackage();
-					} else {
-						EClass eClass = eObject.eClass();
-						ePackage = eClass.getEPackage();
-					}
-					if (ePackage != null) {
-						break;
-					}
-				}
-				return getChildren(ePackage);
-			}
-			return new Object[0];
-		}
-
-		public void dispose() {
-
-		}
-
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		}
-
-		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof IType) {
-				IType type = (IType) parentElement;
-				Class<?> clazz = getBeanType(type);
-				if (clazz != null) {
-					return getChildren(clazz);
-				}
-			} else if (parentElement instanceof Class<?>) {
-				try {
-					Class<?> clazz = (Class<?>) parentElement;
-					Class<?> superclass = clazz.getSuperclass();
-					BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(
-							clazz, superclass);
-					PropertyDescriptor[] properties = beanInfo
-							.getPropertyDescriptors();
-					List<Object> children = new ArrayList<Object>();
-					for (PropertyDescriptor pd : properties) {
-						Class<?> propertyType = pd.getPropertyType();
-						if (propertyType == null) {
-							continue;
-						}
-						if (!displayComplexTypes
-								&& !(propertyType.isPrimitive()
-										|| (propertyType == String.class) || propertyType
-										.isEnum())) {
-							continue;
-						}
-						children.add(pd);
-					}
-					if (displaySuperTypes && Object.class != superclass) {
-						children.add(superclass);
-					}
-					return children.toArray(new Object[0]);
-				} catch (IntrospectionException e) {
-				}
-			} else if (parentElement instanceof EPackage) {
-				return ((EPackage) parentElement).getEClassifiers().toArray(
-						new Object[0]);
-			} else if (parentElement instanceof EClass) {
-				EClass eClass = (EClass) parentElement;
-				List<Object> objects = new ArrayList<Object>();
-				EList<EStructuralFeature> allFeatures = eClass
-						.getEStructuralFeatures();
-				for (EStructuralFeature sf : allFeatures) {
-					if (!displayComplexTypes
-							&& !(sf.getEType() instanceof EDataType)) {
-						continue;
-					}
-					objects.add(sf);
-				}
-				if (displaySuperTypes) {
-					objects.addAll(eClass.getESuperTypes());
-				}
-				return objects.toArray(new Object[0]);
-			}
-			return new Object[0];
-		}
-
-		public Object getParent(Object element) {
-			if (element instanceof EObject) {
-				return ((EObject) element).eContainer();
-			}
-			return null;
-		}
-
-		public boolean hasChildren(Object element) {
-			return getChildren(element).length > 0;
-		}
-
-	}
 }

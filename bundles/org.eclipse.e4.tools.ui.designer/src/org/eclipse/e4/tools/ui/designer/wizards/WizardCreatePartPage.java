@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.wizards;
 
+import java.beans.BeanInfo;
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +25,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.tools.ui.designer.utils.XWTCodegen;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.XWTProjectUtil;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
@@ -118,7 +122,30 @@ public class WizardCreatePartPage extends NewClassWizardPage {
 	}
 
 	protected void computeDataContextProperties() {
-
+		Object dataContextType = getDataContextType();
+		if (dataContextType == null) {
+			return;
+		}
+		// Compute default properties for generating codes.
+		if (dataContextType instanceof Class<?>) {
+			Class<?> javaType = (Class<?>) dataContextType;
+			try {
+				BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(
+						javaType, javaType.getSuperclass());
+				PropertyDescriptor[] descriptors = beanInfo
+						.getPropertyDescriptors();
+				for (PropertyDescriptor pd : descriptors) {
+					dataContextProperties.add(pd.getName());
+				}
+			} catch (Exception e) {
+			}
+		} else if (dataContextType instanceof EClass) {
+			EList<EStructuralFeature> features = ((EClass) dataContextType)
+					.getEStructuralFeatures();
+			for (EStructuralFeature sf : features) {
+				dataContextProperties.add(sf.getName());
+			}
+		}
 	}
 
 	protected Object getDataContextType() {

@@ -71,14 +71,14 @@ public class SashEditPart extends ControlEditPart {
 	public String toString() {
 		return "Sash";
 	}
-	
+
 	public Cursor getDefaultCursor() {
 		if (isHorizontal()) {
-			return SharedCursors.SIZENS;			
+			return SharedCursors.SIZENS;
 		}
-		return SharedCursors.SIZEWE;			
+		return SharedCursors.SIZEWE;
 	}
-	
+
 	@Override
 	public Command getCommand(Request request) {
 		if (request.getType().equals(RequestConstants.REQ_DELETE)) {
@@ -86,9 +86,11 @@ public class SashEditPart extends ControlEditPart {
 		}
 		return super.getCommand(request);
 	}
-	
+
 	public boolean isHorizontal() {
-		return ((sash.getStyle() & SWT.HORIZONTAL) == SWT.HORIZONTAL);		
+		return (sash == null || sash.isDisposed())
+				? true
+				: ((sash.getStyle() & SWT.HORIZONTAL) == SWT.HORIZONTAL);
 	}
 
 }

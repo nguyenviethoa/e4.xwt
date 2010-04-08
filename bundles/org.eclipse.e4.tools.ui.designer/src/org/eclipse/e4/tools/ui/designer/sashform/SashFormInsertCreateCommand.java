@@ -11,6 +11,7 @@
 package org.eclipse.e4.tools.ui.designer.sashform;
 
 import org.eclipse.e4.ui.model.application.MGenericTile;
+import org.eclipse.e4.ui.model.application.MPartStack;
 import org.eclipse.e4.ui.model.application.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
 import org.eclipse.emf.common.util.EList;
@@ -33,13 +34,13 @@ public class SashFormInsertCreateCommand extends Command {
 	private boolean after;
 	private Integer weight;
 
-	public SashFormInsertCreateCommand(SashFormEditPart parent, CreateRequest request,
-			EditPart reference) {
+	public SashFormInsertCreateCommand(SashFormEditPart parent,
+			CreateRequest request, EditPart reference) {
 		this(parent, request, reference, false);
 	}
 
-	public SashFormInsertCreateCommand(SashFormEditPart parent, CreateRequest request,
-			EditPart reference, boolean after) {
+	public SashFormInsertCreateCommand(SashFormEditPart parent,
+			CreateRequest request, EditPart reference, boolean after) {
 		this.parent = parent;
 		this.request = request;
 		this.reference = reference;
@@ -59,7 +60,8 @@ public class SashFormInsertCreateCommand extends Command {
 		if (element instanceof MUIElement) {
 			creatingModel = (MUIElement) element;
 		}
-		return parentModel != null && creatingModel != null;
+		return parentModel != null && creatingModel != null
+				&& creatingModel instanceof MPartStack;
 	}
 
 	public void execute() {
@@ -78,16 +80,20 @@ public class SashFormInsertCreateCommand extends Command {
 		if (index == -1) {
 			index = children.size() - 1;
 		}
-		// update weights
-		MUIElement muiElement = children.get(index);
-		weight = SashFormUtil.getWeight(muiElement);
-		if (weight != null && weight != -1) {
-			int part = weight / 2;
-			muiElement.setContainerData(Integer.toString(part));
-			creatingModel.setContainerData(Integer.toString(part));
+		// Fixed a bug of create PartStack to empty SashForm
+		if (index != -1) {
+			// update weights
+			MUIElement muiElement = children.get(index);
+			weight = SashFormUtil.getWeight(muiElement);
+			if (weight != null && weight != -1) {
+				int part = weight / 2;
+				muiElement.setContainerData(Integer.toString(part));
+				creatingModel.setContainerData(Integer.toString(part));
+			}
+			children.add(index, creatingModel);
+		} else {
+			children.add(creatingModel);
 		}
-
-		children.add(index, creatingModel);
 	}
 
 	public boolean canUndo() {
@@ -96,7 +102,8 @@ public class SashFormInsertCreateCommand extends Command {
 
 	public void undo() {
 		parentModel.getChildren().remove(creatingModel);
-		if (weight != null && index >= 0 && index < parentModel.getChildren().size() - 1) {
+		if (weight != null && index >= 0
+				&& index < parentModel.getChildren().size() - 1) {
 			MUIElement muiElement = parentModel.getChildren().get(index);
 			muiElement.setContainerData(weight.toString());
 		}

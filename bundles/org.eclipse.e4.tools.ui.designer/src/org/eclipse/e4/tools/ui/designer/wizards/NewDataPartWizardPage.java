@@ -36,6 +36,9 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.ui.CodeGeneration;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -43,6 +46,7 @@ import org.eclipse.jdt.ui.CodeGeneration;
 public class NewDataPartWizardPage extends WizardCreatePartPage {
 
 	private EPackage ePackage;
+	private PropertiesComposite propertiesComposite;
 
 	public NewDataPartWizardPage(EPackage ePackage, EObject dataContext) {
 		this.setEPackage(ePackage);
@@ -59,6 +63,9 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 	}
 
 	protected List<String> getDataContextProperties() {
+		if (propertiesComposite != null) {
+			return propertiesComposite.getProperties();
+		}
 		List<String> features = new ArrayList<String>();
 		EClass eClass = (EClass) getDataContextType();
 		if (eClass == null) {
@@ -72,6 +79,13 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 			}
 		}
 		return features;
+	}
+
+	protected void createAdditionalControl(Composite parent, int numColumns) {
+		propertiesComposite = new PropertiesComposite(parent, SWT.NONE);
+		propertiesComposite.setLayoutData(GridDataFactory.fillDefaults()
+				.span(numColumns, 1).create());
+		propertiesComposite.setDataContext(getDataContext());
 	}
 
 	protected void createTypeMembers(IType type, ImportsManager imports,

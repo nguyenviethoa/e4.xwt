@@ -152,8 +152,8 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		if (presentationURI == null) {
 			// presentationURI = PartRenderingEngine.engineURI;
 			presentationURI = DesignerPartRenderingEngine.engineURI;
-			appContext.set(E4Workbench.PRESENTATION_URI_ARG, presentationURI);
 		}
+		appContext.set(E4Workbench.PRESENTATION_URI_ARG, presentationURI);
 		if (cssURI == null) {
 			cssURI = cssResourcesURI;
 		}

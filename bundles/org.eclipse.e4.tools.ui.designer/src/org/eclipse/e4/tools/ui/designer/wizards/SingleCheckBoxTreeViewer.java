@@ -11,6 +11,7 @@
 package org.eclipse.e4.tools.ui.designer.wizards;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -134,6 +135,15 @@ public class SingleCheckBoxTreeViewer extends CheckboxTreeViewer {
 	}
 
 	public Object getChecked() {
+		if (checkedRootItem == null) {
+			TreeItem[] items = getTree().getItems();
+			for (TreeItem treeItem : items) {
+				if (treeItem.getChecked() && treeItem.getData() != null) {
+					checkedRootItem = treeItem;
+					break;
+				}
+			}
+		}
 		if (checkedRootItem != null) {
 			return checkedRootItem.getData();
 		}
@@ -142,7 +152,16 @@ public class SingleCheckBoxTreeViewer extends CheckboxTreeViewer {
 
 	public List<Object> getCheckedChildren() {
 		if (checkedRootItem == null) {
-			return null;
+			TreeItem[] items = getTree().getItems();
+			for (TreeItem treeItem : items) {
+				if (treeItem.getChecked() && treeItem.getData() != null) {
+					checkedRootItem = treeItem;
+					break;
+				}
+			}
+		}
+		if (checkedRootItem == null) {
+			return Collections.emptyList();
 		}
 		List<Object> children = new ArrayList<Object>();
 		Item[] items = getChildren(checkedRootItem);

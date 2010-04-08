@@ -174,24 +174,31 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 
 		if (dataContext != null) {
 			if (dataContext instanceof Class<?>) {
-				setDataContextType((Class<?>) dataContext);
+				setDataContext((Class<?>) dataContext);
 			} else if (dataContext instanceof EClass) {
 				EClass dataContextType = (EClass) dataContext;
 				dataContextField.setText(dataContextType.getInstanceTypeName());
 			} else {
-				setDataContextType(dataContext.getClass());
+				setDataContext(dataContext.getClass());
 			}
 		}
 	}
 
-	public void setDataContextType(Class<?> dataContextType) {
-		IJavaProject project = getJavaProject();
-		try {
-			IType type = project.findType(dataContextType.getName());
-			setPackageFragment(type.getPackageFragment(), true);
-			setTypeName(type.getElementName() + "Part", true);
-			dataContextField.setText(type.getFullyQualifiedName());
-		} catch (JavaModelException e) {
+	public void setDataContext(Object dataContext) {
+		super.setDataContext(dataContext);
+		if (dataContext instanceof Class<?>) {
+			IJavaProject project = getJavaProject();
+			if (project == null) {
+				return;
+			}
+			try {
+				IType type = project.findType(((Class<?>) dataContext)
+						.getName());
+				setPackageFragment(type.getPackageFragment(), true);
+				setTypeName(type.getElementName() + "Part", true);
+				dataContextField.setText(type.getFullyQualifiedName());
+			} catch (JavaModelException e) {
+			}
 		}
 	}
 
@@ -246,7 +253,7 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 			}
 		};
 
-		new Label(parent, SWT.NONE);
+		// new Label(parent, SWT.BORDER);
 		staticButton = new Button(parent, SWT.RADIO);
 		staticButton.setText(OPT_STATIC);
 		staticButton.setSelection(true);
