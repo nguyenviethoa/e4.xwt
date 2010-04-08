@@ -12,11 +12,11 @@
 
 package org.eclipse.e4.demo.contacts.views;
 
-import org.eclipse.e4.core.services.annotations.PreDestroy;
 import org.eclipse.e4.demo.contacts.model.Contact;
 import org.eclipse.e4.demo.contacts.model.ContactsRepositoryFactory;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.core.di.annotations.PreDestroy;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;

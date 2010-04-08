@@ -34,3 +34,4 @@ public class DeleteContactHandler {
 				.removeContact(contact);
 	}
 }
+

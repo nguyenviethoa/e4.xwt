@@ -25,7 +25,7 @@ import javax.inject.Named;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.e4.core.services.annotations.Optional;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.demo.contacts.handlers.FadeAnimation;
 import org.eclipse.e4.demo.contacts.handlers.ThemeUtil;
 import org.eclipse.e4.demo.contacts.model.Contact;
