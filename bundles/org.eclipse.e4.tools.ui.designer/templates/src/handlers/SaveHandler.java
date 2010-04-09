@@ -19,6 +19,9 @@ import org.eclipse.swt.widgets.Shell;
 public class SaveHandler {
 	public boolean canExecute(
 			@Named(IServiceConstants.ACTIVE_PART) MDirtyable dirtyable) {
+		if (dirtyable == null) {
+			return false;
+		}
 		return dirtyable.isDirty();
 	}
 
@@ -36,9 +39,11 @@ public class SaveHandler {
 			public void run(IProgressMonitor monitor)
 					throws InvocationTargetException, InterruptedException {
 				pmContext.set(IProgressMonitor.class.getName(), monitor);
-				Object clientObject = contribution.getObject();
-				ContextInjectionFactory.invoke(clientObject, "doSave", //$NON-NLS-1$
-						pmContext, null);
+				if (contribution != null) {
+					Object clientObject = contribution.getObject();
+					ContextInjectionFactory.invoke(clientObject, "doSave", //$NON-NLS-1$
+							pmContext, null);
+				}
 			}
 		});
 
