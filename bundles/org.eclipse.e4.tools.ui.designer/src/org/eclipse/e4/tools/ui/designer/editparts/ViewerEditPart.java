@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.editparts;
 
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.ViewerInfo;

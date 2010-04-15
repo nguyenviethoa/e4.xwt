@@ -12,9 +12,9 @@ package org.eclipse.e4.tools.ui.designer.commands;
 
 import org.eclipse.e4.tools.ui.designer.commands.part.PartCommandFactory;
 import org.eclipse.e4.tools.ui.designer.part.PartMoveRequest;
-import org.eclipse.e4.ui.model.application.MPart;
-import org.eclipse.e4.ui.model.application.MPartStack;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 

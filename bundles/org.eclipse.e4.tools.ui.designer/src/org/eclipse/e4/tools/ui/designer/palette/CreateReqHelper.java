@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.palette;
 
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.Initializer;
 import org.eclipse.emf.ecore.EClassifier;

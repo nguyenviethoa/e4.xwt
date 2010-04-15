@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
-import org.eclipse.e4.ui.model.application.MMenu;
-import org.eclipse.e4.ui.model.application.MWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.gef.commands.Command;
 
 /**

@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
-import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.emf.common.util.EList;
+import java.util.List;
+
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -56,7 +57,7 @@ public class ChangeParentCommand extends AddChildCommand {
 
 	public void undo() {
 		super.undo();
-		EList<MUIElement> children = (EList<MUIElement>) oldParent
+		List<MUIElement> children = (List<MUIElement>) oldParent
 				.getChildren();
 		if (oldIndex >= children.size()) {
 			children.add(newChild);

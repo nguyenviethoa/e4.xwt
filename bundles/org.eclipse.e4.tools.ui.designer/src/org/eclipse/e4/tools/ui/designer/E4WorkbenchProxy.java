@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.IParameter;
@@ -24,10 +25,10 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
-import org.eclipse.e4.ui.model.application.MCommand;
-import org.eclipse.e4.ui.model.application.MCommandParameter;
-import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.e4.ui.model.application.MWindow;
+import org.eclipse.e4.ui.model.application.commands.MCommand;
+import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.e4.ui.workbench.swt.internal.CSSStylingSupport;
 import org.eclipse.e4.workbench.ui.IPresentationEngine;
@@ -39,7 +40,6 @@ import org.eclipse.e4.workbench.ui.internal.ModelExtensionProcessor;
 import org.eclipse.e4.workbench.ui.internal.Parameter;
 import org.eclipse.e4.workbench.ui.internal.Policy;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -82,16 +82,16 @@ public class E4WorkbenchProxy {
 				.get(ECommandService.class.getName());
 		Category cat = cs.defineCategory(MApplication.class.getName(),
 				"Application Category", null); //$NON-NLS-1$
-		EList<MCommand> commands = appElement.getCommands();
+		List<MCommand> commands = appElement.getCommands();
 		for (MCommand cmd : commands) {
 			IParameter[] parms = null;
-			String id = cmd.getId();
+			String id = cmd.getElementId();
 			String name = cmd.getCommandName();
-			EList<MCommandParameter> modelParms = cmd.getParameters();
+			List<MCommandParameter> modelParms = cmd.getParameters();
 			if (modelParms != null && !modelParms.isEmpty()) {
 				ArrayList<Parameter> parmList = new ArrayList<Parameter>();
 				for (MCommandParameter cmdParm : modelParms) {
-					parmList.add(new Parameter(cmdParm.getId(), cmdParm
+					parmList.add(new Parameter(cmdParm.getElementId(), cmdParm
 							.getName(), null, null, cmdParm.isOptional()));
 				}
 				parms = parmList.toArray(new Parameter[parmList.size()]);
@@ -187,7 +187,7 @@ public class E4WorkbenchProxy {
 				int x = 0, y = 0, width = 500, height = 500;
 				if (renderer != null) {
 					if (uiRoot instanceof MApplication) {
-						EList<MWindow> children = ((MApplication) uiRoot)
+						List<MWindow> children = ((MApplication) uiRoot)
 								.getChildren();
 						for (MWindow mWindow : children) {
 							root = renderer.createGui(mWindow);

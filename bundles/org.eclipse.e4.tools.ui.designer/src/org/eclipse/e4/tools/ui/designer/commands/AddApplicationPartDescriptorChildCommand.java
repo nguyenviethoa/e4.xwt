@@ -11,7 +11,7 @@
 package org.eclipse.e4.tools.ui.designer.commands;
 
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.MPartDescriptor;
+import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.gef.commands.Command;
 

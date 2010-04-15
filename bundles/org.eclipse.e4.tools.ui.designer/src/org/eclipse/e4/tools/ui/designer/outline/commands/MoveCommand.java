@@ -12,7 +12,7 @@ package org.eclipse.e4.tools.ui.designer.outline.commands;
 
 import java.util.Iterator;
 
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;

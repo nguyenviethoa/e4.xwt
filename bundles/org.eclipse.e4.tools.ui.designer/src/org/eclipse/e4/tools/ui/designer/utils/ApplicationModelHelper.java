@@ -10,16 +10,17 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.utils;
 
-import org.eclipse.e4.ui.model.application.MApplicationPackage;
-import org.eclipse.e4.ui.model.application.MMenu;
-import org.eclipse.e4.ui.model.application.MMenuItem;
-import org.eclipse.e4.ui.model.application.MPart;
-import org.eclipse.e4.ui.model.application.MPerspective;
-import org.eclipse.e4.ui.model.application.MPerspectiveStack;
-import org.eclipse.e4.ui.model.application.MToolBar;
-import org.eclipse.e4.ui.model.application.MToolItem;
-import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.e4.ui.model.application.MWindow;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
+import org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenuItem;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolItem;
+import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -39,8 +40,8 @@ public class ApplicationModelHelper {
 
 	public static boolean canAddedChild(EClass eClass, MUIElement target) {
 		// EClass eClass = (EClass) entry.getType();
-		EClass toolBarClass = MApplicationPackage.eINSTANCE.getToolBar();
-		EClass menuClass = MApplicationPackage.eINSTANCE.getMenu();
+		EClass toolBarClass = MenuPackageImpl.eINSTANCE.getToolBar();
+		EClass menuClass = MenuPackageImpl.eINSTANCE.getMenu();
 		if (target instanceof MPart
 				&& !((toolBarClass.isSuperTypeOf(eClass) || toolBarClass == eClass) || (menuClass
 						.isSuperTypeOf(eClass) || menuClass == eClass))) {
@@ -60,18 +61,18 @@ public class ApplicationModelHelper {
 		}
 
 		// accept only MMenuItem by MMenu
-		if ((eClass == MApplicationPackage.eINSTANCE.getMenuItem()) && !(target instanceof MMenu)) {
+		if ((eClass == MenuPackageImpl.eINSTANCE.getMenuItem()) && !(target instanceof MMenu)) {
 			return false;
 		}
 
 		// accept only MToolItem by MToolBar
-		if ((eClass == MApplicationPackage.eINSTANCE.getToolItem())
+		if ((eClass == MenuPackageImpl.eINSTANCE.getToolItem())
 				&& !(target instanceof MToolBar)) {
 			return false;
 		}
 
 		// accept only MPerspective by MPerspectiveStack
-		if (eClass == MApplicationPackage.eINSTANCE.getPerspective()
+		if (eClass == AdvancedPackageImpl.eINSTANCE.getPerspective()
 				&& !(target instanceof MPerspectiveStack)) {
 			return false;
 		}

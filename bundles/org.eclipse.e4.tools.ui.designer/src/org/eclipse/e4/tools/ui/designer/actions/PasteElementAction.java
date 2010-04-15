@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -89,7 +89,7 @@ public class PasteElementAction extends SelectionAction {
 		CompoundCommand cmd = new CompoundCommand("Paste");
 		for (MUIElement child : elements) {
 			MUIElement newChild = (MUIElement) EcoreUtil.copy((EObject)child);
-			newChild.setId(EcoreUtil.generateUUID());
+			newChild.setElementId(EcoreUtil.generateUUID());
 			if (newChild instanceof MUIElement) {
 				MUIElement uiElement = (MUIElement) newChild;
 				uiElement.setWidget(null);

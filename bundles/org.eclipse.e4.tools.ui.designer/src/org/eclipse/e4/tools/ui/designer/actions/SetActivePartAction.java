@@ -11,8 +11,8 @@
 package org.eclipse.e4.tools.ui.designer.actions;
 
 import org.eclipse.e4.tools.ui.designer.commands.SetActivePartCommand;
-import org.eclipse.e4.ui.model.application.MPart;
-import org.eclipse.e4.ui.model.application.MPartStack;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.action.IAction;

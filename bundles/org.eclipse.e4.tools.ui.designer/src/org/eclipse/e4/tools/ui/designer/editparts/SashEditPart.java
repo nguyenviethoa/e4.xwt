@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer.editparts;
 
 import org.eclipse.e4.tools.ui.designer.editparts.handlers.DragSashTracker;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenuFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.ControlInfo;
 import org.eclipse.emf.ecore.EObject;
@@ -37,7 +38,7 @@ public class SashEditPart extends ControlEditPart {
 		super(model);
 		this.sash = sash;
 		if (model == null) {
-			model = (EObject) MApplicationFactory.eINSTANCE.createItem();
+			model = (EObject) MMenuFactory.INSTANCE.createItem();
 			setModel(model);
 		}
 	}

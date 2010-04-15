@@ -17,11 +17,11 @@ import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
-import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MMenu;
-import org.eclipse.e4.ui.model.application.MPart;
-import org.eclipse.e4.ui.model.application.MToolBar;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
 import org.eclipse.emf.ecore.EObject;
@@ -101,7 +101,7 @@ public class MoveOnCommand extends MoveCommand {
 				MApplicationElement newChild = null;
 				if (ApplicationModelHelper.isLive(sourceNode)) {
 					newChild = (MUIElement) EcoreUtil.copy((EObject) sourceNode);
-					newChild.setId(EcoreUtil.generateUUID());
+					newChild.setElementId(EcoreUtil.generateUUID());
 					if (newChild instanceof MUIElement) {
 						MUIElement uiElement = (MUIElement) newChild;
 						uiElement.setWidget(null);

@@ -11,9 +11,9 @@
 package org.eclipse.e4.tools.ui.designer.commands.part;
 
 import org.eclipse.e4.tools.ui.designer.part.Position;
-import org.eclipse.e4.ui.model.application.MPart;
-import org.eclipse.e4.ui.model.application.MPartStack;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.gef.commands.Command;
 
 /**
