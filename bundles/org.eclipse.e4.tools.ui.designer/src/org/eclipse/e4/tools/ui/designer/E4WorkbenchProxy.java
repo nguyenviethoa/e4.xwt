@@ -156,26 +156,12 @@ public class E4WorkbenchProxy {
 				// .getBundleAdmin()));
 
 				// set up the keybinding manager
-				try {
-					KeyBindingDispatcher dispatcher = (KeyBindingDispatcher) ContextInjectionFactory
-							.make(KeyBindingDispatcher.class, appContext);
-					org.eclipse.swt.widgets.Listener listener = dispatcher
-							.getKeyDownFilter();
-					display.addFilter(SWT.KeyDown, listener);
-					display.addFilter(SWT.Traverse, listener);
-				} catch (InvocationTargetException e) {
-					Logger logger = (Logger) appContext.get(Logger.class
-							.getName());
-					if (logger != null) {
-						logger.error(e);
-					}
-				} catch (InstantiationException e) {
-					Logger logger = (Logger) appContext.get(Logger.class
-							.getName());
-					if (logger != null) {
-						logger.error(e);
-					}
-				}
+				KeyBindingDispatcher dispatcher = (KeyBindingDispatcher) ContextInjectionFactory
+						.make(KeyBindingDispatcher.class, appContext);
+				org.eclipse.swt.widgets.Listener listener = dispatcher
+						.getKeyDownFilter();
+				display.addFilter(SWT.KeyDown, listener);
+				display.addFilter(SWT.Traverse, listener);
 
 				// if (device == null || device.isDisposed()) {
 				// device = new Shell(display, SWT.NO_TRIM);
