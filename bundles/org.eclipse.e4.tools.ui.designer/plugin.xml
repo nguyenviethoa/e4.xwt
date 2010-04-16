@@ -36,7 +36,7 @@
       <editor
             class="org.eclipse.e4.tools.ui.designer.E4Designer"
             contributorClass="org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionBarContributor"
-            default="true"
+            default="false"
             extensions="e4xmi"
             filenames="Application"
             id="org.eclipse.e4.tools.ui.designer.E4Designer"
