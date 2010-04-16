@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
@@ -85,7 +85,7 @@ public class CopyElementAction extends SelectionAction {
 							&& parentModel instanceof MUIElement) {
 						MUIElement copymodel = (MUIElement) EcoreUtil
 								.copy((EObject) element);
-						copymodel.setId(EcoreUtil.generateUUID());
+						copymodel.setElementId(EcoreUtil.generateUUID());
 						copymodel.setWidget(null);
 						selectResult.add(copymodel);
 					}

@@ -14,7 +14,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.e4.ui.model.application.MApplicationPackage;
+import org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl;
+import org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl;
+import org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl;
+import org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl;
+import org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl;
+import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.Palette;
 import org.eclipse.e4.xwt.tools.ui.palette.PaletteFactory;
@@ -55,7 +60,7 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		List<EClass> others = new ArrayList<EClass>(allClasses);
 		for (EClass eClass : allClasses) {
 			EList<Entry> entries = entry.getEntries();
-			if (MApplicationPackage.Literals.ELEMENT_CONTAINER
+			if (UiPackageImpl.Literals.ELEMENT_CONTAINER
 					.isSuperTypeOf(eClass)) {
 				createEntry(entries, eClass);
 				others.remove(eClass);
@@ -64,31 +69,31 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		// all
 		entry = createEntry(container, "Element");
 		for (EClass eClass : allClasses) {
-			if (MApplicationPackage.Literals.UI_ELEMENT.isSuperTypeOf(eClass)) {
+			if (UiPackageImpl.Literals.UI_ELEMENT.isSuperTypeOf(eClass)) {
 				createEntry(entry.getEntries(), eClass);
 				others.remove(eClass);
 			}
 		}
 		// Window
-		entry = createRootEntry(container, MApplicationPackage.Literals.WINDOW);
+		entry = createRootEntry(container, BasicPackageImpl.Literals.WINDOW);
 		// Menu
-		entry = createRootEntry(container, MApplicationPackage.Literals.MENU);
+		entry = createRootEntry(container, MenuPackageImpl.Literals.MENU);
 		// Perspective
 		entry = createRootEntry(container,
-				MApplicationPackage.Literals.PERSPECTIVE);
+				AdvancedPackageImpl.Literals.PERSPECTIVE);
 		// ToolBar
 		entry = createRootEntry(container,
-				MApplicationPackage.Literals.TOOL_BAR);
+				MenuPackageImpl.Literals.TOOL_BAR);
 		createRootEntry(entry.getEntries(),
-				MApplicationPackage.Literals.TOOL_ITEM);
+				MenuPackageImpl.Literals.TOOL_ITEM);
 		// Part
-		entry = createRootEntry(container, MApplicationPackage.Literals.PART);
+		entry = createRootEntry(container, BasicPackageImpl.Literals.PART);
 		// Handler
-		entry = createRootEntry(container, MApplicationPackage.Literals.HANDLER);
-		others.remove(MApplicationPackage.Literals.HANDLER);
+		entry = createRootEntry(container, CommandsPackageImpl.Literals.HANDLER);
+		others.remove(CommandsPackageImpl.Literals.HANDLER);
 		// Command
-		entry = createRootEntry(container, MApplicationPackage.Literals.COMMAND);
-		others.remove(MApplicationPackage.Literals.COMMAND);
+		entry = createRootEntry(container, CommandsPackageImpl.Literals.COMMAND);
+		others.remove(CommandsPackageImpl.Literals.COMMAND);
 
 		// Others
 		if (!others.isEmpty()) {
@@ -106,8 +111,8 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		} else {
 			allClasses = new ArrayList<EClass>();
 		}
-		Field[] fields = MApplicationPackage.Literals.class.getFields();
-		EClass applicationElementClass = MApplicationPackage.eINSTANCE
+		Field[] fields = ApplicationPackageImpl.Literals.class.getFields();
+		EClass applicationElementClass = ApplicationPackageImpl.eINSTANCE
 				.getApplicationElement();
 
 		for (int i = 0; i < fields.length; i++) {

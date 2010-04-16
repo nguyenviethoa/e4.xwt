@@ -19,10 +19,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.MPart;
-import org.eclipse.e4.ui.model.application.MWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.IJavaElement;
@@ -69,7 +68,7 @@ public class NewFileInputPartWizard extends WizardNewPart {
 				&& !dataContext.getMasterFeatures().isEmpty()) {
 			// try to add this variable, so that, the selection changed event
 			// will dispatch to all sub contexts, otherwise not.
-			EList<MWindow> children = application.getChildren();
+			List<MWindow> children = application.getChildren();
 			if (children.isEmpty()) {
 				application.getVariables().add(IServiceConstants.SELECTION);
 			} else {

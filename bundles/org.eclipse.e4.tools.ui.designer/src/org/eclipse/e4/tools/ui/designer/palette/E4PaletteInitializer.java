@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.palette;
 
-import org.eclipse.e4.ui.model.application.MApplicationFactory;
 import org.eclipse.e4.ui.model.application.MContribution;
+import org.eclipse.e4.ui.model.application.impl.ApplicationFactoryImpl;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
@@ -50,10 +50,10 @@ public class E4PaletteInitializer extends InitializerImpl {
 		if (creatingObject == null || isCreated) {
 			EClass type = entry.getType();
 			if (type != null) {
-				creatingObject = MApplicationFactory.eINSTANCE.create(type);
+				creatingObject = ApplicationFactoryImpl.eINSTANCE.create(type);
 				if (creatingObject instanceof MContribution) {
 					((MContribution) creatingObject)
-							.setURI("platform:/plugin/org.eclipse.e4.tools.ui.designer/org.eclipse.e4.tools.ui.designer.E4Designer");
+							.setContributionURI("platform:/plugin/org.eclipse.e4.tools.ui.designer/org.eclipse.e4.tools.ui.designer.E4Designer");
 				}
 			}
 		}

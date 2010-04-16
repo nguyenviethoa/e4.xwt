@@ -13,7 +13,7 @@ package org.eclipse.e4.tools.ui.designer.wizards;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.ui.model.application.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.viewers.StructuredSelection;

@@ -16,8 +16,8 @@ import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
-import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
 import org.eclipse.emf.ecore.EObject;
@@ -80,7 +80,7 @@ public class MoveBeforeCommand extends MoveCommand {
 			MApplicationElement newNode = (MApplicationElement) sourceNode;
 			if (!isMove() && ApplicationModelHelper.isLive(sourceNode)) {
 				newNode = (MApplicationElement) EcoreUtil.copy((EObject) sourceNode);
-				newNode.setId(EcoreUtil.generateUUID());
+				newNode.setElementId(EcoreUtil.generateUUID());
 				if (newNode instanceof MUIElement) {
 					MUIElement uiElement = (MUIElement) newNode;
 					uiElement.setWidget(null);

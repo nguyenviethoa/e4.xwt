@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.e4.ui.model.application.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.xwt.ui.utils.ProjectContext;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.IType;
@@ -74,7 +74,7 @@ public abstract class WizardNewPart extends NewElementWizard {
 			String projectName = type.getJavaProject().getElementName();
 			String partURI = URI.createPlatformPluginURI(
 					projectName + "/" + elementName, true).toString();
-			fPart.setURI(partURI);
+			fPart.setContributionURI(partURI);
 			fPart.setLabel(type.getElementName());
 		}
 		return performFinish;

@@ -10,11 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.sashform;
 
-import org.eclipse.e4.ui.model.application.MGenericTile;
-import org.eclipse.e4.ui.model.application.MPartStack;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import java.util.List;
+
+import org.eclipse.e4.ui.model.application.ui.MGenericTile;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
@@ -65,7 +66,7 @@ public class SashFormInsertCreateCommand extends Command {
 	}
 
 	public void execute() {
-		EList<MUIElement> children = parentModel.getChildren();
+		List<MUIElement> children = parentModel.getChildren();
 
 		if (reference != null) {
 			Object model = reference.getModel();

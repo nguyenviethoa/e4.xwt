@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.palette;
 
-import org.eclipse.e4.ui.model.application.MApplicationPackage;
+import org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.Palette;
 import org.eclipse.e4.xwt.tools.ui.palette.PaletteFactory;
@@ -39,13 +39,13 @@ public class E4PartContribution extends EntryResourceProvider {
 		group.setName("Part Contributions");
 
 		Entry selectionEntry = E4PaletteProvider
-				.createEntry(MApplicationPackage.Literals.PART);
+				.createEntry(BasicPackageImpl.Literals.PART);
 		selectionEntry.setId("e4.contribution.selection");
 		selectionEntry.setName("Contributed Selection Part");
 		selectionEntry.setInitializer(new E4SelectionPartInitializer());
 
 		Entry inputEntry = E4PaletteProvider
-				.createEntry(MApplicationPackage.Literals.INPUT_PART);
+				.createEntry(BasicPackageImpl.Literals.INPUT_PART);
 		inputEntry.setId("e4.contribution.input");
 		inputEntry.setName("Contributed Input Part");
 		inputEntry.setInitializer(new E4InputPartInitializer());

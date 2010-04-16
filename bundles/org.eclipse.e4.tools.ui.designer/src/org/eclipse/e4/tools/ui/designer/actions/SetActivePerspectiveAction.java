@@ -11,8 +11,8 @@
 package org.eclipse.e4.tools.ui.designer.actions;
 
 import org.eclipse.e4.tools.ui.designer.commands.SetActivePerspectiveCommand;
-import org.eclipse.e4.ui.model.application.MPerspective;
-import org.eclipse.e4.ui.model.application.MPerspectiveStack;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.action.IAction;

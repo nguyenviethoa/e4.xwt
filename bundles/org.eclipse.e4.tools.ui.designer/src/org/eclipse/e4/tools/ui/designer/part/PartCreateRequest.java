@@ -14,7 +14,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.tools.ui.designer.editparts.PartContainerEditPart;
-import org.eclipse.e4.ui.model.application.MApplicationPackage;
+import org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gef.EditPart;
@@ -46,9 +46,9 @@ public class PartCreateRequest extends PartRequest {
 
 		PrecisionRectangle rect = new PrecisionRectangle();
 		Position position = null;
-		if (MApplicationPackage.Literals.PART.isSuperTypeOf(creationType)) {
+		if (BasicPackageImpl.Literals.PART.isSuperTypeOf(creationType)) {
 			position = buildPartPosition(rect, part, location);
-		} else if (MApplicationPackage.Literals.PART_STACK == creationType) {
+		} else if (BasicPackageImpl.Literals.PART_STACK == creationType) {
 			position = buildPartStackPosition(rect, part, location);
 		}
 		setPosition(position);

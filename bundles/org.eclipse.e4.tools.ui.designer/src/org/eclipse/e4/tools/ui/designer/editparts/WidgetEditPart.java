@@ -15,9 +15,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
-import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.e4.ui.model.application.MUILabel;
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUILabel;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.WidgetInfo;

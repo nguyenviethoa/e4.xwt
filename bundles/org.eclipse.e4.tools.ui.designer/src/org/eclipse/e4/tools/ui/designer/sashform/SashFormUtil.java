@@ -16,14 +16,13 @@ import java.util.List;
 
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MPSCElement;
-import org.eclipse.e4.ui.model.application.MPartSashContainer;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainerElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.GroupRequest;
 import org.eclipse.swt.SWT;
@@ -89,9 +88,9 @@ public class SashFormUtil {
 
 		VisualEditPart editPart = getEditPart(request);
 		if (editPart != null) {
-			MElementContainer<MPSCElement> parentNode = (MElementContainer<MPSCElement>) parent
+			MElementContainer<MPartSashContainerElement> parentNode = (MElementContainer<MPartSashContainerElement>) parent
 					.getModel();
-			EList<MPSCElement> children = parentNode.getChildren();
+			List<MPartSashContainerElement> children = parentNode.getChildren();
 			Object visualObject = editPart.getVisualInfo().getVisualObject();
 			if (visualObject instanceof Sash) {
 				Sash sash = (Sash) visualObject;

@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -95,7 +95,7 @@ public class CutElementAction extends SelectionAction {
 			if (element instanceof MUIElement) {
 				MUIElement copymodel = (MUIElement) EcoreUtil
 						.copy((EObject) element);
-				copymodel.setId(EcoreUtil.generateUUID());
+				copymodel.setElementId(EcoreUtil.generateUUID());
 				if (copymodel instanceof MUIElement) {
 					MUIElement uiElement = (MUIElement) copymodel;
 					uiElement.setWidget(null);

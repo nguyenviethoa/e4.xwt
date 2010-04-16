@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
-import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.emf.common.util.EList;
+import java.util.List;
+
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 
@@ -71,8 +72,8 @@ public class MoveChildCommand extends Command {
 	}
 
 	public void execute() {
-		EList<MUIElement> children = parentNode.getChildren();
-		children.move(newPosition, oldPosition);
+		List<MUIElement> children = parentNode.getChildren();
+		//children.move(newPosition, oldPosition);
 	}
 
 	public boolean canUndo() {
@@ -81,6 +82,6 @@ public class MoveChildCommand extends Command {
 	}
 
 	public void undo() {
-		parentNode.getChildren().move(oldPosition, newPosition);
+		//parentNode.getChildren().move(oldPosition, newPosition);
 	}
 }

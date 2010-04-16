@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands.part;
 
-import org.eclipse.e4.ui.model.application.MGenericStack;
-import org.eclipse.e4.ui.model.application.MPartStack;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MGenericStack;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 

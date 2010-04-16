@@ -13,8 +13,8 @@ package org.eclipse.e4.tools.ui.designer.editparts;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.e4.ui.model.application.MWindow;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.emf.ecore.EObject;
 
 /**

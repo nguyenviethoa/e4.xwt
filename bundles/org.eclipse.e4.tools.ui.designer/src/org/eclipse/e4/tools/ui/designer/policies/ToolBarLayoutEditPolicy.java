@@ -12,7 +12,7 @@ package org.eclipse.e4.tools.ui.designer.policies;
 
 import org.eclipse.e4.tools.ui.designer.commands.factory.CommandsFactory;
 import org.eclipse.e4.tools.ui.designer.commands.factory.ToolBarCommandsFactory;
-import org.eclipse.e4.ui.model.application.MToolItem;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolItem;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;

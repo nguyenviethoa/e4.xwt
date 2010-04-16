@@ -10,11 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.sashform;
 
+import java.util.List;
+
 import org.eclipse.e4.tools.ui.designer.commands.ApplyAttributeSettingCommand;
-import org.eclipse.e4.ui.model.application.MPSCElement;
-import org.eclipse.e4.ui.model.application.MPartSashContainer;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainerElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -59,11 +60,11 @@ public class ChangeWeightsCommand extends Command {
 
 	public void execute() {
 		MPartSashContainer parentNode = (MPartSashContainer) parent.getModel();
-		EList<MPSCElement> children = parentNode.getChildren();
+		List<MPartSashContainerElement> children = parentNode.getChildren();
 		CompoundCommand cmd = new CompoundCommand();
 		int index = -1;
 		for (int i = 0; i < children.size(); i++) {
-			MPSCElement child = children.get(i);
+			MPartSashContainerElement child = children.get(i);
 			if (child.getWidget() == null) {
 				continue;
 			}

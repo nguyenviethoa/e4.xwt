@@ -10,49 +10,48 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.wizards;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
-import org.eclipse.e4.ui.model.application.MBindingContext;
-import org.eclipse.e4.ui.model.application.MBindingTable;
-import org.eclipse.e4.ui.model.application.MCommand;
-import org.eclipse.e4.ui.model.application.MHandledMenuItem;
-import org.eclipse.e4.ui.model.application.MHandledToolItem;
-import org.eclipse.e4.ui.model.application.MHandler;
-import org.eclipse.e4.ui.model.application.MKeyBinding;
-import org.eclipse.e4.ui.model.application.MMenu;
-import org.eclipse.e4.ui.model.application.MMenuItem;
-import org.eclipse.e4.ui.model.application.MPart;
-import org.eclipse.e4.ui.model.application.MPartSashContainer;
-import org.eclipse.e4.ui.model.application.MPartStack;
-import org.eclipse.e4.ui.model.application.MPerspective;
-import org.eclipse.e4.ui.model.application.MPerspectiveStack;
-import org.eclipse.e4.ui.model.application.MToolBar;
-import org.eclipse.e4.ui.model.application.MWindow;
-import org.eclipse.e4.ui.model.application.MWindowTrim;
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.e4.ui.model.application.commands.MBindingContext;
+import org.eclipse.e4.ui.model.application.commands.MBindingTable;
+import org.eclipse.e4.ui.model.application.commands.MCommand;
+import org.eclipse.e4.ui.model.application.commands.MCommandsFactory;
+import org.eclipse.e4.ui.model.application.commands.MHandler;
+import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
+import org.eclipse.e4.ui.model.application.ui.advanced.MAdvancedFactory;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
+import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenuFactory;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -70,7 +69,6 @@ import org.eclipse.pde.core.plugin.IPluginBase;
 import org.eclipse.pde.core.plugin.IPluginElement;
 import org.eclipse.pde.core.plugin.IPluginExtension;
 import org.eclipse.pde.core.plugin.IPluginImport;
-import org.eclipse.pde.core.plugin.IPluginReference;
 import org.eclipse.pde.internal.core.ICoreConstants;
 import org.eclipse.pde.internal.core.bundle.WorkspaceBundlePluginModel;
 import org.eclipse.pde.internal.core.plugin.WorkspacePluginModelBase;
@@ -344,22 +342,22 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 			//
 			Resource resource = resourceSet.createResource(fileURI);
 
-			MApplication application = MApplicationFactory.eINSTANCE
+			MApplication application = MApplicationFactory.INSTANCE
 					.createApplication();
 			
-			application.setId("org.eclipse.e4.ide.application");
+			application.setElementId("org.eclipse.e4.ide.application");
 			
-			MBindingContext rootContext = MApplicationFactory.eINSTANCE.createBindingContext();
-			rootContext.setId("org.eclipse.ui.contexts.dialogAndWindow");
+			MBindingContext rootContext = MCommandsFactory.INSTANCE.createBindingContext();
+			rootContext.setElementId("org.eclipse.ui.contexts.dialogAndWindow");
 			rootContext.setName("In Dialog and Windows");
 			
-			MBindingContext childContext = MApplicationFactory.eINSTANCE.createBindingContext();
-			childContext.setId("org.eclipse.ui.contexts.window");
+			MBindingContext childContext = MCommandsFactory.INSTANCE.createBindingContext();
+			childContext.setElementId("org.eclipse.ui.contexts.window");
 			childContext.setName("In Windows");
 			rootContext.getChildren().add(childContext);
 			
-			childContext = MApplicationFactory.eINSTANCE.createBindingContext();
-			childContext.setId("org.eclipse.ui.contexts.dialog");
+			childContext = MCommandsFactory.INSTANCE.createBindingContext();
+			childContext.setElementId("org.eclipse.ui.contexts.dialog");
 			childContext.setName("In Dialogs");
 			rootContext.getChildren().add(childContext);
 			
@@ -382,7 +380,7 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 					"AboutHandler", "Ctrl+A", projectName, fragment,
 					application);
 
-			MWindow mainWindow = MApplicationFactory.eINSTANCE.createWindow();
+			MTrimmedWindow mainWindow = MBasicFactory.INSTANCE.createTrimmedWindow();
 			application.getChildren().add(mainWindow);
 			{
 				mainWindow.setLabel(projectName);
@@ -391,16 +389,16 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 
 				// Menu
 				{
-					MMenu menu = MApplicationFactory.eINSTANCE.createMenu();
+					MMenu menu = MMenuFactory.INSTANCE.createMenu();
 					mainWindow.setMainMenu(menu);
-					menu.setId("menu:org.eclipse.ui.main.menu");
+					menu.setElementId("menu:org.eclipse.ui.main.menu");
 
-					MMenuItem fileMenuItem = MApplicationFactory.eINSTANCE
-							.createMenuItem();
+					MMenu fileMenuItem = MMenuFactory.INSTANCE
+							.createMenu();
 					menu.getChildren().add(fileMenuItem);
 					fileMenuItem.setLabel("File");
 					{
-						MHandledMenuItem menuItemOpen = MApplicationFactory.eINSTANCE
+						MHandledMenuItem menuItemOpen = MMenuFactory.INSTANCE
 								.createHandledMenuItem();
 						fileMenuItem.getChildren().add(menuItemOpen);
 						menuItemOpen.setLabel("Open");
@@ -408,7 +406,7 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 								+ project.getName() + "/icons/sample.gif");
 						menuItemOpen.setCommand(openCommand);
 
-						MHandledMenuItem menuItemSave = MApplicationFactory.eINSTANCE
+						MHandledMenuItem menuItemSave = MMenuFactory.INSTANCE
 								.createHandledMenuItem();
 						fileMenuItem.getChildren().add(menuItemSave);
 						menuItemSave.setLabel("Save");
@@ -416,19 +414,18 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 								+ project.getName() + "/icons/save_edit.gif");
 						menuItemSave.setCommand(saveCommand);
 
-						MHandledMenuItem menuItemQuit = MApplicationFactory.eINSTANCE
+						MHandledMenuItem menuItemQuit = MMenuFactory.INSTANCE
 								.createHandledMenuItem();
 						fileMenuItem.getChildren().add(menuItemQuit);
 						menuItemQuit.setLabel("Quit");
 						menuItemQuit.setCommand(quitCommand);
 					}
-
-					MMenuItem helpMenuItem = MApplicationFactory.eINSTANCE
-							.createMenuItem();
+					MMenu helpMenuItem = MMenuFactory.INSTANCE
+							.createMenu();
 					menu.getChildren().add(helpMenuItem);
 					helpMenuItem.setLabel("Help");
 					{
-						MHandledMenuItem menuItemAbout = MApplicationFactory.eINSTANCE
+						MHandledMenuItem menuItemAbout = MMenuFactory.INSTANCE
 								.createHandledMenuItem();
 						helpMenuItem.getChildren().add(menuItemAbout);
 						menuItemAbout.setLabel("About");
@@ -438,20 +435,20 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 
 				// PerspectiveStack
 				{
-					MPerspectiveStack perspectiveStack = MApplicationFactory.eINSTANCE
+					MPerspectiveStack perspectiveStack = MAdvancedFactory.INSTANCE
 							.createPerspectiveStack();
 					mainWindow.getChildren().add(perspectiveStack);
 
-					MPerspective perspective = MApplicationFactory.eINSTANCE
+					MPerspective perspective = MAdvancedFactory.INSTANCE
 							.createPerspective();
 					perspectiveStack.getChildren().add(perspective);
 					{
 						// Part Container
-						MPartSashContainer partSashContainer = MApplicationFactory.eINSTANCE
+						MPartSashContainer partSashContainer = MBasicFactory.INSTANCE
 								.createPartSashContainer();
 						perspective.getChildren().add(partSashContainer);
 
-						MPartStack partStack = MApplicationFactory.eINSTANCE
+						MPartStack partStack = MBasicFactory.INSTANCE
 								.createPartStack();
 						partSashContainer.getChildren().add(partStack);
 //
@@ -462,23 +459,22 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 
 					// WindowTrim
 					{
-						MWindowTrim windowTrim = MApplicationFactory.eINSTANCE
-								.createWindowTrim();
-						mainWindow.getChildren().add(windowTrim);
+						MTrimBar trimBar = MBasicFactory.INSTANCE.createTrimBar();
+						mainWindow.getTrimBars().add(trimBar);
 
-						MToolBar toolBar = MApplicationFactory.eINSTANCE
+						MToolBar toolBar = MMenuFactory.INSTANCE
 								.createToolBar();
-						toolBar.setId("toolbar:org.eclipse.ui.main.toolbar");
-						windowTrim.getChildren().add(toolBar);
+						toolBar.setElementId("toolbar:org.eclipse.ui.main.toolbar");
+						trimBar.getChildren().add(toolBar);
 
-						MHandledToolItem toolItemOpen = MApplicationFactory.eINSTANCE
+						MHandledToolItem toolItemOpen = MMenuFactory.INSTANCE
 								.createHandledToolItem();
 						toolBar.getChildren().add(toolItemOpen);
 						toolItemOpen.setIconURI("platform:/plugin/"
 								+ project.getName() + "/icons/sample.gif");
 						toolItemOpen.setCommand(openCommand);
 
-						MHandledToolItem toolItemSave = MApplicationFactory.eINSTANCE
+						MHandledToolItem toolItemSave = MMenuFactory.INSTANCE
 								.createHandledToolItem();
 						toolBar.getChildren().add(toolItemSave);
 						toolItemSave.setIconURI("platform:/plugin/"
@@ -561,25 +557,25 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 	private MCommand createCommand(String name, String className,
 			String keyBinding, String projectName, IPackageFragment fragment,
 			MApplication application) {
-		MCommand command = MApplicationFactory.eINSTANCE.createCommand();
+		MCommand command = MCommandsFactory.INSTANCE.createCommand();
 		command.setCommandName(name);
 		application.getCommands().add(command);
 		{
 			// Create Quit handler for command
-			MHandler quitHandler = MApplicationFactory.eINSTANCE
+			MHandler quitHandler =MCommandsFactory.INSTANCE
 					.createHandler();
 			quitHandler.setCommand(command);
-			quitHandler.setURI("platform:/plugin/" + projectName + "/"
+			quitHandler.setContributionURI("platform:/plugin/" + projectName + "/"
 					+ fragment.getElementName() + ".handlers." + className);
 			application.getHandlers().add(quitHandler);
 
-			MKeyBinding binding = MApplicationFactory.eINSTANCE
+			MKeyBinding binding = MCommandsFactory.INSTANCE
 					.createKeyBinding();
 			binding.setKeySequence(keyBinding);
 			binding.setCommand(command);
-			EList<MBindingTable> tables = application.getBindingTables();
+			List<MBindingTable> tables = application.getBindingTables();
 			if (tables.size()==0) {
-				MBindingTable table = MApplicationFactory.eINSTANCE.createBindingTable();
+				MBindingTable table = MCommandsFactory.INSTANCE.createBindingTable();
 				table.setBindingContextId("org.eclipse.ui.contexts.dialogAndWindow");
 				tables.add(table);
 			}

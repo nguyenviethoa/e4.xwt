@@ -13,7 +13,7 @@ package org.eclipse.e4.tools.ui.designer.outline;
 import org.eclipse.e4.tools.ui.designer.outline.commands.MoveAfterCommand;
 import org.eclipse.e4.tools.ui.designer.outline.commands.MoveBeforeCommand;
 import org.eclipse.e4.tools.ui.designer.outline.commands.MoveOnCommand;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.dnd.OutlineDropManager;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;

@@ -10,18 +10,20 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands.part;
 
+import java.util.List;
+
 import org.eclipse.e4.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.tools.ui.designer.commands.ChangeParentCommand;
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.ui.model.application.MApplicationFactory;
-import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MGenericStack;
-import org.eclipse.e4.ui.model.application.MGenericTile;
-import org.eclipse.e4.ui.model.application.MPart;
-import org.eclipse.e4.ui.model.application.MPartSashContainer;
-import org.eclipse.e4.ui.model.application.MPartStack;
-import org.eclipse.e4.ui.model.application.MUIElement;
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.ui.model.application.ui.MGenericStack;
+import org.eclipse.e4.ui.model.application.ui.MGenericTile;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MBasicFactory;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -47,7 +49,7 @@ public class MoveLeftCommand extends AbstractPartCommand {
 		}
 
 		MElementContainer<MUIElement> parent = partStack.getParent();
-		EList<MUIElement> children = parent.getChildren();
+		List<MUIElement> children = parent.getChildren();
 		int index = children.indexOf(partStack);
 		if (parent instanceof MGenericTile<?>) {
 			MGenericTile<?> genericTile = (MGenericTile<?>) parent;
@@ -59,7 +61,7 @@ public class MoveLeftCommand extends AbstractPartCommand {
 
 		CompoundCommand result = new CompoundCommand();
 
-		MPartSashContainer newSash = MApplicationFactory.eINSTANCE
+		MPartSashContainer newSash = MBasicFactory.INSTANCE
 				.createPartSashContainer();
 		String preferData = partStack.getContainerData();
 		newSash.setContainerData(preferData);
@@ -78,7 +80,7 @@ public class MoveLeftCommand extends AbstractPartCommand {
 			}
 		} else if (selectedPart instanceof MPart) {
 			MPart part = (MPart) selectedPart;
-			MPartStack createPartStack = MApplicationFactory.eINSTANCE
+			MPartStack createPartStack = MBasicFactory.INSTANCE
 					.createPartStack();
 			createPartStack.setContainerData(preferData);
 			if (part.getParent() != null) {

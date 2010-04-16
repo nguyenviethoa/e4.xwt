@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
-import org.eclipse.e4.ui.model.application.MElementContainer;
-import org.eclipse.e4.ui.model.application.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;

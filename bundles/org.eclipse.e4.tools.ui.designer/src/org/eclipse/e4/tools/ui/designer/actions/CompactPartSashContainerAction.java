@@ -1,6 +1,6 @@
 package org.eclipse.e4.tools.ui.designer.actions;
 
-import org.eclipse.e4.ui.model.application.MPartSashContainer;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;

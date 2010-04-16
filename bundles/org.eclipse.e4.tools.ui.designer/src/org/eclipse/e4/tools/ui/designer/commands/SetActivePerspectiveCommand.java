@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
-import org.eclipse.e4.ui.model.application.MPerspective;
-import org.eclipse.e4.ui.model.application.MPerspectiveStack;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
 import org.eclipse.gef.commands.Command;
 
 /**
