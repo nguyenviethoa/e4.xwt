@@ -10,10 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
+import java.util.List;
+
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.gef.commands.Command;
 
 /**
@@ -40,7 +41,7 @@ public class AddChildCommand extends Command {
 		if (index < 0 || index > parent.getChildren().size()) {
 			index = parent.getChildren().size();
 		}
-		EList<MUIElement> children = (EList<MUIElement>) parent.getChildren();
+		List<MUIElement> children = (List<MUIElement>) parent.getChildren();
 		children.add(index, newChild);
 	}
 

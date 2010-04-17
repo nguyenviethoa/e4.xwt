@@ -18,7 +18,6 @@ import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.workbench.modeling.EModelService;
-import org.eclipse.e4.workbench.modeling.ModelService;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 
@@ -42,8 +41,6 @@ public class MoveChildCommand extends Command {
 		super("Move Child Command");
 		this.child = child;
 		this.after = after;
-		
-		
 	}
 
 	public boolean canExecute() {
@@ -92,7 +89,6 @@ public class MoveChildCommand extends Command {
 		if (newPosition > oldPosition) {
 			newPosition--;
 		}
-		// return true;
 		return newPosition != -1 && oldPosition != -1
 				&& oldPosition != newPosition;
 	}

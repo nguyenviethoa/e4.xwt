@@ -68,7 +68,7 @@
             objectClass="org.eclipse.gef.EditPart">
          <filter
                name="ModelType"
-               value="org.eclipse.e4.ui.model.application.MPart">
+               value="org.eclipse.e4.ui.model.application.ui.basic.MPart">
          </filter>
          <action
                class="org.eclipse.e4.tools.ui.designer.actions.SetActivePartAction"
@@ -82,7 +82,7 @@
             objectClass="org.eclipse.gef.EditPart">
          <filter
                name="ModelType"
-               value="org.eclipse.e4.ui.model.application.MPerspective">
+               value="org.eclipse.e4.ui.model.application.ui.advanced.MPerspective">
          </filter>
          <action
                class="org.eclipse.e4.tools.ui.designer.actions.SetActivePerspectiveAction"
@@ -96,7 +96,7 @@
             objectClass="org.eclipse.e4.tools.ui.designer.editparts.WidgetEditPart">
          <filter
                name="ModelType"
-               value="org.eclipse.e4.ui.model.application.MPartSashContainer">
+               value="org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer">
          </filter>
          <action
                class="org.eclipse.e4.tools.ui.designer.actions.CompactPartSashContainerAction"
