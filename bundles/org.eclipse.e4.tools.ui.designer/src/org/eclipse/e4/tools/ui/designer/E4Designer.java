@@ -17,9 +17,14 @@ import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.outline.E4ContentOutlinePage;
 import org.eclipse.e4.tools.ui.designer.outline.OutlinePageDropManager;
+import org.eclipse.e4.ui.model.application.commands.provider.CommandsItemProviderAdapterFactory;
+import org.eclipse.e4.ui.model.application.descriptor.basic.provider.BasicItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.provider.ApplicationItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.advanced.provider.AdvancedItemProviderAdapterFactory;
+import org.eclipse.e4.ui.model.application.ui.menu.provider.MenuItemProviderAdapterFactory;
+import org.eclipse.e4.ui.model.application.ui.provider.UiItemProviderAdapterFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer;
@@ -124,6 +129,16 @@ public class E4Designer extends Designer {
 					.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 			adapterFactory
 					.addAdapterFactory(new ApplicationItemProviderAdapterFactory());
+			adapterFactory
+					.addAdapterFactory(new CommandsItemProviderAdapterFactory());
+			adapterFactory
+					.addAdapterFactory(new UiItemProviderAdapterFactory());
+			adapterFactory
+					.addAdapterFactory(new MenuItemProviderAdapterFactory());
+			adapterFactory
+					.addAdapterFactory(new BasicItemProviderAdapterFactory());
+			adapterFactory
+					.addAdapterFactory(new AdvancedItemProviderAdapterFactory());
 			adapterFactory
 					.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		}
