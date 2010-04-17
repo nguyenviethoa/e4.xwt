@@ -34,7 +34,6 @@ public class MoveChildCommand extends Command {
 	private int oldPosition = -1;
 	private int newPosition = -1;
 	private MElementContainer<MUIElement> parentNode;
-	private MUIElement childNode;
 	private EModelService modelService;
 
 	public MoveChildCommand(EditPart child, EditPart after) {
