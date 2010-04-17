@@ -126,9 +126,11 @@ public class E4Designer extends Designer {
 			adapterFactory = new ComposedAdapterFactory(
 					ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 			adapterFactory
-					.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+					.addAdapterFactory(new org.eclipse.e4.ui.model.application.ui.basic.provider.BasicItemProviderAdapterFactory());
 			adapterFactory
-					.addAdapterFactory(new ApplicationItemProviderAdapterFactory());
+					.addAdapterFactory(new BasicItemProviderAdapterFactory());
+			adapterFactory
+					.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 			adapterFactory
 					.addAdapterFactory(new CommandsItemProviderAdapterFactory());
 			adapterFactory
@@ -136,9 +138,9 @@ public class E4Designer extends Designer {
 			adapterFactory
 					.addAdapterFactory(new MenuItemProviderAdapterFactory());
 			adapterFactory
-					.addAdapterFactory(new BasicItemProviderAdapterFactory());
-			adapterFactory
 					.addAdapterFactory(new AdvancedItemProviderAdapterFactory());
+			adapterFactory
+					.addAdapterFactory(new ApplicationItemProviderAdapterFactory());
 			adapterFactory
 					.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		}

@@ -42,7 +42,7 @@ public class E4PaletteProvider extends EntryResourceProvider {
 			try {
 				resource = new ResourceImpl();
 				palette = PaletteFactory.eINSTANCE.createPalette();
-				palette.setName("E4 Designer Palette");
+				palette.setName("e4 Visual Designer Palette");
 				resource.getContents().add(palette);
 				collectClasses();
 				createEntries();
@@ -52,31 +52,53 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		return resource;
 	}
 
+	private void exclusiveDone(Entry entry, List<EClass> others) {
+		others.remove(entry.getType());
+		
+		for (Entry child : entry.getEntries()) {
+			exclusiveDone(child, others);
+		}
+	}
+	
 	private void createEntries() {
 		EList<Entry> container = palette.getEntries();
 		// Container
 		Entry entry = createEntry(container, "Container");
 		List<EClass> others = new ArrayList<EClass>(allClasses);
 		for (EClass eClass : allClasses) {
+			if (eClass.isAbstract() || eClass.isInterface()) {
+				continue;
+			}
 			EList<Entry> entries = entry.getEntries();
 			if (UiPackageImpl.Literals.ELEMENT_CONTAINER
+					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.MENU_ITEM
+					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.MENU
+					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.TOOL_ITEM
 					.isSuperTypeOf(eClass)) {
 				createEntry(entries, eClass);
-				others.remove(eClass);
 			}
 		}
-		// all
+		// UI Element
 		entry = createEntry(container, "Element");
 		for (EClass eClass : allClasses) {
-			if (UiPackageImpl.Literals.UI_ELEMENT.isSuperTypeOf(eClass)) {
+			if (eClass.isAbstract() || eClass.isInterface()) {
+				continue;
+			}
+			if (UiPackageImpl.Literals.UI_ELEMENT.isSuperTypeOf(eClass) && !UiPackageImpl.Literals.ELEMENT_CONTAINER
+					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.MENU_ITEM
+					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.MENU
+					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.TOOL_ITEM
+					.isSuperTypeOf(eClass)) {
 				createEntry(entry.getEntries(), eClass);
-				others.remove(eClass);
 			}
 		}
 		// Window
 		entry = createRootEntry(container, BasicPackageImpl.Literals.WINDOW);
 		// Menu
 		entry = createRootEntry(container, MenuPackageImpl.Literals.MENU);
+		createRootEntry(entry.getEntries(),
+				MenuPackageImpl.Literals.MENU_ITEM);
+		
 		// Perspective
 		entry = createRootEntry(container,
 				AdvancedPackageImpl.Literals.PERSPECTIVE);
@@ -95,9 +117,16 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		others.remove(CommandsPackageImpl.Literals.COMMAND);
 
 		// Others
+		for (Entry childEntry : container) {
+			exclusiveDone(childEntry, others);
+		}
+		
 		if (!others.isEmpty()) {
 			entry = createEntry(container, "Other");
 			for (EClass eClass : others) {
+				if (eClass.isAbstract() || eClass.isInterface()) {
+					continue;
+				}
 				createEntry(entry.getEntries(), eClass);
 			}
 		}
@@ -129,8 +158,7 @@ public class E4PaletteProvider extends EntryResourceProvider {
 				Object value = fields[i].get(null);
 				if (value instanceof EClass) {
 					EClass eClass = (EClass) value;
-					if (!eClass.isAbstract() && !eClass.isInterface()
-							&& applicationElementClass.isSuperTypeOf(eClass)) {
+					if (applicationElementClass.isSuperTypeOf(eClass)) {
 						allClasses.add(eClass);
 					}
 				}
@@ -142,6 +170,9 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		Entry entry = createEntry(palette.getEntries(), root);
 		String rootName = root.getName().toLowerCase();
 		for (EClass eClass : allClasses) {
+			if (eClass.isAbstract() || eClass.isInterface()) {
+				continue;
+			}
 			String lowerCase = eClass.getName().toLowerCase();
 			if (lowerCase.startsWith(rootName) || root.isSuperTypeOf(eClass)) {
 				createEntry(entry.getEntries(), eClass);
