@@ -192,6 +192,16 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 //			String message = "Unable to load class '" + clazz + "' from bundle '" //$NON-NLS-1$ //$NON-NLS-2$
 //					+ bundle.getBundleId() + "'"; //$NON-NLS-1$
 //			Activator.log(LogService.LOG_ERROR, message, e);
+		} catch (InvocationTargetException e) {
+			contribution = null;
+//			String message = "Unable to instantiate class '" + clazz + "' from bundle '" //$NON-NLS-1$ //$NON-NLS-2$
+//					+ bundle.getBundleId() + "'"; //$NON-NLS-1$
+//			Activator.log(LogService.LOG_ERROR, message, e);
+		} catch (InstantiationException e) {
+			contribution = null;
+//			String message = "Unable to instantiate class '" + clazz + "' from bundle '" //$NON-NLS-1$ //$NON-NLS-2$
+//					+ bundle.getBundleId() + "'"; //$NON-NLS-1$
+//			Activator.log(LogService.LOG_ERROR, message, e);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			contribution = null;
