@@ -12,8 +12,13 @@ package org.eclipse.e4.tools.ui.designer.commands;
 
 import java.util.List;
 
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.workbench.modeling.EModelService;
+import org.eclipse.e4.workbench.modeling.ModelService;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 
@@ -27,15 +32,18 @@ public class MoveChildCommand extends Command {
 	private EditPart child;
 	private EditPart after;
 
-	int oldPosition = -1;
-	int newPosition = -1;
-	MElementContainer<MUIElement> parentNode;
-	MUIElement childNode;
+	private int oldPosition = -1;
+	private int newPosition = -1;
+	private MElementContainer<MUIElement> parentNode;
+	private MUIElement childNode;
+	private EModelService modelService;
 
 	public MoveChildCommand(EditPart child, EditPart after) {
 		super("Move Child Command");
 		this.child = child;
 		this.after = after;
+		
+		
 	}
 
 	public boolean canExecute() {
@@ -57,6 +65,24 @@ public class MoveChildCommand extends Command {
 		if (parentNode == null) {
 			return false;
 		}
+		
+		MWindow window = ApplicationModelHelper.findMWindow(parentNode);
+		if (window == null) {
+			return false;
+		}
+		IEclipseContext context = window.getContext();
+		if (context == null) {
+			return false;
+		}
+		Object value = context.get(EModelService.class.getName());
+		if (value == null || !(value instanceof EModelService)) {
+			return false;
+		}
+		modelService = (EModelService) value;
+		if (modelService == null) {
+			return false;
+		}
+		
 		oldPosition = parentNode.getChildren().indexOf(child.getModel());
 		if (after != null) {
 			newPosition = parentNode.getChildren().indexOf(after.getModel());
@@ -73,7 +99,8 @@ public class MoveChildCommand extends Command {
 
 	public void execute() {
 		List<MUIElement> children = parentNode.getChildren();
-		//children.move(newPosition, oldPosition);
+		MUIElement child = children.get(oldPosition);
+		modelService.move(child, parentNode, newPosition);
 	}
 
 	public boolean canUndo() {
@@ -82,6 +109,8 @@ public class MoveChildCommand extends Command {
 	}
 
 	public void undo() {
-		//parentNode.getChildren().move(oldPosition, newPosition);
+		List<MUIElement> children = parentNode.getChildren();
+		MUIElement child = children.get(newPosition);
+		modelService.move(child, parentNode, oldPosition);
 	}
 }

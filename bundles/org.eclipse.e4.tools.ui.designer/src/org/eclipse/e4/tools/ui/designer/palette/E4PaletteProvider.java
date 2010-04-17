@@ -33,7 +33,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
  * @author jin.liu(jin.liu@soyatec.com)
  */
 public class E4PaletteProvider extends EntryResourceProvider {
-
 	private Resource resource;
 	private Palette palette;
 	private List<EClass> allClasses;
@@ -111,19 +110,31 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		} else {
 			allClasses = new ArrayList<EClass>();
 		}
-		Field[] fields = ApplicationPackageImpl.Literals.class.getFields();
-		EClass applicationElementClass = ApplicationPackageImpl.eINSTANCE
-				.getApplicationElement();
 
-		for (int i = 0; i < fields.length; i++) {
-			Object value = fields[i].get(null);
-			if (value instanceof EClass) {
-				EClass eClass = (EClass) value;
-				if (!eClass.isAbstract() && !eClass.isInterface()
-						&& applicationElementClass.isSuperTypeOf(eClass)) {
-					allClasses.add(eClass);
+		Class<?>[] packageClasses = new Class[] {
+				ApplicationPackageImpl.Literals.class,
+				BasicPackageImpl.Literals.class,
+				UiPackageImpl.Literals.class,
+				CommandsPackageImpl.Literals.class,
+				MenuPackageImpl.Literals.class,
+				AdvancedPackageImpl.Literals.class
+		};
+
+		for (Class<?> packageClass : packageClasses) {
+			Field[] fields = packageClass.getFields();
+			EClass applicationElementClass = ApplicationPackageImpl.eINSTANCE
+					.getApplicationElement();
+
+			for (int i = 0; i < fields.length; i++) {
+				Object value = fields[i].get(null);
+				if (value instanceof EClass) {
+					EClass eClass = (EClass) value;
+					if (!eClass.isAbstract() && !eClass.isInterface()
+							&& applicationElementClass.isSuperTypeOf(eClass)) {
+						allClasses.add(eClass);
+					}
 				}
-			}
+			}			
 		}
 	}
 

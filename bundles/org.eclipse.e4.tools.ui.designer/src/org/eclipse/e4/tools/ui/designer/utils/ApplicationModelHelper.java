@@ -117,4 +117,13 @@ public class ApplicationModelHelper {
 		}
 		return true;
 	}
+	
+	
+	static public MWindow findMWindow(MUIElement element) {
+		MUIElement parent = element;
+		while (parent != null && !(parent instanceof MWindow)) {
+			parent = parent.getParent();
+		}
+		return (MWindow) parent;
+	}
 }
