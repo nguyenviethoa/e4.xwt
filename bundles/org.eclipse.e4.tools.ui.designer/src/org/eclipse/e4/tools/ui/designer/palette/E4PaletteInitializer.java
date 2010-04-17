@@ -11,12 +11,12 @@
 package org.eclipse.e4.tools.ui.designer.palette;
 
 import org.eclipse.e4.ui.model.application.MContribution;
-import org.eclipse.e4.ui.model.application.impl.ApplicationFactoryImpl;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -50,7 +50,7 @@ public class E4PaletteInitializer extends InitializerImpl {
 		if (creatingObject == null || isCreated) {
 			EClass type = entry.getType();
 			if (type != null) {
-				creatingObject = ApplicationFactoryImpl.eINSTANCE.create(type);
+				creatingObject = EcoreUtil.create(type);
 				if (creatingObject instanceof MContribution) {
 					((MContribution) creatingObject)
 							.setContributionURI("platform:/plugin/org.eclipse.e4.tools.ui.designer/org.eclipse.e4.tools.ui.designer.E4Designer");
