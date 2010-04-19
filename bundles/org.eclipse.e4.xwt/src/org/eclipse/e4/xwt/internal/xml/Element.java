@@ -26,7 +26,7 @@ import org.eclipse.e4.xwt.internal.core.Core;
 public class Element extends DocumentObject {
 
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
-	private int originalIndex;
+	private String path;
 	private Map<String, Attribute> originalAttributes;
 
 	private Map<String, Map<String, Attribute>> externalAttributes;
@@ -34,10 +34,10 @@ public class Element extends DocumentObject {
 	private String[] xmlnsMapping;
 	
 	/**
-	 * @return the index of this element in its parent element, as specified in source XML.
+	 * @return the path of this element, i.e. indexes of this element and its parents in XML.
 	 */
-	public int getOriginalIndex() {
-		return originalIndex;
+	public String getPath() {
+		return path;
 	}
 
 	public String getXmlns(String prefix) {
@@ -67,12 +67,12 @@ public class Element extends DocumentObject {
 	 *            element arributes
 	 */
 	public Element(String namespace, String name, Map<String, String> xmlnsMapping) {
-		this(namespace, name, -1, null, xmlnsMapping);
+		this(namespace, name, null, null, xmlnsMapping);
 	}
 
-	public Element(String namespace, String name, int originalIndex, Collection<Attribute> attributes, Map<String, String> xmlnsMapping) {
+	public Element(String namespace, String name, String path, Collection<Attribute> attributes, Map<String, String> xmlnsMapping) {
 		super(namespace, name);
-		this.originalIndex = originalIndex;
+		this.path = path;
 		if (xmlnsMapping != null) {
 			this.xmlnsMapping = new String[xmlnsMapping.size() * 2];
 			int i = 0;

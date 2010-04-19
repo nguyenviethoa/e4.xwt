@@ -463,6 +463,10 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 
 		elementIndexStack.pop();
+		if (!elementIndexStack.isEmpty()) {
+			int nextIndex = elementIndexStack.pop();
+			elementIndexStack.push(nextIndex + 1);
+		}
 
 		uri = normalizeNamespace(uri);
 
@@ -527,9 +531,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		}
 
 		// Create or reference element.
-		int originalIndex = elementIndexStack.pop();
-		elementIndexStack.push(originalIndex + 1);
-		Element element = new Element(namespace, name, originalIndex, attributes, namespaceMapping);
+		Element element = new Element(namespace, name, getIndexPath(), attributes, namespaceMapping);
 		element.setId(id);
 
 		// Add current node to stack
@@ -664,9 +666,7 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 				collection.add(attr);
 			}
 
-			int originalIndex = elementIndexStack.pop();
-			elementIndexStack.push(originalIndex + 1);
-			Attribute attribute = new Attribute(normalizeAttrNamespace(namespace), attributeName, originalIndex, elementId, collection);
+			Attribute attribute = new Attribute(normalizeAttrNamespace(namespace), attributeName, getIndexPath(), elementId, collection);
 			elementStack.push(attribute);
 			bufferStack.push(textBuffer);
 			textBuffer = null;
@@ -800,5 +800,19 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 		StringBuffer buffer = new StringBuffer("[" + locator.getLineNumber() + "," + locator.getColumnNumber() + "] ");
 		buffer.append(msg);
 		return MessageFormat.format(buffer.toString(), args);
+	}
+
+	/**
+	 * @return the '/' separated, zero based, path of current {@link Element}.
+	 */
+	private String getIndexPath() {
+		StringBuilder sb = new StringBuilder();
+		for (Integer index : elementIndexStack) {
+			if (sb.length() != 0) {
+				sb.append('/');
+			}
+			sb.append(index.intValue());
+		}
+		return sb.toString();
 	}
 }

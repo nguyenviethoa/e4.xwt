@@ -31,8 +31,8 @@ public class Attribute extends Element {
 		setId(id);
 	}
 
-	public Attribute(String namespace, String name, int originalIndex, String id, Collection<Attribute> attributes) {
-		super(namespace, name, originalIndex, attributes, null);
+	public Attribute(String namespace, String name, String path, String id, Collection<Attribute> attributes) {
+		super(namespace, name, path, attributes, null);
 		assert id == null;
 		setId(id);
 	}
