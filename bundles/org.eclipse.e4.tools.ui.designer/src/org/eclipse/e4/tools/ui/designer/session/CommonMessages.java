@@ -16,7 +16,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class CommonMessages {
 
-  private static final String BUNDLE_NAME = "org.eclipse.egf.common.l10n.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.eclipse.e4.tools.ui.designer.session.messages"; //$NON-NLS-1$
 
   private CommonMessages() {
     // Do not instantiate
