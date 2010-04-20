@@ -12,7 +12,7 @@ package org.eclipse.e4.tools.ui.designer.palette;
 
 import org.eclipse.e4.tools.ui.designer.E4Designer;
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
-import org.eclipse.e4.tools.ui.designer.wizards.NewDataPartWizard;
+import org.eclipse.e4.tools.ui.designer.wizards.part.NewEObjectPartWizard;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
@@ -50,7 +50,7 @@ public class E4EClassPartInitializer extends E4PartInitializer {
 		EClass data = (EClass) entry.getDataContext();
 		EObject create = EcoreUtil.create(data);
 		WizardDialog dialog = new WizardDialog(new Shell(),
-				new NewDataPartWizard(input.getFile(), (MPart) newObject,
+				new NewEObjectPartWizard(input.getFile(), (MPart) newObject,
 						create));
 		return Window.OK == dialog.open();
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,10 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.wizards;
+package org.eclipse.e4.tools.ui.designer.wizards.part;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,11 +22,9 @@ import org.eclipse.e4.xwt.ui.workbench.views.XWTDynamicPart;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTInputPart;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTSelectionStaticPart;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
@@ -34,6 +35,8 @@ import org.eclipse.jdt.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.IStringButtonAdapter;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.jdt.ui.CodeGeneration;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -43,14 +46,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class NewPartWizardPage extends WizardCreatePartPage {
+public class NewOptionsPartWizardPage extends WizardCreatePartPage {
 
 	private String superClassName = null;
 
@@ -72,11 +77,9 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 	private StringButtonDialogField dataContextField;
 	private Button xwtOptionButton;
 
-	public NewPartWizardPage(String superClass, Object dataContext) {
+	public NewOptionsPartWizardPage(String superClass, PartDataContext dataContext) {
+		super(dataContext);
 		this.superClassName = superClass;
-		setDataContext(dataContext);
-		if (dataContext != null || superClassName != null) {
-		}
 		setUsingXWT(dataContext != null || superClassName != null);
 		setTitle("New Part Creation");
 		setDescription("This wizard creates a Part");
@@ -117,7 +120,11 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 			createOptionsControls(xwtOptions, 4);
 		}
 
-		createDataContextControls(xwtOptions, 4);
+		Group dcComp = new Group(xwtOptions, SWT.NONE);
+		dcComp.setText("Data Context");
+		dcComp.setLayoutData(GridDataFactory.fillDefaults().span(4, 1).create());
+		dcComp.setLayout(new GridLayout(3, false));
+		createDataContextControls(dcComp, 3);
 
 		setOptionsEnabled(isUsingXWT());
 	}
@@ -148,7 +155,6 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 
 	@SuppressWarnings("restriction")
 	protected void createDataContextControls(Composite composite, int nColumns) {
-		new Label(composite, SWT.NONE);
 		DataContextFieldAdapter adapter = new DataContextFieldAdapter();
 		dataContextField = new StringButtonDialogField(adapter) {
 			public Control[] doFillIntoGrid(Composite parent, int nColumns) {
@@ -169,36 +175,62 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 		};
 		dataContextField.setDialogFieldListener(adapter);
 		dataContextField.setButtonLabel("Browser...");
-		dataContextField.setLabelText("DataContext:");
-		dataContextField.doFillIntoGrid(composite, nColumns - 1);
+		dataContextField.setLabelText("Type:");
+		dataContextField.doFillIntoGrid(composite, nColumns);
 
-		if (dataContext != null) {
-			if (dataContext instanceof Class<?>) {
-				setDataContext((Class<?>) dataContext);
-			} else if (dataContext instanceof EClass) {
-				EClass dataContextType = (EClass) dataContext;
-				dataContextField.setText(dataContextType.getInstanceTypeName());
-			} else {
-				setDataContext(dataContext.getClass());
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("Properties:");
+
+		final Link link = new Link(composite, SWT.NONE);
+		link.setText("(Configure properties and master value <A>here</A>.)");
+		link.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				handleDataContextProperties();
 			}
-		}
+		});
+		link.setEnabled(dataContext.getType() != null);
+		dataContext.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				link.setEnabled(dataContext.getType() != null);
+			}
+		});
+		updateDataContextField();
 	}
 
-	public void setDataContext(Object dataContext) {
-		super.setDataContext(dataContext);
-		if (dataContext instanceof Class<?>) {
-			IJavaProject project = getJavaProject();
-			if (project == null) {
-				return;
+	protected void handleDataContextProperties() {
+		TitleAreaDialog dialog = new TitleAreaDialog(getShell()) {
+
+			public void create() {
+				setShellStyle(getShellStyle() | SWT.RESIZE);
+				super.create();
 			}
-			try {
-				IType type = project.findType(((Class<?>) dataContext)
-						.getName());
-				setPackageFragment(type.getPackageFragment(), true);
-				setTypeName(type.getElementName() + "Part", true);
-				dataContextField.setText(type.getFullyQualifiedName());
-			} catch (JavaModelException e) {
+			protected Control createDialogArea(Composite parent) {
+				Composite control = (Composite) super.createDialogArea(parent);
+				Composite newControl = new Composite(control, SWT.NONE);
+				newControl.setLayoutData(new GridData(GridData.FILL_BOTH));
+				newControl.setLayout(new GridLayout());
+				Composite composite = PropertiesComposite.create(newControl,
+						dataContext);
+				composite.setLayoutData(GridDataFactory.fillDefaults().grab(
+						true, true).create());
+				return control;
 			}
+			protected void createButtonsForButtonBar(Composite parent) {
+				createButton(parent, IDialogConstants.OK_ID,
+						IDialogConstants.OK_LABEL, true);
+			}
+		};
+		dialog.create();
+		dialog.setTitle("Properties");
+		dialog.getShell().setText("Properties Configure Dialog");
+		dialog.setMessage("Configure properties and master value.");
+		dialog.open();
+	}
+
+	protected void updateDataContextField() {
+		Object type = dataContext.getType();
+		if (type instanceof Class<?>) {
+			dataContextField.setText(((Class<?>) type).getName());
 		}
 	}
 
@@ -312,19 +344,6 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 		return superClassName;
 	}
 
-	protected Class<?> getDataContextJavaType() {
-		if (dataContext != null) {
-			if (dataContext instanceof Class<?>) {
-				return (Class<?>) dataContext;
-			} else if (dataContext instanceof EClass) {
-				throw new UnsupportedOperationException();
-			} else {
-				return dataContext.getClass();
-			}
-		}
-		return null;
-	}
-
 	protected boolean isCreatingFiles() {
 		return super.isCreatingFiles() && creatingFile;
 	}
@@ -332,7 +351,7 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 	protected void createTypeMembers(IType type, ImportsManager imports,
 			IProgressMonitor monitor) throws CoreException {
 		super.createTypeMembers(type, imports, monitor);
-		Class<?> dataContextType = getDataContextJavaType();
+		Class<?> dataContextType = (Class<?>) dataContext.getType();
 		if (dataContextType != null) {
 			final String lineDelim = "\n"; // OK, since content is formatted afterwards //$NON-NLS-1$
 			StringBuffer buf = new StringBuffer();
@@ -358,13 +377,14 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 		}
 	}
 
-	public void validateDataContext(String dataContext) {
+	public void validateNewType(String newTypeName) {
 		String newMessage = "Invalid Java Type for initializing DataContext.";
 		String errorMessage = getErrorMessage();
-		if (dataContext != null) {
+		Class<?> newType = null;
+		if (newTypeName != null) {
 			ProjectLoader context = new ProjectLoader(getJavaProject());
 			try {
-				this.dataContext = context.loadClass(dataContext);
+				newType = context.loadClass(newTypeName);
 				if (newMessage.equals(errorMessage)) {
 					setErrorMessage(null);
 				} else {
@@ -380,6 +400,7 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 				setErrorMessage(errorMessage);
 			}
 		}
+		dataContext.setType(newType);
 		setPageComplete(getErrorMessage() == null);
 	}
 
@@ -399,7 +420,7 @@ public class NewPartWizardPage extends WizardCreatePartPage {
 
 		// -------- IDialogFieldListener
 		public void dialogFieldChanged(DialogField field) {
-			validateDataContext(((StringButtonDialogField) field).getText());
+			validateNewType(((StringButtonDialogField) field).getText());
 		}
 	}
 

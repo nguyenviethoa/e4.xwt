@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.wizards;
+package org.eclipse.e4.tools.ui.designer.wizards.part;
 
 import java.util.ArrayList;
 import java.util.Collections;

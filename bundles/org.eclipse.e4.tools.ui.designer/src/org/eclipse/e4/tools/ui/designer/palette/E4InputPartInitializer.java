@@ -12,7 +12,7 @@ package org.eclipse.e4.tools.ui.designer.palette;
 
 import org.eclipse.e4.tools.ui.designer.E4Designer;
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
-import org.eclipse.e4.tools.ui.designer.wizards.NewFileInputPartWizard;
+import org.eclipse.e4.tools.ui.designer.wizards.part.NewDynamicFilePartWizard;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
@@ -48,7 +48,7 @@ public class E4InputPartInitializer extends E4PartInitializer {
 			return false;
 		}
 
-		NewFileInputPartWizard newWizard = new NewFileInputPartWizard(input
+		NewDynamicFilePartWizard newWizard = new NewDynamicFilePartWizard(input
 				.getFile(), (MPart) newObject, application);
 		WizardDialog dialog = new WizardDialog(new Shell(), newWizard);
 		return Window.OK == dialog.open();

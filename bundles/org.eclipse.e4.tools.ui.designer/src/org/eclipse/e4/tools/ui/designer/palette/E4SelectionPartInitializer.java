@@ -12,7 +12,7 @@ package org.eclipse.e4.tools.ui.designer.palette;
 
 import org.eclipse.e4.tools.ui.designer.E4Designer;
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
-import org.eclipse.e4.tools.ui.designer.wizards.NewSelectionPartWizard;
+import org.eclipse.e4.tools.ui.designer.wizards.part.NewSelectionPartWizard;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;

@@ -46,7 +46,6 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
-import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
@@ -559,6 +558,7 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 			MApplication application) {
 		MCommand command = MCommandsFactory.INSTANCE.createCommand();
 		command.setCommandName(name);
+		command.setElementId(projectName + "." + name);
 		application.getCommands().add(command);
 		{
 			// Create Quit handler for command

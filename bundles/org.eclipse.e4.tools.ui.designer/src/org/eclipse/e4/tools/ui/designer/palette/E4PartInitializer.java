@@ -12,7 +12,7 @@ package org.eclipse.e4.tools.ui.designer.palette;
 
 import org.eclipse.e4.tools.ui.designer.E4Designer;
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
-import org.eclipse.e4.tools.ui.designer.wizards.NewPartWizard;
+import org.eclipse.e4.tools.ui.designer.wizards.part.NewOptionsPartWizard;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
@@ -50,7 +50,7 @@ public class E4PartInitializer extends E4PaletteInitializer {
 			return false;
 		}
 
-		NewPartWizard newWizard = new NewPartWizard(input.getFile(),
+		NewOptionsPartWizard newWizard = new NewOptionsPartWizard(input.getFile(),
 				(MPart) newObject, entry.getDataContext());
 		WizardDialog dialog = new WizardDialog(new Shell(), newWizard);
 		return Window.OK == dialog.open();

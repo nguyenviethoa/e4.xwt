@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.wizards;
+package org.eclipse.e4.tools.ui.designer.wizards.part;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,6 +29,10 @@ import org.eclipse.jdt.ui.CodeGeneration;
  */
 public class NewSelectionPartWizardPage extends WizardCreatePartPage {
 
+	public NewSelectionPartWizardPage(PartDataContext dataContext) {
+		super(dataContext);
+	}
+
 	protected void createTypeMembers(IType type, ImportsManager imports,
 			IProgressMonitor monitor) throws CoreException {
 		super.createTypeMembers(type, imports, monitor);
@@ -40,7 +44,7 @@ public class NewSelectionPartWizardPage extends WizardCreatePartPage {
 
 	private void createSetSelectionMethod(IType type, ImportsManager imports,
 			IProgressMonitor monitor) {
-		Object dataContextType = getDataContextType();
+		Object dataContextType = dataContext.getType();
 		if (dataContextType == null) {
 			return;
 		}
@@ -91,7 +95,7 @@ public class NewSelectionPartWizardPage extends WizardCreatePartPage {
 	protected void createGetDataContextMethod(IType type,
 			ImportsManager imports, IProgressMonitor monitor) {
 		try {
-			Class<?> dataContextType = (Class<?>) getDataContext();
+			Class<?> dataContextType = (Class<?>) dataContext.getType();
 			final String lineDelim = "\n"; // OK, since content is formatted afterwards //$NON-NLS-1$
 			StringBuffer buf = new StringBuffer();
 			String comment = CodeGeneration

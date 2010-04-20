@@ -21,7 +21,9 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.tools.ui.designer.wizards.part.PDC;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAnnotation;
@@ -57,6 +60,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
@@ -325,9 +329,32 @@ public class XWTCodegen {
 					continue;
 				}
 				Class<?> propertyType = pd.getPropertyType();
-				if (propertyType.isPrimitive() || propertyType == String.class
+				if (propertyType == null) {
+					continue;
+				} else if (propertyType.isArray()
+						|| Collection.class.isAssignableFrom(propertyType)) {
+					try {
+						ByteArrayOutputStream out = new ByteArrayOutputStream();
+						PrintStream ps = new PrintStream(out);
+						printTableBean(ps, pd, null, prefixOffset);
+						byte[] bytes = out.toByteArray();
+						String content = new String(bytes);
+						printSurroundWithGroup(printStream, name, content,
+								new FillLayout(), GridDataFactory
+										.fillDefaults().grab(true, false).span(
+												2, 1).create(), prefixOffset);
+						ps.close();
+						out.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else if (propertyType.isPrimitive()
+						|| propertyType == String.class
 						|| propertyType == URL.class) {
 					result.merge(printLabelText(printStream, pd
+							.getDisplayName(), pd.getName(), prefixOffset));
+				} else if (Date.class == propertyType) {
+					result.merge(printLabelDateTime(printStream, pd
 							.getDisplayName(), pd.getName(), prefixOffset));
 				} else if (propertyType.isEnum()) {
 					List<String> items = new ArrayList<String>();
@@ -337,7 +364,7 @@ public class XWTCodegen {
 					result.merge(printLabelCombo(printStream, name, name, items
 							.toArray(new String[0]), prefixOffset));
 				} else {
-					String elementType = propertyType.getName();
+					String elementType = propertyType.getSimpleName();
 					String content = "<p:" + elementType
 							+ " DataContext=\"{Binding path=" + name + "}\"/>";
 					result.merge(printSurroundWithGroup(printStream, name,
@@ -461,6 +488,61 @@ public class XWTCodegen {
 		return PrintResult.OK;
 	}
 
+	public static PrintResult printTableBean(PrintStream printStream,
+			PropertyDescriptor propertyDescriptor, Object layoutData,
+			String prefixOffset) {
+		if (propertyDescriptor == null
+				|| propertyDescriptor.getPropertyType() == null) {
+			return PrintResult.FAILED;
+		}
+		Class<?> propertyType = propertyDescriptor.getPropertyType();
+		if (!propertyType.isArray()
+				&& !Collection.class.isAssignableFrom(propertyType)) {
+			return PrintResult.FAILED;
+		}
+		if (prefixOffset == null) {
+			prefixOffset = "";
+		}
+		String nextOffset = prefixOffset + "\t";
+		String name = propertyDescriptor.getName();
+		printStream
+				.println(prefixOffset
+						+ "<TableViewer Name=\""
+						+ name
+						+ "TableViewer\" x:style=\"SWT.FULL_SELECTION\" input=\"{Binding Path="
+						+ name + "}\">");
+		Class<?> eType = propertyType.getComponentType();
+		if (eType != null) {
+			printStream.println(nextOffset + "<TableViewer.columns>");
+			List<PropertyDescriptor> properties = PDC.collectProperties(eType,
+					false, false);
+			for (PropertyDescriptor pd : properties) {
+				printTableColumn(printStream, pd.getDisplayName(),
+						pd.getName(), 100, nextOffset + "\t");
+			}
+			printStream.println(nextOffset + "</TableViewer.columns>");
+		}
+
+		String eventHandler = "";
+		// EAnnotation eAnnotation = feature
+		// .getEAnnotation(EMF_FEATURE_MASTER_KEY);
+		// if (eAnnotation != null) {
+		// eventHandler = "SelectionEvent=\"handleSelectionEvent\"";
+		// }
+		printStream.println(nextOffset
+				+ "<TableViewer.table HeaderVisible=\"true\" " + eventHandler
+				+ "/>");
+		if (layoutData != null) {
+			printStream
+					.println(nextOffset + "<TableViewer.control.layoutData>");
+			printlayoutData(printStream, nextOffset, layoutData);
+			printStream.println(nextOffset
+					+ "</TableViewer.control.layoutData>");
+		}
+
+		printStream.println(prefixOffset + "</TableViewer>");
+		return PrintResult.OK;
+	}
 	public static PrintResult printTableColumn(PrintStream printStream,
 			String displayName, String displayMemberPath, int width,
 			String prefixOffset) {
@@ -583,6 +665,23 @@ public class XWTCodegen {
 		return result;
 	}
 
+	public static PrintResult printLabelDateTime(PrintStream printStream,
+			String displayName, String bindingPath, String prefixOffset) {
+		PrintResult result = new PrintResult();
+		if (displayName == null) {
+			displayName = "label";
+		}
+		if (prefixOffset == null) {
+			prefixOffset = "";
+		}
+		result.merge(printControl(Label.class, printStream, displayName,
+				prefixOffset));
+		result.merge(printControl(DateTime.class, printStream, null,
+				bindingPath, "BORDER", GridDataFactory.fillDefaults().grab(
+						true, false).create(), prefixOffset));
+		return result;
+	}
+
 	public static PrintResult printControl(Class<?> control,
 			PrintStream printStream, String displayName, String prefixOffset) {
 		return printControl(control, printStream, displayName, null, null,
@@ -694,7 +793,7 @@ public class XWTCodegen {
 		printStream.println(nextPrefix + " </Group.layout>");
 
 		if (content != null) {
-			printStream.println(nextPrefix + " " + content);
+			printStream.println(content);
 		}
 
 		printStream.println(nextPrefix + " <Group.layoutData>");

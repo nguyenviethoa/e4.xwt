@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,11 +8,9 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.wizards;
+package org.eclipse.e4.tools.ui.designer.wizards.part;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,30 +25,29 @@ import org.eclipse.e4.xwt.emf.EMFBinding;
 import org.eclipse.e4.xwt.ui.utils.ProjectUtil;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.ui.CodeGeneration;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class NewDataPartWizardPage extends WizardCreatePartPage {
+public class NewEObjectPartWizardPage extends WizardCreatePartPage {
 
 	private EPackage ePackage;
-	private PropertiesComposite propertiesComposite;
+	private boolean createPropertiesControl = true;
 
-	public NewDataPartWizardPage(EPackage ePackage, EObject dataContext) {
+	public NewEObjectPartWizardPage(PartDataContext dataContext,
+			EPackage ePackage, boolean createPropertiesControl) {
+		super(dataContext);
 		this.setEPackage(ePackage);
-		setDataContext(dataContext);
+		this.createPropertiesControl = createPropertiesControl;
 	}
 
 	protected void checkDependencies() {
@@ -62,30 +59,16 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 		}
 	}
 
-	protected List<String> getDataContextProperties() {
-		if (propertiesComposite != null) {
-			return propertiesComposite.getProperties();
-		}
-		List<String> features = new ArrayList<String>();
-		EClass eClass = (EClass) getDataContextType();
-		if (eClass == null) {
-			return null;
-		}
-		for (EStructuralFeature feature : eClass
-				.getEStructuralFeatures()) {
-			EClassifier eType = feature.getEType();
-			if (eType instanceof EDataType) {
-				features.add(feature.getName());
-			}
-		}
-		return features;
-	}
-
 	protected void createAdditionalControl(Composite parent, int numColumns) {
-		propertiesComposite = new PropertiesComposite(parent, SWT.NONE);
-		propertiesComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.span(numColumns, 1).create());
-		propertiesComposite.setDataContext(getDataContext());
+		if (!createPropertiesControl) {
+			return;
+		}
+		ExpandableComposite composite = PropertiesComposite.createExpandabel(
+				parent,
+				dataContext);
+		composite.setExpanded(true);
+		composite.setLayoutData(GridDataFactory.fillDefaults().span(numColumns,
+				1).grab(true, true).create());
 	}
 
 	protected void createTypeMembers(IType type, ImportsManager imports,
@@ -159,16 +142,16 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 			}
 			buf.append("public EClass getDataContextType() {"); //$NON-NLS-1$
 			buf.append(lineDelim);
-			
+
 			String content = EMFCodegen.genDynamicModel(imports, getEPackage(),
-					(EObject) getDataContext(), true, monitor);
+					(EObject) dataContext.getValue(), true, monitor);
 			if (content != null && content.length() != 0)
 				buf.append(content);
-			
+
 			buf.append(lineDelim);
 			buf.append("}"); //$NON-NLS-1$
 			buf.append(lineDelim);
-			
+
 			buf.append("public Object getDataContext() {"); //$NON-NLS-1$
 			buf.append(lineDelim);
 			buf.append("\tObject dataContext = super.getDataContext();"); //$NON-NLS-1$
@@ -189,7 +172,7 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 			buf.append("public Object createDataContext() {"); //$NON-NLS-1$
 			buf.append(lineDelim);
 			content = EMFCodegen.genDynamicContents(imports, getEPackage(),
-					(EObject) getDataContext(), true, monitor);
+					(EObject) dataContext.getValue(), true, monitor);
 
 			if (content != null && content.length() != 0)
 				buf.append(content);
@@ -212,6 +195,12 @@ public class NewDataPartWizardPage extends WizardCreatePartPage {
 	}
 
 	public EPackage getEPackage() {
+		if (ePackage == null) {
+			Object type = dataContext.getType();
+			if (type instanceof EClass) {
+				ePackage = ((EClass) type).getEPackage();
+			}
+		}
 		return ePackage;
 	}
 }

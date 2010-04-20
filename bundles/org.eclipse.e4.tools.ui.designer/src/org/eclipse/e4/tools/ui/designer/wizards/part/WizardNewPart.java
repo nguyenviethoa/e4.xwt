@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.wizards;
+package org.eclipse.e4.tools.ui.designer.wizards.part;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -22,10 +22,14 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.xwt.ui.utils.ProjectContext;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.jdt.internal.ui.wizards.NewElementWizard;
+import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
@@ -38,11 +42,16 @@ public abstract class WizardNewPart extends NewElementWizard {
 
 	private ProjectContext fProjectContext;
 
+	private NewClassWizardPage newTypeWizardPage;
+
 	public WizardNewPart(IFile file, MPart part) {
 		this.fFile = file;
 		this.fPart = part;
 		fProjectContext = ProjectContext.getContext(JavaCore.create(file
 				.getProject()));
+		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWCLASS);
+		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
+		setWindowTitle("New Part");
 	}
 
 	public boolean performFinish() {
@@ -100,7 +109,29 @@ public abstract class WizardNewPart extends NewElementWizard {
 		}
 	}
 
+	public void setNewTypeWizardPage(NewClassWizardPage newTypeWizardPage) {
+		this.newTypeWizardPage = newTypeWizardPage;
+	}
+
 	protected boolean canRunForked() {
+		if (newTypeWizardPage != null) {
+			return !newTypeWizardPage.isEnclosingTypeSelected();
+		}
 		return false;
 	}
+
+	protected void finishPage(IProgressMonitor monitor)
+			throws InterruptedException, CoreException {
+		if (newTypeWizardPage != null) {
+			newTypeWizardPage.createType(monitor);
+		}
+	}
+
+	public IJavaElement getCreatedElement() {
+		if (newTypeWizardPage != null) {
+			return newTypeWizardPage.getCreatedType();
+		}
+		return null;
+	}
+
 }

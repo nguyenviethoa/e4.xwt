@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,33 +8,35 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.wizards;
+package org.eclipse.e4.tools.ui.designer.wizards.part;
 
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.tools.ui.designer.utils.XWTCodegen;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.XWTProjectUtil;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -42,10 +44,16 @@ import org.eclipse.ui.PlatformUI;
  */
 public class WizardCreatePartPage extends NewClassWizardPage {
 
-	protected Object dataContext;
-	private List<String> dataContextProperties;
+	protected PartDataContext dataContext;
 
 	protected boolean isUsingXWT = true;
+
+	private String selectionEventHandler = "handleSelectionEvent";
+
+	public WizardCreatePartPage(PartDataContext dataContext) {
+		this.dataContext = dataContext;
+		Assert.isNotNull(dataContext, "Data Context can not be NULL.");
+	}
 
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
@@ -91,6 +99,60 @@ public class WizardCreatePartPage extends NewClassWizardPage {
 		createAdditionalFiles(monitor);
 	}
 
+	protected void createTypeMembers(IType type, ImportsManager imports,
+			IProgressMonitor monitor) throws CoreException {
+		super.createTypeMembers(type, imports, monitor);
+		if (dataContext.hasMasterProperties()) {
+			createEventHandlers(type, imports, monitor);
+		}
+	}
+
+	protected void createEventHandlers(IType type, ImportsManager imports,
+			IProgressMonitor monitor) {
+		try {
+			final String lineDelim = "\n"; // OK, since content is formatted afterwards //$NON-NLS-1$
+			StringBuffer buf = new StringBuffer();
+			buf.append("//Handle Selection Event.");
+			buf.append(lineDelim);
+			imports.addImport(Event.class.getName());
+			imports.addImport(TreeViewer.class.getName());
+			imports.addImport(IStructuredSelection.class.getName());
+			imports.addImport(IServiceConstants.class.getName());
+			buf.append("protected void " + getSelectionEventHandler() + "(Object object, Event event) {"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			buf.append("\tViewer localViewer = UserData.getLocalViewer(object);"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			buf.append("\tif (localViewer != null) {"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			buf.append("\t\tIStructuredSelection selection = (IStructuredSelection) localViewer.getSelection();"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			buf.append("\t\tgetContext().modify(IServiceConstants.SELECTION, selection.size() == 1 ? selection.getFirstElement() : selection.toArray());"); //$NON-NLS-1$
+			buf.append(lineDelim);
+			buf.append("\t}");
+			buf.append(lineDelim);
+			buf.append("}"); //$NON-NLS-1$
+			imports.addImport(Viewer.class.getName());
+			imports.addImport(UserData.class.getName());
+			type.createMethod(buf.toString(), null, false, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	protected void createTypeNameControls(Composite composite, int nColumns) {
+		super.createTypeNameControls(composite, nColumns);
+		dataContext.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				String propertyName = evt.getPropertyName();
+				if (propertyName.equals(PartDataContext.TYPE)
+						|| propertyName.equals(PartDataContext.VALUE)) {
+					String displayName = dataContext.getDisplayName();
+					setTypeName(displayName + "Part", true);
+				}
+			}
+		});
+		setTypeName(dataContext.getDisplayName() + "Part", true);
+	}
+
 	protected boolean isCreatingFiles() {
 		return isUsingXWT();
 	}
@@ -105,64 +167,20 @@ public class WizardCreatePartPage extends NewClassWizardPage {
 		resourcePath = resourcePath.addFileExtension(IConstants.XWT_EXTENSION);
 		try {
 			IFile file = resource.getProject().getFile(resourcePath);
-			XWTCodegen.createFile(getCreatedType(), file, dataContext,
-					getDataContextProperties());
+			if (dataContext.hasMasterProperties()
+					&& getSelectionEventHandler() != null) {
+				List<Object> masterProperties = dataContext
+						.getMasterProperties();
+				for (Object object : masterProperties) {
+					dataContext.addEventHandler(object, "Selection",
+							getSelectionEventHandler());
+				}
+			}
+			PDCCodegen.createFile(getCreatedType(), file, dataContext);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected List<String> getDataContextProperties() {
-		if (dataContextProperties == null) {
-			dataContextProperties = new ArrayList<String>();
-			computeDataContextProperties();
-		}
-		return dataContextProperties;
-	}
-
-	protected void computeDataContextProperties() {
-		Object dataContextType = getDataContextType();
-		if (dataContextType == null) {
-			return;
-		}
-		// Compute default properties for generating codes.
-		if (dataContextType instanceof Class<?>) {
-			Class<?> javaType = (Class<?>) dataContextType;
-			try {
-				BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(
-						javaType, javaType.getSuperclass());
-				PropertyDescriptor[] descriptors = beanInfo
-						.getPropertyDescriptors();
-				for (PropertyDescriptor pd : descriptors) {
-					dataContextProperties.add(pd.getName());
-				}
-			} catch (Exception e) {
-			}
-		} else if (dataContextType instanceof EClass) {
-			EList<EStructuralFeature> features = ((EClass) dataContextType)
-					.getEStructuralFeatures();
-			for (EStructuralFeature sf : features) {
-				dataContextProperties.add(sf.getName());
-			}
-		}
-	}
-
-	protected Object getDataContextType() {
-		Object dc = getDataContext();
-		if (dc == null) {
-			return null;
-		}
-		if (dc instanceof Class<?> || dc instanceof EClass) {
-			return dc;
-		} else if (dc instanceof EObject) {
-			return ((EObject) dc).eClass();
-		}
-		return dc.getClass();
-	}
-
-	public void setDataContextProperties(List<String> dataContextProperties) {
-		this.dataContextProperties = dataContextProperties;
 	}
 
 	protected void checkDependencies() {
@@ -172,25 +190,7 @@ public class WizardCreatePartPage extends NewClassWizardPage {
 		}
 	}
 
-	public void setDataContext(Object dataContext) {
-		this.dataContext = dataContext;
-		if (dataContext == null) {
-			return;
-		}
-		String typeName = null;
-		if (dataContext instanceof EClass) {
-			typeName = ((EClass) dataContext).getName();
-		} else if (dataContext instanceof EObject) {
-			typeName = ((EObject) dataContext).eClass().getName();
-		} else if (dataContext instanceof Class<?>) {
-			typeName = ((Class<?>) dataContext).getSimpleName();
-		} else {
-			typeName = dataContext.getClass().getSimpleName();
-		}
-		setTypeName(typeName + "Part", true);
-	}
-
-	public Object getDataContext() {
+	public PartDataContext getDataContext() {
 		return dataContext;
 	}
 
@@ -230,5 +230,13 @@ public class WizardCreatePartPage extends NewClassWizardPage {
 
 	public boolean isUsingXWT() {
 		return isUsingXWT;
+	}
+
+	public void setSelectionEventHandler(String selectionEventHandler) {
+		this.selectionEventHandler = selectionEventHandler;
+	}
+
+	public String getSelectionEventHandler() {
+		return selectionEventHandler;
 	}
 }

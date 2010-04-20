@@ -43,21 +43,22 @@ public class E4PaletteInitializer extends InitializerImpl {
 	}
 
 	public Object parse(Entry entry) {
-		boolean isCreated = false;
-		if (creatingObject != null && creatingObject instanceof EObject) {
-			isCreated = ((EObject) creatingObject).eContainer() != null;
+		EClass type = entry.getType();
+		if (type == null) {
+			return null;
 		}
-		if (creatingObject == null || isCreated) {
-			EClass type = entry.getType();
-			if (type != null) {
-				creatingObject = EcoreUtil.create(type);
-				if (creatingObject instanceof MContribution) {
-					((MContribution) creatingObject)
-							.setContributionURI("platform:/plugin/org.eclipse.e4.tools.ui.designer/org.eclipse.e4.tools.ui.designer.E4Designer");
-				}
+		boolean useCache = false;
+		if (creatingObject != null && creatingObject instanceof EObject
+				&& type.equals(((EObject) creatingObject).eClass())) {
+			useCache = ((EObject) creatingObject).eContainer() == null;
+		}
+		if (!useCache) {
+			creatingObject = EcoreUtil.create(type);
+			if (creatingObject instanceof MContribution) {
+				((MContribution) creatingObject)
+						.setContributionURI("platform:/plugin/org.eclipse.e4.tools.ui.designer/org.eclipse.e4.tools.ui.designer.E4Designer");
 			}
 		}
 		return creatingObject;
 	}
-
 }

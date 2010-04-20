@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.emf.ecore.EObject;
 
@@ -33,8 +34,15 @@ public class ShellEditPart extends CompositeEditPart {
 	protected List getModelChildren() {
 		List modelChildren = new ArrayList(super.getModelChildren());
 		MUIElement model = getMuiElement();
-		if (model instanceof MWindow && ((MWindow) model).getMainMenu() != null) {
-			modelChildren.add(((MWindow) model).getMainMenu());
+		if (model instanceof MWindow) {
+			MWindow window = (MWindow) model;
+			if (window.getMainMenu() != null) {
+				modelChildren.add(window.getMainMenu());
+			}
+			if (window instanceof MTrimmedWindow) {
+				MTrimmedWindow trimmedWindow = (MTrimmedWindow) window;
+				modelChildren.addAll(trimmedWindow.getTrimBars());
+			}
 		}
 		return modelChildren;
 	}
