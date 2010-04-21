@@ -11,11 +11,12 @@
 package org.eclipse.e4.tools.ui.designer.editparts;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
-import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.MUILabel;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
@@ -78,14 +79,9 @@ public class WidgetEditPart extends VisualEditPart {
 	 */
 	protected List getModelChildren() {
 		List children = new ArrayList();
-		MUIElement muiElement = getMuiElement();
-		if (muiElement instanceof MElementContainer<?>) {
-			for (Object object : ((MElementContainer) muiElement).getChildren()) {
-				if (!(object instanceof MUIElement)) {
-					continue;
-				}
-				children.add(object);
-			}
+		Object[] childrenArray = ApplicationModelHelper.getChildren(getModel());
+		if (childrenArray != null) {
+			children.addAll(Arrays.asList(childrenArray));
 		}
 		return children;
 	}

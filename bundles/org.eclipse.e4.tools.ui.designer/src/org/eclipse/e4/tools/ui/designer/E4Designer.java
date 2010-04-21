@@ -17,14 +17,9 @@ import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.outline.E4ContentOutlinePage;
 import org.eclipse.e4.tools.ui.designer.outline.OutlinePageDropManager;
-import org.eclipse.e4.ui.model.application.commands.provider.CommandsItemProviderAdapterFactory;
-import org.eclipse.e4.ui.model.application.descriptor.basic.provider.BasicItemProviderAdapterFactory;
-import org.eclipse.e4.ui.model.application.provider.ApplicationItemProviderAdapterFactory;
+import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.model.application.ui.advanced.provider.AdvancedItemProviderAdapterFactory;
-import org.eclipse.e4.ui.model.application.ui.menu.provider.MenuItemProviderAdapterFactory;
-import org.eclipse.e4.ui.model.application.ui.provider.UiItemProviderAdapterFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer;
@@ -35,11 +30,6 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePa
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -65,7 +55,6 @@ public class E4Designer extends Designer {
 
 	private boolean isDirty = false;
 	private E4UIRenderer uiRenderer = new E4UIRenderer();
-	private ComposedAdapterFactory adapterFactory;
 
 	/*
 	 * (non-Javadoc)Property
@@ -119,32 +108,6 @@ public class E4Designer extends Designer {
 	protected void setupGraphicalViewerDropCreation(GraphicalViewer viewer) {
 		viewer.addDropTargetListener(new E4GraphicalViewerDropCreationListener(
 				viewer));
-	}
-
-	protected ComposedAdapterFactory getAdapterFactory() {
-		if (adapterFactory == null) {
-			adapterFactory = new ComposedAdapterFactory(
-					ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-			adapterFactory
-					.addAdapterFactory(new org.eclipse.e4.ui.model.application.ui.basic.provider.BasicItemProviderAdapterFactory());
-			adapterFactory
-					.addAdapterFactory(new BasicItemProviderAdapterFactory());
-			adapterFactory
-					.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-			adapterFactory
-					.addAdapterFactory(new CommandsItemProviderAdapterFactory());
-			adapterFactory
-					.addAdapterFactory(new UiItemProviderAdapterFactory());
-			adapterFactory
-					.addAdapterFactory(new MenuItemProviderAdapterFactory());
-			adapterFactory
-					.addAdapterFactory(new AdvancedItemProviderAdapterFactory());
-			adapterFactory
-					.addAdapterFactory(new ApplicationItemProviderAdapterFactory());
-			adapterFactory
-					.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-		}
-		return adapterFactory;
 	}
 
 	/*
@@ -257,9 +220,8 @@ public class E4Designer extends Designer {
 				super.selectionChanged(part, selection);
 			}
 		};
-		propertyPage
-				.setPropertySourceProvider(new AdapterFactoryContentProvider(
-						getAdapterFactory()));
+		propertyPage.setPropertySourceProvider(ApplicationModelHelper
+				.getContentProvider());
 		return propertyPage;
 	}
 
@@ -280,11 +242,9 @@ public class E4Designer extends Designer {
 	 * ()
 	 */
 	protected ContentOutlinePage createOutlinePage() {
-		ComposedAdapterFactory adapterFactory = getAdapterFactory();
-
 		ContentOutlinePage outlinePage = new E4ContentOutlinePage(this,
-				new AdapterFactoryContentProvider(adapterFactory),
-				new AdapterFactoryLabelProvider(adapterFactory),
+				ApplicationModelHelper.getContentProvider(), ApplicationModelHelper
+						.getLabelProvider(),
 				new ViewerFilter[] { new ViewerFilter() {
 					@Override
 					public boolean select(Viewer viewer, Object parentElement,

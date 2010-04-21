@@ -12,8 +12,9 @@ package org.eclipse.e4.tools.ui.designer;
 
 import java.util.List;
 
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionConstants;
+import org.eclipse.e4.tools.ui.designer.actions.FindElementAction;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IMenuManager;
@@ -67,6 +68,7 @@ public class E4DesignerMenuProvider extends DesignerMenuProvider {
 			} else {
 				// Multi-Selection.
 			}
+			menu.add(new FindElementAction(getViewer()));
 		}
 	}
 }
