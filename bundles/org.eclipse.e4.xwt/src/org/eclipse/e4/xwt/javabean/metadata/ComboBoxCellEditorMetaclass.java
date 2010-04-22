@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.javabean.metadata;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.jface.ComboBoxCellEditor;
@@ -42,7 +43,12 @@ public class ComboBoxCellEditorMetaclass extends Metaclass {
 				Constructor<?> constructor = getType().getConstructor(Composite.class, String[].class, int.class);
 				return constructor.newInstance(getParent(parameters[0]), parameters[1], parameters[2]);
 			}
-		} catch (Exception e) {
+		} catch (SecurityException e1) {
+		} catch (IllegalArgumentException e1) {
+		} catch (NoSuchMethodException e1) {
+		} catch (InstantiationException e1) {
+		} catch (IllegalAccessException e1) {
+		} catch (InvocationTargetException e1) {
 		}
 		return super.newInstance(parameters);
 	}

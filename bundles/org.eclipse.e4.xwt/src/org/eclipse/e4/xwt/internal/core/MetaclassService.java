@@ -81,7 +81,7 @@ public class MetaclassService {
 	public IMetaclass getMetaclass(Class<?> type, String namespace) {
 		MetaclassManager manager = map.get(namespace);
 		if (manager == null) {
-			manager = new MetaclassManager(this, manager, xwtLoader);
+			manager = new MetaclassManager(this, null, xwtLoader);
 			map.put(namespace, manager);
 		}
 		IMetaclass metaclass = manager.getMetaclass(type);
@@ -114,7 +114,7 @@ public class MetaclassService {
 	public void register(IMetaclass metaclass, String namespace) {
 		MetaclassManager manager = map.get(namespace);
 		if (manager == null) {
-			manager = new MetaclassManager(this, manager, xwtLoader);
+			manager = new MetaclassManager(this, null, xwtLoader);
 			map.put(namespace, manager);
 		}
 		manager.register(metaclass);

@@ -24,7 +24,7 @@ public class DateToString extends ObjectToString {
 
 	public Object convert(Object fromObject) {
 		if (fromObject == null) {
-			return super.convert(fromObject);
+			return super.convert(null);
 		}
 		return FORMATTER.format((Date) fromObject);
 	}

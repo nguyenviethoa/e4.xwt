@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.javabean.metadata;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
@@ -40,26 +41,30 @@ public class TableViewerColumnMetaClass extends Metaclass {
 	
 	@Override
 	public Object doNewInstance(Object[] parameters) {
-		try {
-			if (parameters.length == 1 && parameters[0] instanceof TableViewer) {
-				Constructor<?> constructor = getType().getConstructor(TableViewer.class, int.class);
-				return constructor.newInstance(parameters[0], SWT.NONE);
-			} else if (parameters.length == 2) {
-				if (parameters[0] instanceof TableViewer && parameters[1] instanceof Integer) {
+			try {
+				if (parameters.length == 1 && parameters[0] instanceof TableViewer) {
 					Constructor<?> constructor = getType().getConstructor(TableViewer.class, int.class);
-					return constructor.newInstance(parameters);
-				} else if (parameters[0] instanceof TableViewer && parameters[1] instanceof TableColumn) {
-					Constructor<?> constructor = getType().getConstructor(TableViewer.class, TableColumn.class);
-					return constructor.newInstance(parameters);
+					return constructor.newInstance(parameters[0], SWT.NONE);
+				} else if (parameters.length == 2) {
+					if (parameters[0] instanceof TableViewer && parameters[1] instanceof Integer) {
+						Constructor<?> constructor = getType().getConstructor(TableViewer.class, int.class);
+						return constructor.newInstance(parameters);
+					} else if (parameters[0] instanceof TableViewer && parameters[1] instanceof TableColumn) {
+						Constructor<?> constructor = getType().getConstructor(TableViewer.class, TableColumn.class);
+						return constructor.newInstance(parameters);
+					}
+				} else if (parameters.length == 3 && parameters[0] instanceof TableViewer
+						&& parameters[1] instanceof Integer && parameters[2] instanceof Integer) {
+					Constructor<?> constructor = getType().getConstructor(TableViewer.class, int.class, int.class);
+					return constructor.newInstance(parameters[0], ((Integer) parameters[1]).intValue(), ((Integer) parameters[2]).intValue());
 				}
-			} else if (parameters.length == 3 && parameters[0] instanceof TableViewer
-					&& parameters[1] instanceof Integer && parameters[2] instanceof Integer) {
-				Constructor<?> constructor = getType().getConstructor(TableViewer.class, int.class, int.class);
-				return constructor.newInstance(parameters[0], ((Integer) parameters[1]).intValue(), ((Integer) parameters[2]).intValue());
+			} catch (SecurityException e) {
+			} catch (IllegalArgumentException e) {
+			} catch (NoSuchMethodException e) {
+			} catch (InstantiationException e) {
+			} catch (IllegalAccessException e) {
+			} catch (InvocationTargetException e) {
 			}
-		} catch (Exception e) {
-
-		}
 
 		return super.newInstance(parameters);
 	}

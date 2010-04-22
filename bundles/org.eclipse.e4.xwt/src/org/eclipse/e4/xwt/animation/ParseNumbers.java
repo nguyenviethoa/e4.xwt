@@ -11,7 +11,8 @@
 package org.eclipse.e4.xwt.animation;
 
 public class ParseNumbers {
-	public static String IntToString(int n, int m, int digits, char ch, int d) {
+	
+	public static String intToString(int n, int m, int digits, char ch, int d) {
 		String value = Integer.toString(n, m);
 
 		if (ch != 0) {

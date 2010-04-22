@@ -134,15 +134,15 @@ public class PathHelper {
 			if (!token1.equals(token2))
 				break;
 		}
-		String output = "";
+		StringBuilder builder = new StringBuilder();
 		while (baseTokenizer.hasMoreTokens()) {
 			baseTokenizer.nextToken();
-			output += RELATIVE_PATH_SIG;
+			builder.append(RELATIVE_PATH_SIG);
 		}
-		output += token2;
+		builder.append(token2);
 		while (inputTokenizer.hasMoreTokens()) {
-			output = output + FORWARD_SLASH + inputTokenizer.nextToken();
+			builder.append(FORWARD_SLASH + inputTokenizer.nextToken());
 		}
-		return output;
+		return builder.toString();
 	}
 }

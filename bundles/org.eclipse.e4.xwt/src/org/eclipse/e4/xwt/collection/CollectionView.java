@@ -88,6 +88,10 @@ public class CollectionView<T> implements ICollectionView<T> {
 	public T getCurrentItem() {
 		return currentItem;
 	}
+	
+	public void setCurrentItem(T currentItem) {
+		this.currentItem = currentItem;
+	}
 
 	public int getCurrentPosition() {
 		return currentPosition;

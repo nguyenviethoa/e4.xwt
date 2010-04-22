@@ -40,7 +40,6 @@ public class ObservableMapLabelProvider extends LabelProvider implements
 		ILabelProvider, ITableLabelProvider {
 
 	private final IObservableMap[] textMaps;
-	private IObservableMap[] imageMaps;
 	private Viewer viewer;
 	
 	private IMapChangeListener mapChangeListener = new IMapChangeListener() {

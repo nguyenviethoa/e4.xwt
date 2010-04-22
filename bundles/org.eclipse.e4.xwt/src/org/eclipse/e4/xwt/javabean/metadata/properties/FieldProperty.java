@@ -28,9 +28,6 @@ public class FieldProperty extends AbstractProperty {
 
 	public FieldProperty(Field field) {
 		super(field.getName(), field.getType());
-		if (field == null) {
-			throw new NullPointerException();
-		}
 		this.field = field;
 	}
 

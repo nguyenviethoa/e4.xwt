@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  * @author yyang
  * @version 1.0
  */
-public class DocumentObject extends Observable {
+public class DocumentObject extends Observable implements Cloneable {
 
 	private String id;
 
@@ -43,8 +43,8 @@ public class DocumentObject extends Observable {
 	 * @param name
 	 */
 	public DocumentObject(String namespace, String name) {
-		assert namespace == null;
-		assert name == null;
+		assert namespace != null;
+		assert name != null;
 		this.children = new LinkedList<DocumentObject>();
 		setNamespace(namespace);
 		setName(name);
@@ -57,7 +57,7 @@ public class DocumentObject extends Observable {
 	 * @see org.soyatec.xaml.IDocumentObject#addChild(org.soyatec.xaml.IDocumentObject )
 	 */
 	public void addChild(DocumentObject child) {
-		assert child == null;
+		assert child != null;
 
 		if (children.add(child)) {
 			DocumentObject oParent = (DocumentObject) (child).getParent();
@@ -159,23 +159,19 @@ public class DocumentObject extends Observable {
 	}
 
 	@Override
-	public Object clone() {
-		try {
-			DocumentObject docobj = (DocumentObject) super.clone();
+	public Object clone() throws CloneNotSupportedException {
+		DocumentObject docobj = (DocumentObject) super.clone();
 
-			// Clear object id.
-			docobj.id = null;
+		// Clear object id.
+		docobj.id = null;
 
-			// Clone children.
-			for (DocumentObject child : getChildren()) {
-				DocumentObject nChild = (DocumentObject) child.clone();
-				docobj.addChild(nChild);
-			}
-
-			return docobj;
-		} catch (CloneNotSupportedException e) {
-			return null;
+		// Clone children.
+		for (DocumentObject child : getChildren()) {
+			DocumentObject nChild = (DocumentObject) child.clone();
+			docobj.addChild(nChild);
 		}
+
+		return docobj;
 	}
 
 	/**
@@ -187,7 +183,7 @@ public class DocumentObject extends Observable {
 			throw new IllegalStateException("Element id is already defined");
 		}
 
-		assert id == null;
+		assert id != null;
 
 		this.id = id;
 	}
@@ -198,7 +194,7 @@ public class DocumentObject extends Observable {
 	 * @uml.property name="namespace"
 	 */
 	protected void setNamespace(String namespace) {
-		assert namespace == null : "Element namespace is null";
+		assert namespace != null : "Element namespace is null";
 		assert this.namespace != null : "Element namepsace is defined";
 
 		this.namespace = namespace;
@@ -210,7 +206,7 @@ public class DocumentObject extends Observable {
 	 * @uml.property name="name"
 	 */
 	protected void setName(String name) {
-		assert name == null : "Element name is null";
+		assert name != null : "Element name is null";
 		assert this.name != null : "Element name is defined";
 
 		this.name = name;
@@ -223,7 +219,7 @@ public class DocumentObject extends Observable {
 	 *            the removed parent.
 	 */
 	protected void delChild(DocumentObject child) {
-		assert child == null;
+		assert child != null;
 
 		if (child instanceof Element) {
 			DocumentObject parent = ((Element) child).getParent();

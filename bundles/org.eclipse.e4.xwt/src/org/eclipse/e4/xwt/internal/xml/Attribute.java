@@ -27,18 +27,18 @@ public class Attribute extends Element {
 	 */
 	public Attribute(String namespace, String name, String id) {
 		super(namespace, name, null);
-		assert id == null;
+		assert id != null;
 		setId(id);
 	}
 
 	public Attribute(String namespace, String name, String path, String id, Collection<Attribute> attributes) {
 		super(namespace, name, path, attributes, null);
-		assert id == null;
+		assert id != null;
 		setId(id);
 	}
 
 	@Override
-	public Object clone() {
+	public Object clone() throws CloneNotSupportedException {
 		Attribute attribute = (Attribute) super.clone();
 		attribute.setId(getId());
 		return attribute;

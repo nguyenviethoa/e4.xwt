@@ -96,7 +96,7 @@ public class TableEditorDynamicProperty extends AbstractProperty {
 		}
 	}
 
-	private class TableSelectionHandler implements SelectionListener {
+	static private class TableSelectionHandler implements SelectionListener {
 
 		private Table table;
 		private TableEditor tableEditor;

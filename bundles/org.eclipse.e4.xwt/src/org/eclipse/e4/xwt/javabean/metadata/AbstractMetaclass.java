@@ -2,6 +2,7 @@ package org.eclipse.e4.xwt.javabean.metadata;
 
 import java.beans.BeanInfo;
 import java.beans.EventSetDescriptor;
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -178,7 +179,8 @@ public abstract class AbstractMetaclass implements IMetaclass {
 					.getEventPropertyName(name);
 			String eventDataName = IEventConstants
 					.getEventPropertyDataName(name);
-			addProperty(new EventProperty(eventPropertyName, eventDataName, typedEvent));
+			addProperty(new EventProperty(eventPropertyName, eventDataName,
+					typedEvent));
 		}
 	}
 
@@ -487,7 +489,8 @@ public abstract class AbstractMetaclass implements IMetaclass {
 							.isViewer(parameters[0])))) {
 				return getType().newInstance();
 			}
-		} catch (Exception e1) {
+		} catch (InstantiationException e1) {
+		} catch (IllegalAccessException e1) {
 		}
 
 		try {
@@ -581,10 +584,20 @@ public abstract class AbstractMetaclass implements IMetaclass {
 								+ getType().getName() + " no found.");
 					}
 				}
-				swtObject = defaultConstructor.newInstance();
+				else {
+					swtObject = defaultConstructor.newInstance();
+				}
 			}
 			return swtObject;
-		} catch (Exception e) {
+		} catch (SecurityException e) {
+			throw new XWTException(e);
+		} catch (IllegalArgumentException e) {
+			throw new XWTException(e);
+		} catch (InstantiationException e) {
+			throw new XWTException(e);
+		} catch (IllegalAccessException e) {
+			throw new XWTException(e);
+		} catch (InvocationTargetException e) {
 			throw new XWTException(e);
 		}
 	}
@@ -651,7 +664,8 @@ public abstract class AbstractMetaclass implements IMetaclass {
 						.getEventPropertyName(eventSetDescriptor.getName());
 				String propertyDataName = IEventConstants
 						.getEventPropertyDataName(eventSetDescriptor.getName());
-				addProperty(new EventProperty(propertyName, propertyDataName, event));
+				addProperty(new EventProperty(propertyName, propertyDataName,
+						event));
 			}
 			if (isWidgetType(type)) {
 				routedEventCache.put(normalize(IEventConstants.XWT_LOADED),
@@ -660,7 +674,9 @@ public abstract class AbstractMetaclass implements IMetaclass {
 
 			markInitialized();
 			buildTypedEvents();
-		} catch (Exception e) {
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IntrospectionException e) {
 			e.printStackTrace();
 		}
 	}

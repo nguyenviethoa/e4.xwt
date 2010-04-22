@@ -40,11 +40,8 @@ public class ControlDataBinding extends AbstractDataBinding {
 		IObservableValue targetWidget = null;
 		Object target = getControl();
 		if (target != null) {
-			IObservable observable = ScopeManager.observeValue(target, target,
+			targetWidget = ScopeManager.observeValue(target, target,
 					getTargetProperty(), getUpdateSourceTrigger());
-			if (observable instanceof IObservableValue) {
-				targetWidget = (IObservableValue) observable;
-			}
 		}
 		if (source == null) {
 			return null;
@@ -55,12 +52,8 @@ public class ControlDataBinding extends AbstractDataBinding {
 			control = getControl();
 		}
 
-		IObservable observable = ScopeManager.observeValue(control, source,
+		IObservableValue sourceWidget = ScopeManager.observeValue(control, source,
 				getSourceProperty(), getUpdateSourceTrigger());
-		IObservableValue sourceWidget = null;
-		if (observable instanceof IObservableValue) {
-			sourceWidget = (IObservableValue) observable;
-		}
 
 		if (targetWidget == null) {
 			if (sourceWidget != null) {

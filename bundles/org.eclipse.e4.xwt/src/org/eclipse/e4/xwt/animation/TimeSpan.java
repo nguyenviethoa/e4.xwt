@@ -101,7 +101,7 @@ public class TimeSpan implements Serializable, Comparable {
 
 	public TimeSpan(int days, int hours, int minutes, int seconds,
 			int milliseconds) throws Exception {
-		long num = ((((((days * SencondsPerHour) * HoursPerDay) + (hours * SencondsPerHour)) + (minutes * 60)) + seconds) * MillisPerSecond)
+		long num = (MillisPerSecond * (((((SencondsPerHour * (long) days) * HoursPerDay) + ((long) hours * SencondsPerHour)) + ((long) minutes * 60)) + seconds))
 				+ milliseconds;
 		if ((num > Long.valueOf(MaxMilliSeconds))
 				|| (num < Long.valueOf(MinMilliSeconds))) {
@@ -341,7 +341,7 @@ public class TimeSpan implements Serializable, Comparable {
 
 	public static long timeToTicks(int hour, int minute, int second)
 			throws Exception {
-		long num = ((hour * SencondsPerHour) + (minute * 60)) + second;
+		long num = ((SencondsPerHour * (long) hour) + ((long) minute * 60)) + (long) second;
 		if ((num > Long.valueOf(MaxSeconds))
 				|| (num < Long.valueOf(MinSeconds))) {
 			throw new Exception("Overflow_TimeSpanTooLong");
@@ -350,7 +350,7 @@ public class TimeSpan implements Serializable, Comparable {
 	}
 
 	private String intToString(int n, int digits) {
-		return ParseNumbers.IntToString(n, 10, digits, (char)0, 0);
+		return ParseNumbers.intToString(n, 10, digits, (char) 0, 0);
 	}
 
 	/*
@@ -730,3 +730,4 @@ class OutParameter {
 		this.timeSpan = timeSpan;
 	}
 }
+

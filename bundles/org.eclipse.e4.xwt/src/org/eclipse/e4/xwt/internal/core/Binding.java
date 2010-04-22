@@ -189,7 +189,7 @@ public class Binding extends DynamicBinding {
 		String parentPath = path.substring(0, index);
 		IObservable observable = ScopeManager.observeValue(getControl(),
 				source, parentPath, getUpdateSourceTrigger());
-		if (observable instanceof IObservableValue) {
+		if (observable != null) {
 			IObservableValue observableValue = (IObservableValue) observable;
 			Object type = observableValue.getValueType();
 			if (type != null) {

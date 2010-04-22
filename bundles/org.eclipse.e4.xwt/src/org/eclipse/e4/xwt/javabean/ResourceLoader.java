@@ -304,9 +304,13 @@ public class ResourceLoader implements IVisualElementLoader {
 						loadedMethod.invoke(loadedObject, new Object[] {
 								loadedObject, event });
 					}
-				} catch (Exception e) {
+				} catch (IllegalArgumentException e1) {
 					throw new XWTException("");
-				}
+				} catch (IllegalAccessException e1) {
+					throw new XWTException("");
+				} catch (InvocationTargetException e1) {
+					throw new XWTException("");
+				}					
 				loadedObject = null;
 				loadedMethod = null;
 				hostCLRWidget = null;
@@ -598,7 +602,8 @@ public class ResourceLoader implements IVisualElementLoader {
 					.setParent((TableItem) parent);
 		}
 
-		for (String key : options.keySet()) {
+		for (Map.Entry<String, Object> entry : options.entrySet()) {
+			String key = entry.getKey();
 			if (IXWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key)
@@ -615,7 +620,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (property == null) {
 				throw new XWTException("Property " + key + " not found.");
 			}
-			property.setValue(targetObject, options.get(key));
+			property.setValue(targetObject, entry.getValue());
 		}
 
 		List<String> delayedAttributes = new ArrayList<String>();
@@ -1665,10 +1670,13 @@ public class ResourceLoader implements IVisualElementLoader {
 			if (resource == null) {
 				try {
 					resource = new URL(context.getResourcePath() + contentValue);
+					return resource.toString();
 				} catch (MalformedURLException e1) {
 				}
 			}
-			return resource.toString();
+			else {
+				return resource.toString();
+			}
 		}
 		if (url != null) {
 			return url.toString();

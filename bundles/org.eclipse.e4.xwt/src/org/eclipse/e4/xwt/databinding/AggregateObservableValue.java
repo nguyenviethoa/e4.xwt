@@ -31,7 +31,7 @@ public class AggregateObservableValue extends AbstractObservableValue {
 	private boolean updating = false;
 	private IMultiValueConverter converter;
 
-	private String currentValue;
+	private Object currentValue;
 
 	private IValueChangeListener listener = new IValueChangeListener() {
 		public void handleValueChange(ValueChangeEvent event) {
@@ -83,6 +83,7 @@ public class AggregateObservableValue extends AbstractObservableValue {
 			updating = false;
 		}
 		doGetValue();
+		currentValue = value;
 		fireValueChange(Diffs.createValueDiff(oldValue, value));
 	}
 

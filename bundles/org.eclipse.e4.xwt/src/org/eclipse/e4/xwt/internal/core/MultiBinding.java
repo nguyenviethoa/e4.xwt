@@ -170,8 +170,6 @@ public class MultiBinding extends DynamicBinding implements IDataBindingInfo {
 		if (observableWidget == null) {
 			Object target = getControl();
 			Object host = getHost();
-			String targetProperty = getType();
-			targetProperty = ModelUtils.normalizePropertyName(targetProperty);
 			try {
 				observableWidget = ScopeManager.observeValue(target, host,
 						getTargettPropertyExpression(),

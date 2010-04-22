@@ -32,6 +32,30 @@ public class TypedViewerObservableValueDecorator extends
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TypedViewerObservableValueDecorator)) {
+			return false;
+		}
+		TypedViewerObservableValueDecorator decorator = (TypedViewerObservableValueDecorator) obj;
+		if (elementType != null) {
+			if (!elementType.equals(decorator.elementType)) {
+				return false;
+			}
+		} else if (decorator.elementType != null) {
+			return false;
+		}
+		return super.equals(obj);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (elementType == null) {
+			return super.hashCode();			
+		}
+		return elementType.hashCode() * super.hashCode();
+	}
+	
+	@Override
 	public Object getValueType() {
 		Object elementType = getElementType();
 		if (elementType != null) {

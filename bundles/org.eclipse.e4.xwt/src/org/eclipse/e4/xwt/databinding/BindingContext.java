@@ -115,7 +115,22 @@ public class BindingContext implements IBindingContext {
 	 * @see org.eclipse.e4.xwt.databinding.IDataBindingContext#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
-		return getContext().equals(obj);
+		if (!(obj instanceof BindingContext)) {
+			return false;			
+		}
+		org.eclipse.core.databinding.DataBindingContext context = getContext();
+		if (context != null) {
+			return context.equals(((BindingContext)obj).getContext());							
+		}
+		if (((BindingContext)obj).getContext() != null) {
+			return false;
+		}
+		return super.equals(obj);
+	}
+	
+	@Override
+	public int hashCode() {
+		return getContext().hashCode();
 	}
 
 	/* (non-Javadoc)

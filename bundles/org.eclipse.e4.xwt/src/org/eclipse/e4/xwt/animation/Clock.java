@@ -21,7 +21,7 @@ public class Clock {
 	protected double currentProgress;
 	protected ClockState currentState;
 	protected ClockController controller;
-	protected boolean HasControllableRoot;
+	protected boolean hasControllableRoot;
 
 	public Clock getParent() {
 		return parent;
@@ -84,9 +84,9 @@ public class Clock {
 		this.controller = controller;
 	}
 	public boolean isHasControllableRoot() {
-		return HasControllableRoot;
+		return this.hasControllableRoot;
 	}
 	public void setHasControllableRoot(boolean hasControllableRoot) {
-		HasControllableRoot = hasControllableRoot;
+		this.hasControllableRoot = hasControllableRoot;
 	}	
 }

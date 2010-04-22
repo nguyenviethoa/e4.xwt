@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.internal.core;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -240,7 +241,11 @@ public class Core {
 			if (object instanceof IConverter) {
 				registerConvertor((IConverter) object);
 			}
-		} catch (Exception e) {
+		} catch (SecurityException e) {
+		} catch (IllegalArgumentException e) {
+		} catch (NoSuchMethodException e) {
+		} catch (IllegalAccessException e) {
+		} catch (InvocationTargetException e) {
 		}
 	}
 
@@ -263,14 +268,18 @@ public class Core {
 
 	public IConverter loadConvertor(Class<?> converter, String methodName,
 			boolean value) {
-		try {
-			Method method = converter.getDeclaredMethod(methodName);
-			Object object = method.invoke(null, value);
-			if (object instanceof IConverter) {
-				return (IConverter) object;
+			try {
+				Method method = converter.getDeclaredMethod(methodName);
+				Object object = method.invoke(null, value);
+				if (object instanceof IConverter) {
+					return (IConverter) object;
+				}
+			} catch (SecurityException e) {
+			} catch (IllegalArgumentException e) {
+			} catch (NoSuchMethodException e) {
+			} catch (IllegalAccessException e) {
+			} catch (InvocationTargetException e) {
 			}
-		} catch (Exception e) {
-		}
 		return null;
 	}
 	
@@ -704,7 +713,7 @@ public class Core {
 		}
 	}
 
-	private class ExtensionContext implements IRenderingContext {
+	static private class ExtensionContext implements IRenderingContext {
 
 		private Map<String, Object> properties = new HashMap<String, Object>();
 

@@ -37,7 +37,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @version 1.0
  */
 class ElementHandler extends DefaultHandler implements ContentHandler {
-	private Stack<StringBuffer> bufferStack;
+	private Stack<StringBuffer> bufferStack = new Stack<StringBuffer>();
 	private static final String[] BINDING_PROPERTIES = new String[] {
 		"path", "validationRule", "converter"
 	};
@@ -46,13 +46,13 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	/**
 	 * Temporary element hierarchy
 	 */
-	private Stack<DocumentObject> elementStack;
-
+	private Stack<DocumentObject> elementStack = new Stack<DocumentObject>();
+	
 	private Stack<Integer> elementIndexStack;
 	
 	private Stack<Boolean> switchStack;
 
-	private StringBuffer textBuffer;
+	private StringBuffer textBuffer = null;
 
 	private Locator locator;
 
@@ -106,10 +106,11 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 					} else if (previous.equals("}")) {
 						endBlock();
 					} else {
-						String block = previous;
+						StringBuilder builder = new StringBuilder();
+						builder.append(previous);
 						if (token.equals("{")) {
 							int level = 1;
-							block += token;
+							builder.append(token);
 							while (stringTokenizer.hasMoreTokens() && level >= 0) {
 								String value = stringTokenizer.nextToken();
 								if (value.equals("{")) {
@@ -118,11 +119,11 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 									level--;
 								}
 								if (level >= 0) {
-									block += value;
+									builder.append(value);
 								}
 							}
 						}
-						handleBlock(block, (nextPrevious == null || !nextPrevious.equals("}")));
+						handleBlock(builder.toString(), (nextPrevious == null || !nextPrevious.equals("}")));
 					}
 				}
 				nextPrevious = previous;
@@ -220,7 +221,8 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 						if (attributeName == null) {
 							attributeName = token;
 						} else {
-							String block = token;
+							StringBuilder builder = new StringBuilder();
+							builder.append(token);
 							if (token.startsWith("{")) {
 								int level = 1;
 								while (tokenizer.hasMoreTokens() && level > 0) {
@@ -230,10 +232,10 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 									} else if (value.equals("}")) {
 										level--;
 									}
-									block += value;
+									builder.append(value);
 								}
 							}
-							attributeValue = block;
+							attributeValue = builder.toString();
 
 							try {
 								token = tokenizer.nextToken(rootPattern).trim();
@@ -304,8 +306,6 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 	 *            loader instance.
 	 */
 	public ElementHandler(ElementManager elementManager) {
-		this.bufferStack = new Stack<StringBuffer>();
-		this.elementStack = new Stack<DocumentObject>();
 		this.ignoreSystemProcession = false;
 		this.hasSetDefaultEncoding = false;
 		this.elementManager = elementManager;
@@ -644,7 +644,6 @@ class ElementHandler extends DefaultHandler implements ContentHandler {
 			preElement(namespace, name, attrs);
 		} else {
 			namespace = normalizeNamespace(namespace);
-			name = normalizeName(name);
 			// Process attributes: original, external
 			Collection<Attribute> collection = new ArrayList<Attribute>();
 			for (int i = 0, len = attrs.getLength(); i < len; i++) {

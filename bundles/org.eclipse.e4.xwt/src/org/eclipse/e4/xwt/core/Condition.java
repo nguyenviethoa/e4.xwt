@@ -138,7 +138,7 @@ public class Condition {
 				if (converter != null) {
 					normalizedValue = converter.convert(normalizedValue);
 				}
-				else if (value != null && value.toString().trim().length() > 0){
+				else if (value.toString().trim().length() > 0){
 					boolean found = false;
 					// in case where the value is a boolean
 					converter = XWT.findConvertor(valueType, Boolean.class);
@@ -153,7 +153,7 @@ public class Condition {
 									found = true;
 								}
 							}
-						} catch (Exception e) {
+						} catch (RuntimeException e) {
 						}
 					}
 					if (!found) {

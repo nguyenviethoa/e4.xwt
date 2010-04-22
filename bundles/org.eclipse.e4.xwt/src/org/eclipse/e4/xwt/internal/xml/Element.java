@@ -76,12 +76,13 @@ public class Element extends DocumentObject {
 		if (xmlnsMapping != null) {
 			this.xmlnsMapping = new String[xmlnsMapping.size() * 2];
 			int i = 0;
-			for (String key : xmlnsMapping.keySet()) {
+			for (Map.Entry<String, String> entry : xmlnsMapping.entrySet()) {
+				String key = entry.getKey();
 				if (key == null) {
 					key = "";
 				}
 				this.xmlnsMapping[i++] = key;
-				this.xmlnsMapping[i++] = xmlnsMapping.get(key);
+				this.xmlnsMapping[i++] = entry.getValue();
 			}
 		}
 
@@ -146,7 +147,7 @@ public class Element extends DocumentObject {
 	 * @see com.soyatec.eface.core.IElement#getAttribute(java.lang.String)
 	 */
 	public Attribute getAttribute(String name) {
-		assert name == null;
+		assert name != null;
 		return originalAttributes.get(name);
 	}
 
@@ -165,7 +166,7 @@ public class Element extends DocumentObject {
 	}
 
 	@Override
-	public Object clone() {
+	public Object clone() throws CloneNotSupportedException {
 		Element element = (Element) super.clone();
 
 		element.parent = null;
@@ -187,8 +188,9 @@ public class Element extends DocumentObject {
 			for (String ns : externalAttributes.keySet()) {
 				Map<String, Attribute> oAttributes = externalAttributes.get(ns);
 				Map<String, Attribute> nAttributes = new LinkedHashMap<String, Attribute>(oAttributes.size());
-				for (String attrName : oAttributes.keySet()) {
-					Attribute attrValue = (Attribute) oAttributes.get(attrName).clone();
+				for (Map.Entry<String, Attribute> entry : oAttributes.entrySet()) {
+					String attrName = entry.getKey();
+					Attribute attrValue = (Attribute) entry.getValue().clone();
 					nAttributes.put(attrName, attrValue);
 				}
 				element.externalAttributes.put(ns, nAttributes);

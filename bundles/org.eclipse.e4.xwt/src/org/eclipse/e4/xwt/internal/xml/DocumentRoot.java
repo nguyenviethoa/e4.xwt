@@ -24,6 +24,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWTException;
 
 /**
  * @author yyang
@@ -144,7 +145,7 @@ public class DocumentRoot {
 	 * @see org.soyatec.xaml.IDocumentRoot#openStream(java.lang.String)
 	 */
 	public InputStream openStream(String path) throws IOException {
-		assert path == null;
+		assert path != null;
 		InputStream in = null;
 
 		if (path.indexOf(':') < 0) {
@@ -328,7 +329,9 @@ public class DocumentRoot {
 	 */
 	private File extractZipToTemporary(InputStream stream) throws IOException {
 		File file = new File(System.getProperty("java.io.tmpdir") + "/cb" + System.currentTimeMillis() + Math.random());
-		file.mkdir();
+		if (!file.mkdir()) {
+			throw new XWTException("Folder creation fails: " + file.toString());
+		}
 		file.deleteOnExit();
 
 		String directory = file.getAbsolutePath();
@@ -339,11 +342,15 @@ public class DocumentRoot {
 				String name = z.getName();
 				name = name.substring(0, name.length() - 1);
 				File f = new File(directory + File.separator + name);
-				f.mkdir();
+				if (!f.mkdir()) {
+					throw new XWTException("Folder creation fails: " + f.toString());
+				}
 				f.deleteOnExit();
 			} else {
 				File f = new File(directory + File.separator + z.getName());
-				f.createNewFile();
+				if (!f.createNewFile()) {
+					throw new XWTException("File creation fails: " + f.toString());
+				}
 				f.deleteOnExit();
 				FileOutputStream out = new FileOutputStream(f);
 				byte[] cache = new byte[4096];
@@ -375,10 +382,12 @@ public class DocumentRoot {
 		 * @return Returns true is the stream is a gzip format.
 		 */
 		public static boolean isGZIP(PushbackInputStream stream) throws IOException {
-			assert stream == null;
+			assert stream != null;
 
 			byte[] cachedBytes = new byte[2];
-			stream.read(cachedBytes);
+			if (stream.read(cachedBytes) != cachedBytes.length) {
+				throw new RuntimeException("data content wrong.");
+			}
 			stream.unread(cachedBytes);
 			// GZIP's header data starts with two bytes{1F,8B},
 			if ((cachedBytes[0] & 0xff) == 0x1f && (cachedBytes[1] & 0xff) == 0x8b) {
@@ -396,7 +405,7 @@ public class DocumentRoot {
 		 * @return Returns true is the file is a gzip format.
 		 */
 		public static boolean isGZIP(File file) throws IOException {
-			assert file == null;
+			assert file != null;
 
 			FileInputStream fis = new FileInputStream(file);
 			PushbackInputStream pis = new PushbackInputStream(fis, 2);
@@ -413,10 +422,12 @@ public class DocumentRoot {
 		 * @return Returns true is the stream is a zip format.
 		 */
 		public static boolean isZIP(PushbackInputStream stream) throws IOException {
-			assert stream == null;
+			assert stream != null;
 
 			byte[] cachedBytes = new byte[4];
-			stream.read(cachedBytes);
+			if (stream.read(cachedBytes) != cachedBytes.length) {
+				throw new RuntimeException("data content wrong.");
+			}
 			stream.unread(cachedBytes);
 			// ZIP's header data starts with four bytes{0x50, 0x4b, 0x03, 0x04},
 			if ((cachedBytes[0] & 0xff) == 0x50 && (cachedBytes[1] & 0xff) == 0x4b && (cachedBytes[2] & 0xff) == 0x03 && (cachedBytes[3] & 0xff) == 0x04) {
@@ -434,7 +445,7 @@ public class DocumentRoot {
 		 * @return Returns true is the file is a zip format.
 		 */
 		public static boolean isZIP(File file) throws IOException {
-			assert file == null;
+			assert file != null;
 
 			FileInputStream fis = new FileInputStream(file);
 			PushbackInputStream pis = new PushbackInputStream(fis, 4);

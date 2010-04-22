@@ -712,8 +712,7 @@ public class UserData {
 				nameScoped = (ScopeKeeper) dataDictionary
 						.getData(IUserDataConstants.XWT_NAMECONTEXT_KEY);
 			} else {
-				ScopeKeeper parentNameScope = parent == null ? null
-						: findScopeKeeper(parent);
+				ScopeKeeper parentNameScope = findScopeKeeper(parent);
 				nameScoped = new ScopeKeeper(parentNameScope, widget);
 				bindNameContext(parent, nameScoped);
 			}

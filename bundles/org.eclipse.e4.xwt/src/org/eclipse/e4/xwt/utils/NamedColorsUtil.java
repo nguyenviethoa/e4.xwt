@@ -25,20 +25,20 @@ public class NamedColorsUtil {
 	private static ResourceBundle COLORS = ResourceBundle.getBundle("org.eclipse.e4.xwt.utils.colors");
 
 	private static String[] colorNames;
+	static {		
+		List<String> colors = new ArrayList<String>();
+		Enumeration<String> keys = COLORS.getKeys();
+		while (keys.hasMoreElements()) {
+			String color = keys.nextElement();
+			colors.add(color);
+		}
+		if (!colors.isEmpty()) {
+			colorNames = colors.toArray(new String[0]);
+			Arrays.sort(colorNames);
+		}
+	}
 
 	public static String[] getColorNames() {
-		if (colorNames == null) {
-			List<String> colors = new ArrayList<String>();
-			Enumeration<String> keys = COLORS.getKeys();
-			while (keys.hasMoreElements()) {
-				String color = keys.nextElement();
-				colors.add(color);
-			}
-			if (!colors.isEmpty()) {
-				colorNames = colors.toArray(new String[0]);
-				Arrays.sort(colorNames);
-			}
-		}
 		return colorNames;
 	}
 

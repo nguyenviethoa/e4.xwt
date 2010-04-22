@@ -72,6 +72,9 @@ public class BindingExpressionPath {
 				if (level == 0) {
 					stripStart = i + 1;
 				}
+				separators.push(array[i]);
+				level ++;
+				break;
 			case '{':
 			case '[':
 				separators.push(array[i]);

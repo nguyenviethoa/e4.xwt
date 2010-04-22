@@ -110,7 +110,7 @@ public class DataTrigger extends TriggerBase {
 									found = true;
 								}
 							}
-						} catch (Exception e) {
+						} catch (RuntimeException e) {
 						}
 					}
 					if (!found) {

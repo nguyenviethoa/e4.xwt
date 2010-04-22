@@ -150,10 +150,6 @@ public class RepeatBehavior {
 	 * @property(Forever)
 	 */
 	public static RepeatBehavior getForever() {
-		if (forever == null) {
-			forever = new RepeatBehavior();
-			forever.type = RepeatBehaviorType.Forever;
-		}
 		return forever;
 	}
 
@@ -181,6 +177,11 @@ public class RepeatBehavior {
 	private RepeatBehaviorType type;
 	
 	private static RepeatBehavior forever;
+	static {
+		forever = new RepeatBehavior();
+		forever.type = RepeatBehaviorType.Forever;
+	}
+
 	public static final RepeatBehavior once = new RepeatBehavior(1);
 
 	public RepeatBehaviorType getRepeatBehaviorType() {

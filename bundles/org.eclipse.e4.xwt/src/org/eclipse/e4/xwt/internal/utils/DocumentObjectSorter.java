@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.utils;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -62,7 +63,7 @@ public class DocumentObjectSorter {
 		return columnsList;
 	}
 
-	private static class AttrComparator implements Comparator<Element> {
+	private static class AttrComparator implements Comparator<Element>, Serializable {
 		private String attrName;
 
 		public AttrComparator(String attrName) {

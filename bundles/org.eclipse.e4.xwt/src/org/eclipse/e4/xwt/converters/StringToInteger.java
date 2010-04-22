@@ -20,6 +20,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.swt.layout.GridData;
@@ -64,37 +65,41 @@ public class StringToInteger implements IConverter {
 			if (normalizedStr.startsWith(GRIDDATA_PREFIX)) {
 				return convertGridDataInt(normalizedStr);
 			}
-			try {
-				int index = str.lastIndexOf('.');
-				if (str.indexOf('.') != -1) {
-					String className = str.substring(0, index);
-					if (className.startsWith("(") && className.endsWith("")) {
-						className = className.substring(1, className.length()-1);
-						Class<?> type = XWT.getLoadingContext().loadClass(className);
-						if (type != null) {
-							String memberName = str.substring(index+1);
-							Field field = type.getField(memberName);
-							if (Modifier.isStatic(field.getModifiers())) {
-								return field.getInt(null);
-							}
-						}
-					}
-					else {
-						IMetaclass metaclass = XWT.getMetaclass(className, IConstants.XWT_NAMESPACE);
-						if (metaclass != null) {
-							Class<?> type = metaclass.getType();
+				try {
+					int index = str.lastIndexOf('.');
+					if (str.indexOf('.') != -1) {
+						String className = str.substring(0, index);
+						if (className.startsWith("(") && className.endsWith("")) {
+							className = className.substring(1, className.length()-1);
+							Class<?> type = XWT.getLoadingContext().loadClass(className);
 							if (type != null) {
 								String memberName = str.substring(index+1);
 								Field field = type.getField(memberName);
 								if (Modifier.isStatic(field.getModifiers())) {
 									return field.getInt(null);
 								}
-							}							
+							}
+						}
+						else {
+							IMetaclass metaclass = XWT.getMetaclass(className, IConstants.XWT_NAMESPACE);
+							if (metaclass != null) {
+								Class<?> type = metaclass.getType();
+								if (type != null) {
+									String memberName = str.substring(index+1);
+									Field field = type.getField(memberName);
+									if (Modifier.isStatic(field.getModifiers())) {
+										return field.getInt(null);
+									}
+								}							
+							}
 						}
 					}
+				} catch (SecurityException e1) {
+				} catch (IllegalArgumentException e1) {
+				} catch (NoSuchFieldException e1) {
+				} catch (IllegalAccessException e1) {
+				} catch (XWTException e1) {
 				}
-			} catch (Exception e1) {
-			}
 			return defaultConvertInt(str);
 		}
 	}

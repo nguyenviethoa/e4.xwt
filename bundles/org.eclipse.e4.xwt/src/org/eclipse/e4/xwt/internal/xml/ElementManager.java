@@ -72,12 +72,14 @@ public class ElementManager {
 		this.parserFactory.setValidating(true);
 		this.errorHandler = new ErrorHandler() {
 
-			// IFrameworkAdaptor adaptor = FrameworkUtil.getFrameworkAdaptor(context);
+			// IFrameworkAdaptor adaptor =
+			// FrameworkUtil.getFrameworkAdaptor(context);
 
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
+			 * @see
+			 * org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
 			 */
 			public void error(SAXParseException exception) throws SAXException {
 				Exception cause = exception.getException();
@@ -89,7 +91,8 @@ public class ElementManager {
 					}
 				} catch (Exception e) {
 					if (cause != null) {
-						throw new SAXException(exception.getLocalizedMessage(), cause);
+						throw new SAXException(exception.getLocalizedMessage(),
+								cause);
 					} else {
 						throw new SAXException(exception);
 					}
@@ -99,9 +102,12 @@ public class ElementManager {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException)
+			 * @see
+			 * org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException
+			 * )
 			 */
-			public void fatalError(SAXParseException exception) throws SAXException {
+			public void fatalError(SAXParseException exception)
+					throws SAXException {
 				Exception cause = exception.getException();
 				try {
 					if (cause != null) {
@@ -111,21 +117,23 @@ public class ElementManager {
 					}
 				} catch (Exception e) {
 					if (cause != null) {
-						throw new SAXException(exception.getLocalizedMessage(), cause);
+						throw new SAXException(exception.getLocalizedMessage(),
+								cause);
 					} else {
 						throw new SAXException(exception);
 					}
-				} finally {
-					System.exit(-1);
 				}
+				throw new RuntimeException();
 			}
 
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
+			 * @see
+			 * org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
 			 */
-			public void warning(SAXParseException exception) throws SAXException {
+			public void warning(SAXParseException exception)
+					throws SAXException {
 				Exception cause = exception.getException();
 				try {
 					if (cause != null) {
@@ -135,7 +143,8 @@ public class ElementManager {
 					}
 				} catch (Exception e) {
 					if (cause != null) {
-						throw new SAXException(exception.getLocalizedMessage(), cause);
+						throw new SAXException(exception.getLocalizedMessage(),
+								cause);
 					} else {
 						throw new SAXException(exception);
 					}
@@ -159,7 +168,7 @@ public class ElementManager {
 	 * @see org.soyatec.xaml.IElementManager#getElement(java.lang.String)
 	 */
 	public Element getElement(String id) {
-		assert id == null;
+		assert id != null;
 		return elements.get(id);
 	}
 
@@ -196,12 +205,12 @@ public class ElementManager {
 	 * @see org.soyatec.xaml.IElementManager#hasElement(java.lang.String)
 	 */
 	public boolean hasElement(String id) {
-		assert id == null;
+		assert id != null;
 		return elements.containsKey(id);
 	}
 
 	protected void setEncoding(String encoding) {
-		assert encoding == null;
+		assert encoding != null;
 		this.encoding = encoding;
 	}
 
@@ -258,8 +267,9 @@ public class ElementManager {
 	/**
 	 * @see ElementHandler
 	 */
-	public void load(InputStream stream, DocumentObject parent) throws SAXException {
-		assert stream == null;
+	public void load(InputStream stream, DocumentObject parent)
+			throws SAXException {
+		assert stream != null;
 
 		ElementHandler contentHandler = new ElementHandler(parent, this);
 		try {
@@ -282,7 +292,9 @@ public class ElementManager {
 				parser.parse(stream, new XDataHandler(out));
 				String content = out.toString();
 				xDataElement.setContent(content);
-			} catch (Exception e) {
+			} catch (ParserConfigurationException e) {
+			} catch (SAXException e) {
+			} catch (IOException e) {
 			}
 		}
 	}
@@ -291,8 +303,9 @@ public class ElementManager {
 	 * @see ElementHandler
 	 */
 	protected void preElement(Element element) {
-		assert element == null;
-		assert elements.containsKey(element.getId()) : "Element already exists in registry: " + element.getId();
+		assert element != null;
+		assert elements.containsKey(element.getId()) : "Element already exists in registry: "
+				+ element.getId();
 
 		// Add to cache.
 		elements.put(element.getId(), element);
@@ -307,9 +320,11 @@ public class ElementManager {
 	 * @see ElementHandler
 	 */
 	protected void postElement(Element element) {
-		assert element == null;
-		assert !elements.containsKey(element.getId()) : "Element not found in registry: " + element.getId();
-		if ("xdata".equalsIgnoreCase(element.getName()) && IConstants.XWT_X_NAMESPACE.equals(element.getNamespace())) {
+		assert element != null;
+		assert !elements.containsKey(element.getId()) : "Element not found in registry: "
+				+ element.getId();
+		if ("xdata".equalsIgnoreCase(element.getName())
+				&& IConstants.XWT_X_NAMESPACE.equals(element.getNamespace())) {
 			xDataElement = element;
 		}
 	}
@@ -319,7 +334,7 @@ public class ElementManager {
 	 * @see #load(URL)
 	 */
 	private void doLoad(InputStream stream) throws Exception {
-		assert stream == null;
+		assert stream != null;
 		ElementHandler contentHandler = new ElementHandler(this);
 		try {
 			SAXParser parser = parserFactory.newSAXParser();

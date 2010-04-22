@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.dataproviders;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.databinding.beans.BeanProperties;
@@ -182,7 +182,11 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 					return method.invoke(target, methodParameters
 							.toArray(new Object[methodParameters.size()]));
 				}
-			} catch (Exception e) {
+			} catch (SecurityException e) {
+			} catch (IllegalArgumentException e) {
+			} catch (NoSuchMethodException e) {
+			} catch (IllegalAccessException e) {
+			} catch (InvocationTargetException e) {
 			}
 		}
 		return target;
@@ -338,7 +342,7 @@ public class ObjectDataProvider extends AbstractDataProvider implements
 		if (beanClass == null && master.getValueType() instanceof Class<?>) {
 			beanClass = (Class<?>) master.getValueType();
 		}
-		if (JFaceXWTDataBinding.isBeanSupport(elementType)) {
+		if (JFaceXWTDataBinding.isBeanSupport(beanClass)) {
 			return BeanProperties.value(beanClass, propertyName,
 					(Class<?>) propertyType).observeDetail(master);
 		}

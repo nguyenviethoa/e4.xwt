@@ -55,16 +55,16 @@ public class JFaceXWTDataBinding {
 	public static final Class<?>[] CONTROL_ARGUMENT_TYPES = new Class[] { Control.class };
 	public static final Class<?>[] VIEWER_ARGUMENT_TYPES = new Class[] { Viewer.class };
 	
-	static String[] VIEWERS_PROPERTIES;
+	static String[] VIEWERS_PROPERTIES = null;
+	static {
+		Method[] methods = ViewerProperties.class.getDeclaredMethods();
+		VIEWERS_PROPERTIES = new String[methods.length];
+		for (int i = 0; i < methods.length; i++) {
+			VIEWERS_PROPERTIES[i] =  methods[i].getName();
+		}		
+	}
 
 	public static boolean isViewerProperty(String propertyName) {
-		if (VIEWERS_PROPERTIES == null) {
-			Method[] methods = ViewerProperties.class.getDeclaredMethods();
-			VIEWERS_PROPERTIES = new String[methods.length];
-			for (int i = 0; i < methods.length; i++) {
-				VIEWERS_PROPERTIES[i] =  methods[i].getName();
-			}
-		}
 		for (String name : VIEWERS_PROPERTIES) {
 			if (name.equals(propertyName)) {
 				return true;

@@ -89,11 +89,7 @@ public class XWTTitleAreaDialog extends TitleAreaDialog {
 				newOptions.put(XWTLoader.BINDING_CONTEXT_PROPERTY,
 						bindingContext);
 			}
-			if (contentCLS == null) {
-				newOptions.put(XWTLoader.CLASS_PROPERTY, this);
-			} else {
-				newOptions.put(XWTLoader.CLASS_PROPERTY, contentCLS);
-			}
+			newOptions.put(XWTLoader.CLASS_PROPERTY, contentCLS);
 
 			XWT.loadWithOptions(getContentURL(), newOptions);
 			GridLayoutFactory.fillDefaults().generateLayout(parent);

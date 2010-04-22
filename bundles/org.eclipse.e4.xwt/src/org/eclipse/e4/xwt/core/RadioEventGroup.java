@@ -29,10 +29,6 @@ public class RadioEventGroup extends AbstractEventGroup {
 
 	public void fireEvent(IObservableValueListener manager, IProperty property) {
 		Object host = manager.getHost();
-		IEventHandler controller = UserData.findEventController(host);
-		if (controller == null) {
-			controller = UserData.updateEventController(host);
-		}
 		IMetaclass metaclass = XWT.getMetaclass(host); 
 
 		EventProperty reaisedEventProperty = (EventProperty) property;

@@ -27,8 +27,6 @@ public class BeanProperty extends AbstractProperty {
 
 	public BeanProperty(PropertyDescriptor descriptor) {
 		super(descriptor.getName(), descriptor.getPropertyType());
-		if (descriptor == null)
-			throw new NullPointerException();
 		this.descriptor = descriptor;
 		
 		Method readMethod = descriptor.getReadMethod();

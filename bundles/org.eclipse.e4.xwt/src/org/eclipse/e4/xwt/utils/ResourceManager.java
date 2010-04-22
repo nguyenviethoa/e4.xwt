@@ -36,7 +36,7 @@ public class ResourceManager {
 
 	private Map<String, Color> key2Colors = new HashMap<String, Color>();
 	private Map<String, Font> key2Fonts = new HashMap<String, Font>();
-	private Map<URL, Image> key2Images = new HashMap<URL, Image>();
+	private Map<String, Image> key2Images = new HashMap<String, Image>();
 
 	/**
 	 * Default constructor.
@@ -72,9 +72,10 @@ public class ResourceManager {
 	}
 
 	public Image getImage(URL file) {
-		Image image = key2Images.get(file);
+		String key = file.toString();
+		Image image = key2Images.get(key);
 		if (image == null || image.isDisposed()) {
-			key2Images.put(file, image = ImageTool.getImage(file));
+			key2Images.put(key, image = ImageTool.getImage(file));
 		}
 		return image;
 	}
