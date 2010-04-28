@@ -36,6 +36,6 @@ public class DesignerRootEditPart extends ScalableFreeformRootEditPart {
 		if (layer != null) {
 			return layer.isVisible();
 		}
-		return null;
+		return Boolean.FALSE;
 	}
 }

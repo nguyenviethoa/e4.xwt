@@ -16,8 +16,7 @@ import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.tools.ui.designer.widgets.FindElementsByContributionURIDialog;
-import org.eclipse.e4.ui.model.application.MContribution;
+import org.eclipse.e4.tools.ui.designer.widgets.FindElementsWithNameDialog;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -31,14 +30,14 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class FindByContributionURIAction extends Action {
-	public static final String ID = "org.eclipse.e4.tools.ui.designer.actions.FindByContributionURIAction";
+public class FindWithElementNameAction extends Action {
+	public static final String ID = "org.eclipse.e4.tools.ui.designer.actions.FindByElementNameAction";
 	private EditPartViewer viewer;
 
-	public FindByContributionURIAction(EditPartViewer viewer) {
+	public FindWithElementNameAction(EditPartViewer viewer) {
 		this.viewer = viewer;
 		setId(ID);
-		setText("Contribution URI");
+		setText("Element Name");
 	}
 
 	public void run() {
@@ -61,8 +60,7 @@ public class FindByContributionURIAction extends Action {
 			Object[] children = ApplicationModelHelper.getChildren(parent,
 					new IFilter() {
 						public boolean select(Object toTest) {
-							if (toTest instanceof EObject
-									&& toTest instanceof MContribution) {
+							if (toTest instanceof EObject) {
 								return ((EObject) toTest).eResource() != null;
 							}
 							return false;
@@ -73,7 +71,7 @@ public class FindByContributionURIAction extends Action {
 			}
 			elements.addAll(Arrays.asList(children));
 		}
-		FindElementsByContributionURIDialog dialog = new FindElementsByContributionURIDialog(
+		FindElementsWithNameDialog dialog = new FindElementsWithNameDialog(
 				new Shell(), elements.toArray(new Object[0]));
 		if (Window.OK == dialog.open()) {
 			Object object = dialog.getFirstResult();

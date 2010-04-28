@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.tools.ui.designer.databinding;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,6 +19,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.databinding.property.list.IListProperty;
@@ -43,7 +45,10 @@ public class PropertyUtil {
 	private static WidgetPropertiesCollector widgetCollector;
 	private static BeanPropertiesCollector beanCollector;
 
-	public static Map<String, Class<?>> getProperties(Object object) {
+	private PropertyUtil() {
+	}
+
+	public static synchronized Map<String, Class<?>> getProperties(Object object) {
 		if (object == null) {
 			return null;
 		}
@@ -65,7 +70,7 @@ public class PropertyUtil {
 		}
 	}
 
-	public static Map<String, org.eclipse.core.databinding.property.IProperty> getJfaceProperties() {
+	public static synchronized Map<String, org.eclipse.core.databinding.property.IProperty> getJfaceProperties() {
 		if (JFACE_PROPERTIES == null) {
 			JFACE_PROPERTIES = new HashMap<String, org.eclipse.core.databinding.property.IProperty>();
 			Method[] declaredMethods = ViewerProperties.class.getDeclaredMethods();
@@ -81,7 +86,7 @@ public class PropertyUtil {
 		return JFACE_PROPERTIES;
 	}
 
-	public static Map<String, IWidgetValueProperty> getSwtProperties() {
+	public static synchronized Map<String, IWidgetValueProperty> getSwtProperties() {
 		if (SWT_PROPERTIES == null) {
 			SWT_PROPERTIES = new HashMap<String, IWidgetValueProperty>();
 			Method[] declaredMethods = WidgetProperties.class.getDeclaredMethods();
@@ -120,8 +125,12 @@ public class PropertyUtil {
 
 			Map<String, Class<?>> results = new HashMap<String, Class<?>>();
 			Map<String, org.eclipse.core.databinding.property.IProperty> jfaceProperties = getJfaceProperties();
-			for (String propertyName : jfaceProperties.keySet()) {
-				org.eclipse.core.databinding.property.IProperty host = jfaceProperties.get(propertyName);
+			Set<Entry<String, org.eclipse.core.databinding.property.IProperty>> entrySet = jfaceProperties
+					.entrySet();
+			for (Entry<String, org.eclipse.core.databinding.property.IProperty> entry : entrySet) {
+				String propertyName = entry.getKey();
+				org.eclipse.core.databinding.property.IProperty host = entry
+						.getValue();
 				Class<?> type = null;
 				if (host instanceof ISetProperty) {
 					type = Set.class;
@@ -211,7 +220,8 @@ public class PropertyUtil {
 					result.put(propertyName, f.getType());
 				}
 
-			} catch (Exception e) {
+			} catch (IntrospectionException e) {
+				e.printStackTrace();
 			}
 			return result;
 		}

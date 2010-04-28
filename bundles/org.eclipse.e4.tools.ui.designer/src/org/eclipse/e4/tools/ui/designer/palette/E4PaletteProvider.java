@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl;
 import org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl;
@@ -47,6 +48,7 @@ public class E4PaletteProvider extends EntryResourceProvider {
 				collectClasses();
 				createEntries();
 			} catch (Exception e) {
+				E4DesignerPlugin.logWarning(e);
 			}
 		}
 		return resource;

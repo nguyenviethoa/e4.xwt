@@ -69,10 +69,10 @@ public class BraceHandler {
 				} else if (previous.equals("}")) {
 					endBlock();
 				} else {
-					String block = previous;
+					StringBuffer block = new StringBuffer(previous);
 					if (token.equals("{")) {
 						int level = 1;
-						block += token;
+						block.append(token);
 						while (stringTokenizer.hasMoreTokens() && level >= 0) {
 							String value = stringTokenizer.nextToken();
 							if (value.equals("{")) {
@@ -81,11 +81,12 @@ public class BraceHandler {
 								level--;
 							}
 							if (level >= 0) {
-								block += value;
+								block.append(value);
 							}
 						}
 					}
-					handleBlock(block, (nextPrevious == null || !nextPrevious.equals("}")));
+					handleBlock(block.toString(),
+							(nextPrevious == null || !nextPrevious.equals("}")));
 				}
 			}
 			nextPrevious = previous;
@@ -257,7 +258,8 @@ public class BraceHandler {
 					if (attributeName == null) {
 						attributeName = token;
 					} else {
-						String block = token;
+						// String block = token;
+						StringBuffer block = new StringBuffer(token);
 						if (token.startsWith("{")) {
 							int level = 1;
 							while (tokenizer.hasMoreTokens() && level > 0) {
@@ -267,10 +269,10 @@ public class BraceHandler {
 								} else if (value.equals("}")) {
 									level--;
 								}
-								block += value;
+								block.append(value);
 							}
 						}
-						attributeValue = block;
+						attributeValue = block.toString();
 
 						try {
 							token = tokenizer.nextToken(rootPattern).trim();

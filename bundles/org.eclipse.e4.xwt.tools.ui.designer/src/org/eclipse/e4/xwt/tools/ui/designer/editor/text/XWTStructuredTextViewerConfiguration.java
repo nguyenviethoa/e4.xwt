@@ -26,9 +26,11 @@ public class XWTStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 */
 	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 		IContentAssistProcessor[] processors = null;
-		if ((partitionType == IStructuredPartitions.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
+		if ((partitionType.equals(IStructuredPartitions.DEFAULT_PARTITION))
+				|| (partitionType.equals(IXMLPartitions.XML_DEFAULT))) {
 			processors = new IContentAssistProcessor[] { new XWTContentAssistProcessor() };
-		} else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
+		} else if (partitionType
+				.equals(IStructuredPartitions.UNKNOWN_PARTITION)) {
 			processors = new IContentAssistProcessor[] { new NoRegionContentAssistProcessor() };
 		}
 		return processors;

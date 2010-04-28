@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.editor.model;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,14 +34,17 @@ import org.osgi.framework.Bundle;
  * @author jliu jin.liu@soyatec.com
  */
 public class ModelCacheUtility {
-	protected static final IPath VISUAL_EDITOR_MODEL_CACHE_ROOT = DesignerPlugin.VE_CACHE_ROOT_NAME.append("emfmodel"); //$NON-NLS-1$ 
+	protected static final IPath VISUAL_EDITOR_MODEL_CACHE_ROOT = DesignerPlugin.VE_CACHE_ROOT_NAME
+			.append("emfmodel"); //$NON-NLS-1$ 
 	private static final Map XML_CACHE_SAVE_OPTIONS;
 	static {
 		// Normally focus on speed not readability
 		XML_CACHE_SAVE_OPTIONS = new HashMap(4);
 		XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_ENCODING, "UTF-8"); //$NON-NLS-1$
-		XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
-		XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_SAVE_TYPE_INFORMATION, Boolean.TRUE);
+		XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_PROCESS_DANGLING_HREF,
+				XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
+		XML_CACHE_SAVE_OPTIONS.put(XMLResource.OPTION_SAVE_TYPE_INFORMATION,
+				Boolean.TRUE);
 	}
 
 	protected static IPath getEMFModelCacheDestination(IProject p) {
@@ -67,7 +71,8 @@ public class ModelCacheUtility {
 	}
 
 	protected static IPath getCachedPath(IFile f) {
-		IPath savedPath = getCacheDirectory(f).append(f.getProjectRelativePath());
+		IPath savedPath = getCacheDirectory(f).append(
+				f.getProjectRelativePath());
 		return savedPath.removeFileExtension().addFileExtension("xmi"); //$NON-NLS-1$
 	}
 
@@ -75,27 +80,29 @@ public class ModelCacheUtility {
 		return URI.createFileURI(getCachedPath(f).toString());
 	}
 
-	public static XamlDocument doLoadFromCache(IFile input, IProgressMonitor monitor) {
+	public static XamlDocument doLoadFromCache(IFile input,
+			IProgressMonitor monitor) {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		monitor.subTask("Loading from cache: " + input.getName());
-		XamlDocument d = null;
 		if (isValidCache(input)) {
 			monitor.worked(1);
 			try {
 				URI uri = getCacheURI(input);
 				ResourceSet rs = new ResourceSetImpl();
 				Resource resource = rs.getResource(uri, true);
-				d = (XamlDocument) resource.getContents().get(0);
-				monitor.worked(1);
+				return (XamlDocument) resource.getContents().get(0);
 			} catch (Exception e) {
-				getCachedPath(input).toFile().delete();
+				removeCache(input);
+			} finally {
+				monitor.worked(1);
 			}
 		}
-		return d;
+		return null;
 	}
 
-	public static void doSaveCache(XamlDocument document, IFile input, IProgressMonitor monitor) {
+	public static void doSaveCache(XamlDocument document, IFile input,
+			IProgressMonitor monitor) {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		monitor.beginTask("Save model to cache", 4);
@@ -121,16 +128,20 @@ public class ModelCacheUtility {
 					resource.save(os, XML_CACHE_SAVE_OPTIONS);
 					os.close();
 				}
-			} catch (Exception e) {
-				getCachedPath(input).toFile().delete();
+			} catch (RuntimeException e) {
+			} catch (IOException e) {
+				removeCache(input);
 			}
 		}
 		monitor.done();
 	}
 
 	public static void removeCache(IFile file) {
-		if (file != null) {
-			getCachedPath(file).toFile().delete();
+		try {
+			if (file != null) {
+				getCachedPath(file).toFile().delete();
+			}
+		} catch (Exception e) {
 		}
 	}
 

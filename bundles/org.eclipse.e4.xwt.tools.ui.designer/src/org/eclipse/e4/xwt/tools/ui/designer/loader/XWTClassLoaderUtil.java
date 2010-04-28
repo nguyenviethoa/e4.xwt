@@ -14,7 +14,7 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 
-public class ClassLoaderUtil extends org.eclipse.e4.xwt.internal.utils.ClassLoaderUtil {
+public class XWTClassLoaderUtil extends org.eclipse.e4.xwt.internal.utils.ClassLoaderUtil {
 
 	static public Object loadStaticMember(ILoadingContext loadingContext, XamlNode element) {
 		String name = element.getName();

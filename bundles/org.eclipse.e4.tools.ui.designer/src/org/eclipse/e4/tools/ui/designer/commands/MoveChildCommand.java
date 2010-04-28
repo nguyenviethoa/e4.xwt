@@ -75,9 +75,6 @@ public class MoveChildCommand extends Command {
 			return false;
 		}
 		modelService = (EModelService) value;
-		if (modelService == null) {
-			return false;
-		}
 		
 		oldPosition = parentNode.getChildren().indexOf(child.getModel());
 		if (after != null) {

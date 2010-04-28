@@ -373,7 +373,7 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		for (XamlAttribute attribute : attributes) {
 			String attrName = attribute.getName();
 			String attrNS = attribute.getNamespace();
-			if (name.equalsIgnoreCase(attrName) && ((namespace == null && attrNS == null) || (namespace != null && namespace.equals(attrNS)))) {
+			if (equals(attrName, name) && equals(attrNS, namespace)) {
 				return attribute;
 			}
 		}
@@ -414,7 +414,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		}
 		EList<XamlElement> children = getChildren(namespace);
 		for (XamlElement element : children) {
-			if (name.equalsIgnoreCase(element.getName()) && ((namespace == null && element.getNamespace() == null) || (namespace != null && namespace.equals(element.getNamespace())))) {
+			if (equals(name, element.getName())
+					&& equals(namespace, element.getNamespace())) {
 				return element;
 			}
 		}

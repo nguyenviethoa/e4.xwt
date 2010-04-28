@@ -25,4 +25,8 @@ public class BindingCreateCommand extends Command {
 		this.request = request;
 	}
 
+	public void execute() {
+		// TODO:
+		System.out.println(request);
+	}
 }

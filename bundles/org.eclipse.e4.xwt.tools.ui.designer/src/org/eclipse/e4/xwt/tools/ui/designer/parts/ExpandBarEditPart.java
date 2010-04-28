@@ -33,7 +33,7 @@ public class ExpandBarEditPart extends CompositeEditPart {
 	 * 
 	 * @see org.eclipse.e4.xwt.tools.ui.designer.parts.ControlEditPart#CollectExternalModels()
 	 */
-	protected void CollectExternalModels(List<Object> collector) {
+	protected void collectExternalModels(List<Object> collector) {
 		ExpandBar expandBar = (ExpandBar) getWidget();
 		if (expandBar != null && !expandBar.isDisposed()) {
 			Control[] children = expandBar.getChildren();

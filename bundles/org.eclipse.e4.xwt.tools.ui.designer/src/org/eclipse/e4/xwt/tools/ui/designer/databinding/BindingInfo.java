@@ -27,6 +27,7 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -196,6 +197,10 @@ public class BindingInfo implements IBindingInfo, IBindingHandler, BindingConsta
 			node = XWTProxy.getModel((Widget) targetSource);
 		} else if (targetSource instanceof XamlElement) {
 			node = (XamlElement) targetSource;
+		}
+
+		if (node == null) {
+			return UnexecutableCommand.INSTANCE;
 		}
 
 		// 1. Get attr of targetProperty, such as < text="{}"/>

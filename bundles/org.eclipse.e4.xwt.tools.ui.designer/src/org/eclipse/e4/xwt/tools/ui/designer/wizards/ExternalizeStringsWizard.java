@@ -229,13 +229,13 @@ public class ExternalizeStringsWizard extends Wizard implements INewWizard {
 		final IFile file = ExternalizeStringsCommon.getIFile(containerName, fileName);
 		try {
 			InputStream stream;
-			StringBuffer historyContent = new StringBuffer();
 			if (!isClassFile) {
 				stream = openPropertyContentStream(checkedItems);
 			} else {
 				if (file.exists()) {
 					// Get the nameMap of the exist file.
-					historyContent = ExternalizeStringsCommon.getHistoryContents(file);
+					StringBuffer historyContent = ExternalizeStringsCommon
+							.getHistoryContents(file);
 					// Create inputStream with exist files nameMap.
 					stream = openSourceContentStream(checkedItems, containerName, fileName, propertyfileName, historyContent);
 				} else {

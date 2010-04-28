@@ -168,10 +168,11 @@ public class EMFCodegen {
 			EList<EStructuralFeature> attributes = eClass
 					.getEStructuralFeatures();
 			for (EStructuralFeature attr : attributes) {
-				String attrName = attr.getName();
-				while (existingNames.contains(attrName)) {
-					attrName = attrName + (i++);
+				StringBuffer attrNameBuf = new StringBuffer(attr.getName());
+				while (existingNames.contains(attrNameBuf.toString())) {
+					attrNameBuf.append(i++);
 				}
+				String attrName = attrNameBuf.toString();
 				int lowerBound = attr.getLowerBound();
 				int upperBound = attr.getUpperBound();
 				existingNames.add(attrName);
@@ -314,8 +315,7 @@ public class EMFCodegen {
 								appendLine(buf, objectName + ".eSet("
 										+ attrVarName + ", new "
 										+ EContentsEList.class.getSimpleName()
-										+ "("
-										+ valueName + "));", lineDelim);
+										+ "(" + valueName + "));", lineDelim);
 							} else {
 								appendLine(buf,
 										objectName + ".eSet(" + attrVarName

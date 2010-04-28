@@ -12,7 +12,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.figures;
 
 /*
  *  $RCSfile: ImageFigure.java,v $
- *  $Revision: 1.3 $  $Date: 2005/08/24 23:12:50 $ 
+ *  $Revision: 1.1 $  $Date: 2009/12/03 20:35:57 $ 
  */
 
 import org.eclipse.draw2d.Figure;
@@ -76,9 +76,7 @@ public class ImageFigure extends Figure {
 
 	protected void paintClientArea(Graphics g) {
 		Rectangle r = getClientArea();
-		if (r.isEmpty() || image == null || image.isDisposed()) {
-			super.paintClientArea(g);
-		} else if (image != null) {
+		if (!r.isEmpty() && image != null && !image.isDisposed()) {
 			g.drawImage(image, r.x, r.y);
 		} else if (useParentImageFigure) {
 			// Get the parent up the chain that has the actual image to use.

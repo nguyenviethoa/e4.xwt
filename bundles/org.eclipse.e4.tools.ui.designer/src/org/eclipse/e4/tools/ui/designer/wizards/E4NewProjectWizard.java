@@ -96,7 +96,7 @@ public class E4NewProjectWizard extends NewPluginProjectWizard {
 	}
 
 	public void addPages() {
-		fMainPage = new NewProjectCreationPage(
+		fMainPage = new E4NewProjectWizardPage(
 				"main", fPluginData, false, getSelection()); //$NON-NLS-1$
 		fMainPage.setTitle(PDEUIMessages.NewProjectWizard_MainPage_title);
 		fMainPage.setDescription(PDEUIMessages.NewProjectWizard_MainPage_desc);

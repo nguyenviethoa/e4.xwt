@@ -72,11 +72,8 @@ public class RowLayoutCommandsFactory extends LayoutCommandsFactory {
 			// Create RowData element if it does not exist.
 			if (newSize instanceof Dimension) {
 				Dimension dimension = (Dimension) newSize;
-				Object rowdatevalue = layoutDataAttr.getChild("RowData");
-				XamlElement attrElement = null;
-				if (rowdatevalue instanceof XamlElement) {
-					attrElement = (XamlElement) rowdatevalue;
-				} else {
+				XamlElement attrElement = layoutDataAttr.getChild("RowData");
+				if (attrElement == null) {
 					attrElement = XamlFactory.eINSTANCE.createElement("RowData", IConstants.XWT_NAMESPACE);
 					layoutDataAttr.getChildNodes().add(attrElement);
 				}

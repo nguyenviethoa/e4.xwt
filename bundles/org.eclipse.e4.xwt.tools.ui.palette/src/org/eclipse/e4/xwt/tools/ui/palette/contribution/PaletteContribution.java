@@ -12,7 +12,6 @@ package org.eclipse.e4.xwt.tools.ui.palette.contribution;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -29,8 +28,6 @@ import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPalettePage;
 import org.eclipse.e4.xwt.tools.ui.palette.page.CustomPaletteViewerProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.page.resources.IPaletteResourceProvider;
 import org.eclipse.e4.xwt.tools.ui.palette.root.PaletteRootFactory;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.Tool;
 import org.eclipse.gef.palette.PaletteRoot;
@@ -59,8 +56,6 @@ public class PaletteContribution implements IExecutableExtension {
 	public static final String TOOL_TYPE_SELECTION = "selection";
 
 	private String editorId;
-	private Resource resource;
-	private String resourceURI;
 	private Map<String, Initializer> initializersMap;
 	private List<IPaletteResourceProvider> resourceProviders;
 
@@ -97,7 +92,7 @@ public class PaletteContribution implements IExecutableExtension {
 			resourceProviders = new ArrayList<IPaletteResourceProvider>();
 		}
 		for (IConfigurationElement resConfig : resources) {
-			String uri = resConfig.getAttribute(RESOURCE_URI);
+			// String uri = resConfig.getAttribute(RESOURCE_URI);
 			try {
 				IPaletteResourceProvider provider = (IPaletteResourceProvider) resConfig
 						.createExecutableExtension(RESOURCE_PROVIDER);
@@ -291,14 +286,6 @@ public class PaletteContribution implements IExecutableExtension {
 
 	public boolean hasInitialiers() {
 		return initializersMap != null && initializersMap.size() > 0;
-	}
-
-	public String getResourceURI() {
-		return resourceURI;
-	}
-
-	public Resource getResource() {
-		return resource;
 	}
 
 	public List<IPaletteResourceProvider> getResourceProviders() {

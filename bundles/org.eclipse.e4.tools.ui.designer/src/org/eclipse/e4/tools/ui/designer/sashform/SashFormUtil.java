@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
@@ -156,6 +157,7 @@ public class SashFormUtil {
 				}
 			}
 		} catch (Exception e) {
+			E4DesignerPlugin.logWarning(e);
 		}
 		return -1;
 	}

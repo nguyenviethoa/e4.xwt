@@ -29,8 +29,7 @@ public class MoveChildCommand extends Command {
 
 	int oldPosition = -1;
 	int newPosition = -1;
-	XamlNode parentNode;
-	XamlNode childNode;
+	private XamlNode parentNode;
 
 	public MoveChildCommand(EditPart child, EditPart after) {
 		super("Move Child Command");

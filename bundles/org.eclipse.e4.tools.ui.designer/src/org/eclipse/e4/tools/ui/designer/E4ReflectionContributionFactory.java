@@ -11,7 +11,6 @@
  ******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -33,7 +32,6 @@ import org.eclipse.e4.core.services.contributions.IContributionFactorySpi;
 import org.eclipse.e4.tools.ui.designer.utils.ProjectLoader;
 import org.eclipse.e4.workbench.ui.internal.Activator;
 import org.eclipse.e4.workbench.ui.internal.Policy;
-import org.eclipse.e4.workbench.ui.internal.ReflectionContributionFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -45,7 +43,6 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 	private Map<String, Object> languages;
 	private IJavaProject project;
 	private ProjectLoader projectLoader;
-	private ReflectionContributionFactory contributionFactory;
 	
 	/**
 	 * Create a reflection factory.
@@ -57,7 +54,6 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 		this.registry = registry;
 		this.project = JavaCore.create(project);
 		this.projectLoader = new ProjectLoader(this.project);
-		contributionFactory = new ReflectionContributionFactory(registry);
 		processLanguages();
 	}
 

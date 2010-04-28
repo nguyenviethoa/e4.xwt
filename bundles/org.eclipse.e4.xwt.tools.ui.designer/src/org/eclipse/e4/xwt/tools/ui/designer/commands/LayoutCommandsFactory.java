@@ -40,6 +40,9 @@ public abstract class LayoutCommandsFactory {
 	}
 
 	public Command getDeleteCommand(Request request) {
+		if (!(request instanceof ForwardedRequest)) {
+			return null;
+		}
 		EditPart sender = ((ForwardedRequest) request).getSender();
 		Object model = sender.getModel();
 		if (isRoot(model)) {

@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.tools.ui.designer.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.e4.xwt.IConstants;
@@ -85,7 +86,7 @@ public class AddItemsCommand extends Command {
 		if (!items.isEmpty()) {
 			oldItems = items.toArray(new String[0]);
 		}
-		if (newItems.equals(oldItems)) {
+		if (Arrays.deepEquals(newItems, oldItems)) {
 			return;
 		}
 

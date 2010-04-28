@@ -52,7 +52,7 @@ public class NullLayoutCommandsFactory extends LayoutCommandsFactory {
 		return null;
 	}
 
-	class CreateCommand extends AbstractCreateCommand {
+	static class CreateCommand extends AbstractCreateCommand {
 		private static final int DEFAULT_WIDTH_WIDGET = 48;
 		private static final int DEFAULT_HEIGHT_WIDGET = 26;
 		private static final int DEFAULT_HEIGHT_COMPOSITE = 100;

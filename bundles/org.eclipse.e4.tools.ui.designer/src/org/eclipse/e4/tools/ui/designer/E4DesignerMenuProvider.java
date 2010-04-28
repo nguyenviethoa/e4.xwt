@@ -16,7 +16,6 @@ import org.eclipse.e4.tools.ui.designer.actions.FindElementAction;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider;
-import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 
@@ -57,7 +56,7 @@ public class E4DesignerMenuProvider extends DesignerMenuProvider {
 	 */
 	public void buildContextMenu(IMenuManager menu) {
 		super.buildContextMenu(menu);
-		ActionRegistry actionRegistry = getActionRegistry();
+		// ActionRegistry actionRegistry = getActionRegistry();
 		// menu.appendToGroup(BINDINGS, actionRegistry.getAction(BindingLayerAction.ID));
 		List selectedEditParts = getViewer().getSelectedEditParts();
 		if (selectedEditParts == null || selectedEditParts.isEmpty()) {

@@ -77,7 +77,8 @@ public class NewOptionsPartWizardPage extends WizardCreatePartPage {
 	private StringButtonDialogField dataContextField;
 	private Button xwtOptionButton;
 
-	public NewOptionsPartWizardPage(String superClass, PartDataContext dataContext) {
+	public NewOptionsPartWizardPage(String superClass,
+			PartDataContext dataContext) {
 		super(dataContext);
 		this.superClassName = superClass;
 		setUsingXWT(dataContext != null || superClassName != null);
@@ -169,7 +170,7 @@ public class NewOptionsPartWizardPage extends WizardCreatePartPage {
 				Button button = getChangeControl(parent);
 				button.setLayoutData(gridDataForButton(button, 1));
 
-				return new Control[]{label, text, button};
+				return new Control[] { label, text, button };
 			}
 
 		};
@@ -204,6 +205,7 @@ public class NewOptionsPartWizardPage extends WizardCreatePartPage {
 				setShellStyle(getShellStyle() | SWT.RESIZE);
 				super.create();
 			}
+
 			protected Control createDialogArea(Composite parent) {
 				Composite control = (Composite) super.createDialogArea(parent);
 				Composite newControl = new Composite(control, SWT.NONE);
@@ -215,6 +217,7 @@ public class NewOptionsPartWizardPage extends WizardCreatePartPage {
 						true, true).create());
 				return control;
 			}
+
 			protected void createButtonsForButtonBar(Composite parent) {
 				createButton(parent, IDialogConstants.OK_ID,
 						IDialogConstants.OK_LABEL, true);
@@ -240,7 +243,7 @@ public class NewOptionsPartWizardPage extends WizardCreatePartPage {
 			return null;
 		}
 
-		IJavaElement[] elements = new IJavaElement[]{project};
+		IJavaElement[] elements = new IJavaElement[] { project };
 		IJavaSearchScope scope = SearchEngine.createJavaSearchScope(elements);
 
 		FilteredTypesSelectionDialog dialog = new FilteredTypesSelectionDialog(
@@ -404,15 +407,13 @@ public class NewOptionsPartWizardPage extends WizardCreatePartPage {
 		setPageComplete(getErrorMessage() == null);
 	}
 
-	private class DataContextFieldAdapter
-			implements
-				IStringButtonAdapter,
-				IDialogFieldListener {
+	private class DataContextFieldAdapter implements IStringButtonAdapter,
+			IDialogFieldListener {
 
 		// -------- IStringButtonAdapter
 		public void changeControlPressed(DialogField field) {
 			IType type = chooseDataContext();
-			if (type != null) {
+			if (type != null && field instanceof StringButtonDialogField) {
 				((StringButtonDialogField) field).setText(type
 						.getFullyQualifiedName());
 			}
@@ -420,7 +421,9 @@ public class NewOptionsPartWizardPage extends WizardCreatePartPage {
 
 		// -------- IDialogFieldListener
 		public void dialogFieldChanged(DialogField field) {
-			validateNewType(((StringButtonDialogField) field).getText());
+			if (field instanceof StringButtonDialogField) {
+				validateNewType(((StringButtonDialogField) field).getText());
+			}
 		}
 	}
 

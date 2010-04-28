@@ -62,7 +62,6 @@ import org.w3c.dom.NodeList;
 public class XWTModelBuilder extends AbstractModelBuilder implements
 		IModelBuilder {
 
-	private Designer designer;
 	private XamlDocument document;
 	private IDocument jfaceDom;
 	private IFile input;
@@ -81,7 +80,9 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 	}
 
 	public boolean doLoad(Designer designer, final IProgressMonitor monitor) {
-		this.designer = designer;
+		if (designer == null) {
+			return false;
+		}
 		input = designer.getInputFile();
 		jfaceDom = designer.getDocument();
 		if (jfaceDom == null) {

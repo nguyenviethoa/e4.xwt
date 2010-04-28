@@ -22,9 +22,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.e4.xwt.tools.ui.designer.core.DesignerPlugin;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -36,7 +34,7 @@ public class SWTStyles {
 	private static StyleGroup[] DEFINED_GROUPS;
 	private static final Map<Class<?>, StyleGroup[]> stylesCache = new HashMap<Class<?>, StyleGroup[]>(1);
 
-	public static StyleGroup[] getDefinedGroups() {
+	public synchronized static StyleGroup[] getDefinedGroups() {
 		if (DEFINED_GROUPS == null) {
 			List<StyleGroup> groups = new ArrayList<StyleGroup>();
 			Field[] feilds = StyleGroup.class.getDeclaredFields();
@@ -47,6 +45,7 @@ public class SWTStyles {
 						groups.add((StyleGroup) object);
 					}
 				} catch (Exception e) {
+					DesignerPlugin.logInfo(e);
 				}
 			}
 			DEFINED_GROUPS = groups.toArray(new StyleGroup[0]);
@@ -113,12 +112,5 @@ public class SWTStyles {
 			}
 		}
 		return result;
-	}
-
-	public static void main(String[] args) {
-		StyleGroup[] styles = getStyles(Button.class);
-		StyleGroup[] styles2 = getStyles(Label.class);
-		StyleGroup[] styles3 = getStyles(Shell.class);
-		System.err.println();
 	}
 }

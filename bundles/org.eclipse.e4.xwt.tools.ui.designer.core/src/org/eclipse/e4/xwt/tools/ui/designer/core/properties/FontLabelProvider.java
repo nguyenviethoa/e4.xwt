@@ -26,7 +26,7 @@ public class FontLabelProvider extends LabelProvider {
 		if (element instanceof Font) {
 			FontData[] fontData = ((Font) element).getFontData();
 			if (fontData != null && fontData.length > 0) {
-				return fontData.toString();
+				return fontData[0].toString();
 			}
 		}
 		return super.getText(element);

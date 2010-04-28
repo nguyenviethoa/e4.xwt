@@ -88,5 +88,9 @@ public class CreateBindingConnectionAction extends Action {
 		// BindingCreateTool tool = new BindingCreateTool(factory);
 		// editPart.getViewer().getEditDomain().setActiveTool(tool);
 		// canvas.notifyListeners(SWT.MouseDown, event);
+
+		System.out.println(editPart);
+		System.out.println(observe);
+		System.out.println(property);
 	}
 }

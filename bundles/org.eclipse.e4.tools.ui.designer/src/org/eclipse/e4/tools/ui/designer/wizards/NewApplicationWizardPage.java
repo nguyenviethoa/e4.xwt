@@ -181,7 +181,7 @@ public class NewApplicationWizardPage extends WizardPage {
 			});
 		}
 		else {
-			label = new Label(parent, SWT.NONE);
+			new Label(parent, SWT.NONE);
 		}
 		data.put(property.getName(), property.getValue());
 	}

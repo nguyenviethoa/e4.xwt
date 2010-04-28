@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.SelectionSynchronizer;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.DesignerOutlinePage;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
@@ -50,7 +50,7 @@ public class E4SelectionSynchronizer extends SelectionSynchronizer {
 
 	protected void setViewerSelection(ISelectionProvider source, ISelectionProvider viewer,
 			ISelection selection) {
-		if (source instanceof ContentOutlinePage) {
+		if (source instanceof DesignerOutlinePage) {
 			ArrayList<EditPart> result = new ArrayList<EditPart>();
 			Iterator<?> iter = ((IStructuredSelection) selection).iterator();
 			while (iter.hasNext()) {
@@ -66,7 +66,7 @@ public class E4SelectionSynchronizer extends SelectionSynchronizer {
 							.size() - 1));
 				}
 			}
-		} else if (viewer instanceof ContentOutlinePage){
+		} else if (viewer instanceof DesignerOutlinePage){
 			ArrayList<Object> result = new ArrayList<Object>();
 			Iterator<?> iter = ((IStructuredSelection) selection).iterator();
 			while (iter.hasNext()) {

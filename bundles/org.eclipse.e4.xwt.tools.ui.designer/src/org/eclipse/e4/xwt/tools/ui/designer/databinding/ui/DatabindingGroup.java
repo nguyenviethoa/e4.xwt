@@ -197,7 +197,7 @@ public class DatabindingGroup implements IGroup {
 			} else if (bindCmd.canExecute()) {
 				bindCmd.execute();
 			}
-			if (input == null && !(input instanceof EditPart)) {
+			if (input == null || !(input instanceof EditPart)) {
 				return;
 			}
 			DisplayUtil.asyncExec(new Runnable() {

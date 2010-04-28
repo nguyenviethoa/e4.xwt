@@ -47,17 +47,16 @@ public class ApplyAttributeSettingCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
 	public boolean canExecute() {
+		if (attr == null) {
+			if (parent != null && attributeName != null) {
+				attr = parent.getAttribute(attributeName, namespace);
+			}
+		}
 		if (attr != null) {
-			return (newValue == null && attr.getValue() != null) || (!newValue.equals(attr.getValue()));
+			return newValue == null ? attr.getValue() != null : !newValue
+					.equals(attr.getValue());
 		}
-		if (parent == null || attributeName == null) {
-			return false;
-		}
-		attr = parent.getAttribute(attributeName, namespace);
-		if (attr != null) {
-			return (newValue == null && attr.getValue() != null) || (!newValue.equals(attr.getValue()));
-		}
-		return true;
+		return false;
 	}
 
 	/*

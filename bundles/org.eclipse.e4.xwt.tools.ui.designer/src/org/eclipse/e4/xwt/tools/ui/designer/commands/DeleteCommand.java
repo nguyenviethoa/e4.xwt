@@ -124,7 +124,7 @@ public class DeleteCommand extends Command {
 		deletedObjects.clear();
 	}
 
-	class DeleteData {
+	private static class DeleteData {
 		EObject parent;
 		int index = -1;
 	}

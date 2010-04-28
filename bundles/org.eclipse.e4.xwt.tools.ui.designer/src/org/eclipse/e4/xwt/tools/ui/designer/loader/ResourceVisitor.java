@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
@@ -241,7 +243,7 @@ public class ResourceVisitor {
 					}
 					if (method == null) {
 						// Load again.
-						clazz = ClassLoaderUtil.loadClass(loader
+						clazz = XWTClassLoaderUtil.loadClass(loader
 								.getLoadingContext(), clazz.getName());
 						method = ObjectUtil.findMethod(clazz, handler,
 								Object.class, Event.class);
@@ -304,8 +306,8 @@ public class ResourceVisitor {
 						loadedMethod.invoke(loadedObject,
 								new Object[] { event });
 					} else if (loadedMethod.getParameterTypes().length == 2) {
-						loadedMethod.invoke(loadedObject,
-								new Object[] { hostCLRWidget, event });
+						loadedMethod.invoke(loadedObject, new Object[] {
+								hostCLRWidget, event });
 					}
 				} catch (Exception e) {
 					LoggerManager.log(e);
@@ -606,8 +608,9 @@ public class ResourceVisitor {
 			((TableItemProperty.Cell) targetObject)
 					.setParent((TableItem) parent);
 		}
-
-		for (String key : options.keySet()) {
+		Set<Entry<String, Object>> entrySet = options.entrySet();
+		for (Entry<String, Object> entry : entrySet) {
+			String key = entry.getKey();
 			if (IXWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key)
@@ -624,7 +627,7 @@ public class ResourceVisitor {
 			if (property == null) {
 				throw new XWTException("Property " + key + " not found.");
 			}
-			property.setValue(targetObject, options.get(key));
+			property.setValue(targetObject, entry.getValue());
 		}
 
 		List<String> delayedAttributes = new ArrayList<String>();
@@ -893,6 +896,7 @@ public class ResourceVisitor {
 					tableEditor.setItem(tableItem);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				continue;
 			}
 		}
@@ -1290,8 +1294,8 @@ public class ResourceVisitor {
 	}
 
 	protected void loadShellCLR(String className, Shell shell) {
-		Class<?> type = ClassLoaderUtil.loadClass(loader.getLoadingContext(),
-				className);
+		Class<?> type = XWTClassLoaderUtil.loadClass(
+				loader.getLoadingContext(), className);
 		if (type == null) {
 			return;
 		}
@@ -1306,8 +1310,8 @@ public class ResourceVisitor {
 
 	protected Object loadCLR(String className, Object[] parameters,
 			Class<?> currentTagType, Map<String, Object> options) {
-		Class<?> type = ClassLoaderUtil.loadClass(loader.getLoadingContext(),
-				className);
+		Class<?> type = XWTClassLoaderUtil.loadClass(
+				loader.getLoadingContext(), className);
 		if (type == null) {
 			return null;
 		}
@@ -1697,7 +1701,7 @@ public class ResourceVisitor {
 		if (children.length == 1) {
 			XamlElement element = (XamlElement) children[0];
 			if (element != null) {
-				return ClassLoaderUtil.loadStaticMember(loader
+				return XWTClassLoaderUtil.loadStaticMember(loader
 						.getLoadingContext(), element);
 			}
 		}

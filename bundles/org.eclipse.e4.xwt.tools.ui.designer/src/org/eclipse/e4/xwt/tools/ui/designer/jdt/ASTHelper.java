@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.e4.xwt.tools.ui.designer.XWTDesignerPlugin;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -122,7 +123,8 @@ public class ASTHelper {
 			format(createdType, lineDelimiter);
 
 			return createdType;
-		} catch (Exception e) {
+		} catch (CoreException e) {
+			XWTDesignerPlugin.logError(e);
 			return null;
 		}
 	}
@@ -258,11 +260,10 @@ public class ASTHelper {
 
 	public static void removeUnusedImports(IType type) {
 		try {
-			ASTHelper helper = new ASTHelper();
 			ICompilationUnit cu = type.getCompilationUnit();
-			CompilationUnit astRoot = helper.createASTForImports(cu);
-			Set existingImports = helper.getExistingImports(astRoot);
-			helper.removeUnusedImports(cu, existingImports, true);
+			CompilationUnit astRoot = ASTHelper.createASTForImports(cu);
+			Set existingImports = ASTHelper.getExistingImports(astRoot);
+			ASTHelper.removeUnusedImports(cu, existingImports, true);
 		} catch (CoreException e) {
 		}
 	}

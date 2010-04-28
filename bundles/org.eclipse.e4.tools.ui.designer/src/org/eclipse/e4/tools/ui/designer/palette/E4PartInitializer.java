@@ -45,6 +45,7 @@ public class E4PartInitializer extends E4PaletteInitializer {
 			input = (IFileEditorInput) editDomain
 					.getData(Designer.DESIGNER_INPUT);
 		} catch (Exception e) {
+			E4DesignerPlugin.logError(e);
 		}
 		if (input == null) {
 			return false;

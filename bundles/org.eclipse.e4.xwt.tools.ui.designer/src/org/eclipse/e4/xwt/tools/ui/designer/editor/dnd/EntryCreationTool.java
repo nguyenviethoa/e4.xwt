@@ -21,7 +21,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.CreationTool;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -37,7 +36,6 @@ public class EntryCreationTool extends CreationTool {
 	static int shadow = 2;
 
 	private Shell shell;
-	private Cursor cursor;
 	private Dimension initSize;
 
 	public EntryCreationTool() {

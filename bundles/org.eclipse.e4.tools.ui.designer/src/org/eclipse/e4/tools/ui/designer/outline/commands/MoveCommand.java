@@ -55,7 +55,7 @@ public abstract class MoveCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#canExecute()
 	 */
 	public boolean canExecute() {
-		boolean state = source != null && target != null && target instanceof MUIElement;
+		boolean state = source != null && target != null;
 		if (!state) {
 			return false;
 		}

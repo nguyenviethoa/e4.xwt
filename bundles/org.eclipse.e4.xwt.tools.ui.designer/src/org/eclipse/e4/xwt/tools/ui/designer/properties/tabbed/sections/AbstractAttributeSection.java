@@ -27,7 +27,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.commands.ApplyAttributeSettingComman
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
-import org.eclipse.e4.xwt.tools.ui.designer.loader.ClassLoaderUtil;
+import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTClassLoaderUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.ResourceVisitor;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTVisualLoader;
 import org.eclipse.e4.xwt.tools.ui.designer.model.RefreshAdapter;
@@ -325,7 +325,7 @@ public abstract class AbstractAttributeSection extends AbstractPropertySection
 		if (children.length == 1) {
 			XamlElement element = (XamlElement) children[0];
 			if (element != null) {
-				return ClassLoaderUtil.loadStaticMember(
+				return XWTClassLoaderUtil.loadStaticMember(
 						((XWTVisualLoader) xwtLoader).getLoadingContext(),
 						element);
 			}

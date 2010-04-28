@@ -104,7 +104,7 @@ public class XamlElementImpl extends XamlNodeImpl implements XamlElement {
 
 	protected void generateContent(Document document, Node node, String value) {
 		String content = getContent(node);
-		if (value == null && content == null || value.equals(content)) {
+		if (equals(value, content)) {
 			return;
 		}
 		value = value == null ? "" : value;

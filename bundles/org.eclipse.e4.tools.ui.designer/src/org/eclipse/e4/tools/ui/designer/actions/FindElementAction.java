@@ -16,6 +16,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
@@ -32,21 +33,23 @@ public class FindElementAction extends Action implements IMenuCreator {
 	public FindElementAction(EditPartViewer viewer) {
 		this.viewer = viewer;
 		setId(ID);
-		setText("Find Element By");
+		setText("Find With");
 		setMenuCreator(this);
 	}
 
 	private MenuManager getDropDownMenus() {
 		if (dropDownMenus == null) {
-			dropDownMenus = new MenuManager("Find By");
+			dropDownMenus = new MenuManager("Find With");
 			makeActions(dropDownMenus);
 		}
 		return dropDownMenus;
 	}
 
 	private void makeActions(MenuManager menuManager) {
-		menuManager.add(new FindByElementIdAction(viewer));
-		menuManager.add(new FindByContributionURIAction(viewer));
+		menuManager.add(new FindWithElementNameAction(viewer));
+		menuManager.add(new FindWithElementIdAction(viewer));
+		menuManager.add(new Separator());
+		menuManager.add(new FindWithContributionURIAction(viewer));
 	}
 
 	public Menu getMenu(Control parent) {

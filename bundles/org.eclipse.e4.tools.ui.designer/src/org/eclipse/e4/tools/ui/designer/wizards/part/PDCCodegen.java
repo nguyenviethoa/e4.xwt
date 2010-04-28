@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -96,8 +98,9 @@ public class PDCCodegen {
 				GridLayoutFactory.swtDefaults().numColumns(2).create());
 		if (result.hasExternalContents()) {
 			Map<String, Object> externalContents = result.getExternalContents();
-			for (String key : externalContents.keySet()) {
-				Object object = externalContents.get(key);
+			Set<Entry<String, Object>> entrySet = externalContents.entrySet();
+			for (Entry<String, Object> entry : entrySet) {
+				Object object = entry.getValue();
 				if (object == null) {
 					continue;
 				}

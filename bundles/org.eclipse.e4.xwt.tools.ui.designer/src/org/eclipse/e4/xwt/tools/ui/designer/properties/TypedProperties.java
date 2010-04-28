@@ -30,7 +30,7 @@ public class TypedProperties {
 	private static List<String> types;
 	private static ResourceBundle TYPED_PROPERTIES = ResourceBundle.getBundle("org.eclipse.e4.xwt.tools.ui.designer.properties.types");
 
-	public static List<String> getTypes() {
+	public static synchronized List<String> getTypes() {
 		if (types == null) {
 			types = new ArrayList<String>();
 			Enumeration<String> enumeration = TYPED_PROPERTIES.getKeys();
@@ -77,10 +77,6 @@ public class TypedProperties {
 				return super.getText(element);
 			}
 		};
-	}
-
-	public static void main(String[] args) {
-		System.out.println(getProperties("type"));
 	}
 
 }

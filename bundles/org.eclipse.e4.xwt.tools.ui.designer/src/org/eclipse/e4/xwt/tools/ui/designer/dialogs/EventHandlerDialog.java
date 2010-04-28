@@ -28,6 +28,9 @@ public class EventHandlerDialog extends AbstractEventHandlerDialog {
 		while ((node != null) && (node.getNodeType() == Node.TEXT_NODE) && (node.getParentNode() != null)) {
 			node = node.getParentNode();
 		}
+		if (node == null) {
+			return false;
+		}
 		String name = node.getNodeName();
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			IMetaclass metaclass = XWT.getMetaclass(name, node.getNamespaceURI());

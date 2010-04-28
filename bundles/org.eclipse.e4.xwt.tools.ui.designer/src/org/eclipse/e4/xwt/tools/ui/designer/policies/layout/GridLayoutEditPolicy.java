@@ -148,7 +148,9 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements
 			}
 
 			public void selectedStateChanged(EditPart editpart) {
-				if ((editpart == null || editpart == getHost() || isChildEditPart(editpart))
+				if ((editpart == null)
+						|| (editpart == getHost())
+						|| (isChildEditPart(editpart))
 						&& (editpart.getSelected() == EditPart.SELECTED || editpart
 								.getSelected() == EditPart.SELECTED_PRIMARY)) {
 					if (gridController != null) {
@@ -668,7 +670,8 @@ public class GridLayoutEditPolicy extends LayoutEditPolicy implements
 	 * eclipse.gef.Request)
 	 */
 	public void showTargetFeedback(Request request) {
-		if (!(REQ_CREATE.equals(request.getType()) && FeedbackHelper
+		if (!(REQ_CREATE.equals(request.getType())
+				&& request instanceof CreateRequest && FeedbackHelper
 				.showCreationFeedback(fbm, (CreateRequest) request))) {
 			super.showTargetFeedback(request);
 		}

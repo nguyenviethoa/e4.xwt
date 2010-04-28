@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.tools.ui.designer.widgets.FindElementsByIdDialog;
-import org.eclipse.e4.ui.model.application.MApplicationElement;
+import org.eclipse.e4.tools.ui.designer.widgets.FindElementsWithContributionURIDialog;
+import org.eclipse.e4.ui.model.application.MContribution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -31,14 +31,14 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class FindByElementIdAction extends Action {
-	public static final String ID = "org.eclipse.e4.tools.ui.designer.actions.FindByElementIdAction";
+public class FindWithContributionURIAction extends Action {
+	public static final String ID = "org.eclipse.e4.tools.ui.designer.actions.FindByContributionURIAction";
 	private EditPartViewer viewer;
 
-	public FindByElementIdAction(EditPartViewer viewer) {
+	public FindWithContributionURIAction(EditPartViewer viewer) {
 		this.viewer = viewer;
 		setId(ID);
-		setText("Element Id");
+		setText("Contribution URI");
 	}
 
 	public void run() {
@@ -62,7 +62,7 @@ public class FindByElementIdAction extends Action {
 					new IFilter() {
 						public boolean select(Object toTest) {
 							if (toTest instanceof EObject
-									&& toTest instanceof MApplicationElement) {
+									&& toTest instanceof MContribution) {
 								return ((EObject) toTest).eResource() != null;
 							}
 							return false;
@@ -73,8 +73,8 @@ public class FindByElementIdAction extends Action {
 			}
 			elements.addAll(Arrays.asList(children));
 		}
-		FindElementsByIdDialog dialog = new FindElementsByIdDialog(new Shell(),
-				elements.toArray(new Object[0]));
+		FindElementsWithContributionURIDialog dialog = new FindElementsWithContributionURIDialog(
+				new Shell(), elements.toArray(new Object[0]));
 		if (Window.OK == dialog.open()) {
 			Object object = dialog.getFirstResult();
 			EditPart editpart = (EditPart) viewer.getEditPartRegistry().get(

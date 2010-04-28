@@ -58,8 +58,6 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ExternalizeStringsWizardPage extends WizardPage {
 
-	private ISelection selection;
-
 	private TextValueModel checkedItems;
 
 	private TextValueModel textValueEntrys;
@@ -88,7 +86,7 @@ public class ExternalizeStringsWizardPage extends WizardPage {
 
 	private Combo combo;
 
-	private ArrayList duplicateKeys;
+	private ArrayList<String> duplicateKeys;
 
 	// create a PropertyFileListener instance.
 	private final TableViewerListener tableViewerListener = new TableViewerListener() {
@@ -111,7 +109,6 @@ public class ExternalizeStringsWizardPage extends WizardPage {
 		setTitle("Externalize Strings");
 		setDescription("Externalizes strings from code into a properties file. The auto-generated keys should be adjusted.");
 		this.textValueEntrys = textValueEntrys;
-		this.selection = selection;
 	}
 
 	/**
@@ -462,7 +459,7 @@ public class ExternalizeStringsWizardPage extends WizardPage {
 	 */
 	private void checkDuplicate(String sourceFolderName, String className, String propertyFolderName, String propertyName) {
 		try {
-			duplicateKeys = new ArrayList();
+			duplicateKeys = new ArrayList<String>();
 			if (ExternalizeStringsCommon.getIFile(sourceFolderName, className).exists()) {
 				StringBuffer classHistoryContents = ExternalizeStringsCommon.getHistoryContents((ExternalizeStringsCommon.getIFile(sourceFolderName, className)));
 				checkDuplicateKey(checkedItems, classHistoryContents, true);
@@ -473,16 +470,17 @@ public class ExternalizeStringsWizardPage extends WizardPage {
 			}
 
 			if (duplicateKeys.size() > 0) {
-				String dialogMessage = "Key: ";
-				ArrayList keys = new ArrayList();
+				StringBuffer dialogMessage = new StringBuffer("Key: ");
+				ArrayList<String> keys = new ArrayList<String>();
 				for (int i = 0; i < duplicateKeys.size(); i++) {
 					if (keys.indexOf(duplicateKeys.get(i)) == -1) {
 						keys.add(duplicateKeys.get(i));
-						dialogMessage = dialogMessage + "\"" + duplicateKeys.get(i) + "\" ";
+						dialogMessage.append("\"" + duplicateKeys.get(i)
+								+ "\" ");
 					}
 				}
-				dialogMessage = dialogMessage + "already exist in files. Please rename.";
-				updateStatus(dialogMessage);
+				dialogMessage.append("already exist in files. Please rename.");
+				updateStatus(dialogMessage.toString());
 			}
 		} catch (CoreException e1) {
 			e1.printStackTrace();

@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.databinding.BindingMode;
@@ -171,14 +173,23 @@ public class BindingHelper implements BindingConstants {
 				return null;
 			}
 			if (dataContext != null && !resources.isEmpty()) {
-				for (Object key : resources.keySet()) {
-					if (dataContext.equals(resources.get(key))) {
-						return new DataContext(key.toString(), dataContext);
+				Set<?> entrySet = resources.entrySet();
+				for (Object object : entrySet) {
+					Entry<?, ?> entry = (Entry<?, ?>) object;
+					Object value = entry.getValue();
+					if (!dataContext.equals(value)) {
+						continue;
 					}
+					Object key = entry.getKey();
+					return new DataContext(key.toString(), value);
 				}
 			} else {
-				for (Object key : resources.keySet()) {
-					return new DataContext(key.toString(), resources.get(key));
+				Set<?> entrySet = resources.entrySet();
+				for (Object object : entrySet) {
+					Entry<?, ?> entry = (Entry<?, ?>) object;
+					Object key = entry.getKey();
+					Object value = entry.getValue();
+					return new DataContext(key.toString(), value);
 				}
 			}
 		} catch (Exception e) {

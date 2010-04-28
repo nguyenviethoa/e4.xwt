@@ -1358,7 +1358,7 @@ public class GridLayoutPolicyHelper {
 		}
 	}
 
-	public class GridComponent {
+	public static class GridComponent {
 
 		private XamlNode model;
 		private boolean filler;

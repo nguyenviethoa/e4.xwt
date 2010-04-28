@@ -47,6 +47,7 @@ public class ExternalizeStringsCommon {
 			line = br.readLine();
 		}
 		fr.close();
+		br.close();
 		return fileContent;
 	}
 

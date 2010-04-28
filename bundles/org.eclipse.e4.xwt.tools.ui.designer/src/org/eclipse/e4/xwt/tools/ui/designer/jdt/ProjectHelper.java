@@ -109,12 +109,6 @@ public class ProjectHelper {
 				fModel = new WorkspaceBundlePluginModel(file, pluginFile);
 			}
 			IPluginBase pluginBase = fModel.getPluginBase();
-			IPluginImport[] imports = pluginBase.getImports();
-			for (IPluginImport pluginImport : imports) {
-				// if (eFaceRCPPlugin.PLUGIN_ID.equals(pluginImport.getName())) {
-				return;
-				// }
-			}
 
 			try {
 				IPluginReference[] dependencies = getDependencies();
@@ -130,7 +124,7 @@ public class ProjectHelper {
 				e.printStackTrace();
 			}
 		} else {
-			AddJars(javaProject);
+			addJars(javaProject);
 		}
 	}
 
@@ -153,7 +147,7 @@ public class ProjectHelper {
 					for (Bundle bundle : bundleGroup.getBundles()) {
 						URL bundlePath = bundle.getEntry("/");
 						URL url = FileLocator.resolve(bundlePath);
-						if (location.equals(url)) {
+						if (location.toString().equals(url.toString())) {
 							return bundle;
 						}
 					}
@@ -205,7 +199,7 @@ public class ProjectHelper {
 		return false;
 	}
 
-	public static void AddJars(IJavaProject javaProject) {
+	public static void addJars(IJavaProject javaProject) {
 		try {
 			IClasspathEntry[] oldclasspath = javaProject.getRawClasspath();
 			for (int i = 0; i < oldclasspath.length; i++) {
@@ -230,7 +224,7 @@ public class ProjectHelper {
 		}
 	}
 
-	public static void RemoveJars(IJavaProject javaProject) {
+	public static void removeJars(IJavaProject javaProject) {
 		try {
 			IClasspathEntry[] oldclasspath = javaProject.getRawClasspath();
 			for (int i = 0; i < oldclasspath.length; i++) {

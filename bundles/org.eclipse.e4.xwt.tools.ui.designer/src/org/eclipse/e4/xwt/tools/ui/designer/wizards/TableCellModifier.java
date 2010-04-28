@@ -21,20 +21,22 @@ import org.eclipse.swt.widgets.TableItem;
 public class TableCellModifier implements ICellModifier {
 
 	public boolean canModify(Object element, String property) {
-		if (property == ExternalizeStringsWizardPage.KEY_COLUMN_ID) {
+		if (property.equals(ExternalizeStringsWizardPage.KEY_COLUMN_ID)) {
 			return true;
-		} else if (property == ExternalizeStringsWizardPage.VALUE_COLUMN_ID) {
+		} else if (property
+				.equals(ExternalizeStringsWizardPage.VALUE_COLUMN_ID)) {
 			return true;
 		}
 		return false;
 	}
 
 	public Object getValue(Object element, String property) {
-		if (property == ExternalizeStringsWizardPage.KEY_COLUMN_ID) {
+		if (property.equals(ExternalizeStringsWizardPage.KEY_COLUMN_ID)) {
 			if (element instanceof TextValueEntry) {
 				return ((TextValueEntry) element).getKey();
 			}
-		} else if (property == ExternalizeStringsWizardPage.VALUE_COLUMN_ID) {
+		} else if (property
+				.equals(ExternalizeStringsWizardPage.VALUE_COLUMN_ID)) {
 			if (element instanceof TextValueEntry) {
 				return ((TextValueEntry) element).getValue();
 			}
@@ -50,7 +52,7 @@ public class TableCellModifier implements ICellModifier {
 			element = ((TableItem) element).getData();
 		}
 		String text = ((String) value).trim();
-		if (property == ExternalizeStringsWizardPage.KEY_COLUMN_ID) {
+		if (property.equals(ExternalizeStringsWizardPage.KEY_COLUMN_ID)) {
 			((TextValueEntry) element).setKey(text);
 		}
 

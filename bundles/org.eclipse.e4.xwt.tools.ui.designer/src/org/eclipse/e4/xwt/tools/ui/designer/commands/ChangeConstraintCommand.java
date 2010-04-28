@@ -26,6 +26,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
@@ -77,11 +78,13 @@ public class ChangeConstraintCommand extends Command {
 		 */
 		if (editPart instanceof ControlEditPart) {
 			Control control = (Control) ((ControlEditPart) editPart).getWidget();
-			if ((control.getParent() instanceof Group)) {
-				return 0;
-			}
 			if (control != null) {
-				return SWTTools.getOffset(control.getParent()).x;
+				Composite parent = control.getParent();
+				if (parent instanceof Group) {
+					return 0;
+				} else {
+					return SWTTools.getOffset(parent).x;
+				}
 			}
 		}
 		return OffsetUtil.getXOffset(editPart.getParent());
@@ -96,11 +99,13 @@ public class ChangeConstraintCommand extends Command {
 		 */
 		if (editPart instanceof ControlEditPart) {
 			Control control = (Control) ((ControlEditPart) editPart).getWidget();
-			if ((control.getParent() instanceof Group)) {
-				return 0;
-			}
-			if (control != null && !(control.getParent() instanceof Group)) {
-				return SWTTools.getOffset(control.getParent()).y;
+			if (control != null) {
+				Composite parent = control.getParent();
+				if (parent instanceof Group) {
+					return 0;
+				} else {
+					return SWTTools.getOffset(parent).y;
+				}
 			}
 		}
 		return OffsetUtil.getYOffset(editPart.getParent());

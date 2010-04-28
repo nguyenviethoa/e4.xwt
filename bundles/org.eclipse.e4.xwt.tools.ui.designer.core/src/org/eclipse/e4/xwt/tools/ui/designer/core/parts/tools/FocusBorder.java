@@ -38,7 +38,7 @@ public class FocusBorder extends LineBorder {
 			Rectangle paintRectangle = getPaintRectangle(figure, insets);
 			tempRect.setBounds(paintRectangle);
 		}
-		if (getWidth() % 2 == 1) {
+		if (getWidth() % 2 != 0) {
 			tempRect.width--;
 			tempRect.height--;
 		}

@@ -38,7 +38,7 @@ import org.eclipse.ui.part.IPageSite;
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
-public class ContentOutlinePage extends
+public class DesignerOutlinePage extends
 		org.eclipse.ui.views.contentoutline.ContentOutlinePage {
 
 	private Designer designer;
@@ -52,7 +52,7 @@ public class ContentOutlinePage extends
 	private OutlineDropListener dropListener;
 	private OutlineDropManager dropManager;
 
-	public ContentOutlinePage(Designer designer) {
+	public DesignerOutlinePage(Designer designer) {
 		this.designer = designer;
 	}
 
@@ -60,12 +60,12 @@ public class ContentOutlinePage extends
 		return designer;
 	}
 
-	public ContentOutlinePage(Designer designer,
+	public DesignerOutlinePage(Designer designer,
 			ITreeContentProvider contentProvider, ILabelProvider labelProvider) {
 		this(designer, contentProvider, labelProvider, null);
 	}
 
-	public ContentOutlinePage(Designer designer,
+	public DesignerOutlinePage(Designer designer,
 			ITreeContentProvider contentProvider, ILabelProvider labelProvider,
 			ViewerFilter[] viewerFilters) {
 		this(designer);

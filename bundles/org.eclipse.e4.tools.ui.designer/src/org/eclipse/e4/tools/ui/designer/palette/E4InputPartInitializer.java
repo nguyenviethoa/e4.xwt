@@ -43,6 +43,7 @@ public class E4InputPartInitializer extends E4PartInitializer {
 					.getData(Designer.DESIGNER_INPUT);
 			application = (MApplication) designer.getDocumentRoot();
 		} catch (Exception e) {
+			E4DesignerPlugin.logError(e);
 		}
 		if (input == null) {
 			return false;

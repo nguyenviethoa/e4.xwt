@@ -21,7 +21,8 @@ import org.eclipse.emf.common.notify.Notification;
 public class ModelNotifySupport implements IModelNotify {
 
 	private List<ModelChangeListener> listeners;
-	private List<Notification> eventsQueue;
+
+	// private List<Notification> eventsQueue;
 
 	public void addModelListener(ModelChangeListener listener) {
 		if (listeners == null) {

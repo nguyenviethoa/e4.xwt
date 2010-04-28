@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.e4.xwt.tools.ui.designer.core.DesignerPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -134,6 +135,7 @@ public class SWTTools {
 					children.add((Widget) item);
 				}
 			} catch (Exception e) {
+				DesignerPlugin.logInfo(e);
 			}
 		}
 		// For controls of items.
@@ -145,6 +147,7 @@ public class SWTTools {
 					children.add((Widget) control);
 				}
 			} catch (Exception e) {
+				DesignerPlugin.logInfo(e);
 			}
 		}
 		// For Context Menu and sub menu of MenuItem
@@ -156,6 +159,7 @@ public class SWTTools {
 					children.add((Widget) menu);
 				}
 			} catch (Exception e) {
+				DesignerPlugin.logInfo(e);
 			}
 		}
 		{// getColumns
@@ -166,6 +170,7 @@ public class SWTTools {
 					children.add((Widget) col);
 				}
 			} catch (Exception e) {
+				DesignerPlugin.logInfo(e);
 			}
 		}
 		return children.toArray(new Widget[children.size()]);

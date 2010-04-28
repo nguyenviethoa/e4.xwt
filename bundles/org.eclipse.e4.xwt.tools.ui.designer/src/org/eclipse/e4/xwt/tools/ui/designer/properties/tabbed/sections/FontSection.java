@@ -53,6 +53,7 @@ public class FontSection extends AbstractAttributeSection {
 				style = fd.getStyle();
 			}
 		} catch (Exception e) {
+			System.out.println();
 		}
 	}
 

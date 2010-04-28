@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.javabean.metadata.BeanEvent;
@@ -165,8 +167,9 @@ public class EventMenuManager extends MenuManager {
 	}
 
 	protected void updateMap(Map<String, List<String>> eventsMap, Collection<String> existingEvents) {
-		for (String key : eventsMap.keySet()) {
-			List<String> value = eventsMap.get(key);
+		Set<Entry<String, List<String>>> entrySet = eventsMap.entrySet();
+		for (Entry<String, List<String>> entry : entrySet) {
+			List<String> value = entry.getValue();
 			for (String string : value.toArray(new String[value.size()])) {
 				String eventKey = string.toLowerCase();
 				if (existingEvents.contains(eventKey)) {

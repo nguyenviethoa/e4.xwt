@@ -136,7 +136,7 @@ public class SashFormDeleteCommand extends Command {
 		deletedObjects.clear();
 	}
 
-	class DeleteData {
+	static class DeleteData {
 		EObject parent;
 		int index = -1;
 	}

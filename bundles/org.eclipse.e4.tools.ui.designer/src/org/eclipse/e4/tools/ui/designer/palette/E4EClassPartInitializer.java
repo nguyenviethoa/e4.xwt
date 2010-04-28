@@ -43,6 +43,7 @@ public class E4EClassPartInitializer extends E4PartInitializer {
 			input = (IFileEditorInput) editDomain
 					.getData(Designer.DESIGNER_INPUT);
 		} catch (Exception e) {
+			E4DesignerPlugin.logError(e);
 		}
 		if (input == null) {
 			return false;

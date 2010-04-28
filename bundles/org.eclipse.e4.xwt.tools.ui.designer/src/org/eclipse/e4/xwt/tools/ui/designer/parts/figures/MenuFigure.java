@@ -118,7 +118,7 @@ public class MenuFigure extends Figure implements Expandable {
 		return host;
 	}
 
-	private class MenuLayout extends ToolbarLayout {
+	private static class MenuLayout extends ToolbarLayout {
 		private int horizontalSpacing = 0;
 		private int verticalSpacing = 0;
 

@@ -82,7 +82,7 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		}
 	};
 
-	static XWTSelectionCompletionProposal[] getBooleanProposals() {
+	static synchronized XWTSelectionCompletionProposal[] getBooleanProposals() {
 		if (booleanProposals == null) {
 			String[] values = new String[] { "true", "false" };
 			Image image = ImageShop
@@ -98,7 +98,7 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		return booleanProposals;
 	}
 
-	static XWTSelectionCompletionProposal[] getColorsProposals() {
+	static synchronized XWTSelectionCompletionProposal[] getColorsProposals() {
 		if (colorsProposals == null) {
 			Collection<String> names = XWTMaps.getColorKeys();
 			String[] colorNames = NamedColorsUtil.getColorNames();
@@ -142,7 +142,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 
 	}
 
-	static XWTSelectionCompletionProposal[] getStylesProposals(Class<?> type,
+	static synchronized XWTSelectionCompletionProposal[] getStylesProposals(
+			Class<?> type,
 			String value) {
 		stylesProposals = null;
 		Image image = ImageShop.get(ImageShop.IMG_ELEMENT);
@@ -267,7 +268,7 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 		return false;
 	}
 
-	static XWTSelectionCompletionProposal[] getAcceleratorsProposals() {
+	static synchronized XWTSelectionCompletionProposal[] getAcceleratorsProposals() {
 		if (acceleratorsProposals == null) {
 			Collection<String> names = XWTMaps.getAcceleratorKeys();
 			acceleratorsProposals = new XWTSelectionCompletionProposal[names

@@ -35,7 +35,7 @@ public class ColorCellEditor extends AbstractCellEditor {
 		if (value instanceof Color) {
 			color = LabelProviderFactory.getLabelProvider(Color.class).getText(value);
 		} else if (value instanceof String) {
-			color = (String) color;
+			color = (String) value;
 		}
 		ColorChooser dialog = new ColorChooser(cellEditorWindow.getShell(), color);
 		if (dialog.open() == Window.OK) {

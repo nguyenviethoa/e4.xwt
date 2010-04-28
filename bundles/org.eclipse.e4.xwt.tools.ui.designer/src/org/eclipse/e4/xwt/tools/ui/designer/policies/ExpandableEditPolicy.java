@@ -52,7 +52,10 @@ public class ExpandableEditPolicy extends GraphicalEditPolicy implements EditPar
 	}
 
 	private void addFocusListener(EditPart part) {
-		if (part != null && !listenedParts.contains(part)) {
+		if (part == null) {
+			return;
+		}
+		if (!listenedParts.contains(part)) {
 			part.addEditPartListener(focusListener);
 			part.addEditPartListener(this);
 			listenedParts.add(part);
@@ -66,7 +69,10 @@ public class ExpandableEditPolicy extends GraphicalEditPolicy implements EditPar
 	}
 
 	private void removeFocusListener(EditPart part) {
-		if (part != null && listenedParts.remove(part)) {
+		if (part == null) {
+			return;
+		}
+		if (listenedParts.remove(part)) {
 			part.removeEditPartListener(focusListener);
 			part.removeEditPartListener(this);
 		}

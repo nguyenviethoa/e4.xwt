@@ -27,7 +27,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -89,6 +91,7 @@ public class XWTCodegen {
 		public void setStatus(IStatus status) {
 			this.status = status;
 		}
+
 		public IStatus getStatus() {
 			return status;
 		}
@@ -107,12 +110,14 @@ public class XWTCodegen {
 			}
 			return externalContents;
 		}
+
 		public void merge(PrintResult newResult) {
 			if (newResult != null && newResult.getStatus().isOK()) {
 				getExternalContents().putAll(newResult.getExternalContents());
 			}
 		}
 	}
+
 	public static void createFile(IType host, IFile file, Object dataContext) {
 		createFile(host, file, dataContext, null);
 	}
@@ -149,8 +154,9 @@ public class XWTCodegen {
 						.swtDefaults().numColumns(2).create());
 		if (result.hasExternalContents()) {
 			Map<String, Object> externalContents = result.getExternalContents();
-			for (String key : externalContents.keySet()) {
-				Object object = externalContents.get(key);
+			Set<Entry<String, Object>> entrySet = externalContents.entrySet();
+			for (Entry<String, Object> entry : entrySet) {
+				Object object = entry.getValue();
 				if (object == null) {
 					continue;
 				}
@@ -197,8 +203,7 @@ public class XWTCodegen {
 		}
 		List<String> dataContextProperties = new ArrayList<String>();
 		if (dataContext instanceof EObject) {
-			EClass eClass = (dataContext instanceof EClass)
-					? (EClass) dataContext
+			EClass eClass = (dataContext instanceof EClass) ? (EClass) dataContext
 					: ((EObject) dataContext).eClass();
 			for (EStructuralFeature feature : eClass.getEStructuralFeatures()) {
 				if (all) {
@@ -216,11 +221,9 @@ public class XWTCodegen {
 			}
 		} else {
 			try {
-				Class<?> type = (dataContext instanceof Class<?>)
-						? (Class<?>) dataContext
+				Class<?> type = (dataContext instanceof Class<?>) ? (Class<?>) dataContext
 						: dataContext.getClass();
-				BeanInfo beanInfo = all
-						? Introspector.getBeanInfo(type)
+				BeanInfo beanInfo = all ? Introspector.getBeanInfo(type)
 						: Introspector.getBeanInfo(type, type.getSuperclass());
 				PropertyDescriptor[] propertyDescriptors = beanInfo
 						.getPropertyDescriptors();
@@ -249,8 +252,7 @@ public class XWTCodegen {
 		}
 		List<Object> embededTypes = new ArrayList<Object>();
 		if (dataContext instanceof EObject) {
-			EClass eClass = (dataContext instanceof EClass)
-					? (EClass) dataContext
+			EClass eClass = (dataContext instanceof EClass) ? (EClass) dataContext
 					: ((EObject) dataContext).eClass();
 			for (EStructuralFeature feature : eClass.getEStructuralFeatures()) {
 				EClassifier eType = feature.getEType();
@@ -262,8 +264,7 @@ public class XWTCodegen {
 			}
 		} else {
 			try {
-				Class<?> type = (dataContext instanceof Class<?>)
-						? (Class<?>) dataContext
+				Class<?> type = (dataContext instanceof Class<?>) ? (Class<?>) dataContext
 						: dataContext.getClass();
 				BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(type);
 				PropertyDescriptor[] propertyDescriptors = beanInfo
@@ -289,14 +290,12 @@ public class XWTCodegen {
 			Object dataContext, List<String> dataContextProperties,
 			String prefixOffset) {
 		if (dataContext instanceof EObject) {
-			EClass eClass = (dataContext instanceof EClass)
-					? (EClass) dataContext
+			EClass eClass = (dataContext instanceof EClass) ? (EClass) dataContext
 					: ((EObject) dataContext).eClass();
 			return printDataContextEMF(printStream, eClass,
 					dataContextProperties, prefixOffset);
 		} else {
-			Class<?> type = (dataContext instanceof Class<?>)
-					? (Class<?>) dataContext
+			Class<?> type = (dataContext instanceof Class<?>) ? (Class<?>) dataContext
 					: dataContext.getClass();
 			return printDataContextBean(printStream, type,
 					dataContextProperties, prefixOffset);
@@ -543,6 +542,7 @@ public class XWTCodegen {
 		printStream.println(prefixOffset + "</TableViewer>");
 		return PrintResult.OK;
 	}
+
 	public static PrintResult printTableColumn(PrintStream printStream,
 			String displayName, String displayMemberPath, int width,
 			String prefixOffset) {
@@ -562,6 +562,7 @@ public class XWTCodegen {
 				+ "/>");
 		return PrintResult.OK;
 	}
+
 	public static PrintResult printRoot(PrintStream printStream,
 			Class<?> rootType, String clr, String[] imports,
 			Map<String, String> namespaces, Object dataContext,
@@ -687,6 +688,7 @@ public class XWTCodegen {
 		return printControl(control, printStream, displayName, null, null,
 				null, prefixOffset);
 	}
+
 	public static PrintResult printControl(Class<?> control,
 			PrintStream printStream, String displayName, String bindingPath,
 			String style, Object layoutData, String prefixOffset) {
@@ -725,6 +727,7 @@ public class XWTCodegen {
 		printStream.println(prefixOffset + " </" + controlName + ">");
 		return result;
 	}
+
 	public static PrintResult printCombo(PrintStream printStream,
 			String bindingPath, String[] items, Object layoutData,
 			String prefixOffset) {
@@ -756,6 +759,7 @@ public class XWTCodegen {
 		printStream.println(prefixOffset + " </Combo>");
 		return result;
 	}
+
 	public static PrintResult printLabelCombo(PrintStream printStream,
 			String displayName, String bindingPath, String[] items,
 			String prefixOffset) {
@@ -875,21 +879,24 @@ public class XWTCodegen {
 					+ gd.grabExcessVerticalSpace + "\"");
 			String alignment = null;
 			switch (gd.horizontalAlignment) {
-				case GridData.FILL :
-					alignment = "GridData.FILL";
-					break;
-				case GridData.BEGINNING :
-					alignment = "GridData.BEGINNING";
-				case GridData.CENTER :
-					alignment = "GridData.CENTER";
-				case GridData.END :
-					alignment = "GridData.END";
-				case GridData.FILL_BOTH :
-					alignment = "GridData.FILL_BOTH";
-				case GridData.FILL_HORIZONTAL :
-					alignment = "GridData.FILL_HORIZONTAL";
-				default :
-					break;
+			case GridData.FILL:
+				alignment = "GridData.FILL";
+				break;
+			case GridData.BEGINNING:
+				alignment = "GridData.BEGINNING";
+				break;
+			case GridData.CENTER:
+				alignment = "GridData.CENTER";
+				break;
+			case GridData.END:
+				alignment = "GridData.END";
+				break;
+			case GridData.FILL_BOTH:
+				alignment = "GridData.FILL_BOTH";
+				break;
+			case GridData.FILL_HORIZONTAL:
+				alignment = "GridData.FILL_HORIZONTAL";
+				break;
 			}
 			printStream.println(prefixOffset
 					+ "\t grabExcessHorizontalSpace=\""
@@ -921,7 +928,7 @@ public class XWTCodegen {
 		// GridDataFactory.fillDefaults().create(), "");
 
 		printRoot(System.out, Composite.class, "hello.example.World",
-				new String[]{"java.lang", "org.eclipse.swt"}, null,
+				new String[] { "java.lang", "org.eclipse.swt" }, null,
 				"<Hello World/>", GridLayoutFactory.swtDefaults().create());
 	}
 }

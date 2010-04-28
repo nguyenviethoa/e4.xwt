@@ -11,7 +11,7 @@
 package org.eclipse.e4.xwt.tools.ui.designer.policies.layout;
 
 /*
- * $RCSfile: NonResizableSpannableEditPolicy.java,v $ $Revision: 1.1 $ $Date: 2009/12/03 20:32:22 $
+ * $RCSfile: NonResizableSpannableEditPolicy.java,v $ $Revision: 1.1 $ $Date: 2009/12/27 00:01:32 $
  */
 
 import java.util.List;
@@ -48,32 +48,39 @@ public class NonResizableSpannableEditPolicy extends NonResizableEditPolicy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy#createSelectionHandles()
+	 * @see org.eclipse.gef.editpolicies.SelectionHandlesEditPolicy#
+	 * createSelectionHandles()
 	 */
 	protected List createSelectionHandles() {
 		List nonResizeHandles = super.createSelectionHandles();
 		if (getHost().getSelected() == EditPart.SELECTED_PRIMARY) {
-			// Can't hide the Right to left under model coor. here. We need to know if RTL so that we
+			// Can't hide the Right to left under model coor. here. We need to
+			// know if RTL so that we
 			// use WEST instead of EAST.
 			if (!layoutEditPolicy.getHelper().isRightToLeft())
-				nonResizeHandles.add(createHandle((GraphicalEditPart) getHost(), PositionConstants.EAST));
+				nonResizeHandles.add(createHandle(
+						(GraphicalEditPart) getHost(), PositionConstants.EAST));
 			else
-				nonResizeHandles.add(createHandle((GraphicalEditPart) getHost(), PositionConstants.WEST));
-			nonResizeHandles.add(createHandle((GraphicalEditPart) getHost(), PositionConstants.SOUTH));
+				nonResizeHandles.add(createHandle(
+						(GraphicalEditPart) getHost(), PositionConstants.WEST));
+			nonResizeHandles.add(createHandle((GraphicalEditPart) getHost(),
+					PositionConstants.SOUTH));
 		}
 		return nonResizeHandles;
 	}
 
 	private Handle createHandle(GraphicalEditPart owner, int direction) {
-		GridSpanHandle handle = new GridSpanHandle(owner, direction, layoutEditPolicy);
+		GridSpanHandle handle = new GridSpanHandle(owner, direction,
+				layoutEditPolicy);
 		handle.setDragTracker(new ResizeTracker(owner, direction));
 		return handle;
 	}
 
 	public Command getCommand(Request request) {
-		if (REQ_RESIZE.equals(request.getType()))
+		if (REQ_RESIZE.equals(request.getType())
+				&& request instanceof ChangeBoundsRequest) {
 			return getSpanCommand((ChangeBoundsRequest) request);
-
+		}
 		return super.getCommand(request);
 	}
 
@@ -87,10 +94,12 @@ public class NonResizableSpannableEditPolicy extends NonResizableEditPolicy {
 	}
 
 	/*
-	 * Return a ChangeBoundsRequest with type REQ_GRIDBAGLAYOUT_SPAN from a REQ_RESIZE ChangeBoundsRequest
+	 * Return a ChangeBoundsRequest with type REQ_GRIDBAGLAYOUT_SPAN from a
+	 * REQ_RESIZE ChangeBoundsRequest
 	 */
 	private ChangeBoundsRequest createSpanRequest(ChangeBoundsRequest request) {
-		ChangeBoundsRequest req = new ChangeBoundsRequest(GridLayoutEditPolicy.REQ_GRIDLAYOUT_SPAN);
+		ChangeBoundsRequest req = new ChangeBoundsRequest(
+				GridLayoutEditPolicy.REQ_GRIDLAYOUT_SPAN);
 		req.setEditParts(getHost());
 		req.setMoveDelta(request.getMoveDelta());
 		req.setSizeDelta(request.getSizeDelta());
@@ -108,8 +117,10 @@ public class NonResizableSpannableEditPolicy extends NonResizableEditPolicy {
 
 	public void showSourceFeedback(Request request) {
 		if (REQ_RESIZE.equals(request.getType())) {
-			if (request instanceof ChangeBoundsRequest && ((ChangeBoundsRequest) request).getEditParts().size() == 1) {
-				layoutEditPolicy.showSpanTargetFeedback(createSpanRequest((ChangeBoundsRequest) request));
+			if (request instanceof ChangeBoundsRequest
+					&& ((ChangeBoundsRequest) request).getEditParts().size() == 1) {
+				layoutEditPolicy
+						.showSpanTargetFeedback(createSpanRequest((ChangeBoundsRequest) request));
 			}
 		} else
 			super.showSourceFeedback(request);

@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.e4.tools.ui.designer.commands.ApplyAttributeSettingCommand;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainerElement;
-import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -40,9 +39,6 @@ public class ChangeWeightsCommand extends Command {
 
 	public boolean canExecute() {
 		if (parent == null || request == null || request.getEditParts() == null) {
-			return false;
-		}
-		if (!(parent instanceof VisualEditPart)) {
 			return false;
 		}
 

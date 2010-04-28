@@ -276,7 +276,9 @@ public class BindingTableGroup implements IGroup {
 		}
 	}
 
-	private class LabelProvider extends org.eclipse.jface.viewers.LabelProvider implements ITableLabelProvider {
+	private static class LabelProvider extends
+			org.eclipse.jface.viewers.LabelProvider implements
+			ITableLabelProvider {
 
 		public String getColumnText(Object element, int columnIndex) {
 			if (element == null)
@@ -309,7 +311,7 @@ public class BindingTableGroup implements IGroup {
 
 	}
 
-	private class ContentProvider implements IStructuredContentProvider {
+	private static class ContentProvider implements IStructuredContentProvider {
 
 		public Object[] getElements(Object inputElement) {
 			if (inputElement == null)

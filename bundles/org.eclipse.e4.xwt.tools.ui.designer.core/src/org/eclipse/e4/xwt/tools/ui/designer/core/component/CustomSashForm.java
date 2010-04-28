@@ -12,7 +12,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.component;
 
 /*
  *  $RCSfile: CustomSashForm.java,v $
- *  $Revision: 1.2 $  $Date: 2009/02/03 00:32:19 $ 
+ *  $Revision: 1.1 $  $Date: 2009/12/03 20:35:58 $ 
  */
 
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public class CustomSashForm extends SashForm {
 			return; // If you can't max up or down, there there is no need for
 		// arrows.
 
-		SASH_WIDTH = 3 + getOrientation() == SWT.VERTICAL ? ARROW_HEIGHT : ARROW_SIZE;
+		SASH_WIDTH = 3 + ARROW_HEIGHT;
 
 		arrowColor = new Color(parent.getDisplay(), 99, 101, 156);
 		borderColor = new Color(parent.getDisplay(), 132, 130, 132);

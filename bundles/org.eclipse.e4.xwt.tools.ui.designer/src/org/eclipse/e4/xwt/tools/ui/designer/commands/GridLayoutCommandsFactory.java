@@ -25,7 +25,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gef.requests.CreateRequest;
 
 /**
  * @author jliu jin.liu@soyatec.com
@@ -94,12 +93,15 @@ public class GridLayoutCommandsFactory extends LayoutCommandsFactory {
 		 * @see org.eclipse.gef.commands.Command#canExecute()
 		 */
 		public boolean canExecute() {
+			XamlNode model = getModel();
+			if (model == null || children == null || children.isEmpty()) {
+				return false;
+			}
 			for (XamlNode child : children) {
-				if (!CreateReqHelper.canCreate(getModel(), child))
+				if (!CreateReqHelper.canCreate(model, child))
 					return false;
 			}
-			return getModel() != null && children != null
-					&& !children.isEmpty();
+			return true;
 		}
 
 		/*

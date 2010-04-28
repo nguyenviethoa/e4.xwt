@@ -217,6 +217,7 @@ public class ConstraintSection extends AbstractAttributeSection {
 						r.width = (Integer) widthProperty.getValue(widget);
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 			XamlAttribute heightAttr = parent.getAttribute("height");
@@ -230,6 +231,7 @@ public class ConstraintSection extends AbstractAttributeSection {
 						r.height = (Integer) heightProperty.getValue(widget);
 					}
 				} catch (Exception e) {
+					System.out.println();
 				}
 			}
 		}

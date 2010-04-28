@@ -29,20 +29,13 @@ public class CreateCommand extends Command {
 	private MElementContainer<MUIElement> parentModel;
 	private MUIElement creatingModel;
 	private int index = -1;
-	private boolean after;
 	private Class<?> childType;
 
 	public CreateCommand(EditPart parent, CreateRequest request, EditPart reference,
 			Class<?> childType) {
-		this(parent, request, reference, childType, false);
-	}
-
-	public CreateCommand(EditPart parent, CreateRequest request, EditPart reference,
-			Class<?> childType, boolean after) {
 		this.parent = parent;
 		this.request = request;
 		this.reference = reference;
-		this.after = after;
 		this.childType = childType;
 	}
 

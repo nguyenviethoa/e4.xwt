@@ -237,7 +237,7 @@ public class XWTProxy {
 			while (container != null && !(container instanceof XamlElement)) {
 				container = container.eContainer();
 			}
-			if (container != null && container instanceof XamlElement) {
+			if (container != null) {
 				Object parentComponent = getComponent(container, loadOnDemand);
 				if (!isNull(parentComponent)) {
 					component = createWidget(parentComponent,
@@ -418,8 +418,7 @@ public class XWTProxy {
 			return false;
 		}
 		try {
-			if (tempObj instanceof Widget
-					&& "style".equalsIgnoreCase(name)
+			if ("style".equalsIgnoreCase(name)
 					&& IConstants.XWT_X_NAMESPACE.endsWith(attribute
 							.getNamespace())) {
 				return ((Widget) tempObj).getStyle();
@@ -505,6 +504,10 @@ public class XWTProxy {
 		XamlNode model = null;
 		if (widget != null && !widget.isDisposed()) {
 			model = getModel(widget);
+		}
+
+		if (model == null) {
+			return false;
 		}
 
 		// in case of SashFrom 

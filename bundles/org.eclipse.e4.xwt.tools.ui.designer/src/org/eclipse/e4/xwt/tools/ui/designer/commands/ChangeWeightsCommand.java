@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.tools.ui.designer.XWTDesignerPlugin;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.VisualEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.StringUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTTools;
@@ -27,7 +28,6 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Sash;
@@ -51,9 +51,6 @@ public class ChangeWeightsCommand extends Command {
 
 	public boolean canExecute() {
 		if (parent == null || request == null || request.getEditParts() == null) {
-			return false;
-		}
-		if (!(parent instanceof VisualEditPart)) {
 			return false;
 		}
 		IVisualInfo visualInfo = ((VisualEditPart) parent).getVisualInfo();
@@ -154,6 +151,7 @@ public class ChangeWeightsCommand extends Command {
 				}
 			}
 		} catch (Exception e) {
+			XWTDesignerPlugin.logError(e);
 		}
 		return -1;
 	}

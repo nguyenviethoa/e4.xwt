@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.tools.ui.designer.utils.EMFCodegen;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.xwt.emf.EMFBinding;
@@ -104,6 +105,7 @@ public class NewEObjectPartWizardPage extends WizardCreatePartPage {
 			imports.addImport(EObject.class.getName());
 			type.createMethod(buf.toString(), null, false, null);
 		} catch (Exception e) {
+			E4DesignerPlugin.logError(e);
 		}
 	}
 

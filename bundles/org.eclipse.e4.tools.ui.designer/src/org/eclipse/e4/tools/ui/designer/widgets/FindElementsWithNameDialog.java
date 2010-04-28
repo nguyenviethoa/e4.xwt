@@ -10,26 +10,29 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.widgets;
 
-import org.eclipse.e4.ui.model.application.MContribution;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class FindElementsByContributionURIDialog extends
-		AbstractFindElementsDialog {
+public class FindElementsWithNameDialog extends AbstractFindElementsDialog {
 
-	public FindElementsByContributionURIDialog(Shell shell,
-			Object[] initializeElements) {
-		super(shell, initializeElements, "contributionURI:");
+	public FindElementsWithNameDialog(Shell shell, Object[] initializeElements) {
+		super(shell, initializeElements, "elementName:");
+		setMessage("Find Element With elementName");
 	}
 
 	protected String getFilterForeignText(Object item) {
-		String contributionURI = null;
-		if (item instanceof MContribution) {
-			contributionURI = ((MContribution) item).getContributionURI();
+		String elementName = "";
+		if (item instanceof EObject) {
+			EClass eClass = ((EObject) item).eClass();
+			if (eClass != null) {
+				elementName = eClass.getName();
+			}
 		}
-		return contributionURI == null ? "" : contributionURI;
+		return elementName;
 	}
 
 }

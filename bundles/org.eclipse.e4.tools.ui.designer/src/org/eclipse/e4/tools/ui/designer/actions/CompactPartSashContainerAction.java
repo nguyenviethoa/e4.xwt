@@ -9,7 +9,6 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 public class CompactPartSashContainerAction implements IObjectActionDelegate {
-	private MPartSashContainer partSashContainer;
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
@@ -29,7 +28,6 @@ public class CompactPartSashContainerAction implements IObjectActionDelegate {
 			if (object instanceof MPartSashContainer) {
 				MPartSashContainer selectedPartSashContainer = (MPartSashContainer) object;
 				if (!selectedPartSashContainer.getChildren().isEmpty()) {
-					partSashContainer = selectedPartSashContainer;
 					enabled = true;
 				}
 			}

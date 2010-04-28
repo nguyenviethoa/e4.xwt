@@ -148,7 +148,7 @@ public class XWTVisualLoader extends XWTLoader {
 	 * (non-Javadoc)
 	 * @see org.eclipse.e4.xwt.XWTLoader#registerMetaclass(java.lang.Class)
 	 */
-	public IMetaclass registerMetaclass(Class<?> type) {
+	public synchronized IMetaclass registerMetaclass(Class<?> type) {
 		IMetaclass metaclass = super.registerMetaclass(type);
 		if (metaclass != null && type != null && Control.class.isAssignableFrom(type)) {
 			IProperty[] properties = metaclass.getProperties();

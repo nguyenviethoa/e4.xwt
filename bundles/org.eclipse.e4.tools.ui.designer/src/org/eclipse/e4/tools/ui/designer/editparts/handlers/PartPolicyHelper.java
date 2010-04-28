@@ -27,10 +27,7 @@ public class PartPolicyHelper {
 		while (host != null && !(host instanceof SashFormEditPart)) {
 			host = host.getParent();
 		}
-		if (host instanceof SashFormEditPart) {
-			return (SashFormEditPart) host;
-		}
-		return null;
+		return (SashFormEditPart) host;
 	}
 
 	public static PartContainerEditPart getPartContainer(EditPart host,

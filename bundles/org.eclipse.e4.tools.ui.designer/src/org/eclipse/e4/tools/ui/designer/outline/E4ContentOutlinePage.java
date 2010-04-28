@@ -11,7 +11,7 @@
 package org.eclipse.e4.tools.ui.designer.outline;
 
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.DesignerOutlinePage;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * @yyang <yves.yang@soyatec.com>
  */
-public class E4ContentOutlinePage extends ContentOutlinePage {
+public class E4ContentOutlinePage extends DesignerOutlinePage {
 
 	public E4ContentOutlinePage(Designer designer) {
 		super(designer);

@@ -20,6 +20,7 @@ import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.tools.ui.designer.XWTDesignerPlugin;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTModelUtil;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
@@ -125,6 +126,7 @@ public class XWTPropertySource implements IPropertySource {
 				return true;
 			}
 		} catch (Exception e) {
+			XWTDesignerPlugin.logInfo(e);
 		}
 		try {
 			Field field = classType.getField(name);
@@ -132,6 +134,7 @@ public class XWTPropertySource implements IPropertySource {
 				return true;
 			}
 		} catch (Exception e) {
+			XWTDesignerPlugin.logInfo(e);
 		}
 		return false;
 	}
@@ -193,6 +196,7 @@ public class XWTPropertySource implements IPropertySource {
 					}
 				}
 			} catch (Exception e) {
+				XWTDesignerPlugin.logError(e);
 			}
 		} else if (styleHelper != null) {
 			value = styleHelper.getPropertyValue(id);

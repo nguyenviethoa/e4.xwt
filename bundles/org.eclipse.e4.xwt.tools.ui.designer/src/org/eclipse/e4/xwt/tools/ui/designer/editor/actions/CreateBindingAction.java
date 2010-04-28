@@ -49,9 +49,16 @@ public class CreateBindingAction extends Action {
 		// BindingInfo bindingInfo = new BindingInfo(targetInfo, modelInfo);
 		// editPart.getViewer().getEditDomain().getCommandStack().execute(bindingInfo.bindWithCommand());
 		// }
+		System.out.println(editPart);
+		System.out.println(observe);
+		System.out.println(property);
+		System.out.println(getRoot(editPart));
 	}
 
 	private EditPart getRoot(EditPart editPart) {
+		if (editPart == null) {
+			return null;
+		}
 		Object model = editPart.getModel();
 		if (model instanceof XamlElement && ((XamlElement) model).eContainer() instanceof XamlDocument) {
 			return editPart;

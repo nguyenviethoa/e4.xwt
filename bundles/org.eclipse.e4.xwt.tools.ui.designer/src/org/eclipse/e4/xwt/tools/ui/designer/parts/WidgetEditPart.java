@@ -29,7 +29,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.databinding.IObservable;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.policies.ComponentEditPolicy;
-import org.eclipse.e4.xwt.tools.ui.designer.policies.GraphicalNodeEditPolicy;
+import org.eclipse.e4.xwt.tools.ui.designer.policies.GraphicalNodeEditPolicyImpl;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
@@ -127,7 +127,7 @@ public class WidgetEditPart extends VisualEditPart implements NodeEditPart {
 		super.createEditPolicies();
 		installEditPolicy(EditPolicy.COMPONENT_ROLE, new ComponentEditPolicy());
 		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE,
-				new GraphicalNodeEditPolicy());
+				new GraphicalNodeEditPolicyImpl());
 	}
 
 	public boolean isTransparent() {

@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.e4.xwt.tools.ui.designer.core.DesignerPlugin;
 import org.eclipse.e4.xwt.tools.ui.designer.core.component.CustomSashForm;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.commandstack.CombinedCommandStack;
@@ -29,7 +30,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropTargetAdapter;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.GraphicalViewerDropCreationListener;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.palette.PaletteDropAdapter;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.DesignerOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineContentProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineLableProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.text.StructuredTextHelper;
@@ -119,7 +120,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 	protected CustomSashForm pageContainer;
 	private CustomPalettePage palettePage;
 	private IPropertySheetPage propertyPage;
-	private ContentOutlinePage outlinePage;
+	private DesignerOutlinePage outlinePage;
 	private ContextMenuProvider menuProvider;
 	private ProblemHandler problemHandler;
 
@@ -230,7 +231,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 		Result result;
 		try {
 			result = getVisualsRender().refreshVisuals(event);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			return;
 		}
 		if (result == null || !result.refreshed) {
@@ -625,6 +626,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 							document.setUndoManager(undoManager);
 						}
 					} catch (Exception e) {
+						DesignerPlugin.logError(e);
 					}
 				}
 				return document;
@@ -694,7 +696,13 @@ public abstract class Designer extends MultiPageEditorPart implements
 				.getData(DND.DROP_TARGET_KEY);
 		if (dropTarget != null) {
 			dropTarget.removeDropListener(dropListener);
+			dropTarget.dispose();
 		}
+
+		dropTarget = new DropTarget(styledText, DND.DROP_MOVE | DND.DROP_COPY);
+		dropTarget.setTransfer(new Transfer[] { getPalettePage()
+				.getPaletteTransfer() });
+		dropTarget.addDropListener(dropListener);
 
 		styledText.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -706,12 +714,6 @@ public abstract class Designer extends MultiPageEditorPart implements
 				}
 			}
 		});
-		dropTarget.dispose();
-
-		dropTarget = new DropTarget(styledText, DND.DROP_MOVE | DND.DROP_COPY);
-		dropTarget.setTransfer(new Transfer[] { getPalettePage()
-				.getPaletteTransfer() });
-		dropTarget.addDropListener(dropListener);
 
 		getProblemHandler().handle();
 	}
@@ -868,7 +870,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 	/**
 	 * @return
 	 */
-	protected ContentOutlinePage getOutlinePage() {
+	protected DesignerOutlinePage getOutlinePage() {
 		if (outlinePage == null) {
 			outlinePage = createOutlinePage();
 			if (outlinePage != null) {
@@ -878,10 +880,10 @@ public abstract class Designer extends MultiPageEditorPart implements
 		return outlinePage;
 	}
 
-	protected ContentOutlinePage createOutlinePage() {
+	protected DesignerOutlinePage createOutlinePage() {
 		OutlineContentProvider contentProvider = new OutlineContentProvider();
 		OutlineLableProvider lableProvider = new OutlineLableProvider();
-		return new ContentOutlinePage(this, contentProvider, lableProvider);
+		return new DesignerOutlinePage(this, contentProvider, lableProvider);
 	}
 
 	public IPropertySheetPage getPropertySheetPage() {

@@ -50,7 +50,6 @@ import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
@@ -78,8 +77,6 @@ import org.eclipse.ui.progress.IProgressService;
  */
 @SuppressWarnings("restriction")
 public class AccessorConfigurationDialog extends StatusDialog {
-
-	private ISelection selection;
 
 	private String sourceFolder;
 	private String sourcePackage;
@@ -633,7 +630,7 @@ public class AccessorConfigurationDialog extends StatusDialog {
 	 * Ensures that both file path are set.
 	 */
 	private void checkPackage(String path, String packageName, boolean isProperty) {
-		if (packageName.length() == 0 || packageName == null) {
+		if (packageName == null || packageName.length() == 0) {
 			if (isProperty) {
 				updateStatus("Incorret package.");
 				return;

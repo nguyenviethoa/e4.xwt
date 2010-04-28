@@ -16,9 +16,9 @@ import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
-public class ClasspathContainerInitializer extends org.eclipse.jdt.core.ClasspathContainerInitializer {
+public class XWTClasspathContainerInitializer extends org.eclipse.jdt.core.ClasspathContainerInitializer {
 
-	public ClasspathContainerInitializer() {
+	public XWTClasspathContainerInitializer() {
 	}
 
 	@Override

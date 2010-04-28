@@ -48,7 +48,7 @@ public class E4PaletteInitializer extends InitializerImpl {
 			return null;
 		}
 		boolean useCache = false;
-		if (creatingObject != null && creatingObject instanceof EObject
+		if (creatingObject != null
 				&& type.equals(((EObject) creatingObject).eClass())) {
 			useCache = ((EObject) creatingObject).eContainer() == null;
 		}

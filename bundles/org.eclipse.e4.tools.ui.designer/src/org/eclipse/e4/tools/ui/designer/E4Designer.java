@@ -26,7 +26,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.DesignerOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -241,8 +241,8 @@ public class E4Designer extends Designer {
 	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createOutlinePage
 	 * ()
 	 */
-	protected ContentOutlinePage createOutlinePage() {
-		ContentOutlinePage outlinePage = new E4ContentOutlinePage(this,
+	protected DesignerOutlinePage createOutlinePage() {
+		DesignerOutlinePage outlinePage = new E4ContentOutlinePage(this,
 				ApplicationModelHelper.getContentProvider(), ApplicationModelHelper
 						.getLabelProvider(),
 				new ViewerFilter[] { new ViewerFilter() {

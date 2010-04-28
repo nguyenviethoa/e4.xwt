@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.util.swt;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.eclipse.e4.xwt.tools.ui.designer.core.DesignerPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Point;
@@ -106,15 +107,13 @@ public class SWTWorkarounds {
 				return EMPTY;
 			}
 		}
-		Rectangle result = new Rectangle(0, 0, 0, 0);
 		try {
 			Method method = object.getClass().getDeclaredMethod("getBounds");
 			method.setAccessible(true);
-			result = (Rectangle) method.invoke(object);
+			return (Rectangle) method.invoke(object);
 		} catch (Throwable e) {
 			throw new UnsupportedOperationException(e);
 		}
-		return result;
 	}
 
 	public static Rectangle getBounds(MenuItem menuItem) {
@@ -133,6 +132,9 @@ public class SWTWorkarounds {
 	public static Rectangle getBounds(Menu menu) {
 		Rectangle result = getBounds((Object) menu);
 		Decorations parent = menu.getParent();
+		if (parent == null || parent.isDisposed()) {
+			return result;
+		}
 		Rectangle bounds = parent.getBounds();
 		if (!result.isEmpty() && parent != null) {
 			return new Rectangle(result.x - bounds.x, result.y - bounds.y,
@@ -175,7 +177,8 @@ public class SWTWorkarounds {
 			Class<?> clazz = Class.forName("org.eclipse.swt.internal.win32.OS");
 			Class<?>[] params = new Class[] { Integer.TYPE, Integer.TYPE, Integer.TYPE, lParam.getClass(), };
 			Method method = clazz.getMethod("SendMessage", params);
-			Object[] args = new Object[] { new Integer(hWnd), new Integer(Msg), new Integer(wParam), lParam, };
+			Object[] args = new Object[] { Integer.valueOf(hWnd),
+					Integer.valueOf(Msg), Integer.valueOf(wParam), lParam, };
 			result = ((Integer) method.invoke(clazz, args)).intValue();
 		} catch (Throwable e) {
 			throw new UnsupportedOperationException(e);
@@ -238,6 +241,7 @@ public class SWTWorkarounds {
 			getHeaderField.setAccessible(true);
 			hwndHeader = (Integer) getHeaderField.get(parent);
 		} catch (Exception e) {
+			DesignerPlugin.logInfo(e);
 		}
 		if (hwndHeader == 0) {
 			return new Rectangle(0, 0, 0, 0);
@@ -255,7 +259,7 @@ public class SWTWorkarounds {
 		try {
 			Class<?> clazz = Class.forName("org.eclipse.swt.internal.gtk.OS");
 			Class<?>[] params = new Class[] { Integer.TYPE };
-			Object[] args = new Object[] { new Integer(handle) };
+			Object[] args = new Object[] { Integer.valueOf(handle) };
 			Method method = clazz.getMethod("GTK_WIDGET_X", params);
 			bounds.x = ((Integer) method.invoke(clazz, args)).intValue();
 			method = clazz.getMethod("GTK_WIDGET_Y", params);

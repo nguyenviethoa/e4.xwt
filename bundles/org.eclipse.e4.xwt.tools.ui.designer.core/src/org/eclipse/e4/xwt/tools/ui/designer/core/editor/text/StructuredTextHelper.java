@@ -12,7 +12,6 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.editor.text;
 
 import java.lang.reflect.Method;
 
-import org.eclipse.e4.xwt.tools.ui.palette.ContextType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.custom.StyledText;
@@ -71,42 +70,6 @@ public class StructuredTextHelper {
 
 	public static IDOMNode getNode(ITextViewer textViewer, int documentPosition) {
 		return (IDOMNode) ContentAssistUtils.getNodeAt(textViewer, documentPosition);
-	}
-
-	/**
-	 * find the car
-	 * 
-	 * @param textViewer
-	 * @param contextType
-	 * @return
-	 */
-	public static int findContextTypeOffset(ITextViewer textViewer, ContextType contextType) {
-		int documentPosition = textViewer.getTextWidget().getCaretOffset();
-		return findContextTypeOffset(textViewer, documentPosition, contextType);
-	}
-
-	public static int findContextTypeOffset(ITextViewer textViewer, int documentPosition, ContextType contextType) {
-		Node node = getNode(textViewer, documentPosition);
-		ITextRegion completionRegion = getCompletionRegion(documentPosition, node);
-		System.out.println(completionRegion.getStart() + ", " + completionRegion.getEnd() + ", " + completionRegion.getLength());
-		String regionType = completionRegion.getType();
-
-		return documentPosition;
-	}
-
-	public static ContextType getCurrentContextType(ITextViewer textViewer) {
-		int documentPosition = textViewer.getTextWidget().getCaretOffset();
-		return getContextType(textViewer, documentPosition);
-	}
-
-	public static ContextType getContextType(ITextViewer textViewer, int documentPosition) {
-		Node node = getNode(textViewer, documentPosition);
-		ITextRegion completionRegion = getCompletionRegion(documentPosition, node);
-		System.out.println(completionRegion.getStart() + ", " + completionRegion.getEnd() + ", " + completionRegion.getLength());
-		String regionType = completionRegion.getType();
-
-		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(textViewer, documentPosition);
-		return ContextType.NONE;
 	}
 
 	static public ITextRegion getCompletionRegion(int documentPosition, Node domnode) {

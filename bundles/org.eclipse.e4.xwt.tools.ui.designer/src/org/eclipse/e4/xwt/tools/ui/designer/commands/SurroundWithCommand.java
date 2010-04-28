@@ -382,7 +382,7 @@ public class SurroundWithCommand extends Command {
 		return type;
 	}
 
-	class Counter {
+	static class Counter {
 		List<Integer> indexes;
 		int count = 0;
 

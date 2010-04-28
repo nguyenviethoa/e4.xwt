@@ -75,7 +75,6 @@ public class ModelAdapter extends EContentAdapter {
 		Synchronizer synch = fContext.getSynchronizer();
 		synchronized (synch) {
 			synch.setEventType(EventType.ModelEvent);
-			IDOMDocument textRoot = fContext.getTextRoot();
 			Object notifier = msg.getNotifier();
 			Object oldValue = msg.getOldValue();
 			Object newValue = msg.getNewValue();
@@ -339,7 +338,8 @@ public class ModelAdapter extends EContentAdapter {
 
 	protected void reverseContent(IDOMNode node, String value) {
 		String content = fContext.getContent(node);
-		if (value == null && content == null || value.equals(content)) {
+		if (value == null && content == null || value != null
+				&& value.equals(content)) {
 			return;
 		}
 		value = value == null ? "" : value;

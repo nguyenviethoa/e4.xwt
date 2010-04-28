@@ -22,7 +22,6 @@ import org.eclipse.e4.xwt.tools.ui.designer.databinding.Observable;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.ObservableUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.Property;
 import org.eclipse.e4.xwt.tools.ui.designer.databinding.ui.ObserveModelGroup;
-import org.eclipse.e4.xwt.tools.ui.designer.model.RefreshAdapter;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
 import org.eclipse.gef.EditPart;
@@ -155,8 +154,7 @@ public class DataBindingSection extends AbstractPropertySection {
 	}
 
 	protected void createBinding() {
-		Widget widget = editPart.getWidget();
-		if (editPart == null || widget == null) {
+		if (editPart == null || editPart.getWidget() == null) {
 			return;
 		}
 		BindingInfo bindingInfo = new BindingInfo(bindingContext);

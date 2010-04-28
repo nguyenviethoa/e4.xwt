@@ -16,7 +16,7 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.ContentOutlinePage;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.DesignerOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.BindingLayerAction;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.actions.ChangeTextAction;
@@ -321,8 +321,8 @@ public class XWTDesigner extends Designer implements
 	 * 
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createOutlinePage()
 	 */
-	protected ContentOutlinePage createOutlinePage() {
-		ContentOutlinePage outlinePage = (ContentOutlinePage) super
+	protected DesignerOutlinePage createOutlinePage() {
+		DesignerOutlinePage outlinePage = (DesignerOutlinePage) super
 				.createOutlinePage();
 		outlinePage.setContentProvider(new OutlinePageContentProvider());
 		outlinePage.setLabelProvider(new OutlinePageLabelProvider());

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
@@ -55,10 +56,18 @@ public abstract class AbstractFindElementsDialog extends
 		});
 	}
 
+	protected Label createMessageArea(Composite composite) {
+		Label msgLabel = super.createMessageArea(composite);
+		msgLabel.setFont(JFaceResources.getBannerFont());
+		return msgLabel;
+	}
+
 	protected Control createExtendedContentArea(Composite parent) {
 		if (detailsLabelText != null) {
 			Label label = new Label(parent, SWT.NONE);
 			label.setText(detailsLabelText);
+			label.setForeground(parent.getDisplay().getSystemColor(
+					SWT.COLOR_RED));
 			return label;
 		}
 		return null;

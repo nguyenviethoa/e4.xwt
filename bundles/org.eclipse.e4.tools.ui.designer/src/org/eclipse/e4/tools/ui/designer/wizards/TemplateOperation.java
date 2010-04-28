@@ -35,8 +35,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.pde.internal.ui.PDEUIMessages;
-import org.eclipse.pde.internal.ui.wizards.templates.ControlStack;
 import org.eclipse.pde.ui.templates.IVariableProvider;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
@@ -67,6 +67,7 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 			try {
 				fileUrl = new URL(file.substring(0, exclamation));
 			} catch (MalformedURLException mue) {
+				E4DesignerPlugin.logError(mue);
 				return;
 			}
 			File pluginJar = new File(fileUrl.getFile());
@@ -110,7 +111,7 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 					String folderName = getProcessedString(member.getName(), member.getName());
 					dstContainer = dst.getFolder(new Path(folderName));
 				}
-				if (dstContainer instanceof IFolder && !dstContainer.exists())
+				if (dstContainer != null && !dstContainer.exists())
 					((IFolder) dstContainer).create(true, true, monitor);
 				generateFiles(member, dstContainer, false, monitor);
 			} else {
@@ -176,7 +177,7 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 					String folderName = getProcessedString(name, name);
 					dstContainer = dst.getFolder(new Path(folderName));
 				}
-				if (dstContainer instanceof IFolder && !dstContainer.exists())
+				if (dstContainer != null && !dstContainer.exists())
 					((IFolder) dstContainer).create(true, true, monitor);
 				generateFiles(zipFile, path.append(name), dstContainer, monitor);
 			} else {
@@ -215,7 +216,9 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 		}
 	}
 	
-	private void copyFile(String fileName, InputStream input, IContainer dst,final String destPath, IProgressMonitor monitor) throws CoreException {
+	protected void copyFile(String fileName, InputStream input, IContainer dst,
+			final String destPath, IProgressMonitor monitor)
+			throws CoreException {
 		String targetFileName  = null;
 		if(destPath == null){
 			targetFileName = getProcessedString(fileName, fileName);

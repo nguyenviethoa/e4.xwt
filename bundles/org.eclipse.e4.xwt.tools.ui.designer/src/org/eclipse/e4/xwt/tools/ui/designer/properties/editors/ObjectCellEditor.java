@@ -24,8 +24,6 @@ import org.eclipse.ui.dialogs.SelectionDialog;
  */
 public class ObjectCellEditor extends AbstractCellEditor {
 
-	private Class<?> type;
-
 	public ObjectCellEditor(Composite parent, Class<?> type) {
 		super(parent);
 	}

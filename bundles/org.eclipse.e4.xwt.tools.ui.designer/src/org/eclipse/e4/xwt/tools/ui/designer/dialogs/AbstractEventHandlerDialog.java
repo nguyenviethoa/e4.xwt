@@ -218,7 +218,7 @@ public abstract class AbstractEventHandlerDialog {
 		return inputHandler;
 	}
 
-	private class RBSelectionAdapter extends SelectionAdapter {
+	private static class RBSelectionAdapter extends SelectionAdapter {
 		private Text text;
 		private Combo combo;
 		private int number;

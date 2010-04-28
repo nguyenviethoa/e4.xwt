@@ -13,6 +13,8 @@ package org.eclipse.e4.xwt.tools.ui.designer.databinding;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.Viewer;
@@ -69,9 +71,10 @@ public class Observable implements IObservable {
 				sourceObj = ((DataContext) source).getData();
 			}
 			Map<String, Class<?>> propertiesMap = PropertyUtil.getProperties(sourceObj);
-			for (String propertyName : propertiesMap.keySet()) {
-				Class<?> valueType = propertiesMap.get(propertyName);
-				Property property = new Property(this, propertyName, valueType);
+			Set<Entry<String, Class<?>>> entrySet = propertiesMap.entrySet();
+			for (Entry<String, Class<?>> entry : entrySet) {
+				Property property = new Property(this, entry.getKey(), entry
+						.getValue());
 				properties.add(property);
 			}
 		}

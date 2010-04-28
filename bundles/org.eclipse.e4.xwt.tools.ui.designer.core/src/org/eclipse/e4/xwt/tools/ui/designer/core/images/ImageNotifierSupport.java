@@ -25,18 +25,18 @@ public class ImageNotifierSupport {
 		imageListeners.add(aListener);
 	}
 
-	public void fireImageChanged(Image image) {
+	public synchronized void fireImageChanged(Image image) {
 		// Probably should make a copy of the notification list to prevent
 		// modifications while firing, but we'll see if this gives any problems.
-		if (imageListeners != null && !imageListeners.isEmpty()) {
-			Object[] listeners = imageListeners.getListeners();
+		Object[] listeners = imageListeners.getListeners();
+		if (listeners != null) {
 			for (int i = 0; i < listeners.length; i++) {
 				((IImageListener) listeners[i]).imageChanged(image);
 			}
 		}
 	}
 
-	public boolean hasImageListeners() {
+	public synchronized boolean hasImageListeners() {
 		return imageListeners != null && !imageListeners.isEmpty();
 	}
 

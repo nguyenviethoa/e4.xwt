@@ -1,13 +1,15 @@
 package org.eclipse.e4.tools.ui.designer.utils;
 
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 import org.eclipse.jdt.core.IJavaProject;
 
 public class ProjectLoader {
 	protected IJavaProject javaProject;
 	private ClassLoader classLoader;
-	
+
 	class RuntimeLoader extends ClassLoader {
 
 		public RuntimeLoader(ClassLoader parent) {
@@ -21,7 +23,7 @@ public class ProjectLoader {
 				String className = name;
 				int index = name.lastIndexOf('/');
 				if (index != -1) {
-					className = name.substring(index+1);
+					className = name.substring(index + 1);
 				}
 				type = super.findClass(className);
 			} catch (ClassNotFoundException e) {
@@ -30,14 +32,15 @@ public class ProjectLoader {
 				}
 				if (type == null) {
 					throw e;
-				} 
+				}
 			}
 			return type;
 		}
 
 		public Class<?> redefined(String name) {
 			try {
-				byte[] content = ClassLoaderHelper.getClassContent(ProjectLoader.this.javaProject, name);
+				byte[] content = ClassLoaderHelper.getClassContent(
+						ProjectLoader.this.javaProject, name);
 				if (content != null) {
 					int index = name.lastIndexOf('/');
 					if (index != -1) {
@@ -55,7 +58,8 @@ public class ProjectLoader {
 		protected URL findResource(String name) {
 			URL url = super.findResource(name);
 			if (url == null) {
-				url = ClassLoaderHelper.getResourceAsURL(ProjectLoader.this.javaProject, name);
+				url = ClassLoaderHelper.getResourceAsURL(
+						ProjectLoader.this.javaProject, name);
 			}
 			return url;
 		}
@@ -67,10 +71,16 @@ public class ProjectLoader {
 	}
 
 	protected void resetLoader() {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		setClassLoader(new RuntimeLoader(classLoader));
+		AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+			public ClassLoader run() {
+				ClassLoader classLoader = Thread.currentThread()
+						.getContextClassLoader();
+				setClassLoader(new RuntimeLoader(classLoader));
+				return classLoader;
+			}
+		});
 	}
-	
+
 	protected void setClassLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
 		Thread.currentThread().setContextClassLoader(classLoader);
@@ -79,7 +89,7 @@ public class ProjectLoader {
 	protected ClassLoader getClassLoader() {
 		return classLoader;
 	}
-	
+
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
 		return getClassLoader().loadClass(name);
 	}

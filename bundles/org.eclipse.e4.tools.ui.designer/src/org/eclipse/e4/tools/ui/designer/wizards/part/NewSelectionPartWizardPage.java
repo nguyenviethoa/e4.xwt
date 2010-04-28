@@ -16,6 +16,7 @@ import javax.inject.Named;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.xwt.ui.workbench.views.XWTStaticPart;
 import org.eclipse.emf.ecore.EClass;
@@ -129,6 +130,7 @@ public class NewSelectionPartWizardPage extends WizardCreatePartPage {
 
 			type.createMethod(buf.toString(), null, false, null);
 		} catch (Exception e) {
+			E4DesignerPlugin.logError(e);
 		}
 	}
 

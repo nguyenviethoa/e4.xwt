@@ -50,7 +50,7 @@ public class ApplicationModelHelper {
 	private static AdapterFactoryContentProvider contentProvider;
 	private static AdapterFactoryLabelProvider labelProvider;
 
-	public static ComposedAdapterFactory getFactory() {
+	public synchronized static ComposedAdapterFactory getFactory() {
 		if (adapterFactory == null) {
 			adapterFactory = new ComposedAdapterFactory(
 					ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -77,14 +77,14 @@ public class ApplicationModelHelper {
 		return adapterFactory;
 	}
 
-	public static AdapterFactoryContentProvider getContentProvider() {
+	public synchronized static AdapterFactoryContentProvider getContentProvider() {
 		if (contentProvider == null) {
 			contentProvider = new AdapterFactoryContentProvider(getFactory());
 		}
 		return contentProvider;
 	}
 
-	public static AdapterFactoryLabelProvider getLabelProvider() {
+	public synchronized static AdapterFactoryLabelProvider getLabelProvider() {
 		if (labelProvider == null) {
 			labelProvider = new AdapterFactoryLabelProvider(getFactory());
 		}

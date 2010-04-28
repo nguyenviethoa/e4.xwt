@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.loader;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -63,7 +64,9 @@ public class NodesSorter {
 		return columnsList;
 	}
 
-	private static class AttrComparator implements Comparator<XamlElement> {
+	private static class AttrComparator implements Comparator<XamlElement>,
+			Serializable {
+		private static final long serialVersionUID = 5974723422066058166L;
 		private String attrName;
 
 		public AttrComparator(String attrName) {

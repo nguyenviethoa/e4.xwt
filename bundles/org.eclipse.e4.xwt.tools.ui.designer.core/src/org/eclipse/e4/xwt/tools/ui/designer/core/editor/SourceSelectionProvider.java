@@ -72,7 +72,6 @@ public class SourceSelectionProvider implements ISelectionProvider {
 	}
 
 	protected void handleTextSelection(SelectionChangedEvent event) {
-		ISelection selection = textEditor.getSelectionProvider().getSelection();
 		List selectedNodes = getSelectedNodes();
 		if (selectedNodes == null || selectedNodes.isEmpty()) {
 			return;

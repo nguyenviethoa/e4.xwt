@@ -251,7 +251,9 @@ public class SashFormLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 * gef.Request)
 	 */
 	public Command getCommand(Request request) {
-		if (request.getType().equals(RequestConstants.REQ_RESIZE_CHILDREN)) {
+		if (request.getType().equals(RequestConstants.REQ_RESIZE_CHILDREN)
+				&& getHost() instanceof SashEditPart
+				&& request instanceof ChangeBoundsRequest) {
 			return new ChangeWeightsCommand((SashFormEditPart) getHost(),
 					(ChangeBoundsRequest) request);
 		}

@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -53,9 +55,11 @@ public class Property {
 				System.out.println("Collection");
 			} else {
 				Map<String, Class<?>> propertiesMap = PropertyUtil.getProperties(type);
-				for (String propertyName : propertiesMap.keySet()) {
-					Class<?> valueType = propertiesMap.get(propertyName);
-					properties.add(new Property(this, propertyName, valueType));
+				Set<Entry<String, Class<?>>> entrySet = propertiesMap
+						.entrySet();
+				for (Entry<String, Class<?>> entry : entrySet) {
+					properties.add(new Property(this, entry.getKey(), entry
+							.getValue()));
 				}
 			}
 		}

@@ -96,10 +96,7 @@ public class CutElementAction extends SelectionAction {
 				MUIElement copymodel = (MUIElement) EcoreUtil
 						.copy((EObject) element);
 				copymodel.setElementId(EcoreUtil.generateUUID());
-				if (copymodel instanceof MUIElement) {
-					MUIElement uiElement = (MUIElement) copymodel;
-					uiElement.setWidget(null);
-				}
+				copymodel.setWidget(null);
 				selectResult.add(copymodel);
 			}
 		}

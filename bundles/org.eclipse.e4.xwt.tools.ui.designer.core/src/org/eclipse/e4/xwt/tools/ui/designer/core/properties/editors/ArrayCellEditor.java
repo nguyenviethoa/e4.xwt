@@ -63,7 +63,7 @@ public class ArrayCellEditor extends AbstractCellEditor {
 		super.updateContents("[...]");
 	}
 
-	class ArrayDialog extends Dialog {
+	static class ArrayDialog extends Dialog {
 		private Text text;
 		private String result;
 		private String[] initValue;

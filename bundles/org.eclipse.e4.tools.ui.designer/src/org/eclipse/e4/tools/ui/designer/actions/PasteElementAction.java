@@ -90,10 +90,7 @@ public class PasteElementAction extends SelectionAction {
 		for (MUIElement child : elements) {
 			MUIElement newChild = (MUIElement) EcoreUtil.copy((EObject)child);
 			newChild.setElementId(EcoreUtil.generateUUID());
-			if (newChild instanceof MUIElement) {
-				MUIElement uiElement = (MUIElement) newChild;
-				uiElement.setWidget(null);
-			}
+			newChild.setWidget(null);
 			cmd.add(CommandFactory.createAddChildCommand(parentNode, newChild, -1));
 		}
 		Command command = cmd.unwrap();
