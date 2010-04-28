@@ -59,6 +59,7 @@ public class DesignerRender extends WBWRenderer {
 
 		// set up context
 		IEclipseContext localContext = getContext(wbwModel);
+		localContext.set(IContextConstants.DEBUG_STRING, "MWindow"); //$NON-NLS-1$
 		parentContext.set(IContextConstants.ACTIVE_CHILD, localContext);
 
 		// Add the shell into the WBW's context
