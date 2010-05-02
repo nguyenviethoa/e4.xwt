@@ -16,7 +16,6 @@ import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
-import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.IDisposable;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -24,6 +23,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.e4.workbench.modeling.EPartService;
+import org.eclipse.e4.workbench.ui.Persist;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
@@ -40,8 +40,7 @@ public class SaveHandler {
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
 			final EPartService partService)
 			throws InvocationTargetException, InterruptedException {
-		final IEclipseContext pmContext = EclipseContextFactory.create(context,
-				null);
+		final IEclipseContext pmContext = context.createChild();
 
 		ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 		dialog.open();
@@ -54,7 +53,7 @@ public class SaveHandler {
 				pmContext.set(IProgressMonitor.class.getName(), monitor);
 				MPart details = partService.findPart("DetailsView");
 				Object clientObject = details.getObject();
-				ContextInjectionFactory.invoke(clientObject, "doSave", //$NON-NLS-1$
+				ContextInjectionFactory.invoke(clientObject, Persist.class,
 						pmContext, null);
 			}
 		});
