@@ -8,31 +8,8 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean.metadata;
+package org.eclipse.e4.xwt.tests.jface.treeviewer;
 
-import org.eclipse.e4.xwt.metadata.IBehavior;
-
-/**
- * @author yyang (yves.yang@soyatec.com)
- */
-public abstract class Behavior implements IBehavior {
-	private String name;
-	protected int flags;
-
-	public Behavior(String name) {
-		this.name = name;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IBehavior#getName()
-	 */
-	public final String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+public enum Sex {
+	Male, Female;
 }

@@ -104,6 +104,7 @@ import org.eclipse.e4.xwt.javabean.metadata.ComboBoxCellEditorMetaclass;
 import org.eclipse.e4.xwt.javabean.metadata.ExpandItemHeightAction;
 import org.eclipse.e4.xwt.javabean.metadata.TableEditorMetaclass;
 import org.eclipse.e4.xwt.javabean.metadata.TableViewerColumnMetaClass;
+import org.eclipse.e4.xwt.javabean.metadata.properties.AbstractProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DataProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicBeanProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.DynamicProperty;
@@ -1442,14 +1443,15 @@ public class XWTLoader implements IXWTLoader {
 
 			metaclass.addProperty(new DataProperty(
 					PropertiesConstants.PROPERTY_BINDING_PATH,
-					IUserDataConstants.XWT_PROPERTY_DATA_KEY, 
-					String.class));
+					IUserDataConstants.XWT_PROPERTY_DATA_KEY, String.class));
 			metaclass.addProperty(new DataProperty(
 					PropertiesConstants.PROPERTY_ITEM_TEXT,
-					IUserDataConstants.XWT_PROPERTY_ITEM_TEXT_KEY, IBinding.class));
+					IUserDataConstants.XWT_PROPERTY_ITEM_TEXT_KEY,
+					IBinding.class));
 			metaclass.addProperty(new DataProperty(
 					PropertiesConstants.PROPERTY_ITEM_IMAGE,
-					IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY, IBinding.class));
+					IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY,
+					IBinding.class));
 			metaclass.addProperty(new SingleSelectionBeanProperty(
 					PropertiesConstants.PROPERTY_SINGLE_SELECTION));
 			metaclass.addProperty(new MultiSelectionBeanProperty(
@@ -1477,6 +1479,15 @@ public class XWTLoader implements IXWTLoader {
 		for (Class<?> cls : JFacesHelper.getSupportedElements()) {
 			registerMetaclass(cls);
 		}
+		type = org.eclipse.jface.viewers.TableViewer.class;
+		metaclass = (IMetaclass) core.getMetaclass(type,
+				IConstants.XWT_NAMESPACE);
+		IProperty property = metaclass.findProperty("table");
+		if (property instanceof AbstractProperty) {
+			AbstractProperty abstractProperty = (AbstractProperty) property;
+			abstractProperty.setValueAsParent(true);
+		}
+		
 		core.registerMetaclass(new ComboBoxCellEditorMetaclass(core
 				.getMetaclass(ComboBoxCellEditor.class.getSuperclass(),
 						IConstants.XWT_NAMESPACE), this),

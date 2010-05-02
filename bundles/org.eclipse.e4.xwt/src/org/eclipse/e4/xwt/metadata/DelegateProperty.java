@@ -79,4 +79,8 @@ public class DelegateProperty implements IProperty {
 	public void setDelegate(IProperty delegate) {
 		this.delegate = delegate;
 	}
+	
+	public boolean isValueAsParent() {
+		return this.delegate.isValueAsParent();
+	}
 }

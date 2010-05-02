@@ -40,4 +40,10 @@ public interface IProperty extends IBehavior {
 	public boolean isContainement();
 	
 	public boolean isReadOnly();
+	
+	/**
+	 * use the value ad parent for the children. Table.table, Form.setHeadClient etc
+	 * @return
+	 */
+	public boolean isValueAsParent();
 }

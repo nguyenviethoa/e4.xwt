@@ -8,31 +8,26 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean.metadata;
+package org.eclipse.e4.xwt.tests.jface.treeviewer;
 
-import org.eclipse.e4.xwt.metadata.IBehavior;
+import java.net.URL;
+
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
 
 /**
- * @author yyang (yves.yang@soyatec.com)
+ * @author jliu
  */
-public abstract class Behavior implements IBehavior {
-	private String name;
-	protected int flags;
+public class TreeViewer_bindingPath {
+	public static void main(String[] args) {
 
-	public Behavior(String name) {
-		this.name = name;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IBehavior#getName()
-	 */
-	public final String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+		URL url = TreeViewer_bindingPath.class
+				.getResource(TreeViewer_bindingPath.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

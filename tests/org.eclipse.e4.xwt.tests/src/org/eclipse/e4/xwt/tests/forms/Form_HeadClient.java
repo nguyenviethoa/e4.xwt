@@ -8,31 +8,22 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean.metadata;
+package org.eclipse.e4.xwt.tests.forms;
 
-import org.eclipse.e4.xwt.metadata.IBehavior;
+import java.net.URL;
 
-/**
- * @author yyang (yves.yang@soyatec.com)
- */
-public abstract class Behavior implements IBehavior {
-	private String name;
-	protected int flags;
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.forms.XWTForms;
 
-	public Behavior(String name) {
-		this.name = name;
-	}
+public class Form_HeadClient {
+	public static void main(String[] args) {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IBehavior#getName()
-	 */
-	public final String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+		URL url = Form_HeadClient.class.getResource(Form_HeadClient.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWTForms.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

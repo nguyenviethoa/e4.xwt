@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.forms.metaclass;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.nio.channels.IllegalSelectorException;
+
 import org.eclipse.e4.xwt.forms.metaclass.properties.DecoratingHeading;
+import org.eclipse.e4.xwt.forms.metaclass.properties.HeadClientBeanProperty;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
@@ -25,6 +31,23 @@ public class FormMetaclass extends AbstractFormMetaclass {
 	public FormMetaclass() {
 		super(Form.class);
 		addProperty(new DecoratingHeading());
+		addProperty(new HeadClientBeanProperty(getHeadClient()));
+	}
+	
+	static PropertyDescriptor getHeadClient() {
+		try {
+			BeanInfo beanInfo = java.beans.Introspector.getBeanInfo(Form.class);
+			PropertyDescriptor[] propertyDescriptors = beanInfo
+					.getPropertyDescriptors();
+			for (PropertyDescriptor p : propertyDescriptors) {
+				String propertyName = p.getName();
+				if (propertyName.equalsIgnoreCase("headClient")) {
+					return p;
+				}
+			}
+		} catch (IntrospectionException e) {
+		}
+		throw new IllegalSelectorException();
 	}
 
 	@Override

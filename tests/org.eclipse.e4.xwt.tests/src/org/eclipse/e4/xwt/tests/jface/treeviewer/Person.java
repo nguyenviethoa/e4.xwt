@@ -8,31 +8,44 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.javabean.metadata;
+package org.eclipse.e4.xwt.tests.jface.treeviewer;
 
-import org.eclipse.e4.xwt.metadata.IBehavior;
-
-/**
- * @author yyang (yves.yang@soyatec.com)
- */
-public abstract class Behavior implements IBehavior {
-	private String name;
-	protected int flags;
-
-	public Behavior(String name) {
-		this.name = name;
+public class Person {
+	protected String name;
+	protected int age;
+	protected Person[] children = new Person[0];
+	
+	protected Sex sex;
+	
+	public Sex getSex() {
+		return sex;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.soyatec.xaswt.core.metadata.IBehavior#getName()
-	 */
-	public final String getName() {
+	public void setSex(Sex sex) {
+		this.sex = sex;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public Person[] getChildren() {
+		return children;
+	}
+
+	public void setChildren(Person[] children) {
+		this.children = children;
 	}
 }

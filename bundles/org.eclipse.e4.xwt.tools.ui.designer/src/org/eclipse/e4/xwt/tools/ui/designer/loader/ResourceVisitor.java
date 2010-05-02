@@ -1488,7 +1488,7 @@ public class ResourceVisitor {
 								directTarget = propertyValue;
 								// use the existing property value as parent,
 								// not need to add the constraint
-								if (type != Table.class) {
+								if (!property.isValueAsParent()) {
 									type = null;
 									usingExistingValue = true;
 								}

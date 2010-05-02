@@ -79,7 +79,19 @@ public class FormsTests extends FormTestCase {
 			}
 		});
 	}
-	
+
+	public void testForm_HeadClient() throws Exception {
+		URL url = FormsTests.class
+				.getResource(Form_HeadClient.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				checkVisibility("Form.HeadClient.Button", Button.class);
+			}
+		});
+	}
+
 	public void testForm_ButtonSection() throws Exception {
 		URL url = FormsTests.class
 				.getResource(Form_ButtonSection.class

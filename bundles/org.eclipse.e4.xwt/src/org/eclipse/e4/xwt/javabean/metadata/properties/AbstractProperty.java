@@ -19,6 +19,8 @@ import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.metadata.ISetPostAction;
 
 public abstract class AbstractProperty extends Behavior implements IProperty {
+	static final int VALUE_AS_PARENT = 1<<1;
+	
 	protected Collection<ISetPostAction> setPostActions = Collections.EMPTY_LIST;
 	private Class<?> type;
 
@@ -99,4 +101,12 @@ public abstract class AbstractProperty extends Behavior implements IProperty {
 	public Class<?> getType() {
 		return type;
 	}
+	
+	public boolean isValueAsParent() {
+		return (flags & VALUE_AS_PARENT) == VALUE_AS_PARENT;
+	}
+	
+	public void setValueAsParent(boolean value) {
+		flags |= VALUE_AS_PARENT;
+	}	
 }

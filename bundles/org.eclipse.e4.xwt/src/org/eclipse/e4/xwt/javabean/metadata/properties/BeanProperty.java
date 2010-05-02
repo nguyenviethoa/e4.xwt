@@ -112,9 +112,9 @@ public class BeanProperty extends AbstractProperty {
 			IllegalAccessException, InvocationTargetException,
 			SecurityException, NoSuchFieldException {
 		if (descriptor != null && descriptor.getReadMethod() != null) {
-			Method writeMethod = descriptor.getReadMethod();
-			writeMethod.setAccessible(true);
-			return writeMethod.invoke(target);
+			Method readMethod = descriptor.getReadMethod();
+			readMethod.setAccessible(true);
+			return readMethod.invoke(target);
 		}
 		return null;
 	}
