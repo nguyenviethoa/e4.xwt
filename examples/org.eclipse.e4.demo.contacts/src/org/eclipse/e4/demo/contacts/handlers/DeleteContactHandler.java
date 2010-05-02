@@ -14,6 +14,7 @@ package org.eclipse.e4.demo.contacts.handlers;
 
 import javax.inject.Named;
 
+import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.demo.contacts.model.Contact;
 import org.eclipse.e4.demo.contacts.model.ContactsRepositoryFactory;
 import org.eclipse.e4.ui.model.application.ui.MContext;
@@ -27,6 +28,7 @@ public class DeleteContactHandler {
 		return contact != null;
 	}
 
+	@Execute
 	void execute(@Named(IServiceConstants.ACTIVE_PART) MContext context) {
 		Contact contact = (Contact) context.getContext().get(
 				IServiceConstants.SELECTION);
