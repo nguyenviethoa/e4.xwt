@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.ICreatedAction;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IIndexedElement;
@@ -108,6 +109,8 @@ public class ResourceVisitor {
 
 	private static final HashMap<String, Collection<Class<?>>> DELAYED_ATTRIBUTES = new HashMap<String, Collection<Class<?>>>();
 	private static final String COLUMN = "Column";
+
+	private Map<String, Object> options;
 
 	protected ResourceVisitor parentLoader;
 	protected XWTVisualLoader loader;
@@ -333,6 +336,7 @@ public class ResourceVisitor {
 	public Object createCLRElement(XamlElement element,
 			Map<String, Object> options) {
 		try {
+			this.options = options;
 			Composite parent = (Composite) options
 					.get(IXWTLoader.CONTAINER_PROPERTY);
 			if (!loader.getTrackings().isEmpty()) {
@@ -452,7 +456,7 @@ public class ResourceVisitor {
 			Display display = Display.getDefault();
 			shell = new Shell(display, styleValue);
 			targetObject = shell;
-			postCreation0(element, targetObject);
+			invokeCreatededAction(element, targetObject);
 			loadData.setCurrentWidget(shell);
 
 			if (metaclass.getType() != Shell.class) {
@@ -552,7 +556,7 @@ public class ResourceVisitor {
 					}
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
-						postCreation0(element, targetObject);
+						invokeCreatededAction(element, targetObject);
 						Widget widget = UserData.getWidget(targetObject);
 						if (widget != null) {
 							Object clr = loadData.getClr();
@@ -620,6 +624,7 @@ public class ResourceVisitor {
 							.equalsIgnoreCase(key)
 					|| IXWTLoader.CLASS_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.LOADED_ACTION.equalsIgnoreCase(key)
+					|| IXWTLoader.CREATED_ACTION.equalsIgnoreCase(key)
 					|| IXWTLoader.DESIGN_MODE_ROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
@@ -692,6 +697,18 @@ public class ResourceVisitor {
 	protected void postCreation0(XamlElement element, Object targetObject) {
 	}
 
+	private void invokeCreatededAction(XamlElement element, Object targetObject) {
+		if (targetObject != null) {
+			postCreation0(element, targetObject);			
+		}
+		if (options != null) {
+			ICreatedAction createdAction = (ICreatedAction) options.get(IXWTLoader.CREATED_ACTION);
+			if (createdAction != null) {
+				createdAction.onCreated(targetObject);
+			}
+		}
+	}
+	
 	/**
 	 * This method is invoked after full creation of component, i.e. after
 	 * creating its instance, applying its attributes and creating children.
@@ -1239,6 +1256,7 @@ public class ResourceVisitor {
 			Object instance = null;
 			if (content == null) {
 				instance = metaclass.newInstance(new Object[] { swtObject });
+				invokeCreatededAction(element, instance);
 				if (instance instanceof TableEditor) {
 					// TODO should be moved into IMetaclass
 					TableEditor tableEditor = (TableEditor) instance;
@@ -1260,6 +1278,7 @@ public class ResourceVisitor {
 				if (constructor != null) {
 					instance = constructor.newInstance(loader.convertFrom(type,
 							content));
+					invokeCreatededAction(element, instance);
 				} else {
 					LoggerManager.log(new XWTException("Constructor \"" + name
 							+ "(" + type.getSimpleName() + ")\" is not found"));

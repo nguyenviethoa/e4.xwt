@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.Form;
 
 public class FormsTests extends FormTestCase {	
 	public void testSection() throws Exception {
@@ -88,6 +89,22 @@ public class FormsTests extends FormTestCase {
 		runTest(url, new Runnable() {
 			public void run() {
 				checkVisibility("Form.HeadClient.Button", Button.class);
+			}
+		});
+	}
+
+	public void testForm_Background() throws Exception {
+		URL url = FormsTests.class
+				.getResource(Form_Background.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Form form1 = (Form) XWT.findElementByName(root, "FormBackground");
+				Color form1Color = form1.getBackground();
+				Form form2 = (Form) XWT.findElementByName(root, "Form");
+				Color form2Color = form2.getBackground();
+				assertFalse(form1Color.equals(form2Color));
 			}
 		});
 	}

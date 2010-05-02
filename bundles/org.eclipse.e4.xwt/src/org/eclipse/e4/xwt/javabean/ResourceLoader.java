@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.ICreatedAction;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IIndexedElement;
@@ -106,6 +107,8 @@ public class ResourceLoader implements IVisualElementLoader {
 
 	private static final HashMap<String, Collection<Class<?>>> DELAYED_ATTRIBUTES = new HashMap<String, Collection<Class<?>>>();
 	private static final String COLUMN = "Column";
+	
+	private Map<String, Object> options;
 
 	protected ResourceLoader parentLoader;
 	protected IRenderingContext context;
@@ -345,6 +348,7 @@ public class ResourceLoader implements IVisualElementLoader {
 	 */
 	public Object createCLRElement(Element element, Map<String, Object> options) {
 		try {
+			this.options = options;
 			Composite parent = (Composite) options
 					.get(IXWTLoader.CONTAINER_PROPERTY);
 			if (!loader.getTrackings().isEmpty()) {
@@ -455,7 +459,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			Display display = Display.getDefault();
 			shell = new Shell(display, styleValue);
 			targetObject = shell;
-			postCreation0(element, targetObject);
+			invokeCreatededAction(element, targetObject);
 			loadData.setCurrentWidget(shell);
 
 			if (metaclass.getType() != Shell.class) {
@@ -548,7 +552,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					}
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
-						postCreation0(element, targetObject);
+						invokeCreatededAction(element, targetObject);
 						Widget widget = UserData.getWidget(targetObject);
 						if (widget != null) {
 							Object clr = loadData.getClr();
@@ -613,6 +617,7 @@ public class ResourceLoader implements IVisualElementLoader {
 							.equalsIgnoreCase(key)
 					|| IXWTLoader.CLASS_PROPERTY.equalsIgnoreCase(key)
 					|| IXWTLoader.LOADED_ACTION.equalsIgnoreCase(key)
+					|| IXWTLoader.CREATED_ACTION.equalsIgnoreCase(key)
 					|| IXWTLoader.DESIGN_MODE_ROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
@@ -684,6 +689,18 @@ public class ResourceLoader implements IVisualElementLoader {
 	 *            the created visual object.
 	 */
 	protected void postCreation0(Element element, Object targetObject) {
+	}
+
+	private void invokeCreatededAction(Element element, Object targetObject) {
+		if (targetObject != null) {
+			postCreation0(element, targetObject);			
+		}
+		if (options != null) {
+			ICreatedAction createdAction = (ICreatedAction) options.get(IXWTLoader.CREATED_ACTION);
+			if (createdAction != null) {
+				createdAction.onCreated(targetObject);
+			}
+		}
 	}
 	
 	/**
@@ -1261,6 +1278,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			Object instance = null;
 			if (content == null) {
 				instance = metaclass.newInstance(new Object[] { swtObject });
+				invokeCreatededAction(element, instance);
 				if (instance instanceof TableEditor) {
 					// TODO should be moved into IMetaclass
 					TableEditor tableEditor = (TableEditor) instance;
@@ -1282,6 +1300,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				if (constructor != null) {
 					instance = constructor.newInstance(loader.convertFrom(type,
 							content));
+					invokeCreatededAction(element, instance);
 				} else {
 					LoggerManager.log(new XWTException("Constructor \"" + name
 							+ "(" + type.getSimpleName() + ")\" is not found"));

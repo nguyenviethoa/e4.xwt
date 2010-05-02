@@ -48,8 +48,11 @@ public class ToolKitUtil {
 	 * @param root
 	 *            widget hierarchy
 	 */
-	public static void adapt(Control root) {
-		adaptRecursive(root, null);
+	public static void adapt(Control element) {
+		FormToolkit tk = getToolkit(element);
+		if (tk != null && element.getData(FORM_SIGNATURE_KEY) != Boolean.TRUE) {
+			tk.adapt(element, true, true);
+		}
 	}
 
 	/**

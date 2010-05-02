@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.ICreatedAction;
 import org.eclipse.e4.xwt.ILoadedAction;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
@@ -44,9 +45,9 @@ import org.eclipse.swt.widgets.Widget;
 public class XWTForms {
 	private static Object FormsProfile;
 	
-	private static ILoadedAction LoadedAction = new ILoadedAction() {
+	private static ICreatedAction CreatedAction = new ICreatedAction() {
 		
-		public void onLoaded(Object sender) {
+		public void onCreated(Object sender) {
 			Widget widget = UserData.getWidget(sender);
 			if (widget instanceof Control) {
 				ToolKitUtil.adapt((Control)widget);
@@ -151,7 +152,7 @@ public class XWTForms {
 	static public synchronized void open(URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
-			options.put(IXWTLoader.LOADED_ACTION, LoadedAction);
+			options.put(IXWTLoader.CREATED_ACTION, CreatedAction);
 			XWT.open(url, options);
 		} 
 		finally {
@@ -164,7 +165,7 @@ public class XWTForms {
 	static public synchronized Control loadWithOptions(URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
-			options.put(IXWTLoader.LOADED_ACTION, LoadedAction);
+			options.put(IXWTLoader.CREATED_ACTION, CreatedAction);
 			return XWT.loadWithOptions(url, options);
 		} 
 		finally {
@@ -197,7 +198,7 @@ public class XWTForms {
 	static public synchronized Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
-			options.put(IXWTLoader.LOADED_ACTION, LoadedAction);
+			options.put(IXWTLoader.CREATED_ACTION, CreatedAction);
 			return XWT.loadWithOptions(stream, url, options);
 		} 
 		finally {

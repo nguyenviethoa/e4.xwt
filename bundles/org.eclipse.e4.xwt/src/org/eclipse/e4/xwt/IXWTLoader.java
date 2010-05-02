@@ -93,7 +93,13 @@ public interface IXWTLoader {
 	 * Resources to associate to root element
 	 * 
 	 */
-	String LOADED_ACTION = "XWT.onLoaded";
+	String LOADED_ACTION = ILoadedAction.class.getName();
+
+	/**
+	 * Resources to associate to root element
+	 * 
+	 */
+	String CREATED_ACTION = ICreatedAction.class.getName();
 
 	/**
 	 * Register an Observable IChangeListener for a given UI element. The second
