@@ -1562,22 +1562,27 @@ public class ResourceLoader implements IVisualElementLoader {
 							&& attribute.getContent() != null) {
 						value = attribute.getContent();
 					} else {
-						value = doCreate(directTarget, (Element) child, type,
-								EMPTY_MAP);
-						if (value == null
-								&& type != null
-								&& !(type == Table.class
-										&& "TableColumn"
-												.equals(child.getName()) && Table.class
-										.isInstance(directTarget))) {
-							throw new XWTException(child.getName()
-									+ " cannot be a content of "
-									+ type.getName() + " "
-									+ target.getClass().getName() + "."
-									+ property.getName());
-						}
-						if (value instanceof IDynamicBinding) {
-							((IDynamicBinding) value).setType(attrName);
+						if ("Null".equals(child.getName()) && IConstants.XWT_X_NAMESPACE.equals(child.getNamespace())) {
+							property.setValue(directTarget, null);
+							return;
+						} else {
+							value = doCreate(directTarget, (Element) child, type,
+									EMPTY_MAP);
+							if (value == null
+									&& type != null
+									&& !(type == Table.class
+											&& "TableColumn"
+													.equals(child.getName()) && Table.class
+											.isInstance(directTarget))) {
+								throw new XWTException(child.getName()
+										+ " cannot be a content of "
+										+ type.getName() + " "
+										+ target.getClass().getName() + "."
+										+ property.getName());
+							}
+							if (value instanceof IDynamicBinding) {
+								((IDynamicBinding) value).setType(attrName);
+							}
 						}
 					}
 				}

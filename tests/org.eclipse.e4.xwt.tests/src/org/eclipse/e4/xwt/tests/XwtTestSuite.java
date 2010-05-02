@@ -18,6 +18,7 @@ import org.eclipse.e4.xwt.tests.annotation.AnnotationTests;
 import org.eclipse.e4.xwt.tests.attachedproperty.AttachedPropertyTests;
 import org.eclipse.e4.xwt.tests.clr.XWTTestSuite;
 import org.eclipse.e4.xwt.tests.controls.ControlsTestSuite;
+import org.eclipse.e4.xwt.tests.controls.layout.LayoutTestSuite;
 import org.eclipse.e4.xwt.tests.databinding.BindingTestSuite;
 import org.eclipse.e4.xwt.tests.events.EventsTestSuite;
 import org.eclipse.e4.xwt.tests.forms.FormsTestSuite;
@@ -111,6 +112,7 @@ public class XwtTestSuite extends TestSuite {
 
 	protected void addControlsTests() {
 		addTest(ControlsTestSuite.suite());
+		addTest(LayoutTestSuite.suite());
 		addTest(SWTTestSuite.suite());
 	}
 
