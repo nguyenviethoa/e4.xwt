@@ -31,11 +31,9 @@ import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.ICreatedAction;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IIndexedElement;
-import org.eclipse.e4.xwt.ILoadedAction;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.INamespaceHandler;
 import org.eclipse.e4.xwt.IStyle;
@@ -47,6 +45,8 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.annotation.UI;
+import org.eclipse.e4.xwt.callback.ICreatedCallback;
+import org.eclipse.e4.xwt.callback.ILoadedCallback;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
 import org.eclipse.e4.xwt.core.IEventHandler;
@@ -370,8 +370,8 @@ public class ResourceVisitor {
 			if (control instanceof Composite) {
 				((Composite) control).layout();
 			}
-			ILoadedAction loadedAction = (ILoadedAction) options
-					.get(IXWTLoader.LOADED_ACTION);
+			ILoadedCallback loadedAction = (ILoadedCallback) options
+					.get(IXWTLoader.LOADED_CALLBACK);
 			if (loadedAction != null) {
 				loadedAction.onLoaded(control);
 			}
@@ -623,8 +623,9 @@ public class ResourceVisitor {
 					|| IXWTLoader.RESOURCE_DICTIONARY_PROPERTY
 							.equalsIgnoreCase(key)
 					|| IXWTLoader.CLASS_PROPERTY.equalsIgnoreCase(key)
-					|| IXWTLoader.LOADED_ACTION.equalsIgnoreCase(key)
-					|| IXWTLoader.CREATED_ACTION.equalsIgnoreCase(key)
+					|| IXWTLoader.LOADED_CALLBACK.equalsIgnoreCase(key)
+					|| IXWTLoader.CREATED_CALLBACK.equalsIgnoreCase(key)
+					|| IXWTLoader.BEFORE_PARSING_CALLBACK.equalsIgnoreCase(key)
 					|| IXWTLoader.DESIGN_MODE_ROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
@@ -702,7 +703,7 @@ public class ResourceVisitor {
 			postCreation0(element, targetObject);			
 		}
 		if (options != null) {
-			ICreatedAction createdAction = (ICreatedAction) options.get(IXWTLoader.CREATED_ACTION);
+			ICreatedCallback createdAction = (ICreatedCallback) options.get(IXWTLoader.CREATED_CALLBACK);
 			if (createdAction != null) {
 				createdAction.onCreated(targetObject);
 			}

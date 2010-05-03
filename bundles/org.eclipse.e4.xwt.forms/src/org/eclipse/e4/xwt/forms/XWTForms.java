@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.ICreatedAction;
-import org.eclipse.e4.xwt.ILoadedAction;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.callback.ICreatedCallback;
+import org.eclipse.e4.xwt.callback.ILoadedCallback;
 import org.eclipse.e4.xwt.forms.metaclass.ButtonMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.CompositeMetaclass;
 import org.eclipse.e4.xwt.forms.metaclass.ExpandableCompositeMetaclass;
@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Widget;
 public class XWTForms {
 	private static Object FormsProfile;
 	
-	private static ICreatedAction CreatedAction = new ICreatedAction() {
+	private static ICreatedCallback CreatedAction = new ICreatedCallback() {
 		
 		public void onCreated(Object sender) {
 			Widget widget = UserData.getWidget(sender);
@@ -152,7 +152,7 @@ public class XWTForms {
 	static public synchronized void open(URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
-			options.put(IXWTLoader.CREATED_ACTION, CreatedAction);
+			options.put(IXWTLoader.CREATED_CALLBACK, CreatedAction);
 			XWT.open(url, options);
 		} 
 		finally {
@@ -165,7 +165,7 @@ public class XWTForms {
 	static public synchronized Control loadWithOptions(URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
-			options.put(IXWTLoader.CREATED_ACTION, CreatedAction);
+			options.put(IXWTLoader.CREATED_CALLBACK, CreatedAction);
 			return XWT.loadWithOptions(url, options);
 		} 
 		finally {
@@ -198,7 +198,7 @@ public class XWTForms {
 	static public synchronized Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
-			options.put(IXWTLoader.CREATED_ACTION, CreatedAction);
+			options.put(IXWTLoader.CREATED_CALLBACK, CreatedAction);
 			return XWT.loadWithOptions(stream, url, options);
 		} 
 		finally {

@@ -24,6 +24,9 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.callback.IBeforeParsingCallback;
+import org.eclipse.e4.xwt.callback.ICreatedCallback;
+import org.eclipse.e4.xwt.callback.ILoadedCallback;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.databinding.IBindingContext;
@@ -93,13 +96,19 @@ public interface IXWTLoader {
 	 * Resources to associate to root element
 	 * 
 	 */
-	String LOADED_ACTION = ILoadedAction.class.getName();
+	String LOADED_CALLBACK = ILoadedCallback.class.getName();
 
 	/**
-	 * Resources to associate to root element
+	 * Action to invoke after the creation of each UI element before the properties setting
 	 * 
 	 */
-	String CREATED_ACTION = ICreatedAction.class.getName();
+	String CREATED_CALLBACK = ICreatedCallback.class.getName();
+
+	/**
+	 * Action to invoke before parsing the XML file
+	 * 
+	 */
+	String BEFORE_PARSING_CALLBACK = IBeforeParsingCallback.class.getName();
 
 	/**
 	 * Register an Observable IChangeListener for a given UI element. The second

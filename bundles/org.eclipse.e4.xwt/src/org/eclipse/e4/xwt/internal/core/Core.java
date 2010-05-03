@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.core;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -36,6 +37,7 @@ import org.eclipse.e4.xwt.INamespaceHandler;
 import org.eclipse.e4.xwt.IStyle;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.Tracking;
+import org.eclipse.e4.xwt.callback.IBeforeParsingCallback;
 import org.eclipse.e4.xwt.converters.ObjectToObject;
 import org.eclipse.e4.xwt.converters.StringToEnum;
 import org.eclipse.e4.xwt.core.IElementLoaderFactory;
@@ -648,8 +650,25 @@ public class Core {
 		Control control = null;
 		ElementManager manager = new ElementManager();
 		if (input != null) {
-			Element element = (stream == null ? manager.load(input) : manager
-					.load(stream, input));
+			Element element = null;
+			if (stream == null) {
+				element = manager.load(input, (IBeforeParsingCallback) options.get(IXWTLoader.BEFORE_PARSING_CALLBACK));
+			}
+			else {
+				IBeforeParsingCallback callback = (IBeforeParsingCallback) options.get(IXWTLoader.BEFORE_PARSING_CALLBACK);
+				InputStream inputStream = stream;
+				if (callback != null) {
+					int size = stream.read();
+					byte[] buffer = new byte[size];
+					stream.read(buffer);
+					String content = new String(buffer);
+					stream.close();
+					content = callback.onParsing(content);
+					inputStream = new ByteArrayInputStream(content.getBytes());
+					element = manager.load(stream, input);					
+				}
+				element = manager.load(inputStream, input);
+			}
 			IRenderingContext context = new ExtensionContext(loadingContext,
 					manager, manager.getRootElement().getNamespace());
 			Object visual = createCLRElement(context, element, options);

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.xml;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.callback.IBeforeParsingCallback;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -217,20 +219,34 @@ public class ElementManager {
 	/**
 	 * @see Core
 	 */
-	public Element load(URL url) throws Exception {
+	public Element load(URL url, IBeforeParsingCallback callback) throws Exception {
 
 		reset();
 
-		// Initialize document root
-		documentRoot.init(null, url.toString());
+		if (callback == null) {
+			// Initialize document root
+			documentRoot.init(null, url.toString());
 
-		InputStream input = url.openStream();
-		doLoad(input);
+			InputStream input = url.openStream();
+			doLoad(input);
 
-		input = documentRoot.openStream();
-		loadXData(input);
-		input.close();
-		return rootElement;
+			input = documentRoot.openStream();
+			loadXData(input);
+			input.close();
+		}
+		else {
+			String content = callback.onParsing(url.toString());
+			
+			documentRoot.init(null, content);
+
+			InputStream input = new ByteArrayInputStream(content.getBytes());
+			doLoad(input);
+
+			input = documentRoot.openStream();
+			loadXData(input);
+			input.close();			
+		}
+		return rootElement;			
 	}
 
 	/**

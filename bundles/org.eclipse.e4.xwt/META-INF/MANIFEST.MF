@@ -15,6 +15,7 @@ Require-Bundle:
 Export-Package: org.eclipse.e4.xwt,
  org.eclipse.e4.xwt.animation,
  org.eclipse.e4.xwt.annotation,
+ org.eclipse.e4.xwt.callback,
  org.eclipse.e4.xwt.collection,
  org.eclipse.e4.xwt.converters,
  org.eclipse.e4.xwt.core,

@@ -37,7 +37,7 @@ public class BindingExpressionTests extends TestCase {
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
-			Element element = elementManager.load(url);
+			Element element = elementManager.load(url, null);
 			checkTextValue(element, "path", "name");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -50,7 +50,7 @@ public class BindingExpressionTests extends TestCase {
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
-			Element element = elementManager.load(url);
+			Element element = elementManager.load(url, null);
 			checkTextValue(element, "path", "employees.name");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,7 +63,7 @@ public class BindingExpressionTests extends TestCase {
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
-			Element element = elementManager.load(url);
+			Element element = elementManager.load(url, null);
 			checkTextValue(element, "path", "(Person.name)");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,7 +76,7 @@ public class BindingExpressionTests extends TestCase {
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
-			Element element = elementManager.load(url);
+			Element element = elementManager.load(url, null);
 			checkTextValue(element, "path", "persons[1].name");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,7 +89,7 @@ public class BindingExpressionTests extends TestCase {
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
-			Element element = elementManager.load(url);
+			Element element = elementManager.load(url, null);
 			checkTextValue(element, "path", "(gui.Person.name)");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,7 +103,7 @@ public class BindingExpressionTests extends TestCase {
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
-			Element element = elementManager.load(url);
+			Element element = elementManager.load(url, null);
 			checkTextValue(element, "path", "(gui.Person.name)");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -116,7 +116,7 @@ public class BindingExpressionTests extends TestCase {
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			ElementManager elementManager = new ElementManager();
-			Element element = elementManager.load(url);
+			Element element = elementManager.load(url, null);
 			checkTextValue(element, "UpdateSourceTrigger", "PropertyChanged");
 		} catch (Exception e) {
 			e.printStackTrace();
