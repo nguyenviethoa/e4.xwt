@@ -41,7 +41,7 @@ public class SetActivePartCommand extends Command {
 
 	@Override
 	public void execute() {
-		this.oldPart = partStack.getSelectedElement();
+		this.oldPart = (MPart) partStack.getSelectedElement();
 		partStack.setSelectedElement(part);
 	}
 
