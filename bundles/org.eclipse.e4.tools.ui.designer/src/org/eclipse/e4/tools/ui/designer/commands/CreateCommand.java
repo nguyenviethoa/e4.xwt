@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,71 +10,72 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
+import java.util.List;
+
+import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
+import org.eclipse.e4.xwt.tools.ui.palette.Entry;
+import org.eclipse.e4.xwt.tools.ui.palette.contribution.CreationCommand;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.CreateRequest;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class CreateCommand extends Command {
+public class CreateCommand extends CreationCommand {
 
-	private CreateRequest request;
 	private EditPart parent;
-	private EditPart reference;
-
-	private MElementContainer<MUIElement> parentModel;
-	private MUIElement creatingModel;
-	private int index = -1;
-	private Class<?> childType;
-
-	public CreateCommand(EditPart parent, CreateRequest request, EditPart reference,
-			Class<?> childType) {
+	private int index;
+	private MElementContainer parentModel;
+	private Object newObj;
+	public CreateCommand(CreateRequest createRequest, EditPart parent,
+			int index) {
+		super(createRequest);
 		this.parent = parent;
-		this.request = request;
-		this.reference = reference;
-		this.childType = childType;
+		this.index = index;
 	}
 
 	public boolean canExecute() {
-		if (parent == null) {
+		if (parent == null || !super.canExecute()) {
 			return false;
 		}
 		Object model = parent.getModel();
-		if (model instanceof MElementContainer) {
-			parentModel = (MElementContainer<MUIElement>) model;
-		}
-		if (creatingModel == null) {
-			Object element = EntryHelper.getNewObject(request);
-			if (element instanceof MUIElement) {
-				creatingModel = (MUIElement) element;
-			}
-		}
-		if (childType != null && !childType.isInstance(creatingModel)) {
+		if (!(model instanceof MElementContainer<?>)) {
 			return false;
 		}
-		return parentModel != null && creatingModel != null;
+		parentModel = (MElementContainer<?>) model;
+		Entry entry = getEntry();
+		if (entry == null) {
+			return false;
+		}
+		EClass type = entry.getType();
+		Object tmpObj = EcoreUtil.create(type);
+		if (tmpObj == null || !(tmpObj instanceof MUIElement)) {
+			return false;
+		}
+		return ApplicationModelHelper.canAddedChild((MUIElement) tmpObj,
+				parentModel);
 	}
 
-	public void execute() {
-		if (reference != null) {
-			index = parentModel.getChildren().indexOf(reference.getModel());
-		}
-		if (index != -1) {
-			parentModel.getChildren().add(index, creatingModel);
+	protected void doCreate(Entry entry, Object newObject) {
+		List children = parentModel.getChildren();
+		if (index == -1 || index >= children.size()) {
+			children.add(newObject);
 		} else {
-			parentModel.getChildren().add(creatingModel);
+			children.add(index, newObject);
 		}
+		this.newObj = newObject;
 	}
 
 	public boolean canUndo() {
-		return parentModel != null && creatingModel != null;
+		return parentModel != null && newObj != null;
 	}
 
 	public void undo() {
-		parentModel.getChildren().remove(creatingModel);
+		parentModel.getChildren().remove(newObj);
 	}
+
 }

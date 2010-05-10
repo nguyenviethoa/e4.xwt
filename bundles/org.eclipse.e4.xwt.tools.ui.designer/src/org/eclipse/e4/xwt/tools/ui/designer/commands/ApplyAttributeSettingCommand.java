@@ -56,7 +56,7 @@ public class ApplyAttributeSettingCommand extends Command {
 			return newValue == null ? attr.getValue() != null : !newValue
 					.equals(attr.getValue());
 		}
-		return false;
+		return true;
 	}
 
 	/*

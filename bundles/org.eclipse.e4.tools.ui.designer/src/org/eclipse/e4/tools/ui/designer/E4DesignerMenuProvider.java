@@ -13,9 +13,10 @@ package org.eclipse.e4.tools.ui.designer;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.actions.FindElementAction;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider;
+import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 
@@ -26,16 +27,20 @@ public class E4DesignerMenuProvider extends DesignerMenuProvider {
 
 	private static final String BINDINGS = "Bindings";
 
-	private static final String EXTERNALIZE = "Externalize"; // add by xrchen 2009/9/22
+	private static final String EXTERNALIZE = "Externalize"; // add by xrchen
+																// 2009/9/22
 
-	public E4DesignerMenuProvider(Designer editor) {
-		super(editor);
+	public E4DesignerMenuProvider(EditPartViewer viewer,
+			ActionRegistry actionRegistry) {
+		super(viewer, actionRegistry);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.ContextMenuProvider#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
+	 * @see
+	 * org.eclipse.gef.ContextMenuProvider#menuAboutToShow(org.eclipse.jface
+	 * .action.IMenuManager)
 	 */
 	public void menuAboutToShow(IMenuManager menu) {
 		menu.add(new Separator(DesignerActionConstants.UNDO));
@@ -52,12 +57,15 @@ public class E4DesignerMenuProvider extends DesignerMenuProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.soyatec.xaml.ve.editor.EditorMenuProvider#buildContextMenu(org.eclipse .jface.action.IMenuManager)
+	 * @see
+	 * org.soyatec.xaml.ve.editor.EditorMenuProvider#buildContextMenu(org.eclipse
+	 * .jface.action.IMenuManager)
 	 */
 	public void buildContextMenu(IMenuManager menu) {
 		super.buildContextMenu(menu);
 		// ActionRegistry actionRegistry = getActionRegistry();
-		// menu.appendToGroup(BINDINGS, actionRegistry.getAction(BindingLayerAction.ID));
+		// menu.appendToGroup(BINDINGS,
+		// actionRegistry.getAction(BindingLayerAction.ID));
 		List selectedEditParts = getViewer().getSelectedEditParts();
 		if (selectedEditParts == null || selectedEditParts.isEmpty()) {
 			// Diagram directly...

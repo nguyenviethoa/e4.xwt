@@ -36,5 +36,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.ecore.edit;bundle-version="2.6.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.e4.tools.ui.designer.palette
+Export-Package: org.eclipse.e4.tools.ui.designer.palette,
+ org.eclipse.e4.ui.model.application.node,
+ org.eclipse.e4.ui.model.application.node.provider
 Import-Package: javax.inject;version="1.0.0"

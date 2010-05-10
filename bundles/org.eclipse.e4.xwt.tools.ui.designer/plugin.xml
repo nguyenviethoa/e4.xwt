@@ -63,7 +63,7 @@
          point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
             contributorId="org.eclipse.e4.xwt.tools.ui.designer.XWTDesigner"
-            labelProvider="org.eclipse.e4.xwt.tools.ui.designer.editor.outline.OutlinePageLabelProvider">
+            labelProvider="org.eclipse.e4.xwt.tools.ui.designer.editor.outline.OutlineLabelProvider">
          <propertyCategory
                category="xwt property"></propertyCategory>
       </propertyContributor>
@@ -119,52 +119,57 @@
                id="TextSection"
                tab="AppearanceTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
                afterSection="TextSection"
                class="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.FontSection"
+               filter="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.filters.BasicFilter"
                id="FontSection"
                tab="AppearanceTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
                afterSection="FontSection"
                class="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.ForegroundSection"
+               filter="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.filters.BasicFilter"
                id="ForegroundSection"
                tab="AppearanceTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
                afterSection="ForegroundSection"
                class="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.BackgroundSection"
+			   filter="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.filters.BasicFilter"
                id="BackgroundSection"
                tab="AppearanceTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
                afterSection="BackgroundSection"
                class="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.ImageSection"
+			   filter="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.filters.BasicFilter"               
                id="ImageSection"
                tab="AppearanceTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
                afterSection="ImageSection"
                class="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.BackgroundImageSection"
+               filter="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.filters.BasicFilter"               
                id="BackgroundImageSection"
                tab="AppearanceTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
@@ -173,7 +178,7 @@
                id="ConstraintSection"
                tab="SizeLocationTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
@@ -182,7 +187,7 @@
                id="LayoutSection"
                tab="LayoutTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
@@ -191,7 +196,7 @@
                id="LayoutDataSection"
                tab="LayoutDataTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
@@ -199,15 +204,16 @@
                id="DataBindingSection"
                tab="DataBindingTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
          <propertySection
                class="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.AdvancedSection"
+			   filter="org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.filters.BasicFilter"                              
                id="AdvancedSection"
                tab="AdvancedTab">
             <input
-                  type="org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart">
+                  type="org.eclipse.gef.EditPart">
             </input>
          </propertySection>
       </propertySections>

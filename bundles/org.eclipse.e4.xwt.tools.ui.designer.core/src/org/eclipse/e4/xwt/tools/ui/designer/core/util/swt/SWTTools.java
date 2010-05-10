@@ -55,7 +55,7 @@ public class SWTTools {
 		}
 		return null;
 	}
-	
+
 	public static Point getLocation(Widget widget) {
 		if (widget == null || widget.isDisposed()) {
 			return new Point(-1, -1);
@@ -129,11 +129,14 @@ public class SWTTools {
 		// For all items.
 		{
 			try {
-				Method getItemsMethod = widget.getClass().getDeclaredMethod("getItems");
-				Object[] items = (Object[]) getItemsMethod.invoke(widget, new Object[0]);
+				Method getItemsMethod = widget.getClass().getDeclaredMethod(
+						"getItems");
+				Object[] items = (Object[]) getItemsMethod.invoke(widget,
+						new Object[0]);
 				for (Object item : items) {
 					children.add((Widget) item);
 				}
+			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 				DesignerPlugin.logInfo(e);
 			}
@@ -141,11 +144,13 @@ public class SWTTools {
 		// For controls of items.
 		if (widget instanceof Item) {
 			try {
-				Method getControlMethod = widget.getClass().getDeclaredMethod("getControl");
+				Method getControlMethod = widget.getClass().getDeclaredMethod(
+						"getControl");
 				Object control = getControlMethod.invoke(widget, new Object[0]);
 				if (control != null) {
 					children.add((Widget) control);
 				}
+			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 				DesignerPlugin.logInfo(e);
 			}
@@ -153,22 +158,27 @@ public class SWTTools {
 		// For Context Menu and sub menu of MenuItem
 		{
 			try {
-				Method getMenuMethod = widget.getClass().getDeclaredMethod("getMenu");
+				Method getMenuMethod = widget.getClass().getDeclaredMethod(
+						"getMenu");
 				Object menu = getMenuMethod.invoke(widget, new Object[0]);
 				if (menu != null) {
 					children.add((Widget) menu);
 				}
+			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 				DesignerPlugin.logInfo(e);
 			}
 		}
 		{// getColumns
 			try {
-				Method getColumnsMethod = widget.getClass().getDeclaredMethod("getColumns", new Class<?>[0]);
-				Object[] columns = (Object[]) getColumnsMethod.invoke(widget, new Object[0]);
+				Method getColumnsMethod = widget.getClass().getDeclaredMethod(
+						"getColumns", new Class<?>[0]);
+				Object[] columns = (Object[]) getColumnsMethod.invoke(widget,
+						new Object[0]);
 				for (Object col : columns) {
 					children.add((Widget) col);
 				}
+			} catch (NoSuchMethodException e) {
 			} catch (Exception e) {
 				DesignerPlugin.logInfo(e);
 			}
@@ -177,7 +187,8 @@ public class SWTTools {
 	}
 
 	public static boolean checkStyle(Widget widget, int style) {
-		return widget != null && !widget.isDisposed() && checkStyle(widget.getStyle(), style);
+		return widget != null && !widget.isDisposed()
+				&& checkStyle(widget.getStyle(), style);
 	}
 
 	public static boolean checkStyle(int styles, int style) {

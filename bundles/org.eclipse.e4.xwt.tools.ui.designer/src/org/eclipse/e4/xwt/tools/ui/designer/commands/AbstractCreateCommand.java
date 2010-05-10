@@ -26,7 +26,7 @@ public abstract class AbstractCreateCommand extends Command {
 	protected EditPart parent;
 	protected CreateRequest createRequest;
 	protected CreateReqHelper helper;
-	private Command addChildCommand;
+	protected Command addChildCommand;
 	private XamlNode child;
 
 	public AbstractCreateCommand(EditPart parent, CreateRequest createRequest) {
@@ -60,12 +60,12 @@ public abstract class AbstractCreateCommand extends Command {
 		if (child == null) {
 			child = helper.getNewObject();
 		}
-		if (addChildCommand == null) {
-			addChildCommand = createCreateCommand(getParentModel(), child);
-		}
 
 		if (!InitializeHelper.checkValue(child)) {
 			return false;
+		}
+		if (addChildCommand == null) {
+			addChildCommand = createCreateCommand(getParentModel(), child);
 		}
 
 		if (addChildCommand == null || !addChildCommand.canExecute()) {

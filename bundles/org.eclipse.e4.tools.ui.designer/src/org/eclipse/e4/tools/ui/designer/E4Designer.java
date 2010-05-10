@@ -15,32 +15,29 @@ import org.eclipse.e4.tools.ui.designer.actions.CopyElementAction;
 import org.eclipse.e4.tools.ui.designer.actions.CutElementAction;
 import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
-import org.eclipse.e4.tools.ui.designer.outline.E4ContentOutlinePage;
-import org.eclipse.e4.tools.ui.designer.outline.OutlinePageDropManager;
+import org.eclipse.e4.tools.ui.designer.outline.TreeEditPartFactory;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.DesignerOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchPart;
@@ -56,41 +53,19 @@ public class E4Designer extends Designer {
 	private boolean isDirty = false;
 	private E4UIRenderer uiRenderer = new E4UIRenderer();
 
-	/*
-	 * (non-Javadoc)Property
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createModelBuilder()
-	 */
 	protected IModelBuilder createModelBuilder() {
 		return uiRenderer;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createMenuProvider()
-	 */
-	protected ContextMenuProvider createMenuProvider() {
-		return new E4DesignerMenuProvider(this);
+	protected ContextMenuProvider createMenuProvider(EditPartViewer viewer,
+			ActionRegistry actionRegistry) {
+		return new E4DesignerMenuProvider(viewer, actionRegistry);
 	}
 
-	protected ISelectionSynchronizer createSelectionSynchronizer() {
-		return new E4SelectionSynchronizer(getGraphicalViewer());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createEditPartFactory
-	 * ()
-	 */
 	protected EditPartFactory createEditPartFactory() {
 		return new E4EditPartsFactory();
 	}
 
-	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		super.init(site, input);
@@ -225,15 +200,6 @@ public class E4Designer extends Designer {
 		return propertyPage;
 	}
 
-	@Override
-	protected void setContent(EditPart diagram) {
-		super.setContent(diagram);
-		EObject eObject = (EObject) diagram.getModel();
-		if (eObject != null) {
-			getOutlinePage().getTreeViewer().setInput(eObject.eResource());
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -242,21 +208,18 @@ public class E4Designer extends Designer {
 	 * ()
 	 */
 	protected DesignerOutlinePage createOutlinePage() {
-		DesignerOutlinePage outlinePage = new E4ContentOutlinePage(this,
-				ApplicationModelHelper.getContentProvider(), ApplicationModelHelper
-						.getLabelProvider(),
-				new ViewerFilter[] { new ViewerFilter() {
-					@Override
-					public boolean select(Viewer viewer, Object parentElement,
-							Object element) {
-						if (element instanceof EObject) {
-							return ((EObject) element).eResource() != null;
-						}
-						return false;
-					}
-				} });
-		outlinePage.setDropManager(new OutlinePageDropManager(getEditDomain()
-				.getCommandStack()));
-		return outlinePage;
+		DesignerOutlinePage designerOutlinePage = new DesignerOutlinePage(
+				getEditDomain(), new TreeEditPartFactory());
+		TreeViewer treeViewer = designerOutlinePage.getTreeViewer();
+		ContextMenuProvider outlineMenu = createMenuProvider(treeViewer,
+				getActionRegistry());
+		if (outlineMenu != null) {
+			treeViewer.setContextMenu(outlineMenu);
+			outlineMenu.setRemoveAllWhenShown(true);
+			getSite().registerContextMenu(
+					getClass().getSimpleName() + ".outlineMenu", outlineMenu,
+					treeViewer);
+		}
+		return designerOutlinePage;
 	}
 }

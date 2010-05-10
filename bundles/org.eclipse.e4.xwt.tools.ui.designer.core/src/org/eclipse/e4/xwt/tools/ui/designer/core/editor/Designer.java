@@ -31,8 +31,6 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropTargetAdapter;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.GraphicalViewerDropCreationListener;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.palette.PaletteDropAdapter;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.DesignerOutlinePage;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineContentProvider;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.OutlineLableProvider;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.text.StructuredTextHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.ModelChangeListener;
@@ -121,7 +119,6 @@ public abstract class Designer extends MultiPageEditorPart implements
 	private CustomPalettePage palettePage;
 	private IPropertySheetPage propertyPage;
 	private DesignerOutlinePage outlinePage;
-	private ContextMenuProvider menuProvider;
 	private ProblemHandler problemHandler;
 
 	// GEF editor.
@@ -332,17 +329,26 @@ public abstract class Designer extends MultiPageEditorPart implements
 			getEditDomain().setViewerData(getGraphicalViewer(),
 					IVisualRenderer.KEY, vr);
 		}
-		EditPart diagram = getDiagramEditPart();
-		setContent(diagram);
+		setContent(getDocumentRoot());
 		loadingFigureController.showLoadingFigure(false);
-		if (diagram != null) {
-			refresher.refreshAsynchronous(diagram);
-			installed = true;
-		}
+
+		installed = true;
 	}
 
-	protected void setContent(EditPart diagram) {
-		getGraphicalViewer().setContents(diagram);
+	protected void setContent(EObject diagram) {
+		GraphicalViewer graphicalViewer = getGraphicalViewer();
+		if (graphicalViewer != null) {
+			EditPart diagramEp = getDiagramEditPart();
+			graphicalViewer.setContents(diagramEp);
+			if (diagramEp != null) {
+				refresher.refreshAsynchronous(diagramEp);
+			}
+		}
+
+		DesignerOutlinePage outlinePage = getOutlinePage();
+		if (outlinePage != null) {
+			outlinePage.setContents(diagram);
+		}
 	}
 
 	public IVisualRenderer getVisualsRender() {
@@ -463,10 +469,11 @@ public abstract class Designer extends MultiPageEditorPart implements
 		editDomain.addViewer(graphicalViewer);
 
 		getSite().setSelectionProvider(graphicalViewer);
-		getSelectionSynchronizer().addViewer(graphicalViewer);
+		getSelectionSynchronizer().addProvider(graphicalViewer);
 
 		graphicalViewer.setEditPartFactory(getEditPartFactory());
-		ContextMenuProvider menuProvider = getContextMenuProvider();
+		ContextMenuProvider menuProvider = createMenuProvider(graphicalViewer,
+				getActionRegistry());
 		if (menuProvider != null) {
 			graphicalViewer.setContextMenu(menuProvider);
 			menuProvider.setRemoveAllWhenShown(true);
@@ -516,20 +523,9 @@ public abstract class Designer extends MultiPageEditorPart implements
 		return fSharedKeyHandler;
 	}
 
-	/**
-	 * MenuProvider of the editor
-	 * 
-	 * @return
-	 */
-	public ContextMenuProvider getContextMenuProvider() {
-		if (menuProvider == null) {
-			menuProvider = createMenuProvider();
-		}
-		return menuProvider;
-	}
-
-	protected ContextMenuProvider createMenuProvider() {
-		return new DesignerMenuProvider(this);
+	protected ContextMenuProvider createMenuProvider(EditPartViewer viewer,
+			ActionRegistry actionRegistry) {
+		return new DesignerMenuProvider(viewer, actionRegistry);
 	}
 
 	/**
@@ -648,7 +644,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 		}
 		SourceSelectionProvider selectionProvider = new SourceSelectionProvider(
 				this, fTextEditor);
-		getSelectionSynchronizer().addViewer(selectionProvider);
+		getSelectionSynchronizer().addProvider(selectionProvider);
 		fTextEditor.setAction(ITextEditorActionConstants.DELETE, null);
 		if (pageContainer != null) {
 			pageContainer.setWeights(new int[] { 1, 1 });
@@ -874,17 +870,14 @@ public abstract class Designer extends MultiPageEditorPart implements
 		if (outlinePage == null) {
 			outlinePage = createOutlinePage();
 			if (outlinePage != null) {
-				getSelectionSynchronizer().addViewer(outlinePage);
+				getSelectionSynchronizer().addProvider(
+						outlinePage.getTreeViewer());
 			}
 		}
 		return outlinePage;
 	}
 
-	protected DesignerOutlinePage createOutlinePage() {
-		OutlineContentProvider contentProvider = new OutlineContentProvider();
-		OutlineLableProvider lableProvider = new OutlineLableProvider();
-		return new DesignerOutlinePage(this, contentProvider, lableProvider);
-	}
+	protected abstract DesignerOutlinePage createOutlinePage();
 
 	public IPropertySheetPage getPropertySheetPage() {
 		if (propertyPage == null || propertyPage.getControl() == null

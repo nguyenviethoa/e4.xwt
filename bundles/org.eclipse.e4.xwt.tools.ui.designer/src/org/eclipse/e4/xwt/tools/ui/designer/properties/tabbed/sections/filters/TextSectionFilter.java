@@ -10,29 +10,19 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.filters;
 
-import org.eclipse.e4.xwt.metadata.IProperty;
-import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTUtility;
-import org.eclipse.jface.viewers.IFilter;
+import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 
 /**
  * @author rui.ban rui.ban@soyatec.com
  */
-public class TextSectionFilter implements IFilter {
+public class TextSectionFilter extends BasicFilter {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.viewers.IFilter#select(java.lang.Object)
-	 */
-	public boolean select(Object toTest) {
-		if (toTest instanceof WidgetEditPart) {
-			IProperty property = XWTUtility.getProperty(((WidgetEditPart) toTest).getCastModel(), "text");
-			if (property != null) {
-				return true;
-			}
+	protected boolean select(XamlNode node) {
+		if (super.select(node)){
+			return XWTUtility.getProperty(node, "text") != null;
 		}
-		return false;
+		return super.select(node);
 	}
 
 }

@@ -404,6 +404,10 @@ public class PDCCodegen {
 
 	public static void createFile(IType type, IFile file,
 			PartDataContext dataContext) {
+		if (type == null || file == null || dataContext == null
+				|| dataContext.getType() == null) {
+			return;
+		}
 		PDCCodegen codegen = new PDCCodegen(dataContext);
 		codegen.createFile(type, file);
 	}

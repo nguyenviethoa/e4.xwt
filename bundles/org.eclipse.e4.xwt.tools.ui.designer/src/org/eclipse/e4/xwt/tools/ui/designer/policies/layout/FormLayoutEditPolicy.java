@@ -47,7 +47,8 @@ import org.eclipse.swt.widgets.Control;
 /**
  * @author jliu jin.liu@soyatec.com
  */
-public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutEditPolicy {
+public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements
+		ILayoutEditPolicy {
 	private FeedbackManager fbm = new FeedbackManager(this);
 	private FormLayoutHelper helper;
 	private FormDataFigure feedback;
@@ -55,7 +56,9 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getCreateCommand(org.eclipse.gef.requests.CreateRequest)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#getCreateCommand(org.eclipse
+	 * .gef.requests.CreateRequest)
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
 		return getFormDataCommand(request);
@@ -74,7 +77,9 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy#refresh()
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy
+	 * #refresh()
 	 */
 	public void refresh() {
 
@@ -89,20 +94,27 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 		Control control = null;
 		if (REQ_CREATE == request.getType()) {
 			location = ((EntryCreateRequest) request).getLocation().getCopy();
-			size = ((EntryCreateRequest) request).getInitSize();
+			// size = ((EntryCreateRequest) request).getInitSize();
 		} else if (REQ_MOVE == request.getType()) {
 			location = ((ChangeBoundsRequest) request).getLocation().getCopy();
-			EditPart part = (EditPart) ((ChangeBoundsRequest) request).getEditParts().get(0);
+			EditPart part = (EditPart) ((ChangeBoundsRequest) request)
+					.getEditParts().get(0);
 			if (part != null && part instanceof ControlEditPart) {
 				control = (Control) ((ControlEditPart) part).getWidget();
 				if (control != null && !control.isDisposed()) {
-					size = ((ControlEditPart) part).getVisualInfo().getBounds().getSize();
+					size = ((ControlEditPart) part).getVisualInfo().getBounds()
+							.getSize();
 				}
 			}
 		}
+		if (size == null) {
+			size = new Dimension(10, 10);
+		}
 		if (location != null && size != null) {
-			Point relative = FigureUtil.translateToRelative(getHost(), location.getCopy());
-			FormLayoutData layoutData = helper.computeData(new Rectangle(relative, size), control);
+			Point relative = FigureUtil.translateToRelative(getHost(), location
+					.getCopy());
+			FormLayoutData layoutData = helper.computeData(new Rectangle(
+					relative, size), control);
 			if (layoutData != null) {
 				layoutData.bounds = new Rectangle(location, size);
 			}
@@ -115,12 +127,14 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 		EditPart parent = getHost();
 		XamlNode forCreate = null;
 		if (REQ_CREATE.equals(request.getType())) {
-			CreateReqHelper reqHelper = new CreateReqHelper((CreateRequest) request);
+			CreateReqHelper reqHelper = new CreateReqHelper(
+					(CreateRequest) request);
 			if (reqHelper.canCreate(parent)) {
 				forCreate = reqHelper.getNewObject();
 			}
 		} else if (REQ_MOVE_CHILDREN.equals(request.getType())) {
-			EditPart part = (EditPart) ((ChangeBoundsRequest) request).getEditParts().get(0);
+			EditPart part = (EditPart) ((ChangeBoundsRequest) request)
+					.getEditParts().get(0);
 			if (part != null) {
 				forCreate = (XamlNode) part.getModel();
 			}
@@ -144,10 +158,14 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.policies.layout.NullLayoutEditPolicy#showLayoutTargetFeedback(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.policies.layout.NullLayoutEditPolicy
+	 * #showLayoutTargetFeedback(org.eclipse.gef.Request)
 	 */
 	protected void showLayoutTargetFeedback(Request request) {
-		if (REQ_CREATE.equals(request.getType()) && FeedbackHelper.showCreationFeedback(fbm, (CreateRequest) request)) {
+		if (REQ_CREATE.equals(request.getType())
+				&& FeedbackHelper.showCreationFeedback(fbm,
+						(CreateRequest) request)) {
 			return;
 		}
 		FormLayoutData data = computeData(request);
@@ -159,7 +177,8 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 	}
 
 	private void showFormdataFeedback(FormLayoutData layoutData) {
-		if (layoutData == null || layoutData.data == null || layoutData.bounds == null) {
+		if (layoutData == null || layoutData.data == null
+				|| layoutData.bounds == null) {
 			return;
 		}
 		if (feedback == null) {
@@ -173,7 +192,9 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.policies.layout.NullLayoutEditPolicy#eraseLayoutTargetFeedback(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.policies.layout.NullLayoutEditPolicy
+	 * #eraseLayoutTargetFeedback(org.eclipse.gef.Request)
 	 */
 	protected void eraseLayoutTargetFeedback(Request request) {
 		if (feedback != null) {
@@ -187,7 +208,9 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy#getType()
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.designer.policies.layout.ILayoutEditPolicy
+	 * #getType()
 	 */
 	public LayoutType getType() {
 		return LayoutType.FormLayout;
@@ -196,7 +219,8 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#getMoveChildrenCommand(org.eclipse.gef.Request)
+	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#
+	 * getMoveChildrenCommand(org.eclipse.gef.Request)
 	 */
 	protected Command getMoveChildrenCommand(Request request) {
 		return getFormDataCommand(request);
@@ -205,7 +229,8 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#getResizeChildrenCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
+	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#
+	 * getResizeChildrenCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
 	 */
 	protected Command getResizeChildrenCommand(ChangeBoundsRequest request) {
 		CompoundCommand command = new CompoundCommand();
@@ -221,16 +246,20 @@ public class FormLayoutEditPolicy extends XYLayoutEditPolicy implements ILayoutE
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#createChangeConstraintCommand(org.eclipse.gef.EditPart, java.lang.Object)
+	 * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#
+	 * createChangeConstraintCommand(org.eclipse.gef.EditPart, java.lang.Object)
 	 */
-	protected Command createChangeConstraintCommand(EditPart child, Object constraint) {
+	protected Command createChangeConstraintCommand(EditPart child,
+			Object constraint) {
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.editpolicies.LayoutEditPolicy#getDeleteDependantCommand(org.eclipse.gef.Request)
+	 * @see
+	 * org.eclipse.gef.editpolicies.LayoutEditPolicy#getDeleteDependantCommand
+	 * (org.eclipse.gef.Request)
 	 */
 	protected Command getDeleteDependantCommand(Request request) {
 		ForwardedRequest forwarded = (ForwardedRequest) request;

@@ -25,6 +25,8 @@ import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.commands.UnexecutableCommand;
+import org.eclipse.gef.requests.CreateRequest;
 
 public class CommandFactory {
 
@@ -78,7 +80,28 @@ public class CommandFactory {
 		} else if (container instanceof MPart && child instanceof MMenu) {
 			return new AddPartMenuChildCommand((MPart) container, (MMenu) child);
 		}
-		throw new UnsupportedOperationException(container.getClass().getName()
-				+ " " + child.getClass().getName());
+		// throw new
+		// UnsupportedOperationException(container.getClass().getName()
+		// + " " + child.getClass().getName());
+		return UnexecutableCommand.INSTANCE;
+	}
+
+	static public Command createCreateCommand(CreateRequest request,
+			EditPart parent, EditPart insertAfter) {
+		int index = -1;
+		if (insertAfter != null) {
+			index = parent.getChildren().indexOf(insertAfter);
+		}
+		return createCreateCommand(request, parent, index);
+	}
+
+	static public Command createCreateCommand(CreateRequest req,
+			EditPart parent, int index) {
+		return new CreateCommand(req, parent, index);
+	}
+
+	static public Command createChangeConstraintCommand(EditPart child,
+			Object constraint) {
+		return new ChangeConstraintCommand(child, constraint);
 	}
 }

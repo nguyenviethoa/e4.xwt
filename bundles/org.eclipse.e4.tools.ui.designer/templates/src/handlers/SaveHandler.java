@@ -14,6 +14,7 @@ import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.ui.model.application.MContribution;
 import org.eclipse.e4.ui.model.application.ui.MDirtyable;
 import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.e4.workbench.ui.Persist;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
@@ -44,7 +45,7 @@ public class SaveHandler {
 				pmContext.set(IProgressMonitor.class.getName(), monitor);
 				if (contribution != null) {
 					Object clientObject = contribution.getObject();
-					ContextInjectionFactory.invoke(clientObject, "doSave", //$NON-NLS-1$
+					ContextInjectionFactory.invoke(clientObject, Persist.class, //$NON-NLS-1$
 							pmContext, null);
 				}
 			}

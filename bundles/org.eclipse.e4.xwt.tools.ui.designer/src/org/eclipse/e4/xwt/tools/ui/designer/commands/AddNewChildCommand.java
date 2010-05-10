@@ -107,4 +107,8 @@ public class AddNewChildCommand extends Command {
 	public XamlNode getChild() {
 		return child;
 	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
 }

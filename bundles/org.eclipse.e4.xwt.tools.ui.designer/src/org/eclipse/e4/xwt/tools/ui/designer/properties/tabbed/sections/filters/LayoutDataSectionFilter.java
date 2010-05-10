@@ -13,22 +13,17 @@ package org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections.filters;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutDataType;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.LayoutsHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.layouts.pages.AssistancePageFactory;
-import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
+import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.IFilter;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
  */
 public class LayoutDataSectionFilter implements IFilter {
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.viewers.IFilter#select(java.lang.Object)
-	 */
 	public boolean select(Object toTest) {
-		if (toTest instanceof WidgetEditPart) {
-			LayoutDataType layoutDataType = LayoutsHelper.getLayoutDataType((WidgetEditPart) toTest);
+		if (toTest instanceof EditPart) {
+			LayoutDataType layoutDataType = LayoutsHelper
+					.getLayoutDataType((EditPart) toTest);
 			return AssistancePageFactory.isSupport(layoutDataType);
 		}
 		return false;

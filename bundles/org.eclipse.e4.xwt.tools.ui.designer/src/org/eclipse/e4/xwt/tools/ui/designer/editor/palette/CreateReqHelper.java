@@ -20,6 +20,7 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Composite;
@@ -110,7 +111,7 @@ public class CreateReqHelper {
 			if (parentType == null && parentNode != null) {
 				parentType = getType(parentNode);
 			}
-			if (parentType == null) {
+			if (parentType == null || parentType == CCombo.class) {
 				return false;
 			}
 			boolean canCreate = false;

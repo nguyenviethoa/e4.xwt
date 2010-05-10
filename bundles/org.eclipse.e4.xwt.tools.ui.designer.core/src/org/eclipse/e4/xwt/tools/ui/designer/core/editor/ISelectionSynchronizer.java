@@ -6,23 +6,23 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 public interface ISelectionSynchronizer {
 
 	/**
-	 * Adds a viewer to the set of synchronized viewers
+	 * Adds a provider to the set of synchronized providers.
 	 * 
-	 * @param viewer
-	 *            the viewer
+	 * @param provider
+	 *            the provider
 	 */
-	public abstract void addViewer(ISelectionProvider viewer);
+	public abstract void addProvider(ISelectionProvider provider);
 
 	/**
-	 * Removes the viewer from the set of synchronized viewers
+	 * Removes the provider from the set of synchronized providers
 	 * 
-	 * @param viewer
-	 *            the viewer to remove
+	 * @param provider
+	 *            the provider to remove
 	 */
-	public abstract void removeViewer(ISelectionProvider viewer);
+	public abstract void removeProvider(ISelectionProvider provider);
 
 	/**
-	 * Receives notification from one viewer, and maps selection to all other
+	 * Receives notification from one provider, and maps selection to all other
 	 * members.
 	 * 
 	 * @param event

@@ -73,6 +73,7 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.e4.xwt.utils.PathHelper;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -406,22 +407,19 @@ public class ResourceVisitor {
 				.get(IXWTLoader.BINDING_CONTEXT_PROPERTY);
 		String name = element.getName();
 		String namespace = element.getNamespace();
+		EList<XamlElement> childNodes = element.getChildNodes();
 		if (IConstants.XWT_X_NAMESPACE.equalsIgnoreCase(namespace)) {
 			if (IConstants.XAML_X_NULL.equalsIgnoreCase(name)) {
 				return null;
 			}
 			if (IConstants.XAML_X_TYPE.equalsIgnoreCase(name)
 					&& constraintType != null && constraintType == Class.class) {
-				XamlNode[] children = element.getChildNodes().toArray(
-						new XamlNode[0]);
-				if (children != null && children.length > 0) {
-					if (children[0] instanceof XamlElement) {
-						XamlElement type = (XamlElement) children[0];
-						IMetaclass metaclass = loader.getMetaclass(type
-								.getName(), type.getNamespace());
-						if (metaclass != null) {
-							return metaclass.getType();
-						}
+				if (!childNodes.isEmpty()) {
+					XamlElement type = childNodes.get(0);
+					IMetaclass metaclass = loader.getMetaclass(type.getName(),
+							type.getNamespace());
+					if (metaclass != null) {
+						return metaclass.getType();
 					}
 				} else {
 					String content = element.getValue();
@@ -638,9 +636,9 @@ public class ResourceVisitor {
 
 		List<String> delayedAttributes = new ArrayList<String>();
 		init(metaclass, targetObject, element, delayedAttributes);
-		if (targetObject instanceof Style && element.getChildNodes().size() > 0) {
+		if (targetObject instanceof Style && childNodes.size() > 0) {
 			Collection<Setter> setters = new ArrayList<Setter>();
-			for (XamlNode doc : element.getChildNodes()) {
+			for (XamlNode doc : childNodes) {
 				Object child = doCreate(targetObject, (XamlElement) doc, null,
 						Collections.EMPTY_MAP);
 				if (!(child instanceof Setter)) {
@@ -651,7 +649,7 @@ public class ResourceVisitor {
 			((Style) targetObject).setSetters(setters
 					.toArray(new Setter[setters.size()]));
 		} else if (targetObject instanceof ControlEditor) {
-			for (XamlNode doc : element.getChildNodes()) {
+			for (XamlNode doc : childNodes) {
 				Object editor = doCreate(parent, (XamlElement) doc, null,
 						Collections.EMPTY_MAP);
 				if (editor != null && editor instanceof Control) {
@@ -662,7 +660,7 @@ public class ResourceVisitor {
 				}
 			}
 		} else if (targetObject instanceof IDataProvider) {
-			for (XamlNode doc : element.getChildNodes()) {
+			for (XamlNode doc : childNodes) {
 				if (IConstants.XWT_X_NAMESPACE.equals(doc.getNamespace())) {
 					String content = doc.getValue();
 					if (content != null) {
@@ -672,7 +670,7 @@ public class ResourceVisitor {
 				}
 			}
 		} else {
-			for (XamlNode doc : element.getChildNodes()) {
+			for (XamlNode doc : childNodes) {
 				doCreate(targetObject, (XamlElement) doc, null,
 						Collections.EMPTY_MAP);
 			}
@@ -700,16 +698,17 @@ public class ResourceVisitor {
 
 	private void invokeCreatededAction(XamlElement element, Object targetObject) {
 		if (targetObject != null) {
-			postCreation0(element, targetObject);			
+			postCreation0(element, targetObject);
 		}
 		if (options != null) {
-			ICreatedCallback createdAction = (ICreatedCallback) options.get(IXWTLoader.CREATED_CALLBACK);
+			ICreatedCallback createdAction = (ICreatedCallback) options
+					.get(IXWTLoader.CREATED_CALLBACK);
 			if (createdAction != null) {
 				createdAction.onCreated(targetObject);
 			}
 		}
 	}
-	
+
 	/**
 	 * This method is invoked after full creation of component, i.e. after
 	 * creating its instance, applying its attributes and creating children.
@@ -1548,12 +1547,14 @@ public class ResourceVisitor {
 								&& attribute.getValue() != null) {
 							value = attribute.getValue();
 						} else {
-							if ("Null".equals(child.getName()) && IConstants.XWT_X_NAMESPACE.equals(child.getNamespace())) {
+							if ("Null".equals(child.getName())
+									&& IConstants.XWT_X_NAMESPACE.equals(child
+											.getNamespace())) {
 								property.setValue(directTarget, null);
 								return;
 							} else {
-								value = doCreate(directTarget, (XamlElement) child,
-										type, EMPTY_MAP);
+								value = doCreate(directTarget,
+										(XamlElement) child, type, EMPTY_MAP);
 								if (value == null
 										&& type != null
 										&& !(type == Table.class

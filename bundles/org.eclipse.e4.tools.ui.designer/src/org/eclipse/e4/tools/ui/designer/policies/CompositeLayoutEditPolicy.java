@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.policies;
 
-import org.eclipse.e4.tools.ui.designer.commands.factory.CommandsFactory;
-import org.eclipse.e4.tools.ui.designer.commands.factory.CompositeCommandsFactory;
-import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
@@ -22,21 +20,13 @@ import org.eclipse.gef.requests.CreateRequest;
  * @author Jin Liu(jin.liu@soyatec.com)
  */
 public class CompositeLayoutEditPolicy extends XYLayoutEditPolicy {
-	private CommandsFactory factory;
 
-	public void activate() {
-		super.activate();
-		if (factory == null) {
-			factory = new CompositeCommandsFactory(getHost());
-		}
-	}
-	
 	protected Command getCreateCommand(CreateRequest request) {
-		return factory.getCreateCommand(request, null, MUIElement.class);
+		return CommandFactory.createCreateCommand(request, getHost(), null);
 	}
 
 	protected Command createChangeConstraintCommand(EditPart child,
 			Object constraint) {
-		return factory.getChangeConstraintCommand(child, constraint);
+		return CommandFactory.createChangeConstraintCommand(child, constraint);
 	}
 }

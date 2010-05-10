@@ -27,8 +27,8 @@ import org.eclipse.e4.xwt.tools.ui.designer.commands.ApplyAttributeSettingComman
 import org.eclipse.e4.xwt.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
-import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTClassLoaderUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.ResourceVisitor;
+import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTClassLoaderUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTVisualLoader;
 import org.eclipse.e4.xwt.tools.ui.designer.model.RefreshAdapter;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.WidgetEditPart;
@@ -39,6 +39,8 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlFactory;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -54,6 +56,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -213,6 +217,20 @@ public abstract class AbstractAttributeSection extends AbstractPropertySection
 		Object object = ((IStructuredSelection) selection).getFirstElement();
 		if (object instanceof WidgetEditPart) {
 			applyEditPart((WidgetEditPart) object);
+		} else if (object instanceof EditPart) {
+			IWorkbenchPage activePage = part.getSite().getWorkbenchWindow()
+					.getActivePage();
+			IEditorPart activeEditor = activePage.getActiveEditor();
+			GraphicalViewer graphicalViewer = (GraphicalViewer) activeEditor
+					.getAdapter(GraphicalViewer.class);
+			if (graphicalViewer != null) {
+				EditPart editPart = (EditPart) graphicalViewer
+						.getEditPartRegistry().get(
+								((EditPart) object).getModel());
+				if (editPart instanceof WidgetEditPart) {
+					applyEditPart((WidgetEditPart) editPart);
+				}
+			}
 		}
 	}
 
@@ -299,12 +317,10 @@ public abstract class AbstractAttributeSection extends AbstractPropertySection
 											LoggerManager
 													.log(new XWTException(
 															"Convertor "
-																	+ value
-																			.getClass()
+																	+ value.getClass()
 																			.getSimpleName()
 																	+ "->"
-																	+ type
-																			.getSimpleName()
+																	+ type.getSimpleName()
 																	+ " is not found"));
 										}
 									}

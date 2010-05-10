@@ -12,7 +12,6 @@ package org.eclipse.e4.xwt.tools.ui.designer.properties.tabbed.sections;
 
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
-import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
 import org.eclipse.e4.xwt.tools.ui.designer.wizards.ExternalizeStringsWizard;
 import org.eclipse.e4.xwt.tools.ui.designer.wizards.models.TextValueEntry;
 import org.eclipse.e4.xwt.tools.ui.designer.wizards.models.TextValueModel;
@@ -21,11 +20,9 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -36,7 +33,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 public class TextSection extends AbstractAttributeSection {
 	protected TabbedPropertySheetPage tabbedPropertySheetPage;
 	private Text textWidget;
-	private Button externalizeButton;
+	// private Button externalizeButton;
 	private Runnable delayRunnable;
 
 	protected void _createControls(Composite parent,
@@ -53,16 +50,16 @@ public class TextSection extends AbstractAttributeSection {
 		textWidget.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		textWidget.addListener(SWT.Modify, this);
 
-		externalizeButton = getWidgetFactory().createButton(control, "",
-				SWT.PUSH);
-		externalizeButton.setImage(ImageShop
-				.get(ImageShop.IMAGE_OBSERVE_CUSTOM));
-		externalizeButton.setToolTipText("Externalize String");
-		externalizeButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				externalizeText();
-			}
-		});
+		// externalizeButton = getWidgetFactory().createButton(control, "",
+		// SWT.PUSH);
+		// externalizeButton.setImage(ImageShop
+		// .get(ImageShop.IMAGE_OBSERVE_CUSTOM));
+		// externalizeButton.setToolTipText("Externalize String");
+		// externalizeButton.addListener(SWT.Selection, new Listener() {
+		// public void handleEvent(Event event) {
+		// externalizeText();
+		// }
+		// });
 		return control;
 	}
 

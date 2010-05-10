@@ -50,6 +50,7 @@ public class InsertCreateCommand extends AbstractCreateCommand {
 	protected void preExecute(XamlNode newNode, CreateRequest createRequest) {
 		if (reference != null) {
 			index = getParentModel().getChildNodes().indexOf(reference.getModel());
+			((AddNewChildCommand) addChildCommand).setIndex(index);
 		}
 	}
 

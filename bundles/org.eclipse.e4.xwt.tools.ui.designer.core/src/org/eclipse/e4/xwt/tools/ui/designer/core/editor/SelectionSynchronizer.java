@@ -29,21 +29,14 @@ import org.eclipse.jface.viewers.StructuredSelection;
 public class SelectionSynchronizer implements ISelectionChangedListener,
 		ISelectionSynchronizer {
 
-	private List<ISelectionProvider> viewers = new ArrayList<ISelectionProvider>();
+	private List<ISelectionProvider> providers = new ArrayList<ISelectionProvider>();
 	private boolean isDispatching = false;
 	private int disabled = 0;
 	private ISelectionProvider pendingSelection;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer
-	 * #addViewer(org.eclipse.jface.viewers.ISelectionProvider)
-	 */
-	public void addViewer(ISelectionProvider viewer) {
-		viewer.addSelectionChangedListener(this);
-		viewers.add(viewer);
+	public void addProvider(ISelectionProvider provider) {
+		provider.addSelectionChangedListener(this);
+		providers.add(provider);
 	}
 
 	/**
@@ -51,19 +44,18 @@ public class SelectionSynchronizer implements ISelectionChangedListener,
 	 * It returns <code>null</code> if there is no corresponding part. This
 	 * method can be overridden to provide custom mapping.
 	 * 
-	 * @param viewer
+	 * @param provider
 	 *            the viewer being mapped to
 	 * @param part
 	 *            a part from another viewer
 	 * @return <code>null</code> or a corresponding editpart
 	 */
-	protected EditPart convert(ISelectionProvider viewer, EditPart part) {
-		// Object temp = viewer.getEditPartRegistry().get(part.getModel());
-		EditPart newPart = part;
-		// if (temp != null) {
-		// newPart = (EditPart) temp;
-		// }
-		return newPart;
+	protected EditPart convert(ISelectionProvider provider, EditPart part) {
+		if (provider instanceof EditPartViewer) {
+			return (EditPart) ((EditPartViewer) provider).getEditPartRegistry()
+					.get(part.getModel());
+		}
+		return part;
 	}
 
 	/*
@@ -73,9 +65,9 @@ public class SelectionSynchronizer implements ISelectionChangedListener,
 	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.ISelectionSynchronizer
 	 * #removeViewer(org.eclipse.jface.viewers.ISelectionProvider)
 	 */
-	public void removeViewer(ISelectionProvider viewer) {
+	public void removeProvider(ISelectionProvider viewer) {
 		viewer.removeSelectionChangedListener(this);
-		viewers.remove(viewer);
+		providers.remove(viewer);
 		if (pendingSelection == viewer)
 			pendingSelection = null;
 	}
@@ -101,9 +93,9 @@ public class SelectionSynchronizer implements ISelectionChangedListener,
 
 	private void syncSelection(ISelectionProvider source, ISelection selection) {
 		isDispatching = true;
-		for (int i = 0; i < viewers.size(); i++) {
-			if (viewers.get(i) != source) {
-				ISelectionProvider viewer = viewers.get(i);
+		for (int i = 0; i < providers.size(); i++) {
+			if (providers.get(i) != source) {
+				ISelectionProvider viewer = providers.get(i);
 				setViewerSelection(source, viewer, selection);
 			}
 		}
@@ -126,8 +118,8 @@ public class SelectionSynchronizer implements ISelectionChangedListener,
 		}
 	}
 
-	protected void setViewerSelection(ISelectionProvider source, ISelectionProvider viewer,
-			ISelection selection) {
+	protected void setViewerSelection(ISelectionProvider source,
+			ISelectionProvider viewer, ISelection selection) {
 		ArrayList<EditPart> result = new ArrayList<EditPart>();
 		Iterator<?> iter = ((IStructuredSelection) selection).iterator();
 		while (iter.hasNext()) {

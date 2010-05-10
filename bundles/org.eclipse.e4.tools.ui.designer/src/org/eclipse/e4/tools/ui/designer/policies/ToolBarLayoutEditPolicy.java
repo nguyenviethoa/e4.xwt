@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.policies;
 
-import org.eclipse.e4.tools.ui.designer.commands.factory.CommandsFactory;
-import org.eclipse.e4.tools.ui.designer.commands.factory.ToolBarCommandsFactory;
-import org.eclipse.e4.ui.model.application.ui.menu.MToolItem;
+import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 
@@ -22,18 +21,6 @@ import org.eclipse.gef.requests.CreateRequest;
  * @author Jin Liu(jin.liu@soyatec.com)
  */
 public class ToolBarLayoutEditPolicy extends FlowLayoutEditPolicy {
-
-	private CommandsFactory factory;
-
-	public ToolBarLayoutEditPolicy() {
-	}
-
-	public void activate() {
-		super.activate();
-		if (factory == null) {
-			factory = new ToolBarCommandsFactory(getHost());
-		}
-	}
 
 	protected boolean isHorizontal() {
 		// quickly fixed.
@@ -49,7 +36,8 @@ public class ToolBarLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 */
 	protected Command getCreateCommand(CreateRequest request) {
 		EditPart insertionReference = getInsertionReference(request);
-		return factory.getCreateCommand(request, insertionReference, MToolItem.class);
+		return CommandFactory.createCreateCommand(request, getHost(),
+				insertionReference);
 	}
 
 	/*
@@ -60,18 +48,20 @@ public class ToolBarLayoutEditPolicy extends FlowLayoutEditPolicy {
 	 * (org.eclipse.gef.EditPart, org.eclipse.gef.EditPart)
 	 */
 	protected Command createAddCommand(EditPart child, EditPart after) {
-		return factory.getAddCommand(child, after);
+		EditPart host = getHost();
+		if (host == null || child == null) {
+			return UnexecutableCommand.INSTANCE;
+		}
+		int index = -1;
+		if (after != null) {
+			index = host.getChildren().indexOf(after);
+		}
+		return CommandFactory.createAddChildCommand(host.getModel(), child
+				.getModel(), index);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.gef.editpolicies.OrderedLayoutEditPolicy#createMoveChildCommand
-	 * (org.eclipse.gef.EditPart, org.eclipse.gef.EditPart)
-	 */
 	protected Command createMoveChildCommand(EditPart child, EditPart after) {
-		return factory.getMoveChildCommand(child, after);
+		return null;
 	}
 
 }

@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor;
 
 import org.eclipse.gef.ContextMenuProvider;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -22,18 +23,16 @@ import org.eclipse.ui.actions.ActionFactory;
  */
 public class DesignerMenuProvider extends ContextMenuProvider {
 
-	protected Designer designer;
+	private ActionRegistry actionRegistry;
 
-	/**
-	 * @param viewer
-	 */
-	public DesignerMenuProvider(Designer editor) {
-		super(editor.getGraphicalViewer());
-		this.designer = editor;
+	public DesignerMenuProvider(EditPartViewer viewer,
+			ActionRegistry actionRegistry) {
+		super(viewer);
+		this.actionRegistry = actionRegistry;
 	}
 
 	public ActionRegistry getActionRegistry() {
-		return (ActionRegistry) designer.getAdapter(ActionRegistry.class);
+		return actionRegistry;
 	}
 
 	/*
@@ -49,10 +48,6 @@ public class DesignerMenuProvider extends ContextMenuProvider {
 		menu.add(new Separator(DesignerActionConstants.ACTIONS));
 		menu.add(new Separator(DesignerActionConstants.ADDITIONS));
 		super.menuAboutToShow(menu);
-	}
-
-	public Designer getDesigner() {
-		return designer;
 	}
 
 	/*

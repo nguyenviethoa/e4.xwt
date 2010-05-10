@@ -373,7 +373,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		for (XamlAttribute attribute : attributes) {
 			String attrName = attribute.getName();
 			String attrNS = attribute.getNamespace();
-			if (equals(attrName, name) && equals(attrNS, namespace)) {
+			if (name.equalsIgnoreCase(attrName)
+					&& namespace.equalsIgnoreCase(attrNS)) {
 				return attribute;
 			}
 		}

@@ -79,7 +79,7 @@ public class WidgetEditPart extends VisualEditPart {
 	 */
 	protected List getModelChildren() {
 		List children = new ArrayList();
-		Object[] childrenArray = ApplicationModelHelper.getChildren(getModel());
+		Object[] childrenArray = ApplicationModelHelper.getModelChildren(getModel());
 		if (childrenArray != null) {
 			children.addAll(Arrays.asList(childrenArray));
 		}

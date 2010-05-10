@@ -32,19 +32,20 @@ import org.eclipse.e4.xwt.tools.ui.designer.editor.dnd.XWTDropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.dnd.XWTGraphicalViewerDropListener;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.event.EventHandler;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.model.XWTModelBuilder;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.outline.OutlinePageContentProvider;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.outline.OutlinePageDropManager;
-import org.eclipse.e4.xwt.tools.ui.designer.editor.outline.OutlinePageLabelProvider;
+import org.eclipse.e4.xwt.tools.ui.designer.editor.outline.TreeEditPartFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTVisualLoader;
 import org.eclipse.e4.xwt.tools.ui.designer.parts.XWTEditPartFactory;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument;
 import org.eclipse.e4.xwt.ui.XWTPerspectiveFactory;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.ui.actions.ActionRegistry;
+import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
@@ -297,13 +298,9 @@ public class XWTDesigner extends Designer implements
 		generateTool.setEnabled(false);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createMenuProvider()
-	 */
-	protected ContextMenuProvider createMenuProvider() {
-		return new XWTDesignerMenuProvider(this);
+	protected ContextMenuProvider createMenuProvider(EditPartViewer viewer,
+			ActionRegistry actionRegistry) {
+		return new XWTDesignerMenuProvider(viewer, actionRegistry, this);
 	}
 
 	/*
@@ -322,14 +319,19 @@ public class XWTDesigner extends Designer implements
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createOutlinePage()
 	 */
 	protected DesignerOutlinePage createOutlinePage() {
-		DesignerOutlinePage outlinePage = (DesignerOutlinePage) super
-				.createOutlinePage();
-		outlinePage.setContentProvider(new OutlinePageContentProvider());
-		outlinePage.setLabelProvider(new OutlinePageLabelProvider());
-		outlinePage.setContextMenuProvider(getContextMenuProvider());
-		outlinePage.setDropManager(new OutlinePageDropManager(getEditDomain()
-				.getCommandStack()));
-		return outlinePage;
+		DesignerOutlinePage designerOutlinePage = new DesignerOutlinePage(
+				getEditDomain(), new TreeEditPartFactory());
+		TreeViewer treeViewer = designerOutlinePage.getTreeViewer();
+		ContextMenuProvider outlineMenu = createMenuProvider(treeViewer,
+				getActionRegistry());
+		if (outlineMenu != null) {
+			treeViewer.setContextMenu(outlineMenu);
+		}
+		return designerOutlinePage;
+	}
+
+	protected void setContent(EObject diagram) {
+		super.setContent(diagram);
 	}
 
 	/*

@@ -24,7 +24,12 @@ public class E4SelectionTool extends SelectionTool {
 		EditPart editPart = getTargetEditPart();
 		if (editPart == null) {
 			setDefaultCursor(null);
-			return super.updateTargetUnderMouse();
+			try {
+				return super.updateTargetUnderMouse();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		if (editPart instanceof SashEditPart) {
 			SashEditPart sashEditPart = (SashEditPart) editPart;
