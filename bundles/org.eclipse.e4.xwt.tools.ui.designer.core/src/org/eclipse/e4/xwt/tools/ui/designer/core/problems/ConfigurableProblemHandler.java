@@ -53,7 +53,7 @@ public class ConfigurableProblemHandler implements ProblemHandler {
 			return;
 		}
 		try {
-			IFile file = designer.getInputFile();
+			IFile file = designer.getFile();
 			for (Problem problem : problems) {
 				makeMaker(file, problem);
 			}
@@ -87,7 +87,7 @@ public class ConfigurableProblemHandler implements ProblemHandler {
 	}
 
 	public void clear() {
-		IFile file = designer.getInputFile();
+		IFile file = designer.getFile();
 		try {
 			file.deleteMarkers(MARKS_ID, true, IResource.DEPTH_INFINITE);
 		} catch (CoreException e) {
@@ -100,7 +100,7 @@ public class ConfigurableProblemHandler implements ProblemHandler {
 	 * @see org.soyatec.tools.designer.problems.ProblemHandler#isValidate()
 	 */
 	public boolean isValidate() {
-		return designer != null && designer.getInputFile() != null;
+		return designer != null && designer.getFile() != null;
 	}
 
 	/*

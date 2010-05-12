@@ -291,7 +291,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 		UIJob setupJob = new UIJob("Setup") {
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				if (modelBuilder.doLoad(Designer.this, monitor)) {
-					setDocumentRoot(modelBuilder.getDocumentRoot());
+					setDocumentRoot(modelBuilder.getDiagram());
 				}
 				if (!isDisposed()) {
 					try {
@@ -374,7 +374,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 		return editDomain == null;
 	}
 
-	public IFile getInputFile() {
+	public IFile getFile() {
 		IEditorInput editorInput = getEditorInput();
 		return (IFile) editorInput.getAdapter(IFile.class);
 	}
@@ -851,7 +851,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 		} else if (adapter == IProject.class) {
 			return getProject();
 		} else if (adapter == IFile.class) {
-			return getInputFile();
+			return getFile();
 		}
 		return super.getAdapter(adapter);
 	}
@@ -1011,7 +1011,7 @@ public abstract class Designer extends MultiPageEditorPart implements
 	}
 
 	public IProject getProject() {
-		return getInputFile().getProject();
+		return getFile().getProject();
 	}
 
 	/**

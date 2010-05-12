@@ -34,17 +34,18 @@ import org.w3c.dom.Node;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlDocumentImpl#getRootElement <em>Root Element</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlDocumentImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlDocumentImpl#getRootElement <em>Root Element</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlDocumentImpl#getDeclaredNamespaces <em>Declared Namespaces</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
-public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocument {
+public class XamlDocumentImpl extends AnnotatedObjectImpl implements
+		XamlDocument {
 	/**
-	 * The cached value of the '{@link #getRootElement() <em>Root Element</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getRootElement() <em>Root Element</em>}' containment reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getRootElement()
 	 * @generated
 	 * @ordered
@@ -52,8 +53,8 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 	protected XamlElement rootElement;
 
 	/**
-	 * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getDeclaredNamespaces() <em>Declared Namespaces</em>}' map.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getDeclaredNamespaces()
 	 * @generated
 	 * @ordered
@@ -62,7 +63,6 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected XamlDocumentImpl() {
@@ -71,7 +71,6 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -81,7 +80,6 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public XamlElement getRootElement() {
@@ -90,14 +88,16 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	public NotificationChain basicSetRootElement(XamlElement newRootElement, NotificationChain msgs) {
+	public NotificationChain basicSetRootElement(XamlElement newRootElement,
+			NotificationChain msgs) {
 		XamlElement oldRootElement = rootElement;
 		rootElement = newRootElement;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, XamlPackage.XAML_DOCUMENT__ROOT_ELEMENT, oldRootElement, newRootElement);
+			ENotificationImpl notification = new ENotificationImpl(this,
+					Notification.SET, XamlPackage.XAML_DOCUMENT__ROOT_ELEMENT,
+					oldRootElement, newRootElement);
 			if (msgs == null)
 				msgs = notification;
 			else
@@ -108,31 +108,40 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRootElement(XamlElement newRootElement) {
 		if (newRootElement != rootElement) {
 			NotificationChain msgs = null;
 			if (rootElement != null)
-				msgs = ((InternalEObject) rootElement).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - XamlPackage.XAML_DOCUMENT__ROOT_ELEMENT, null, msgs);
+				msgs = ((InternalEObject) rootElement).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE
+								- XamlPackage.XAML_DOCUMENT__ROOT_ELEMENT,
+						null, msgs);
 			if (newRootElement != null)
-				msgs = ((InternalEObject) newRootElement).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - XamlPackage.XAML_DOCUMENT__ROOT_ELEMENT, null, msgs);
+				msgs = ((InternalEObject) newRootElement).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE
+								- XamlPackage.XAML_DOCUMENT__ROOT_ELEMENT,
+						null, msgs);
 			msgs = basicSetRootElement(newRootElement, msgs);
 			if (msgs != null)
 				msgs.dispatch();
 		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.XAML_DOCUMENT__ROOT_ELEMENT, newRootElement, newRootElement));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.XAML_DOCUMENT__ROOT_ELEMENT, newRootElement,
+					newRootElement));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EMap<String, String> getDeclaredNamespaces() {
 		if (declaredNamespaces == null) {
-			declaredNamespaces = new EcoreEMap<String, String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, XamlPackage.XAML_DOCUMENT__DECLARED_NAMESPACES);
+			declaredNamespaces = new EcoreEMap<String, String>(
+					EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY,
+					EStringToStringMapEntryImpl.class, this,
+					XamlPackage.XAML_DOCUMENT__DECLARED_NAMESPACES);
 		}
 		return declaredNamespaces;
 	}
@@ -157,23 +166,23 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case XamlPackage.XAML_DOCUMENT__ROOT_ELEMENT:
 			return basicSetRootElement(null, msgs);
 		case XamlPackage.XAML_DOCUMENT__DECLARED_NAMESPACES:
-			return ((InternalEList<?>) getDeclaredNamespaces()).basicRemove(otherEnd, msgs);
+			return ((InternalEList<?>) getDeclaredNamespaces()).basicRemove(
+					otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -192,7 +201,6 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -202,7 +210,8 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 			setRootElement((XamlElement) newValue);
 			return;
 		case XamlPackage.XAML_DOCUMENT__DECLARED_NAMESPACES:
-			((EStructuralFeature.Setting) getDeclaredNamespaces()).set(newValue);
+			((EStructuralFeature.Setting) getDeclaredNamespaces())
+					.set(newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -210,7 +219,6 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -228,7 +236,6 @@ public class XamlDocumentImpl extends AnnotatedObjectImpl implements XamlDocumen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.commands.provider.CommandsItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.descriptor.basic.provider.BasicItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.node.CategoryNode;
@@ -29,6 +30,7 @@ import org.eclipse.e4.ui.model.application.node.NodeFactory;
 import org.eclipse.e4.ui.model.application.node.provider.NodeItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.provider.ApplicationItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
 import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
 import org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.advanced.provider.AdvancedItemProviderAdapterFactory;
@@ -38,7 +40,9 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenuItem;
 import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolItem;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.menu.provider.MenuItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.ui.provider.ElementContainerItemProvider;
@@ -283,24 +287,46 @@ public class ApplicationModelHelper {
 		return true;
 	}
 
-	public static boolean canAddedChild(MUIElement element, MUIElement target) {
-		if (element == null || target == null) {
+	public static boolean canAddedChild(MApplicationElement element, MUIElement target) {
+		if (target instanceof MPart
+				&& !((element instanceof MToolBar) || (element instanceof MMenu))) {
 			return false;
 		}
-		boolean canAdd = determineByGeneric(element.getClass(), target
-				.getClass());
-		if (!canAdd) {
+
+		if (element instanceof MToolItem && target instanceof MToolBar) {
+			return true;
+		}
+
+		if (element instanceof MMenuItem && target instanceof MMenu) {
+			return true;
+		}
+
+		if (element instanceof MMenu && target instanceof MMenu) {
 			return false;
 		}
-		if (target instanceof MPartSashContainer) {
-			canAdd = element instanceof MPartSashContainer
-					|| element instanceof MPartStack;
-		} else if (target instanceof MPartStack) {
-			canAdd = element instanceof MPart;
+
+		if (element instanceof MMenu && !(target instanceof MWindow || target instanceof MPart)) {
+			return false;
 		}
-		return canAdd;
+
+		// accept only MMenuItem by MMenu
+		if (element instanceof MMenuItem && !(target instanceof MMenu)) {
+			return false;
+		}
+
+		// accept only MToolItem by MToolBar
+		if (element instanceof MToolItem && !(target instanceof MToolBar)) {
+			return false;
+		}
+
+		// accept only MPerspective by MPerspectiveStack
+		if (element instanceof MPerspective && !(target instanceof MPerspectiveStack)) {
+			return false;
+		}
+		return true;
 	}
 
+	// It doesn't work. The generic type can be lost in runtime.
 	static private boolean determineByGeneric(Class<?> childType,
 			Class<?> targetType) {
 		if (childType == null || targetType == null) {

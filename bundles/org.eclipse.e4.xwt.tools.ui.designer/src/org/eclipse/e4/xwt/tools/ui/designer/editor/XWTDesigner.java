@@ -94,7 +94,7 @@ public class XWTDesigner extends Designer implements
 	protected void setInput(IEditorInput input) {
 		super.setInput(input);
 		// Initialize to setup an active IXWTLoader.
-		IFile inputFile = getInputFile();
+		IFile inputFile = getFile();
 		if (inputFile != null) {
 			xwtLoader = new XWTVisualLoader(inputFile);
 			XWTLoaderManager.setActive(xwtLoader, true);
@@ -388,7 +388,7 @@ public class XWTDesigner extends Designer implements
 	 * @see org.soyatec.tools.designer.editor.XAMLDesigner#createVisualsRender()
 	 */
 	protected IVisualRenderer createVisualsRender() {
-		return new XWTVisualRenderer(getInputFile(),
+		return new XWTVisualRenderer(getFile(),
 				(XamlDocument) getDocumentRoot());
 	}
 

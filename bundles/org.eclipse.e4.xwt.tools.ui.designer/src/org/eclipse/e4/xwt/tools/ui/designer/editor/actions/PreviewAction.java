@@ -49,7 +49,7 @@ public class PreviewAction extends SelectionAction {
 	 */
 	public void run() {
 		try {
-			IFile inputFile = part.getInputFile();
+			IFile inputFile = part.getFile();
 			String content = part.getDocument().get();
 			Control control = XWT.load(new ByteArrayInputStream(content.getBytes()), inputFile.getLocationURI().toURL());
 			if (control == null || control.isDisposed()) {

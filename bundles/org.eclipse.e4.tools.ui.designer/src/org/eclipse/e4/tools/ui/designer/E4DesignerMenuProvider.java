@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer;
 
 import java.util.List;
 
+import org.eclipse.e4.tools.ui.designer.actions.CategoryCreateAction;
 import org.eclipse.e4.tools.ui.designer.actions.FindElementAction;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider;
@@ -24,6 +25,8 @@ import org.eclipse.jface.action.Separator;
  * @author jliu jin.liu@soyatec.com
  */
 public class E4DesignerMenuProvider extends DesignerMenuProvider {
+
+	private static final String GROUP_NEW = "New";
 
 	private static final String BINDINGS = "Bindings";
 
@@ -43,6 +46,8 @@ public class E4DesignerMenuProvider extends DesignerMenuProvider {
 	 * .action.IMenuManager)
 	 */
 	public void menuAboutToShow(IMenuManager menu) {
+		menu.add(new Separator(GROUP_NEW));
+		menu.add(new Separator(DesignerActionConstants.UNDO));
 		menu.add(new Separator(DesignerActionConstants.UNDO));
 		menu.add(new Separator(DesignerActionConstants.DELETE));
 		menu.add(new Separator(DesignerActionConstants.PRINT));
@@ -72,6 +77,8 @@ public class E4DesignerMenuProvider extends DesignerMenuProvider {
 		} else {
 			if (selectedEditParts.size() == 1) {
 				// Single selection...
+				menu.appendToGroup(GROUP_NEW, getActionRegistry().getAction(
+						CategoryCreateAction.ID));
 			} else {
 				// Multi-Selection.
 			}

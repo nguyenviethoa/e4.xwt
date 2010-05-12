@@ -83,4 +83,6 @@ public interface CategoryNode extends EObject {
 	 */
 	void setObject(EObject value);
 
+	Object getReferenceValue();
+
 } // CategoryNode

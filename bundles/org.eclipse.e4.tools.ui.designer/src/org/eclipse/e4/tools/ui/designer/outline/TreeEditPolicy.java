@@ -14,11 +14,13 @@ import java.util.List;
 
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
-import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.tools.ui.designer.commands.CreateCommand;
+import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
+import org.eclipse.e4.tools.ui.designer.commands.EObjectDeleteCommand;
 import org.eclipse.e4.tools.ui.designer.outline.commands.MoveChildrenCommand;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.TreeItemEditPolicy;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
@@ -38,6 +40,8 @@ public class TreeEditPolicy extends TreeItemEditPolicy {
 		Object model = getHost().getModel();
 		if (model instanceof MUIElement) {
 			return new DeleteCommand((MUIElement) model);
+		} else if (model instanceof EObject) {
+			return new EObjectDeleteCommand((EObject) model);
 		}
 		return super.getDeleteCommand(req);
 	}

@@ -30,26 +30,26 @@ import org.w3c.dom.Node;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlAttributeImpl#isUseFlatValue <em>Use Flat Value</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlAttributeImpl#getGroupName <em>Group Name</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlAttributeImpl#isUseFlatValue <em>Use Flat Value</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlAttributeImpl#getGroupName <em>Group Name</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 
 	/**
-	 * The default value of the '{@link #isUseFlatValue() <em>Use Flat Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #isUseFlatValue() <em>Use Flat Value</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #isUseFlatValue()
 	 * @generated
 	 * @ordered
 	 */
 	protected static final boolean USE_FLAT_VALUE_EDEFAULT = false;
 	/**
-	 * The cached value of the '{@link #isUseFlatValue() <em>Use Flat Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #isUseFlatValue() <em>Use Flat Value</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #isUseFlatValue()
 	 * @generated
 	 * @ordered
@@ -57,16 +57,16 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 	protected boolean useFlatValue = USE_FLAT_VALUE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getGroupName() <em>Group Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getGroupName() <em>Group Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getGroupName()
 	 * @generated
 	 * @ordered
 	 */
 	protected static final String GROUP_NAME_EDEFAULT = null;
 	/**
-	 * The cached value of the '{@link #getGroupName() <em>Group Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getGroupName() <em>Group Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getGroupName()
 	 * @generated
 	 * @ordered
@@ -75,7 +75,6 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected XamlAttributeImpl() {
@@ -84,7 +83,6 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -94,7 +92,6 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public boolean isUseFlatValue() {
@@ -103,19 +100,19 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setUseFlatValue(boolean newUseFlatValue) {
 		boolean oldUseFlatValue = useFlatValue;
 		useFlatValue = newUseFlatValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.XAML_ATTRIBUTE__USE_FLAT_VALUE, oldUseFlatValue, useFlatValue));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.XAML_ATTRIBUTE__USE_FLAT_VALUE,
+					oldUseFlatValue, useFlatValue));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getGroupName() {
@@ -134,12 +131,13 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 		String oldGroupName = groupName;
 		groupName = newGroupName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.XAML_ATTRIBUTE__GROUP_NAME, oldGroupName, groupName));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.XAML_ATTRIBUTE__GROUP_NAME, oldGroupName,
+					groupName));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -155,7 +153,6 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -173,7 +170,6 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -191,7 +187,6 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -200,14 +195,14 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 		case XamlPackage.XAML_ATTRIBUTE__USE_FLAT_VALUE:
 			return useFlatValue != USE_FLAT_VALUE_EDEFAULT;
 		case XamlPackage.XAML_ATTRIBUTE__GROUP_NAME:
-			return GROUP_NAME_EDEFAULT == null ? groupName != null : !GROUP_NAME_EDEFAULT.equals(groupName);
+			return GROUP_NAME_EDEFAULT == null ? groupName != null
+					: !GROUP_NAME_EDEFAULT.equals(groupName);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -237,10 +232,12 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 		String name = getName();
 		String value = getValue();
 		if (value != null) {// Just create a simple attribute.
-			attrNode = document.createAttributeNS(getNamespace(), getQualifiedName());
+			attrNode = document.createAttributeNS(getNamespace(),
+					getQualifiedName());
 			attrNode.setNodeValue(value);
 		} else if (isUseFlatValue()) {
-			attrNode = document.createAttributeNS(getNamespace(), getQualifiedName());
+			attrNode = document.createAttributeNS(getNamespace(),
+					getQualifiedName());
 			attrNode.setNodeValue("{" + getFlatValue() + "}");
 		} else if (!getAttributes().isEmpty() || !getChildNodes().isEmpty()) {
 			// 1. <Control.layoutData><GridData/></Control.layoutData>
@@ -265,7 +262,8 @@ public class XamlAttributeImpl extends XamlNodeImpl implements XamlAttribute {
 			if (parentName != null) {
 				name = parentName + "." + name;
 			}
-			attrNode = document.createElementNS(namespace, getQualifiedName(name));
+			attrNode = document.createElementNS(namespace,
+					getQualifiedName(name));
 			for (XamlAttribute childAttr : getAttributes()) {
 				Node newAttr = childAttr.generate(document, options);
 				if (newAttr == null) {

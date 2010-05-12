@@ -17,33 +17,34 @@ import org.w3c.dom.Node;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Node</b></em>'. <!-- end-user-doc -->
- * 
+ *
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getName <em>Name</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getPrefix <em>Prefix</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getNamespace <em>Namespace</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getValue <em>Value</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getChildNodes <em>Child Nodes</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getAttributes <em>Attributes</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getId <em>Id</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getComments <em>Comments</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getPrefix <em>Prefix</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getNamespace <em>Namespace</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getChildNodes <em>Child Nodes</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getComments <em>Comments</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getWidget <em>Widget</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode()
  * @model abstract="true"
  * @generated
  */
 public interface XamlNode extends AnnotatedObject {
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode_Name()
@@ -53,22 +54,21 @@ public interface XamlNode extends AnnotatedObject {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getName <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Name</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Prefix</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Prefix</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Prefix</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Prefix</em>' attribute.
 	 * @see #setPrefix(String)
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode_Prefix()
@@ -78,22 +78,21 @@ public interface XamlNode extends AnnotatedObject {
 	String getPrefix();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getPrefix <em>Prefix</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Prefix</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getPrefix <em>Prefix</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Prefix</em>' attribute.
 	 * @see #getPrefix()
 	 * @generated
 	 */
 	void setPrefix(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Namespace</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Namespace</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Namespace</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Namespace</em>' attribute.
 	 * @see #setNamespace(String)
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode_Namespace()
@@ -103,22 +102,21 @@ public interface XamlNode extends AnnotatedObject {
 	String getNamespace();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getNamespace <em>Namespace</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Namespace</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getNamespace <em>Namespace</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Namespace</em>' attribute.
 	 * @see #getNamespace()
 	 * @generated
 	 */
 	void setNamespace(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Value</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Value</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Value</em>' attribute.
 	 * @see #setValue(String)
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode_Value()
@@ -128,22 +126,22 @@ public interface XamlNode extends AnnotatedObject {
 	String getValue();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getValue <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Value</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getValue <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Value</em>' attribute.
 	 * @see #getValue()
 	 * @generated
 	 */
 	void setValue(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Child Nodes</b></em>' containment reference list. The list contents are of type {@link org.eclipse.e4.xwt.tools.ui.xaml.XamlElement}. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Child Nodes</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.e4.xwt.tools.ui.xaml.XamlElement}.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Child Nodes</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Child Nodes</em>' containment reference list.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode_ChildNodes()
 	 * @model containment="true"
@@ -152,12 +150,13 @@ public interface XamlNode extends AnnotatedObject {
 	EList<XamlElement> getChildNodes();
 
 	/**
-	 * Returns the value of the '<em><b>Attributes</b></em>' containment reference list. The list contents are of type {@link org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute}. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Attributes</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute}.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Attributes</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Attributes</em>' containment reference list.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode_Attributes()
 	 * @model containment="true"
@@ -166,12 +165,12 @@ public interface XamlNode extends AnnotatedObject {
 	EList<XamlAttribute> getAttributes();
 
 	/**
-	 * Returns the value of the '<em><b>Id</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode_Id()
@@ -181,22 +180,22 @@ public interface XamlNode extends AnnotatedObject {
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getId <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Id</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getId <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id</em>' attribute.
 	 * @see #getId()
 	 * @generated
 	 */
 	void setId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Comments</b></em>' containment reference list. The list contents are of type {@link org.eclipse.e4.xwt.tools.ui.xaml.Comment}. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Comments</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.e4.xwt.tools.ui.xaml.Comment}.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Comments</em>' containment reference list isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Comments</em>' containment reference list.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode_Comments()
 	 * @model containment="true"
@@ -205,8 +204,33 @@ public interface XamlNode extends AnnotatedObject {
 	EList<Comment> getComments();
 
 	/**
+	 * Returns the value of the '<em><b>Widget</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Widget</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Widget</em>' attribute.
+	 * @see #setWidget(Object)
+	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlNode_Widget()
+	 * @model
+	 * @generated
+	 */
+	Object getWidget();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode#getWidget <em>Widget</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Widget</em>' attribute.
+	 * @see #getWidget()
+	 * @generated
+	 */
+	void setWidget(Object value);
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -214,7 +238,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -222,7 +245,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -230,7 +252,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -238,7 +259,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -246,7 +266,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -254,7 +273,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -262,7 +280,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -270,7 +287,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */
@@ -278,7 +294,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -286,7 +301,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model dataType="org.eclipse.e4.xwt.tools.ui.xaml.Node" documentDataType="org.eclipse.e4.xwt.tools.ui.xaml.Document"
 	 * @generated
 	 */
@@ -294,7 +308,6 @@ public interface XamlNode extends AnnotatedObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */

@@ -130,6 +130,11 @@ public class WidgetEditPart extends VisualEditPart {
 		return null;
 	}
 
+	public void refresh() {
+		// refreshVisuals();
+		// refreshChildren();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -73,6 +73,7 @@
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1"
         eType="#//Comment" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="widget" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XamlElement" eSuperTypes="#//XamlNode"/>
   <eClassifiers xsi:type="ecore:EClass" name="XamlAttribute" eSuperTypes="#//XamlNode">
@@ -87,10 +88,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Comment">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="prev" eType="#//XamlNode"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//XamlNode"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prev" eType="#//XamlNode"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="next" eType="#//XamlNode"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Node" instanceClassName="org.w3c.dom.Node"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Document" instanceClassName="org.w3c.dom.Document"/>

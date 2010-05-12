@@ -27,18 +27,18 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.CommentImpl#getContent <em>Content</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.CommentImpl#getPrev <em>Prev</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.CommentImpl#getNext <em>Next</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.CommentImpl#getContent <em>Content</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.CommentImpl#getPrev <em>Prev</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.CommentImpl#getNext <em>Next</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class CommentImpl extends EObjectImpl implements Comment {
 	/**
-	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getContent() <em>Content</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getContent()
 	 * @generated
 	 * @ordered
@@ -46,8 +46,8 @@ public class CommentImpl extends EObjectImpl implements Comment {
 	protected static final String CONTENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getContent() <em>Content</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getContent()
 	 * @generated
 	 * @ordered
@@ -55,8 +55,8 @@ public class CommentImpl extends EObjectImpl implements Comment {
 	protected String content = CONTENT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getPrev() <em>Prev</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getPrev() <em>Prev</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getPrev()
 	 * @generated
 	 * @ordered
@@ -64,8 +64,8 @@ public class CommentImpl extends EObjectImpl implements Comment {
 	protected XamlNode prev;
 
 	/**
-	 * The cached value of the '{@link #getNext() <em>Next</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getNext() <em>Next</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getNext()
 	 * @generated
 	 * @ordered
@@ -74,7 +74,6 @@ public class CommentImpl extends EObjectImpl implements Comment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected CommentImpl() {
@@ -83,7 +82,6 @@ public class CommentImpl extends EObjectImpl implements Comment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -93,7 +91,6 @@ public class CommentImpl extends EObjectImpl implements Comment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getContent() {
@@ -102,127 +99,94 @@ public class CommentImpl extends EObjectImpl implements Comment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setContent(String newContent) {
 		String oldContent = content;
 		content = newContent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.COMMENT__CONTENT, oldContent, content));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.COMMENT__CONTENT, oldContent, content));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public XamlNode getPrev() {
+		if (prev != null && prev.eIsProxy()) {
+			InternalEObject oldPrev = (InternalEObject) prev;
+			prev = (XamlNode) eResolveProxy(oldPrev);
+			if (prev != oldPrev) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							XamlPackage.COMMENT__PREV, oldPrev, prev));
+			}
+		}
+		return prev;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public XamlNode basicGetPrev() {
 		return prev;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetPrev(XamlNode newPrev, NotificationChain msgs) {
-		XamlNode oldPrev = prev;
-		prev = newPrev;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, XamlPackage.COMMENT__PREV, oldPrev, newPrev);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setPrev(XamlNode newPrev) {
-		if (newPrev != prev) {
-			NotificationChain msgs = null;
-			if (prev != null)
-				msgs = ((InternalEObject) prev).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - XamlPackage.COMMENT__PREV, null, msgs);
-			if (newPrev != null)
-				msgs = ((InternalEObject) newPrev).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - XamlPackage.COMMENT__PREV, null, msgs);
-			msgs = basicSetPrev(newPrev, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.COMMENT__PREV, newPrev, newPrev));
+		XamlNode oldPrev = prev;
+		prev = newPrev;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.COMMENT__PREV, oldPrev, prev));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public XamlNode getNext() {
+		if (next != null && next.eIsProxy()) {
+			InternalEObject oldNext = (InternalEObject) next;
+			next = (XamlNode) eResolveProxy(oldNext);
+			if (next != oldNext) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							XamlPackage.COMMENT__NEXT, oldNext, next));
+			}
+		}
+		return next;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public XamlNode basicGetNext() {
 		return next;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetNext(XamlNode newNext, NotificationChain msgs) {
-		XamlNode oldNext = next;
-		next = newNext;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, XamlPackage.COMMENT__NEXT, oldNext, newNext);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setNext(XamlNode newNext) {
-		if (newNext != next) {
-			NotificationChain msgs = null;
-			if (next != null)
-				msgs = ((InternalEObject) next).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - XamlPackage.COMMENT__NEXT, null, msgs);
-			if (newNext != null)
-				msgs = ((InternalEObject) newNext).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - XamlPackage.COMMENT__NEXT, null, msgs);
-			msgs = basicSetNext(newNext, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.COMMENT__NEXT, newNext, newNext));
+		XamlNode oldNext = next;
+		next = newNext;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.COMMENT__NEXT, oldNext, next));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-		case XamlPackage.COMMENT__PREV:
-			return basicSetPrev(null, msgs);
-		case XamlPackage.COMMENT__NEXT:
-			return basicSetNext(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -231,16 +195,19 @@ public class CommentImpl extends EObjectImpl implements Comment {
 		case XamlPackage.COMMENT__CONTENT:
 			return getContent();
 		case XamlPackage.COMMENT__PREV:
-			return getPrev();
+			if (resolve)
+				return getPrev();
+			return basicGetPrev();
 		case XamlPackage.COMMENT__NEXT:
-			return getNext();
+			if (resolve)
+				return getNext();
+			return basicGetNext();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -261,7 +228,6 @@ public class CommentImpl extends EObjectImpl implements Comment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -282,14 +248,14 @@ public class CommentImpl extends EObjectImpl implements Comment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 		case XamlPackage.COMMENT__CONTENT:
-			return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
+			return CONTENT_EDEFAULT == null ? content != null
+					: !CONTENT_EDEFAULT.equals(content);
 		case XamlPackage.COMMENT__PREV:
 			return prev != null;
 		case XamlPackage.COMMENT__NEXT:
@@ -300,7 +266,6 @@ public class CommentImpl extends EObjectImpl implements Comment {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

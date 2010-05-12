@@ -26,7 +26,7 @@ public class ImageCellEditor extends AbstractCellEditor {
 	protected Object openDialogBox(Control cellEditorWindow) {
 		XWTDesigner designer = XWTDesignerPlugin.getDefault().getActiveDesigner();
 		if (designer != null) {
-			ImageDialog dialog = new ImageDialog(cellEditorWindow.getShell(), designer.getInputFile());
+			ImageDialog dialog = new ImageDialog(cellEditorWindow.getShell(), designer.getFile());
 			if (Window.OK == dialog.open()) {
 				return dialog.getImagePath();
 			}

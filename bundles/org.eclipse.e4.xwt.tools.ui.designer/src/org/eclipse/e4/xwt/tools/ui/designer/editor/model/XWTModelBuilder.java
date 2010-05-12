@@ -22,11 +22,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.text.StructuredTextHelper;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.AbstractModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.DisplayUtil;
+import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.model.Synchronizer.EventType;
 import org.eclipse.e4.xwt.tools.ui.designer.utils.XWTModelUtil;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
@@ -39,6 +39,7 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -79,12 +80,12 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 		return typeName + RANDOM.nextInt(Integer.MAX_VALUE);
 	}
 
-	public boolean doLoad(Designer designer, final IProgressMonitor monitor) {
+	public boolean doLoad(IEditorPart designer, final IProgressMonitor monitor) {
 		if (designer == null) {
 			return false;
 		}
-		input = designer.getInputFile();
-		jfaceDom = designer.getDocument();
+		input = ((XWTDesigner) designer).getFile();
+		jfaceDom = ((XWTDesigner) designer).getDocument();
 		if (jfaceDom == null) {
 			return false;
 		}
@@ -157,7 +158,7 @@ public class XWTModelBuilder extends AbstractModelBuilder implements
 	 * 
 	 * @see org.soyatec.xaml.ve.editor.IDiagramModelBuilder#getModelRoot()
 	 */
-	public XamlDocument getDocumentRoot() {
+	public XamlDocument getDiagram() {
 		return document;
 	}
 

@@ -39,12 +39,12 @@ package org.eclipse.e4.xwt.tools.ui.xaml;
  */
 public interface XamlAttribute extends XamlNode {
 	/**
-	 * Returns the value of the '<em><b>Use Flat Value</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Use Flat Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Use Flat Value</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Use Flat Value</em>' attribute.
 	 * @see #setUseFlatValue(boolean)
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlAttribute_UseFlatValue()
@@ -54,22 +54,21 @@ public interface XamlAttribute extends XamlNode {
 	boolean isUseFlatValue();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute#isUseFlatValue <em>Use Flat Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Use Flat Value</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute#isUseFlatValue <em>Use Flat Value</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Use Flat Value</em>' attribute.
 	 * @see #isUseFlatValue()
 	 * @generated
 	 */
 	void setUseFlatValue(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Group Name</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Group Name</em>' attribute isn't clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Group Name</em>' attribute.
 	 * @see #setGroupName(String)
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlAttribute_GroupName()
@@ -79,10 +78,9 @@ public interface XamlAttribute extends XamlNode {
 	String getGroupName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute#getGroupName <em>Group Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Group Name</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute#getGroupName <em>Group Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Group Name</em>' attribute.
 	 * @see #getGroupName()
 	 * @generated
 	 */

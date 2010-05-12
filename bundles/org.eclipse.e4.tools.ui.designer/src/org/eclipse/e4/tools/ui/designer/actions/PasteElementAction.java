@@ -14,7 +14,11 @@ import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.MApplicationElement;
+import org.eclipse.e4.ui.model.application.node.CategoryNode;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.xwt.tools.ui.designer.core.ceditor.ConfigureDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -65,9 +69,20 @@ public class PasteElementAction extends SelectionAction {
 		if (parent instanceof EditPart) {
 			parent = ((EditPart)parent).getModel();
 		}
-		if (parent == null || !(parent instanceof MUIElement)) {
+		if (parent == null) {
 			return false;
 		}
+		
+		if (parent instanceof CategoryNode) {
+			CategoryNode categoryNode = (CategoryNode) parent;
+			if (categoryNode.getObject() != null) {
+				parent = categoryNode.getObject();
+			}
+		}
+		if (!(parent instanceof MUIElement)) {
+			return false;			
+		}
+
 		return canPaste((MUIElement) parent);
 	}
 
@@ -84,18 +99,29 @@ public class PasteElementAction extends SelectionAction {
 		if (parent instanceof EditPart) {
 			parent = ((EditPart)parent).getModel();
 		}
+		
+		if (parent instanceof CategoryNode) {
+			CategoryNode categoryNode = (CategoryNode) parent;
+			if (categoryNode.getObject() != null) {
+				parent = categoryNode.getObject();
+			}
+		}
+		
 		MUIElement parentNode = (MUIElement) parent;
-		List<MUIElement> elements = (List<MUIElement>) contents;
+		List<MApplicationElement> elements = (List<MApplicationElement>) contents;
 		CompoundCommand cmd = new CompoundCommand("Paste");
-		for (MUIElement child : elements) {
-			MUIElement newChild = (MUIElement) EcoreUtil.copy((EObject)child);
+		for (MApplicationElement child : elements) {
+			MApplicationElement newChild = (MApplicationElement) EcoreUtil.copy((EObject)child);
 			newChild.setElementId(EcoreUtil.generateUUID());
-			newChild.setWidget(null);
+			if (newChild instanceof MUIElement) {
+				MUIElement muiElement = (MUIElement) newChild;
+				muiElement.setWidget(null);
+			}
 			cmd.add(CommandFactory.createAddChildCommand(parentNode, newChild, -1));
 		}
 		Command command = cmd.unwrap();
 		if (command.canExecute()) {
-			Designer editorPart = (Designer) getWorkbenchPart();
+			ConfigureDesigner editorPart = (ConfigureDesigner) getWorkbenchPart();
 			editorPart.getEditDomain().getCommandStack().execute(command);
 		}
 	}
@@ -107,10 +133,10 @@ public class PasteElementAction extends SelectionAction {
 		}
 		List<?> contents = (List<?>) content;
 		for (Object element : contents) {
-			if (!(element instanceof MUIElement)) {
+			if (!(element instanceof MApplicationElement)) {
 				return false;
 			}
-			if (!ApplicationModelHelper.canAddedChild((MUIElement)element, parent))
+			if (!ApplicationModelHelper.canAddedChild((MApplicationElement)element, parent))
 				return false;
 		}
 		return true;

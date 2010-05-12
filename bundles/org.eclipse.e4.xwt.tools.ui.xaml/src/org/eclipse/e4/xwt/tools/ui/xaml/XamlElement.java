@@ -12,8 +12,8 @@ package org.eclipse.e4.xwt.tools.ui.xaml;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Element</b></em>'. <!-- end-user-doc -->
- * 
- * 
+ *
+ *
  * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage#getXamlElement()
  * @model
  * @generated

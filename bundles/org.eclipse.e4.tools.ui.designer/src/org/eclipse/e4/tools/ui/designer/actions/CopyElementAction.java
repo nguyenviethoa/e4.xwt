@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -68,7 +69,7 @@ public class CopyElementAction extends SelectionAction {
 
 	public void run() {
 		IStructuredSelection structuredSelection = (IStructuredSelection) getSelection();
-		List<MUIElement> selectResult = new ArrayList<MUIElement>();
+		List<MApplicationElement> selectResult = new ArrayList<MApplicationElement>();
 		if (structuredSelection.isEmpty()) {
 			// Diagram directly...
 		} else {
@@ -81,12 +82,15 @@ public class CopyElementAction extends SelectionAction {
 				}
 				if (element instanceof EObject) {
 					EObject parentModel = ((EObject) element).eContainer();
-					if (element instanceof MUIElement
-							&& parentModel instanceof MUIElement) {
-						MUIElement copymodel = (MUIElement) EcoreUtil
+					if (element instanceof MApplicationElement
+							&& parentModel instanceof MApplicationElement) {
+						MApplicationElement copymodel = (MApplicationElement) EcoreUtil
 								.copy((EObject) element);
 						copymodel.setElementId(EcoreUtil.generateUUID());
-						copymodel.setWidget(null);
+						if (copymodel instanceof MUIElement) {
+							MUIElement muiElement = (MUIElement) copymodel;
+							muiElement.setWidget(null);
+						}
 						selectResult.add(copymodel);
 					}
 				}

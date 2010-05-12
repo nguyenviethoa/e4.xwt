@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.outline;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.TreeItemEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -22,10 +26,13 @@ import org.eclipse.gef.EditPolicy;
 public class TreeEditPartFactory implements EditPartFactory {
 
 	public EditPart createEditPart(EditPart context, Object model) {
+		if (context == null && model instanceof MApplication) {
+			return new RootTreeEditPart((MApplication) model);
+		}
 		return new TreeEditPart(model);
 	}
 
-	private class TreeEditPart extends TreeItemEditPart {
+	private static class TreeEditPart extends TreeItemEditPart {
 
 		public TreeEditPart(Object model) {
 			super(model, ApplicationModelHelper.getContentProvider(),
@@ -35,6 +42,23 @@ public class TreeEditPartFactory implements EditPartFactory {
 		protected void createEditPolicies() {
 			installEditPolicy(EditPolicy.TREE_CONTAINER_ROLE,
 					new TreeEditPolicy());
+		}
+	}
+
+	private static class RootTreeEditPart extends TreeEditPart {
+
+		private MApplication model;
+
+		public RootTreeEditPart(MApplication model) {
+			super(model);
+			this.model = model;
+		}
+
+		protected List getModelChildren() {
+			if (model != null) {
+				return Collections.singletonList(model);
+			}
+			return super.getModelChildren();
 		}
 	}
 }

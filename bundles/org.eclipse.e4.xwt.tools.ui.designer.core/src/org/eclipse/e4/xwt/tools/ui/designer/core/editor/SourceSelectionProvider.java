@@ -84,11 +84,11 @@ public class SourceSelectionProvider implements ISelectionProvider {
 				if (model == null) {
 					continue;
 				}
-				EditPart ep = designer.getEditPart(model);
-				if (ep == null) {
+				// EditPart ep = designer.getEditPart(model);
+				// if (ep == null) {
 					continue;
-				}
-				editParts.add(ep);
+				// }
+				// editParts.add(ep);
 			}
 			if (!editParts.isEmpty()) {
 				fSelection = new StructuredSelection(editParts);

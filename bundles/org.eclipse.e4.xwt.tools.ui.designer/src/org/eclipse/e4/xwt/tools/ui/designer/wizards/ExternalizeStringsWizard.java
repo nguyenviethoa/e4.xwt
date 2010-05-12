@@ -109,7 +109,7 @@ public class ExternalizeStringsWizard extends Wizard implements INewWizard {
 	}
 
 	private void getDefaultAccessorContents() {
-		IFile inputFile = designer.getInputFile();
+		IFile inputFile = designer.getFile();
 
 		IContainer container = inputFile.getParent();
 		IJavaElement javaElement =  JavaCore.create(container);

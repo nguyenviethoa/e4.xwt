@@ -40,14 +40,16 @@ import org.eclipse.pde.internal.ui.PDEUIMessages;
 import org.eclipse.pde.ui.templates.IVariableProvider;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
-public class TemplateOperation extends WorkspaceModifyOperation implements IVariableProvider {
+public class TemplateOperation extends WorkspaceModifyOperation implements
+		IVariableProvider {
 
 	private final URL templateDirectory;
 	private final IContainer target;
 	private final Map<String, String> keys;
 	private final Set<String> binaryExtentions;
 
-	public TemplateOperation(URL source, IContainer target, Map<String, String> keys, Set<String> binaryExtentions) {
+	public TemplateOperation(URL source, IContainer target,
+			Map<String, String> keys, Set<String> binaryExtentions) {
 		templateDirectory = source;
 		this.binaryExtentions = binaryExtentions;
 		this.target = target;
@@ -55,7 +57,8 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 	}
 
 	@Override
-	protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
+	protected void execute(IProgressMonitor monitor) throws CoreException,
+			InvocationTargetException, InterruptedException {
 		monitor.setTaskName(PDEUIMessages.AbstractTemplateSection_generating);
 
 		if ("jar".equals(templateDirectory.getProtocol())) { //$NON-NLS-1$
@@ -97,18 +100,20 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 		}
 	}
 
-	private void generateFiles(File src, IContainer dst, boolean firstLevel, IProgressMonitor monitor) throws CoreException {
+	private void generateFiles(File src, IContainer dst, boolean firstLevel,
+			IProgressMonitor monitor) throws CoreException {
 		File[] members = src.listFiles();
 
 		for (int i = 0; i < members.length; i++) {
 			File member = members[i];
+			String name = member.getName();
 			if (member.isDirectory()) {
-				if (".svn".equals(member.getName()))
+				if (".svn".equals(name) || "cvs".equalsIgnoreCase(name))
 					continue;
 				IContainer dstContainer = null;
 
 				if (dstContainer == null) {
-					String folderName = getProcessedString(member.getName(), member.getName());
+					String folderName = getProcessedString(name, name);
 					dstContainer = dst.getFolder(new Path(folderName));
 				}
 				if (dstContainer != null && !dstContainer.exists())
@@ -118,7 +123,7 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 				InputStream in = null;
 				try {
 					in = new FileInputStream(member);
-					copyFile(member.getName(), in, dst, monitor);
+					copyFile(name, in, dst, monitor);
 				} catch (IOException ioe) {
 				} finally {
 					if (in != null)
@@ -140,12 +145,14 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	private void generateFiles(ZipFile zipFile, IPath path, IContainer dst, IProgressMonitor monitor) throws CoreException {
+	private void generateFiles(ZipFile zipFile, IPath path, IContainer dst,
+			IProgressMonitor monitor) throws CoreException {
 		int pathLength = path.segmentCount();
 		// Immidiate children
 		Map childZipEntries = new HashMap(); // "dir/" or "dir/file.java"
 
-		for (Enumeration zipEntries = zipFile.entries(); zipEntries.hasMoreElements();) {
+		for (Enumeration zipEntries = zipFile.entries(); zipEntries
+				.hasMoreElements();) {
 			ZipEntry zipEntry = (ZipEntry) zipEntries.nextElement();
 			IPath entryPath = new Path(zipEntry.getName());
 			if (entryPath.segmentCount() <= pathLength) {
@@ -159,7 +166,8 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 			if (entryPath.segmentCount() == pathLength + 1) {
 				childZipEntries.put(zipEntry.getName(), zipEntry);
 			} else {
-				String name = entryPath.uptoSegment(pathLength + 1).addTrailingSeparator().toString();
+				String name = entryPath.uptoSegment(pathLength + 1)
+						.addTrailingSeparator().toString();
 				if (!childZipEntries.containsKey(name)) {
 					ZipEntry dirEntry = new ZipEntry(name);
 					childZipEntries.put(name, dirEntry);
@@ -197,14 +205,16 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 		}
 	}
 
-	private void copyFile(String fileName, InputStream input, IContainer dst, IProgressMonitor monitor) throws CoreException {
+	private void copyFile(String fileName, InputStream input, IContainer dst,
+			IProgressMonitor monitor) throws CoreException {
 		String targetFileName = getProcessedString(fileName, fileName);
 
 		monitor.subTask(targetFileName);
 		IFile dstFile = dst.getFile(new Path(targetFileName));
 
 		try {
-			InputStream stream = isBinary(fileName) ? input : getProcessedStream(fileName, input);
+			InputStream stream = isBinary(fileName) ? input
+					: getProcessedStream(fileName, input);
 			if (dstFile.exists()) {
 				dstFile.setContents(stream, true, true, monitor);
 			} else {
@@ -215,14 +225,14 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 		} catch (IOException e) {
 		}
 	}
-	
+
 	protected void copyFile(String fileName, InputStream input, IContainer dst,
 			final String destPath, IProgressMonitor monitor)
 			throws CoreException {
-		String targetFileName  = null;
-		if(destPath == null){
+		String targetFileName = null;
+		if (destPath == null) {
 			targetFileName = getProcessedString(fileName, fileName);
-		}else{
+		} else {
 			targetFileName = destPath;
 		}
 
@@ -230,7 +240,8 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 		IFile dstFile = dst.getFile(new Path(targetFileName));
 
 		try {
-			InputStream stream = isBinary(fileName) ? input : getProcessedStream(fileName, input);
+			InputStream stream = isBinary(fileName) ? input
+					: getProcessedStream(fileName, input);
 			if (dstFile.exists()) {
 				dstFile.setContents(stream, true, true, monitor);
 			} else {
@@ -251,18 +262,22 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	public void copyFile(String fileName, InputStream input, IContainer dst, final String basePath, final String destName,IProgressMonitor monitor) throws CoreException {
-		if(basePath == null || basePath.equals("")){
-			copyFile(fileName, input, dst,monitor);
+	public void copyFile(String fileName, InputStream input, IContainer dst,
+			final String basePath, final String destName,
+			IProgressMonitor monitor) throws CoreException {
+		if (basePath == null || basePath.equals("")) {
+			copyFile(fileName, input, dst, monitor);
 		}
-		
-		String targetFileName = destName == null? getProcessedString(fileName, fileName):destName;
+
+		String targetFileName = destName == null ? getProcessedString(fileName,
+				fileName) : destName;
 
 		monitor.subTask(targetFileName);
 		IFile dstFile = dst.getFile(new Path(basePath + targetFileName));
 
 		try {
-			InputStream stream = isBinary(fileName) ? input : getProcessedStream(fileName, input);
+			InputStream stream = isBinary(fileName) ? input
+					: getProcessedStream(fileName, input);
 			if (dstFile.exists()) {
 				dstFile.setContents(stream, true, true, monitor);
 			} else {
@@ -292,7 +307,8 @@ public class TemplateOperation extends WorkspaceModifyOperation implements IVari
 		return name.substring(indexOf);
 	}
 
-	private InputStream getProcessedStream(String fileName, InputStream stream) throws IOException, CoreException {
+	private InputStream getProcessedStream(String fileName, InputStream stream)
+			throws IOException, CoreException {
 		InputStreamReader reader = new InputStreamReader(stream);
 		int bufsize = 1024;
 		char[] cbuffer = new char[bufsize];

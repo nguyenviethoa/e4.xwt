@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.gef.DefaultEditDomain;
@@ -27,11 +29,29 @@ public class EditDomain extends DefaultEditDomain {
 	private Map<Object, Map<Object, Object>> viewerData;
 	private Map<Object, Object> domainData;
 
+	private List<EditPartViewer> viewers = new ArrayList<EditPartViewer>();
+
 	/**
 	 * @param editorPart
 	 */
 	public EditDomain(IEditorPart editorPart) {
 		super(editorPart);
+	}
+
+	public void addViewer(EditPartViewer viewer) {
+		super.addViewer(viewer);
+		if (!viewers.contains(viewer)) {
+			viewers.add(viewer);
+		}
+	}
+
+	public void removeViewer(EditPartViewer viewer) {
+		super.removeViewer(viewer);
+		viewers.remove(viewer);
+	}
+
+	public List<EditPartViewer> getViewers() {
+		return viewers;
 	}
 
 	/**

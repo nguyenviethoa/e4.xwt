@@ -130,7 +130,7 @@ public class XWTVisualLoader extends XWTLoader {
 				if (xamlDocument == null) {
 					builder = new XWTModelBuilder();
 					builder.doLoad(designer, null);
-					xamlDocument = builder.getDocumentRoot();
+					xamlDocument = builder.getDiagram();
 				}
 				Control control = (Control) new XWTProxy(file).load(xamlDocument.getRootElement(), options);
 				if (builder != null) {

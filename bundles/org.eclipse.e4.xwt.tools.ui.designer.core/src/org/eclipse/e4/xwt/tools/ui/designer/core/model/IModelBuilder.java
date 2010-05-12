@@ -11,8 +11,8 @@
 package org.eclipse.e4.xwt.tools.ui.designer.core.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
@@ -24,12 +24,12 @@ public interface IModelBuilder extends IModelNotify {
 	/**
 	 * Load model from given designer.
 	 */
-	public boolean doLoad(Designer designer, IProgressMonitor monitor);
+	public boolean doLoad(IEditorPart designer, IProgressMonitor monitor);
 
 	/**
 	 * Return loaded {@link XamlDocument};
 	 */
-	public EObject getDocumentRoot();
+	public EObject getDiagram();
 
 	public void doSave(IProgressMonitor monitor);
 

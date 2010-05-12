@@ -36,11 +36,13 @@ public class AddApplicationHandlerChildCommand extends Command {
 	}
 
 	public void execute() {
-		if (index < 0 || index > parent.getChildren().size()) {
-			index = parent.getHandlers().size();
-		}
 		EList<MHandler> commands = (EList<MHandler>) parent.getHandlers();
-		commands.add(index, newChild);
+		if (index < 0 || index > commands.size()) {
+			commands.add(newChild);
+		}
+		else {
+			commands.add(index, newChild);
+		}
 	}
 
 	public boolean canUndo() {

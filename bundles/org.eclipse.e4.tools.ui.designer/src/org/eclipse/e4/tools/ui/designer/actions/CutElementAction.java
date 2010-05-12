@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
+import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.emf.ecore.EObject;
@@ -84,7 +85,7 @@ public class CutElementAction extends SelectionAction {
 	 */
 	public void run() {
 		IStructuredSelection structuredSelection = (IStructuredSelection) getSelection();
-		List<MUIElement> selectResult = new ArrayList<MUIElement>();
+		List<MApplicationElement> selectResult = new ArrayList<MApplicationElement>();
 		for (Iterator<?> iterator = structuredSelection.iterator(); iterator
 				.hasNext();) {
 			Object element = iterator.next();
@@ -92,11 +93,14 @@ public class CutElementAction extends SelectionAction {
 				EditPart editPart = (EditPart) element;
 				element = editPart.getModel();
 			}
-			if (element instanceof MUIElement) {
-				MUIElement copymodel = (MUIElement) EcoreUtil
+			if (element instanceof MApplicationElement) {
+				MApplicationElement copymodel = (MApplicationElement) EcoreUtil
 						.copy((EObject) element);
 				copymodel.setElementId(EcoreUtil.generateUUID());
-				copymodel.setWidget(null);
+				if (copymodel instanceof MUIElement) {
+					MUIElement muiElement = (MUIElement) copymodel;
+					muiElement.setWidget(null);
+				}
 				selectResult.add(copymodel);
 			}
 		}

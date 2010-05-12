@@ -30,17 +30,17 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.AnnotationImpl#getSource <em>Source</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.AnnotationImpl#getDetails <em>Details</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.AnnotationImpl#getSource <em>Source</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.AnnotationImpl#getDetails <em>Details</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class AnnotationImpl extends EObjectImpl implements Annotation {
 	/**
-	 * The default value of the '{@link #getSource() <em>Source</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getSource() <em>Source</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getSource()
 	 * @generated
 	 * @ordered
@@ -48,8 +48,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 	protected static final String SOURCE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSource() <em>Source</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getSource() <em>Source</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getSource()
 	 * @generated
 	 * @ordered
@@ -57,8 +57,8 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 	protected String source = SOURCE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getDetails() <em>Details</em>}' map. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getDetails() <em>Details</em>}' map.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getDetails()
 	 * @generated
 	 * @ordered
@@ -67,7 +67,6 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AnnotationImpl() {
@@ -76,7 +75,6 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -86,7 +84,6 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getSource() {
@@ -95,45 +92,47 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setSource(String newSource) {
 		String oldSource = source;
 		source = newSource;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.ANNOTATION__SOURCE, oldSource, source));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.ANNOTATION__SOURCE, oldSource, source));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EMap<String, String> getDetails() {
 		if (details == null) {
-			details = new EcoreEMap<String, String>(EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY, EStringToStringMapEntryImpl.class, this, XamlPackage.ANNOTATION__DETAILS);
+			details = new EcoreEMap<String, String>(
+					EcorePackage.Literals.ESTRING_TO_STRING_MAP_ENTRY,
+					EStringToStringMapEntryImpl.class, this,
+					XamlPackage.ANNOTATION__DETAILS);
 		}
 		return details;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case XamlPackage.ANNOTATION__DETAILS:
-			return ((InternalEList<?>) getDetails()).basicRemove(otherEnd, msgs);
+			return ((InternalEList<?>) getDetails())
+					.basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -152,7 +151,6 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -170,7 +168,6 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -188,14 +185,14 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 		case XamlPackage.ANNOTATION__SOURCE:
-			return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT.equals(source);
+			return SOURCE_EDEFAULT == null ? source != null : !SOURCE_EDEFAULT
+					.equals(source);
 		case XamlPackage.ANNOTATION__DETAILS:
 			return details != null && !details.isEmpty();
 		}
@@ -204,7 +201,6 @@ public class AnnotationImpl extends EObjectImpl implements Annotation {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

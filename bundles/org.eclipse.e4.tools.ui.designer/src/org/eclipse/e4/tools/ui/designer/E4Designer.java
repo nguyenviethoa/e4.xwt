@@ -10,23 +10,22 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.tools.ui.designer.actions.CategoryCreateAction;
 import org.eclipse.e4.tools.ui.designer.actions.CopyElementAction;
 import org.eclipse.e4.tools.ui.designer.actions.CutElementAction;
 import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.outline.TreeEditPartFactory;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.ui.model.application.ui.MElementContainer;
-import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.xwt.tools.ui.designer.core.ceditor.ConfigureDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer.Result;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.DesignerOutlinePage;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
-import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.e4.xwt.tools.ui.designer.core.parts.root.DesignerRootEditPart;
 import org.eclipse.gef.ContextMenuProvider;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
@@ -38,20 +37,35 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 
 /**
  * @author jin.liu(jin.liu@soyatec.com)
  */
-public class E4Designer extends Designer {
+public class E4Designer extends ConfigureDesigner {
 
-	private boolean isDirty = false;
 	private E4UIRenderer uiRenderer = new E4UIRenderer();
+
+	protected void initializeGraphicalViewer() {
+		GraphicalViewer graphicalViewer = getGraphicalViewer();
+		graphicalViewer.setContextMenu(createMenuProvider(graphicalViewer,
+				getActionRegistry()));
+		graphicalViewer.setEditPartFactory(createEditPartFactory());
+		graphicalViewer.setRootEditPart(new DesignerRootEditPart());
+		graphicalViewer
+				.addDropTargetListener(new E4GraphicalViewerDropCreationListener(
+						graphicalViewer));
+	}
+
+	public MApplication getDocumentRoot() {
+		if (uiRenderer != null) {
+			return uiRenderer.getDiagram();
+		}
+		return null;
+	}
 
 	protected IModelBuilder createModelBuilder() {
 		return uiRenderer;
@@ -66,117 +80,47 @@ public class E4Designer extends Designer {
 		return new E4EditPartsFactory();
 	}
 
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
-		super.init(site, input);
-		EditDomain domain = getEditDomain();
-		domain.setDefaultTool(new E4SelectionTool());
-		domain.loadDefaultTool();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#
-	 * setupGraphicalViewerDropCreation(org.eclipse.gef.GraphicalViewer)
-	 */
-	protected void setupGraphicalViewerDropCreation(GraphicalViewer viewer) {
-		viewer.addDropTargetListener(new E4GraphicalViewerDropCreationListener(
-				viewer));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.MultiPageEditorPart#isDirty()
-	 */
-	public boolean isDirty() {
-		return isDirty;
+	protected EditDomain createEditDomain() {
+		EditDomain ed = super.createEditDomain();
+		ed.setDefaultTool(new E4SelectionTool());
+		ed.loadDefaultTool();
+		return ed;
 	}
 
 	protected void createActions() {
 		super.createActions();
 		ActionRegistry registry = getActionRegistry();
 		IAction action;
+
 		action = new CopyElementAction(this);
 		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
 		action = new PasteElementAction(this);
 		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
 		action = new CutElementAction(this);
 		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
+
+		action = new CategoryCreateAction(this);
+		registry.registerAction(action);
+		getSelectionActions().add(action.getId());
 	}
 
-	protected void performModelChanged(Notification event) {
-		Result result = getVisualsRender().refreshVisuals(event);
-		if (result == null || !result.isRefreshed()) {
-			return;
-		}
-		EditPart editPart = getEditPart(result.visuals);
-		EditPart toRefresh = null;
-		if (editPart != null) {
-			toRefresh = editPart.getParent();
-		}
-		if (toRefresh == null && result.visuals instanceof MUIElement) {
-			MElementContainer<MUIElement> parent = ((MUIElement) result.visuals)
-					.getParent();
-			toRefresh = getEditPart(parent);
-		}
-		if (toRefresh == null) {
-			return;
-		}
-		getRefresher().refreshInJob(toRefresh);
-
-		getOutlinePage().refresh(toRefresh);
-
-		isDirty = true;
-		firePropertyChange(PROP_DIRTY);
-	}
-
-	public void doSave(IProgressMonitor monitor) {
-		super.doSave(monitor);
-		isDirty = false;
-		firePropertyChange(PROP_DIRTY);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createPages()
-	 */
-	protected void createPages() {
-		super.createPages();
-		// TODO: hide source page quickly.
-		pageContainer.setWeights(new int[] { 1, 0 });
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.tools.ui.designer.core.Designer#createVisualsRender()
-	 */
-	protected IVisualRenderer createVisualsRender() {
+	protected IVisualRenderer createVisualsRender(IFile file, Object diagram) {
 		return uiRenderer;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.e4.xwt.tools.ui.designer.core.Designer#getDropContext()
-	 */
-	protected DropContext getDropContext() {
-		return null;
+	protected void saveGraphicalEditor(IProgressMonitor monitor) {
+		if (uiRenderer != null) {
+			uiRenderer.doSave(monitor);
+		}
+		super.saveGraphicalEditor(monitor);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createPropertyPage
-	 * ()
-	 */
-	protected IPropertySheetPage createPropertyPage() {
+	protected IPropertySheetPage createPropertySheetPage() {
 		PropertySheetPage propertyPage = new PropertySheetPage() {
 			@Override
 			public void selectionChanged(IWorkbenchPart part,
@@ -200,14 +144,7 @@ public class E4Designer extends Designer {
 		return propertyPage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer#createOutlinePage
-	 * ()
-	 */
-	protected DesignerOutlinePage createOutlinePage() {
+	protected IContentOutlinePage createContentOutlinePage() {
 		DesignerOutlinePage designerOutlinePage = new DesignerOutlinePage(
 				getEditDomain(), new TreeEditPartFactory());
 		TreeViewer treeViewer = designerOutlinePage.getTreeViewer();
@@ -220,6 +157,7 @@ public class E4Designer extends Designer {
 					getClass().getSimpleName() + ".outlineMenu", outlineMenu,
 					treeViewer);
 		}
+		getSelectionSynchronizer().addViewer(treeViewer);
 		return designerOutlinePage;
 	}
 }

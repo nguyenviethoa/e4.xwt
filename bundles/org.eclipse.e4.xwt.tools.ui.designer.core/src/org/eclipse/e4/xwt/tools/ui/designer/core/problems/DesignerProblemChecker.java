@@ -11,11 +11,9 @@
 package org.eclipse.e4.xwt.tools.ui.designer.core.problems;
 
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -42,13 +40,13 @@ public abstract class DesignerProblemChecker implements IProblemChecker {
 			endOffset = ((IDOMNode) node).getEndOffset();
 		}
 		int line = 0;
-		try {
-			StructuredTextViewer textViewer = designer.getTextViewer();
-			if (textViewer != null) {
-				line = textViewer.getDocument().getLineOfOffset(startOffset) + 1;
-			}
-		} catch (BadLocationException e) {
-		}
+		// try {
+		// StructuredTextViewer textViewer = designer.getTextViewer();
+		// if (textViewer != null) {
+		// line = textViewer.getDocument().getLineOfOffset(startOffset) + 1;
+		// }
+		// } catch (BadLocationException e) {
+		// }
 		return createProblem(msg, type, node, startOffset, endOffset, line);
 	}
 

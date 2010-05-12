@@ -58,11 +58,15 @@ public class ControlEditPart extends WidgetEditPart {
 		} else {
 			int x = 0;
 			int y = 0;
+			int width = -1;
+			int height = -1;
 			Control parent = control.getParent();
 			while (parent != null) {
 				Rectangle r = WidgetLocator.getBounds(parent, false);
 				x += r.x;
 				y += r.y;
+				width = Math.max(width, r.width);
+				height = Math.max(height, r.height);
 				parent = parent.getParent();
 				if (parent == parentControl) {
 					parent = null;
@@ -71,6 +75,12 @@ public class ControlEditPart extends WidgetEditPart {
 			Rectangle rect = WidgetLocator.getBounds(control, false);
 			rect.x += x;
 			rect.y += y;
+			if (width != -1) {
+				rect.width = Math.min(width, rect.width);
+			}
+			if (height != -1) {
+				rect.height = Math.min(height, rect.height);
+			}
 			return Draw2dTools.toDraw2d(rect);
 		}
 	}

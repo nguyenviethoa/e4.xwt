@@ -17,9 +17,11 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.RootEditPart;
+import org.eclipse.gef.dnd.AbstractTransferDropTargetListener;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.TreeViewer;
+import org.eclipse.swt.dnd.DropTargetEvent;
 
 /**
  * @author jliu (jin.liu@soyatec.com)
@@ -49,6 +51,25 @@ public class DesignerOutlinePage extends ContentOutlinePage {
 		TreeViewer treeViewer = getTreeViewer();
 		editDomain.addViewer(treeViewer);
 		treeViewer.setEditPartFactory(editPartFactory);
+		treeViewer
+				.addDropTargetListener(new AbstractTransferDropTargetListener(
+						treeViewer) {
+					protected void updateTargetRequest() {
+
+					}
+
+					public void dragOver(DropTargetEvent event) {
+						super.dragOver(event);
+						System.out
+								.println("DesignerOutlinePage.configureTreeViewer().new AbstractTransferDropTargetListener() {...}.dragOver()");
+					}
+
+					protected void handleHover() {
+						super.handleHover();
+						System.out
+								.println("DesignerOutlinePage.configureTreeViewer().new AbstractTransferDropTargetListener() {...}.handleHover()");
+					}
+				});
 	}
 
 	public void setContents(final Object contents) {
@@ -78,8 +99,8 @@ public class DesignerOutlinePage extends ContentOutlinePage {
 		if (model instanceof EditPart) {
 			model = ((EditPart) model).getModel();
 		}
-		EditPart editPart = (EditPart) treeViewer.getEditPartRegistry()
-				.get(model);
+		EditPart editPart = (EditPart) treeViewer.getEditPartRegistry().get(
+				model);
 		if (editPart == null) {
 			editPart = treeViewer.getContents();
 		}

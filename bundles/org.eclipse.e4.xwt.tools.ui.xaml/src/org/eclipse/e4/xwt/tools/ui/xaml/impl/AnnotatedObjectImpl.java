@@ -28,16 +28,16 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.AnnotatedObjectImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.AnnotatedObjectImpl#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class AnnotatedObjectImpl extends EObjectImpl implements AnnotatedObject {
 	/**
-	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getAnnotations()
 	 * @generated
 	 * @ordered
@@ -46,7 +46,6 @@ public class AnnotatedObjectImpl extends EObjectImpl implements AnnotatedObject 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AnnotatedObjectImpl() {
@@ -55,7 +54,6 @@ public class AnnotatedObjectImpl extends EObjectImpl implements AnnotatedObject 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -65,12 +63,13 @@ public class AnnotatedObjectImpl extends EObjectImpl implements AnnotatedObject 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<Annotation> getAnnotations() {
 		if (annotations == null) {
-			annotations = new EObjectContainmentEList<Annotation>(Annotation.class, this, XamlPackage.ANNOTATED_OBJECT__ANNOTATIONS);
+			annotations = new EObjectContainmentEList<Annotation>(
+					Annotation.class, this,
+					XamlPackage.ANNOTATED_OBJECT__ANNOTATIONS);
 		}
 		return annotations;
 	}
@@ -92,21 +91,21 @@ public class AnnotatedObjectImpl extends EObjectImpl implements AnnotatedObject 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case XamlPackage.ANNOTATED_OBJECT__ANNOTATIONS:
-			return ((InternalEList<?>) getAnnotations()).basicRemove(otherEnd, msgs);
+			return ((InternalEList<?>) getAnnotations()).basicRemove(otherEnd,
+					msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -120,7 +119,6 @@ public class AnnotatedObjectImpl extends EObjectImpl implements AnnotatedObject 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -129,7 +127,8 @@ public class AnnotatedObjectImpl extends EObjectImpl implements AnnotatedObject 
 		switch (featureID) {
 		case XamlPackage.ANNOTATED_OBJECT__ANNOTATIONS:
 			getAnnotations().clear();
-			getAnnotations().addAll((Collection<? extends Annotation>) newValue);
+			getAnnotations()
+					.addAll((Collection<? extends Annotation>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -137,7 +136,6 @@ public class AnnotatedObjectImpl extends EObjectImpl implements AnnotatedObject 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -152,7 +150,6 @@ public class AnnotatedObjectImpl extends EObjectImpl implements AnnotatedObject 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

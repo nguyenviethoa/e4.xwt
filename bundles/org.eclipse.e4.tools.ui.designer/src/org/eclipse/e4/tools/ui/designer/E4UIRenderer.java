@@ -34,7 +34,6 @@ import org.eclipse.e4.ui.workbench.swt.internal.E4Application;
 import org.eclipse.e4.workbench.ui.IResourceUtiltities;
 import org.eclipse.e4.workbench.ui.internal.Activator;
 import org.eclipse.e4.workbench.ui.internal.E4Workbench;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.AbstractModelBuilder;
 import org.eclipse.emf.common.notify.Notification;
@@ -48,6 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
@@ -62,8 +62,8 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 	private E4WorkbenchProxy workbench;
 	private IEclipseContext appContext;
 
-	public boolean doLoad(Designer designer, IProgressMonitor monitor) {
-		inputFile = designer.getInputFile();
+	public boolean doLoad(IEditorPart designer, IProgressMonitor monitor) {
+		inputFile = (IFile) designer.getAdapter(IFile.class);
 		String path = inputFile.getLocation().toString();
 		URI uri = URI.createFileURI(path);
 		resource = new ResourceSetImpl().getResource(uri, true);
@@ -71,7 +71,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		return appModel != null;
 	}
 
-	public ApplicationImpl getDocumentRoot() {
+	public ApplicationImpl getDiagram() {
 		return appModel;
 	}
 
@@ -166,9 +166,9 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		workbench = new E4WorkbenchProxy(appModel, appContext);
 		workbench.createAndRunUI();
 		if (cssURI != null) {
-			applyStyle((Control)workbench.getRoot(), project, cssURI);
+			applyStyle((Control) workbench.getRoot(), project, cssURI);
 		}
-		
+
 		E4UIEventPublisher globalDistahcher = workbench.getGlobalDistahcher();
 		globalDistahcher.addPublishedAdapter(new AdapterImpl() {
 			public void notifyChanged(Notification msg) {
@@ -190,8 +190,8 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		return new Result(appModel.getWidget(), true);
 	}
 
-	public static void applyStyle(Control control,
-			final IProject project, final String css) {
+	public static void applyStyle(Control control, final IProject project,
+			final String css) {
 		final Shell shell = (Shell) control.getShell();
 		if (shell == null) {
 			return;

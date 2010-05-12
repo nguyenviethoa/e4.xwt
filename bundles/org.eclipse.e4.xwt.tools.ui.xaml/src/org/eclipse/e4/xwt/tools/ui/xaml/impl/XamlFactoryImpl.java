@@ -22,18 +22,18 @@ import org.w3c.dom.Node;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 	/**
-	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static XamlFactory init() {
 		try {
-			XamlFactory theXamlFactory = (XamlFactory) EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/e4/xwt/tools/designer/xaml");
+			XamlFactory theXamlFactory = (XamlFactory) EPackage.Registry.INSTANCE
+					.getEFactory("http://www.eclipse.org/e4/xwt/tools/designer/xaml");
 			if (theXamlFactory != null) {
 				return theXamlFactory;
 			}
@@ -44,8 +44,8 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 	}
 
 	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public XamlFactoryImpl() {
@@ -54,7 +54,6 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -73,13 +72,13 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 		case XamlPackage.COMMENT:
 			return createComment();
 		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+			throw new IllegalArgumentException("The class '" + eClass.getName()
+					+ "' is not a valid classifier");
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -90,13 +89,13 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 		case XamlPackage.DOCUMENT:
 			return createDocumentFromString(eDataType, initialValue);
 		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+			throw new IllegalArgumentException("The datatype '"
+					+ eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -107,13 +106,13 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 		case XamlPackage.DOCUMENT:
 			return convertDocumentToString(eDataType, instanceValue);
 		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+			throw new IllegalArgumentException("The datatype '"
+					+ eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public XamlDocument createXamlDocument() {
@@ -123,7 +122,6 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AnnotatedObject createAnnotatedObject() {
@@ -133,7 +131,6 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public XamlElement createXamlElement() {
@@ -143,7 +140,6 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public XamlAttribute createXamlAttribute() {
@@ -153,7 +149,6 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Annotation createAnnotation() {
@@ -163,7 +158,6 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Comment createComment() {
@@ -173,7 +167,6 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Node createNodeFromString(EDataType eDataType, String initialValue) {
@@ -182,7 +175,6 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertNodeToString(EDataType eDataType, Object instanceValue) {
@@ -191,25 +183,24 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	public Document createDocumentFromString(EDataType eDataType, String initialValue) {
+	public Document createDocumentFromString(EDataType eDataType,
+			String initialValue) {
 		return (Document) super.createFromString(eDataType, initialValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	public String convertDocumentToString(EDataType eDataType, Object instanceValue) {
+	public String convertDocumentToString(EDataType eDataType,
+			Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public XamlPackage getXamlPackage() {
@@ -218,7 +209,6 @@ public class XamlFactoryImpl extends EFactoryImpl implements XamlFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @deprecated
 	 * @generated
 	 */

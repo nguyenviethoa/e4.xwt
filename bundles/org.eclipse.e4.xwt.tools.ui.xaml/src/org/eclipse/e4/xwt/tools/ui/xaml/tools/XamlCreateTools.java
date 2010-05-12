@@ -20,14 +20,17 @@ import org.eclipse.e4.xwt.tools.ui.xaml.XamlNode;
  */
 public class XamlCreateTools {
 
-	public static XamlAttribute addAttribute(XamlNode parent, String name, String namespace, String value) {
+	public static XamlAttribute addAttribute(XamlNode parent, String name,
+			String namespace, String value) {
 		if (parent == null || name == null || namespace == null) {
 			throw new NullPointerException();
 		}
 		XamlAttribute attribute = parent.getAttribute(name, namespace);
 		boolean isNew = false;
 		if (attribute == null) {
-			attribute = XamlFactory.eINSTANCE.createAttribute(name, namespace);
+			attribute = XamlFactory.eINSTANCE.createXamlAttribute();
+			attribute.setName(name);
+			attribute.setNamespace(namespace);
 			isNew = true;
 		}
 		if (value != null) {
@@ -39,32 +42,59 @@ public class XamlCreateTools {
 		return attribute;
 	}
 
-	public static XamlAttribute addAttribute(XamlNode parent, String name, String namespace) {
+	public static XamlAttribute addAttribute(XamlNode parent, String name,
+			String namespace) {
 		return addAttribute(parent, name, namespace, null);
 	}
 
-	public static XamlAttribute addComplexAttribute(XamlElement parent, String name, String namespace, String childName, String childNamespace) {
-		return addComplexAttribute(parent, name, namespace, childName, childNamespace, false);
+	public static XamlAttribute addComplexAttribute(XamlElement parent,
+			String name, String namespace, String childName,
+			String childNamespace) {
+		return addComplexAttribute(parent, name, namespace, childName,
+				childNamespace, false);
 	}
 
-	public static XamlAttribute addComplexAttribute(XamlElement parent, String name, String namespace, String childName, String childNamespace, boolean allowMutilChild) {
-		if (parent == null || name == null || namespace == null || childName == null || childNamespace == null) {
+	public static XamlAttribute addComplexAttribute(XamlElement parent,
+			String name, String namespace, String childName,
+			String childNamespace, boolean allowMutilChild) {
+		if (parent == null || name == null || namespace == null
+				|| childName == null || childNamespace == null) {
 			throw new NullPointerException();
 		}
 		XamlAttribute attribute = parent.getAttribute(name, namespace);
 		if (attribute == null) {
-			attribute = XamlFactory.eINSTANCE.createAttribute(name, namespace);
-			XamlElement child = XamlFactory.eINSTANCE.createElement(childName, childNamespace);
+			attribute = createAttribute(name, namespace);
+			XamlElement child = createElement(childName, childNamespace);
 			attribute.getChildNodes().add(child);
 			parent.getAttributes().add(attribute);
 		} else if (attribute.getChild(childName, childNamespace) == null) {
-			XamlElement child = XamlFactory.eINSTANCE.createElement(childName, childNamespace);
+			XamlElement child = createElement(childName, childNamespace);
 			if (!allowMutilChild) {
 				attribute.getChildNodes().clear();
 			}
 			attribute.getChildNodes().add(child);
 		}
 		return attribute;
+	}
+
+	public static XamlAttribute createAttribute(String name, String namespace) {
+		if (name == null || namespace == null) {
+			throw new NullPointerException();
+		}
+		XamlAttribute attribute = XamlFactory.eINSTANCE.createXamlAttribute();
+		attribute.setName(name);
+		attribute.setNamespace(namespace);
+		return attribute;
+	}
+
+	public static XamlElement createElement(String name, String namespace) {
+		if (name == null || namespace == null) {
+			throw new NullPointerException();
+		}
+		XamlElement element = XamlFactory.eINSTANCE.createXamlElement();
+		element.setName(name);
+		element.setNamespace(namespace);
+		return element;
 	}
 
 	private XamlCreateTools() {

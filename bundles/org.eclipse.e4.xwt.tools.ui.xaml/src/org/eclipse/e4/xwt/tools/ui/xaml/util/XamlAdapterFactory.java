@@ -20,21 +20,20 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc --> The <b>Adapter Factory</b> for the model. It provides an adapter <code>createXXX</code> method for each class of the model. <!-- end-user-doc -->
- * 
  * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlPackage
  * @generated
  */
 public class XamlAdapterFactory extends AdapterFactoryImpl {
 	/**
-	 * The cached model package. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached model package.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected static XamlPackage modelPackage;
 
 	/**
-	 * Creates an instance of the adapter factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the adapter factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public XamlAdapterFactory() {
@@ -44,8 +43,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Returns whether this factory is applicable for the type of the object. <!-- begin-user-doc --> This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model. <!-- end-user-doc -->
-	 * 
+	 * Returns whether this factory is applicable for the type of the object.
+	 * <!-- begin-user-doc --> This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model. <!-- end-user-doc -->
 	 * @return whether this factory is applicable for the type of the object.
 	 * @generated
 	 */
@@ -61,8 +60,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * The switch that delegates to the <code>createXXX</code> methods. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The switch that delegates to the <code>createXXX</code> methods.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected XamlSwitch<Adapter> modelSwitch = new XamlSwitch<Adapter>() {
@@ -108,10 +107,9 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	};
 
 	/**
-	 * Creates an adapter for the <code>target</code>. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param target
-	 *            the object to adapt.
+	 * Creates an adapter for the <code>target</code>.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param target the object to adapt.
 	 * @return the adapter for the <code>target</code>.
 	 * @generated
 	 */
@@ -121,8 +119,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument <em>Document</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument <em>Document</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument
 	 * @generated
@@ -132,8 +130,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.AnnotatedObject <em>Annotated Object</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.AnnotatedObject <em>Annotated Object</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.AnnotatedObject
 	 * @generated
@@ -143,8 +141,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode <em>Node</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlNode <em>Node</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlNode
 	 * @generated
@@ -154,8 +152,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlElement <em>Element</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlElement <em>Element</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlElement
 	 * @generated
@@ -165,8 +163,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute <em>Attribute</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute <em>Attribute</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute
 	 * @generated
@@ -176,8 +174,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.Annotation <em>Annotation</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.Annotation <em>Annotation</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.Annotation
 	 * @generated
@@ -187,8 +185,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.Comment <em>Comment</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
+	 * Creates a new adapter for an object of class '{@link org.eclipse.e4.xwt.tools.ui.xaml.Comment <em>Comment</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @see org.eclipse.e4.xwt.tools.ui.xaml.Comment
 	 * @generated
@@ -198,8 +196,8 @@ public class XamlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for the default case. <!-- begin-user-doc --> This default implementation returns null. <!-- end-user-doc -->
-	 * 
+	 * Creates a new adapter for the default case.
+	 * <!-- begin-user-doc --> This default implementation returns null. <!-- end-user-doc -->
 	 * @return the new adapter.
 	 * @generated
 	 */

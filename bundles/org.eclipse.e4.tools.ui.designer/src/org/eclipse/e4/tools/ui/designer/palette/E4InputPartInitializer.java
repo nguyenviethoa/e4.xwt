@@ -10,18 +10,16 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.palette;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.tools.ui.designer.E4Designer;
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.tools.ui.designer.wizards.part.NewDynamicFilePartWizard;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IFileEditorInput;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -32,25 +30,22 @@ public class E4InputPartInitializer extends E4PartInitializer {
 		if (newObject == null || !(newObject instanceof MPart)) {
 			return false;
 		}
-		IFileEditorInput input = null;
 		MApplication application = null;
+		IFile file = null;
 		try {
 			E4Designer designer = (E4Designer) E4DesignerPlugin.getDefault()
 					.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 					.getActiveEditor();
-			EditDomain editDomain = designer.getEditDomain();
-			input = (IFileEditorInput) editDomain
-					.getData(Designer.DESIGNER_INPUT);
-			application = (MApplication) designer.getDocumentRoot();
+			file = designer.getFile();
 		} catch (Exception e) {
 			E4DesignerPlugin.logError(e);
 		}
-		if (input == null) {
+		if (file == null) {
 			return false;
 		}
 
-		NewDynamicFilePartWizard newWizard = new NewDynamicFilePartWizard(input
-				.getFile(), (MPart) newObject, application);
+		NewDynamicFilePartWizard newWizard = new NewDynamicFilePartWizard(file,
+				(MPart) newObject, application);
 		WizardDialog dialog = new WizardDialog(new Shell(), newWizard);
 		return Window.OK == dialog.open();
 	}

@@ -38,23 +38,25 @@ import org.w3c.dom.Node;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getName <em>Name</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getPrefix <em>Prefix</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getNamespace <em>Namespace</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getValue <em>Value</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getChildNodes <em>Child Nodes</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getAttributes <em>Attributes</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getId <em>Id</em>}</li>
- * <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getComments <em>Comments</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getPrefix <em>Prefix</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getNamespace <em>Namespace</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getChildNodes <em>Child Nodes</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getComments <em>Comments</em>}</li>
+ *   <li>{@link org.eclipse.e4.xwt.tools.ui.xaml.impl.XamlNodeImpl#getWidget <em>Widget</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
-public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNode {
+public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements
+		XamlNode {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -62,8 +64,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -71,8 +73,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getPrefix() <em>Prefix</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getPrefix() <em>Prefix</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getPrefix()
 	 * @generated
 	 * @ordered
@@ -80,8 +82,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected static final String PREFIX_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getPrefix() <em>Prefix</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getPrefix() <em>Prefix</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getPrefix()
 	 * @generated
 	 * @ordered
@@ -89,8 +91,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected String prefix = PREFIX_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getNamespace() <em>Namespace</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getNamespace()
 	 * @generated
 	 * @ordered
@@ -98,8 +100,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected static final String NAMESPACE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getNamespace() <em>Namespace</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getNamespace() <em>Namespace</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getNamespace()
 	 * @generated
 	 * @ordered
@@ -107,8 +109,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected String namespace = NAMESPACE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getValue()
 	 * @generated
 	 * @ordered
@@ -116,8 +118,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected static final String VALUE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getValue()
 	 * @generated
 	 * @ordered
@@ -125,8 +127,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected String value = VALUE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getChildNodes() <em>Child Nodes</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getChildNodes() <em>Child Nodes</em>}' containment reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getChildNodes()
 	 * @generated
 	 * @ordered
@@ -134,8 +136,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected EList<XamlElement> childNodes;
 
 	/**
-	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' containment reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getAttributes()
 	 * @generated
 	 * @ordered
@@ -143,8 +145,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected EList<XamlAttribute> attributes;
 
 	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -152,8 +154,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected static final String ID_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getId()
 	 * @generated
 	 * @ordered
@@ -161,8 +163,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getComments() <em>Comments</em>}' containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getComments() <em>Comments</em>}' containment reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getComments()
 	 * @generated
 	 * @ordered
@@ -170,8 +172,27 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	protected EList<Comment> comments;
 
 	/**
+	 * The default value of the '{@link #getWidget() <em>Widget</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getWidget()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Object WIDGET_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getWidget() <em>Widget</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getWidget()
+	 * @generated
+	 * @ordered
+	 */
+	protected Object widget = WIDGET_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected XamlNodeImpl() {
@@ -180,7 +201,6 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -190,7 +210,6 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -209,7 +228,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.XAML_NODE__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.XAML_NODE__NAME, oldName, name));
 	}
 
 	/**
@@ -219,7 +239,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	 */
 	public String getPrefix() {
 		if (prefix == null && namespace != null && getOwnerDocument() != null) {
-			EMap<String, String> declaredNamespaces = getOwnerDocument().getDeclaredNamespaces();
+			EMap<String, String> declaredNamespaces = getOwnerDocument()
+					.getDeclaredNamespaces();
 			for (String key : declaredNamespaces.keySet()) {
 				if (namespace.equals(declaredNamespaces.get(key))) {
 					prefix = key;
@@ -242,16 +263,17 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		String oldPrefix = prefix;
 		prefix = newPrefix;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.XAML_NODE__PREFIX, oldPrefix, prefix));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.XAML_NODE__PREFIX, oldPrefix, prefix));
 	}
 
 	boolean equals(Object source, Object target) {
-		return (source == null && target == null) || (source != null && source.equals(target));
+		return (source == null && target == null)
+				|| (source != null && source.equals(target));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getNamespace() {
@@ -270,12 +292,12 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		String oldNamespace = namespace;
 		namespace = newNamespace;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.XAML_NODE__NAMESPACE, oldNamespace, namespace));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.XAML_NODE__NAMESPACE, oldNamespace, namespace));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getValue() {
@@ -294,36 +316,37 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		String oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.XAML_NODE__VALUE, oldValue, value));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.XAML_NODE__VALUE, oldValue, value));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<XamlElement> getChildNodes() {
 		if (childNodes == null) {
-			childNodes = new EObjectContainmentEList<XamlElement>(XamlElement.class, this, XamlPackage.XAML_NODE__CHILD_NODES);
+			childNodes = new EObjectContainmentEList<XamlElement>(
+					XamlElement.class, this, XamlPackage.XAML_NODE__CHILD_NODES);
 		}
 		return childNodes;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<XamlAttribute> getAttributes() {
 		if (attributes == null) {
-			attributes = new EObjectContainmentEList<XamlAttribute>(XamlAttribute.class, this, XamlPackage.XAML_NODE__ATTRIBUTES);
+			attributes = new EObjectContainmentEList<XamlAttribute>(
+					XamlAttribute.class, this,
+					XamlPackage.XAML_NODE__ATTRIBUTES);
 		}
 		return attributes;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getId() {
@@ -342,19 +365,42 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		String oldId = id;
 		id = newId;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XamlPackage.XAML_NODE__ID, oldId, id));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.XAML_NODE__ID, oldId, id));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<Comment> getComments() {
 		if (comments == null) {
-			comments = new EObjectContainmentEList<Comment>(Comment.class, this, XamlPackage.XAML_NODE__COMMENTS);
+			comments = new EObjectContainmentEList<Comment>(Comment.class,
+					this, XamlPackage.XAML_NODE__COMMENTS);
 		}
 		return comments;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Object getWidget() {
+		return widget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setWidget(Object newWidget) {
+		Object oldWidget = widget;
+		widget = newWidget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					XamlPackage.XAML_NODE__WIDGET, oldWidget, widget));
 	}
 
 	/**
@@ -363,11 +409,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 	 * @generated NOT
 	 */
 	public XamlAttribute getAttribute(String name, String namespace) {
-		if (name == null) {
+		if (name == null || namespace == null) {
 			return null;
-		}
-		if (namespace == null) {
-			return getAttribute(name);
 		}
 		EList<XamlAttribute> attributes = getAttributes();
 		for (XamlAttribute attribute : attributes) {
@@ -390,15 +433,7 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		if (name == null) {
 			return null;
 		}
-		XamlDocument ownerDocument = getOwnerDocument();
-		if (ownerDocument != null) {
-			String namespace = ownerDocument.getDeclaredNamespaces().get(null);
-			if (namespace == null) {
-				return null;
-			}
-			return getAttribute(name, namespace);
-		}
-		return null;
+		return getAttribute(name, namespace);
 	}
 
 	/**
@@ -410,12 +445,9 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		if (name == null) {
 			return null;
 		}
-		if (namespace == null) {
-			return getChild(name);
-		}
 		EList<XamlElement> children = getChildren(namespace);
 		for (XamlElement element : children) {
-			if (equals(name, element.getName())
+			if (name.equalsIgnoreCase(element.getName())
 					&& equals(namespace, element.getNamespace())) {
 				return element;
 			}
@@ -432,7 +464,9 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		EList<XamlElement> children = new BasicEList<XamlElement>();
 		EList<XamlElement> all = getChildNodes();
 		for (XamlElement element : all) {
-			if ((namespace == null && element.getNamespace() == null) || (namespace != null && namespace.equals(element.getNamespace()))) {
+			if ((namespace == null && element.getNamespace() == null)
+					|| (namespace != null && namespace.equals(element
+							.getNamespace()))) {
 				children.add(element);
 			}
 		}
@@ -550,7 +584,6 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Node generate(Document document, Map<String, Object> options) {
@@ -561,7 +594,6 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getFlatValue() {
@@ -572,25 +604,27 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case XamlPackage.XAML_NODE__CHILD_NODES:
-			return ((InternalEList<?>) getChildNodes()).basicRemove(otherEnd, msgs);
+			return ((InternalEList<?>) getChildNodes()).basicRemove(otherEnd,
+					msgs);
 		case XamlPackage.XAML_NODE__ATTRIBUTES:
-			return ((InternalEList<?>) getAttributes()).basicRemove(otherEnd, msgs);
+			return ((InternalEList<?>) getAttributes()).basicRemove(otherEnd,
+					msgs);
 		case XamlPackage.XAML_NODE__COMMENTS:
-			return ((InternalEList<?>) getComments()).basicRemove(otherEnd, msgs);
+			return ((InternalEList<?>) getComments()).basicRemove(otherEnd,
+					msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -612,13 +646,14 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 			return getId();
 		case XamlPackage.XAML_NODE__COMMENTS:
 			return getComments();
+		case XamlPackage.XAML_NODE__WIDGET:
+			return getWidget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -639,11 +674,13 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 			return;
 		case XamlPackage.XAML_NODE__CHILD_NODES:
 			getChildNodes().clear();
-			getChildNodes().addAll((Collection<? extends XamlElement>) newValue);
+			getChildNodes()
+					.addAll((Collection<? extends XamlElement>) newValue);
 			return;
 		case XamlPackage.XAML_NODE__ATTRIBUTES:
 			getAttributes().clear();
-			getAttributes().addAll((Collection<? extends XamlAttribute>) newValue);
+			getAttributes().addAll(
+					(Collection<? extends XamlAttribute>) newValue);
 			return;
 		case XamlPackage.XAML_NODE__ID:
 			setId((String) newValue);
@@ -652,13 +689,15 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 			getComments().clear();
 			getComments().addAll((Collection<? extends Comment>) newValue);
 			return;
+		case XamlPackage.XAML_NODE__WIDGET:
+			setWidget(newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -688,26 +727,32 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		case XamlPackage.XAML_NODE__COMMENTS:
 			getComments().clear();
 			return;
+		case XamlPackage.XAML_NODE__WIDGET:
+			setWidget(WIDGET_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 		case XamlPackage.XAML_NODE__NAME:
-			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT
+					.equals(name);
 		case XamlPackage.XAML_NODE__PREFIX:
-			return PREFIX_EDEFAULT == null ? prefix != null : !PREFIX_EDEFAULT.equals(prefix);
+			return PREFIX_EDEFAULT == null ? prefix != null : !PREFIX_EDEFAULT
+					.equals(prefix);
 		case XamlPackage.XAML_NODE__NAMESPACE:
-			return NAMESPACE_EDEFAULT == null ? namespace != null : !NAMESPACE_EDEFAULT.equals(namespace);
+			return NAMESPACE_EDEFAULT == null ? namespace != null
+					: !NAMESPACE_EDEFAULT.equals(namespace);
 		case XamlPackage.XAML_NODE__VALUE:
-			return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+			return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT
+					.equals(value);
 		case XamlPackage.XAML_NODE__CHILD_NODES:
 			return childNodes != null && !childNodes.isEmpty();
 		case XamlPackage.XAML_NODE__ATTRIBUTES:
@@ -716,13 +761,15 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		case XamlPackage.XAML_NODE__COMMENTS:
 			return comments != null && !comments.isEmpty();
+		case XamlPackage.XAML_NODE__WIDGET:
+			return WIDGET_EDEFAULT == null ? widget != null : !WIDGET_EDEFAULT
+					.equals(widget);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -741,6 +788,8 @@ public abstract class XamlNodeImpl extends AnnotatedObjectImpl implements XamlNo
 		result.append(value);
 		result.append(", id: ");
 		result.append(id);
+		result.append(", widget: ");
+		result.append(widget);
 		result.append(')');
 		return result.toString();
 	}

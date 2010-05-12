@@ -13,26 +13,17 @@ package org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.palette;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.Designer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropAdapter;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.dnd.DropContext;
-import org.eclipse.e4.xwt.tools.ui.designer.core.editor.text.StructuredTextHelper;
 import org.eclipse.e4.xwt.tools.ui.palette.ContextType;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.templates.ContextTypeRegistry;
-import org.eclipse.jface.text.templates.DocumentTemplateContext;
 import org.eclipse.jface.text.templates.GlobalTemplateVariables;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateBuffer;
-import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Node;
 
 /**
@@ -74,34 +65,38 @@ public class PaletteDropAdapter implements DropAdapter {
 				drop(template, dropCaretOffset, 0);
 			}
 		};
-		designer.formatWithCompound(dropRunnable);
+		// designer.formatWithCompound(dropRunnable);
 	}
 
 	/**
 	 * @param template
 	 */
 	protected void drop(Template template, int dropCaretOffset, int length) {
-		IDocument document = designer.getTextViewer().getDocument();
-		ContextTypeRegistry registry = XMLUIPlugin.getDefault().getTemplateContextRegistry();
-		if (registry != null) {
-			TemplateContextType type = registry.getContextType(template.getContextTypeId());
-
-			DocumentTemplateContext templateContext = new DocumentTemplateContext(type, document, new Position(dropCaretOffset, length));
-			if (templateContext.canEvaluate(template)) {
-				try {
-					TemplateBuffer templateBuffer = templateContext.evaluate(template);
-					String templateString = templateBuffer.getString();
-					document.replace(dropCaretOffset, length, templateString);
-
-					StyledText styledText = designer.getTextWidget();
-					int position = getCursorOffset(templateBuffer) + dropCaretOffset;
-					styledText.setCaretOffset(position);
-					styledText.setFocus();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
+		// IDocument document = designer.getTextViewer().getDocument();
+		// ContextTypeRegistry registry =
+		// XMLUIPlugin.getDefault().getTemplateContextRegistry();
+		// if (registry != null) {
+		// TemplateContextType type =
+		// registry.getContextType(template.getContextTypeId());
+		//
+		// DocumentTemplateContext templateContext = new
+		// DocumentTemplateContext(type, document, new Position(dropCaretOffset,
+		// length));
+		// if (templateContext.canEvaluate(template)) {
+		// try {
+		// TemplateBuffer templateBuffer = templateContext.evaluate(template);
+		// String templateString = templateBuffer.getString();
+		// document.replace(dropCaretOffset, length, templateString);
+		//
+		// StyledText styledText = designer.getTextWidget();
+		// int position = getCursorOffset(templateBuffer) + dropCaretOffset;
+		// styledText.setCaretOffset(position);
+		// styledText.setFocus();
+		// } catch (Exception e) {
+		// throw new RuntimeException(e);
+		// }
+		// }
+		// }
 	}
 
 	protected Template createTemplate(Entry entry) {
@@ -120,31 +115,36 @@ public class PaletteDropAdapter implements DropAdapter {
 	}
 
 	public void dragOver(DropTargetEvent event) {
-		if (!isAccept() || !(getSelection() instanceof Entry)) {
-			return;
-		}
-		this.entry = (Entry) getSelection();
-		Node node = getCurrentNode(event);
-		int position = context.findDropPosition(node, getScope(), getContextType(), getCursor(event));
-		if (position < 0) {
-			event.detail = DND.DROP_NONE;
-		} else {
-			StyledText styledText = designer.getTextWidget();
-			setDropCaretOffset(position);
-			refreshCaret(styledText, getDropCaretOffset());
-			event.detail = DND.DROP_COPY;
-		}
+		// if (!isAccept() || !(getSelection() instanceof Entry)) {
+		// return;
+		// }
+		// this.entry = (Entry) getSelection();
+		// Node node = getCurrentNode(event);
+		// int position = context.findDropPosition(node, getScope(),
+		// getContextType(), getCursor(event));
+		// if (position < 0) {
+		// event.detail = DND.DROP_NONE;
+		// } else {
+		// StyledText styledText = designer.getTextWidget();
+		// setDropCaretOffset(position);
+		// refreshCaret(styledText, getDropCaretOffset());
+		// event.detail = DND.DROP_COPY;
+		// }
 	}
 
 	protected Node getCurrentNode(DropTargetEvent event) {
-		StructuredTextViewer textViewer = designer.getTextEditor().getTextViewer();
-		return StructuredTextHelper.getNode(textViewer, getCursor(event));
+		// StructuredTextViewer textViewer =
+		// designer.getTextEditor().getTextViewer();
+		// return StructuredTextHelper.getNode(textViewer, getCursor(event));
+		return null;
 	}
 
 	protected int getCursor(DropTargetEvent event) {
-		StructuredTextViewer textViewer = designer.getTextEditor().getTextViewer();
-		return StructuredTextHelper.getOffsetAtPoint(textViewer, new Point(event.x, event.y));
-
+		// StructuredTextViewer textViewer =
+		// designer.getTextEditor().getTextViewer();
+		// return StructuredTextHelper.getOffsetAtPoint(textViewer, new
+		// Point(event.x, event.y));
+		return 0;
 	}
 
 	/*
@@ -162,10 +162,10 @@ public class PaletteDropAdapter implements DropAdapter {
 	 * @see org.eclipse.swt.dnd.DropTargetListener#dragLeave(org.eclipse.swt.dnd.DropTargetEvent)
 	 */
 	public void dragLeave(DropTargetEvent event) {
-		StyledText styledText = designer.getTextWidget();
-		if (getDropCaretOffset() != -1) {
-			refreshCaret(styledText, getDropCaretOffset());
-		}
+		// StyledText styledText = designer.getTextWidget();
+		// if (getDropCaretOffset() != -1) {
+		// refreshCaret(styledText, getDropCaretOffset());
+		// }
 	}
 
 	/*

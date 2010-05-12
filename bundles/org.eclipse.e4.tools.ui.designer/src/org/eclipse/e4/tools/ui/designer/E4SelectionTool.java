@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
-import org.eclipse.e4.tools.ui.designer.editparts.SashEditPart;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.tools.SelectionTool;
 
 public class E4SelectionTool extends SelectionTool {
@@ -21,23 +19,23 @@ public class E4SelectionTool extends SelectionTool {
 
 	@Override
 	protected boolean updateTargetUnderMouse() {
-		EditPart editPart = getTargetEditPart();
-		if (editPart == null) {
-			setDefaultCursor(null);
-			try {
-				return super.updateTargetUnderMouse();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if (editPart instanceof SashEditPart) {
-			SashEditPart sashEditPart = (SashEditPart) editPart;
-			setDefaultCursor(sashEditPart.getDefaultCursor());
-		}
-		else {
-			setDefaultCursor(null);
-		}
+		// EditPart editPart = getTargetEditPart();
+		// if (editPart == null) {
+		// setDefaultCursor(null);
+		// try {
+		// return super.updateTargetUnderMouse();
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// if (editPart instanceof SashEditPart) {
+		// SashEditPart sashEditPart = (SashEditPart) editPart;
+		// setDefaultCursor(sashEditPart.getDefaultCursor());
+		// }
+		// else {
+		// setDefaultCursor(null);
+		// }
 		return super.updateTargetUnderMouse();
 	}
 }

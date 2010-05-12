@@ -31,14 +31,13 @@ import org.w3c.dom.Text;
  * <!-- begin-user-doc --> An implementation of the model object ' <em><b>Element</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class XamlElementImpl extends XamlNodeImpl implements XamlElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected XamlElementImpl() {
@@ -47,7 +46,6 @@ public class XamlElementImpl extends XamlNodeImpl implements XamlElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -75,7 +73,8 @@ public class XamlElementImpl extends XamlNodeImpl implements XamlElement {
 				}
 			}
 		}
-		String qualifiedName = prefix == null ? getName() : prefix + ":" + getName();
+		String qualifiedName = prefix == null ? getName() : prefix + ":"
+				+ getName();
 		String namespace = getNamespace();
 		Element node = document.createElementNS(namespace, qualifiedName);
 		for (XamlAttribute attribute : getAttributes()) {
@@ -85,7 +84,8 @@ public class XamlElementImpl extends XamlNodeImpl implements XamlElement {
 			}
 			if (newAttr instanceof Attr) {
 				node.setAttributeNode((Attr) newAttr);
-			} else if (newAttr.getChildNodes().getLength() != 0 || newAttr.getAttributes().getLength() != 0) {
+			} else if (newAttr.getChildNodes().getLength() != 0
+					|| newAttr.getAttributes().getLength() != 0) {
 				node.appendChild(newAttr);
 			}
 		}

@@ -11,11 +11,15 @@
 package org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline;
 
 import org.eclipse.gef.Request;
+import org.eclipse.gef.TreeEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.TreeContainerEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.gef.requests.GroupRequest;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -59,4 +63,22 @@ public class TreeItemEditPolicy extends TreeContainerEditPolicy {
 		return null;
 	}
 
+	public void showTargetFeedback(Request req) {
+		super.showTargetFeedback(req);
+		if (req.getType().equals(REQ_MOVE) || req.getType().equals(REQ_ADD)
+				|| req.getType().equals(REQ_CREATE)) {
+			expandTreeItem((DropRequest) req);
+		}
+	}
+
+	private void expandTreeItem(DropRequest req) {
+		Widget hostWidget = ((TreeEditPart) getHost()).getWidget();
+		if (hostWidget == null || hostWidget.isDisposed()
+				|| !(hostWidget instanceof TreeItem)) {
+			return;
+		}
+		TreeItem treeItem = (TreeItem) hostWidget;
+		treeItem.setExpanded(true);
+
+	}
 }
