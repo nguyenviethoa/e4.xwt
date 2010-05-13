@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer.outline.commands;
 
 import java.util.Iterator;
 
+import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.gef.commands.Command;
@@ -25,13 +26,13 @@ import org.eclipse.swt.dnd.DND;
 public abstract class MoveCommand extends Command {
 
 	private IStructuredSelection source;
-	private MUIElement target;
+	private MApplicationElement target;
 
 	private Command command;
 	
 	private int operation;
 
-	public MoveCommand(IStructuredSelection source, MUIElement target, int operation) {
+	public MoveCommand(IStructuredSelection source, MApplicationElement target, int operation) {
 		this.setSource(source);
 		this.setTarget(target);
 		this.setOperation(operation);		
@@ -111,14 +112,14 @@ public abstract class MoveCommand extends Command {
 	 * @param target
 	 *            the target to set
 	 */
-	public void setTarget(MUIElement target) {
+	public void setTarget(MApplicationElement target) {
 		this.target = target;
 	}
 
 	/**
 	 * @return the target
 	 */
-	public MUIElement getTarget() {
+	public MApplicationElement getTarget() {
 		return target;
 	}
 

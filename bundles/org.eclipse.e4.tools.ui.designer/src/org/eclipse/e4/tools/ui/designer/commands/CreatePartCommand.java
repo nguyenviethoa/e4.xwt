@@ -12,6 +12,7 @@ package org.eclipse.e4.tools.ui.designer.commands;
 
 import org.eclipse.e4.tools.ui.designer.commands.part.PartCommandFactory;
 import org.eclipse.e4.tools.ui.designer.part.PartCreateRequest;
+import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
@@ -75,6 +76,7 @@ public class CreatePartCommand extends CreationCommand {
 		}
 
 		if (command == null) {
+			// ApplicationModelHelper.canAddedChild(creatingElement, partStack)
 			command = PartCommandFactory.createCommand(partReq.getPosition(), creatingElement,
 					partStack, header);
 		}

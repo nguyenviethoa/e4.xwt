@@ -136,7 +136,7 @@ public class PasteElementAction extends SelectionAction {
 			if (!(element instanceof MApplicationElement)) {
 				return false;
 			}
-			if (!ApplicationModelHelper.canAddedChild((MApplicationElement)element, parent))
+			if (!ApplicationModelHelper.canAddedChild(parent, (MApplicationElement)element))
 				return false;
 		}
 		return true;

@@ -13,8 +13,8 @@ package org.eclipse.e4.tools.ui.designer.commands;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.ui.model.application.ui.MElementContainer;
-import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.gef.commands.Command;
 
 /**
@@ -22,11 +22,13 @@ import org.eclipse.gef.commands.Command;
  */
 public class AddChildCommand extends Command {
 
-	protected MElementContainer<?> parent;
-	protected MUIElement newChild;
+	protected EObject parent;
+	protected EObject newChild;
+	protected Object oldChild;
 	protected int index;
+	protected EReference reference;
 
-	public AddChildCommand(MElementContainer<?> parent, MUIElement newChild,
+	public AddChildCommand(EObject parent, EObject newChild,
 			int index) {
 		this.parent = parent;
 		this.newChild = newChild;
@@ -34,22 +36,39 @@ public class AddChildCommand extends Command {
 	}
 
 	public boolean canExecute() {
-		return parent != null && newChild != null && ApplicationModelHelper.canAddedChild(newChild, parent);
+		return parent != null && newChild != null && ApplicationModelHelper.canAddedChild(parent, newChild);
 	}
 
 	public void execute() {
-		if (index < 0 || index > parent.getChildren().size()) {
-			index = parent.getChildren().size();
+		EObject container = (EObject) parent;
+		EObject element = (EObject) newChild;
+		reference = ApplicationModelHelper.findReference(container.eClass(), element.eClass());
+		
+		oldChild = container.eGet(reference);
+		if (reference.isMany()) {
+			List listValue = (List) oldChild;
+			if (index < 0 || index > listValue.size()) {
+				index = listValue.size();
+			}
+			listValue.add(index, newChild);
 		}
-		List<MUIElement> children = (List<MUIElement>) parent.getChildren();
-		children.add(index, newChild);
+		else {
+			container.eSet(reference, newChild);
+		}
 	}
 
 	public boolean canUndo() {
-		return parent != null;
+		return parent != null && reference != null;
 	}
 
 	public void undo() {
-		parent.getChildren().remove(newChild);
+		EObject container = (EObject) parent;
+		if (reference.isMany()) {
+			List listValue = (List) container.eGet(reference);
+			listValue.add(index, newChild);
+		}
+		else {
+			container.eSet(reference, oldChild);
+		}
 	}
 }

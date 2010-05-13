@@ -11,9 +11,11 @@
 package org.eclipse.e4.xwt.emf;
 
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 public class EMFHelper {
@@ -51,6 +53,22 @@ public class EMFHelper {
 		else if (data instanceof EMFDataProvider) {
 			EMFDataProvider dataProvider = (EMFDataProvider) data;
 			return dataProvider.getDataType(null);
+		}
+		return null;
+	}
+	
+	public static EReference findReference(EClass eClass, String name) {
+			for (EStructuralFeature feature : eClass.getEStructuralFeatures()) {
+				if (feature instanceof EReference && name.equals(feature.getName())) {
+					return (EReference)feature;
+				}
+			}
+		
+		for (EClass superType : eClass.getESuperTypes()) {
+			EReference reference = findReference(superType, name);
+			if (reference != null) {
+				return reference;
+			}			
 		}
 		return null;
 	}

@@ -47,13 +47,13 @@ public class MoveOnCommand extends MoveCommand {
 		}
 
 		IStructuredSelection sourceNodes = getSource();
-		MUIElement target = getTarget();
+		MApplicationElement target = getTarget();
 		for (Iterator<?> iterator = sourceNodes.iterator(); iterator.hasNext();) {
 			Object element = iterator.next();
 			MUIElement sourceNode = null;
 			if (element instanceof Entry) {
 				Entry entry = (Entry) element;
-				if (!ApplicationModelHelper.canAddedChild(entry.getType(), target)) {
+				if (!ApplicationModelHelper.canAddedChild(target, entry.getType())) {
 					return false;
 				}
 				continue;

@@ -16,7 +16,6 @@ import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
-import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
@@ -36,15 +35,15 @@ public class MoveBeforeCommand extends MoveCommand {
 
 	@Override
 	public boolean canExecute() {
-		if (!super.canExecute() || getTarget().getParent() == null) {
+		if (!super.canExecute() || ((EObject)getTarget()).eContainer() == null) {
 			return false;
 		}
 
-		MUIElement target = getTarget().getParent();
+		EObject target = ((EObject)getTarget()).eContainer();
 		for (Iterator<?> iterator = getSource().iterator(); iterator.hasNext();) {
 			Object element = iterator.next();
 			if (element instanceof Entry) {
-				if (!ApplicationModelHelper.canAddedChild(((Entry) element).getType(), target)) {
+				if (!ApplicationModelHelper.canAddedChild(target, ((Entry) element).getType())) {
 					return false;
 				}
 			}
@@ -61,9 +60,9 @@ public class MoveBeforeCommand extends MoveCommand {
 	 */
 	protected void collectCommands(CompoundCommand command) {
 		IStructuredSelection sourceNodes = getSource();
-		MUIElement targetNode = getTarget();
-		MElementContainer<MUIElement> parent = targetNode.getParent();
-		int index = parent.getChildren().indexOf(targetNode);
+		MApplicationElement targetNode = getTarget();
+		EObject parent = ((EObject)targetNode).eContainer();
+		int index = ApplicationModelHelper.getChildIndex(parent, targetNode);
 
 		for (Iterator<?> iterator = sourceNodes.iterator(); iterator.hasNext();) {
 			Object element = iterator.next();

@@ -12,16 +12,10 @@ package org.eclipse.e4.tools.ui.designer.commands;
 
 import java.util.Collection;
 
-import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.commands.MCommand;
-import org.eclipse.e4.ui.model.application.commands.MHandler;
-import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
-import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
-import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -52,37 +46,13 @@ public class CommandFactory {
 
 	static public Command createAddChildCommand(Object container, Object child,
 			int index) {
-		if (container instanceof MApplication) {
-			if (child instanceof MCommand) {
-				return new AddApplicationCommandChildCommand(
-						(MApplication) container, (MCommand) child, -1);
-			} else if (child instanceof MKeyBinding) {
-				return new AddApplicationKeyBindingChildCommand(
-						(MApplication) container, (MKeyBinding) child, -1);
-			} else if (child instanceof MHandler) {
-				return new AddApplicationHandlerChildCommand(
-						(MApplication) container, (MHandler) child, -1);
-			} else if (child instanceof MPartDescriptor) {
-				return new AddApplicationPartDescriptorChildCommand(
-						(MApplication) container, (MPartDescriptor) child, -1);
-			} else if (child instanceof MUIElement) {
-				return new AddChildCommand((MApplication) container,
-						(MUIElement) child, -1);
-			}
-		} else if (child instanceof MMenu && container instanceof MWindow) {
-			return new AddWindowMenuChildCommand((MWindow) container,
-					(MMenu) child);
-		} else if (container instanceof MElementContainer
-				&& child instanceof MUIElement) {
-			return new AddChildCommand(
-					(MElementContainer<MUIElement>) container,
-					(MUIElement) child, index);
-		} else if (container instanceof MPart && child instanceof MMenu) {
-			return new AddPartMenuChildCommand((MPart) container, (MMenu) child);
+		if (container instanceof EObject
+				&& child instanceof EObject
+				&& ApplicationModelHelper.canAddedChild((EObject) container,
+						(EObject) child)) {
+			return new AddChildCommand((EObject) container,
+					(EObject) child, -1);			
 		}
-		// throw new
-		// UnsupportedOperationException(container.getClass().getName()
-		// + " " + child.getClass().getName());
 		return UnexecutableCommand.INSTANCE;
 	}
 

@@ -16,7 +16,6 @@ import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.commands.DeleteCommand;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
-import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.tools.EntryHelper;
@@ -30,22 +29,24 @@ import org.eclipse.jface.viewers.IStructuredSelection;
  */
 public class MoveAfterCommand extends MoveCommand {
 
-	public MoveAfterCommand(IStructuredSelection source, MUIElement target, int operation) {
+	public MoveAfterCommand(IStructuredSelection source, MUIElement target,
+			int operation) {
 		super(source, target, operation);
 		setLabel("Move After");
 	}
 
 	@Override
 	public boolean canExecute() {
-		if (!super.canExecute() || getTarget().getParent() == null) {
+		if (!super.canExecute() || ((EObject) getTarget()).eContainer() == null) {
 			return false;
 		}
 
-		MUIElement target = getTarget().getParent();
+		EObject target = ((EObject) getTarget()).eContainer();
 		for (Iterator<?> iterator = getSource().iterator(); iterator.hasNext();) {
 			Object element = iterator.next();
 			if (element instanceof Entry) {
-				if (!ApplicationModelHelper.canAddedChild(((Entry) element).getType(), target)) {
+				if (!ApplicationModelHelper.canAddedChild(target, ((Entry) element)
+						.getType())) {
 					return false;
 				}
 			}
@@ -62,9 +63,9 @@ public class MoveAfterCommand extends MoveCommand {
 	 */
 	protected void collectCommands(CompoundCommand command) {
 		IStructuredSelection sourceNodes = getSource();
-		MUIElement targetNode = getTarget();
-		MElementContainer<MUIElement> parent = targetNode.getParent();
-		int index = parent.getChildren().indexOf(targetNode);
+		MApplicationElement targetNode = getTarget();
+		EObject parent = ((EObject) getTarget()).eContainer();
+		int index = ApplicationModelHelper.getChildIndex(parent, targetNode);
 		MApplicationElement newNode = null;
 
 		for (Iterator<?> iterator = sourceNodes.iterator(); iterator.hasNext();) {
@@ -80,7 +81,8 @@ public class MoveAfterCommand extends MoveCommand {
 			}
 
 			if (ApplicationModelHelper.isLive(sourceNode)) {
-				newNode = (MApplicationElement) EcoreUtil.copy((EObject) sourceNode);
+				newNode = (MApplicationElement) EcoreUtil
+						.copy((EObject) sourceNode);
 				newNode.setElementId(EcoreUtil.generateUUID());
 				if (newNode instanceof MUIElement) {
 					MUIElement uiElement = (MUIElement) newNode;
@@ -89,7 +91,8 @@ public class MoveAfterCommand extends MoveCommand {
 			} else if (sourceNode instanceof MApplicationElement) {
 				newNode = (MApplicationElement) sourceNode;
 			}
-			command.add(CommandFactory.createAddChildCommand(parent, newNode, ++index));
+			command.add(CommandFactory.createAddChildCommand(parent, newNode,
+					++index));
 			if (isMove() && ApplicationModelHelper.isLive(sourceNode)
 					&& sourceNode instanceof MUIElement) {
 				command.add(new DeleteCommand((MUIElement) sourceNode));

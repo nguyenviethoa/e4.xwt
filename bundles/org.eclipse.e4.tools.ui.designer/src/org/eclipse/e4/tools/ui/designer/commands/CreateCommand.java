@@ -15,11 +15,11 @@ import java.util.List;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.node.CategoryNode;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
-import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.contribution.CreationCommand;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
@@ -57,8 +57,7 @@ public class CreateCommand extends CreationCommand {
 		parentModel = parent.getModel();
 		if (parentModel instanceof MElementContainer<?>) {
 			MElementContainer<?> container = (MElementContainer<?>) parentModel;
-			return (ApplicationModelHelper.canAddedChild((MUIElement) tmpObj,
-					container));
+			return (ApplicationModelHelper.canAddedChild(container, (EObject) tmpObj));
 		} else if (parentModel instanceof CategoryNode) {
 			CategoryNode categoryNode = (CategoryNode) parentModel;
 			EReference reference = categoryNode.getReference();

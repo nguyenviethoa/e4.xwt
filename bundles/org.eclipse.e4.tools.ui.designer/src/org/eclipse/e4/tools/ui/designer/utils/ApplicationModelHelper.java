@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.utils;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -30,24 +30,14 @@ import org.eclipse.e4.ui.model.application.node.NodeFactory;
 import org.eclipse.e4.ui.model.application.node.provider.NodeItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.provider.ApplicationItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
-import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
-import org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.advanced.provider.AdvancedItemProviderAdapterFactory;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.model.application.ui.basic.MPartSashContainer;
-import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl;
-import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
-import org.eclipse.e4.ui.model.application.ui.menu.MMenuItem;
-import org.eclipse.e4.ui.model.application.ui.menu.MToolBar;
-import org.eclipse.e4.ui.model.application.ui.menu.MToolItem;
-import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.menu.provider.MenuItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.ui.provider.ElementContainerItemProvider;
 import org.eclipse.e4.ui.model.application.ui.provider.UiItemProviderAdapterFactory;
 import org.eclipse.e4.workbench.modeling.EModelService;
+import org.eclipse.e4.xwt.emf.EMFHelper;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -72,6 +62,174 @@ public class ApplicationModelHelper {
 	private static ComposedAdapterFactory adapterFactory;
 	private static AdapterFactoryContentProvider contentProvider;
 	private static AdapterFactoryLabelProvider labelProvider;
+
+	private static Map<EClass, Map<String, EClass>> referenceTypeMap = new HashMap<EClass, Map<String, EClass>>();
+
+	static {
+		// Application
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("commands", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getCommand());
+			classMap.put("addons", org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE.getAddon());
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getWindow());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE.getApplication(), classMap);
+		}
+		// Contribution
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("persistedState", org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE.getStringToStringMap());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE.getContribution(), classMap);
+		}
+		// ModelComponents
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("components", org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE.getModelComponent());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE.getModelComponents(), classMap);
+		}
+		// ModelComponent
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl.eINSTANCE.getUIElement());
+			classMap.put("commands", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getCommand());
+			classMap.put("bindings", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getKeyBinding());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE.getModelComponent(), classMap);
+		}
+		// BindingTableContainer
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("bindingTables", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getBindingTable());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getBindingTableContainer(), classMap);
+		}
+		// BindingContext
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getBindingContext());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getBindingContext(), classMap);
+		}
+		// BindingTable
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("bindings", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getKeyBinding());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getBindingTable(), classMap);
+		}
+		// Command
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("parameters", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getCommandParameter());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getCommand(), classMap);
+		}
+		// HandlerContainer
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("handlers", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getHandler());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getHandlerContainer(), classMap);
+		}
+		// KeyBinding
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("parameters", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getParameter());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getKeyBinding(), classMap);
+		}
+		// Context
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("properties", org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE.getStringToStringMap());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl.eINSTANCE.getContext(), classMap);
+		}
+		// ElementContainer
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl.eINSTANCE.getUIElement());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl.eINSTANCE.getElementContainer(), classMap);
+		}
+		// HandledItem
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("parameters", org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE.getParameter());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl.eINSTANCE.getHandledItem(), classMap);
+		}
+		// Menu
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl.eINSTANCE.getMenuElement());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl.eINSTANCE.getMenu(), classMap);
+		}
+		// ToolItem
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl.eINSTANCE.getMenuElement());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl.eINSTANCE.getToolItem(), classMap);
+		}
+		// ToolBar
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl.eINSTANCE.getToolBarElement());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl.eINSTANCE.getToolBar(), classMap);
+		}
+		// Part
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("menus", org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl.eINSTANCE.getMenu());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getPart(), classMap);
+		}
+		// PartStack
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getStackElement());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getPartStack(), classMap);
+		}
+		// PartSashContainer
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getPartSashContainerElement());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getPartSashContainer(), classMap);
+		}
+		// Window
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("windows", org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getWindow());
+			classMap.put("sharedElements", org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl.eINSTANCE.getUIElement());
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getWindowElement());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getWindow(), classMap);
+		}
+		// TrimmedWindow
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("trimBars", org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getTrimBar());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getTrimmedWindow(), classMap);
+		}
+		// TrimBar
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getTrimElement());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getTrimBar(), classMap);
+		}
+		// Perspective
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("windows", org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getWindow());
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl.eINSTANCE.getPartSashContainerElement());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl.eINSTANCE.getPerspective(), classMap);
+		}
+		// PerspectiveStack
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("children", org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl.eINSTANCE.getPerspective());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl.eINSTANCE.getPerspectiveStack(), classMap);
+		}
+		// PartDescriptor
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("menus", org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl.eINSTANCE.getMenu());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.descriptor.basic.impl.BasicPackageImpl.eINSTANCE.getPartDescriptor(), classMap);
+		}
+		// PartDescriptorContainer
+		{
+			Map<String, EClass> classMap = new HashMap<String, EClass>();
+			classMap.put("descriptors", org.eclipse.e4.ui.model.application.descriptor.basic.impl.BasicPackageImpl.eINSTANCE.getPartDescriptor());
+			referenceTypeMap.put(org.eclipse.e4.ui.model.application.descriptor.basic.impl.BasicPackageImpl.eINSTANCE.getPartDescriptorContainer(), classMap);
+		}
+	}
 
 	public synchronized static ComposedAdapterFactory getFactory() {
 		if (adapterFactory == null) {
@@ -244,129 +402,65 @@ public class ApplicationModelHelper {
 		return (eObject != null && eObject.eResource() != null);
 	}
 
-	public static boolean canAddedChild(EClass eClass, MUIElement target) {
-		// EClass eClass = (EClass) entry.getType();
-		EClass toolBarClass = MenuPackageImpl.eINSTANCE.getToolBar();
-		EClass menuClass = MenuPackageImpl.eINSTANCE.getMenu();
-		if (target instanceof MPart
-				&& !((toolBarClass.isSuperTypeOf(eClass) || toolBarClass == eClass) || (menuClass
-						.isSuperTypeOf(eClass) || menuClass == eClass))) {
-			return false;
-		}
-
-		if ((eClass == menuClass) && (target instanceof MMenu)) {
-			return false;
-		}
-
-		if ((eClass == toolBarClass) && (target instanceof MToolBar)) {
-			return false;
-		}
-
-		if ((eClass == menuClass)
-				&& (!(target instanceof MWindow || target instanceof MPart))) {
-			return false;
-		}
-
-		// accept only MMenuItem by MMenu
-		if ((eClass == MenuPackageImpl.eINSTANCE.getMenuItem())
-				&& !(target instanceof MMenu)) {
-			return false;
-		}
-
-		// accept only MToolItem by MToolBar
-		if ((eClass == MenuPackageImpl.eINSTANCE.getToolItem())
-				&& !(target instanceof MToolBar)) {
-			return false;
-		}
-
-		// accept only MPerspective by MPerspectiveStack
-		if (eClass == AdvancedPackageImpl.eINSTANCE.getPerspective()
-				&& !(target instanceof MPerspectiveStack)) {
-			return false;
-		}
-		return true;
+	public static EReference findReference(EClass container, EClass target) {
+		return findReference(container, target, new HashSet<String>());
 	}
 
-	public static boolean canAddedChild(MApplicationElement element, MUIElement target) {
-		if (target instanceof MPart
-				&& !((element instanceof MToolBar) || (element instanceof MMenu))) {
-			return false;
-		}
-
-		if (element instanceof MToolItem && target instanceof MToolBar) {
-			return true;
-		}
-
-		if (element instanceof MMenuItem && target instanceof MMenu) {
-			return true;
-		}
-
-		if (element instanceof MMenu && target instanceof MMenu) {
-			return false;
-		}
-
-		if (element instanceof MMenu && !(target instanceof MWindow || target instanceof MPart)) {
-			return false;
-		}
-
-		// accept only MMenuItem by MMenu
-		if (element instanceof MMenuItem && !(target instanceof MMenu)) {
-			return false;
-		}
-
-		// accept only MToolItem by MToolBar
-		if (element instanceof MToolItem && !(target instanceof MToolBar)) {
-			return false;
-		}
-
-		// accept only MPerspective by MPerspectiveStack
-		if (element instanceof MPerspective && !(target instanceof MPerspectiveStack)) {
-			return false;
-		}
-		return true;
-	}
-
-	// It doesn't work. The generic type can be lost in runtime.
-	static private boolean determineByGeneric(Class<?> childType,
-			Class<?> targetType) {
-		if (childType == null || targetType == null) {
-			return false;
-		}
-		Class<?> genericType = getGenericType(targetType);
-		return genericType == null || genericType.isAssignableFrom(childType);
-	}
-
-	static public Class<?> getGenericType(Type type) {
-		if (type == null) {
-			return null;
-		}
-		Class<?> genericType = null;
-		if ((type instanceof ParameterizedType)) {
-			ParameterizedType parameterizedType = (ParameterizedType) type;
-			Type[] actualTypeArguments = parameterizedType
-					.getActualTypeArguments();
-			for (Type actualType : actualTypeArguments) {
-				if (actualType instanceof Class<?>) {
-					genericType = (Class<?>) actualType;
-					break;
+	protected static EReference findReference(EClass container, EClass target, Collection<String> checkedProperties) {
+		Map<String, EClass> metaclassEntry = referenceTypeMap.get(container);
+		if (metaclassEntry != null) {
+			for (Map.Entry<String, EClass> entry : metaclassEntry.entrySet()) {
+				String key = entry.getKey();
+				if (checkedProperties.contains(key)) {
+					continue;
 				}
-			}
-		} else if (type instanceof Class<?> && EObject.class != type
-				&& Object.class != type) {
-			Class<?> classType = (Class<?>) type;
-			Type genericSuperclass = classType.getGenericSuperclass();
-			genericType = getGenericType(genericSuperclass);
-			if (genericType == null) {
-				Type[] genericInterfaces = classType.getGenericInterfaces();
-				for (Type generic : genericInterfaces) {
-					genericType = getGenericType(generic);
-					if (genericType != null) {
-						break;
+				checkedProperties.add(key);
+				EClass value = entry.getValue();
+				if (value.isSuperTypeOf(target) || value.equals(target)) {
+					EReference reference = EMFHelper.findReference(container,
+							key);
+					if (reference != null) {
+						return reference;
 					}
 				}
 			}
 		}
-		return genericType;
+
+		for (EClass superType : container.getESuperTypes()) {
+			EReference reference = findReference(superType, target, checkedProperties);
+			if (reference != null) {
+				return reference;
+			}
+		}
+		return null;
+	}
+
+	public static int getChildIndex(Object parent, Object child) {
+		if (parent instanceof EObject) {
+			EObject parentObject = (EObject) parent;
+			EReference reference = ApplicationModelHelper.findReference(parentObject.eClass(),
+					((EObject) child).eClass());
+			if (reference != null && reference.isMany()) {
+				List listValue = (List) parentObject.eGet(reference);
+				return listValue.indexOf(child);
+			}
+		}
+		return -1;
+	}
+
+	public static boolean canAddedChild(Object target, Object element) {
+		if (element instanceof EObject && target instanceof EObject) {
+			return canAddedChild((EObject) target, (EObject) element);
+		}
+		return false;
+	}
+
+	private static boolean canAddedChild(EObject target, EObject element) {
+		EClass elementType = (element instanceof EClass ? (EClass) element
+				: element.eClass());
+		EClass targetType = (target instanceof EClass ? (EClass) target
+				: target.eClass());
+		return findReference(targetType, elementType) != null;
 	}
 
 	static public MWindow findMWindow(MUIElement element) {
