@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -93,15 +94,17 @@ public class PropertiesComposite {
 	protected Composite createClient(Composite parent) {
 		Composite client = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
-		layout.marginLeft = 0;
-		layout.marginWidth = 0;
 		client.setLayout(layout);
+
+		Label label = new Label(client, SWT.NONE);
+		label.setText("Show Members:");
 
 		Composite tableComp = new Composite(client, SWT.NONE);
 		TableColumnLayout tableLayout = new TableColumnLayout();
 		tableComp.setLayout(tableLayout);
 		tableComp.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
 				.create());
+		
 		tableViewer = CheckboxTableViewer.newCheckList(tableComp, SWT.BORDER
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION);
 		propertiesProvider = new PropertiesContentProvider();
@@ -128,7 +131,7 @@ public class PropertiesComposite {
 		});
 
 		TableColumn masterColumn = new TableColumn(table, SWT.LEFT);
-		masterColumn.setText("Master");
+		masterColumn.setText("Selection Provider");
 		tableLayout.setColumnData(masterColumn, new ColumnWeightData(10));
 
 		TableViewerColumn masterViewerColumn = new TableViewerColumn(

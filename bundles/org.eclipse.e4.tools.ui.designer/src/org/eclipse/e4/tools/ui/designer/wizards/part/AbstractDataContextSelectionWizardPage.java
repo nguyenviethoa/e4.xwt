@@ -40,6 +40,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -100,9 +102,18 @@ public abstract class AbstractDataContextSelectionWizardPage extends WizardPage 
 		dataContextComp.setLayoutData(GridDataFactory.fillDefaults().grab(true,
 				true).span(3, 1).create());
 		SashForm container = new SashForm(dataContextComp, SWT.VERTICAL);
+		
+		Composite dataTypeContainer = new Composite(container, SWT.NONE);
+		GridLayout gridLayout = new GridLayout();
+		dataTypeContainer.setLayout(gridLayout);
 
-		dataContextViewer = createDataContextViewer(container);
+		Label label = new Label(dataTypeContainer, SWT.NONE);
+		label.setText("Data Type:");
+
+		dataContextViewer = createDataContextViewer(dataTypeContainer);
 		Assert.isNotNull(dataContextViewer);
+		dataContextViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
+		
 		dataContextViewer
 				.addSelectionChangedListener(new ISelectionChangedListener() {
 					public void selectionChanged(SelectionChangedEvent event) {
@@ -125,7 +136,7 @@ public abstract class AbstractDataContextSelectionWizardPage extends WizardPage 
 		validate();
 	}
 
-	protected TableViewer createDataContextViewer(Composite parent) {
+	protected TableViewer createDataContextViewer(Composite parent) {		
 		final TableViewer tableViewer = new TableViewer(parent, SWT.SINGLE
 				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		tableViewer.setContentProvider(new IStructuredContentProvider() {
