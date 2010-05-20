@@ -12,8 +12,7 @@ package org.eclipse.e4.xwt.ui.workbench.views;
 
 import java.net.URL;
 
-import javax.annotation.PostConstruct;
-
+import org.eclipse.e4.core.di.annotations.PostConstruct;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.ui.workbench.IStaticPart;
 
