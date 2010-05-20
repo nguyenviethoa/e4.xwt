@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.widgets;
+package org.eclipse.e4.tools.ui.designer.dialogs;
 
 import java.text.Collator;
 import java.util.Comparator;

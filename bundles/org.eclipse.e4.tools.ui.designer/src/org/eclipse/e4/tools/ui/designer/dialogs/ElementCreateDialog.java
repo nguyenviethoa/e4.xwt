@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.widgets;
+package org.eclipse.e4.tools.ui.designer.dialogs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class ElementCreateDialog extends TitleAreaDialog {
 
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Element Create Dialog");
+		newShell.setText("Element Creation Dialog");
 	}
 
 	protected Control createDialogArea(Composite parent) {

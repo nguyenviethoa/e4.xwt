@@ -134,6 +134,9 @@ public class SWTTools {
 				Object[] items = (Object[]) getItemsMethod.invoke(widget,
 						new Object[0]);
 				for (Object item : items) {
+					if (!(item instanceof Widget)) {
+						continue;// items of Combo
+					}
 					children.add((Widget) item);
 				}
 			} catch (NoSuchMethodException e) {

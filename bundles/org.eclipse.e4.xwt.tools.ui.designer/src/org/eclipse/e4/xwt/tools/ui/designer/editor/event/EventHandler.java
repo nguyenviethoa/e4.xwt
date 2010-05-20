@@ -122,6 +122,9 @@ public class EventHandler {
 		}
 		for (XamlAttribute xamlAttribute : handlerAttrs) {
 			String handlerName = xamlAttribute.getValue();
+			if (exist(handlerName)) {
+				continue;
+			}
 			createHandler(handlerName);
 		}
 	}

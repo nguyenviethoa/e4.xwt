@@ -12,13 +12,11 @@ package org.eclipse.e4.tools.ui.designer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.tools.ui.designer.actions.CategoryCreateAction;
 import org.eclipse.e4.tools.ui.designer.actions.CopyElementAction;
 import org.eclipse.e4.tools.ui.designer.actions.CutElementAction;
 import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.outline.TreeEditPartFactory;
-import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.xwt.tools.ui.designer.core.ceditor.ConfigureDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
@@ -27,25 +25,22 @@ import org.eclipse.e4.xwt.tools.ui.designer.core.editor.outline.DesignerOutlineP
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.IModelBuilder;
 import org.eclipse.e4.xwt.tools.ui.designer.core.parts.root.DesignerRootEditPart;
 import org.eclipse.gef.ContextMenuProvider;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author jin.liu(jin.liu@soyatec.com)
  */
-public class E4Designer extends ConfigureDesigner {
+public class E4Designer extends ConfigureDesigner implements
+		ITabbedPropertySheetPageContributor {
 
 	private E4UIRenderer uiRenderer = new E4UIRenderer();
 
@@ -73,7 +68,7 @@ public class E4Designer extends ConfigureDesigner {
 
 	protected ContextMenuProvider createMenuProvider(EditPartViewer viewer,
 			ActionRegistry actionRegistry) {
-		return new E4DesignerMenuProvider(viewer, actionRegistry);
+		return new E4DesignerMenuProvider(getProject(), viewer, actionRegistry);
 	}
 
 	protected EditPartFactory createEditPartFactory() {
@@ -104,9 +99,6 @@ public class E4Designer extends ConfigureDesigner {
 		registry.registerAction(action);
 		getSelectionActions().add(action.getId());
 
-		action = new CategoryCreateAction(this);
-		registry.registerAction(action);
-		getSelectionActions().add(action.getId());
 	}
 
 	protected IVisualRenderer createVisualsRender(IFile file, Object diagram) {
@@ -121,26 +113,8 @@ public class E4Designer extends ConfigureDesigner {
 	}
 
 	protected IPropertySheetPage createPropertySheetPage() {
-		PropertySheetPage propertyPage = new PropertySheetPage() {
-			@Override
-			public void selectionChanged(IWorkbenchPart part,
-					ISelection selection) {
-				if (selection instanceof IStructuredSelection) {
-					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-					Object[] objects = structuredSelection.toArray();
-					for (int i = 0; i < objects.length; i++) {
-						if (objects[i] instanceof EditPart) {
-							EditPart editPart = (EditPart) objects[i];
-							objects[i] = editPart.getModel();
-						}
-					}
-					selection = new StructuredSelection(objects);
-				}
-				super.selectionChanged(part, selection);
-			}
-		};
-		propertyPage.setPropertySourceProvider(ApplicationModelHelper
-				.getContentProvider());
+		TabbedPropertySheetPage propertyPage = new TabbedPropertySheetPage(
+				this, false);
 		return propertyPage;
 	}
 
@@ -159,5 +133,9 @@ public class E4Designer extends ConfigureDesigner {
 		}
 		getSelectionSynchronizer().addViewer(treeViewer);
 		return designerOutlinePage;
+	}
+
+	public String getContributorId() {
+		return getSite().getId();
 	}
 }

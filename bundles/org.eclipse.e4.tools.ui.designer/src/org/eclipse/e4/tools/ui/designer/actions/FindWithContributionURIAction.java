@@ -15,8 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
+import org.eclipse.e4.tools.ui.designer.dialogs.FindElementsWithContributionURIDialog;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.tools.ui.designer.widgets.FindElementsWithContributionURIDialog;
 import org.eclipse.e4.ui.model.application.MContribution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;

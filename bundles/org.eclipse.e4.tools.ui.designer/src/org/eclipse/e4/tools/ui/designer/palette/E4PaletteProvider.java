@@ -10,13 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.palette;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
+import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl;
-import org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.basic.impl.BasicPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl;
@@ -36,7 +35,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 public class E4PaletteProvider extends EntryResourceProvider {
 	private Resource resource;
 	private Palette palette;
-	private List<EClass> allClasses;
+
+	// private List<EClass> allClasses;
 
 	public Resource getPaletteResource() {
 		if (resource == null) {
@@ -45,7 +45,7 @@ public class E4PaletteProvider extends EntryResourceProvider {
 				palette = PaletteFactory.eINSTANCE.createPalette();
 				palette.setName("e4 Visual Designer Palette");
 				resource.getContents().add(palette);
-				collectClasses();
+				// collectClasses();
 				createEntries();
 			} catch (Exception e) {
 				E4DesignerPlugin.logWarning(e);
@@ -56,41 +56,47 @@ public class E4PaletteProvider extends EntryResourceProvider {
 
 	private void exclusiveDone(Entry entry, List<EClass> others) {
 		others.remove(entry.getType());
-		
+
 		for (Entry child : entry.getEntries()) {
 			exclusiveDone(child, others);
 		}
 	}
-	
+
 	private void createEntries() {
 		EList<Entry> container = palette.getEntries();
 		// Container
 		Entry entry = createEntry(container, "Container");
-		List<EClass> others = new ArrayList<EClass>(allClasses);
-		for (EClass eClass : allClasses) {
+		List<EClass> applicationClasses = ApplicationModelHelper
+				.getApplicationClasses();
+		List<EClass> others = new ArrayList<EClass>(applicationClasses);
+		for (EClass eClass : applicationClasses) {
 			if (eClass.isAbstract() || eClass.isInterface()) {
 				continue;
 			}
 			EList<Entry> entries = entry.getEntries();
-			if (UiPackageImpl.Literals.ELEMENT_CONTAINER
-					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.MENU_ITEM
-					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.MENU
-					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.TOOL_ITEM
-					.isSuperTypeOf(eClass)) {
+			if (UiPackageImpl.Literals.ELEMENT_CONTAINER.isSuperTypeOf(eClass)
+					&& !MenuPackageImpl.Literals.MENU_ITEM
+							.isSuperTypeOf(eClass)
+					&& !MenuPackageImpl.Literals.MENU.isSuperTypeOf(eClass)
+					&& !MenuPackageImpl.Literals.TOOL_ITEM
+							.isSuperTypeOf(eClass)) {
 				createEntry(entries, eClass);
 			}
 		}
 		// UI Element
 		entry = createEntry(container, "Element");
-		for (EClass eClass : allClasses) {
+		for (EClass eClass : applicationClasses) {
 			if (eClass.isAbstract() || eClass.isInterface()) {
 				continue;
 			}
-			if (UiPackageImpl.Literals.UI_ELEMENT.isSuperTypeOf(eClass) && !UiPackageImpl.Literals.ELEMENT_CONTAINER
-					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.MENU_ITEM
-					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.MENU
-					.isSuperTypeOf(eClass) && !MenuPackageImpl.Literals.TOOL_ITEM
-					.isSuperTypeOf(eClass)) {
+			if (UiPackageImpl.Literals.UI_ELEMENT.isSuperTypeOf(eClass)
+					&& !UiPackageImpl.Literals.ELEMENT_CONTAINER
+							.isSuperTypeOf(eClass)
+					&& !MenuPackageImpl.Literals.MENU_ITEM
+							.isSuperTypeOf(eClass)
+					&& !MenuPackageImpl.Literals.MENU.isSuperTypeOf(eClass)
+					&& !MenuPackageImpl.Literals.TOOL_ITEM
+							.isSuperTypeOf(eClass)) {
 				createEntry(entry.getEntries(), eClass);
 			}
 		}
@@ -98,17 +104,14 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		entry = createRootEntry(container, BasicPackageImpl.Literals.WINDOW);
 		// Menu
 		entry = createRootEntry(container, MenuPackageImpl.Literals.MENU);
-		createRootEntry(entry.getEntries(),
-				MenuPackageImpl.Literals.MENU_ITEM);
-		
+		createRootEntry(entry.getEntries(), MenuPackageImpl.Literals.MENU_ITEM);
+
 		// Perspective
 		entry = createRootEntry(container,
 				AdvancedPackageImpl.Literals.PERSPECTIVE);
 		// ToolBar
-		entry = createRootEntry(container,
-				MenuPackageImpl.Literals.TOOL_BAR);
-		createRootEntry(entry.getEntries(),
-				MenuPackageImpl.Literals.TOOL_ITEM);
+		entry = createRootEntry(container, MenuPackageImpl.Literals.TOOL_BAR);
+		createRootEntry(entry.getEntries(), MenuPackageImpl.Literals.TOOL_ITEM);
 		// Part
 		entry = createRootEntry(container, BasicPackageImpl.Literals.PART);
 		// Handler
@@ -122,7 +125,7 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		for (Entry childEntry : container) {
 			exclusiveDone(childEntry, others);
 		}
-		
+
 		if (!others.isEmpty()) {
 			entry = createEntry(container, "Other");
 			for (EClass eClass : others) {
@@ -134,44 +137,42 @@ public class E4PaletteProvider extends EntryResourceProvider {
 		}
 	}
 
-	private void collectClasses() throws IllegalArgumentException,
-			IllegalAccessException {
-		if (allClasses != null) {
-			allClasses.clear();
-		} else {
-			allClasses = new ArrayList<EClass>();
-		}
-
-		Class<?>[] packageClasses = new Class[] {
-				ApplicationPackageImpl.Literals.class,
-				BasicPackageImpl.Literals.class,
-				UiPackageImpl.Literals.class,
-				CommandsPackageImpl.Literals.class,
-				MenuPackageImpl.Literals.class,
-				AdvancedPackageImpl.Literals.class
-		};
-
-		for (Class<?> packageClass : packageClasses) {
-			Field[] fields = packageClass.getFields();
-			EClass applicationElementClass = ApplicationPackageImpl.eINSTANCE
-					.getApplicationElement();
-
-			for (int i = 0; i < fields.length; i++) {
-				Object value = fields[i].get(null);
-				if (value instanceof EClass) {
-					EClass eClass = (EClass) value;
-					if (applicationElementClass.isSuperTypeOf(eClass)) {
-						allClasses.add(eClass);
-					}
-				}
-			}			
-		}
-	}
+	// private void collectClasses() throws IllegalArgumentException,
+	// IllegalAccessException {
+	// if (allClasses != null) {
+	// allClasses.clear();
+	// } else {
+	// allClasses = new ArrayList<EClass>();
+	// }
+	//
+	// Class<?>[] packageClasses = new Class[] {
+	// ApplicationPackageImpl.Literals.class,
+	// BasicPackageImpl.Literals.class, UiPackageImpl.Literals.class,
+	// CommandsPackageImpl.Literals.class,
+	// MenuPackageImpl.Literals.class,
+	// AdvancedPackageImpl.Literals.class };
+	//
+	// for (Class<?> packageClass : packageClasses) {
+	// Field[] fields = packageClass.getFields();
+	// EClass applicationElementClass = ApplicationPackageImpl.eINSTANCE
+	// .getApplicationElement();
+	//
+	// for (int i = 0; i < fields.length; i++) {
+	// Object value = fields[i].get(null);
+	// if (value instanceof EClass) {
+	// EClass eClass = (EClass) value;
+	// if (applicationElementClass.isSuperTypeOf(eClass)) {
+	// allClasses.add(eClass);
+	// }
+	// }
+	// }
+	// }
+	// }
 
 	private Entry createRootEntry(EList<Entry> container, EClass root) {
 		Entry entry = createEntry(palette.getEntries(), root);
 		String rootName = root.getName().toLowerCase();
-		for (EClass eClass : allClasses) {
+		for (EClass eClass : ApplicationModelHelper.getApplicationClasses()) {
 			if (eClass.isAbstract() || eClass.isInterface()) {
 				continue;
 			}

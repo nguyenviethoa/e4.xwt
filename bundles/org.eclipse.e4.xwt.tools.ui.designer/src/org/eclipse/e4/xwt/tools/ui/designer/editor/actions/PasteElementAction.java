@@ -101,7 +101,7 @@ public class PasteElementAction extends SelectionAction {
 		}
 	}
 
-	public Boolean canPaste(XamlElement parent) {
+	public boolean canPaste(XamlElement parent) {
 		Class<?> parentType = null;
 		parentType = getType(parent);
 		if (parentType == null) {
@@ -109,7 +109,6 @@ public class PasteElementAction extends SelectionAction {
 		}
 		List<XamlElement> contents = (List<XamlElement>) Clipboard.getDefault().getContents();
 
-		boolean canCreate = false;
 		for (XamlElement element : contents) {
 			Class<?> createtype = getType(element);
 			if (createtype == null) {
@@ -118,8 +117,7 @@ public class PasteElementAction extends SelectionAction {
 			if (!canPaste(createtype, parentType, parent))
 				return false;
 		}
-		canCreate = true;
-		return canCreate;
+		return true;
 	}
 
 	public Class<?> getType(XamlNode element) {
@@ -133,7 +131,7 @@ public class PasteElementAction extends SelectionAction {
 		return null;
 	}
 
-	public Boolean canPaste(Object createType, Class<?> parentType, XamlElement parent) {
+	public boolean canPaste(Object createType, Class<?> parentType, XamlElement parent) {
 		boolean canCreate = false;
 		if (createType instanceof Class<?>) {
 			Class<?> type = (Class<?>) createType;

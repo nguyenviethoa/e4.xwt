@@ -12,10 +12,12 @@ package org.eclipse.e4.tools.ui.designer;
 
 import java.util.List;
 
-import org.eclipse.e4.tools.ui.designer.actions.CategoryCreateAction;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.e4.tools.ui.designer.actions.FindElementAction;
+import org.eclipse.e4.tools.ui.designer.actions.NewChildAction;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerActionConstants;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.DesignerMenuProvider;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.IMenuManager;
@@ -32,10 +34,12 @@ public class E4DesignerMenuProvider extends DesignerMenuProvider {
 
 	private static final String EXTERNALIZE = "Externalize"; // add by xrchen
 																// 2009/9/22
+	private IProject project;
 
-	public E4DesignerMenuProvider(EditPartViewer viewer,
+	public E4DesignerMenuProvider(IProject project, EditPartViewer viewer,
 			ActionRegistry actionRegistry) {
 		super(viewer, actionRegistry);
+		this.project = project;
 	}
 
 	/*
@@ -77,8 +81,9 @@ public class E4DesignerMenuProvider extends DesignerMenuProvider {
 		} else {
 			if (selectedEditParts.size() == 1) {
 				// Single selection...
-				menu.appendToGroup(GROUP_NEW, getActionRegistry().getAction(
-						CategoryCreateAction.ID));
+				EditPart editPart = (EditPart) selectedEditParts.get(0);
+				menu.appendToGroup(GROUP_NEW, new NewChildAction(project,
+						editPart));
 			} else {
 				// Multi-Selection.
 			}

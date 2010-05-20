@@ -1,0 +1,175 @@
+<Composite xmlns="http://www.eclipse.org/xwt/presentation"
+	 xmlns:x="http://www.eclipse.org/xwt"
+	 xmlns:j="clr-namespace:java.lang"
+	 xmlns:c="clr-namespace:org.eclipse.e4.tools.ui.dataform.workbench.converter"
+	 xmlns:v="clr-namespace:org.eclipse.e4.tools.ui.dataform.workbench.validation"
+	 xmlns:p="clr-namespace:org.eclipse.e4.tools.ui.dataform.workbench"
+	 x:Class="org.eclipse.e4.tools.ui.dataform.workbench.WindowDataForm">
+	 <Composite.layout>
+	 <GridLayout numColumns="3" horizontalSpacing="5"
+		 makeColumnsEqualWidth="false" marginBottom="0" marginHeight="5" marginLeft="0"
+		 marginRight="0" marginTop="0" marginWidth="5" verticalSpacing="5" />
+	 </Composite.layout>
+	 	 <Label x:style="NONE"  text="Label *:" >
+	 </Label>
+	 <Text x:style="BORDER"  x:name="labelText" text="{Binding path=label, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=label, target={Binding}}, validationRule={v:RequiredValidationRule featureName=label, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Label x:style="SEPARATOR|HORIZONTAL">
+		 <Label.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="3" verticalSpan="1"/>
+		 </Label.layoutData>
+	 </Label>
+	 <Label x:style="NONE"  text="X:" >
+	 </Label>
+	 <Text x:style="BORDER"  x:name="xText" text="{Binding path=x, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=x, target={Binding}}, validationRule={v:BasicValidationRule featureName=x, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Label x:style="NONE"  text="Y:" >
+	 </Label>
+	 <Text x:style="BORDER"  x:name="yText" text="{Binding path=y, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=y, target={Binding}}, validationRule={v:BasicValidationRule featureName=y, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Label x:style="NONE"  text="Width:" >
+	 </Label>
+	 <Text x:style="BORDER"  x:name="widthText" text="{Binding path=width, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=width, target={Binding}}, validationRule={v:BasicValidationRule featureName=width, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Label x:style="NONE"  text="Height:" >
+	 </Label>
+	 <Text x:style="BORDER"  x:name="heightText" text="{Binding path=height, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=height, target={Binding}}, validationRule={v:BasicValidationRule featureName=height, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Label x:style="NONE"  text="Selected Element:" >
+	 </Label>
+	 <Text x:style="BORDER|READ_ONLY"  x:name="selectedElementText" text="{Binding path=selectedElement, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=selectedElement, target={Binding}}, validationRule={v:BasicValidationRule featureName=selectedElement, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="1" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Button x:style="NONE"  x:name="selectedElementButton" text="..." SelectionEvent="chooseSelectedElement">
+	 </Button>
+	 <Label x:style="NONE"  text="To Be Rendered:" >
+	 </Label>
+	 <Button x:style="CHECK"  selection="{Binding path=toBeRendered, updateSourceTrigger=PropertyChanged, target={Binding}}, validationRule={v:BasicValidationRule featureName=toBeRendered, target={Binding}}}">
+		 <Button.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Button.layoutData>
+	 </Button>
+	 <Label x:style="NONE"  text="On Top:" >
+	 </Label>
+	 <Button x:style="CHECK"  selection="{Binding path=onTop, updateSourceTrigger=PropertyChanged, target={Binding}}, validationRule={v:BasicValidationRule featureName=onTop, target={Binding}}}">
+		 <Button.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Button.layoutData>
+	 </Button>
+	 <Label x:style="NONE"  text="Visible:" >
+	 </Label>
+	 <Button x:style="CHECK"  selection="{Binding path=visible, updateSourceTrigger=PropertyChanged, target={Binding}}, validationRule={v:BasicValidationRule featureName=visible, target={Binding}}}">
+		 <Button.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Button.layoutData>
+	 </Button>
+	 <Label x:style="NONE"  text="Container Data:" >
+	 </Label>
+	 <Text x:style="BORDER"  x:name="containerDataText" text="{Binding path=containerData, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=containerData, target={Binding}}, validationRule={v:BasicValidationRule featureName=containerData, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Label x:style="NONE"  text="Element Id:" >
+	 </Label>
+	 <Text x:style="BORDER"  x:name="elementIdText" text="{Binding path=elementId, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=elementId, target={Binding}}, validationRule={v:BasicValidationRule featureName=elementId, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Label x:style="NONE"  text="Tags:" >
+	 </Label>
+	 <Text x:style="BORDER|READ_ONLY"  x:name="tagsText" text="{Binding path=tags, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=tags, target={Binding}}, validationRule={v:BasicValidationRule featureName=tags, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="1" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Button x:style="NONE"  x:name="tagsButton" text="..." SelectionEvent="chooseTags">
+	 </Button>
+	 <Label x:style="NONE"  text="Icon URI:" >
+	 </Label>
+	 <Text x:style="BORDER"  x:name="iconURIText" text="{Binding path=iconURI, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=iconURI, target={Binding}}, validationRule={v:URIValidationRule featureName=iconURI, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="1" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Button x:style="NONE"  x:name="iconURIButton" text="..." SelectionEvent="chooseIconURI">
+	 </Button>
+	 <Label x:style="NONE"  text="Tooltip:" >
+	 </Label>
+	 <Text x:style="BORDER"  x:name="tooltipText" text="{Binding path=tooltip, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=tooltip, target={Binding}}, validationRule={v:BasicValidationRule featureName=tooltip, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Label x:style="NONE"  text="Variables:" >
+	 </Label>
+	 <Text x:style="BORDER|READ_ONLY"  x:name="variablesText" text="{Binding path=variables, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=variables, target={Binding}}, validationRule={v:BasicValidationRule featureName=variables, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="1" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Button x:style="NONE"  x:name="variablesButton" text="..." SelectionEvent="chooseVariables">
+	 </Button>
+	 <Label x:style="NONE"  text="Binding Contexts:" >
+	 </Label>
+	 <Text x:style="BORDER|READ_ONLY"  x:name="bindingContextsText" text="{Binding path=bindingContexts, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=bindingContexts, target={Binding}}, validationRule={v:BasicValidationRule featureName=bindingContexts, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="1" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Button x:style="NONE"  x:name="bindingContextsButton" text="..." SelectionEvent="chooseBindingContexts">
+	 </Button>
+
+</Composite>

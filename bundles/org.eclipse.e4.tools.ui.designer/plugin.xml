@@ -135,4 +135,52 @@
          </Resource>
       </Contribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="org.eclipse.e4.tools.ui.designer.E4Designer">
+         <propertySection
+               class="org.eclipse.e4.tools.ui.designer.properties.AppearanceSection"
+               id="AppearanceSection"
+               tab="AppearanceTab">
+            <input
+                  type="org.eclipse.gef.EditPart">
+            </input>
+         </propertySection>
+         <propertySection
+               class="org.eclipse.e4.tools.ui.designer.properties.AvancedSection"
+               id="AdvancedSection"
+               tab="AdvancedTab">
+            <input
+                  type="org.eclipse.gef.EditPart">
+            </input>
+         </propertySection>
+      </propertySections>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs
+            contributorId="org.eclipse.e4.tools.ui.designer.E4Designer">
+         <propertyTab
+               category="cat"
+               id="AppearanceTab"
+               label="General">
+         </propertyTab>
+         <propertyTab
+               afterTab="AppearanceTab"
+               category="cat"
+               id="AdvancedTab"
+               label="Advanced">
+         </propertyTab>
+      </propertyTabs>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+      <propertyContributor
+            contributorId="org.eclipse.e4.tools.ui.designer.E4Designer">
+         <propertyCategory
+               category="cat">
+         </propertyCategory>
+      </propertyContributor>
+   </extension>
 </plugin>

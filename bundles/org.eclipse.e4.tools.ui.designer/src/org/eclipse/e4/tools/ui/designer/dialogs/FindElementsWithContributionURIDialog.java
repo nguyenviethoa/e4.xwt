@@ -8,26 +8,29 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.tools.ui.designer.widgets;
+package org.eclipse.e4.tools.ui.designer.dialogs;
 
-import org.eclipse.e4.ui.model.application.MApplicationElement;
+import org.eclipse.e4.ui.model.application.MContribution;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class FindElementsWithIdDialog extends AbstractFindElementsDialog {
+public class FindElementsWithContributionURIDialog extends
+		AbstractFindElementsDialog {
 
-	public FindElementsWithIdDialog(Shell shell, Object[] initializeElements) {
-		super(shell, initializeElements, "elementId:");
-		setMessage("Find Element With elementId");
+	public FindElementsWithContributionURIDialog(Shell shell,
+			Object[] initializeElements) {
+		super(shell, initializeElements, "contributionURI:");
+		setMessage("Find Element With contributionURI");
 	}
 
 	protected String getFilterForeignText(Object item) {
-		String elementId = null;
-		if (item instanceof MApplicationElement) {
-			elementId = ((MApplicationElement) item).getElementId();
+		String contributionURI = null;
+		if (item instanceof MContribution) {
+			contributionURI = ((MContribution) item).getContributionURI();
 		}
-		return elementId == null ? "" : elementId;
+		return contributionURI == null ? "" : contributionURI;
 	}
+
 }

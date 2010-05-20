@@ -44,6 +44,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
@@ -365,7 +366,12 @@ public abstract class ConfigureDesigner extends GraphicalEditor {
 	}
 
 	public IPropertySheetPage getPropertySheetPage() {
-		if (propertySheetPage == null) {
+		boolean recreate = true;
+		if (propertySheetPage != null) {
+			Control control = propertySheetPage.getControl();
+			recreate = control == null || control.isDisposed();
+		}
+		if (recreate) {
 			propertySheetPage = createPropertySheetPage();
 		}
 		return propertySheetPage;
