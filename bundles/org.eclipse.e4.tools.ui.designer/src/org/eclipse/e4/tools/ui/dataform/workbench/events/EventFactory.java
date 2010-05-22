@@ -13,14 +13,13 @@ package org.eclipse.e4.tools.ui.dataform.workbench.events;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.e4.tools.ui.dataform.DataForms;
-import org.eclipse.e4.tools.ui.designer.dialogs.FindElementsWithIdDialog;
+import org.eclipse.e4.tools.ui.designer.dialogs.FindByElementIdDialog;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl;
@@ -186,7 +185,7 @@ public class EventFactory {
 					return false;
 				}
 			}, true);
-			FindElementsWithIdDialog dialog = new FindElementsWithIdDialog(
+			FindByElementIdDialog dialog = new FindByElementIdDialog(
 					shell, children);
 			if (Window.OK == dialog.open()) {
 				Object result = dialog.getFirstResult();

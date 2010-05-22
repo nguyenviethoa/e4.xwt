@@ -17,11 +17,11 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class FindElementsWithNameDialog extends AbstractFindElementsDialog {
+public class FindByTypeNameDialog extends AbstractFindElementsDialog {
 
-	public FindElementsWithNameDialog(Shell shell, Object[] initializeElements) {
-		super(shell, initializeElements, "elementName:");
-		setMessage("Find Element With elementName");
+	public FindByTypeNameDialog(Shell shell, Object[] initializeElements) {
+		super(shell, initializeElements, "Type name:");
+		setMessage("Find element by type name");
 	}
 
 	protected String getFilterForeignText(Object item) {

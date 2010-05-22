@@ -10,27 +10,24 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.dialogs;
 
-import org.eclipse.e4.ui.model.application.MContribution;
+import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class FindElementsWithContributionURIDialog extends
-		AbstractFindElementsDialog {
+public class FindByElementIdDialog extends AbstractFindElementsDialog {
 
-	public FindElementsWithContributionURIDialog(Shell shell,
-			Object[] initializeElements) {
-		super(shell, initializeElements, "contributionURI:");
-		setMessage("Find Element With contributionURI");
+	public FindByElementIdDialog(Shell shell, Object[] initializeElements) {
+		super(shell, initializeElements, "element Id:");
+		setMessage("Find Element by Element Id");
 	}
 
 	protected String getFilterForeignText(Object item) {
-		String contributionURI = null;
-		if (item instanceof MContribution) {
-			contributionURI = ((MContribution) item).getContributionURI();
+		String elementId = null;
+		if (item instanceof MApplicationElement) {
+			elementId = ((MApplicationElement) item).getElementId();
 		}
-		return contributionURI == null ? "" : contributionURI;
+		return elementId == null ? "" : elementId;
 	}
-
 }

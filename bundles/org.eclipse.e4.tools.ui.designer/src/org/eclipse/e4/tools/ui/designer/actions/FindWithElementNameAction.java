@@ -11,21 +11,15 @@
 package org.eclipse.e4.tools.ui.designer.actions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
-import org.eclipse.e4.tools.ui.designer.dialogs.FindElementsWithNameDialog;
+import org.eclipse.e4.tools.ui.designer.dialogs.FindByTypeNameDialog;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.IFilter;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
@@ -39,11 +33,10 @@ public class FindWithElementNameAction extends Action {
 	public FindWithElementNameAction(EditPartViewer viewer) {
 		this.viewer = viewer;
 		setId(ID);
-		setText("Element Name");
+		setText("Type Name");
 	}
 
 	public void run() {
-		List<EObject> contexts = new ArrayList<EObject>();
 		List<EditPart> editparts = new ArrayList<EditPart>();
 		List selectedEditParts = viewer.getSelectedEditParts();
 		if (selectedEditParts != null && !selectedEditParts.isEmpty()) {
@@ -69,25 +62,12 @@ public class FindWithElementNameAction extends Action {
 				selectedElement, ApplicationPackageImpl.eINSTANCE
 						.getApplicationElement());
 
-		FindElementsWithNameDialog dialog = new FindElementsWithNameDialog(
-				new Shell(), elements.toArray(new Object[0]));
+		FindByTypeNameDialog dialog = new FindByTypeNameDialog(new Shell(),
+				elements.toArray(new Object[0]));
 		if (Window.OK == dialog.open()) {
 			Object object = dialog.getFirstResult();
-			EditPart editpart = (EditPart) viewer.getEditPartRegistry().get(
-					object);
-			if (editpart != null) {
-				viewer.reveal(editpart);
-				viewer.select(editpart);
-			} else {
-				StructuredSelection selection = new StructuredSelection(object);
-				ISelectionProvider selectionProvider = E4DesignerPlugin
-						.getDefault().getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().getActivePart().getSite()
-						.getSelectionProvider();
-				if (selectionProvider != null) {
-					selectionProvider.setSelection(selection);
-				}
-			}
+			DesignerSelectionTools.selectElement(object, viewer);
 		}
 	}
+
 }

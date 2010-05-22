@@ -16,7 +16,6 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
@@ -48,7 +47,6 @@ public class FindElementAction extends Action implements IMenuCreator {
 	private void makeActions(MenuManager menuManager) {
 		menuManager.add(new FindWithElementNameAction(viewer));
 		menuManager.add(new FindWithElementIdAction(viewer));
-		menuManager.add(new Separator());
 		menuManager.add(new FindWithContributionURIAction(viewer));
 	}
 
