@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -183,7 +184,7 @@ public class ResourceManager {
 				int style = SWT.NORMAL;
 				while (stk.hasMoreTokens()) {
 					String token = stk.nextToken().trim();
-					if (token.equalsIgnoreCase("normal") || token.equalsIgnoreCase("blod") || token.equalsIgnoreCase("italic") || token.contains("|")) {
+					if (token.equalsIgnoreCase("normal") || token.equalsIgnoreCase("bold") || token.equalsIgnoreCase("italic") || token.contains("|")) {
 						style = (Integer) ObjectUtil.resolveValue(token, Integer.class, style);
 					} else if (isInt(token)) {
 						height = Integer.parseInt(token);
@@ -228,7 +229,12 @@ public class ResourceManager {
 				return null;
 			}
 			try {
-				return new Image(Display.getDefault(), url.openStream());
+				InputStream stream = url.openStream();
+				try {
+					return new Image(Display.getDefault(), stream);
+				} finally {
+					stream.close();
+				}
 			} catch (IOException e) {
 				return null;
 			}
