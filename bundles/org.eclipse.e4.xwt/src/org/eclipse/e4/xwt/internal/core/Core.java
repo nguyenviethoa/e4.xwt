@@ -695,7 +695,7 @@ public class Core {
 
 			if (control instanceof Composite) {
 				Object parent = options.get(IXWTLoader.CONTAINER_PROPERTY);
-				Object designMode = options.get(IXWTLoader.DESIGN_MODE_ROPERTY);
+				Object designMode = options.get(IXWTLoader.DESIGN_MODE_PROPERTY);
 				if (parent instanceof Composite) {
 					Composite parentComposite = (Composite) parent;
 					if (parentComposite.getLayout() == null

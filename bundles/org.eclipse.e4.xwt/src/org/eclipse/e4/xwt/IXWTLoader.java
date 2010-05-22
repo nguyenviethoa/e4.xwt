@@ -55,7 +55,7 @@ public interface IXWTLoader {
 	/**
 	 * Used for editor/designer to pass design mode
 	 */
-	String DESIGN_MODE_ROPERTY = "XWT.DesignMode";
+	String DESIGN_MODE_PROPERTY = "XWT.DesignMode";
 
 	/**
 	 * Default styles to apply. The value should be a collection or Array of

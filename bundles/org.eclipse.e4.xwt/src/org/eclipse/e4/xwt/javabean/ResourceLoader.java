@@ -620,7 +620,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					|| IXWTLoader.LOADED_CALLBACK.equalsIgnoreCase(key)
 					|| IXWTLoader.CREATED_CALLBACK.equalsIgnoreCase(key)
 					|| IXWTLoader.BEFORE_PARSING_CALLBACK.equalsIgnoreCase(key)
-					|| IXWTLoader.DESIGN_MODE_ROPERTY.equalsIgnoreCase(key)) {
+					|| IXWTLoader.DESIGN_MODE_PROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
 			IProperty property = metaclass.findProperty(key);
@@ -1465,7 +1465,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			addCommandExecuteListener(attribute.getContent(), (Widget) target);
 		}
 		if (property == null) {
-			if (options.get(IXWTLoader.DESIGN_MODE_ROPERTY) == Boolean.TRUE) {
+			if (options.get(IXWTLoader.DESIGN_MODE_PROPERTY) == Boolean.TRUE) {
 				return;
 			}
 			// prepare event
