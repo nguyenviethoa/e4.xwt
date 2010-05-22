@@ -238,7 +238,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				if (receiver != null) {
 					Class<?> clazz = receiver.getClass();
 					method = ObjectUtil.findMethod(clazz, handler,
-							Object.class, Event.class);
+							control.getClass(), Event.class);
 					if (method == null) {
 						method = ObjectUtil.findMethod(clazz, handler,
 								Event.class);
@@ -520,6 +520,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					if (targetObject == null) {
 						return null;
 					}
+					invokeCreatededAction(element, targetObject);
 				} else
 					throw new XWTException(
 							"Cannot add user control: Parent is not a composite");
@@ -1464,6 +1465,10 @@ public class ResourceLoader implements IVisualElementLoader {
 			addCommandExecuteListener(attribute.getContent(), (Widget) target);
 		}
 		if (property == null) {
+			if (options.get(IXWTLoader.DESIGN_MODE_ROPERTY) == Boolean.TRUE) {
+				return;
+			}
+			// prepare event
 			IEvent event = metaclass.findEvent(attrName);
 			if (event == null) {
 				return;

@@ -233,11 +233,13 @@ public class DocumentRoot {
 			basePath = null;
 			baseURL = new URL(path);
 			PushbackInputStream pis = null;
+			boolean shouldClose_pis = false;
 			if (inputStream instanceof PushbackInputStream) {
 				pis = (PushbackInputStream) inputStream;
 			} else {
 				if (inputStream == null) {
 					pis = new PushbackInputStream(baseURL.openStream(), 4);
+					shouldClose_pis = true;
 				} else {
 					pis = new PushbackInputStream(inputStream, 4);
 				}
@@ -249,6 +251,9 @@ public class DocumentRoot {
 				File tempDir = extractZipToTemporary(pis);
 				basePath = "file:/" + tempDir.getAbsolutePath();
 				baseFile = getMainFile(tempDir);
+			}
+			if (shouldClose_pis) {
+				pis.close();
 			}
 
 			if (basePath == null) {

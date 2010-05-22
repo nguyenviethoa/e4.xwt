@@ -228,11 +228,18 @@ public class ElementManager {
 			documentRoot.init(null, url.toString());
 
 			InputStream input = url.openStream();
-			doLoad(input);
+			try {
+				doLoad(input);
+			} finally {
+				input.close();
+			}
 
 			input = documentRoot.openStream();
-			loadXData(input);
-			input.close();
+			try {
+				loadXData(input);
+			} finally {
+				input.close();
+			}
 		}
 		else {
 			String content = callback.onParsing(url.toString());
@@ -240,11 +247,18 @@ public class ElementManager {
 			documentRoot.init(null, content);
 
 			InputStream input = new ByteArrayInputStream(content.getBytes());
-			doLoad(input);
+			try {
+				doLoad(input);
+			} finally {
+				input.close();
+			}
 
 			input = documentRoot.openStream();
-			loadXData(input);
-			input.close();			
+			try {
+				loadXData(input);
+			} finally {
+				input.close();
+			}
 		}
 		return rootElement;			
 	}
