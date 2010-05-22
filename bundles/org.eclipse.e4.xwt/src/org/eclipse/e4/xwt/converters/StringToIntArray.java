@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.e4.xwt.XWTException;
 
 /**
  * String to int[] converter
@@ -32,25 +33,21 @@ public class StringToIntArray implements IConverter {
 	public Object convert(Object fromObject) {
 		String source = (String) fromObject;
 		List<Integer> result = new ArrayList<Integer>();
-		if (source.indexOf(",") != -1) {
-			StringTokenizer stk = new StringTokenizer(source, ",");
-			while (stk.hasMoreTokens()) {
-				String nextToken = stk.nextToken();
-				try {
-					result.add(Integer.parseInt(nextToken.trim()));
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
+		StringTokenizer stk = new StringTokenizer(source, ",");
+		while (stk.hasMoreTokens()) {
+			String nextToken = stk.nextToken();
+			try {
+				result.add(Integer.parseInt(nextToken.trim()));
+			} catch (NumberFormatException e) {
+				throw new XWTException(source + " is not integer array");
 			}
-			int[] intArray = new int[result.size()];
-			for (int i = 0; i < result.size(); i++) {
-				intArray[i] = result.get(i);
-			}
-			return intArray;
 		}
-		return new int[0];
+		int[] intArray = new int[result.size()];
+		for (int i = 0; i < result.size(); i++) {
+			intArray[i] = result.get(i);
+		}
+		return intArray;
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
