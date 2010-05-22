@@ -16,11 +16,13 @@ import java.util.Map;
 import org.eclipse.core.databinding.AggregateValidationStatus;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.e4.tools.ui.dataform.DataForms;
 import org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl;
 import org.eclipse.e4.xwt.databinding.BindingContext;
+import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -39,6 +41,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
@@ -61,6 +64,8 @@ public class AppearanceSection extends AbstractPropertySection {
 
 	private AggregateValidationStatus validation;
 	private ValidationStatusListener listener = new ValidationStatusListener();
+
+	private EditDomain editDomain;
 
 	public void createControls(Composite parent,
 			TabbedPropertySheetPage propertyPage) {
@@ -144,6 +149,15 @@ public class AppearanceSection extends AbstractPropertySection {
 		if (control instanceof AbstractDataForm) {
 			AbstractDataForm widget = (AbstractDataForm) control;
 			widget.setNewObject(eObj);
+			if (editDomain != null) {
+				widget.setCommandStack(editDomain.getCommandStack());
+				IEditorPart editorPart = editDomain.getEditorPart();
+				if (editorPart != null) {
+					IProject project = (IProject) editorPart
+							.getAdapter(IProject.class);
+					widget.setProject(project);
+				}
+			}
 			BindingContext bindingContext = widget.getBindingContext();
 			if (bindingContext != null) {
 				validation = bindingContext.getStatus();
@@ -161,8 +175,13 @@ public class AppearanceSection extends AbstractPropertySection {
 		Control control = null;
 		if (newType == null || stackComp.isDisposed()) {
 			control = emptyLabel;
-		} else if (ApplicationPackageImpl.eINSTANCE.getApplicationElement().isSuperTypeOf(newType)){
+		} else if (ApplicationPackageImpl.eINSTANCE.getApplicationElement()
+				.isSuperTypeOf(newType)) {
 			control = DataForms.createWidget(newType, stackComp, null);
+			if (control instanceof AbstractDataForm) {
+				AbstractDataForm dataForm = (AbstractDataForm) control;
+				dataForm.setContainer(eObj);
+			}
 		}
 		if (control == null) {
 			control = emptyLabel;
@@ -177,7 +196,9 @@ public class AppearanceSection extends AbstractPropertySection {
 			Object object = ((IStructuredSelection) selection)
 					.getFirstElement();
 			if (object instanceof EditPart) {
-				Object model = ((EditPart) object).getModel();
+				EditPart editPart = (EditPart) object;
+				editDomain = EditDomain.getEditDomain(editPart);
+				Object model = editPart.getModel();
 				if (model instanceof EObject) {
 					newObj = (EObject) model;
 				}
@@ -205,10 +226,6 @@ public class AppearanceSection extends AbstractPropertySection {
 
 		public void setValidation(AggregateValidationStatus validation) {
 			this.validation = validation;
-		}
-
-		public AggregateValidationStatus getValidation() {
-			return validation;
 		}
 
 	}

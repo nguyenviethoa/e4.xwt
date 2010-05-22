@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
-import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-
+import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
@@ -23,28 +22,28 @@ public class WindowDataForm extends AbstractDataForm {
 		super(parent, style);
 	}
 
-	public void chooseSelectedElement(Object object, Event event) {
-		handleEvent("selectedElement");
-	}
-
-	public void chooseTags(Object object, Event event) {
-		handleEvent("tags");
-	}
-
-	public void chooseContext(Object object, Event event) {
-		handleEvent("context");
-	}
-
-	public void chooseVariables(Object object, Event event) {
-		handleEvent("variables");
-	}
-
 	public void chooseBindingContexts(Object object, Event event) {
 		handleEvent("bindingContexts");
 	}
 
 	public void chooseIconURI(Object object, Event event) {
 		handleEvent("iconURI");
+	}
+
+	public void chooseSelectedElement(Object object, Event event) {
+		handleEvent("selectedElement");
+	}
+
+	public void chooseSharedElements(Object object, Event event) {
+		handleEvent("sharedElements");
+	}
+
+	public void chooseTags(Object object, Event event) {
+		handleEvent("tags");
+	}
+
+	public void chooseVariables(Object object, Event event) {
+		handleEvent("variables");
 	}
 
 }

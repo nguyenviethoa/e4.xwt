@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
-import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-
+import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
@@ -23,24 +22,24 @@ public class DirectToolItemDataForm extends AbstractDataForm {
 		super(parent, style);
 	}
 
-	public void chooseTags(Object object, Event event) {
-		handleEvent("tags");
-	}
-
-	public void chooseSelectedElement(Object object, Event event) {
-		handleEvent("selectedElement");
-	}
-
-	public void choosePersistedState(Object object, Event event) {
-		handleEvent("persistedState");
-	}
-
 	public void chooseContributionURI(Object object, Event event) {
 		handleEvent("contributionURI");
 	}
 
 	public void chooseIconURI(Object object, Event event) {
 		handleEvent("iconURI");
+	}
+
+	public void choosePersistedState(Object object, Event event) {
+		handleEvent("persistedState");
+	}
+
+	public void chooseSelectedElement(Object object, Event event) {
+		handleEvent("selectedElement");
+	}
+
+	public void chooseTags(Object object, Event event) {
+		handleEvent("tags");
 	}
 
 }

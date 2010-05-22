@@ -11,18 +11,16 @@
 package org.eclipse.e4.tools.ui.designer.actions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.tools.ui.designer.dialogs.FindElementsWithIdDialog;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.ui.model.application.MApplicationElement;
+import org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -50,31 +48,24 @@ public class FindWithElementIdAction extends Action {
 		} else {
 			editparts.add(viewer.getRootEditPart());
 		}
+		EObject selectedElement = null;
 		for (EditPart ep : editparts) {
 			Object model = ep.getModel();
 			if (model instanceof EObject) {
-				contexts.add((EObject) model);
+				selectedElement = (EObject) model;
+				break;
 			}
 		}
-		List<Object> elements = new ArrayList<Object>();
-		for (EObject parent : contexts) {
-			Object[] children = ApplicationModelHelper.getChildren(parent,
-					new IFilter() {
-						public boolean select(Object toTest) {
-							if (toTest instanceof EObject
-									&& toTest instanceof MApplicationElement) {
-								return ((EObject) toTest).eResource() != null;
-							}
-							return false;
-						}
-					}, true);
-			if (children == null || children.length == 0) {
-				continue;
-			}
-			elements.addAll(Arrays.asList(children));
+		if (selectedElement == null) {
+			// TODO
+			return;
 		}
-		FindElementsWithIdDialog dialog = new FindElementsWithIdDialog(new Shell(),
-				elements.toArray(new Object[0]));
+		List<?> elements = ApplicationModelHelper.collectAllElements(
+				selectedElement, ApplicationPackageImpl.eINSTANCE
+						.getApplicationElement());
+
+		FindElementsWithIdDialog dialog = new FindElementsWithIdDialog(
+				new Shell(), elements.toArray(new Object[0]));
 		if (Window.OK == dialog.open()) {
 			Object object = dialog.getFirstResult();
 			EditPart editpart = (EditPart) viewer.getEditPartRegistry().get(

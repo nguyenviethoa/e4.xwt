@@ -11,23 +11,14 @@
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class ItemDataForm extends AbstractDataForm {
+public class PartDescriptorContainerDataForm extends AbstractDataForm {
 
-	public ItemDataForm(Composite parent, int style) {
+	public PartDescriptorContainerDataForm(Composite parent, int style) {
 		super(parent, style);
-	}
-
-	public void chooseIconURI(Object object, Event event) {
-		handleEvent("iconURI");
-	}
-
-	public void chooseTags(Object object, Event event) {
-		handleEvent("tags");
 	}
 
 }

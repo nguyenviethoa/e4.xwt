@@ -18,14 +18,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.e4.tools.ui.dataform.workbench.events.EventFactory;
 import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -40,7 +34,10 @@ public abstract class AbstractDataForm extends Composite {
 	private IProject project;
 	private BindingContext bindingContext;
 
-	private Adapter copier;
+	private CommandStack commandStack;
+
+	private DataCopier dataContextCopier;
+	private DataCopier newObjectCopier;
 
 	public AbstractDataForm(Composite parent, int style) {
 		super(parent, style);
@@ -56,95 +53,57 @@ public abstract class AbstractDataForm extends Composite {
 
 	public void setNewObject(EObject newObject) {
 		this.newObject = newObject;
+		EObject dc = getDataContext();
+		if (dc == null) {
+			return;
+		}
 		if (newObject != null) {
-			removeAdapter();
-			copy(newObject, getDataContext());
 			addAdapter();
 		} else {
 			removeAdapter();
 		}
 	}
 
-	private void copy(EObject from, EObject to) {
-		if (!hasSameType(from, to)) {
-			return;
-		}
-		BindingContext bc = getBindingContext();
-		List<Binding> bindings = null;
-		if (bc != null) {
-			bindings = new ArrayList<Binding>(bc.getBindings());
-			for (Binding binding : bindings) {
-				bc.removeBinding(binding);
-			}
-		}
-		EClass eType = to.eClass();
-		EObject copy = EcoreUtil.copy(from);
-		EList<EStructuralFeature> features = eType.getEAllStructuralFeatures();
-		for (EStructuralFeature sf : features) {
-			if (copy.eIsSet(sf)) {
-				Object featureValue = copy.eGet(sf);
-				to.eSet(sf, featureValue);
-			} else if (to.eIsSet(sf)) {
-				to.eUnset(sf);
-			}
-		}
-		if (bc != null && bindings != null) {
-			for (Binding binding : bindings) {
-				bc.addBinding(binding);
-			}
-		}
-	}
-
 	private void removeAdapter() {
-		if (getDataContext() != null) {
-			dataContext.eAdapters().remove(copier);
+		if (dataContextCopier != null) {
+			dataContextCopier.dispose();
 		}
+		dataContextCopier = null;
+		if (newObjectCopier != null) {
+			newObjectCopier.dispose();
+		}
+		newObjectCopier = null;
 	}
 
 	private void addAdapter() {
+		removeAdapter();
 		EObject dc = getDataContext();
-		if (dc == null) {
-			return;
-		}
-		if (copier == null) {
-			copier = new AdapterImpl() {
-				public void notifyChanged(Notification msg) {
-					handleValueChanged(msg);
+		dataContextCopier = new DataCopier(dc, newObject);
+		dataContextCopier.setCommandStack(commandStack);
+		newObjectCopier = new DataCopier(newObject, dc) {
+			protected void copy() {
+				BindingContext bc = getBindingContext();
+				List<Binding> bindings = null;
+				if (bc != null) {
+					bindings = new ArrayList<Binding>(bc.getBindings());
+					for (Binding binding : bindings) {
+						bc.removeBinding(binding);
+					}
+				}
+				super.copy();
+				if (bc != null && bindings != null) {
+					for (Binding binding : bindings) {
+						bc.addBinding(binding);
+					}
 				}
 			};
-		}
-		if (!dc.eAdapters().contains(copier)) {
-			dc.eAdapters().add(copier);
-		}
-	}
-
-	private void handleValueChanged(Notification msg) {
-		if (msg.isTouch() || !hasSameType(newObject, dataContext)) {
-			return;
-		}
-		EStructuralFeature feature = (EStructuralFeature) msg.getFeature();
-		Object newValue = msg.getNewValue();
-		if (feature != null) {
-			newObject.eSet(feature, newValue);
-		}
-	}
-
-	protected boolean hasSameType(EObject o1, EObject o2) {
-		if (o1 == null || o2 == null) {
-			return false;
-		}
-		return equals(o1.eClass(), o2.eClass());
+		};
+		newObjectCopier.copy();
 	}
 
 	public void dispose() {
-		if (dataContext != null) {
-			dataContext.eAdapters().remove(copier);
-		}
+		removeAdapter();
 		super.dispose();
-	}
-
-	protected boolean equals(Object o1, Object o2) {
-		return o1 == null ? o2 == null : o1.equals(o2);
 	}
 
 	public EObject getDataContext() {
@@ -173,5 +132,13 @@ public abstract class AbstractDataForm extends Composite {
 
 	public BindingContext getBindingContext() {
 		return bindingContext;
+	}
+
+	public void setCommandStack(CommandStack commandStack) {
+		this.commandStack = commandStack;
+	}
+
+	public CommandStack getCommandStack() {
+		return commandStack;
 	}
 }

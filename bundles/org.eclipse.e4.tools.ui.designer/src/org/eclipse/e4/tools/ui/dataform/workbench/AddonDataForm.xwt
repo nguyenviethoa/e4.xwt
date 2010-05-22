@@ -3,7 +3,6 @@
 	 xmlns:j="clr-namespace:java.lang"
 	 xmlns:c="clr-namespace:org.eclipse.e4.tools.ui.dataform.workbench.converter"
 	 xmlns:v="clr-namespace:org.eclipse.e4.tools.ui.dataform.workbench.validation"
-	 xmlns:p="clr-namespace:org.eclipse.e4.tools.ui.dataform.workbench"
 	 x:Class="org.eclipse.e4.tools.ui.dataform.workbench.AddonDataForm">
 	 <Composite.layout>
 	 <GridLayout numColumns="3" horizontalSpacing="5"

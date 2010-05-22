@@ -221,7 +221,7 @@ public abstract class ConfigureDesigner extends GraphicalEditor {
 		}
 		EditPart editPart = (EditPart) viewer.getEditPartRegistry().get(model);
 		if (editPart == null) {
-			editPart = viewer.getContents();
+			// editPart = viewer.getContents();
 		}
 		if (editPart != null) {
 			refresher.refreshInJob(editPart);

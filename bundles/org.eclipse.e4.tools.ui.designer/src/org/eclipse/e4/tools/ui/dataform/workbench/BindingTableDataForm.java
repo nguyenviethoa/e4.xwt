@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
-import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-
+import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
@@ -23,12 +22,12 @@ public class BindingTableDataForm extends AbstractDataForm {
 		super(parent, style);
 	}
 
-	public void chooseTags(Object object, Event event) {
-		handleEvent("tags");
-	}
-
 	public void chooseBindingContextId(Object object, Event event) {
 		handleEvent("bindingContextId");
+	}
+
+	public void chooseTags(Object object, Event event) {
+		handleEvent("tags");
 	}
 
 }

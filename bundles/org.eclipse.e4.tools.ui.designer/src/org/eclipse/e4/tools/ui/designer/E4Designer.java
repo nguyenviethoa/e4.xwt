@@ -17,6 +17,7 @@ import org.eclipse.e4.tools.ui.designer.actions.CutElementAction;
 import org.eclipse.e4.tools.ui.designer.actions.PasteElementAction;
 import org.eclipse.e4.tools.ui.designer.editparts.E4EditPartsFactory;
 import org.eclipse.e4.tools.ui.designer.outline.TreeEditPartFactory;
+import org.eclipse.e4.tools.ui.designer.properties.E4TabbedPropertySheetPage;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.xwt.tools.ui.designer.core.ceditor.ConfigureDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
@@ -34,7 +35,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
-import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
  * @author jin.liu(jin.liu@soyatec.com)
@@ -113,9 +113,7 @@ public class E4Designer extends ConfigureDesigner implements
 	}
 
 	protected IPropertySheetPage createPropertySheetPage() {
-		TabbedPropertySheetPage propertyPage = new TabbedPropertySheetPage(
-				this, false);
-		return propertyPage;
+		return new E4TabbedPropertySheetPage(this, getCommandStack());
 	}
 
 	protected IContentOutlinePage createContentOutlinePage() {

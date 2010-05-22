@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
-import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
@@ -22,8 +22,20 @@ public class InputPartDataForm extends AbstractDataForm {
 		super(parent, style);
 	}
 
-	public void chooseContext(Object object, Event event) {
-		handleEvent("context");
+	public void chooseBindingContexts(Object object, Event event) {
+		handleEvent("bindingContexts");
+	}
+
+	public void chooseContributionURI(Object object, Event event) {
+		handleEvent("contributionURI");
+	}
+
+	public void chooseIconURI(Object object, Event event) {
+		handleEvent("iconURI");
+	}
+
+	public void chooseInputURI(Object object, Event event) {
+		handleEvent("inputURI");
 	}
 
 	public void choosePersistedState(Object object, Event event) {
@@ -36,22 +48,6 @@ public class InputPartDataForm extends AbstractDataForm {
 
 	public void chooseVariables(Object object, Event event) {
 		handleEvent("variables");
-	}
-
-	public void chooseBindingContexts(Object object, Event event) {
-		handleEvent("bindingContexts");
-	}
-
-	public void chooseContributionURI(Object object, Event event) {
-		handleEvent("contributionURI");
-	}
-
-	public void chooseInputURI(Object object, Event event) {
-		handleEvent("inputURI");
-	}
-
-	public void chooseIconURI(Object object, Event event) {
-		handleEvent("iconURI");
 	}
 
 }

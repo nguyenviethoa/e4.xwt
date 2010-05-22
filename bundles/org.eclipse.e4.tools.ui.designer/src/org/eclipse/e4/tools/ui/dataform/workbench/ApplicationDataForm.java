@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
-import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-
+import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
@@ -21,6 +20,10 @@ public class ApplicationDataForm extends AbstractDataForm {
 
 	public ApplicationDataForm(Composite parent, int style) {
 		super(parent, style);
+	}
+
+	public void chooseBindingContexts(Object object, Event event) {
+		handleEvent("bindingContexts");
 	}
 
 	public void chooseSelectedElement(Object object, Event event) {
@@ -31,16 +34,8 @@ public class ApplicationDataForm extends AbstractDataForm {
 		handleEvent("tags");
 	}
 
-	public void chooseContext(Object object, Event event) {
-		handleEvent("context");
-	}
-
 	public void chooseVariables(Object object, Event event) {
 		handleEvent("variables");
-	}
-
-	public void chooseBindingContexts(Object object, Event event) {
-		handleEvent("bindingContexts");
 	}
 
 }

@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
-import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-
+import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
@@ -27,16 +26,16 @@ public class HandledItemDataForm extends AbstractDataForm {
 		handleEvent("command");
 	}
 
-	public void chooseWbCommand(Object object, Event event) {
-		handleEvent("wbCommand");
+	public void chooseIconURI(Object object, Event event) {
+		handleEvent("iconURI");
 	}
 
 	public void chooseTags(Object object, Event event) {
 		handleEvent("tags");
 	}
 
-	public void chooseIconURI(Object object, Event event) {
-		handleEvent("iconURI");
+	public void chooseWbCommand(Object object, Event event) {
+		handleEvent("wbCommand");
 	}
 
 }

@@ -268,9 +268,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		if (source instanceof Notification) {
 			Notification msg = (Notification) source;
 			Object notifier = msg.getNotifier();
-			if (notifier instanceof MUIElement) {
-				return new Result(((MUIElement) notifier), true);
-			}
+			return new Result(notifier, true);
 		}
 		return null;
 	}

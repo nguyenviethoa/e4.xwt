@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
-import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-
+import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
@@ -21,11 +20,14 @@ public class HandlerDataForm extends AbstractDataForm {
 
 	public HandlerDataForm(Composite parent, int style) {
 		super(parent, style);
-		// setType(CommandsPackageImpl.Literals.HANDLER);
 	}
 
 	public void chooseCommand(Object object, Event event) {
 		handleEvent("command");
+	}
+
+	public void chooseContributionURI(Object object, Event event) {
+		handleEvent("contributionURI");
 	}
 
 	public void choosePersistedState(Object object, Event event) {
@@ -34,10 +36,6 @@ public class HandlerDataForm extends AbstractDataForm {
 
 	public void chooseTags(Object object, Event event) {
 		handleEvent("tags");
-	}
-
-	public void chooseContributionURI(Object object, Event event) {
-		handleEvent("contributionURI");
 	}
 
 }

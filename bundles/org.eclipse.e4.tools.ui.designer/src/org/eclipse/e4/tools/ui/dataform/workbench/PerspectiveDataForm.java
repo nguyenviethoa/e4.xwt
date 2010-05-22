@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
-import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-
+import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
@@ -23,8 +22,8 @@ public class PerspectiveDataForm extends AbstractDataForm {
 		super(parent, style);
 	}
 
-	public void chooseContext(Object object, Event event) {
-		handleEvent("context");
+	public void chooseIconURI(Object object, Event event) {
+		handleEvent("iconURI");
 	}
 
 	public void chooseSelectedElement(Object object, Event event) {
@@ -37,10 +36,6 @@ public class PerspectiveDataForm extends AbstractDataForm {
 
 	public void chooseVariables(Object object, Event event) {
 		handleEvent("variables");
-	}
-
-	public void chooseIconURI(Object object, Event event) {
-		handleEvent("iconURI");
 	}
 
 }

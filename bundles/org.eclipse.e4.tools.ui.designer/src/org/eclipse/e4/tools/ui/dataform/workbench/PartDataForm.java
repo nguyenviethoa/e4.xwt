@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench;
 
-import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-
+import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
@@ -21,22 +20,6 @@ public class PartDataForm extends AbstractDataForm {
 
 	public PartDataForm(Composite parent, int style) {
 		super(parent, style);
-	}
-
-	public void choosePersistedState(Object object, Event event) {
-		handleEvent("persistedState");
-	}
-
-	public void chooseTags(Object object, Event event) {
-		handleEvent("tags");
-	}
-
-	public void chooseContext(Object object, Event event) {
-		handleEvent("context");
-	}
-
-	public void chooseVariables(Object object, Event event) {
-		handleEvent("variables");
 	}
 
 	public void chooseBindingContexts(Object object, Event event) {
@@ -49,6 +32,18 @@ public class PartDataForm extends AbstractDataForm {
 
 	public void chooseIconURI(Object object, Event event) {
 		handleEvent("iconURI");
+	}
+
+	public void choosePersistedState(Object object, Event event) {
+		handleEvent("persistedState");
+	}
+
+	public void chooseTags(Object object, Event event) {
+		handleEvent("tags");
+	}
+
+	public void chooseVariables(Object object, Event event) {
+		handleEvent("variables");
 	}
 
 }

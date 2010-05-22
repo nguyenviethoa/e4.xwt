@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.gef.ui.properties.UndoablePropertySheetEntry;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -30,6 +32,14 @@ public class AvancedSection extends AdvancedPropertySection {
 	public void createControls(Composite parent,
 			TabbedPropertySheetPage propertyPage) {
 		super.createControls(parent, propertyPage);
+		CommandStack commandStack = null;
+		if (propertyPage instanceof E4TabbedPropertySheetPage) {
+			commandStack = ((E4TabbedPropertySheetPage) propertyPage)
+					.getCommandStack();
+		}
+		if (commandStack != null) {
+			page.setRootEntry(new UndoablePropertySheetEntry(commandStack));
+		}
 		page.setPropertySourceProvider(ApplicationModelHelper
 				.getContentProvider());
 	}

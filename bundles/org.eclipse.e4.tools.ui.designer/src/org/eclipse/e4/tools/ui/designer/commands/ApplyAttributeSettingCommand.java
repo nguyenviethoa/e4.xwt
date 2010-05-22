@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.commands.Command;
@@ -59,6 +61,19 @@ public class ApplyAttributeSettingCommand extends Command {
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
 	public void execute() {
+		if (feature.isMany()) {
+			List oldValue = (List) eObject.eGet(feature);
+			if (newValue == null) {
+				return;					
+			}
+			if (oldValue != null && oldValue.isEmpty()) {
+				return;
+			}
+			if (!(newValue instanceof List) && !oldValue.contains(newValue)) {
+				oldValue.add(newValue);
+				return;
+			}
+		}
 		eObject.eSet(feature, newValue);
 	}
 

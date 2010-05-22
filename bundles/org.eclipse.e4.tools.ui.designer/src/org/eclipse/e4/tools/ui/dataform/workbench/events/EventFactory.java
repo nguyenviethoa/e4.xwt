@@ -108,6 +108,8 @@ public class EventFactory {
 			FeatureEditorDialog dialog = new FeatureEditorDialog(shell,
 					ApplicationModelHelper.getLabelProvider(), eObj, attribute,
 					displayName, null);
+			dialog.create();
+			dialog.getShell().pack(true);
 			if (Window.OK == dialog.open()) {
 				EList<?> result = dialog.getResult();
 				eObj.eSet(attribute, result);
@@ -220,6 +222,7 @@ public class EventFactory {
 					"Failed to handle reference.");
 			return;
 		}
+
 		final EClassifier featureType = reference.getEType();
 		Object[] children = ApplicationModelHelper.getChildren(parent
 				.eResource(), new IFilter() {
@@ -237,27 +240,44 @@ public class EventFactory {
 				return false;
 			}
 		}, true);
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-				shell, ApplicationModelHelper.getLabelProvider());
-		dialog.setElements(children);
-		dialog.setMultipleSelection(reference.isMany());
+
 		Object oldValue = null;
 		try {
 			oldValue = eObj.eGet(reference);
 		} catch (Exception e) {
 		}
-		if (oldValue != null) {
-			dialog.setInitialElementSelections((List) (reference.isMany() ? oldValue
-					: Collections.singletonList(oldValue)));
-		}
-		dialog.create();
-		dialog.setTitle("Choose " + featureType.getName());
-		dialog.getShell().setText(reference.getName() + " - Reference");
-		if (dialog.open() == Window.OK) {
-			Object[] result = dialog.getResult();
-			if (reference.isMany()) {
-				eObj.eSet(reference, Arrays.asList(result));
-			} else {
+
+		if (reference.isMany()) {
+			String displayName = ApplicationModelHelper.getDisplayName(eObj,
+					reference);
+			if (displayName == null) {
+				displayName = reference.getName();
+			}
+			FeatureEditorDialog dialog = new FeatureEditorDialog(shell,
+					ApplicationModelHelper.getLabelProvider(), eObj,
+					featureType, (List<?>) oldValue, displayName,
+					ApplicationModelHelper.collectAllElements(parent,
+							featureType), false, false, reference.isUnique());
+			if (dialog.open() == Window.OK) {
+				EList<?> result = dialog.getResult();
+				List list = (List) oldValue;
+				list.clear();
+				list.addAll(result);
+			}
+		} else {
+			ElementListSelectionDialog dialog = new ElementListSelectionDialog(
+					shell, ApplicationModelHelper.getLabelProvider());
+			dialog.setElements(children);
+			dialog.setMultipleSelection(reference.isMany());
+			if (oldValue != null) {
+				dialog.setInitialElementSelections((List) (reference.isMany() ? oldValue
+						: Collections.singletonList(oldValue)));
+			}
+			dialog.create();
+			dialog.setTitle("Choose " + featureType.getName());
+			dialog.getShell().setText(reference.getName() + " - Reference");
+			if (dialog.open() == Window.OK) {
+				Object[] result = dialog.getResult();
 				eObj.eSet(reference, result[0]);
 			}
 		}

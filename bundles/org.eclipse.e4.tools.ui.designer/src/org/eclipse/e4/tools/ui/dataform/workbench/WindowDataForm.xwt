@@ -3,7 +3,6 @@
 	 xmlns:j="clr-namespace:java.lang"
 	 xmlns:c="clr-namespace:org.eclipse.e4.tools.ui.dataform.workbench.converter"
 	 xmlns:v="clr-namespace:org.eclipse.e4.tools.ui.dataform.workbench.validation"
-	 xmlns:p="clr-namespace:org.eclipse.e4.tools.ui.dataform.workbench"
 	 x:Class="org.eclipse.e4.tools.ui.dataform.workbench.WindowDataForm">
 	 <Composite.layout>
 	 <GridLayout numColumns="3" horizontalSpacing="5"
@@ -62,6 +61,17 @@
 				 verticalAlignment="GridData.FILL" horizontalSpan="2" verticalSpan="1"/>
 		 </Text.layoutData>
 	 </Text>
+	 <Label x:style="NONE"  text="Shared Elements:" >
+	 </Label>
+	 <Text x:style="BORDER|READ_ONLY"  x:name="sharedElementsText" text="{Binding path=sharedElements, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=sharedElements, target={Binding}}, validationRule={v:BasicValidationRule featureName=sharedElements, target={Binding}}}">
+		 <Text.layoutData>
+			 <GridData grabExcessVerticalSpace="false"
+				 grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"
+				 verticalAlignment="GridData.FILL" horizontalSpan="1" verticalSpan="1"/>
+		 </Text.layoutData>
+	 </Text>
+	 <Button x:style="NONE"  x:name="sharedElementsButton" text="..." SelectionEvent="chooseSharedElements">
+	 </Button>
 	 <Label x:style="NONE"  text="Selected Element:" >
 	 </Label>
 	 <Text x:style="BORDER|READ_ONLY"  x:name="selectedElementText" text="{Binding path=selectedElement, updateSourceTrigger=PropertyChanged, converter={c:FeatureValueConverter featureName=selectedElement, target={Binding}}, validationRule={v:BasicValidationRule featureName=selectedElement, target={Binding}}}">

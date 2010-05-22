@@ -16,10 +16,18 @@ import org.eclipse.e4.tools.ui.dataform.AbstractDataForm;
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
  */
-public class ItemDataForm extends AbstractDataForm {
+public class PartDescriptorDataForm extends AbstractDataForm {
 
-	public ItemDataForm(Composite parent, int style) {
+	public PartDescriptorDataForm(Composite parent, int style) {
 		super(parent, style);
+	}
+
+	public void chooseBindingContexts(Object object, Event event) {
+		handleEvent("bindingContexts");
+	}
+
+	public void chooseContributionURI(Object object, Event event) {
+		handleEvent("contributionURI");
 	}
 
 	public void chooseIconURI(Object object, Event event) {

@@ -202,8 +202,8 @@ public class DataForms {
 			options.put(XWTLoader.BINDING_CONTEXT_PROPERTY, bindingContext);
 			options.put(XWTLoader.CLASS_PROPERTY, clr);
 
-			AbstractDataForm dataformControl = (AbstractDataForm) XWT.loadWithOptions(url,
-					options);
+			AbstractDataForm dataformControl = (AbstractDataForm) XWT
+					.loadWithOptions(url, options);
 			Layout layout = parent.getLayout();
 			if (layout == null || layout instanceof GridLayout) {
 				GridLayoutFactory.swtDefaults().generateLayout(parent);
