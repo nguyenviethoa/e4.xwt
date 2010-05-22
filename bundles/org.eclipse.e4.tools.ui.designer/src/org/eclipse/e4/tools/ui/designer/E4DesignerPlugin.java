@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import java.net.URL;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -25,6 +28,8 @@ public class E4DesignerPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	private static E4DesignerPlugin plugin;
+	
+	private ResourceLocator resourceLocator;
 
 	/**
 	 * The constructor
@@ -279,4 +284,37 @@ public class E4DesignerPlugin extends AbstractUIPlugin {
 		return new Status(severity, PLUGIN_ID, 0, message, exception);
 	}
 
+	
+	public ResourceLocator getResourceLocator() {
+		if (resourceLocator == null) {
+			resourceLocator = new ResourceLocator() {
+				
+				public String getString(String key, Object[] substitutions,
+						boolean translate) {
+					return null;
+				}
+				
+				public String getString(String key, Object[] substitutions) {
+					return null;
+				}
+				
+				public String getString(String key, boolean translate) {
+					return null;
+				}
+				
+				public String getString(String key) {
+					return null;
+				}
+				
+				public Object getImage(String key) {
+					return null;
+				}
+				
+				public URL getBaseURL() {
+					return null;
+				}
+			};
+		}
+		return resourceLocator;
+	}
 }

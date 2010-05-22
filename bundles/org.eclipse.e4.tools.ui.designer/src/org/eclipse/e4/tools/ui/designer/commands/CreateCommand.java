@@ -13,7 +13,7 @@ package org.eclipse.e4.tools.ui.designer.commands;
 import java.util.List;
 
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.ui.model.application.node.CategoryNode;
+import org.eclipse.e4.xwt.tools.categorynode.node.CategoryNode;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.xwt.tools.ui.palette.Entry;
 import org.eclipse.e4.xwt.tools.ui.palette.contribution.CreationCommand;

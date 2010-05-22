@@ -8,13 +8,12 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.ui.model.application.node.provider;
+package org.eclipse.e4.xwt.tools.categorynode.node.provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.e4.ui.model.application.node.util.NodeAdapterFactory;
-
+import org.eclipse.e4.xwt.tools.categorynode.node.util.NodeAdapterFactory;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -80,7 +79,7 @@ public class NodeItemProviderAdapterFactory extends NodeAdapterFactory implement
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.e4.ui.model.application.node.CategoryNode} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.e4.xwt.tools.categorynode.node.CategoryNode} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -88,7 +87,7 @@ public class NodeItemProviderAdapterFactory extends NodeAdapterFactory implement
 	protected CategoryNodeItemProvider categoryNodeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.e4.ui.model.application.node.CategoryNode}.
+	 * This creates an adapter for a {@link org.eclipse.e4.xwt.tools.categorynode.node.CategoryNode}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated

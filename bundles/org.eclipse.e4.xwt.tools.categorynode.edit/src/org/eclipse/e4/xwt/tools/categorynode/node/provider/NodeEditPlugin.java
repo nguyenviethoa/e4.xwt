@@ -8,7 +8,7 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.ui.model.application.node.provider;
+package org.eclipse.e4.xwt.tools.categorynode.node.provider;
 
 import org.eclipse.emf.common.EMFPlugin;
 

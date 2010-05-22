@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
-import org.eclipse.e4.ui.model.application.node.CategoryNode;
+import org.eclipse.e4.xwt.tools.categorynode.node.CategoryNode;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.xwt.tools.ui.designer.core.ceditor.ConfigureDesigner;
 import org.eclipse.emf.ecore.EObject;

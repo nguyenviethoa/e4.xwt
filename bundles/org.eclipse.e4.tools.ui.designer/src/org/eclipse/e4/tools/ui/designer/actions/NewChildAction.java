@@ -21,7 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.e4.tools.ui.designer.commands.CommandFactory;
 import org.eclipse.e4.tools.ui.designer.dialogs.ElementInitializeDialog;
 import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
-import org.eclipse.e4.ui.model.application.node.CategoryNode;
+import org.eclipse.e4.xwt.tools.categorynode.node.CategoryNode;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.EditDomain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
