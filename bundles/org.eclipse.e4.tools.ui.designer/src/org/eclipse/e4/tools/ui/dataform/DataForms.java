@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.e4.tools.ui.designer.E4DesignerPlugin;
 import org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl;
 import org.eclipse.e4.ui.model.application.descriptor.basic.impl.BasicPackageImpl;
 import org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl;
@@ -214,7 +215,7 @@ public class DataForms {
 			dataformControl.setBindingContext(bindingContext);
 			return dataformControl;
 		} catch (Exception e) {
-			e.printStackTrace();
+			E4DesignerPlugin.logError(e);
 		} finally {
 			Thread.currentThread().setContextClassLoader(classLoader);
 			parent.setVisible(true);
