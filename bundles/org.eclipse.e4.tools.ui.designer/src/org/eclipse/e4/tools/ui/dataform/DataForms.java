@@ -36,7 +36,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
  * @author Jin Liu(jin.liu@soyatec.com)
@@ -140,30 +139,35 @@ public class DataForms {
 	}
 
 	public static URL findWidget(EClass eClass) {
-		if (eClass == null) {
+		Class<?> clr;
+		try {
+			clr = findWidgetCLR(eClass);
+		} catch (ClassNotFoundException e) {
 			return null;
 		}
-		try {
-			Class<?> clr = findWidgetCLR(eClass);
-			return clr.getResource(clr.getSimpleName()
+		return clr.getResource(clr.getSimpleName()
 					+ IConstants.XWT_EXTENSION_SUFFIX);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
+	}
+
+	public static URL findWidget(Class<?> clr) {
+		return clr.getResource(clr.getSimpleName()
+					+ IConstants.XWT_EXTENSION_SUFFIX);
 	}
 
 	public static AbstractDataForm getWidget(Composite parent, EClass eType) {
 		if (parent == null || parent.isDisposed() || eType == null) {
 			return null;
 		}
+		Class<?> clr;
 		try {
-			findWidgetCLR(eType);
+			clr = findWidgetCLR(eType);
 		} catch (ClassNotFoundException e) {
+			E4DesignerPlugin.logError(e);
 			return null;
 		}
-		URL url = findWidget(eType);
+		URL url = findWidget(clr);
 		if (url == null) {
+			E4DesignerPlugin.logError("Data Form for " + eType.getName() + " is not found.");
 			return null;
 		}
 		Map<URL, AbstractDataForm> widgets = widgetsCache.get(parent);
@@ -189,11 +193,15 @@ public class DataForms {
 		parent.setVisible(false);
 		try {
 			EMFBinding.initialze();
-			XWT.registerMetaclass(ExpandableComposite.class);
 			Class<?> clr = findWidgetCLR(eType);
+			if (clr == null) {
+				E4DesignerPlugin.logError("Data Form controller for " + eType.getName() + " is not fund");
+				return null;
+			}
 			Thread.currentThread().setContextClassLoader(clr.getClassLoader());
-			URL url = findWidget(eType);
+			URL url = findWidget(clr);
 			if (url == null) {
+				E4DesignerPlugin.logError("Data Form controller for " + eType.getName() + " is not fund");
 				return null;
 			}
 			BindingContext bindingContext = new BindingContext(parent);
