@@ -13,7 +13,7 @@ package org.eclipse.e4.xwt.tests.forms;
 import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.forms.XWTForms;
 
 public class ExpandableComposite_Composite {
 	public static void main(String[] args) {
@@ -21,8 +21,7 @@ public class ExpandableComposite_Composite {
 		URL url = ExpandableComposite_Composite.class.getResource(ExpandableComposite_Composite.class.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
-			XWT.registerMetaclass(org.eclipse.ui.forms.widgets.ExpandableComposite.class);
-			XWT.open(url);
+			XWTForms.open(url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

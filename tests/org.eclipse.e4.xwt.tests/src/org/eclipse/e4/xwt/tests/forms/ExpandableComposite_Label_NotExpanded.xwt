@@ -3,7 +3,7 @@
     <Composite.layout>
         <GridLayout numColumns="1" />
     </Composite.layout>
-	<ExpandableComposite x:style="Section.TITLE_BAR|Section.TWISTIE|Section.EXPANDED" expanded="true" name="ExpandableComposite"
+	<ExpandableComposite x:style="Section.TITLE_BAR|Section.TWISTIE|Section.EXPANDED" expanded="false" name="ExpandableComposite"
 	    text="Expandable Composite">
 	    <ExpandableComposite.client>
 		     <Label name="ExpandableComposite.Label" text="test" />

@@ -195,4 +195,20 @@ public class FormsTests extends FormTestCase {
 			}
 		});
 	}
+
+	public void testExpandableComposite_Label_NotExpanded() throws Exception {
+		URL url = FormsTests.class
+				.getResource(ExpandableComposite_Label_NotExpanded.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				org.eclipse.ui.forms.widgets.ExpandableComposite expandableComposite = (org.eclipse.ui.forms.widgets.ExpandableComposite) XWT
+						.findElementByName(root,
+								"ExpandableComposite");
+				checkVisibility("ExpandableComposite.Label", Label.class);
+				assertFalse(expandableComposite.isExpanded());
+				assertTrue(expandableComposite.getClient() instanceof Label);
+			}
+		});
+	}
 }

@@ -15,10 +15,10 @@ import java.net.URL;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.forms.XWTForms;
 
-public class ExpandableComposite_Label {
+public class ExpandableComposite_Label_NotExpanded {
 	public static void main(String[] args) {
 
-		URL url = ExpandableComposite_Label.class.getResource(ExpandableComposite_Label.class.getSimpleName()
+		URL url = ExpandableComposite_Label_NotExpanded.class.getResource(ExpandableComposite_Label_NotExpanded.class.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWTForms.open(url);
