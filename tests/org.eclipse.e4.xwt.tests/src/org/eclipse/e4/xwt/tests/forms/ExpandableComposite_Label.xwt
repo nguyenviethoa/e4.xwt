@@ -1,0 +1,12 @@
+<Composite xmlns="http://www.eclipse.org/xwt/presentation"
+    xmlns:x="http://www.eclipse.org/xwt">
+    <Composite.layout>
+        <GridLayout numColumns="1" />
+    </Composite.layout>
+	<ExpandableComposite expanded="true" name="ExpandableComposite"
+	    text="Expandable Composite">
+	    <ExpandableComposite.client>
+		     <Label name="ExpandableComposite.Label" text="test" />
+	    </ExpandableComposite.client>
+	</ExpandableComposite>
+</Composite>

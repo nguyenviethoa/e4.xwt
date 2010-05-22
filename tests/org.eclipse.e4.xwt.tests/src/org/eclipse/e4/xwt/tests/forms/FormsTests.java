@@ -13,25 +13,22 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 
-public class FormsTests extends FormTestCase {	
+public class FormsTests extends FormTestCase {
 	public void testSection() throws Exception {
-		URL url = FormsTests.class
-				.getResource(Section.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(Section.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
-				checkVisibility("Section", org.eclipse.ui.forms.widgets.Section.class);
+				checkVisibility("Section",
+						org.eclipse.ui.forms.widgets.Section.class);
 				checkVisibility("Section.Label", Label.class);
 			}
 		});
 	}
 
 	public void testForm_Label() throws Exception {
-		URL url = FormsTests.class
-				.getResource(Form_Label.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(Form_Label.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkVisibility("Form", org.eclipse.ui.forms.widgets.Form.class);
@@ -41,10 +38,9 @@ public class FormsTests extends FormTestCase {
 	}
 
 	public void testForm_Button() throws Exception {
-		URL url = FormsTests.class
-				.getResource(Form_Button.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(Form_Button.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkVisibility("Form", org.eclipse.ui.forms.widgets.Form.class);
@@ -54,10 +50,9 @@ public class FormsTests extends FormTestCase {
 	}
 
 	public void testForm_LabelButton() throws Exception {
-		URL url = FormsTests.class
-				.getResource(Form_LabelButton.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(Form_LabelButton.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkVisibility("Form", org.eclipse.ui.forms.widgets.Form.class);
@@ -68,24 +63,23 @@ public class FormsTests extends FormTestCase {
 	}
 
 	public void testForm_Section() throws Exception {
-		URL url = FormsTests.class
-				.getResource(Form_Section.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(Form_Section.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkVisibility("Form", org.eclipse.ui.forms.widgets.Form.class);
-				checkVisibility("Form.Section", org.eclipse.ui.forms.widgets.Section.class);
+				checkVisibility("Form.Section",
+						org.eclipse.ui.forms.widgets.Section.class);
 				checkVisibility("Form.Section.Label", Label.class);
 			}
 		});
 	}
 
 	public void testForm_HeadClient() throws Exception {
-		URL url = FormsTests.class
-				.getResource(Form_HeadClient.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(Form_HeadClient.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkVisibility("Form.HeadClient.Button", Button.class);
@@ -94,13 +88,13 @@ public class FormsTests extends FormTestCase {
 	}
 
 	public void testForm_Background() throws Exception {
-		URL url = FormsTests.class
-				.getResource(Form_Background.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(Form_Background.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
-				Form form1 = (Form) XWT.findElementByName(root, "FormBackground");
+				Form form1 = (Form) XWT.findElementByName(root,
+						"FormBackground");
 				Color form1Color = form1.getBackground();
 				Form form2 = (Form) XWT.findElementByName(root, "Form");
 				Color form2Color = form2.getBackground();
@@ -110,47 +104,53 @@ public class FormsTests extends FormTestCase {
 	}
 
 	public void testForm_ButtonSection() throws Exception {
-		URL url = FormsTests.class
-				.getResource(Form_ButtonSection.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(Form_ButtonSection.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkVisibility("Form", org.eclipse.ui.forms.widgets.Form.class);
 				checkVisibility("Form.Button", Button.class);
-				checkVisibility("Form.Section", org.eclipse.ui.forms.widgets.Section.class);
+				checkVisibility("Form.Section",
+						org.eclipse.ui.forms.widgets.Section.class);
 				checkVisibility("Form.Section.Label", Label.class);
 			}
 		});
 	}
 
 	public void testScrolledForm() throws Exception {
-		URL url = FormsTests.class
-				.getResource(ScrolledForm.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(ScrolledForm.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
-				checkVisibility("ScrolledForm", org.eclipse.ui.forms.widgets.ScrolledForm.class);
+				checkVisibility("ScrolledForm",
+						org.eclipse.ui.forms.widgets.ScrolledForm.class);
 				checkVisibility("ScrolledForm.SashForm", SashForm.class);
-				checkVisibility("ScrolledForm.SashForm.Section1", org.eclipse.ui.forms.widgets.Section.class);
-				checkVisibility("ScrolledForm.SashForm.Section1.Composite", Composite.class);
-				checkVisibility("ScrolledForm.SashForm.Section1.Composite.Label", Label.class);
-				checkVisibility("ScrolledForm.SashForm.Section1.Composite.Text", Text.class);
-				checkVisibility("ScrolledForm.SashForm.Section2", org.eclipse.ui.forms.widgets.Section.class);
-				checkVisibility("ScrolledForm.SashForm.Section2.Label", Label.class);
+				checkVisibility("ScrolledForm.SashForm.Section1",
+						org.eclipse.ui.forms.widgets.Section.class);
+				checkVisibility("ScrolledForm.SashForm.Section1.Composite",
+						Composite.class);
+				checkVisibility(
+						"ScrolledForm.SashForm.Section1.Composite.Label",
+						Label.class);
+				checkVisibility(
+						"ScrolledForm.SashForm.Section1.Composite.Text",
+						Text.class);
+				checkVisibility("ScrolledForm.SashForm.Section2",
+						org.eclipse.ui.forms.widgets.Section.class);
+				checkVisibility("ScrolledForm.SashForm.Section2.Label",
+						Label.class);
 				checkVisibility("ScrolledForm.Label", Label.class);
 				checkChildren("ScrolledForm", 1);
 				checkChildren("ScrolledForm", "Body", 2);
 			}
 		});
 	}
-	
+
 	public void testForm_Group_Adapt() throws Exception {
-		URL url = FormsTests.class
-				.getResource(Form_Group.class
-						.getSimpleName()
-						+ IConstants.XWT_EXTENSION_SUFFIX);
+		URL url = FormsTests.class.getResource(Form_Group.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
 				checkVisibility("Form.Group", Group.class);
@@ -163,5 +163,36 @@ public class FormsTests extends FormTestCase {
 		});
 	}
 
+	public void testExpandableComposite_Composite() throws Exception {
+		URL url = FormsTests.class
+				.getResource(ExpandableComposite_Composite.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				org.eclipse.ui.forms.widgets.ExpandableComposite expandableComposite = (org.eclipse.ui.forms.widgets.ExpandableComposite) XWT
+						.findElementByName(root,
+								"ExpandableComposite");
+				checkVisibility("ExpandableComposite.Label", Label.class);
+				assertTrue(expandableComposite.isExpanded());
+				assertTrue(expandableComposite.getClient() instanceof Composite);
+			}
+		});
+	}
 
+	public void testExpandableComposite_Label() throws Exception {
+		URL url = FormsTests.class
+				.getResource(ExpandableComposite_Label.class.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				org.eclipse.ui.forms.widgets.ExpandableComposite expandableComposite = (org.eclipse.ui.forms.widgets.ExpandableComposite) XWT
+						.findElementByName(root,
+								"ExpandableComposite");
+				checkVisibility("ExpandableComposite.Label", Label.class);
+				assertTrue(expandableComposite.isExpanded());
+				assertTrue(expandableComposite.getClient() instanceof Label);
+			}
+		});
+	}
 }
