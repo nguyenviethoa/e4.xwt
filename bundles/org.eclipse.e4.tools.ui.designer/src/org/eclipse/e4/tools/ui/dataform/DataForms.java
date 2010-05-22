@@ -198,7 +198,6 @@ public class DataForms {
 				E4DesignerPlugin.logError("Data Form controller for " + eType.getName() + " is not fund");
 				return null;
 			}
-			Thread.currentThread().setContextClassLoader(clr.getClassLoader());
 			URL url = findWidget(clr);
 			if (url == null) {
 				E4DesignerPlugin.logError("Data Form controller for " + eType.getName() + " is not fund");
@@ -213,6 +212,7 @@ public class DataForms {
 			options.put(XWTLoader.BINDING_CONTEXT_PROPERTY, bindingContext);
 			options.put(XWTLoader.CLASS_PROPERTY, clr);
 
+			Thread.currentThread().setContextClassLoader(clr.getClassLoader());
 			AbstractDataForm dataformControl = (AbstractDataForm) XWT
 					.loadWithOptions(url, options);
 			Layout layout = parent.getLayout();
