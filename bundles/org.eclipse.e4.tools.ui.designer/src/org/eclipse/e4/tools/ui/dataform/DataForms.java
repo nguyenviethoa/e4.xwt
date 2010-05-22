@@ -65,6 +65,8 @@ public class DataForms {
 			REQUIRED_SF_LIST
 					.add(CommandsPackageImpl.Literals.BINDING_CONTEXT__NAME);
 			REQUIRED_SF_LIST
+					.add(CommandsPackageImpl.Literals.BINDING_TABLE__BINDING_CONTEXT_ID);
+			REQUIRED_SF_LIST
 					.add(CommandsPackageImpl.Literals.COMMAND__COMMAND_NAME);
 			REQUIRED_SF_LIST.add(CommandsPackageImpl.Literals.HANDLER__COMMAND);
 			REQUIRED_SF_LIST
