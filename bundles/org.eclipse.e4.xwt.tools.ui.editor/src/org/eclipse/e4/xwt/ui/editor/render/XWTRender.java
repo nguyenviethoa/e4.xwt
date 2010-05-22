@@ -60,7 +60,7 @@ public class XWTRender implements VEXRenderer {
 		canvasManager = new CanvasManager(container);
 		
 		options = new HashMap<String, Object>();
-		options.put(IXWTLoader.DESIGN_MODE_ROPERTY, Boolean.TRUE);
+		options.put(IXWTLoader.DESIGN_MODE_PROPERTY, Boolean.TRUE);
 	}
 
 	public void dispose() {

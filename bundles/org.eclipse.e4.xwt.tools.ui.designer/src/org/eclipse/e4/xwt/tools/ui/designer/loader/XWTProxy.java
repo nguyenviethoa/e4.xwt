@@ -73,7 +73,7 @@ public class XWTProxy {
 		}
 		resourceVisitor = new ResourceVisitor((XWTVisualLoader) xwtLoader);
 		options = new HashMap<String, Object>();
-		options.put(IXWTLoader.DESIGN_MODE_ROPERTY, Boolean.TRUE);
+		options.put(IXWTLoader.DESIGN_MODE_PROPERTY, Boolean.TRUE);
 	}
 
 	public Object load(XamlElement node, Map<String, Object> options) {

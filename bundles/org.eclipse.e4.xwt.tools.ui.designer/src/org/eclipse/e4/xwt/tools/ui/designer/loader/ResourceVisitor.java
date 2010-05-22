@@ -240,7 +240,7 @@ public class ResourceVisitor {
 				if (receiver != null) {
 					Class<?> clazz = receiver.getClass();
 					method = ObjectUtil.findMethod(clazz, handler,
-							Object.class, Event.class);
+							control.getClass(), Event.class);
 					if (method == null) {
 						method = ObjectUtil.findMethod(clazz, handler,
 								Event.class);
@@ -624,7 +624,7 @@ public class ResourceVisitor {
 					|| IXWTLoader.LOADED_CALLBACK.equalsIgnoreCase(key)
 					|| IXWTLoader.CREATED_CALLBACK.equalsIgnoreCase(key)
 					|| IXWTLoader.BEFORE_PARSING_CALLBACK.equalsIgnoreCase(key)
-					|| IXWTLoader.DESIGN_MODE_ROPERTY.equalsIgnoreCase(key)) {
+					|| IXWTLoader.DESIGN_MODE_PROPERTY.equalsIgnoreCase(key)) {
 				continue;
 			}
 			IProperty property = metaclass.findProperty(key);
