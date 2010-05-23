@@ -23,6 +23,7 @@ import org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.advanced.impl.AdvancedPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl;
+import org.eclipse.e4.xwt.DefaultLoadingContext;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
@@ -212,7 +213,7 @@ public class DataForms {
 			options.put(XWTLoader.BINDING_CONTEXT_PROPERTY, bindingContext);
 			options.put(XWTLoader.CLASS_PROPERTY, clr);
 
-			Thread.currentThread().setContextClassLoader(clr.getClassLoader());
+			XWT.setLoadingContext(new DefaultLoadingContext(clr.getClassLoader()));
 			AbstractDataForm dataformControl = (AbstractDataForm) XWT
 					.loadWithOptions(url, options);
 			Layout layout = parent.getLayout();

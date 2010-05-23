@@ -23,6 +23,7 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.services.IStylingEngine;
+import org.eclipse.e4.xwt.DefaultLoadingContext;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.css.CSSHandler;
@@ -155,7 +156,7 @@ public abstract class XWTAbstractPart implements IContentPart {
 		ClassLoader classLoader = Thread.currentThread()
 				.getContextClassLoader();
 		try {
-			Thread.currentThread().setContextClassLoader(loader);
+			XWT.setLoadingContext(new DefaultLoadingContext(loader));
 			HashMap<String, Object> newOptions = new HashMap<String, Object>();
 			newOptions.put(XWTLoader.CONTAINER_PROPERTY, parent);
 			newOptions.put(XWTLoader.DATACONTEXT_PROPERTY, dataContext);
