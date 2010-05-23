@@ -135,7 +135,7 @@ public class DocumentRoot {
 		case FORMAT_GZIP:
 			return new GZIPInputStream(new URL(basePath + "/" + baseFile).openStream());
 		default:
-			return new URL(basePath + File.separatorChar + baseFile).openStream();
+			return new URL(basePath + "/" + baseFile).openStream();
 		}
 	}
 
