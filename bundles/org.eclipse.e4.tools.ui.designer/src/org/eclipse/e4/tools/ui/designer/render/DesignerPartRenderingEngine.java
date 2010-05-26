@@ -23,9 +23,12 @@ public class DesignerPartRenderingEngine extends PartRenderingEngine {
 	public static final String engineURI = "platform:/plugin/org.eclipse.e4.tools.ui.designer/"
 		+ "org.eclipse.e4.tools.ui.designer.render.DesignerPartRenderingEngine";
 
+	public static final String factoryURI = "platform:/plugin/org.eclipse.e4.tools.ui.designer/"
+		+ "org.eclipse.e4.tools.ui.designer.render.DesignerWorkbenchRendererFactory";
+
 	public static String defaultRenderingFactoryId = "org.eclipse.e4.tools.ui.designer.renderers.default";
 	
 	public DesignerPartRenderingEngine() {
-		super(defaultRenderingFactoryId);
+		super(factoryURI);
 	}
 }
