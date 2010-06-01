@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,15 +12,8 @@ package org.eclipse.e4.tools.ui.designer;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IProduct;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.RegistryFactory;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.contributions.IContributionFactory;
 import org.eclipse.e4.tools.ui.designer.render.DesignerPartRenderingEngine;
@@ -42,13 +35,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * @author jin.liu(jin.liu@soyatec.com)
@@ -160,8 +150,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		IProject project = inputFile.getProject();
 		// take over the resource resolution
 		appContext.set(IResourceUtiltities.class.getName(),
-				new ResourceUtiltities(project, Activator.getDefault()
-						.getBundleAdmin(), projectBundleSession));
+				new ResourceUtiltities(project, projectBundleSession));
 
 		workbench = new E4WorkbenchProxy(appModel, appContext);
 		workbench.createAndRunUI();
