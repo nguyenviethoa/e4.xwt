@@ -265,6 +265,11 @@ public class ModelAdapter extends EContentAdapter {
 				}
 				parent.appendChild(node);
 				fContext.map(model, node);
+			} else {
+				IDOMElement node = (IDOMElement) textDocument
+						.createElement(childName);
+				parent.appendChild(node);
+				fContext.map(model, node);
 			}
 		}
 	}
