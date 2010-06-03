@@ -16,15 +16,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.e4.tools.ui.designer.session.ProjectBundleSession;
-import org.eclipse.e4.ui.workbench.swt.util.ISWTResourceUtiltities;
+import org.eclipse.e4.ui.workbench.swt.util.ISWTResourceUtilities;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.resource.ImageDescriptor;
 
-public class ResourceUtiltities implements ISWTResourceUtiltities {
+public class ResourceUtilities implements ISWTResourceUtilities {
 
 	private final IProject project;
 	
-	public ResourceUtiltities(IProject project, ProjectBundleSession projectBundleSession) {
+	public ResourceUtilities(IProject project, ProjectBundleSession projectBundleSession) {
 		this.project = project;
 	}
 

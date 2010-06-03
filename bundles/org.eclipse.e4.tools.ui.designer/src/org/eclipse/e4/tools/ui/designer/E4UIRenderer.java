@@ -18,13 +18,13 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.contributions.IContributionFactory;
 import org.eclipse.e4.tools.ui.designer.render.DesignerPartRenderingEngine;
 import org.eclipse.e4.tools.ui.designer.session.ProjectBundleSession;
-import org.eclipse.e4.tools.ui.designer.utils.ResourceUtiltities;
+import org.eclipse.e4.tools.ui.designer.utils.ResourceUtilities;
 import org.eclipse.e4.ui.css.core.engine.CSSEngine;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.workbench.swt.internal.E4Application;
-import org.eclipse.e4.workbench.ui.IResourceUtiltities;
+import org.eclipse.e4.workbench.ui.IResourceUtilities;
 import org.eclipse.e4.workbench.ui.internal.Activator;
 import org.eclipse.e4.workbench.ui.internal.E4Workbench;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
@@ -149,8 +149,8 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		}
 		IProject project = inputFile.getProject();
 		// take over the resource resolution
-		appContext.set(IResourceUtiltities.class.getName(),
-				new ResourceUtiltities(project, projectBundleSession));
+		appContext.set(IResourceUtilities.class.getName(),
+				new ResourceUtilities(project, projectBundleSession));
 
 		workbench = new E4WorkbenchProxy(appModel, appContext);
 		workbench.createAndRunUI();

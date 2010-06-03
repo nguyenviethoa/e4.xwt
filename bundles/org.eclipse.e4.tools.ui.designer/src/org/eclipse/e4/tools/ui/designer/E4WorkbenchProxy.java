@@ -151,7 +151,7 @@ public class E4WorkbenchProxy {
 				}
 
 				// Register an SWT resource handler
-				// appContext.set(IResourceUtiltities.class.getName(), new
+				// appContext.set(IResourceUtilities.class.getName(), new
 				// ResourceUtility(Activator.getDefault()
 				// .getBundleAdmin()));
 
