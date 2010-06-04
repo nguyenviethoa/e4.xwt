@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.commands;
 
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+
 import java.util.List;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -17,7 +19,6 @@ import org.eclipse.e4.tools.ui.designer.utils.ApplicationModelHelper;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
-import org.eclipse.e4.workbench.modeling.EModelService;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 

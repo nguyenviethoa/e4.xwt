@@ -10,10 +10,11 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.editparts;
 
+import org.eclipse.e4.ui.internal.workbench.swt.AbstractPartRenderer;
+
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.tools.ui.designer.editparts.handlers.MovableTracker;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.workbench.swt.internal.AbstractPartRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.Draw2dTools;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt.WidgetInfo;

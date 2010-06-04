@@ -10,13 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.dataform.workbench.validation;
 
+import org.eclipse.e4.ui.internal.workbench.Activator;
+
 import java.io.InputStream;
 import java.net.URL;
 
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.tools.ui.dataform.DataForms;
-import org.eclipse.e4.workbench.ui.internal.Activator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.osgi.framework.Bundle;

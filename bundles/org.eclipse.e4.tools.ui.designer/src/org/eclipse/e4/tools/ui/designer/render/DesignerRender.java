@@ -10,8 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.render;
 
+import org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer;
+
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.workbench.ui.renderers.swt.WBWRenderer;
 import org.eclipse.swt.widgets.Shell;
 
 public class DesignerRender extends WBWRenderer {

@@ -10,6 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.e4.ui.internal.workbench.swt.E4Application;
+
+import org.eclipse.e4.ui.internal.workbench.Activator;
+import org.eclipse.e4.ui.internal.workbench.E4Workbench;
+
+import org.eclipse.e4.ui.workbench.IResourceUtilities;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import org.eclipse.core.resources.*;
@@ -23,10 +30,6 @@ import org.eclipse.e4.ui.css.core.engine.CSSEngine;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.workbench.swt.internal.E4Application;
-import org.eclipse.e4.workbench.ui.IResourceUtilities;
-import org.eclipse.e4.workbench.ui.internal.Activator;
-import org.eclipse.e4.workbench.ui.internal.E4Workbench;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.AbstractModelBuilder;
 import org.eclipse.emf.common.notify.Notification;

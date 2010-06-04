@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.utils;
 
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +41,6 @@ import org.eclipse.e4.ui.model.application.ui.menu.impl.MenuPackageImpl;
 import org.eclipse.e4.ui.model.application.ui.menu.provider.MenuItemProviderAdapterFactory;
 import org.eclipse.e4.ui.model.application.ui.provider.ElementContainerItemProvider;
 import org.eclipse.e4.ui.model.application.ui.provider.UiItemProviderAdapterFactory;
-import org.eclipse.e4.workbench.modeling.EModelService;
 import org.eclipse.e4.xwt.emf.EMFHelper;
 import org.eclipse.e4.xwt.tools.categorynode.node.CategoryNode;
 import org.eclipse.e4.xwt.tools.categorynode.node.NodeFactory;

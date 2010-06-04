@@ -10,6 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.e4.ui.internal.workbench.swt.CSSStylingSupport;
+
+import org.eclipse.e4.ui.internal.workbench.*;
+
+import org.eclipse.e4.ui.workbench.IPresentationEngine;
+import org.eclipse.e4.ui.workbench.IWorkbench;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +37,6 @@ import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.services.IStylingEngine;
-import org.eclipse.e4.ui.workbench.swt.internal.CSSStylingSupport;
-import org.eclipse.e4.workbench.ui.IPresentationEngine;
-import org.eclipse.e4.workbench.ui.IWorkbench;
-import org.eclipse.e4.workbench.ui.internal.Activator;
-import org.eclipse.e4.workbench.ui.internal.E4CommandProcessor;
-import org.eclipse.e4.workbench.ui.internal.E4Workbench;
-import org.eclipse.e4.workbench.ui.internal.ModelExtensionProcessor;
-import org.eclipse.e4.workbench.ui.internal.Parameter;
-import org.eclipse.e4.workbench.ui.internal.Policy;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.render;
 
-import org.eclipse.e4.ui.workbench.swt.internal.PartRenderingEngine;
+import org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine;
 
 
 /**

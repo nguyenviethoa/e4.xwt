@@ -10,12 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.properties;
 
+import org.eclipse.e4.ui.workbench.UIEvents;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.workbench.ui.UIEvents;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;

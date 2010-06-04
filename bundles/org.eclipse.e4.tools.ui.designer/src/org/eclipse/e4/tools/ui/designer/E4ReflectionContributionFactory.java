@@ -11,6 +11,9 @@
  ******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.e4.ui.internal.workbench.Activator;
+import org.eclipse.e4.ui.internal.workbench.Policy;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -30,8 +33,6 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.contributions.IContributionFactory;
 import org.eclipse.e4.core.services.contributions.IContributionFactorySpi;
 import org.eclipse.e4.tools.ui.designer.utils.ProjectLoader;
-import org.eclipse.e4.workbench.ui.internal.Activator;
-import org.eclipse.e4.workbench.ui.internal.Policy;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;

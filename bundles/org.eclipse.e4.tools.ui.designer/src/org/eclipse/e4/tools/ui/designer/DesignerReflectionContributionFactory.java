@@ -1,9 +1,10 @@
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.e4.ui.internal.workbench.ReflectionContributionFactory;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.e4.tools.ui.designer.session.ProjectBundleSession;
-import org.eclipse.e4.workbench.ui.internal.ReflectionContributionFactory;
 import org.eclipse.emf.common.util.URI;
 import org.osgi.framework.Bundle;
 

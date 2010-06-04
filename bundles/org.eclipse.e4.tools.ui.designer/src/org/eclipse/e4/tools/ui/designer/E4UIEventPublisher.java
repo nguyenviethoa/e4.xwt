@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.e4.ui.internal.workbench.UIEventPublisher;
+
+import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.e4.ui.workbench.UIEvents.EventTags;
+import org.eclipse.e4.ui.workbench.UIEvents.EventTypes;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +25,6 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.workbench.ui.UIEvents;
-import org.eclipse.e4.workbench.ui.UIEvents.EventTags;
-import org.eclipse.e4.workbench.ui.UIEvents.EventTypes;
-import org.eclipse.e4.workbench.ui.internal.UIEventPublisher;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;

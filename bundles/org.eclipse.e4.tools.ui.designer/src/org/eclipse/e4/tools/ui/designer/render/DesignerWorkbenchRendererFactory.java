@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.render;
 
+import org.eclipse.e4.ui.internal.workbench.swt.AbstractPartRenderer;
+
+import org.eclipse.e4.ui.workbench.renderers.swt.WorkbenchRendererFactory;
+
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
-import org.eclipse.e4.ui.workbench.swt.internal.AbstractPartRenderer;
-import org.eclipse.e4.workbench.ui.renderers.swt.WorkbenchRendererFactory;
 
 public class DesignerWorkbenchRendererFactory extends WorkbenchRendererFactory {
 	private DesignerRender designerWindowRender;
