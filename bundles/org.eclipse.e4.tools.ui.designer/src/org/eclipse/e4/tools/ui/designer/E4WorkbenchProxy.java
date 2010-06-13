@@ -10,17 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
-import org.eclipse.e4.ui.internal.workbench.swt.CSSStylingSupport;
-
-import org.eclipse.e4.ui.internal.workbench.*;
-
-import org.eclipse.e4.ui.workbench.IPresentationEngine;
-import org.eclipse.e4.ui.workbench.IWorkbench;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.databinding.observable.Realm;
@@ -30,6 +21,13 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.contributions.IContributionFactory;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher;
+import org.eclipse.e4.ui.internal.workbench.Activator;
+import org.eclipse.e4.ui.internal.workbench.E4CommandProcessor;
+import org.eclipse.e4.ui.internal.workbench.E4Workbench;
+import org.eclipse.e4.ui.internal.workbench.ModelExtensionProcessor;
+import org.eclipse.e4.ui.internal.workbench.Parameter;
+import org.eclipse.e4.ui.internal.workbench.Policy;
+import org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -37,6 +35,8 @@ import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.services.IStylingEngine;
+import org.eclipse.e4.ui.workbench.IPresentationEngine;
+import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
@@ -142,8 +142,7 @@ public class E4WorkbenchProxy {
 				if (cssURI != null) {
 					String cssResourcesURI = (String) appContext
 							.get(E4Workbench.CSS_RESOURCE_URI_ARG);
-					CSSStylingSupport.initializeStyling(display, cssURI,
-							cssResourcesURI, appContext);
+					PartRenderingEngine.initializeStyling(display, appContext);
 				} else {
 					initializeNullStyling(appContext);
 				}
