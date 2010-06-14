@@ -37,10 +37,11 @@ public class SashEditPart extends ControlEditPart {
 	public SashEditPart(Sash sash, EObject model) {
 		super(model);
 		this.sash = sash;
-		if (model == null) {
-			model = (EObject) MMenuFactory.INSTANCE.createItem();
-			setModel(model);
-		}
+//FIXME Yves
+//		if (model == null) {
+//			model = (EObject) MMenuFactory.INSTANCE.createItem();
+//			setModel(model);
+//		}
 	}
 
 	/*
