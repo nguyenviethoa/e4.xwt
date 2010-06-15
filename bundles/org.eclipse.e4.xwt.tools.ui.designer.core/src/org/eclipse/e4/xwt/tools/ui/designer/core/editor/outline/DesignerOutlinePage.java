@@ -21,6 +21,7 @@ import org.eclipse.gef.dnd.AbstractTransferDropTargetListener;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.TreeViewer;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.swt.dnd.DropTargetEvent;
 
 /**
@@ -53,7 +54,7 @@ public class DesignerOutlinePage extends ContentOutlinePage {
 		treeViewer.setEditPartFactory(editPartFactory);
 		treeViewer
 				.addDropTargetListener(new AbstractTransferDropTargetListener(
-						treeViewer) {
+						treeViewer, LocalSelectionTransfer.getTransfer()) {
 					protected void updateTargetRequest() {
 
 					}
