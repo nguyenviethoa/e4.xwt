@@ -111,38 +111,39 @@ public class ApplicationModelHelper {
 							org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE
 									.getContribution(), classMap);
 		}
-		// ModelComponents
-		{
-			Map<String, EClass> classMap = new HashMap<String, EClass>();
-			classMap.put(
-					"components",
-					org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE
-							.getModelComponent());
-			referenceTypeMap
-					.put(
-							org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE
-									.getModelComponents(), classMap);
-		}
-		// ModelComponent
-		{
-			Map<String, EClass> classMap = new HashMap<String, EClass>();
-			classMap.put(
-					"children",
-					org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl.eINSTANCE
-							.getUIElement());
-			classMap.put(
-					"commands",
-					org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE
-							.getCommand());
-			classMap.put(
-					"bindings",
-					org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE
-							.getKeyBinding());
-			referenceTypeMap
-					.put(
-							org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE
-									.getModelComponent(), classMap);
-		}
+//FIXME Yves to check if this is correct
+//		// ModelComponents
+//		{
+//			Map<String, EClass> classMap = new HashMap<String, EClass>();
+//			classMap.put(
+//					"components",
+//					org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE
+//							.getModelComponent());
+//			referenceTypeMap
+//					.put(
+//							org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE
+//									.getModelComponents(), classMap);
+//		}
+//		// ModelComponent
+//		{
+//			Map<String, EClass> classMap = new HashMap<String, EClass>();
+//			classMap.put(
+//					"children",
+//					org.eclipse.e4.ui.model.application.ui.impl.UiPackageImpl.eINSTANCE
+//							.getUIElement());
+//			classMap.put(
+//					"commands",
+//					org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE
+//							.getCommand());
+//			classMap.put(
+//					"bindings",
+//					org.eclipse.e4.ui.model.application.commands.impl.CommandsPackageImpl.eINSTANCE
+//							.getKeyBinding());
+//			referenceTypeMap
+//					.put(
+//							org.eclipse.e4.ui.model.application.impl.ApplicationPackageImpl.eINSTANCE
+//									.getModelComponent(), classMap);
+//		}
 		// BindingTableContainer
 		{
 			Map<String, EClass> classMap = new HashMap<String, EClass>();
