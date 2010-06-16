@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.e4.ui.internal.workbench.ModelAssembler;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.commands.Category;
@@ -24,7 +26,6 @@ import org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher;
 import org.eclipse.e4.ui.internal.workbench.Activator;
 import org.eclipse.e4.ui.internal.workbench.E4CommandProcessor;
 import org.eclipse.e4.ui.internal.workbench.E4Workbench;
-import org.eclipse.e4.ui.internal.workbench.ModelExtensionProcessor;
 import org.eclipse.e4.ui.internal.workbench.Parameter;
 import org.eclipse.e4.ui.internal.workbench.Policy;
 import org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine;
@@ -97,10 +98,18 @@ public class E4WorkbenchProxy {
 			cs.defineCommand(id, name, null, cat, parms);
 		}
 
-		// Add model items described in the model extension point
-		ModelExtensionProcessor extProcessor = new ModelExtensionProcessor(
-				appElement);
-		extProcessor.addModelExtensions();
+//FIXME Yves to check if this is correct
+		IEclipseContext context = appContext.createChild();
+		context.set(MApplication.class, appElement);
+		ModelAssembler contribProcessor = ContextInjectionFactory.make(ModelAssembler.class,
+				context);
+		contribProcessor.processModel();
+		context.dispose();
+		
+//		// Add model items described in the model extension point
+//		ModelExtensionProcessor extProcessor = new ModelExtensionProcessor(
+//				appElement);
+//		extProcessor.addModelExtensions();
 
 		// Do a top level processHierarchy for the application?
 		E4Workbench.processHierarchy(appElement);
