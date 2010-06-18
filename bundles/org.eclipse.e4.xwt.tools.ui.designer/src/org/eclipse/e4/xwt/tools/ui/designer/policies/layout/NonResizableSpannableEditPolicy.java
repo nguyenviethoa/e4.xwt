@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 package org.eclipse.e4.xwt.tools.ui.designer.policies.layout;
 
 /*
- * $RCSfile: NonResizableSpannableEditPolicy.java,v $ $Revision: 1.1 $ $Date: 2009/12/27 00:01:32 $
+ * $RCSfile: NonResizableSpannableEditPolicy.java,v $ $Revision: 1.2 $ $Date: 2010/04/28 20:04:33 $
  */
 
 import java.util.List;

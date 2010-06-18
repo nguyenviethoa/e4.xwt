@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2010 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.e4.xwt.javabean.metadata;
 
 import java.beans.BeanInfo;
@@ -66,11 +76,11 @@ public abstract class AbstractMetaclass implements IMetaclass {
 	private boolean initialize = false;
 	private IObjectInitializer[] initializers = EMPTY_INITIALIZERS;
 
-	protected boolean shouldIgnored(Class<?> type, String propertyName,
+	protected boolean shouldIgnored(Class<?> declaredType, String propertyName,
 			Class<?> propertyType) {
 		String packageName = "";
 		if (type.getPackage() != null) {
-			packageName = type.getPackage().getName();
+			packageName = declaredType.getPackage().getName();
 		}
 		if (("data".equals(propertyName) && packageName
 				.startsWith("org.eclipse.swt."))) {
@@ -223,6 +233,9 @@ public abstract class AbstractMetaclass implements IMetaclass {
 					return null;
 				}
 				Class<?> propertyType = getter.getReturnType();
+				if (shouldIgnored(getter.getDeclaringClass(), name, propertyType)) {
+					return null;
+				}
 				Method setter = DynamicProperty.createSetter(type,
 						propertyType, name);
 				return new DynamicProperty(propertyType, setter, getter, name);
@@ -621,7 +634,10 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			for (PropertyDescriptor p : propertyDescriptors) {
 				String propertyName = p.getName();
 				Class<?> propertyType = p.getPropertyType();
-				if (shouldIgnored(type, propertyName, propertyType)
+				if (p.getReadMethod() == null) {
+					continue;
+				}		
+				if (shouldIgnored(p.getReadMethod().getDeclaringClass(), propertyName, propertyType)
 						|| propertyCache
 								.containsKey(propertyName.toLowerCase())) {
 					continue;
@@ -642,7 +658,7 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			for (Field f : type.getDeclaredFields()) {
 				String propertyName = f.getName();
 				Class<?> propertyType = f.getType();
-				if (shouldIgnored(type, propertyName, propertyType)) {
+				if (shouldIgnored(f.getDeclaringClass(), propertyName, propertyType)) {
 					continue;
 				}
 

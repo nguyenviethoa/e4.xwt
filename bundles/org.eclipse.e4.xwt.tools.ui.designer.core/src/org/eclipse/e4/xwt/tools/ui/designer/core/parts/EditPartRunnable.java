@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 /*
  *  $RCSfile: EditPartRunnable.java,v $
- *  $Revision: 1.1 $  $Date: 2005/06/15 20:19:34 $ 
+ *  $Revision: 1.1 $  $Date: 2009/12/03 20:35:56 $ 
  */
 package org.eclipse.e4.xwt.tools.ui.designer.core.parts;
 

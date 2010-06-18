@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ public class SourceContents {
 	private String porpertyFileName;
 	private String propertyFilePath;
 	private StringBuffer historyContent;
-	private String header = "/*******************************************************************************" + "\r" + "* Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others." + "\r" + "* All rights reserved. This program and the accompanying materials" + "\r" + "* are made available under the terms of the Eclipse Public License v1.0" + "\r" + "* which accompanies this distribution, and is available at" + "\r" + "* http://www.eclipse.org/legal/epl-v10.html" + "\r" + "* " + "\r" + "* Contributors:" + "\r" + "*     Soyatec - initial API and implementation" + "\r" + "*******************************************************************************/";
+	private String header = "/*******************************************************************************" + "\r" + "* Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others." + "\r" + "* All rights reserved. This program and the accompanying materials" + "\r" + "* are made available under the terms of the Eclipse Public License v1.0" + "\r" + "* which accompanies this distribution, and is available at" + "\r" + "* http://www.eclipse.org/legal/epl-v10.html" + "\r" + "* " + "\r" + "* Contributors:" + "\r" + "*     Soyatec - initial API and implementation" + "\r" + "*******************************************************************************/";
 	private String sourceKey;
 
 	public SourceContents(TextValueModel checkedItems, String path, String propertyFilePath, String name, String porpertyFileName, StringBuffer historyContent, IPackageFragmentRoot root) {

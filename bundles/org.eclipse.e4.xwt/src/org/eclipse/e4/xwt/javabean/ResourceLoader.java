@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -695,7 +695,7 @@ public class ResourceLoader implements IVisualElementLoader {
 
 	private void invokeCreatededAction(Element element, Object targetObject) {
 		if (targetObject != null) {
-			postCreation0(element, targetObject);			
+			postCreation0(element, targetObject);
 		}
 		if (options != null) {
 			ICreatedCallback createdAction = (ICreatedCallback) options.get(IXWTLoader.CREATED_CALLBACK);
