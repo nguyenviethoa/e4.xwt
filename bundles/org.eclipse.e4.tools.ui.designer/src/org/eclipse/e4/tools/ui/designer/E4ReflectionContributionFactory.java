@@ -77,6 +77,21 @@ public class E4ReflectionContributionFactory implements IContributionFactory {
 		}
 		return contribution;
 	}
+	
+	// Copy of the #create(String uriString, IEclipseContext context) method + 2nd context
+	public Object create(String uriString, IEclipseContext context, IEclipseContext staticContext) {
+		Object contribution;
+		try {
+			Class<?> targetClass = projectLoader.loadClass(uriString);
+			contribution = ContextInjectionFactory.make(targetClass, context, staticContext);
+		} catch (ClassNotFoundException e) {
+			contribution = null;
+		} catch (Throwable e) {
+			e.printStackTrace();
+			contribution = null;
+		}
+		return contribution;
+	}
 
 	private void processLanguages() {
 		languages = new HashMap<String, Object>();
