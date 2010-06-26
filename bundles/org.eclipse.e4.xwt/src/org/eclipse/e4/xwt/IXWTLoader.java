@@ -700,4 +700,28 @@ public interface IXWTLoader {
 	 * @return
 	 */
 	IBindingContext getBindingContext(Object element);
+
+	/**
+	 * Check if the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	boolean isFileResolveType(Class<?> type);
+
+	/**
+	 * Register the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	void registerFileResolveType(Class<?> type);
+
+	/**
+	 * Register the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	void unregisterFileResolveType(Class<?> type);
 }

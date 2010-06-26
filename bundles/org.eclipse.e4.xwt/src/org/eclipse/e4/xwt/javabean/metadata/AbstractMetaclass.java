@@ -590,14 +590,27 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			}
 			if (swtObject == null) {
 				if (defaultConstructor == null) {
+					if (UserData.isUIElementType(getType())) {
+						// this is used for Visual
+						Shell shell = new Shell();
+						try {
+							Constructor<?> constructor = getType()
+									.getConstructor(Composite.class, int.class);
+							if (constructor != null) {
+								return constructor.newInstance(shell, SWT.NONE);
+							}
+						} catch (Exception e) {
+							throw new XWTException("Constructor "
+									+ getType().getName() + " no found.");
+						}
+					}
 					try {
 						swtObject = getType().newInstance();
 					} catch (Exception e) {
 						throw new XWTException("Constructor "
 								+ getType().getName() + " no found.");
 					}
-				}
-				else {
+				} else {
 					swtObject = defaultConstructor.newInstance();
 				}
 			}
@@ -656,6 +669,9 @@ public abstract class AbstractMetaclass implements IMetaclass {
 				}
 			}
 			for (Field f : type.getDeclaredFields()) {
+				if (Modifier.isStatic(f.getModifiers())) {
+					continue;
+				}
 				String propertyName = f.getName();
 				Class<?> propertyType = f.getType();
 				if (shouldIgnored(f.getDeclaringClass(), propertyName, propertyType)) {

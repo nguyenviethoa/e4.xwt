@@ -279,6 +279,18 @@ public class Binding extends DynamicBinding {
 	}
 
 	/**
+	 * Sets a single validationRule
+	 * 
+	 * @param validator
+	 */
+	public IValidationRule getValidationRule() {
+		if (this.validationRules != null && this.validationRules.length > 0) {
+			return this.validationRules[0];
+		}
+		return null;
+	}
+
+	/**
 	 * Set the validationRules for the binding
 	 * 
 	 * @param validators

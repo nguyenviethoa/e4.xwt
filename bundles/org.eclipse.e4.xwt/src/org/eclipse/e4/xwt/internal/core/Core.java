@@ -84,6 +84,8 @@ public class Core {
 	
 	private static LinkedHashMap<String, IDataProviderFactory> dataProviderFactories = new LinkedHashMap<String, IDataProviderFactory>();
 
+	private Collection<Class<?>> resolveTypes = new ArrayList<Class<?>>();
+
 	private IXWTLoader xwtLoader;
 
 	static public ILogger nullLog = new ILogger() {
@@ -793,4 +795,40 @@ public class Core {
 		return metaclassService;
 	}
 
+	/**
+	 * Check if the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	public boolean isFileResolveType(Class<?> type) {
+		for (Class<?> resolveType : resolveTypes) {
+			if (resolveType.isAssignableFrom(type)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Register the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	public void registerFileResolveType(Class<?> type) {
+		if (!resolveTypes.contains(type)) {
+			resolveTypes.add(type);
+		}
+	}
+
+	/**
+	 * Register the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	public void unregisterFileResolveType(Class<?> type) {
+		resolveTypes.remove(type);
+	}	
 }

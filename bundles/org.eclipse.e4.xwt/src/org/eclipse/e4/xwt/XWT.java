@@ -757,4 +757,34 @@ public class XWT {
 				|| IConstants.XWT_NAMESPACE.equals(namespace)
 				|| namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO);
 	}
+	
+	/**
+	 * Check if the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	public static boolean isFileResolveType(Class<?> type) {
+		return XWTLoaderManager.getActive().isFileResolveType(type);		
+	}
+
+	/**
+	 * Register the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	public static void registerFileResolveType(Class<?> type) {
+		XWTLoaderManager.getActive().registerFileResolveType(type);
+	}
+
+	/**
+	 * Register the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	public static void unregisterFileResolveType(Class<?> type) {
+		XWTLoaderManager.getActive().unregisterFileResolveType(type);		
+	}
 }

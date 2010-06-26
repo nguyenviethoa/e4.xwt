@@ -139,6 +139,7 @@ import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -164,7 +165,7 @@ import org.eclipse.swt.widgets.TreeItem;
 public class XWTLoader implements IXWTLoader {
 	// Declarations
 	private Stack<Core> cores;
-
+	
 	public Display display;
 	public Realm realm;
 
@@ -1561,6 +1562,9 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(ObservableListContentProvider.class);
 		registerMetaclass(ObservableSetContentProvider.class);
 		registerMetaclass(ObservableTreeContentProvider.class);
+		
+		registerFileResolveType(Image.class);
+		registerFileResolveType(URL.class);
 	}
 
 	/*
@@ -1624,4 +1628,33 @@ public class XWTLoader implements IXWTLoader {
 		getCurrentCore().setLanguageSupport(languageSupport);
 	}
 
+	/**
+	 * Check if the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	public boolean isFileResolveType(Class<?> type) {
+		return getCurrentCore().isFileResolveType(type);		
+	}
+
+	/**
+	 * Register the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	public void registerFileResolveType(Class<?> type) {
+		getCurrentCore().registerFileResolveType(type);
+	}
+
+	/**
+	 * Register the value of a property is to resolve.
+	 * 
+	 * @param type type of property
+	 * @return
+	 */
+	public void unregisterFileResolveType(Class<?> type) {
+		getCurrentCore().unregisterFileResolveType(type);		
+	}	
 }

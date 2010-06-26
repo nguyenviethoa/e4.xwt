@@ -1500,13 +1500,13 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 		}
 		if (contentValue != null
-				&& (Image.class.isAssignableFrom(property.getType()))) {
-			contentValue = getImagePath(attribute, contentValue);
+				&& loader.isFileResolveType(property.getType())) {
+			contentValue = getImagePath(contentValue);
 		}
-		if (contentValue != null
-				&& (URL.class.isAssignableFrom(property.getType()))) {
-			contentValue = getSourceURL(contentValue);
-		}
+//		if (contentValue != null
+//				&& (URL.class.isAssignableFrom(property.getType()))) {
+//			contentValue = getSourceURL(contentValue);
+//		}
 		Object value = null;
 		DocumentObject[] children = attribute.getChildren();
 		boolean usingExistingValue = false;
@@ -1748,7 +1748,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		return null;
 	}
 
-	protected String getImagePath(Attribute attribute, String contentValue) {
+	protected String getImagePath(String contentValue) {
 		String value = contentValue;
 		try {
 			File file = new File(contentValue);
