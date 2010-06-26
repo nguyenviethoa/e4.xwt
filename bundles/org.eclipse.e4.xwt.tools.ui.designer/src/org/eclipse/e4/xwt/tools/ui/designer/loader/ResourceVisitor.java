@@ -1478,13 +1478,13 @@ public class ResourceVisitor {
 				}
 			}
 			if (contentValue != null
-					&& (Image.class.isAssignableFrom(property.getType()))) {
-				contentValue = getImagePath(attribute, contentValue);
+					&& loader.isFileResolveType(property.getType())) {
+				contentValue = getImagePath(contentValue);
 			}
-			if (contentValue != null
-					&& (URL.class.isAssignableFrom(property.getType()))) {
-				contentValue = getSourceURL(contentValue);
-			}
+//			if (contentValue != null
+//					&& (URL.class.isAssignableFrom(property.getType()))) {
+//				contentValue = getSourceURL(contentValue);
+//			}
 			Object value = null;
 			XamlNode[] children = attribute.getChildNodes().toArray(
 					new XamlNode[0]);
@@ -1734,7 +1734,7 @@ public class ResourceVisitor {
 		return null;
 	}
 
-	protected String getImagePath(XamlAttribute attribute, String contentValue) {
+	protected String getImagePath(String contentValue) {
 		try {
 			File file = new File(contentValue);
 			if (file.exists()) {
