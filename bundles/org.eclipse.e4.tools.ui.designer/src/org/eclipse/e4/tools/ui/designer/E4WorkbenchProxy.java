@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.e4.ui.internal.workbench.swt.WorkbenchSWTActivator;
+
 import org.eclipse.e4.ui.internal.workbench.swt.ResourceUtility;
 import org.eclipse.e4.ui.workbench.IResourceUtilities;
 
@@ -30,7 +32,6 @@ import java.net.URL;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.e4.ui.css.core.util.impl.resources.OSGiResourceLocator;
 import org.eclipse.e4.ui.internal.workbench.swt.E4Application;
-import org.eclipse.e4.ui.workbench.swt.WorkbenchSWTActivator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
