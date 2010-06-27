@@ -10,51 +10,36 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
-import org.eclipse.e4.ui.internal.workbench.swt.WorkbenchSWTActivator;
-
-import org.eclipse.e4.ui.internal.workbench.swt.ResourceUtility;
-import org.eclipse.e4.ui.workbench.IResourceUtilities;
-
-import org.eclipse.e4.ui.internal.workbench.ToolBarContributionHandler;
-import org.eclipse.e4.ui.internal.workbench.TrimContributionHandler;
-import org.eclipse.e4.ui.workbench.swt.modeling.MenuServiceFilter;
-
-import org.eclipse.e4.ui.css.swt.engine.CSSSWTEngineImpl;
-
-import org.eclipse.e4.ui.css.swt.theme.IThemeManager;
-
-import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.e4.ui.css.core.util.impl.resources.OSGiResourceLocator;
-import org.eclipse.e4.ui.internal.workbench.swt.E4Application;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-
-import org.eclipse.e4.ui.internal.workbench.ModelAssembler;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.contributions.IContributionFactory;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher;
+import org.eclipse.e4.ui.css.core.util.impl.resources.OSGiResourceLocator;
+import org.eclipse.e4.ui.css.swt.engine.CSSSWTEngineImpl;
+import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
+import org.eclipse.e4.ui.css.swt.theme.IThemeManager;
 import org.eclipse.e4.ui.internal.workbench.Activator;
 import org.eclipse.e4.ui.internal.workbench.E4CommandProcessor;
 import org.eclipse.e4.ui.internal.workbench.E4Workbench;
+import org.eclipse.e4.ui.internal.workbench.ModelAssembler;
 import org.eclipse.e4.ui.internal.workbench.Parameter;
 import org.eclipse.e4.ui.internal.workbench.Policy;
-import org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine;
+import org.eclipse.e4.ui.internal.workbench.TrimContributionHandler;
+import org.eclipse.e4.ui.internal.workbench.swt.E4Application;
+import org.eclipse.e4.ui.internal.workbench.swt.ResourceUtility;
+import org.eclipse.e4.ui.internal.workbench.swt.WorkbenchSWTActivator;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.MApplicationElement;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -63,13 +48,18 @@ import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.e4.ui.workbench.IPresentationEngine;
+import org.eclipse.e4.ui.workbench.IResourceUtilities;
 import org.eclipse.e4.ui.workbench.IWorkbench;
+import org.eclipse.e4.ui.workbench.swt.modeling.MenuServiceFilter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 /**
  * Mainly comes from PartRenderingEngine
@@ -204,8 +194,6 @@ public class E4WorkbenchProxy {
 				display.addFilter(SWT.Traverse, keyListener);
 
 				ContextInjectionFactory.make(TrimContributionHandler.class,
-						appContext);
-				ContextInjectionFactory.make(ToolBarContributionHandler.class,
 						appContext);
 				menuServiceFilter = ContextInjectionFactory.make(
 						MenuServiceFilter.class, appContext);
