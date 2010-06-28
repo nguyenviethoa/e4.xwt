@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.w3c.dom.Element;
+
+import org.w3c.dom.css.CSSStyleDeclaration;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -286,6 +290,10 @@ public class E4WorkbenchProxy {
 					engine.applyStyles((Widget) widget, true);
 				}
 
+				public CSSStyleDeclaration getStyle(Object widget) {
+					return engine.getStyle((Widget) widget);
+				}
+
 			});
 		} else if (cssURI != null) {
 			String cssResourcesURI = (String) appContext
@@ -309,6 +317,14 @@ public class E4WorkbenchProxy {
 
 				public void style(Object widget) {
 					engine.applyStyles((Widget) widget, true);
+				}
+
+				public CSSStyleDeclaration getStyle(Object widget) {
+					Element e = engine.getCSSElementContext(widget).getElement();
+					if( e == null ) {
+						return null;
+					}
+					return engine.getViewCSS().getComputedStyle(e, null);
 				}
 
 			});
@@ -402,6 +418,10 @@ public class E4WorkbenchProxy {
 			}
 
 			public void style(Object widget) {
+			}
+
+			public CSSStyleDeclaration getStyle(Object widget) {
+				return null;
 			}
 		});
 	}
