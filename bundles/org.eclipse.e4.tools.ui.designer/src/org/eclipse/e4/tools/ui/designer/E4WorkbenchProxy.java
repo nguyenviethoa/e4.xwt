@@ -36,7 +36,6 @@ import org.eclipse.e4.ui.internal.workbench.E4Workbench;
 import org.eclipse.e4.ui.internal.workbench.ModelAssembler;
 import org.eclipse.e4.ui.internal.workbench.Parameter;
 import org.eclipse.e4.ui.internal.workbench.Policy;
-import org.eclipse.e4.ui.internal.workbench.TrimContributionHandler;
 import org.eclipse.e4.ui.internal.workbench.swt.E4Application;
 import org.eclipse.e4.ui.internal.workbench.swt.ResourceUtility;
 import org.eclipse.e4.ui.internal.workbench.swt.WorkbenchSWTActivator;
@@ -193,8 +192,6 @@ public class E4WorkbenchProxy {
 				display.addFilter(SWT.KeyDown, keyListener);
 				display.addFilter(SWT.Traverse, keyListener);
 
-				ContextInjectionFactory.make(TrimContributionHandler.class,
-						appContext);
 				menuServiceFilter = ContextInjectionFactory.make(
 						MenuServiceFilter.class, appContext);
 				display.addFilter(SWT.Show, menuServiceFilter);
