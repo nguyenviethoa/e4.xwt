@@ -293,6 +293,13 @@ public class E4WorkbenchProxy {
 				public CSSStyleDeclaration getStyle(Object widget) {
 					return engine.getStyle((Widget) widget);
 				}
+				public void setClassnameAndId(Object widget, String classname,
+						String id) {
+					((Widget) widget).setData(
+							"org.eclipse.e4.ui.css.CssClassName", classname); //$NON-NLS-1$
+					((Widget) widget).setData("org.eclipse.e4.ui.css.id", id); //$NON-NLS-1$
+					engine.applyStyles((Widget) widget, true);
+				}
 
 			});
 		} else if (cssURI != null) {
@@ -325,6 +332,13 @@ public class E4WorkbenchProxy {
 						return null;
 					}
 					return engine.getViewCSS().getComputedStyle(e, null);
+				}
+				public void setClassnameAndId(Object widget, String classname,
+						String id) {
+					((Widget) widget).setData(
+							"org.eclipse.e4.ui.css.CssClassName", classname); //$NON-NLS-1$
+					((Widget) widget).setData("org.eclipse.e4.ui.css.id", id); //$NON-NLS-1$
+					engine.applyStyles((Widget) widget, true);
 				}
 
 			});
@@ -422,6 +436,10 @@ public class E4WorkbenchProxy {
 
 			public CSSStyleDeclaration getStyle(Object widget) {
 				return null;
+			}
+
+			public void setClassnameAndId(Object widget, String classname,
+					String id) {
 			}
 		});
 	}
