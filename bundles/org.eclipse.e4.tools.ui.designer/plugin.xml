@@ -46,24 +46,6 @@
       </editor>
    </extension>
    <extension
-         point="org.eclipse.ui.newWizards">
-      <category
-            id="org.eclipse.e4"
-            name="%category.name">
-      </category>
-      <wizard
-            canFinishEarly="false"
-            category="org.eclipse.e4"
-            class="org.eclipse.e4.tools.ui.designer.wizards.E4NewProjectWizard"
-            finalPerspective="org.eclipse.e4.xwt.ui.perspective"
-            hasPages="true"
-            icon="platform:/plugin/org.eclipse.pde.ui/icons/etool16/newpprj_wiz.gif"
-            id="org.eclipse.e4.tools.ui.designer.E4NewProjectWizard"
-            name="%wizard.name"
-            project="true">
-      </wizard>
-   </extension>
-   <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             id="org.eclipse.e4.tools.ui.designer.partContribution"
