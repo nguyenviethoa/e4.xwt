@@ -137,7 +137,9 @@ public class E4WorkbenchProxy {
 		E4Workbench.processHierarchy(appElement);
 		
 		//init commands and bindings here.
+		E4CommandProcessor.processCategories(appContext, appElement.getCategories());
 		E4CommandProcessor.processCommands(appContext, appElement.getCommands());
+		//E4CommandProcessor.watchForCommandChanges(appContext);
 		E4CommandProcessor.processBindings(appContext, appElement);
 	}
 
