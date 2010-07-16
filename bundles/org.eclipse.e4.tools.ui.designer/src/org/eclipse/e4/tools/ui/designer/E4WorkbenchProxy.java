@@ -141,6 +141,7 @@ public class E4WorkbenchProxy {
 		E4CommandProcessor.processCommands(appContext, appElement.getCommands());
 		//E4CommandProcessor.watchForCommandChanges(appContext);
 		E4CommandProcessor.processBindings(appContext, appElement);
+		//E4CommandProcessor.watchForBindingChanges(appContext);
 	}
 
 	public void createAndRunUI() {
