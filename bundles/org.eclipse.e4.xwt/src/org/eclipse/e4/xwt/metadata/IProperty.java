@@ -18,6 +18,8 @@ import java.lang.reflect.InvocationTargetException;
  * @author yyang
  */
 public interface IProperty extends IBehavior {
+	IProperty[] EMPTY_ARRAY = new IProperty[] {};
+	
 	public Class<?> getType();
 
 	public void setType(Class<?> type);
@@ -46,4 +48,6 @@ public interface IProperty extends IBehavior {
 	 * @return
 	 */
 	public boolean isValueAsParent();
+	
+	public ILoadingType getLoadingType();
 }

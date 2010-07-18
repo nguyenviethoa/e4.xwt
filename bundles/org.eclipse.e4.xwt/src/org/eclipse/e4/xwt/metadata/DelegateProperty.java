@@ -19,9 +19,19 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class DelegateProperty implements IProperty {
 	protected IProperty delegate;
+	protected ILoadingType loadingType;
 	
 	public DelegateProperty(IProperty delegate) {
+		this(delegate, ILoadingType.DEFAULT);
+	}
+	
+	public DelegateProperty(ILoadingType loadingType) {
+		this(null, loadingType);
+	}
+
+	public DelegateProperty(IProperty delegate, ILoadingType loadingType) {
 		this.delegate = delegate;
+		this.loadingType = loadingType;
 	}
 
 	public void addSetPostAction(ISetPostAction setPostAction) {
@@ -82,5 +92,9 @@ public class DelegateProperty implements IProperty {
 	
 	public boolean isValueAsParent() {
 		return this.delegate.isValueAsParent();
+	}
+
+	public ILoadingType getLoadingType() {
+		return loadingType;
 	}
 }

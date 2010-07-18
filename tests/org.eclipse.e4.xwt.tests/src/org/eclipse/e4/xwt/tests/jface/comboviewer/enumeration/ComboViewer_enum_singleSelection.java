@@ -1,27 +1,25 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.controls.tree;
+package org.eclipse.e4.xwt.tests.jface.comboviewer.enumeration;
 
 import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
-/**
- * @author jliu
- */
-public class Tree_Test2 {
+public class ComboViewer_enum_singleSelection {
 	public static void main(String[] args) {
 
-		URL url = Tree_Test2.class.getResource(Tree_Test2.class.getSimpleName()
+		URL url = ComboViewer_enum_singleSelection.class.getResource(ComboViewer_enum_singleSelection.class
+				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);

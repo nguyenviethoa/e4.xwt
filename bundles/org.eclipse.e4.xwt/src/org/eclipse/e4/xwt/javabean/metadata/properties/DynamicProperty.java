@@ -14,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
+import org.eclipse.e4.xwt.metadata.ILoadingType;
+import org.eclipse.e4.xwt.metadata.IProperty;
 
 /**
  * This class is used to extend the Java Bean model
@@ -29,8 +31,16 @@ public class DynamicProperty extends AbstractProperty {
 		this(propertyType, createSetter0(type, propertyType, name), createGetter0(propertyType, name), name);
 	}
 
+	public DynamicProperty(Class<?> type, Class<?> propertyType, String name, ILoadingType loadingType) {
+		this(propertyType, createSetter0(type, propertyType, name), createGetter0(propertyType, name), name, loadingType);
+	}
+
 	public DynamicProperty(Class<?> propertyType, Method setter, Method getter, String name) {
-		super(name, propertyType);
+		this(propertyType, setter, getter, name, ILoadingType.DEFAULT);
+	}
+
+	public DynamicProperty(Class<?> propertyType, Method setter, Method getter, String name, ILoadingType loadingType) {
+		super(name, propertyType, loadingType);
 		this.setter = setter;
 		this.getter = getter;
 	}

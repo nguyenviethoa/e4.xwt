@@ -11,6 +11,8 @@
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.metadata.ILoadingType;
+import org.eclipse.e4.xwt.metadata.IProperty;
 
 /**
  * Additional property to store in user data in widget
@@ -31,7 +33,11 @@ public class DataProperty extends AbstractProperty {
 	}
 
 	public DataProperty(String name, String key, Class<?> propertyType, Object defaultValue) {
-		super(name, propertyType);
+		this(name, key, propertyType, defaultValue, ILoadingType.DEFAULT);
+	}
+
+	public DataProperty(String name, String key, Class<?> propertyType, Object defaultValue, ILoadingType loadingType) {
+		super(name, propertyType, loadingType);
 		this.key = key;
 		this.defaultValue = defaultValue;
 	}

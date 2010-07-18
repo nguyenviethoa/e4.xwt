@@ -14,7 +14,7 @@
 		<TreeColumn text="Node" width="100" tooltipText="Node column" image="closedFolder.gif"/>
 		<TreeColumn text="Type" width="100" tooltipText="Type column"/>
 		<TreeColumn text="Size" width="100" tooltipText="Size column"/>
-		<TreeItem image="closedFolder.gif">
+		<TreeItem name="TreeItem" image="closedFolder.gif">
 			<TreeItem.texts>
 				<x:Array Type="j:String">
 					<j:String>Node1</j:String>

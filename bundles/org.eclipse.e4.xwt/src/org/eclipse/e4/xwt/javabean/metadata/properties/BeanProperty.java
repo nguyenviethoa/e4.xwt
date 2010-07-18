@@ -20,13 +20,19 @@ import org.eclipse.e4.xwt.annotation.Containment;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.metadata.ILoadingType;
+import org.eclipse.e4.xwt.metadata.IProperty;
 
 public class BeanProperty extends AbstractProperty {
 	protected PropertyDescriptor descriptor;
 	private boolean containment = false;
-
+	
 	public BeanProperty(PropertyDescriptor descriptor) {
-		super(descriptor.getName(), descriptor.getPropertyType());
+		this(descriptor, ILoadingType.DEFAULT);
+	}
+
+	public BeanProperty(PropertyDescriptor descriptor, ILoadingType loadingType) {
+		super(descriptor.getName(), descriptor.getPropertyType(), loadingType);
 		this.descriptor = descriptor;
 		
 		Method readMethod = descriptor.getReadMethod();

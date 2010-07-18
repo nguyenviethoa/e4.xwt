@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.eclipse.e4.xwt.javabean.metadata.Behavior;
+import org.eclipse.e4.xwt.metadata.ILoadingType;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.e4.xwt.metadata.ISetPostAction;
 
@@ -23,10 +24,16 @@ public abstract class AbstractProperty extends Behavior implements IProperty {
 	
 	protected Collection<ISetPostAction> setPostActions = Collections.EMPTY_LIST;
 	private Class<?> type;
+	protected ILoadingType loadingType;
 
 	public AbstractProperty(String name, Class<?> type) {
+		this(name, type, ILoadingType.DEFAULT);
+	}
+
+	public AbstractProperty(String name, Class<?> type, ILoadingType loadingType) {
 		super(name);
 		setType(type);
+		this.loadingType = loadingType;
 	}
 
 	public void addSetPostAction(ISetPostAction setPostAction) {
@@ -108,5 +115,9 @@ public abstract class AbstractProperty extends Behavior implements IProperty {
 	
 	public void setValueAsParent(boolean value) {
 		flags |= VALUE_AS_PARENT;
-	}	
+	}
+
+	public ILoadingType getLoadingType() {
+		return loadingType;
+	}
 }

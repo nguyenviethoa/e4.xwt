@@ -68,6 +68,7 @@ import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.metadata.IValueLoading;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlAttribute;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlDocument;
 import org.eclipse.e4.xwt.tools.ui.xaml.XamlElement;
@@ -77,20 +78,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.ControlEditor;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -108,7 +103,6 @@ public class ResourceVisitor {
 
 	static final String RESOURCE_LOADER_PROPERTY = "XWT.ResourceLoader";
 
-	private static final HashMap<String, Collection<Class<?>>> DELAYED_ATTRIBUTES = new HashMap<String, Collection<Class<?>>>();
 	private static final String COLUMN = "Column";
 
 	private Map<String, Object> options;
@@ -413,7 +407,7 @@ public class ResourceVisitor {
 				return null;
 			}
 			if (IConstants.XAML_X_TYPE.equalsIgnoreCase(name)
-					&& constraintType != null && constraintType == Class.class) {
+					&& constraintType != null && constraintType instanceof Class<?>) {
 				if (!childNodes.isEmpty()) {
 					XamlElement type = childNodes.get(0);
 					IMetaclass metaclass = loader.getMetaclass(type.getName(),
@@ -634,7 +628,7 @@ public class ResourceVisitor {
 			property.setValue(targetObject, entry.getValue());
 		}
 
-		List<String> delayedAttributes = new ArrayList<String>();
+		Map<String, IProperty> delayedAttributes = new HashMap<String, IProperty>();
 		init(metaclass, targetObject, element, delayedAttributes);
 		if (targetObject instanceof Style && childNodes.size() > 0) {
 			Collection<Setter> setters = new ArrayList<Setter>();
@@ -676,12 +670,36 @@ public class ResourceVisitor {
 			}
 		}
 
-		for (String delayed : delayedAttributes) {
-			initAttribute(metaclass, targetObject, element, null, delayed);
-		}
+		iniDelayedAttribute(metaclass, targetObject, element, null, delayedAttributes);
 		postCreation(targetObject);
 		popStack();
 		return targetObject;
+	}
+
+	protected void iniDelayedAttribute(IMetaclass metaclass, Object targetObject,
+			XamlNode element, String namespace,
+			Map<String, IProperty> delayedAttributes) throws Exception {
+		Set<String> keys = delayedAttributes.keySet();
+		while (!keys.isEmpty()) {
+			for (String delayed : keys.toArray(new String[keys.size()])) {
+				IProperty property = delayedAttributes.get(delayed);
+				boolean hasDependency = false;
+				IProperty[] dependencies = property.getLoadingType().getDependencies();
+				if (dependencies.length > 0) {
+					for (IProperty dependency : dependencies) {
+						if (delayedAttributes.containsValue(dependency)) {
+							hasDependency = true;
+							break;
+						}
+					}
+				}
+				if (!hasDependency) {
+					initAttribute(metaclass, targetObject, element, null,
+							delayed);
+					keys.remove(delayed);
+				}
+			}
+		}
 	}
 
 	/**
@@ -1024,7 +1042,7 @@ public class ResourceVisitor {
 	}
 
 	protected void init(IMetaclass metaclass, Object targetObject,
-			XamlNode element, List<String> delayedAttributes) throws Exception {
+			XamlNode element, Map<String, IProperty> delayedAttributes) throws Exception {
 		// editors for TableItem,
 		if (targetObject instanceof TableItem) {
 			installTableEditors((TableItem) targetObject);
@@ -1077,6 +1095,8 @@ public class ResourceVisitor {
 		for (XamlAttribute attr : element.getAttributes()) {
 			String namespace = attr.getNamespace();
 			String attrName = attr.getName();
+			
+			IProperty property = metaclass.findProperty(attrName);
 
 			//
 			// 1. handle foreigner namespace
@@ -1107,7 +1127,6 @@ public class ResourceVisitor {
 						.equalsIgnoreCase(attrName)) {
 					continue; // done before
 				} else if (IConstants.XAML_X_ARRAY.equalsIgnoreCase(attrName)) {
-					IProperty property = metaclass.findProperty(attrName);
 					Class<?> type = property.getType();
 					Object value = getArrayProperty(type, targetObject,
 							element, attrName);
@@ -1128,9 +1147,9 @@ public class ResourceVisitor {
 			// 3. handle delayed attributes.
 			//
 			else if (delayedAttributes != null
-					&& isDelayedProperty(attrName.toLowerCase(), metaclass
-							.getType())) {
-				delayedAttributes.add(attrName);
+					&& property != null
+					&& property.getLoadingType().getValueLoading() != IValueLoading.Normal) {
+				delayedAttributes.put(attrName, property);
 			}
 			//
 			// 4. handle others.
@@ -1285,11 +1304,9 @@ public class ResourceVisitor {
 				}
 			}
 
-			List<String> delayedAttributes = new ArrayList<String>();
+			Map<String, IProperty> delayedAttributes = new HashMap<String, IProperty>();
 			init(metaclass, instance, element, delayedAttributes);
-			for (String delayed : delayedAttributes) {
-				initAttribute(metaclass, instance, element, null, delayed);
-			}
+			iniDelayedAttribute(metaclass, instance, element, null, delayedAttributes);
 
 			for (XamlElement doc : element.getChildNodes()) {
 				doCreate(instance, doc, null, Collections.EMPTY_MAP);
@@ -1653,11 +1670,9 @@ public class ResourceVisitor {
 					value = property.getValue(target);
 				}
 				if (value != null) {
-					List<String> delayedAttributes = new ArrayList<String>();
+					Map<String, IProperty> delayedAttributes = new HashMap<String, IProperty>();
 					init(propertyMetaclass, value, attribute, delayedAttributes);
-					for (String delayed : delayedAttributes) {
-						initAttribute(metaclass, target, element, null, delayed);
-					}
+					iniDelayedAttribute(metaclass, target, element, null, delayedAttributes);
 				}
 			}
 		} catch (Exception e) {
@@ -1795,59 +1810,5 @@ public class ResourceVisitor {
 		}
 		stringBuffer.append(str);
 		return stringBuffer.toString();
-
 	}
-
-	static protected boolean isDelayedProperty(String attr, Class<?> type) {
-		Collection<Class<?>> types = DELAYED_ATTRIBUTES.get(attr);
-		if (types == null) {
-			return false;
-		}
-		if (types.contains(type)) {
-			return true;
-		}
-		for (Class<?> class1 : types) {
-			if (class1.isAssignableFrom(type)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	static {
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(Viewer.class);
-			DELAYED_ATTRIBUTES.put("input", types);
-		}
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(Sash.class);
-			types.add(SashForm.class);
-			DELAYED_ATTRIBUTES.put("weights", types);
-		}
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(Combo.class);
-			types.add(CCombo.class);
-			DELAYED_ATTRIBUTES.put("text", types);
-		}
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(Browser.class);
-			DELAYED_ATTRIBUTES.put("url", types);
-		}
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(TableEditor.class);
-			DELAYED_ATTRIBUTES.put("dynamic", types);
-		}
-		// {
-		// Collection<Class<?>> types = new ArrayList<Class<?>>();
-		// types.add(TableViewer.class);
-		// DELAYED_ATTRIBUTES.put("labelprovider", types);
-		// }
-	}
-
 }

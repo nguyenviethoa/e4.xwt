@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.e4.xwt.tests.jface.comboviewer.array.JFaceComboViewer_ArrayTests;
 import org.eclipse.e4.xwt.tests.jface.comboviewer.collection.JFaceComboViewer_CollectionTests;
+import org.eclipse.e4.xwt.tests.jface.comboviewer.enumeration.JFaceComboViewer_EnumTests;
 import org.eclipse.e4.xwt.tests.jface.listviewer.array.JFaceListViewer_ArrayTests;
 import org.eclipse.e4.xwt.tests.jface.listviewer.collection.JFaceListViewer_CollectionTests;
 import org.eclipse.e4.xwt.tests.jface.tableviewer.JFaceTableViewer_Tests;
@@ -41,5 +42,6 @@ public class JFaceTestSuite extends TestSuite {
 		addTest(new TestSuite(JFaceTableViewer_Array_MasterDetail_Tests.class));
 		addTest(new TestSuite(JFaceComboViewer_ArrayTests.class));
 		addTest(new TestSuite(JFaceComboViewer_CollectionTests.class));	
+		addTest(new TestSuite(JFaceComboViewer_EnumTests.class));	
 	}
 }

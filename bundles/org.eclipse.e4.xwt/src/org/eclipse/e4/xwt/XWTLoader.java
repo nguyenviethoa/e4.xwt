@@ -129,8 +129,12 @@ import org.eclipse.e4.xwt.jface.JFaceInitializer;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.jface.ObservableTreeContentProvider;
 import org.eclipse.e4.xwt.jface.ViewerFilter;
+import org.eclipse.e4.xwt.metadata.DefaultLoadingType;
+import org.eclipse.e4.xwt.metadata.DelegateProperty;
+import org.eclipse.e4.xwt.metadata.ILoadingType;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.metadata.IValueLoading;
 import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -1309,17 +1313,50 @@ public class XWTLoader implements IXWTLoader {
 		convertorRegister.register(double.class, String.class,
 				NumberToStringConverter.fromDouble(true));
 
-		Class<?> type = org.eclipse.swt.browser.Browser.class;
+		Class<?> type = org.eclipse.swt.widgets.Widget.class;
+		IMetaclass metaclass = (IMetaclass) registerMetaclass(type);
+		IProperty dataContextProperty = new DataProperty(IConstants.XAML_DATA_CONTEXT,
+				IUserDataConstants.XWT_DATACONTEXT_KEY);
+		metaclass.addProperty(dataContextProperty);
+		metaclass.addProperty(new DataProperty(IConstants.XAML_BINDING_CONTEXT,
+				IUserDataConstants.XWT_BINDING_CONTEXT_KEY));
+		metaclass.addProperty(new DataProperty(IConstants.XAML_TRIGGERS,
+				IUserDataConstants.XWT_TRIGGERS_KEY, TriggerBase[].class));
+		metaclass.addProperty(new StyleProperty());
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.KEY_GROUP));
+		registerEventGroup(type, new RadioEventGroup(
+				IEventConstants.MOUSE_GROUP));
+		registerEventGroup(type, new RadioEventGroup(
+				IEventConstants.MOUSE_MOVING_GROUP));
+		registerEventGroup(type, new RadioEventGroup(
+				IEventConstants.FOCUS_GROUP));
+		registerEventGroup(type, new RadioEventGroup(
+				IEventConstants.EXPAND_GROUP));
+		registerEventGroup(type, new RadioEventGroup(
+				IEventConstants.WINDOW_GROUP));
+		registerEventGroup(type, new RadioEventGroup(
+				IEventConstants.ACTIVATION_GROUP));
+		registerEventGroup(type, new RadioEventGroup(IEventConstants.HARD_KEY));
+		type = org.eclipse.swt.browser.Browser.class;
 		IMetaclass browserMetaclass = (IMetaclass) registerMetaclass(type);
+		ILoadingType loadingType = new DefaultLoadingType(IValueLoading.PostChildren, new IProperty[]{dataContextProperty});
+		
 		browserMetaclass.addProperty(new DynamicProperty(type, String.class,
-				PropertiesConstants.PROPERTY_URL));
+				PropertiesConstants.PROPERTY_URL, loadingType));
+
 		IMetaclass buttonMetaclass = (IMetaclass) registerMetaclass(Button.class);
 		buttonMetaclass.addProperty(new DataProperty(IConstants.XAML_COMMAND,
 				IUserDataConstants.XWT_COMMAND_KEY, ICommand.class));
 
 		registerMetaclass(org.eclipse.swt.widgets.Canvas.class);
 		registerMetaclass(org.eclipse.swt.widgets.Caret.class);
-		registerMetaclass(org.eclipse.swt.widgets.Combo.class);
+		metaclass = registerMetaclass(org.eclipse.swt.widgets.Combo.class);
+		if (metaclass != null) {
+			IProperty property = metaclass.findProperty("text");
+			IProperty inputProperty = new DelegateProperty(property, loadingType);
+			metaclass.addProperty(inputProperty);
+		}
+
 		registerMetaclass(org.eclipse.swt.widgets.Composite.class);
 		registerMetaclass(org.eclipse.swt.widgets.CoolBar.class);
 		registerMetaclass(org.eclipse.swt.widgets.CoolItem.class);
@@ -1341,9 +1378,11 @@ public class XWTLoader implements IXWTLoader {
 		menuItemMetaclass.addProperty(new DataProperty(IConstants.XAML_COMMAND,
 				IUserDataConstants.XWT_COMMAND_KEY, ICommand.class));
 
+		
 		registerMetaclass(org.eclipse.swt.widgets.MessageBox.class);
 		registerMetaclass(org.eclipse.swt.widgets.ProgressBar.class);
 		registerMetaclass(org.eclipse.swt.widgets.Sash.class);
+
 		registerMetaclass(org.eclipse.swt.widgets.Scale.class);
 		registerMetaclass(org.eclipse.swt.widgets.ScrollBar.class);
 		registerMetaclass(org.eclipse.swt.widgets.Shell.class);
@@ -1354,7 +1393,7 @@ public class XWTLoader implements IXWTLoader {
 
 		registerMetaclass(org.eclipse.swt.widgets.Table.class);
 		type = org.eclipse.swt.widgets.TableItem.class;
-		IMetaclass metaclass = (IMetaclass) registerMetaclass(type);
+		metaclass = (IMetaclass) registerMetaclass(type);
 		metaclass.addProperty(new TableItemProperty());
 		metaclass.addProperty(new TableItemEditorProperty());
 		metaclass.addProperty(new DynamicBeanProperty(TableItem.class,
@@ -1367,7 +1406,7 @@ public class XWTLoader implements IXWTLoader {
 
 		IMetaclass TableEditorMetaclass = core.getMetaclass(TableEditor.class,
 				IConstants.XWT_NAMESPACE);
-		TableEditorMetaclass.addProperty(new TableEditorDynamicProperty());
+		TableEditorMetaclass.addProperty(new TableEditorDynamicProperty(loadingType));
 
 		type = org.eclipse.swt.widgets.TableColumn.class;
 		metaclass = (IMetaclass) registerMetaclass(type);
@@ -1381,12 +1420,17 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(org.eclipse.swt.widgets.Tray.class);
 		registerMetaclass(org.eclipse.swt.widgets.Tree.class);
 		registerMetaclass(org.eclipse.swt.widgets.TreeColumn.class);
-		registerMetaclass(org.eclipse.swt.widgets.TreeItem.class);
 		type = org.eclipse.swt.widgets.TreeItem.class;
+		registerMetaclass(type);
 		metaclass = (IMetaclass) registerMetaclass(type);
 		metaclass.addProperty(new DynamicBeanProperty(TreeItem.class,
 				String[].class, PropertiesConstants.PROPERTY_TEXTS,
 				PropertiesConstants.PROPERTY_TEXT));
+		if (metaclass != null) {
+			IProperty property = metaclass.findProperty("expanded");
+			IProperty expandedProperty = new DelegateProperty(property, loadingType);
+			metaclass.addProperty(expandedProperty);
+		}
 
 		// registerMetaclass(org.eclipse.swt.layout.FillData.class);
 		registerMetaclass(org.eclipse.swt.layout.FillLayout.class);
@@ -1400,10 +1444,21 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(org.eclipse.swt.custom.StackLayout.class);
 
 		registerMetaclass(org.eclipse.swt.custom.CLabel.class);
-		registerMetaclass(org.eclipse.swt.custom.CCombo.class);
+		metaclass = registerMetaclass(org.eclipse.swt.custom.CCombo.class);
+		if (metaclass != null) {
+			IProperty property = metaclass.findProperty("text");
+			IProperty inputProperty = new DelegateProperty(property, loadingType);
+			metaclass.addProperty(inputProperty);
+		}
 		registerMetaclass(org.eclipse.swt.custom.CTabFolder.class);
 		registerMetaclass(org.eclipse.swt.custom.CTabItem.class);
-		registerMetaclass(org.eclipse.swt.custom.SashForm.class);
+		metaclass = registerMetaclass(org.eclipse.swt.custom.SashForm.class);
+		if (metaclass != null) {
+			IProperty property = metaclass.findProperty("weights");
+			IProperty inputProperty = new DelegateProperty(property, loadingType);
+			metaclass.addProperty(inputProperty);
+		}
+		
 		registerMetaclass(org.eclipse.swt.custom.StyledText.class);
 		registerMetaclass(org.eclipse.swt.custom.ScrolledComposite.class);
 		registerMetaclass(org.eclipse.swt.custom.TableTree.class);
@@ -1411,37 +1466,13 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(org.eclipse.swt.custom.CBanner.class);
 		registerMetaclass(org.eclipse.swt.custom.TableCursor.class);
 
-		type = org.eclipse.swt.widgets.Widget.class;
-		metaclass = (IMetaclass) registerMetaclass(type);
-		metaclass.addProperty(new DataProperty(IConstants.XAML_DATA_CONTEXT,
-				IUserDataConstants.XWT_DATACONTEXT_KEY));
-		metaclass.addProperty(new DataProperty(IConstants.XAML_BINDING_CONTEXT,
-				IUserDataConstants.XWT_BINDING_CONTEXT_KEY));
-		metaclass.addProperty(new DataProperty(IConstants.XAML_TRIGGERS,
-				IUserDataConstants.XWT_TRIGGERS_KEY, TriggerBase[].class));
-		metaclass.addProperty(new StyleProperty());
-		registerEventGroup(type, new RadioEventGroup(IEventConstants.KEY_GROUP));
-		registerEventGroup(type, new RadioEventGroup(
-				IEventConstants.MOUSE_GROUP));
-		registerEventGroup(type, new RadioEventGroup(
-				IEventConstants.MOUSE_MOVING_GROUP));
-		registerEventGroup(type, new RadioEventGroup(
-				IEventConstants.FOCUS_GROUP));
-		registerEventGroup(type, new RadioEventGroup(
-				IEventConstants.EXPAND_GROUP));
-		registerEventGroup(type, new RadioEventGroup(
-				IEventConstants.WINDOW_GROUP));
-		registerEventGroup(type, new RadioEventGroup(
-				IEventConstants.ACTIVATION_GROUP));
-		registerEventGroup(type, new RadioEventGroup(IEventConstants.HARD_KEY));
-
 		type = org.eclipse.jface.viewers.Viewer.class;
 		metaclass = (IMetaclass) core.getMetaclass(type,
 				IConstants.XWT_NAMESPACE);
 		if (metaclass != null) {
 			IProperty property = metaclass.findProperty("Input");
-
-			metaclass.addProperty(new InputBeanProperty(property));
+			IProperty inputProperty = new InputBeanProperty(property, loadingType);
+			metaclass.addProperty(inputProperty);
 			metaclass.addProperty(new DataProperty(
 					IConstants.XAML_DATA_CONTEXT,
 					IUserDataConstants.XWT_DATACONTEXT_KEY));
@@ -1459,12 +1490,13 @@ public class XWTLoader implements IXWTLoader {
 					PropertiesConstants.PROPERTY_ITEM_IMAGE,
 					IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY,
 					IBinding.class));
+			ILoadingType inputLoadingType = new DefaultLoadingType(IValueLoading.PostChildren, new IProperty[]{inputProperty});
 			metaclass.addProperty(new SingleSelectionBeanProperty(
-					PropertiesConstants.PROPERTY_SINGLE_SELECTION));
+					PropertiesConstants.PROPERTY_SINGLE_SELECTION, inputLoadingType));
 			metaclass.addProperty(new MultiSelectionBeanProperty(
-					PropertiesConstants.PROPERTY_MULTI_SELECTION));
+					PropertiesConstants.PROPERTY_MULTI_SELECTION, inputLoadingType));
 		}
-
+		
 		type = org.eclipse.jface.viewers.AbstractListViewer.class;
 		metaclass = (IMetaclass) core.getMetaclass(type,
 				IConstants.XWT_NAMESPACE);

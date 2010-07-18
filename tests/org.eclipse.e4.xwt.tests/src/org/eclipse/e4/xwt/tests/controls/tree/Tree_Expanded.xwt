@@ -9,9 +9,10 @@
 			<GridData horizontalAlignment="FILL" verticalAlignment="FILL" 
 			          grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true"/>
 		</Tree.layoutData>
-		<TreeItem name="TreeItem" text="Node1" image="closedFolder.gif">
+		<TreeItem name="TreeItem" text="Node1" expanded="true"
+			image="closedFolder.gif">
 			<TreeItem text="Node11">
-				<TreeItem text="Node111"/> 
+				<TreeItem text="Node111"/>
 			</TreeItem >
 			<TreeItem text="Node12">
 				<TreeItem text="Node121"/>

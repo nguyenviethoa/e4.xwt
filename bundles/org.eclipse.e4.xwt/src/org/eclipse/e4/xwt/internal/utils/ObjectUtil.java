@@ -292,7 +292,12 @@ public class ObjectUtil {
 
 		Method method;
 		try {
-			method = clazz.getMethod(getterName, EMPTY);
+			if (clazz.isEnum()) {
+				method = clazz.getClass().getMethod(getterName, EMPTY);
+			}
+			else {
+				method = clazz.getMethod(getterName, EMPTY);
+			}				
 		} catch (NoSuchMethodException e1) {
 
 			// :Check if it is a boolean getter

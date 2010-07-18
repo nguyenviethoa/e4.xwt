@@ -22,7 +22,6 @@ import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.e4.xwt.javabean.metadata.properties.PropertiesConstants;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -125,7 +124,7 @@ public class JFacesHelper {
 		}
 		Object dataContext = element;
 		
-		if (properties != null) {
+		if (properties != null && columnIndex < properties.length) {
 			Object propertyElement = properties[columnIndex];
 			if (propertyElement != null) {
 				String propertyName = propertyElement.toString();

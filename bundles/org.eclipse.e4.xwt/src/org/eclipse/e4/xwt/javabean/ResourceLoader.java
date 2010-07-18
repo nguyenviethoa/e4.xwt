@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
@@ -73,24 +74,18 @@ import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.e4.xwt.metadata.IValueLoading;
 import org.eclipse.e4.xwt.utils.PathHelper;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.ControlEditor;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -105,9 +100,8 @@ public class ResourceLoader implements IVisualElementLoader {
 
 	static final String RESOURCE_LOADER_PROPERTY = "XWT.ResourceLoader";
 
-	private static final HashMap<String, Collection<Class<?>>> DELAYED_ATTRIBUTES = new HashMap<String, Collection<Class<?>>>();
 	private static final String COLUMN = "Column";
-	
+
 	private Map<String, Object> options;
 
 	protected ResourceLoader parentLoader;
@@ -237,8 +231,8 @@ public class ResourceLoader implements IVisualElementLoader {
 				Object receiver = current.getClr();
 				if (receiver != null) {
 					Class<?> clazz = receiver.getClass();
-					method = ObjectUtil.findMethod(clazz, handler,
-							control.getClass(), Event.class);
+					method = ObjectUtil.findMethod(clazz, handler, control
+							.getClass(), Event.class);
 					if (method == null) {
 						method = ObjectUtil.findMethod(clazz, handler,
 								Event.class);
@@ -313,7 +307,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					throw new XWTException("");
 				} catch (InvocationTargetException e1) {
 					throw new XWTException("");
-				}					
+				}
 				loadedObject = null;
 				loadedMethod = null;
 				hostCLRWidget = null;
@@ -397,8 +391,9 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	protected Object doCreate(Object parent, Element element, Class<?> constraintType,
-			Map<String, Object> options) throws Exception {
+	protected Object doCreate(Object parent, Element element,
+			Class<?> constraintType, Map<String, Object> options)
+			throws Exception {
 		int styles = -1;
 		if (options.containsKey(IXWTLoader.INIT_STYLE_PROPERTY)) {
 			styles = (Integer) options.get(IXWTLoader.INIT_STYLE_PROPERTY);
@@ -416,7 +411,8 @@ public class ResourceLoader implements IVisualElementLoader {
 				return null;
 			}
 			if (IConstants.XAML_X_TYPE.equalsIgnoreCase(name)
-					&& constraintType != null && constraintType == Class.class) {
+					&& constraintType != null
+					&& constraintType instanceof Class<?>) {
 				DocumentObject[] children = element.getChildren();
 				if (children != null && children.length > 0) {
 					if (children[0] instanceof Element) {
@@ -630,7 +626,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			property.setValue(targetObject, entry.getValue());
 		}
 
-		List<String> delayedAttributes = new ArrayList<String>();
+		Map<String, IProperty> delayedAttributes = new HashMap<String, IProperty>();
 		init(metaclass, targetObject, element, delayedAttributes);
 		if (targetObject instanceof Style && element.getChildren().length > 0) {
 			Collection<Setter> setters = new ArrayList<Setter>();
@@ -672,15 +668,40 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 		}
 
-		for (String delayed : delayedAttributes) {
-			initAttribute(metaclass, targetObject, element, null, delayed);
-		}
+		iniDelayedAttribute(metaclass, targetObject, element, null,
+				delayedAttributes);
 
 		postCreation(targetObject);
 		popStack();
 		return targetObject;
 	}
-	
+
+	protected void iniDelayedAttribute(IMetaclass metaclass,
+			Object targetObject, Element element, String namespace,
+			Map<String, IProperty> delayedAttributes) throws Exception {
+		Set<String> keys = delayedAttributes.keySet();
+		while (!keys.isEmpty()) {
+			for (String delayed : keys.toArray(new String[keys.size()])) {
+				IProperty property = delayedAttributes.get(delayed);
+				boolean hasDependency = false;
+				IProperty[] dependencies = property.getLoadingType().getDependencies();
+				if (dependencies.length > 0) {
+					for (IProperty dependency : dependencies) {
+						if (delayedAttributes.containsValue(dependency)) {
+							hasDependency = true;
+							break;
+						}
+					}
+				}
+				if (!hasDependency) {
+					initAttribute(metaclass, targetObject, element, null,
+							delayed);
+					keys.remove(delayed);
+				}
+			}
+		}
+	}
+
 	/**
 	 * This method is invoked directly after creation of component instance, but
 	 * before applying its attributes and creating children.
@@ -698,13 +719,14 @@ public class ResourceLoader implements IVisualElementLoader {
 			postCreation0(element, targetObject);
 		}
 		if (options != null) {
-			ICreatedCallback createdAction = (ICreatedCallback) options.get(IXWTLoader.CREATED_CALLBACK);
+			ICreatedCallback createdAction = (ICreatedCallback) options
+					.get(IXWTLoader.CREATED_CALLBACK);
 			if (createdAction != null) {
 				createdAction.onCreated(targetObject);
 			}
 		}
 	}
-	
+
 	/**
 	 * This method is invoked after full creation of component, i.e. after
 	 * creating its instance, applying its attributes and creating children.
@@ -802,7 +824,8 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	protected void applyStyles(Element element, Object targetObject) throws Exception {
+	protected void applyStyles(Element element, Object targetObject)
+			throws Exception {
 		if (targetObject instanceof Widget) {
 			Widget widget = (Widget) targetObject;
 			Map<String, Object> dico = UserData.getLocalResources(widget);
@@ -937,8 +960,8 @@ public class ResourceLoader implements IVisualElementLoader {
 						return dataContext;
 					} else if (IConstants.XAML_BINDING.equals(documentObject
 							.getName())) {
-						dataContext = doCreate(swtObject, (Element) documentObject,
-								null, EMPTY_MAP);
+						dataContext = doCreate(swtObject,
+								(Element) documentObject, null, EMPTY_MAP);
 						loadData.setDataContext(dataContext);
 						return dataContext;
 					} else {
@@ -1016,8 +1039,9 @@ public class ResourceLoader implements IVisualElementLoader {
 						.convert(attribute.getContent());
 	}
 
-	protected void init(IMetaclass metaclass, Object targetObject, Element element,
-			List<String> delayedAttributes) throws Exception {
+	protected void init(IMetaclass metaclass, Object targetObject,
+			Element element, Map<String, IProperty> delayedAttributes)
+			throws Exception {
 		// editors for TableItem,
 		if (targetObject instanceof TableItem) {
 			installTableEditors((TableItem) targetObject);
@@ -1068,13 +1092,13 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 
 		for (String attrName : element.attributeNames()) {
+			IProperty property = metaclass.findProperty(attrName);
 			if (IConstants.XWT_X_NAMESPACE.equals(element
 					.getAttribute(attrName).getNamespace())) {
 				continue;
-			} else if (delayedAttributes != null
-					&& isDelayedProperty(attrName.toLowerCase(), metaclass
-							.getType()))
-				delayedAttributes.add(attrName);
+			} else if (delayedAttributes != null && property != null
+					&& property.getLoadingType().getValueLoading() != IValueLoading.Normal)
+				delayedAttributes.put(attrName, property);
 			else {
 				if (!done.contains(attrName)) {
 					initAttribute(metaclass, targetObject, element, null,
@@ -1140,7 +1164,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				continue;
 			}
 			if (!done.contains(attrName)
-					&& !delayedAttributes.contains(attrName)) {
+					&& !delayedAttributes.containsKey(attrName)) {
 				initAttribute(metaclass, targetObject, element, null, attrName);
 				done.add(attrName);
 			}
@@ -1308,11 +1332,10 @@ public class ResourceLoader implements IVisualElementLoader {
 							+ "(" + type.getSimpleName() + ")\" is not found"));
 				}
 			}
-			List<String> delayedAttributes = new ArrayList<String>();
+			Map<String, IProperty> delayedAttributes = new HashMap<String, IProperty>();
 			init(metaclass, instance, element, delayedAttributes);
-			for (String delayed : delayedAttributes) {
-				initAttribute(metaclass, instance, element, null, delayed);
-			}
+			iniDelayedAttribute(metaclass, instance, element, null,
+					delayedAttributes);
 
 			for (DocumentObject doc : element.getChildren()) {
 				doCreate(instance, (Element) doc, null, Collections.EMPTY_MAP);
@@ -1415,7 +1438,8 @@ public class ResourceLoader implements IVisualElementLoader {
 				namespace, attrName);
 	}
 
-	protected void addCommandExecuteListener(String commandName, final Widget targetButton) {
+	protected void addCommandExecuteListener(String commandName,
+			final Widget targetButton) {
 		final ICommand commandObj = loader.getCommand(commandName);
 		if (commandObj != null) {
 			targetButton.addListener(SWT.Selection, new Listener() {
@@ -1426,9 +1450,9 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	protected void initSegmentAttribute(IMetaclass metaclass, String propertyName,
-			Object target, Element element, String namespace, String attrName)
-			throws Exception {
+	protected void initSegmentAttribute(IMetaclass metaclass,
+			String propertyName, Object target, Element element,
+			String namespace, String attrName) throws Exception {
 		Attribute attribute = namespace == null ? element
 				.getAttribute(attrName) : element.getAttribute(namespace,
 				attrName);
@@ -1503,10 +1527,10 @@ public class ResourceLoader implements IVisualElementLoader {
 				&& loader.isFileResolveType(property.getType())) {
 			contentValue = getImagePath(contentValue);
 		}
-//		if (contentValue != null
-//				&& (URL.class.isAssignableFrom(property.getType()))) {
-//			contentValue = getSourceURL(contentValue);
-//		}
+		// if (contentValue != null
+		// && (URL.class.isAssignableFrom(property.getType()))) {
+		// contentValue = getSourceURL(contentValue);
+		// }
 		Object value = null;
 		DocumentObject[] children = attribute.getChildren();
 		boolean usingExistingValue = false;
@@ -1568,17 +1592,19 @@ public class ResourceLoader implements IVisualElementLoader {
 							&& attribute.getContent() != null) {
 						value = attribute.getContent();
 					} else {
-						if ("Null".equals(child.getName()) && IConstants.XWT_X_NAMESPACE.equals(child.getNamespace())) {
+						if ("Null".equals(child.getName())
+								&& IConstants.XWT_X_NAMESPACE.equals(child
+										.getNamespace())) {
 							property.setValue(directTarget, null);
 							return;
 						} else {
-							value = doCreate(directTarget, (Element) child, type,
-									EMPTY_MAP);
+							value = doCreate(directTarget, (Element) child,
+									type, EMPTY_MAP);
 							if (value == null
 									&& type != null
 									&& !(type == Table.class
-											&& "TableColumn"
-													.equals(child.getName()) && Table.class
+											&& "TableColumn".equals(child
+													.getName()) && Table.class
 											.isInstance(directTarget))) {
 								throw new XWTException(child.getName()
 										+ " cannot be a content of "
@@ -1674,11 +1700,9 @@ public class ResourceLoader implements IVisualElementLoader {
 				value = property.getValue(target);
 			}
 			if (value != null) {
-				List<String> delayedAttributes = new ArrayList<String>();
+				Map<String, IProperty> delayedAttributes = new HashMap<String, IProperty>();
 				init(propertyMetaclass, value, attribute, delayedAttributes);
-				for (String delayed : delayedAttributes) {
-					initAttribute(metaclass, target, element, null, delayed);
-				}
+				iniDelayedAttribute(metaclass, target, element, namespace, delayedAttributes);
 			}
 		}
 	}
@@ -1703,8 +1727,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					return resource.toString();
 				} catch (MalformedURLException e1) {
 				}
-			}
-			else {
+			} else {
 				return resource.toString();
 			}
 		}
@@ -1814,54 +1837,5 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		stringBuffer.append(str);
 		return stringBuffer.toString();
-
 	}
-
-	static protected boolean isDelayedProperty(String attr, Class<?> type) {
-		Collection<Class<?>> types = DELAYED_ATTRIBUTES.get(attr);
-		if (types == null) {
-			return false;
-		}
-		if (types.contains(type)) {
-			return true;
-		}
-		for (Class<?> class1 : types) {
-			if (class1.isAssignableFrom(type)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	static {
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(Viewer.class);
-			DELAYED_ATTRIBUTES.put("input", types);
-		}
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(Sash.class);
-			types.add(SashForm.class);
-			DELAYED_ATTRIBUTES.put("weights", types);
-		}
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(Combo.class);
-			types.add(CCombo.class);
-			DELAYED_ATTRIBUTES.put("text", types);
-		}
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(Browser.class);
-			DELAYED_ATTRIBUTES.put("url", types);
-		}
-		{
-			Collection<Class<?>> types = new ArrayList<Class<?>>();
-			types.add(TableEditor.class);
-			DELAYED_ATTRIBUTES.put("dynamic", types);
-		}
-	}
-
 }

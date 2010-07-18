@@ -12,6 +12,8 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.e4.xwt.metadata.ILoadingType;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.FocusAdapter;
@@ -40,6 +42,10 @@ public class TableEditorDynamicProperty extends AbstractProperty {
 
 	public TableEditorDynamicProperty() {
 		super(PropertiesConstants.PROPERTY_DYNAMIC, Boolean.class);
+	}
+
+	public TableEditorDynamicProperty(ILoadingType loadingType) {
+		super(PropertiesConstants.PROPERTY_DYNAMIC, Boolean.class, loadingType);
 	}
 
 	/**

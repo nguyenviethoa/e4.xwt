@@ -12,6 +12,8 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.e4.xwt.metadata.ILoadingType;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,7 +27,11 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class SingleSelectionBeanProperty extends AbstractProperty {
 	public SingleSelectionBeanProperty(String name) {
-		super(name, Object.class);
+		this(name, ILoadingType.DEFAULT);
+	}
+
+	public SingleSelectionBeanProperty(String name, ILoadingType loadingType) {
+		super(name, Object.class, loadingType);
 	}
 
 	public Object getValue(Object source) throws IllegalArgumentException,

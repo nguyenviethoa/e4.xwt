@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.e4.xwt.metadata.ILoadingType;
+import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -29,9 +31,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
  */
 public class MultiSelectionBeanProperty extends AbstractProperty {
 	public MultiSelectionBeanProperty(String name) {
-		super(name, Object.class);
+		this(name, ILoadingType.DEFAULT);
 	}
 
+	public MultiSelectionBeanProperty(String name, ILoadingType loadingType) {
+		super(name, Object.class, loadingType);
+	}
+	
 	public Object getValue(Object source) throws IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException,
 			SecurityException, NoSuchFieldException {

@@ -17,6 +17,7 @@ import org.eclipse.e4.xwt.tests.controls.button.ButtonTests;
 import org.eclipse.e4.xwt.tests.controls.ccombo.CComboTests;
 import org.eclipse.e4.xwt.tests.controls.combo.ComboTests;
 import org.eclipse.e4.xwt.tests.controls.shell.ShellTests;
+import org.eclipse.e4.xwt.tests.controls.tree.TreeTests;
 
 public class ControlsTestSuite extends TestSuite {
 	public static final Test suite() {
@@ -29,5 +30,6 @@ public class ControlsTestSuite extends TestSuite {
 		addTest(new TestSuite(ComboTests.class));
 		addTest(new TestSuite(CComboTests.class));
 		addTest(new TestSuite(ShellTests.class));
+		addTest(new TestSuite(TreeTests.class));
 	}
 }

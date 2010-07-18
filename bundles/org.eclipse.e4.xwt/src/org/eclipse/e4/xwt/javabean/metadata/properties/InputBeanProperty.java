@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.Set;
 
 import org.eclipse.core.databinding.observable.IObservableCollection;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.collection.CollectionViewSource;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.jface.DefaultViewerLabelProvider;
@@ -25,6 +28,7 @@ import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.jface.ObservableMapLabelProvider;
 import org.eclipse.e4.xwt.jface.ObservableTreeContentProvider;
 import org.eclipse.e4.xwt.metadata.DelegateProperty;
+import org.eclipse.e4.xwt.metadata.ILoadingType;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
@@ -42,8 +46,12 @@ import org.eclipse.jface.viewers.IContentProvider;
  */
 public class InputBeanProperty extends DelegateProperty {
 
-	public InputBeanProperty(IProperty delegate) {
-		super(delegate);
+//	public InputBeanProperty(IProperty delegate) {
+//		super(delegate);
+//	}
+
+	public InputBeanProperty(IProperty delegate, ILoadingType loadingType) {
+		super(delegate, loadingType);
 	}
 
 	@Override
@@ -53,6 +61,15 @@ public class InputBeanProperty extends DelegateProperty {
 		if (value == null) {
 			return;
 		}
+
+		if (value instanceof Class<?>) {
+			Class<?> type = (Class<?>) value;
+			if (type.isEnum()) {
+				value = new WritableList(XWT.getRealm(), Arrays.asList(type
+						.getEnumConstants()), type);
+			}
+		}
+
 		Class<?> elementType = getElementType();
 		if (value.getClass().isArray()) {
 			elementType = value.getClass().getComponentType();
@@ -81,7 +98,8 @@ public class InputBeanProperty extends DelegateProperty {
 
 			String[] propertyNames = JFacesHelper.getViewerProperties(viewer);
 			if (target instanceof AbstractTreeViewer) {
-				IContentProvider contentProvider = (IContentProvider) viewer.getContentProvider();
+				IContentProvider contentProvider = (IContentProvider) viewer
+						.getContentProvider();
 				if (contentProvider instanceof ObservableTreeContentProvider) {
 					ObservableTreeContentProvider xwtContentProvider = (ObservableTreeContentProvider) contentProvider;
 					xwtContentProvider.updateContext(viewer, value);
@@ -92,15 +110,16 @@ public class InputBeanProperty extends DelegateProperty {
 							viewer, listContentProvider.getKnownElements(),
 							propertyNames));
 				}
-			}
-			else {
+			} else {
 				IContentProvider contentProvider = viewer.getContentProvider();
 				if (value instanceof List<?> || value.getClass().isArray()) {
 					if (contentProvider == null) {
 						contentProvider = new ObservableListContentProvider();
 						viewer.setContentProvider(contentProvider);
 					}
-					if (propertyNames != null && propertyNames.length > 0 && hasDefaultLabelProvider(viewer) 
+					if (propertyNames != null
+							&& propertyNames.length > 0
+							&& hasDefaultLabelProvider(viewer)
 							&& contentProvider instanceof ObservableListContentProvider) {
 						ObservableListContentProvider listContentProvider = (ObservableListContentProvider) contentProvider;
 						viewer.setLabelProvider(new ObservableMapLabelProvider(
@@ -112,24 +131,29 @@ public class InputBeanProperty extends DelegateProperty {
 						contentProvider = new ObservableSetContentProvider();
 						viewer.setContentProvider(contentProvider);
 					}
-					if (propertyNames != null && propertyNames.length > 0 && hasDefaultLabelProvider(viewer)
+					if (propertyNames != null
+							&& propertyNames.length > 0
+							&& hasDefaultLabelProvider(viewer)
 							&& contentProvider instanceof ObservableSetContentProvider) {
 						ObservableSetContentProvider setContentProvider = (ObservableSetContentProvider) contentProvider;
 						viewer.setLabelProvider(new ObservableMapLabelProvider(
-								viewer, setContentProvider.getKnownElements(), propertyNames));
+								viewer, setContentProvider.getKnownElements(),
+								propertyNames));
 					}
 				}
 			}
 		}
 		if (value instanceof CollectionViewSource) {
 			value = ((CollectionViewSource) value).getView();
-		} else if ((value instanceof Collection<?>) && !(value instanceof IObservableCollection)) {
-			value = ObjectUtil.resolveValue(value, IObservableCollection.class, value);
+		} else if ((value instanceof Collection<?>)
+				&& !(value instanceof IObservableCollection)) {
+			value = ObjectUtil.resolveValue(value, IObservableCollection.class,
+					value);
 		}
 		super.setValue(target, value);
 	}
-	
-	protected boolean hasDefaultLabelProvider(ContentViewer viewer ) {
+
+	protected boolean hasDefaultLabelProvider(ContentViewer viewer) {
 		IBaseLabelProvider labelProvider = viewer.getLabelProvider();
 		return (labelProvider == null || labelProvider.getClass() == DefaultViewerLabelProvider.class);
 	}
