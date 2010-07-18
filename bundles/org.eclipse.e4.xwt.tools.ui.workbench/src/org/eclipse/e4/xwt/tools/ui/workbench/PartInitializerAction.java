@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tools.ui.workbench;
 
-import org.eclipse.e4.ui.model.application.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.xwt.jface.XWTTitleAreaDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;

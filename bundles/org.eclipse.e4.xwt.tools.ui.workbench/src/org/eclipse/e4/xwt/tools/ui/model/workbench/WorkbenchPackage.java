@@ -75,6 +75,15 @@ public interface WorkbenchPackage extends EPackage {
 	int XWT_PART_INITIALIZER = 0;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XWT_PART_INITIALIZER__ID = PalettePackage.INITIALIZER__ID;
+
+	/**
 	 * The feature id for the '<em><b>Content Form</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

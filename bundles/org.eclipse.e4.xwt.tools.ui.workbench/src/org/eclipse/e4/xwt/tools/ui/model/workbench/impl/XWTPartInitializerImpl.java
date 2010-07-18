@@ -12,11 +12,12 @@ package org.eclipse.e4.xwt.tools.ui.model.workbench.impl;
 
 import org.eclipse.e4.xwt.tools.ui.model.workbench.WorkbenchPackage;
 import org.eclipse.e4.xwt.tools.ui.model.workbench.XWTPartInitializer;
+import org.eclipse.e4.xwt.tools.ui.palette.Entry;
+import org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl;
 import org.eclipse.e4.xwt.tools.ui.workbench.PartInitializerAction;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '
@@ -32,8 +33,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * 
  * @generated
  */
-public class XWTPartInitializerImpl extends EObjectImpl implements
-		XWTPartInitializer {
+public class XWTPartInitializerImpl extends InitializerImpl implements XWTPartInitializer {
 	private PartInitializerAction action;
 
 	/**
@@ -94,8 +94,8 @@ public class XWTPartInitializerImpl extends EObjectImpl implements
 		contentForm = newContentForm;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					WorkbenchPackage.XWT_PART_INITIALIZER__CONTENT_FORM,
-					oldContentForm, contentForm));
+					WorkbenchPackage.XWT_PART_INITIALIZER__CONTENT_FORM, oldContentForm,
+					contentForm));
 	}
 
 	/**
@@ -151,8 +151,8 @@ public class XWTPartInitializerImpl extends EObjectImpl implements
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 		case WorkbenchPackage.XWT_PART_INITIALIZER__CONTENT_FORM:
-			return CONTENT_FORM_EDEFAULT == null ? contentForm != null
-					: !CONTENT_FORM_EDEFAULT.equals(contentForm);
+			return CONTENT_FORM_EDEFAULT == null ? contentForm != null : !CONTENT_FORM_EDEFAULT
+					.equals(contentForm);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -181,17 +181,6 @@ public class XWTPartInitializerImpl extends EObjectImpl implements
 		return action.run(element);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public Object parse() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
-
 	protected Class<?> loadClass() {
 		try {
 			String contentForm = getContentForm();
@@ -199,6 +188,32 @@ public class XWTPartInitializerImpl extends EObjectImpl implements
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl#parse(org.eclipse
+	 * .e4.xwt.tools.ui.palette.Entry)
+	 */
+	@Override
+	public Object parse(Entry entry) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.tools.ui.palette.impl.InitializerImpl#initialize(org
+	 * .eclipse.e4.xwt.tools.ui.palette.Entry, java.lang.Object)
+	 */
+	@Override
+	public boolean initialize(Entry entry, Object newObject) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 } // XWTPartInitializerImpl
