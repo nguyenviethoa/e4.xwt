@@ -10,26 +10,29 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
-import org.eclipse.e4.ui.internal.workbench.swt.E4Application;
-
-import org.eclipse.e4.ui.internal.workbench.Activator;
-import org.eclipse.e4.ui.internal.workbench.E4Workbench;
-
-import org.eclipse.e4.ui.workbench.IResourceUtilities;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IProduct;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.RegistryFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.contributions.IContributionFactory;
 import org.eclipse.e4.tools.ui.designer.render.DesignerPartRenderingEngine;
 import org.eclipse.e4.tools.ui.designer.session.ProjectBundleSession;
 import org.eclipse.e4.tools.ui.designer.utils.ResourceUtilities;
 import org.eclipse.e4.ui.css.core.engine.CSSEngine;
+import org.eclipse.e4.ui.internal.workbench.Activator;
+import org.eclipse.e4.ui.internal.workbench.E4Workbench;
+import org.eclipse.e4.ui.internal.workbench.swt.E4Application;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.impl.ApplicationImpl;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.workbench.IResourceUtilities;
 import org.eclipse.e4.xwt.tools.ui.designer.core.editor.IVisualRenderer;
 import org.eclipse.e4.xwt.tools.ui.designer.core.model.AbstractModelBuilder;
 import org.eclipse.emf.common.notify.Notification;
@@ -38,10 +41,13 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
  * @author jin.liu(jin.liu@soyatec.com)

@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -59,7 +58,7 @@ public class ProjectBundleSession {
 	public BundleContext getBundleContext() {
 		return _context;
 	}
-
+	
 	/**
 	 * Installs the bundle corresponding to the model.
 	 * 
@@ -67,13 +66,19 @@ public class ProjectBundleSession {
 	 *            Model of the bundle to be installed.
 	 */
 	private Bundle installBundle(IPluginModelBase base) throws CoreException {
+		Bundle bundle = Platform.getBundle(BundleHelper.getBundleId(base));
+		if (bundle != null) {
+			if (bundle.getState() == Bundle.ACTIVE || bundle.getState() == Bundle.STARTING) {
+				return bundle;				
+			}
+		}
+		
 		List<Bundle> bundles = new ArrayList<Bundle>();
 		Bundle uninstalled = checkTargetBundle(base);
 		if (uninstalled != null) {
 			bundles.add(uninstalled);
 		}
 		IResource manifest = base.getUnderlyingResource();
-		Bundle bundle = null;
 		String location = null;
 		try {
 			location = "reference:" //$NON-NLS-1$
