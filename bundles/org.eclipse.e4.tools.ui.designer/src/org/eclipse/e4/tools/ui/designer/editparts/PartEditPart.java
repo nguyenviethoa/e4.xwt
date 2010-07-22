@@ -50,12 +50,20 @@ public class PartEditPart extends WidgetEditPart {
 			CTabItem tabItem = (CTabItem) header;
 			return tabItem.isShowing();
 		}
+		else if (header instanceof org.eclipse.e4.ui.widgets.CTabItem) {
+			org.eclipse.e4.ui.widgets.CTabItem tabItem = (org.eclipse.e4.ui.widgets.CTabItem) header;
+			return tabItem.isShowing();
+		}
 		throw new UnsupportedOperationException();
 	}
 
 	protected org.eclipse.swt.graphics.Rectangle getHeaderBounds() {
 		if (header instanceof CTabItem) {
 			CTabItem tabItem = (CTabItem) header;
+			return tabItem.getBounds();
+		}
+		else if (header instanceof org.eclipse.e4.ui.widgets.CTabItem) {
+			org.eclipse.e4.ui.widgets.CTabItem tabItem = (org.eclipse.e4.ui.widgets.CTabItem) header;
 			return tabItem.getBounds();
 		}
 		throw new UnsupportedOperationException();
@@ -76,6 +84,15 @@ public class PartEditPart extends WidgetEditPart {
 				if (container instanceof CTabFolder) {
 					CTabFolder parent = (CTabFolder) widget.getParent();
 					for (CTabItem item : parent.getItems()) {
+						if (widget == item.getControl()) {
+							header = item;
+							break;
+						}
+					}
+				}
+				else if (container instanceof org.eclipse.e4.ui.widgets.CTabFolder) {
+					org.eclipse.e4.ui.widgets.CTabFolder parent = (org.eclipse.e4.ui.widgets.CTabFolder) widget.getParent();
+					for (org.eclipse.e4.ui.widgets.CTabItem item : parent.getItems()) {
 						if (widget == item.getControl()) {
 							header = item;
 							break;

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.editparts;
 
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+
 import org.eclipse.swt.widgets.ToolItem;
 
 import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
@@ -57,7 +59,7 @@ public class E4EditPartsFactory implements EditPartFactory {
 				return new ToolItemEditPart((EObject) model);
 			} else if (widget instanceof SashForm) {
 				return new SashFormEditPart((EObject) elementImpl);
-			} else if (widget instanceof CTabFolder) {
+			} else if (widget instanceof CTabFolder || widget instanceof org.eclipse.e4.ui.widgets.CTabFolder) {
 				return new PartContainerEditPart((EObject) elementImpl);
 			} else if (widget instanceof Composite) {
 				return new CompositeEditPart((EObject) elementImpl);

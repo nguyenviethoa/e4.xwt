@@ -44,7 +44,7 @@ public class ControlEditPart extends WidgetEditPart {
 		Control control = (Control) getWidget();
 		if (control != null
 				&& !control.isDisposed()
-				&& (control.getParent() instanceof CTabFolder)) {
+				&& (control.getParent() instanceof CTabFolder || control.getParent() instanceof org.eclipse.e4.ui.widgets.CTabFolder)) {
 			return Draw2dTools.toDraw2d(control.getBounds());
 		}
 		EditPart parentEp = getParent();

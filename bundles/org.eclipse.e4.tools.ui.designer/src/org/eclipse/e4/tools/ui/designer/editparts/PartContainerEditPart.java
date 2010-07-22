@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.editparts;
 
+import org.eclipse.swt.widgets.Item;
+
 import org.eclipse.e4.ui.internal.workbench.swt.AbstractPartRenderer;
 
 import java.util.ArrayList;
@@ -53,6 +55,15 @@ public class PartContainerEditPart extends CompositeEditPart {
 				}
 			}
 		}
+		else if (widget instanceof org.eclipse.e4.ui.widgets.CTabFolder) {
+			org.eclipse.e4.ui.widgets.CTabFolder tabFolder = (org.eclipse.e4.ui.widgets.CTabFolder) muiElement.getWidget();
+			org.eclipse.e4.ui.widgets.CTabItem[] items = tabFolder.getItems();
+			for (org.eclipse.e4.ui.widgets.CTabItem item : items) {
+				if (item != null) {
+					modelChildren.add(item);
+				}
+			}
+		}
 		return modelChildren;
 	}
 
@@ -64,8 +75,8 @@ public class PartContainerEditPart extends CompositeEditPart {
 	}
 
 	protected EditPart createChild(Object model) {
-		if (model instanceof CTabItem) {
-			CTabItem item = (CTabItem) model;
+		if (model instanceof Item) {
+			Item item = (Item) model;
 			MUIElement data = (MUIElement) item
 					.getData(AbstractPartRenderer.OWNING_ME);
 			return new PartEditPart((EObject) data, item);

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
+import org.eclipse.core.runtime.CoreException;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import org.eclipse.core.resources.IFile;
@@ -60,6 +62,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 	private IFile inputFile;
 	private E4WorkbenchProxy workbench;
 	private IEclipseContext appContext;
+	private ProjectBundleSession projectBundleSession;
 
 	public boolean doLoad(IEditorPart designer, IProgressMonitor monitor) {
 		inputFile = (IFile) designer.getAdapter(IFile.class);
@@ -102,6 +105,12 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 		if (workbench != null) {
 			workbench.dispose();
 		}
+		if (projectBundleSession != null){
+			try {
+				projectBundleSession.dispose();
+			} catch (CoreException e) {
+			}
+		}
 	}
 
 	/*
@@ -126,7 +135,7 @@ public class E4UIRenderer extends AbstractModelBuilder implements
 
 		IExtensionRegistry registry = RegistryFactory.getRegistry();
 
-		ProjectBundleSession projectBundleSession = new ProjectBundleSession(
+		projectBundleSession = new ProjectBundleSession(
 				Activator.getDefault().getContext());
 		DesignerReflectionContributionFactory contributionFactory = new DesignerReflectionContributionFactory(
 				registry, projectBundleSession);

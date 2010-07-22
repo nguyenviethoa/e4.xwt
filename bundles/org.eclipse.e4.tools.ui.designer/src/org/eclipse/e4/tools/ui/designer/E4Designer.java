@@ -136,4 +136,12 @@ public class E4Designer extends ConfigureDesigner implements
 	public String getContributorId() {
 		return getSite().getId();
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (uiRenderer != null) {
+			uiRenderer.dispose();
+		}
+	}
 }
