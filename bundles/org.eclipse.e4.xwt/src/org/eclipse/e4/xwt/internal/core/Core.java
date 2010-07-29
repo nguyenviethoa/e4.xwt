@@ -29,7 +29,6 @@ import org.eclipse.e4.xwt.DefaultLoadingContext;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IDataProviderFactory;
-import org.eclipse.e4.xwt.ILanguageSupport;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
@@ -80,7 +79,6 @@ public class Core {
 	private Map<String, INamespaceHandler> nsHandlers = new HashMap<String, INamespaceHandler>();
 	private ILogger logger;
 	private Collection<IStyle> defaultStyles = new ArrayList<IStyle>();
-	private ILanguageSupport languageSupport;
 	
 	private static LinkedHashMap<String, IDataProviderFactory> dataProviderFactories = new LinkedHashMap<String, IDataProviderFactory>();
 
@@ -532,14 +530,7 @@ public class Core {
 	public void setLoadingContext(ILoadingContext loadingContext) {
 		_loadingContext = loadingContext;
 	}
-	
-	public ILanguageSupport getLanguageSupport() {
-		if (languageSupport == null) {
-			languageSupport = new JavaLanguageSupport(); 
-		}
-		return languageSupport;
-	}
-	
+		
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -548,11 +539,7 @@ public class Core {
 	public ILoadingContext findLoadingContext(Object container) {
 		return getLoadingContext();
 	}
-	
-	public void setLanguageSupport(ILanguageSupport languageSupport) {
-		this.languageSupport = languageSupport;
-	}
-	
+		
 	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
 		return getMetaclassService().getMetaclass(context, name, namespace);
 	}
@@ -613,10 +600,10 @@ public class Core {
 	protected Object createCLRElement(IRenderingContext context, Element element, Map<String, Object> options) {
 		IVisualElementLoader loader = findElementLoader(element);
 		if (loader != null) {
-			return loader.createCLRElement(element, options);
+			return loader.createUIElement(element, options);
 		}
 		loader = createElementLoader(context, element);
-		Object visualObject = loader.createCLRElement(element, options);
+		Object visualObject = loader.createUIElement(element, options);
 		removeElementLoader(element);
 		return visualObject;
 	}

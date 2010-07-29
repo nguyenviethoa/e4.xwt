@@ -14,6 +14,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IObservableValueListener;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.EventProperty;
@@ -50,7 +51,7 @@ public class RadioEventGroup extends AbstractEventGroup {
 	public void registerEvent(IObservableValueListener manager,
 			IProperty property) {
 		Object host = manager.getHost();
-		IEventHandler controller = UserData.findEventController(host);
+		IEventController controller = UserData.findEventController(host);
 		if (controller == null) {
 			controller = UserData.updateEventController(host);
 		}

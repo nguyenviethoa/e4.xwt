@@ -13,18 +13,19 @@ package org.eclipse.e4.xwt.javabean;
 import java.lang.reflect.Method;
 
 import org.eclipse.e4.xwt.IEventConstants;
-import org.eclipse.e4.xwt.core.IEventHandler;
+import org.eclipse.e4.xwt.IEventInvoker;
+import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-public class Controller implements Listener, IEventHandler {
+public class Controller implements Listener, IEventController {
 	int waterMark = 0;
 	protected int[] eventTypes = null;
 	protected String[] names = null;
-	protected Method[] handlers = null;
+	protected Object[] handlers = null;
 	protected Object[] receivers = null;
 	protected Object[] args = null;
 
@@ -36,14 +37,25 @@ public class Controller implements Listener, IEventHandler {
 
 		for (int i = 0; i < eventTypes.length; i++) {
 			if (eventTypes[i] == eventType) {
-				if (handlers[i] != null) {
+				Object handler = handlers[i];
+				if (handler instanceof IEventInvoker) {
+					IEventInvoker eventInvoker = (IEventInvoker) handler;
 					try {
-						handlers[i].setAccessible(true);
+						eventInvoker.invoke(args[i], e);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						return;
+					}
+				}
+				else {
+					Method method = (Method) handler;
+					try {
+						method.setAccessible(true);
 						// support old style
-						if (handlers[i].getParameterTypes().length == 1) {
-							handlers[i].invoke(receivers[i], e);
+						if (method.getParameterTypes().length == 1) {
+							method.invoke(receivers[i], e);
 						} else {
-							handlers[i].invoke(receivers[i], args[i], e);
+							method.invoke(receivers[i], args[i], e);
 						}
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -75,6 +87,16 @@ public class Controller implements Listener, IEventHandler {
 	 */
 	public void addEvent(int eventType, String name, IEvent event,
 			Widget control, Object receiver, Object arg, Method method) {
+		doAddEvent(eventType, name, event, control, receiver, arg, method);
+	}
+
+	public void addEvent(int eventType, String name, IEvent event,
+			Widget control, Object arg, IEventInvoker eventInvoker) {
+		doAddEvent(eventType, name, event, control, null, arg, eventInvoker);
+	}
+
+	protected void doAddEvent(int eventType, String name, IEvent event,
+				Widget control, Object receiver, Object arg, Object method) {
 		if (eventTypes == null) {
 			eventTypes = new int[3];
 			handlers = new Method[3];
@@ -91,13 +113,13 @@ public class Controller implements Listener, IEventHandler {
 		}
 		if (waterMark >= eventTypes.length) {
 			int[] oldEventTypes = eventTypes;
-			Method[] oldHandlers = handlers;
+			Object[] oldHandlers = handlers;
 			Object[] oldReceivers = receivers;
 			Object[] oldNames = names;
 			Object[] oldArgs = args;
 
 			eventTypes = new int[waterMark + 3];
-			handlers = new Method[waterMark + 3];
+			handlers = new Object[waterMark + 3];
 			receivers = new Object[waterMark + 3];
 			names = new String[waterMark + 3];
 			args = new Object[waterMark + 3];
@@ -127,6 +149,15 @@ public class Controller implements Listener, IEventHandler {
 		int eventType = getEventTypeByName(name);
 		if (eventType != SWT.None) {
 			addEvent(eventType, name, event, control, receiver, arg, method);
+		}
+	}
+
+	public void setEvent(IEvent event, Widget control, 
+			Object arg, IEventInvoker eventInvoker) {
+		String name = event.getName();
+		int eventType = getEventTypeByName(name);
+		if (eventType != SWT.None) {
+			doAddEvent(eventType, name, event, control, null, arg, eventInvoker);
 		}
 	}
 

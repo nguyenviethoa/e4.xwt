@@ -15,5 +15,5 @@ import java.util.Map;
 import org.eclipse.e4.xwt.internal.xml.Element;
 
 public interface IVisualElementLoader {
-	public Object createCLRElement(Element element, Map<String, Object> options);
+	public Object createUIElement(Element element, Map<String, Object> options);
 }

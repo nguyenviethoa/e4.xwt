@@ -11,7 +11,7 @@
 package org.eclipse.e4.xwt.databinding;
 
 import org.eclipse.e4.xwt.IObservableValueListener;
-import org.eclipse.e4.xwt.core.IEventHandler;
+import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.ObservableValueManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
@@ -24,7 +24,7 @@ public class EventPropertyObservableValue extends XWTObservableValue {
 	public EventPropertyObservableValue(Object observed, EventProperty property) {
 		super(Boolean.class, observed, property.getName());
 		this.property = property;
-		IEventHandler controller = UserData.findEventController(observed);
+		IEventController controller = UserData.findEventController(observed);
 		if (controller == null) {
 			controller = UserData.updateEventController(observed);
 		}

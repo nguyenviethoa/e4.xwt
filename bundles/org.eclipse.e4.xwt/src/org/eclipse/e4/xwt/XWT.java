@@ -689,24 +689,6 @@ public class XWT {
 	}
 
 	/**
-	 * Change the language support
-	 * 
-	 * @return ILoadingContext
-	 */
-	public static void setLanguageSupport(ILanguageSupport languageSupport) {
-		XWTLoaderManager.getActive().setLanguageSupport(languageSupport);
-	}
-
-	/**
-	 * Get current language support
-	 * 
-	 * @return ILoadingContext
-	 */
-	public static ILanguageSupport getLanguageSupport() {
-		return XWTLoaderManager.getActive().getLanguageSupport();
-	}
-
-	/**
 	 * Add a tracking option
 	 * 
 	 * @param tracking

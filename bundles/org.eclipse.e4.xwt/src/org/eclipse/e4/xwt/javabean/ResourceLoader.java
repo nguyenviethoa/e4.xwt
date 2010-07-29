@@ -32,6 +32,8 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IEventConstants;
+import org.eclipse.e4.xwt.IEventHandler;
+import org.eclipse.e4.xwt.IEventInvoker;
 import org.eclipse.e4.xwt.IIndexedElement;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.INamespaceHandler;
@@ -48,7 +50,6 @@ import org.eclipse.e4.xwt.callback.ICreatedCallback;
 import org.eclipse.e4.xwt.callback.ILoadedCallback;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
-import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.core.IRenderingContext;
 import org.eclipse.e4.xwt.core.IVisualElementLoader;
 import org.eclipse.e4.xwt.core.Setter;
@@ -57,6 +58,7 @@ import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.DataBindingTrack;
+import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
 import org.eclipse.e4.xwt.internal.utils.ClassLoaderUtil;
 import org.eclipse.e4.xwt.internal.utils.DocumentObjectSorter;
@@ -221,7 +223,7 @@ public class ResourceLoader implements IVisualElementLoader {
 
 		public void updateEvent(IRenderingContext context, Widget control,
 				IEvent event, String handler) {
-			IEventHandler eventController = UserData
+			IEventController eventController = UserData
 					.updateEventController(control);
 			Method method = null;
 			Object clrObject = null;
@@ -229,7 +231,16 @@ public class ResourceLoader implements IVisualElementLoader {
 			ResourceLoader currentParentLoader = parentLoader;
 			while (current != null) {
 				Object receiver = current.getClr();
-				if (receiver != null) {
+				if (receiver instanceof IEventHandler) {
+					IEventHandler eventManager = (IEventHandler) receiver;
+					IEventInvoker eventInvoker = eventManager.getEventInvoker(handler, control
+							.getClass(), Event.class);
+					if (eventInvoker != null) {
+						eventController.setEvent(event, control,
+							control, eventInvoker);
+					}
+				}
+				else if (receiver != null) {
 					Class<?> clazz = receiver.getClass();
 					method = ObjectUtil.findMethod(clazz, handler, control
 							.getClass(), Event.class);
@@ -336,11 +347,11 @@ public class ResourceLoader implements IVisualElementLoader {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.e4.xwt.IVisualElementLoader#createCLRElement(org.eclipse.
+	 * org.eclipse.e4.xwt.IVisualElementLoader#createUIElement(org.eclipse.
 	 * e4.xwt.Element, org.eclipse.e4.xwt.ILoadData,
 	 * org.eclipse.e4.xwt.IResourceDictionary)
 	 */
-	public Object createCLRElement(Element element, Map<String, Object> options) {
+	public Object createUIElement(Element element, Map<String, Object> options) {
 		try {
 			this.options = options;
 			Composite parent = (Composite) options

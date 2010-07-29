@@ -1645,21 +1645,6 @@ public class XWTLoader implements IXWTLoader {
 		getCurrentCore().setLoadingContext(loadingContext);
 	}
 
-	public ILanguageSupport getLanguageSupport() {
-		for (int i = cores.size() - 1; i >= 0; i--) {
-			Core core = cores.get(i);
-			ILanguageSupport support = core.getLanguageSupport();
-			if (support != null) {
-				return support;
-			}
-		}
-		return null;
-	}
-
-	public void setLanguageSupport(ILanguageSupport languageSupport) {
-		getCurrentCore().setLanguageSupport(languageSupport);
-	}
-
 	/**
 	 * Check if the value of a property is to resolve.
 	 * 

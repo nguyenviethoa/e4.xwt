@@ -51,7 +51,7 @@ public class MultiTrigger extends TriggerBase {
 				}
 			}
 
-			if (oldvalues != null) {
+			if (oldvalues != null && !oldvalues.isEmpty()) {
 				return;
 			}
 

@@ -656,20 +656,6 @@ public interface IXWTLoader {
 	void setLoadingContext(ILoadingContext loadingContext);
 
 	/**
-	 * Change the language support
-	 * 
-	 * @return ILoadingContext
-	 */
-	void setLanguageSupport(ILanguageSupport languageSupport);
-
-	/**
-	 * Get current language support
-	 * 
-	 * @return ILoadingContext
-	 */
-	ILanguageSupport getLanguageSupport();
-
-	/**
 	 * Create a UI Profile with the provide data and apply it immediately.
 	 * 
 	 * @param profileData

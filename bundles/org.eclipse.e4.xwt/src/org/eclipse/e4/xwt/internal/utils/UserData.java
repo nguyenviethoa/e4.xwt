@@ -18,12 +18,13 @@ import java.util.Map;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.IObservableValueListener;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.databinding.IBindingContext;
+import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
+import org.eclipse.e4.xwt.javabean.Controller;
 import org.eclipse.e4.xwt.jface.JFacesHelper;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -391,8 +392,8 @@ public class UserData {
 		return null;
 	}
 
-	public static IEventHandler findEventController(Object widget) {
-		return (IEventHandler) findData(widget,
+	public static IEventController findEventController(Object widget) {
+		return (IEventController) findData(widget,
 				IUserDataConstants.XWT_CONTROLLER_KEY);
 	}
 
@@ -607,16 +608,16 @@ public class UserData {
 	}
 
 	public static void setEventController(Object object,
-			IEventHandler controller) {
+			IEventController controller) {
 		setLocalData(object, IUserDataConstants.XWT_CONTROLLER_KEY, controller);
 	}
 
-	public static IEventHandler updateEventController(Object object) {
+	public static IEventController updateEventController(Object object) {
 		UserData dataDictionary = updateDataDictionary(object);
-		IEventHandler controller = (IEventHandler) dataDictionary
+		IEventController controller = (IEventController) dataDictionary
 				.getData(IUserDataConstants.XWT_CONTROLLER_KEY);
 		if (controller == null) {
-			controller = XWT.getLanguageSupport().createEventHandler();
+			controller = new Controller();
 			dataDictionary.setData(IUserDataConstants.XWT_CONTROLLER_KEY,
 					controller);
 		}

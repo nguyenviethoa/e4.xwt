@@ -122,12 +122,16 @@ public class Trigger extends TriggerBase {
 
 					if (!Operator.compare(newValue, operator, realValue)) {
 						restoreValues();
+						if (oldvalues != null) {
+							oldvalues.clear();
+						}
 						return;
 					}
 					
-					if (oldvalues != null) {
+					if (oldvalues != null && !oldvalues.isEmpty()) {
 						return;
 					}
+
 					for (SetterBase setter : getSetters()) {
 						try {
 							Object oldValue = setter.applyTo(element, true);

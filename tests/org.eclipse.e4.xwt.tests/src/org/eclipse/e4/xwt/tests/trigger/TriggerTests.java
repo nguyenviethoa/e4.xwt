@@ -82,8 +82,10 @@ public class TriggerTests extends XWTTestCase {
 			}
 
 			public void checkButton() {
-				Button button = (Button) XWT.findElementByName(root, "target");
-				assertFalse(button.isVisible());
+				Button target = (Button) XWT.findElementByName(root, "target");
+				Button button = (Button) XWT.findElementByName(root, "Button");
+				assertTrue(button.getSelection());
+				assertFalse(target.isVisible());
 			}
 		});
 	}
@@ -105,8 +107,36 @@ public class TriggerTests extends XWTTestCase {
 			}
 
 			public void checkButton() {
-				Button button = (Button) XWT.findElementByName(root, "target");
+				Button target = (Button) XWT.findElementByName(root, "target");
+				Button button = (Button) XWT.findElementByName(root, "Button");
+				assertFalse(button.getSelection());
+				assertTrue(target.isVisible());
+			}
+		});
+	}
+
+	public void test_Button_Trigger_Setter_TargetName3() {
+		URL url = TriggerTests.class
+				.getResource(Button_Click_Trigger_Setter_TargetName.class
+						.getSimpleName()
+						+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Button button = (Button) XWT.findElementByName(root, "Button");
+				selectButton(button, true);
+				selectButton(button, false);
+				selectButton(button, true);
+			}
+		}, new Runnable() {
+			public void run() {
+				checkButton();
+			}
+
+			public void checkButton() {
+				Button target = (Button) XWT.findElementByName(root, "target");
+				Button button = (Button) XWT.findElementByName(root, "Button");
 				assertTrue(button.isVisible());
+				assertFalse(target.isVisible());
 			}
 		});
 	}
