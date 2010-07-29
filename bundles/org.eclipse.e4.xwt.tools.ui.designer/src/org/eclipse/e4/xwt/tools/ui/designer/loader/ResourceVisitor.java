@@ -33,6 +33,8 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IEventConstants;
+import org.eclipse.e4.xwt.IEventHandler;
+import org.eclipse.e4.xwt.IEventInvoker;
 import org.eclipse.e4.xwt.IIndexedElement;
 import org.eclipse.e4.xwt.ILoadingContext;
 import org.eclipse.e4.xwt.INamespaceHandler;
@@ -49,12 +51,12 @@ import org.eclipse.e4.xwt.callback.ICreatedCallback;
 import org.eclipse.e4.xwt.callback.ILoadedCallback;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
-import org.eclipse.e4.xwt.core.IEventHandler;
 import org.eclipse.e4.xwt.core.Setter;
 import org.eclipse.e4.xwt.core.Style;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
+import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.NamespaceHelper;
@@ -223,7 +225,7 @@ public class ResourceVisitor {
 		}
 
 		public void updateEvent(Widget control, IEvent event, String handler) {
-			IEventHandler eventController = UserData
+			IEventController eventController = UserData
 					.updateEventController(control);
 			Method method = null;
 			Object clrObject = null;
@@ -231,7 +233,16 @@ public class ResourceVisitor {
 			ResourceVisitor currentParentLoader = parentLoader;
 			while (current != null) {
 				Object receiver = current.getClr();
-				if (receiver != null) {
+				if (receiver instanceof IEventHandler) {
+					IEventHandler eventManager = (IEventHandler) receiver;
+					IEventInvoker eventInvoker = eventManager.getEventInvoker(handler, control
+							.getClass(), Event.class);
+					if (eventInvoker != null) {
+						eventController.setEvent(event, control,
+							control, eventInvoker);
+					}
+				}
+				else if (receiver != null) {
 					Class<?> clazz = receiver.getClass();
 					method = ObjectUtil.findMethod(clazz, handler,
 							control.getClass(), Event.class);
