@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Shell;
  * @author yyang (yves.yang@soyatec.com)
  */
 public interface IXWTLoader {
-
 	// Properties
 	/**
 	 * style of type int is used to create SWT element
@@ -81,10 +80,16 @@ public interface IXWTLoader {
 	String BINDING_CONTEXT_PROPERTY = "XWT.BindingContext";
 
 	/**
-	 * The DataContext to setup in root element
+	 * The CLR class
 	 * 
 	 */
 	String CLASS_PROPERTY = "XWT.Class";
+
+	/**
+	 * The CLR class factory
+	 * 
+	 */
+	String CLASS_FACTORY_PROPERTY = "XWT.ClassFactory";
 
 	/**
 	 * Resources to associate to root element
@@ -110,6 +115,18 @@ public interface IXWTLoader {
 	 */
 	String BEFORE_PARSING_CALLBACK = IBeforeParsingCallback.class.getName();
 
+	String[] ALL_PROPERTIES = { CONTAINER_PROPERTY,
+			INIT_STYLE_PROPERTY,
+			DATACONTEXT_PROPERTY,
+			BINDING_CONTEXT_PROPERTY,
+			RESOURCE_DICTIONARY_PROPERTY,
+			CLASS_PROPERTY,
+			CLASS_FACTORY_PROPERTY,
+			LOADED_CALLBACK,
+			CREATED_CALLBACK,
+			BEFORE_PARSING_CALLBACK,
+			DESIGN_MODE_PROPERTY};
+	
 	/**
 	 * Register an Observable IChangeListener for a given UI element. The second
 	 * registration of the same listener on the same UI Element has no effect.
@@ -679,6 +696,20 @@ public interface IXWTLoader {
 	public Object restoreProfile();
 
 	/**
+	 * Set up the default ICLRFactory 
+	 * 
+	 * @param factory
+	 */
+	public void setCLRFactory(ICLRFactory factory);
+
+	/**
+	 * The default CLRFactory.
+	 * 
+	 * @return
+	 */
+	public ICLRFactory getCLRFactory();
+
+	/**
 	 * Returns the {@link BindingContext} of the element
 	 * 
 	 * @param element
@@ -710,4 +741,15 @@ public interface IXWTLoader {
 	 * @return
 	 */
 	void unregisterFileResolveType(Class<?> type);
+	
+	public class Utilities {
+		public static boolean isPropertyName(String name) {	
+			for (String propertyName : ALL_PROPERTIES) {
+				if (propertyName.equalsIgnoreCase(name)) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 }

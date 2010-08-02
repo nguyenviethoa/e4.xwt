@@ -13,12 +13,12 @@ package org.eclipse.e4.xwt.tests.clr;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class XWTTestSuite extends TestSuite {
+public class CLRTestSuite extends TestSuite {
 	public static final Test suite() {
-		return new XWTTestSuite();
+		return new CLRTestSuite();
 	}
 
-	public XWTTestSuite() {
+	public CLRTestSuite() {
 		addTest(new TestSuite(CLRTests.class));
 	}
 }

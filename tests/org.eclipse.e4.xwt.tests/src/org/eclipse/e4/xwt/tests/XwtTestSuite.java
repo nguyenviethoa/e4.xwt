@@ -16,7 +16,8 @@ import junit.framework.TestSuite;
 import org.eclipse.e4.xwt.tests.animation.AnimationSuite;
 import org.eclipse.e4.xwt.tests.annotation.AnnotationTests;
 import org.eclipse.e4.xwt.tests.attachedproperty.AttachedPropertyTests;
-import org.eclipse.e4.xwt.tests.clr.XWTTestSuite;
+import org.eclipse.e4.xwt.tests.clr.CLRTestSuite;
+import org.eclipse.e4.xwt.tests.clrfactory.CLRFactoryTestSuite;
 import org.eclipse.e4.xwt.tests.controls.ControlsTestSuite;
 import org.eclipse.e4.xwt.tests.controls.layout.LayoutTestSuite;
 import org.eclipse.e4.xwt.tests.databinding.BindingTestSuite;
@@ -106,7 +107,8 @@ public class XwtTestSuite extends TestSuite {
 	}
 
 	protected void addXWTTests() {
-		addTest(XWTTestSuite.suite());
+		addTest(CLRTestSuite.suite());
+		addTest(CLRFactoryTestSuite.suite());
 		addTest(new TestSuite(AttachedPropertyTests.class));
 	}
 

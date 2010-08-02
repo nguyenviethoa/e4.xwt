@@ -465,6 +465,21 @@ public class XWTLoader implements IXWTLoader {
 		}
 		return dataBindingContext;
 	}
+	
+	public ICLRFactory getCLRFactory() {
+		for (int i = cores.size() - 1; i >= 0; i--) {
+			Core core = cores.get(i);
+			ICLRFactory factory = core.getCLRFactory();
+			if (factory != null) {
+				return factory;
+			}
+		}
+		return null;
+	}
+
+	public void setCLRFactory(ICLRFactory clrFactory) {
+		cores.peek().setCLRFactory(clrFactory);
+	}
 
 	/*
 	 * (non-Javadoc)

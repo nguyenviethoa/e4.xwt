@@ -10,6 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
+/**
+ * This class provides an open solution to manage the events. By default, 
+ * XWT uses Java reflection to find the method to handle an event. If the class 
+ * specified by <code>x:Class</code> implements this interface, this class can provide 
+ * the IEventInvoker for each event.   
+ * 
+ * @author yyang
+ */
 public interface IEventHandler {
 	IEventInvoker getEventInvoker(String name, Class<?> elementType,
 			Class<?> eventType);

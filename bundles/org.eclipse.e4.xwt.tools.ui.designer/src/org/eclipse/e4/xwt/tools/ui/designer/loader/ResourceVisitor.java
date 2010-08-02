@@ -26,10 +26,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.e4.xwt.ICLRFactory;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IEventConstants;
@@ -362,6 +364,9 @@ public class ResourceVisitor {
 					resourceDictionary.remove(Core.DEFAULT_STYLES_KEY);
 				}
 			}
+			if (!options.containsKey(IXWTLoader.CLASS_FACTORY_PROPERTY)) {
+				options.put(IXWTLoader.CLASS_FACTORY_PROPERTY, loader.getCLRFactory());
+			}
 
 			Object control = doCreate(parent, element, null, options);
 			// get databinding messages and print into console view
@@ -484,7 +489,24 @@ public class ResourceVisitor {
 				className = expandNamespace(classAttribute, className);
 				loadShellCLR(className, shell);
 			}
-
+			else {
+				XamlAttribute classFactoryAttribute = element.getAttribute(
+						IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS_FACTORY);
+				if (classFactoryAttribute != null) {
+					String content = classFactoryAttribute.getValue();
+					Object clr = loadFactoryCLR(content);
+					loadData.setClr(clr);
+					UserData.setCLR(shell, clr);
+				}
+				else {
+					ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
+					if (clrFactory != null) {
+						Object clr = clrFactory.createCLR(null);
+						loadData.setClr(clr);
+						UserData.setCLR(shell, clr);						
+					}
+				}
+			}
 		} else {
 			pushStack(parent);
 
@@ -519,6 +541,7 @@ public class ResourceVisitor {
 								childBindingContext);
 					}
 					nestedOptions.put(RESOURCE_LOADER_PROPERTY, this);
+					nestedOptions.put(IXWTLoader.CLASS_FACTORY_PROPERTY, null); // disable the global setting
 					targetObject = loader.loadWithOptions(file, nestedOptions);
 					if (targetObject == null) {
 						return null;
@@ -543,6 +566,7 @@ public class ResourceVisitor {
 
 				// x:Class
 				{
+					boolean hasClass = false;
 					XamlAttribute classAttribute = element
 							.getAttribute(IConstants.XAML_X_CLASS,
 									IConstants.XWT_X_NAMESPACE);
@@ -551,12 +575,31 @@ public class ResourceVisitor {
 						className = expandNamespace(classAttribute, className);
 						targetObject = loadCLR(className, parameters, metaclass
 								.getType(), options);
+						hasClass = true;
 					} else {
 						Object clr = options.get(XWTLoader.CLASS_PROPERTY);
 						if (clr != null) {
 							loadData.setClr(clr);
+							hasClass = true;
 						}
 					}
+					if (!hasClass) {
+						XamlAttribute classFactoryAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE,
+								IConstants.XAML_X_CLASS_FACTORY);
+						if (classFactoryAttribute != null) {
+							Object clr = loadFactoryCLR(classFactoryAttribute.getValue());
+							if (clr != null) {
+								loadData.setClr(clr);
+							}
+						}
+						else {
+							ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
+							if (clrFactory != null) {
+								loadData.setClr(clrFactory.createCLR(null));
+							}
+						}
+					}
+					
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
 						invokeCreatededAction(element, targetObject);
@@ -618,18 +661,7 @@ public class ResourceVisitor {
 		Set<Entry<String, Object>> entrySet = options.entrySet();
 		for (Entry<String, Object> entry : entrySet) {
 			String key = entry.getKey();
-			if (IXWTLoader.CONTAINER_PROPERTY.equalsIgnoreCase(key)
-					|| IXWTLoader.INIT_STYLE_PROPERTY.equalsIgnoreCase(key)
-					|| IXWTLoader.DATACONTEXT_PROPERTY.equalsIgnoreCase(key)
-					|| IXWTLoader.BINDING_CONTEXT_PROPERTY
-							.equalsIgnoreCase(key)
-					|| IXWTLoader.RESOURCE_DICTIONARY_PROPERTY
-							.equalsIgnoreCase(key)
-					|| IXWTLoader.CLASS_PROPERTY.equalsIgnoreCase(key)
-					|| IXWTLoader.LOADED_CALLBACK.equalsIgnoreCase(key)
-					|| IXWTLoader.CREATED_CALLBACK.equalsIgnoreCase(key)
-					|| IXWTLoader.BEFORE_PARSING_CALLBACK.equalsIgnoreCase(key)
-					|| IXWTLoader.DESIGN_MODE_PROPERTY.equalsIgnoreCase(key)) {
+			if (IXWTLoader.Utilities.isPropertyName(key)) {
 				continue;
 			}
 			IProperty property = metaclass.findProperty(key);
@@ -1353,6 +1385,40 @@ public class ResourceVisitor {
 		} catch (Exception e) {
 			LoggerManager.log(e);
 		}
+	}
+
+	protected Object loadFactoryCLR(String value) {
+		StringTokenizer stringTokenizer = new StringTokenizer(value);		
+		if (!stringTokenizer.hasMoreTokens()) {
+			throw new XWTException("x:ClassFactory is empty");
+		}
+		String token = stringTokenizer.nextToken();
+		String arg = value.substring(token.length()).trim();
+		int index = token.lastIndexOf('.');
+		if (index != -1) {
+			String memberName = token.substring(index + 1);
+			String typeName = token.substring(0, index);
+			Class<?> type = XWTClassLoaderUtil.loadClass(loader.getLoadingContext(),
+					typeName);
+			if (type != null) {
+				Object member = XWTClassLoaderUtil.loadMember(loader.getLoadingContext(),
+						type, memberName, false);
+				if (member instanceof ICLRFactory) {
+					ICLRFactory factory = (ICLRFactory) member;
+					return factory.createCLR(arg);
+				}
+			}
+		}
+		Class<?> type = XWTClassLoaderUtil.loadClass(loader.getLoadingContext(), token);
+		if (type != null && ICLRFactory.class.isAssignableFrom(type)) {
+			try {
+				ICLRFactory factory = (ICLRFactory) type.newInstance();
+				return factory.createCLR(arg);				
+			} catch (Exception e) {
+				throw new XWTException(e);
+			}
+		}
+		throw new XWTException("ClassFactory not found.");
 	}
 
 	protected Object loadCLR(String className, Object[] parameters,

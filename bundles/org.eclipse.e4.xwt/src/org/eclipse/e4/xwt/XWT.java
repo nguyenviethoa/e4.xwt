@@ -717,6 +717,25 @@ public class XWT {
 	}
 
 	/**
+	 * Set up the default ICLRFactory 
+	 * 
+	 * @param factory
+	 */
+	static public void setCLRFactory(ICLRFactory factory) {
+		XWTLoaderManager.getActive().setCLRFactory(factory);		
+	}
+
+	/**
+	 * The default CLRFactory.
+	 * 
+	 * @return
+	 */
+	static public ICLRFactory getCLRFactory() {
+		return XWTLoaderManager.getActive().getCLRFactory();
+	}
+
+
+	/**
 	 * Find a command by name
 	 * 
 	 * @param name

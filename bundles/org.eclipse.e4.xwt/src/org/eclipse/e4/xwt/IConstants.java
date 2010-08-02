@@ -33,6 +33,7 @@ public interface IConstants {
 	public final String XAML_X_STATIC_MEMBER = "Member";
 	public final String XAML_X_ARRAY = "Array";
 	public final String XAML_X_CLASS = "Class";
+	public final String XAML_X_CLASS_FACTORY = "ClassFactory";
 	public final String XAML_X_NAME = "Name";
 	public final String XAML_X_NULL = "Null";
 	public final String XAML_X_SHARED = "Shared";

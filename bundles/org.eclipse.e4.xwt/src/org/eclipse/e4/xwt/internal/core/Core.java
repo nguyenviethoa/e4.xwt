@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.DefaultLoadingContext;
+import org.eclipse.e4.xwt.ICLRFactory;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IDataProviderFactory;
@@ -73,6 +74,8 @@ public class Core {
 	private IElementLoaderFactory loaderFactory;
 	
 	private ILoadingContext _loadingContext = null;
+
+	private ICLRFactory clrFactory = null;
 
 	private Set<Tracking> trackingSet = new HashSet<Tracking>();
 	private Map<String, ICommand> commands = new HashMap<String, ICommand>();
@@ -152,6 +155,14 @@ public class Core {
 	 */
 	public void setLogger(ILogger log) {
 		logger = log;
+	}
+
+	public ICLRFactory getCLRFactory() {
+		return clrFactory;
+	}
+
+	public void setCLRFactory(ICLRFactory clrFactory) {
+		this.clrFactory = clrFactory;
 	}
 
 	/**
