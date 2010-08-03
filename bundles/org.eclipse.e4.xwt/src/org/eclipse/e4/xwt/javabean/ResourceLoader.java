@@ -375,8 +375,19 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 			}
 			if (!options.containsKey(IXWTLoader.CLASS_FACTORY_PROPERTY)) {
-				options.put(IXWTLoader.CLASS_FACTORY_PROPERTY, loader.getCLRFactory());
-			}
+				try {
+					options.put(IXWTLoader.CLASS_FACTORY_PROPERTY, loader.getCLRFactory());
+				}
+				catch (UnsupportedOperationException e) {
+					if (options.isEmpty()) {
+						options = new HashMap<String, Object>(); 
+						options.put(IXWTLoader.CLASS_FACTORY_PROPERTY, loader.getCLRFactory());	
+					}
+					else {
+						throw e;
+					}
+				}
+			} 
 			
 			Object control = doCreate(parent, element, null, options);
 
