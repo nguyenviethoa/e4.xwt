@@ -19,8 +19,16 @@ import org.eclipse.core.databinding.conversion.IConverter;
  * @author jliu
  */
 public class ObjectToString implements IConverter {
-	public static ObjectToString instance = new ObjectToString();
-
+	public static ObjectToString FROM_OBJECT = new ObjectToString(Object.class);
+	public static ObjectToString FROM_INTEGER = new ObjectToString(Integer.class);
+	public static ObjectToString FROM_SHORT = new ObjectToString(Short.class);
+	public static ObjectToString FROM_LONG = new ObjectToString(Long.class);
+	private Class<?> fromType;
+	
+	public ObjectToString(Class<?> fromType) {
+		this.fromType = fromType;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -39,7 +47,10 @@ public class ObjectToString implements IConverter {
 	 * @see org.eclipse.core.databinding.conversion.IConverter#getFromType()
 	 */
 	public Object getFromType() {
-		return Object.class;
+		if (fromType == null) {
+			return Object.class;			
+		}
+		return fromType;
 	}
 
 	/*

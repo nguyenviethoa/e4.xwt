@@ -509,14 +509,14 @@ public class ResourceLoader implements IVisualElementLoader {
 			else {
 				Attribute classFactoryAttribute = element.getAttribute(
 						IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS_FACTORY);
+				ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 				if (classFactoryAttribute != null) {
 					String content = classFactoryAttribute.getContent();
-					Object clr = loadFactoryCLR(content);
+					Object clr = loadFactoryCLR(content, clrFactory);
 					loadData.setClr(clr);
 					UserData.setCLR(shell, clr);
 				}
 				else {
-					ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 					if (clrFactory != null) {
 						Object clr = clrFactory.createCLR(null);
 						loadData.setClr(clr);
@@ -598,14 +598,14 @@ public class ResourceLoader implements IVisualElementLoader {
 					if (!hasClass) {
 						Attribute classFactoryAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE,
 								IConstants.XAML_X_CLASS_FACTORY);
+						ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 						if (classFactoryAttribute != null) {
-							Object clr = loadFactoryCLR(classFactoryAttribute.getContent());
+							Object clr = loadFactoryCLR(classFactoryAttribute.getContent(), clrFactory);
 							if (clr != null) {
 								loadData.setClr(clr);
 							}
 						}
 						else {
-							ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 							if (clrFactory != null) {
 								loadData.setClr(clrFactory.createCLR(null));
 							}							
@@ -1424,13 +1424,24 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 	}
 
-	protected Object loadFactoryCLR(String value) {
-		StringTokenizer stringTokenizer = new StringTokenizer(value);		
-		if (!stringTokenizer.hasMoreTokens()) {
-			throw new XWTException("x:ClassFactory is empty");
+	protected Object loadFactoryCLR(String value, ICLRFactory factory) {
+		String token;
+		String arg;
+		if (value.startsWith("+")) {
+			if (factory == null) {
+				throw new XWTException("ICLRFactory option is missing.");				
+			}
+			arg = value.substring(1).trim();
+			return factory.createCLR(arg);
 		}
-		String token = stringTokenizer.nextToken();
-		String arg = value.substring(token.length()).trim();
+		else {
+			StringTokenizer stringTokenizer = new StringTokenizer(value);		
+			if (!stringTokenizer.hasMoreTokens()) {
+				throw new XWTException("x:ClassFactory is empty");
+			}
+			token = stringTokenizer.nextToken();
+			arg = value.substring(token.length()).trim();
+		}
 		int index = token.lastIndexOf('.');
 		if (index != -1) {
 			String memberName = token.substring(index + 1);
@@ -1441,16 +1452,18 @@ public class ResourceLoader implements IVisualElementLoader {
 				Object member = ClassLoaderUtil.loadMember(context.getLoadingContext(),
 						type, memberName, false);
 				if (member instanceof ICLRFactory) {
-					ICLRFactory factory = (ICLRFactory) member;
-					return factory.createCLR(arg);
+					factory = (ICLRFactory) member;
+				}
+				if (factory != null) {
+					return factory.createCLR(arg);					
 				}
 			}
 		}
 		Class<?> type = ClassLoaderUtil.loadClass(context.getLoadingContext(), token);
 		if (type != null && ICLRFactory.class.isAssignableFrom(type)) {
 			try {
-				ICLRFactory factory = (ICLRFactory) type.newInstance();
-				return factory.createCLR(arg);				
+				ICLRFactory localFactory = (ICLRFactory) type.newInstance();
+				return localFactory.createCLR(arg);				
 			} catch (Exception e) {
 				throw new XWTException(e);
 			}

@@ -64,7 +64,7 @@ public abstract class XWTAbstractPart implements IContentPart {
 
 	static {
 		try {
-			XWT.registerNamspaceHandler(CSSHandler.NAMESPACE,
+			XWT.registerNamespaceHandler(CSSHandler.NAMESPACE,
 					CSSHandler.handler);
 		} catch (Exception e) {
 		}

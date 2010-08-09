@@ -18,7 +18,7 @@ import org.eclipse.e4.xwt.XWT;
 /**
  * @author jliu
  */
-public class CLRFactoryOptionArgs{
+public class CLRFactoryOptionArgs {
 
 	public static void main(String[] args) {
 

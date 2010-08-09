@@ -68,6 +68,8 @@ import org.eclipse.e4.xwt.converters.StringToIValueConverter;
 import org.eclipse.e4.xwt.converters.StringToImage;
 import org.eclipse.e4.xwt.converters.StringToIntArray;
 import org.eclipse.e4.xwt.converters.StringToInteger;
+import org.eclipse.e4.xwt.converters.StringToKeySpline;
+import org.eclipse.e4.xwt.converters.StringToKeyTime;
 import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
 import org.eclipse.e4.xwt.converters.StringToRepeatBehavior;
@@ -1222,7 +1224,7 @@ public class XWTLoader implements IXWTLoader {
 				ControlEditor.class, IConstants.XWT_NAMESPACE), this),
 				IConstants.XWT_NAMESPACE);
 
-		registerConvertor(ObjectToString.instance);
+		registerConvertor(ObjectToString.FROM_OBJECT);
 		registerConvertor(DateToString.instance);
 		registerConvertor(EnumToString.instance);
 		registerConvertor(StringToInteger.instance);
@@ -1274,6 +1276,8 @@ public class XWTLoader implements IXWTLoader {
 		registerConvertor(SetToIObservableCollection.instance);
 		registerConvertor(ObjectToISelection.instance);
 		registerConvertor(ListToSet.instance);
+		registerConvertor(StringToKeyTime.instance);
+		registerConvertor(StringToKeySpline.instance);
 
 		registerConvertor(IStatusToString.instance);
 		registerConvertor(IStatusToBoolean.instance);

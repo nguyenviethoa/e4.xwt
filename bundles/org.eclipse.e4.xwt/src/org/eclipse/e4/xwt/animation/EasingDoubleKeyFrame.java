@@ -8,26 +8,22 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.namespace.handler;
+package org.eclipse.e4.xwt.animation;
 
-import java.net.URL;
+import org.pushingpixels.trident.Timeline;
 
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.XWT;
+public class EasingDoubleKeyFrame extends DoubleKeyFrame {
+	private IEasingFunction easingFunction;
+	
+	public IEasingFunction getEasingFunction() {
+		return easingFunction;
+	}
 
-/**
- * @author jliu
- */
-public class LabelExt {
-	public static void main(String[] args) {
-		URL url = LabelExt.class.getResource(LabelExt.class.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
-		try {
-			XWT.registerNamespaceHandler("http://www.eclipse.org/ext",
-					new ExtHandler());
-			XWT.open(url);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void setEasingFunction(IEasingFunction easingFunction) {
+		this.easingFunction = easingFunction;
+	}
+
+	@Override
+	protected void start(Timeline timeline, Object target) {
 	}
 }

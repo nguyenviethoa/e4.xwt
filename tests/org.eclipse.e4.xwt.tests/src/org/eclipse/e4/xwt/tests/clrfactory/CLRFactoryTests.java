@@ -13,7 +13,6 @@ package org.eclipse.e4.xwt.tests.clrfactory;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.eclipse.e4.xwt.ICLRFactory;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
@@ -161,6 +160,50 @@ public class CLRFactoryTests extends XWTTestCase {
 				Button element = (Button)XWT.findElementByName(root, "button");
 				Object data = element.getData("CLR");
 				assertTrue(data instanceof CLR);
+			}
+		});
+	}
+
+	public void testCLRFactoryPrecedentOptionOverGlobal() throws Exception {
+		URL url = CLR.class.getResource(CLRFactoryOption.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		// CLRfactory should be not used
+		final CLRFadeFactory clrFadeFactory = new CLRFadeFactory();
+		XWT.setCLRFactory(clrFadeFactory);
+		
+		// CLRfactory should be used
+		CLRFactory clrFactory = new CLRFactory();
+		options.put(IXWTLoader.CLASS_FACTORY_PROPERTY, clrFactory);
+		runTest(url, options, new Runnable() {
+			public void run() {
+				Button element = (Button)XWT.findElementByName(root, "button");
+				selectButton(element);
+			}
+		}, new Runnable() {
+			public void run() {
+				Button element = (Button)XWT.findElementByName(root, "button");
+				Object data = element.getData("CLR");
+				assertTrue(data instanceof CLR);
+			}
+		});
+	}
+	
+	public void testCLRFactoryOptionArg() throws Exception {
+		URL url = CLR.class.getResource(CLRFactoryOptionArgs.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		final CLRFactory clrFactory = new CLRFactory();
+		options.put(IXWTLoader.CLASS_FACTORY_PROPERTY, clrFactory);
+		runTest(url, options, new Runnable() {
+			public void run() {
+				Button element = (Button)XWT.findElementByName(root, "button");
+				selectButton(element);
+			}
+		}, new Runnable() {
+			public void run() {
+				Button element = (Button)XWT.findElementByName(root, "button");
+				assertTrue(element.getText().equals("arg1 arg2"));
 			}
 		});
 	}

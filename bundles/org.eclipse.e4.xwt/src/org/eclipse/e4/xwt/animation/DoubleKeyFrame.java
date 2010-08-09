@@ -8,26 +8,31 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.namespace.handler;
+package org.eclipse.e4.xwt.animation;
 
-import java.net.URL;
+import org.pushingpixels.trident.Timeline;
 
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.XWT;
+public abstract class DoubleKeyFrame {
+	public static final DoubleKeyFrame[] EMPTY_ARRAY = {}; 
+	private KeyTime keyTime;
+	private Double value;
 
-/**
- * @author jliu
- */
-public class LabelExt {
-	public static void main(String[] args) {
-		URL url = LabelExt.class.getResource(LabelExt.class.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
-		try {
-			XWT.registerNamespaceHandler("http://www.eclipse.org/ext",
-					new ExtHandler());
-			XWT.open(url);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public KeyTime getKeyTime() {
+		return keyTime;
+	}
+
+	public void setKeyTime(KeyTime keyTime) {
+		this.keyTime = keyTime;
+	}
+
+	public Double getValue() {
+		return value;
+	}
+
+	public void setValue(Double value) {
+		this.value = value;
+	}
+
+	protected void start(Timeline timeline, Object target) {
 	}
 }

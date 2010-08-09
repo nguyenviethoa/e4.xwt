@@ -1,41 +1,35 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.converters;
+
+import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.e4.xwt.animation.KeySpline;
 
 /**
- * The operation to inverse the converter direction.
+ * String to Font converter
  * 
  * @author yyang
- * 
  */
-public class InverseValueConverter implements IValueConverter {
-	private IValueConverter source;
-
-	public InverseValueConverter(IValueConverter source) {
-		this.source = source;
-	}
-
-	public Object convertBack(Object value) {
-		return source.convert(value);
-	}
+public class StringToKeySpline implements IConverter {
+	public static StringToKeySpline instance = new StringToKeySpline();
 
 	public Object convert(Object fromObject) {
-		return source.convertBack(fromObject);
+		return KeySpline.fromString((String) fromObject);
 	}
 
 	public Object getFromType() {
-		return source.getToType();
+		return String.class;
 	}
 
 	public Object getToType() {
-		return source.getFromType();
+		return KeySpline.class;
 	}
 }

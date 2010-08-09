@@ -90,7 +90,7 @@ public class XWT {
 	 * @param nsmapace
 	 * @param handler
 	 */
-	public static void registerNamspaceHandler(String nsmapace,
+	public static void registerNamespaceHandler(String nsmapace,
 			INamespaceHandler handler) {
 		XWTLoaderManager.getActive()
 				.registerNamespaceHandler(nsmapace, handler);
@@ -100,7 +100,7 @@ public class XWT {
 	 * 
 	 * @param nsmapace
 	 */
-	public static void unregisterNamspaceHandler(String nsmapace) {
+	public static void unregisterNamespaceHandler(String nsmapace) {
 		XWTLoaderManager.getActive().unregisterNamespaceHandler(nsmapace);
 	}
 
@@ -109,7 +109,7 @@ public class XWT {
 	 * @param nsmapace
 	 * @return
 	 */
-	public static INamespaceHandler getNamspaceHandler(String nsmapace) {
+	public static INamespaceHandler getNamespaceHandler(String nsmapace) {
 		return XWTLoaderManager.getActive().getNamespaceHandler(nsmapace);
 	}
 

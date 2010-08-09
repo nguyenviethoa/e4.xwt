@@ -22,15 +22,19 @@ public class DateToString extends ObjectToString {
 	private static final SimpleDateFormat FORMATTER = new SimpleDateFormat();
 	public static DateToString instance = new DateToString();
 
+	public DateToString() {
+		this(Date.class);
+	}
+
+	protected DateToString(Class<?> fromType) {
+		super(fromType);
+	}
+
 	public Object convert(Object fromObject) {
 		if (fromObject == null) {
 			return super.convert(null);
 		}
 		return FORMATTER.format((Date) fromObject);
-	}
-
-	public Object getFromType() {
-		return Date.class;
 	}
 
 	public Object getToType() {

@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Label;
 public class NamespaceHandlerTests extends XWTTestCase {
 
 	public void testLabelExt() throws Exception {
-		XWT.registerNamspaceHandler("http://www.eclipse.org/ext",
+		XWT.registerNamespaceHandler("http://www.eclipse.org/ext",
 				new ExtHandler());
 		URL url = NamespaceHandlerTests.class.getResource(LabelExt.class
 				.getSimpleName()

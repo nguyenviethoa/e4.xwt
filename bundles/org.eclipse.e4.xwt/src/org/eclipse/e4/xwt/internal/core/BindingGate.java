@@ -30,7 +30,7 @@ import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.validation.InverseValidationRule;
 
 /**
- * @author jliu jin.liu@soyatec.com
+ * @author jliu <jin.liu@soyatec.com>
  */
 public class BindingGate {
 	public static final UpdateSetStrategy POLICY_UPDATE = new UpdateSetStrategy(

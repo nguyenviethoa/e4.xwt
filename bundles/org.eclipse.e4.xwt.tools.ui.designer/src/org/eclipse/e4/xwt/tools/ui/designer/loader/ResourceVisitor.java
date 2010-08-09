@@ -60,6 +60,7 @@ import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.Core;
 import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
+import org.eclipse.e4.xwt.internal.utils.ClassLoaderUtil;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.NamespaceHelper;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
@@ -503,14 +504,14 @@ public class ResourceVisitor {
 			else {
 				XamlAttribute classFactoryAttribute = element.getAttribute(
 						IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS_FACTORY);
+				ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 				if (classFactoryAttribute != null) {
 					String content = classFactoryAttribute.getValue();
-					Object clr = loadFactoryCLR(content);
+					Object clr = loadFactoryCLR(content, clrFactory);
 					loadData.setClr(clr);
 					UserData.setCLR(shell, clr);
 				}
 				else {
-					ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 					if (clrFactory != null) {
 						Object clr = clrFactory.createCLR(null);
 						loadData.setClr(clr);
@@ -597,14 +598,14 @@ public class ResourceVisitor {
 					if (!hasClass) {
 						XamlAttribute classFactoryAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE,
 								IConstants.XAML_X_CLASS_FACTORY);
+						ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 						if (classFactoryAttribute != null) {
-							Object clr = loadFactoryCLR(classFactoryAttribute.getValue());
+							Object clr = loadFactoryCLR(classFactoryAttribute.getValue(), clrFactory);
 							if (clr != null) {
 								loadData.setClr(clr);
 							}
 						}
 						else {
-							ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 							if (clrFactory != null) {
 								loadData.setClr(clrFactory.createCLR(null));
 							}
@@ -1398,40 +1399,53 @@ public class ResourceVisitor {
 		}
 	}
 
-	protected Object loadFactoryCLR(String value) {
-		StringTokenizer stringTokenizer = new StringTokenizer(value);		
-		if (!stringTokenizer.hasMoreTokens()) {
-			throw new XWTException("x:ClassFactory is empty");
+	protected Object loadFactoryCLR(String value, ICLRFactory factory) {
+		String token;
+		String arg;
+		if (value.startsWith("+")) {
+			if (factory == null) {
+				throw new XWTException("ICLRFactory option is missing.");				
+			}
+			arg = value.substring(1);
+			return factory.createCLR(arg);
 		}
-		String token = stringTokenizer.nextToken();
-		String arg = value.substring(token.length()).trim();
+		else {
+			StringTokenizer stringTokenizer = new StringTokenizer(value);		
+			if (!stringTokenizer.hasMoreTokens()) {
+				throw new XWTException("x:ClassFactory is empty");
+			}
+			token = stringTokenizer.nextToken();
+			arg = value.substring(token.length()).trim();
+		}
 		int index = token.lastIndexOf('.');
 		if (index != -1) {
 			String memberName = token.substring(index + 1);
 			String typeName = token.substring(0, index);
-			Class<?> type = XWTClassLoaderUtil.loadClass(loader.getLoadingContext(),
+			Class<?> type = ClassLoaderUtil.loadClass(loader.getLoadingContext(),
 					typeName);
 			if (type != null) {
-				Object member = XWTClassLoaderUtil.loadMember(loader.getLoadingContext(),
+				Object member = ClassLoaderUtil.loadMember(loader.getLoadingContext(),
 						type, memberName, false);
 				if (member instanceof ICLRFactory) {
-					ICLRFactory factory = (ICLRFactory) member;
-					return factory.createCLR(arg);
+					factory = (ICLRFactory) member;
+				}
+				if (factory != null) {
+					return factory.createCLR(arg);					
 				}
 			}
 		}
-		Class<?> type = XWTClassLoaderUtil.loadClass(loader.getLoadingContext(), token);
+		Class<?> type = ClassLoaderUtil.loadClass(loader.getLoadingContext(), token);
 		if (type != null && ICLRFactory.class.isAssignableFrom(type)) {
 			try {
-				ICLRFactory factory = (ICLRFactory) type.newInstance();
-				return factory.createCLR(arg);				
+				ICLRFactory localFactory = (ICLRFactory) type.newInstance();
+				return localFactory.createCLR(arg);				
 			} catch (Exception e) {
 				throw new XWTException(e);
 			}
 		}
-		throw new XWTException("ClassFactory not found.");
+		throw new XWTException(value + " ClassFactory not found.");
 	}
-
+	
 	protected Object loadCLR(String className, Object[] parameters,
 			Class<?> currentTagType, Map<String, Object> options) {
 		Class<?> type = XWTClassLoaderUtil.loadClass(
