@@ -32,6 +32,7 @@ import org.eclipse.e4.xwt.tests.resourcesdictionary.ResourcesDictionaryTestSuite
 import org.eclipse.e4.xwt.tests.snippet017.Snippet017TestSuite;
 import org.eclipse.e4.xwt.tests.snippet019.Snippet019TestSuite;
 import org.eclipse.e4.xwt.tests.swt.SWTTestSuite;
+import org.eclipse.e4.xwt.tests.threading.ThreadingSuite;
 import org.eclipse.e4.xwt.tests.trigger.TriggerTestSuite;
 import org.eclipse.e4.xwt.tests.xaml.BindingExpressionTestSuite;
 
@@ -101,6 +102,7 @@ public class XwtTestSuite extends TestSuite {
 
 	protected void addXAMLTests() {
 		addTest(NameTestSuite.suite());
+		addTest(ThreadingSuite.suite());
 		addTest(ResourcesTestSuite.suite());
 		addTest(ResourcesDictionaryTestSuite.suite());
 		addTest(BindingExpressionTestSuite.suite());

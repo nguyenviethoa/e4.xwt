@@ -375,7 +375,7 @@ public class XWT {
 	 * This method return the root element.
 	 * 
 	 */
-	static public synchronized Control load(URL file) throws Exception {
+	static public Control load(URL file) throws Exception {
 		return XWTLoaderManager.getActive().load(file);
 	}
 
@@ -384,7 +384,7 @@ public class XWT {
 	 * This method return the root element.
 	 * 
 	 */
-	static public synchronized Control load(URL file, Object dataContext)
+	static public Control load(URL file, Object dataContext)
 			throws Exception {
 		return XWTLoaderManager.getActive().load(file, dataContext);
 	}
@@ -394,7 +394,7 @@ public class XWT {
 	 * method returns the root element. The DataContext will be associated to
 	 * the root element.
 	 */
-	static public synchronized Control load(Composite parent, URL file)
+	static public Control load(Composite parent, URL file)
 			throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file);
 	}
@@ -404,7 +404,7 @@ public class XWT {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	static public synchronized Control load(Composite parent, URL file,
+	static public Control load(Composite parent, URL file,
 			Object dataContext) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file, dataContext);
 	}
@@ -412,7 +412,7 @@ public class XWT {
 	/**
 	 * Open and show the file content in a new Shell.
 	 */
-	static public synchronized void open(final URL url) throws Exception {
+	static public void open(final URL url) throws Exception {
 		XWTLoaderManager.getActive().open(url);
 	}
 
@@ -420,7 +420,7 @@ public class XWT {
 	 * load the content from a stream with a style, a DataContext and a
 	 * ResourceDictionary. The root elements will be hold by Composite parent
 	 */
-	static public synchronized Control load(Composite parent,
+	static public Control load(Composite parent,
 			InputStream stream, URL file, Object dataContext) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, stream, file,
 				dataContext);
@@ -429,7 +429,7 @@ public class XWT {
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public synchronized void open(URL url, Object dataContext)
+	static public void open(URL url, Object dataContext)
 			throws Exception {
 		XWTLoaderManager.getActive().open(url, dataContext);
 	}
@@ -437,7 +437,7 @@ public class XWT {
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public synchronized void open(Class<?> type, Object dataContext)
+	static public void open(Class<?> type, Object dataContext)
 			throws Exception {
 		open(type.getResource(type.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX), dataContext);
@@ -446,7 +446,7 @@ public class XWT {
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public synchronized void open(URL url, Map<String, Object> options)
+	static public void open(URL url, Map<String, Object> options)
 			throws Exception {
 		XWTLoaderManager.getActive().open(url, options);
 	}
@@ -455,7 +455,7 @@ public class XWT {
 		return XWTLoaderManager.getActive().convertFrom(targetType, string);
 	}
 
-	static public synchronized Control loadWithOptions(URL url,
+	static public Control loadWithOptions(URL url,
 			Map<String, Object> options) throws Exception {
 		return XWTLoaderManager.getActive().loadWithOptions(url, options);
 	}
@@ -468,7 +468,7 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public synchronized Control load(InputStream stream, URL url)
+	static public Control load(InputStream stream, URL url)
 			throws Exception {
 		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
@@ -481,7 +481,7 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public synchronized Control loadWithOptions(InputStream stream,
+	static public Control loadWithOptions(InputStream stream,
 			URL url, Map<String, Object> options) throws Exception {
 		return XWTLoaderManager.getActive().loadWithOptions(stream, url,
 				options);

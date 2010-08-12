@@ -479,7 +479,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				styleValue = SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.MAX
 						| SWT.RESIZE;
 			}
-			Display display = Display.getDefault();
+			Display display = Display.getCurrent();
 			shell = new Shell(display, styleValue);
 			targetObject = shell;
 			invokeCreatededAction(element, targetObject);

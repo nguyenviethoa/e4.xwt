@@ -147,7 +147,7 @@ public class ResourceManager {
 			if (red > 255 || green > 255 || blue > 255 || red < 0 || green < 0 || blue < 0) {
 				return null;
 			}
-			return new Color(Display.getDefault(), red, green, blue);
+			return new Color(Display.getCurrent(), red, green, blue);
 		}
 
 		static Color getColor(int rgb) {
@@ -170,7 +170,7 @@ public class ResourceManager {
 		}
 
 		static Color getSWTColor(int swtValue) {
-			return Display.getDefault().getSystemColor(swtValue);
+			return Display.getCurrent().getSystemColor(swtValue);
 		}
 	}
 
@@ -210,11 +210,11 @@ public class ResourceManager {
 			if (name == null) {
 				return null;
 			}
-			return new Font(Display.getDefault(), name, height, style);
+			return new Font(Display.getCurrent(), name, height, style);
 		}
 
 		static Font getSWTFont() {
-			return Display.getDefault().getSystemFont();
+			return Display.getCurrent().getSystemFont();
 		}
 	}
 
@@ -231,7 +231,7 @@ public class ResourceManager {
 			try {
 				InputStream stream = url.openStream();
 				try {
-					return new Image(Display.getDefault(), stream);
+					return new Image(Display.getCurrent(), stream);
 				} finally {
 					stream.close();
 				}
