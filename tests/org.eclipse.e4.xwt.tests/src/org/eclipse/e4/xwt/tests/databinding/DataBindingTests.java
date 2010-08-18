@@ -65,9 +65,10 @@ public class DataBindingTests extends XWTTestCase {
 				assertTrue(input instanceof Text);
 				Text inputText = (Text) input;
 				assertTrue(target instanceof Text);
-				Text targetText = (Text) target;
 				inputText.setText("new value");
-				targetText.setFocus();
+				Text targetText = (Text) target;
+				// setFocus() doesn't work on Mac OS 64 Bits cocoa
+				setFocus(inputText, false);
 			}
 		}, new Runnable() {
 			public void run() {
@@ -78,7 +79,7 @@ public class DataBindingTests extends XWTTestCase {
 				Object target = XWT.findElementByName(root, "targetText");
 				assertTrue(target instanceof Text);
 				Text targetText = (Text) target;
-				assertEquals(targetText.getText(), "new value");
+				assertEquals("new value", targetText.getText());
 			}
 		});
 	}

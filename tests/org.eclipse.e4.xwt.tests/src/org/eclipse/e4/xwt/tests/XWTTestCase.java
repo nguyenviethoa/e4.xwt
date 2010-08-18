@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  *
@@ -169,6 +170,28 @@ public abstract class XWTTestCase extends TestCase {
 		button.notifyListeners(SWT.Selection, upEvent);
 	}
 
+	protected void setFocus(Widget widget) {
+		setFocus(widget, true);
+	}
+
+	
+	protected void setFocus(Widget widget, boolean focus) {
+		Display display = widget.getDisplay();
+		Event upEvent = new Event();
+		upEvent.widget = widget;
+		upEvent.button = 1;
+		upEvent.type = SWT.MouseUp;
+		display.post(upEvent);
+
+		if (focus) {
+			widget.notifyListeners(SWT.FocusIn, upEvent);
+		}
+		else {
+			widget.notifyListeners(SWT.FocusOut, upEvent);					
+		}
+	}
+	
+	
 	protected void assertText(String name, String value) {
 		Object element = XWT.findElementByName(root, name);
 		assertTrue(element instanceof Text);
