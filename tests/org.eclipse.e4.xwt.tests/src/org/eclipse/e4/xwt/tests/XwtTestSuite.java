@@ -98,11 +98,13 @@ public class XwtTestSuite extends TestSuite {
 
 		// triggers
 		addAnimationTests();
+		
+		// Must be done at last
+		addTest(ThreadingSuite.suite());
 	}
 
 	protected void addXAMLTests() {
 		addTest(NameTestSuite.suite());
-		addTest(ThreadingSuite.suite());
 		addTest(ResourcesTestSuite.suite());
 		addTest(ResourcesDictionaryTestSuite.suite());
 		addTest(BindingExpressionTestSuite.suite());

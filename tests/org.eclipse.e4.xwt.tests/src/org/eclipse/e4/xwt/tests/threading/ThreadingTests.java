@@ -29,6 +29,8 @@ public class ThreadingTests extends XWTTestCase {
 	 * 
 	 */
 	public void testThreading_Open() throws Exception {
+		Display.getDefault().dispose();
+		
 		URL url = ThreadingTests.class.getResource(Threading.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
