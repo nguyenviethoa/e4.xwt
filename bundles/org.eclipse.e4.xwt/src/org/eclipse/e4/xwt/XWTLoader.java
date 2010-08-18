@@ -1429,6 +1429,8 @@ public class XWTLoader implements IXWTLoader {
 
 		browserMetaclass.addProperty(new DynamicProperty(type, String.class,
 				PropertiesConstants.PROPERTY_URL, loadingType));
+		browserMetaclass.addProperty(new DynamicProperty(type, String.class,
+				PropertiesConstants.PROPERTY_TEXT, loadingType));
 
 		IMetaclass buttonMetaclass = (IMetaclass) registerMetaclass(Button.class);
 		buttonMetaclass.addProperty(new DataProperty(IConstants.XAML_COMMAND,
