@@ -16,6 +16,7 @@ import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author yyang(yves.yang@soyatec.com)
@@ -30,7 +31,79 @@ public class ThreadingTests extends XWTTestCase {
 	 */
 	public void testThreading_Open() throws Exception {
 		Display.getDefault().dispose();
+		if (SWT.getPlatform().equals("cocoa") || SWT.getPlatform().equals("carbon")) {			
+			macDoTestThreading_Open();
+		}
+		else {
+			doTestThreading_Open();
+		}
+	}
+
+	public void macDoTestThreading_Open() throws Exception {		
+		XWT.getAllMetaclasses(); // invoke XWT initialization in the main thread. 
 		
+		URL url = ThreadingTests.class.getResource(Threading.class
+				.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		
+		Thread thread1 = new Thread() {
+			@Override
+			public void run() {
+				URL url = Threading.class.getResource(Threading.class
+						.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+				try {
+					openStarted = true;
+					XWT.open(url);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		Thread thread2 = new Thread() {
+			@Override
+			public void run() {
+				URL url = Threading.class.getResource(Threading.class
+						.getSimpleName() + IConstants.XWT_EXTENSION_SUFFIX);
+				try {
+					openStarted = true;
+					XWT.open(url);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		thread1.start();
+		thread2.start();
+		
+		long startTime = -1;
+		for (int i = 0; i< 100; i++) {
+			if (!Display.getDefault().readAndDispatch()) {
+				Display.getDefault().sleep();
+			}
+			
+			if (Display.getDefault().getShells().length == 2) {
+				break;
+			}
+			
+			Shell[] shells = Display.getDefault().getShells();
+			if (shells.length == 0) {
+				if (startTime == -1) {
+					startTime = System.currentTimeMillis();
+				}
+				else if ((System.currentTimeMillis() - startTime) > 1000) {
+					assertFalse(true);
+					break;
+				}
+			}
+			else {
+				startTime = -1;
+			}
+		}
+	}
+
+	public void doTestThreading_Open() throws Exception {
 		URL url = ThreadingTests.class.getResource(Threading.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
