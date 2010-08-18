@@ -141,6 +141,7 @@ import org.eclipse.e4.xwt.utils.ResourceManager;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.DisposeEvent;
@@ -171,14 +172,14 @@ import org.eclipse.swt.widgets.TreeItem;
 public class XWTLoader implements IXWTLoader {
 	// Declarations
 	private Stack<Core> cores;
-	
+
 	public Display display;
 	public Realm realm;
 
 	public XWTLoader() {
 		display = Display.getCurrent();
 		if (display == null) {
-			display = new Display();
+			display = Display.getDefault();
 		}
 		if (realm == null) {
 			realm = SWTObservables.getRealm(display);
@@ -467,7 +468,7 @@ public class XWTLoader implements IXWTLoader {
 		}
 		return dataBindingContext;
 	}
-	
+
 	public ICLRFactory getCLRFactory() {
 		for (int i = cores.size() - 1; i >= 0; i--) {
 			Core core = cores.get(i);
@@ -609,8 +610,7 @@ public class XWTLoader implements IXWTLoader {
 	 * 
 	 * @see org.eclipse.e4.xwt.IXWTLoader#load(java.net.URL, java.lang.Object)
 	 */
-	public Control load(URL file, Object dataContext)
-			throws Exception {
+	public Control load(URL file, Object dataContext) throws Exception {
 		return load(null, file, dataContext);
 	}
 
@@ -621,8 +621,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite,
 	 * java.net.URL)
 	 */
-	public Control load(Composite parent, URL file)
-			throws Exception {
+	public Control load(Composite parent, URL file) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
 		return loadWithOptions(file, options);
@@ -635,8 +634,8 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite,
 	 * java.net.URL, java.lang.Object)
 	 */
-	public Control load(Composite parent, URL file,
-			Object dataContext) throws Exception {
+	public Control load(Composite parent, URL file, Object dataContext)
+			throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
 		options.put(DATACONTEXT_PROPERTY, dataContext);
@@ -650,8 +649,8 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite,
 	 * java.lang.Class, java.lang.Object)
 	 */
-	public Control load(Composite parent, Class<?> viewType,
-			Object dataContext) throws Exception {
+	public Control load(Composite parent, Class<?> viewType, Object dataContext)
+			throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
 		options.put(DATACONTEXT_PROPERTY, dataContext);
@@ -708,12 +707,12 @@ public class XWTLoader implements IXWTLoader {
 			Map<String, Object> options) throws Exception {
 		ILoadingContext context = getLoadingContext();
 		try {
-			setLoadingContext(new DefaultLoadingContext(viewType
-					.getClassLoader()));
+			setLoadingContext(new DefaultLoadingContext(
+					viewType.getClassLoader()));
 			options = prepareOptions(options);
-			return loadWithOptions(viewType.getResource(viewType
-					.getSimpleName()
-					+ ".xwt"), options);
+			return loadWithOptions(
+					viewType.getResource(viewType.getSimpleName() + ".xwt"),
+					options);
 		} finally {
 			setLoadingContext(context);
 		}
@@ -745,8 +744,8 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite,
 	 * java.io.InputStream, java.net.URL, java.lang.Object)
 	 */
-	public Control load(Composite parent, InputStream stream,
-			URL file, Object dataContext) throws Exception {
+	public Control load(Composite parent, InputStream stream, URL file,
+			Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
 		options.put(DATACONTEXT_PROPERTY, dataContext);
@@ -770,8 +769,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#open(java.lang.Class,
 	 * java.lang.Object)
 	 */
-	public void open(Class<?> type, Object dataContext)
-			throws Exception {
+	public void open(Class<?> type, Object dataContext) throws Exception {
 		open(type.getResource(type.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX), dataContext);
 	}
@@ -781,35 +779,97 @@ public class XWTLoader implements IXWTLoader {
 	 * 
 	 * @see org.eclipse.e4.xwt.IXWTLoader#open(java.net.URL, java.util.Map)
 	 */
-	public void open(final URL url,
-			final Map<String, Object> options) throws Exception {
-		if (Display.getCurrent() == null) {
-			new Display();
-		}
-		
-		Realm.runWithDefault(realm, new Runnable() {
-			public void run() {
-				try {
-					if (url == null) {
-						throw new XWTException("UI Resource is not found.");
+	public void open(final URL url, final Map<String, Object> options)
+			throws Exception {
+		if (SWT.getPlatform().startsWith("win")) {
+			if (Display.getCurrent() == null) {
+				new Display();
+			}
+			Realm.runWithDefault(realm, new Runnable() {
+				public void run() {
+					try {
+						if (url == null) {
+							throw new XWTException("UI Resource is not found.");
+						}
+						Control control = loadWithOptions(url, options);
+						Shell shell = control.getShell();
+						shell.addDisposeListener(new DisposeListener() {
+							public void widgetDisposed(DisposeEvent e) {
+								Shell[] shells = Display.getDefault()
+										.getShells();
+								if (shells.length == 0) {
+									ResourceManager.resources.dispose();
+								}
+							}
+						});
+						shell.open();
+						while (!shell.isDisposed()) {
+							if (!shell.getDisplay().readAndDispatch())
+								shell.getDisplay().sleep();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					Control control = loadWithOptions(url, options);
-					Shell shell = control.getShell();
-					shell.addDisposeListener(new DisposeListener() {
-						public void widgetDisposed(DisposeEvent e) {
-							ResourceManager.resources.dispose();
+				}
+			});
+			return;
+		}
+		Display defaultDisplay = Display.getDefault();
+		if (Thread.currentThread() == defaultDisplay.getThread()) {
+			Realm.runWithDefault(realm, new Runnable() {
+				public void run() {
+					try {
+						if (url == null) {
+							throw new XWTException("UI Resource is not found.");
+						}
+						Control control = loadWithOptions(url, options);
+						Shell shell = control.getShell();
+						shell.open();
+						long startTime = -1;
+						while (true) {
+							if (!Display.getDefault().readAndDispatch()) {
+								Display.getDefault().sleep();
+							}
+							Shell[] shells = Display.getDefault().getShells();
+							if (shells.length == 0) {
+								if (startTime == -1) {
+									startTime = System.currentTimeMillis();
+								}
+								else if ((System.currentTimeMillis() - startTime) > 1000) {
+									break;
+								}
+							}
+							else {
+								startTime = -1;
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+		else {
+			defaultDisplay.asyncExec(new Runnable() {
+				public void run() {
+					Realm.runWithDefault(realm, new Runnable() {
+						public void run() {
+							try {
+								if (url == null) {
+									throw new XWTException(
+											"UI Resource is not found.");
+								}
+								Control control = loadWithOptions(url, options);
+								Shell shell = control.getShell();
+								shell.open();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					});
-					shell.open();
-					while (!shell.isDisposed()) {
-						if (!shell.getDisplay().readAndDispatch())
-							shell.getDisplay().sleep();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
-			}
-		});
+			});
+		}
 	}
 
 	/*
@@ -851,8 +911,8 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#loadWithOptions(java.net.URL,
 	 * java.util.Map)
 	 */
-	public Control loadWithOptions(URL url,
-			Map<String, Object> options) throws Exception {
+	public Control loadWithOptions(URL url, Map<String, Object> options)
+			throws Exception {
 		if (url == null) {
 			throw new XWTException("UI Resource is not found.");
 		}
@@ -871,8 +931,7 @@ public class XWTLoader implements IXWTLoader {
 	 * @see org.eclipse.e4.xwt.IXWTLoader#load(java.io.InputStream,
 	 * java.net.URL)
 	 */
-	public Control load(InputStream stream, URL url)
-			throws Exception {
+	public Control load(InputStream stream, URL url) throws Exception {
 		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
 
@@ -1210,7 +1269,7 @@ public class XWTLoader implements IXWTLoader {
 		return null;
 	}
 
-	private void initialize() {
+	private synchronized void initialize() {
 		cores = new Stack<Core>();
 		Core core = new Core(new ResourceLoaderFactory(), this);
 		cores.push(core);
@@ -1224,8 +1283,9 @@ public class XWTLoader implements IXWTLoader {
 				IConstants.XWT_NAMESPACE);
 		core.registerMetaclass(new BindingMetaclass(MultiBinding.class, this),
 				IConstants.XWT_NAMESPACE);
-		core.registerMetaclass(new TableEditorMetaclass(core.getMetaclass(
-				ControlEditor.class, IConstants.XWT_NAMESPACE), this),
+		core.registerMetaclass(
+				new TableEditorMetaclass(core.getMetaclass(ControlEditor.class,
+						IConstants.XWT_NAMESPACE), this),
 				IConstants.XWT_NAMESPACE);
 
 		registerConvertor(ObjectToString.FROM_OBJECT);
@@ -1338,7 +1398,8 @@ public class XWTLoader implements IXWTLoader {
 
 		Class<?> type = org.eclipse.swt.widgets.Widget.class;
 		IMetaclass metaclass = (IMetaclass) registerMetaclass(type);
-		IProperty dataContextProperty = new DataProperty(IConstants.XAML_DATA_CONTEXT,
+		IProperty dataContextProperty = new DataProperty(
+				IConstants.XAML_DATA_CONTEXT,
 				IUserDataConstants.XWT_DATACONTEXT_KEY);
 		metaclass.addProperty(dataContextProperty);
 		metaclass.addProperty(new DataProperty(IConstants.XAML_BINDING_CONTEXT,
@@ -1362,8 +1423,10 @@ public class XWTLoader implements IXWTLoader {
 		registerEventGroup(type, new RadioEventGroup(IEventConstants.HARD_KEY));
 		type = org.eclipse.swt.browser.Browser.class;
 		IMetaclass browserMetaclass = (IMetaclass) registerMetaclass(type);
-		ILoadingType loadingType = new DefaultLoadingType(IValueLoading.PostChildren, new IProperty[]{dataContextProperty});
-		
+		ILoadingType loadingType = new DefaultLoadingType(
+				IValueLoading.PostChildren,
+				new IProperty[] { dataContextProperty });
+
 		browserMetaclass.addProperty(new DynamicProperty(type, String.class,
 				PropertiesConstants.PROPERTY_URL, loadingType));
 
@@ -1376,7 +1439,8 @@ public class XWTLoader implements IXWTLoader {
 		metaclass = registerMetaclass(org.eclipse.swt.widgets.Combo.class);
 		if (metaclass != null) {
 			IProperty property = metaclass.findProperty("text");
-			IProperty inputProperty = new DelegateProperty(property, loadingType);
+			IProperty inputProperty = new DelegateProperty(property,
+					loadingType);
 			metaclass.addProperty(inputProperty);
 		}
 
@@ -1401,7 +1465,6 @@ public class XWTLoader implements IXWTLoader {
 		menuItemMetaclass.addProperty(new DataProperty(IConstants.XAML_COMMAND,
 				IUserDataConstants.XWT_COMMAND_KEY, ICommand.class));
 
-		
 		registerMetaclass(org.eclipse.swt.widgets.MessageBox.class);
 		registerMetaclass(org.eclipse.swt.widgets.ProgressBar.class);
 		registerMetaclass(org.eclipse.swt.widgets.Sash.class);
@@ -1429,7 +1492,8 @@ public class XWTLoader implements IXWTLoader {
 
 		IMetaclass TableEditorMetaclass = core.getMetaclass(TableEditor.class,
 				IConstants.XWT_NAMESPACE);
-		TableEditorMetaclass.addProperty(new TableEditorDynamicProperty(loadingType));
+		TableEditorMetaclass.addProperty(new TableEditorDynamicProperty(
+				loadingType));
 
 		type = org.eclipse.swt.widgets.TableColumn.class;
 		metaclass = (IMetaclass) registerMetaclass(type);
@@ -1451,7 +1515,8 @@ public class XWTLoader implements IXWTLoader {
 				PropertiesConstants.PROPERTY_TEXT));
 		if (metaclass != null) {
 			IProperty property = metaclass.findProperty("expanded");
-			IProperty expandedProperty = new DelegateProperty(property, loadingType);
+			IProperty expandedProperty = new DelegateProperty(property,
+					loadingType);
 			metaclass.addProperty(expandedProperty);
 		}
 
@@ -1470,7 +1535,8 @@ public class XWTLoader implements IXWTLoader {
 		metaclass = registerMetaclass(org.eclipse.swt.custom.CCombo.class);
 		if (metaclass != null) {
 			IProperty property = metaclass.findProperty("text");
-			IProperty inputProperty = new DelegateProperty(property, loadingType);
+			IProperty inputProperty = new DelegateProperty(property,
+					loadingType);
 			metaclass.addProperty(inputProperty);
 		}
 		registerMetaclass(org.eclipse.swt.custom.CTabFolder.class);
@@ -1478,10 +1544,11 @@ public class XWTLoader implements IXWTLoader {
 		metaclass = registerMetaclass(org.eclipse.swt.custom.SashForm.class);
 		if (metaclass != null) {
 			IProperty property = metaclass.findProperty("weights");
-			IProperty inputProperty = new DelegateProperty(property, loadingType);
+			IProperty inputProperty = new DelegateProperty(property,
+					loadingType);
 			metaclass.addProperty(inputProperty);
 		}
-		
+
 		registerMetaclass(org.eclipse.swt.custom.StyledText.class);
 		registerMetaclass(org.eclipse.swt.custom.ScrolledComposite.class);
 		registerMetaclass(org.eclipse.swt.custom.TableTree.class);
@@ -1494,7 +1561,8 @@ public class XWTLoader implements IXWTLoader {
 				IConstants.XWT_NAMESPACE);
 		if (metaclass != null) {
 			IProperty property = metaclass.findProperty("Input");
-			IProperty inputProperty = new InputBeanProperty(property, loadingType);
+			IProperty inputProperty = new InputBeanProperty(property,
+					loadingType);
 			metaclass.addProperty(inputProperty);
 			metaclass.addProperty(new DataProperty(
 					IConstants.XAML_DATA_CONTEXT,
@@ -1513,13 +1581,17 @@ public class XWTLoader implements IXWTLoader {
 					PropertiesConstants.PROPERTY_ITEM_IMAGE,
 					IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY,
 					IBinding.class));
-			ILoadingType inputLoadingType = new DefaultLoadingType(IValueLoading.PostChildren, new IProperty[]{inputProperty});
+			ILoadingType inputLoadingType = new DefaultLoadingType(
+					IValueLoading.PostChildren,
+					new IProperty[] { inputProperty });
 			metaclass.addProperty(new SingleSelectionBeanProperty(
-					PropertiesConstants.PROPERTY_SINGLE_SELECTION, inputLoadingType));
+					PropertiesConstants.PROPERTY_SINGLE_SELECTION,
+					inputLoadingType));
 			metaclass.addProperty(new MultiSelectionBeanProperty(
-					PropertiesConstants.PROPERTY_MULTI_SELECTION, inputLoadingType));
+					PropertiesConstants.PROPERTY_MULTI_SELECTION,
+					inputLoadingType));
 		}
-		
+
 		type = org.eclipse.jface.viewers.AbstractListViewer.class;
 		metaclass = (IMetaclass) core.getMetaclass(type,
 				IConstants.XWT_NAMESPACE);
@@ -1549,20 +1621,22 @@ public class XWTLoader implements IXWTLoader {
 			AbstractProperty abstractProperty = (AbstractProperty) property;
 			abstractProperty.setValueAsParent(true);
 		}
-		
-		core.registerMetaclass(new ComboBoxCellEditorMetaclass(core
-				.getMetaclass(ComboBoxCellEditor.class.getSuperclass(),
+
+		core.registerMetaclass(
+				new ComboBoxCellEditorMetaclass(core.getMetaclass(
+						ComboBoxCellEditor.class.getSuperclass(),
 						IConstants.XWT_NAMESPACE), this),
 				IConstants.XWT_NAMESPACE);
 
 		type = org.eclipse.jface.viewers.TableViewerColumn.class;
-		core.registerMetaclass(new TableViewerColumnMetaClass(core
-				.getMetaclass(type.getSuperclass(), IConstants.XWT_NAMESPACE),
-				this), IConstants.XWT_NAMESPACE);
+		core.registerMetaclass(
+				new TableViewerColumnMetaClass(core.getMetaclass(
+						type.getSuperclass(), IConstants.XWT_NAMESPACE), this),
+				IConstants.XWT_NAMESPACE);
 
 		metaclass = (IMetaclass) core.getMetaclass(type,
 				IConstants.XWT_NAMESPACE);
-		// 
+		//
 		// PROPERTY_DATA_KEY
 		//
 		metaclass.addProperty(new TableViewerColumnWidthProperty());
@@ -1574,9 +1648,11 @@ public class XWTLoader implements IXWTLoader {
 		metaclass.addProperty(new TableViewerColumnDynamicProperty(
 				PropertiesConstants.PROPERTY_ITEM_TEXT,
 				IUserDataConstants.XWT_PROPERTY_ITEM_TEXT_KEY, IBinding.class));
-		metaclass.addProperty(new TableViewerColumnDynamicProperty(
-				PropertiesConstants.PROPERTY_ITEM_IMAGE,
-				IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY, IBinding.class));
+		metaclass
+				.addProperty(new TableViewerColumnDynamicProperty(
+						PropertiesConstants.PROPERTY_ITEM_IMAGE,
+						IUserDataConstants.XWT_PROPERTY_ITEM_IMAGE_KEY,
+						IBinding.class));
 
 		registerMetaclass(DefaultCellModifier.class);
 		registerMetaclass(ViewerFilter.class);
@@ -1617,7 +1693,7 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(ObservableListContentProvider.class);
 		registerMetaclass(ObservableSetContentProvider.class);
 		registerMetaclass(ObservableTreeContentProvider.class);
-		
+
 		registerFileResolveType(Image.class);
 		registerFileResolveType(URL.class);
 	}
@@ -1671,17 +1747,19 @@ public class XWTLoader implements IXWTLoader {
 	/**
 	 * Check if the value of a property is to resolve.
 	 * 
-	 * @param type type of property
+	 * @param type
+	 *            type of property
 	 * @return
 	 */
 	public boolean isFileResolveType(Class<?> type) {
-		return getCurrentCore().isFileResolveType(type);		
+		return getCurrentCore().isFileResolveType(type);
 	}
 
 	/**
 	 * Register the value of a property is to resolve.
 	 * 
-	 * @param type type of property
+	 * @param type
+	 *            type of property
 	 * @return
 	 */
 	public void registerFileResolveType(Class<?> type) {
@@ -1691,10 +1769,11 @@ public class XWTLoader implements IXWTLoader {
 	/**
 	 * Register the value of a property is to resolve.
 	 * 
-	 * @param type type of property
+	 * @param type
+	 *            type of property
 	 * @return
 	 */
 	public void unregisterFileResolveType(Class<?> type) {
-		getCurrentCore().unregisterFileResolveType(type);		
-	}	
+		getCurrentCore().unregisterFileResolveType(type);
+	}
 }
