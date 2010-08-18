@@ -33,11 +33,11 @@ public class ValidationStatusTests extends XWTTestCase {
 				Label status = (Label) XWT.findElementByName(root, "statusLabel");
 				
 				text1.setText("5");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals("Value must be 6", status.getText());
 				
 				text2.setText("6");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals("", status.getText());
 			}
 		});
@@ -54,21 +54,21 @@ public class ValidationStatusTests extends XWTTestCase {
 				Label status = (Label) XWT.findElementByName(root, "statusLabel");
 
 				text1.setText("4");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals("Value must be 5", status.getText());
 				
-				text1.setFocus();
+				setFocusIn(text1);
 				text1.setText("5");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals("Value must be 6", status.getText());
 				
 				text2.setText("4");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals("Value must be 6", status.getText());
 
-				text2.setFocus();
+				setFocusIn(text2);
 				text2.setText("6");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals("", status.getText());
 			}
 		});
@@ -85,11 +85,11 @@ public class ValidationStatusTests extends XWTTestCase {
 				Label status = (Label) XWT.findElementByName(root, "statusLabel");
 				
 				text1.setText("5");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals("Value must be 6", status.getText());
 				
 				text2.setText("6");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals("OK", status.getText());
 			}
 		});
@@ -106,21 +106,21 @@ public class ValidationStatusTests extends XWTTestCase {
 				Label status = (Label) XWT.findElementByName(root, "statusLabel");
 
 				text1.setText("4");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals("Value must be 5", status.getText());
 				
-				text1.setFocus();
+				setFocusIn(text1);
 				text1.setText("5");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals("Value must be 6", status.getText());
 				
 				text2.setText("4");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals("Value must be 6", status.getText());
 
-				text2.setFocus();
+				setFocusIn(text2);
 				text2.setText("6");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals("OK", status.getText());
 			}
 		});
@@ -140,11 +140,12 @@ public class ValidationStatusTests extends XWTTestCase {
 				assertEquals("Value must be 5", text2.getToolTipText());
 
 				text1.setText("5");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals("Value must be 6", text1.getToolTipText());
 				
+				setFocusIn(text2);
 				text2.setText("6");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals("", text2.getToolTipText());
 				assertEquals("", text1.getToolTipText());
 			}
@@ -161,24 +162,24 @@ public class ValidationStatusTests extends XWTTestCase {
 				Text text2 = (Text) XWT.findElementByName(root, "text2");
 
 				text1.setText("4");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals("Value must be 5", text1.getToolTipText());
 				assertEquals("Value must be 5", text2.getToolTipText());
 				
-				text1.setFocus();
+				setFocusIn(text1);
 				text1.setText("5");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals("Value must be 6", text1.getToolTipText());
 				assertEquals("Value must be 6", text2.getToolTipText());
 				
 				text2.setText("4");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals("Value must be 6", text1.getToolTipText());
 				assertEquals("Value must be 6", text2.getToolTipText());
 
-				text2.setFocus();
+				setFocusIn(text2);
 				text2.setText("6");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals("", text1.getToolTipText());
 				assertEquals("", text2.getToolTipText());
 			}
@@ -200,21 +201,21 @@ public class ValidationStatusTests extends XWTTestCase {
 				assertEquals(red, text2.getForeground());
 
 				text1.setText("4");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals(red, text1.getForeground());
 				
-				text1.setFocus();
+				setFocusIn(text1);
 				text1.setText("5");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertNotSame(red, text1.getForeground());
 				
 				text2.setText("4");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals(red, text2.getForeground());
 
-				text2.setFocus();
+				setFocusIn(text2);
 				text2.setText("6");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertNotSame(red, text1.getForeground());
 			}
 		});
@@ -236,24 +237,24 @@ public class ValidationStatusTests extends XWTTestCase {
 				assertEquals(red, statusLabel.getForeground());
 
 				text1.setText("4");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals(red, statusLabel.getForeground());
 				assertEquals("Value must be 5", statusLabel.getText());
 
-				text1.setFocus();
+				setFocusIn(text1);
 				text1.setText("5");
-				text2.setFocus();
+				setFocusOut(text1);
 				assertEquals(red, statusLabel.getForeground());
 				assertEquals("Value must be 6", statusLabel.getText());
 				
 				text2.setText("4");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertEquals(red, statusLabel.getForeground());
 				assertEquals("Value must be 6", statusLabel.getText());
 
-				text2.setFocus();
+				setFocusIn(text2);
 				text2.setText("6");
-				text1.setFocus();
+				setFocusOut(text2);
 				assertNotSame(red, statusLabel.getForeground());
 				assertEquals("", statusLabel.getText());
 			}

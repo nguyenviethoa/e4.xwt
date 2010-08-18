@@ -170,12 +170,15 @@ public abstract class XWTTestCase extends TestCase {
 		button.notifyListeners(SWT.Selection, upEvent);
 	}
 
-	protected void setFocus(Widget widget) {
-		setFocus(widget, true);
+	protected void setFocusOut(Widget widget) {
+		setFocus(widget, false);
 	}
 
+	protected void setFocusIn(Widget widget) {
+		setFocus(widget, true);
+	}
 	
-	protected void setFocus(Widget widget, boolean focus) {
+	private void setFocus(Widget widget, boolean focus) {
 		Display display = widget.getDisplay();
 		Event upEvent = new Event();
 		upEvent.widget = widget;

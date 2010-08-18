@@ -68,7 +68,7 @@ public class DataBindingTests extends XWTTestCase {
 				inputText.setText("new value");
 				Text targetText = (Text) target;
 				// setFocus() doesn't work on Mac OS 64 Bits cocoa
-				setFocus(inputText, false);
+				setFocusOut(inputText);
 			}
 		}, new Runnable() {
 			public void run() {
