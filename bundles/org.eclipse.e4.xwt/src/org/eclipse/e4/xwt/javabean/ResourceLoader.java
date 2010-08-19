@@ -518,7 +518,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				}
 				else {
 					if (clrFactory != null) {
-						Object clr = clrFactory.createCLR(null);
+						Object clr = clrFactory.createCLR(null, options);
 						loadData.setClr(clr);
 						UserData.setCLR(shell, clr);						
 					}
@@ -607,7 +607,7 @@ public class ResourceLoader implements IVisualElementLoader {
 						}
 						else {
 							if (clrFactory != null) {
-								loadData.setClr(clrFactory.createCLR(null));
+								loadData.setClr(clrFactory.createCLR(null, options));
 							}							
 						}
 					}
@@ -1432,7 +1432,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				throw new XWTException("ICLRFactory option is missing.");				
 			}
 			arg = value.substring(1).trim();
-			return factory.createCLR(arg);
+			return factory.createCLR(arg, options);
 		}
 		else {
 			StringTokenizer stringTokenizer = new StringTokenizer(value);		
@@ -1455,7 +1455,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					factory = (ICLRFactory) member;
 				}
 				if (factory != null) {
-					return factory.createCLR(arg);					
+					return factory.createCLR(arg, options);					
 				}
 			}
 		}
@@ -1463,7 +1463,7 @@ public class ResourceLoader implements IVisualElementLoader {
 		if (type != null && ICLRFactory.class.isAssignableFrom(type)) {
 			try {
 				ICLRFactory localFactory = (ICLRFactory) type.newInstance();
-				return localFactory.createCLR(arg);				
+				return localFactory.createCLR(arg, options);				
 			} catch (Exception e) {
 				throw new XWTException(e);
 			}

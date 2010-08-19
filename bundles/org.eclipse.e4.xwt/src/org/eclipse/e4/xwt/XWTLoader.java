@@ -657,7 +657,7 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(viewType, options);
 	}
 
-	protected Map<String, Object> prepareOptions(Map<String, Object> options) {
+	protected Map<String, Object> prepareOptions(Map<String, Object> options, URL url) {
 		Boolean disabledStyle = (Boolean) options.get(DISABLE_STYLES_PROPERTY);
 		if (!Boolean.TRUE.equals(disabledStyle)) {
 			Collection<IStyle> defaultStyles = getDefaultStyles();
@@ -694,6 +694,11 @@ public class XWTLoader implements IXWTLoader {
 				dictionary.put(Core.DEFAULT_STYLES_KEY, defaultStyles);
 			}
 		}
+		// Register URL property
+		if (options == Collections.EMPTY_MAP) {
+			options = new HashMap<String, Object>();
+		}
+		options.put(URL_PROPERTY, url);
 		return options;
 	}
 
@@ -709,7 +714,7 @@ public class XWTLoader implements IXWTLoader {
 		try {
 			setLoadingContext(new DefaultLoadingContext(
 					viewType.getClassLoader()));
-			options = prepareOptions(options);
+			options = prepareOptions(options, null);
 			return loadWithOptions(
 					viewType.getResource(viewType.getSimpleName() + ".xwt"),
 					options);
@@ -795,7 +800,7 @@ public class XWTLoader implements IXWTLoader {
 						Shell shell = control.getShell();
 						shell.addDisposeListener(new DisposeListener() {
 							public void widgetDisposed(DisposeEvent e) {
-								Shell[] shells = Display.getDefault()
+								Shell[] shells = Display.getCurrent()
 										.getShells();
 								if (shells.length == 0) {
 									ResourceManager.resources.dispose();
@@ -919,7 +924,7 @@ public class XWTLoader implements IXWTLoader {
 		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object)
 				: getLoadingContext());
-		options = prepareOptions(options);
+		options = prepareOptions(options, url);
 		Control visualObject = getCurrentCore().load(loadingContext, url,
 				options);
 		return visualObject;
@@ -946,7 +951,7 @@ public class XWTLoader implements IXWTLoader {
 		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object)
 				: getLoadingContext());
-		options = prepareOptions(options);
+		options = prepareOptions(options, base);
 		Control visualObject = getCurrentCore().load(loadingContext, stream,
 				base, options);
 		return visualObject;

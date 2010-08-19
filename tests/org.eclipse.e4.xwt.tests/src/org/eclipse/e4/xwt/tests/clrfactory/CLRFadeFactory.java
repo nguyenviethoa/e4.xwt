@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.clrfactory;
 
+import java.util.Map;
+
 import org.eclipse.e4.xwt.ICLRFactory;
 
 /**
@@ -18,7 +20,7 @@ import org.eclipse.e4.xwt.ICLRFactory;
 public class CLRFadeFactory implements ICLRFactory {
 	public static ICLRFactory INSTANCE = new CLRFadeFactory();
 	
-	public Object createCLR(String args) {
+	public Object createCLR(String args, Map<String, Object> options) {
 		return new CLRFade(this, args);
 	}
 }

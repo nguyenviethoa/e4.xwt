@@ -45,6 +45,13 @@ import org.eclipse.swt.widgets.Shell;
  */
 public interface IXWTLoader {
 	// Properties
+	
+	/**
+	 * The URL which open XWT file
+	 * 
+	 */
+	String URL_PROPERTY = "XWT.URL";
+
 	/**
 	 * style of type int is used to create SWT element
 	 */
@@ -115,7 +122,8 @@ public interface IXWTLoader {
 	 */
 	String BEFORE_PARSING_CALLBACK = IBeforeParsingCallback.class.getName();
 
-	String[] ALL_PROPERTIES = { CONTAINER_PROPERTY,
+	String[] ALL_PROPERTIES = { URL_PROPERTY, 
+			CONTAINER_PROPERTY,
 			INIT_STYLE_PROPERTY,
 			DATACONTEXT_PROPERTY,
 			BINDING_CONTEXT_PROPERTY,

@@ -81,7 +81,7 @@ public class ResourceManager {
 		return image;
 	}
 
-	public void dispose() {
+	public synchronized void dispose() {
 		// dispose colors.
 		Collection<Color> colors = key2Colors.values();
 		for (Color color : colors) {
