@@ -1,0 +1,9 @@
+<Shell xmlns="http://www.eclipse.org/xwt/presentation"
+    xmlns:x="http://www.eclipse.org/xwt"
+    x:ClassFactory="ui.MySpringCLRFactory.INSTANCE bean=myUI">
+    <Shell.layout>
+       <GridLayout/>
+    </Shell.layout>
+    <Button text="Click Me!" SelectionEvent="clickButton">
+    </Button>
+</Shell>

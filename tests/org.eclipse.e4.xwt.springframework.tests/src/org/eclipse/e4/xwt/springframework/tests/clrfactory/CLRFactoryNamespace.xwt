@@ -1,0 +1,9 @@
+<Composite xmlns="http://www.eclipse.org/xwt/presentation"
+    xmlns:x="http://www.eclipse.org/xwt"
+    xmlns:c="clr-namespace:org.eclipse.e4.xwt.springframework.tests.clrfactory"
+    x:ClassFactory="c:CLRFactory bean=myCLR">
+	<Composite.layout>
+		<GridLayout numColumns="2"/>
+	</Composite.layout>
+	<Button name="button" text="XWT CLRFactory" selectionEvent="select"/>
+</Composite>

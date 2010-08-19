@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.eclipse.e4.xwt.springframework.osgi.sample4.config.springclrfactory
+Bundle-Version: 0.9.1.qualifier
+Fragment-Host: org.eclipse.e4.xwt.springframework;bundle-version="0.9.1.qualifier"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Localization: plugin
+
