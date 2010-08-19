@@ -17,6 +17,9 @@ import org.eclipse.e4.xwt.springframework.DefaultBeanNameProvider;
 import org.eclipse.e4.xwt.springframework.SpringCLRFactory;
 import org.eclipse.e4.xwt.springframework.internal.utils.StringUtils;
 import org.eclipse.osgi.service.debug.DebugOptions;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
@@ -89,7 +92,7 @@ public class Activator implements BundleActivator {
 	private boolean lazy = false;
 
 	private boolean lazyBean;
-
+	
 	public Activator() {
 		Activator.activator = this;
 	}
@@ -121,12 +124,47 @@ public class Activator implements BundleActivator {
 			}
 
 			if (lazy) {
-				// Set default XWT ICLRFactory
-				XWT.setCLRFactory(SpringCLRFactory.INSTANCE);
-				if (DebugHelper.DEBUG) {
-					DebugHelper
-							.log("Use SpringCLRFactory.INSTANCE as default XWT x:ClassFactory. XWT file can use syntax x:ClassFactory=\"+ bean=<myBean> bundle=<myBundle>\"",
-									1);
+				String platform = SWT.getPlatform();
+				if (platform.startsWith("win")) {
+					// Set default XWT ICLRFactory
+					XWT.setCLRFactory(SpringCLRFactory.INSTANCE);
+					if (DebugHelper.DEBUG) {
+						DebugHelper
+								.log("Use SpringCLRFactory.INSTANCE as default XWT x:ClassFactory. XWT file can use syntax x:ClassFactory=\"+ bean=<myBean> bundle=<myBundle>\"",
+										1);
+					}					
+				}
+				else if (platform.endsWith("gtk")) {
+					new Thread() { // start SWT Display thread
+						public void run() {
+							XWT.setCLRFactory(SpringCLRFactory.INSTANCE);
+							long startTime = -1;
+							while (true) {
+								if (!Display.getCurrent().readAndDispatch()) {
+									Display.getCurrent().sleep();
+								}
+								
+								if (Display.getCurrent().getShells().length == 2) {
+									break;
+								}
+								Shell[] shells = Display.getCurrent().getShells();
+								if (shells.length == 0) {
+									if (startTime == -1) {
+										startTime = System.currentTimeMillis();
+									}
+									else if ((System.currentTimeMillis() - startTime) > 1000) {
+										break;
+									}
+								}
+								else {
+									startTime = -1;
+								}
+							}
+						}
+					}.start();
+				}
+				else {
+					throw new UnsupportedOperationException();
 				}
 			}
 
