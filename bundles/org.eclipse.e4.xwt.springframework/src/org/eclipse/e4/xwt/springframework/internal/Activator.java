@@ -127,17 +127,13 @@ public class Activator implements BundleActivator {
 				String platform = SWT.getPlatform();
 				if (platform.startsWith("win")) {
 					// Set default XWT ICLRFactory
-					XWT.setCLRFactory(SpringCLRFactory.INSTANCE);
-					if (DebugHelper.DEBUG) {
-						DebugHelper
-								.log("Use SpringCLRFactory.INSTANCE as default XWT x:ClassFactory. XWT file can use syntax x:ClassFactory=\"+ bean=<myBean> bundle=<myBundle>\"",
-										1);
-					}					
+					setDefaultCLRFactory();				
 				}
 				else if (platform.endsWith("gtk")) {
 					new Thread() { // start SWT Display thread
 						public void run() {
-							XWT.setCLRFactory(SpringCLRFactory.INSTANCE);
+							// Set default XWT ICLRFactory
+							setDefaultCLRFactory();
 							long startTime = -1;
 							while (true) {
 								if (!Display.getCurrent().readAndDispatch()) {
@@ -172,6 +168,18 @@ public class Activator implements BundleActivator {
 			if (DebugHelper.DEBUG) {
 				DebugHelper.log("END Activator#start");
 			}
+		}
+	}
+	
+	/**
+	 * Set default XWT ICLRFactory with SpringCLRFactory.
+	 */
+	private void setDefaultCLRFactory() {
+		XWT.setCLRFactory(SpringCLRFactory.INSTANCE);
+		if (DebugHelper.DEBUG) {
+			DebugHelper
+					.log("Use SpringCLRFactory.INSTANCE as default XWT x:ClassFactory. XWT file can use syntax x:ClassFactory=\"+ bean=<myBean> bundle=<myBundle>\"",
+							1);
 		}
 	}
 
