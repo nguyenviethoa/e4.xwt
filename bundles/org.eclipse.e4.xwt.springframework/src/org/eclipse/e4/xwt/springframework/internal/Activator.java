@@ -91,6 +91,10 @@ public class Activator implements BundleActivator {
 	 */
 	private boolean lazy = false;
 
+	public boolean isLazy() {
+		return lazy;
+	}
+
 	private boolean lazyBean;
 	
 	public Activator() {
