@@ -35,6 +35,7 @@ import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -723,6 +724,25 @@ public class XWT {
 	 */
 	static public void setCLRFactory(ICLRFactory factory) {
 		XWTLoaderManager.getActive().setCLRFactory(factory);		
+	}
+
+	static public boolean waitForStarted() {
+		return waitForStarted(-1);
+	}
+
+	static public boolean waitForStarted(long timeoutMillis) {
+		long started = System.currentTimeMillis();
+		while(!XWTLoaderManager.isStarted()) {
+			if (timeoutMillis != -1 && System.currentTimeMillis() - started > timeoutMillis) {
+				return false;
+			}
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

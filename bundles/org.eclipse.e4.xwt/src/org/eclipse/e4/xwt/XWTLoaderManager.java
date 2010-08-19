@@ -16,10 +16,10 @@ package org.eclipse.e4.xwt;
  */
 public class XWTLoaderManager {
 	/** Default XWT loader */
-	private static IXWTLoader defaultXWTLoader = new XWTLoader();
+	private static IXWTLoader defaultXWTLoader;
 
 	/** Active XWT loader */
-	private static IXWTLoader activeXWTLoader = null;
+	private static IXWTLoader activeXWTLoader;
 
 	/**
 	 * Returns the default instance of the XWT loader
@@ -27,7 +27,14 @@ public class XWTLoaderManager {
 	 * @return the default instance of the XWT loader
 	 */
 	public static IXWTLoader getDefault() {
+		if (defaultXWTLoader == null) {
+			defaultXWTLoader = new XWTLoader();
+		}
 		return defaultXWTLoader;
+	}
+
+	public static boolean isStarted() {
+		return defaultXWTLoader != null;
 	}
 
 	/**
