@@ -731,9 +731,6 @@ public class XWT {
 	}
 
 	static public boolean waitForStarted(long timeoutMillis) {
-		if (SWT.getPlatform().startsWith("win")) {
-			return true; // not need, since Windows supports multi-displays
-		}
 		long started = System.currentTimeMillis();
 		while(!XWTLoaderManager.isStarted()) {
 			if (timeoutMillis != -1 && System.currentTimeMillis() - started > timeoutMillis) {
