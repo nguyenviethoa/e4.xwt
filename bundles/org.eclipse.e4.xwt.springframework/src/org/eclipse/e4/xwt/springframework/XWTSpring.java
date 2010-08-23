@@ -21,7 +21,7 @@ public class XWTSpring {
 	public static void waitForStarted() {
 		// lazy
 		if (Activator.getDefault().isLazy()) {
-			XWT.waitForStarted();
+			XWT.waitForInitialization();
 		}
 	}
 }

@@ -12,14 +12,13 @@ package org.eclipse.e4.xwt.springframework.internal;
 
 import java.util.Properties;
 
+import org.eclipse.e4.xwt.IXWTInitializer;
+import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.springframework.DefaultBeanNameProvider;
 import org.eclipse.e4.xwt.springframework.SpringCLRFactory;
 import org.eclipse.e4.xwt.springframework.internal.utils.StringUtils;
 import org.eclipse.osgi.service.debug.DebugOptions;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
@@ -30,7 +29,7 @@ import org.springframework.context.ApplicationContext;
  * the {@link ApplicationContextTracker}.
  * 
  */
-public class Activator implements BundleActivator {
+public class Activator implements BundleActivator, IXWTInitializer {
 
 	/**
 	 * Lazy bean property name configuration
@@ -96,7 +95,9 @@ public class Activator implements BundleActivator {
 	}
 
 	private boolean lazyBean;
-	
+
+	private boolean initialized;
+
 	public Activator() {
 		Activator.activator = this;
 	}
@@ -110,10 +111,13 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		this.bundleContext = bundleContext;
+		initialized = false;
 		try {
 			if (DebugHelper.DEBUG) {
 				DebugHelper.log("BEGIN Activator#start");
 			}
+
+			XWT.addInitializer(this);
 			// Load lazy, timeout, bundle properties.
 			loadProperties();
 
@@ -128,53 +132,31 @@ public class Activator implements BundleActivator {
 			}
 
 			if (lazy) {
-				String platform = SWT.getPlatform();
-				if (platform.startsWith("win")) {
-					// Set default XWT ICLRFactory
-					setDefaultCLRFactory();				
-				}
-				else if (platform.endsWith("gtk")) {
-					new Thread() { // start SWT Display thread
-						public void run() {
-							// Set default XWT ICLRFactory
-							setDefaultCLRFactory();
-							long startTime = -1;
-							while (true) {
-								if (!Display.getCurrent().readAndDispatch()) {
-									Display.getCurrent().sleep();
-								}
-								
-								if (Display.getCurrent().getShells().length == 2) {
-									break;
-								}
-								Shell[] shells = Display.getCurrent().getShells();
-								if (shells.length == 0) {
-									if (startTime == -1) {
-										startTime = System.currentTimeMillis();
-									}
-									else if ((System.currentTimeMillis() - startTime) > 1000) {
-										break;
-									}
-								}
-								else {
-									startTime = -1;
-								}
-							}
-						}
-					}.start();
-				}
-				else {
-					throw new UnsupportedOperationException();
-				}
+				XWT.runInDisplay(new Runnable() {
+					public void run() {
+						// Set default XWT ICLRFactory
+						setDefaultCLRFactory();
+					}
+				});
 			}
 
 		} finally {
+			if (!lazy) {
+				initialized = true;
+			}
 			if (DebugHelper.DEBUG) {
 				DebugHelper.log("END Activator#start");
 			}
 		}
 	}
+
+	public void initialize(IXWTLoader loader) {		
+	}
 	
+	public boolean isInitialized() {
+		return initialized;
+	}
+
 	/**
 	 * Set default XWT ICLRFactory with SpringCLRFactory.
 	 */
@@ -185,6 +167,7 @@ public class Activator implements BundleActivator {
 					.log("Use SpringCLRFactory.INSTANCE as default XWT x:ClassFactory. XWT file can use syntax x:ClassFactory=\"+ bean=<myBean> bundle=<myBundle>\"",
 							1);
 		}
+		initialized = true;
 	}
 
 	/**

@@ -1703,6 +1703,10 @@ public class XWTLoader implements IXWTLoader {
 
 		registerFileResolveType(Image.class);
 		registerFileResolveType(URL.class);
+				
+		for (IXWTInitializer initializer : XWT.getInitializers()) {
+			initializer.initialize(this);
+		}
 	}
 
 	/*

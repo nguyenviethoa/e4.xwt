@@ -13,8 +13,10 @@ package org.eclipse.e4.xwt;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +28,7 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.databinding.BindingContext;
@@ -38,6 +41,7 @@ import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
@@ -48,6 +52,11 @@ import org.eclipse.swt.widgets.Widget;
  * @author yyang
  */
 public class XWT {
+	
+	private static List<IXWTInitializer> initializers = null;
+	private static Thread displayThread; 
+	
+	
 	/**
 	 * Get the system logger.
 	 * 
@@ -726,22 +735,41 @@ public class XWT {
 		XWTLoaderManager.getActive().setCLRFactory(factory);		
 	}
 
-	static public boolean waitForStarted() {
-		return waitForStarted(-1);
+	static public boolean waitForInitialization() {
+		if (isAllInitializersInitialized()) {
+			return false;
+		}
+		return waitForInitialization(-1);
 	}
 
-	static public boolean waitForStarted(long timeoutMillis) {
+	static public boolean waitForInitialization(long timeoutMillis) {
 		long started = System.currentTimeMillis();
-		while(!XWTLoaderManager.isStarted()) {
+		while(true) {
 			if (timeoutMillis != -1 && System.currentTimeMillis() - started > timeoutMillis) {
 				return false;
 			}
+
+			if (isAllInitializersInitialized()) {
+				return false;
+			}
+			
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				return false;
 			}
 		}
+	}
+
+	private static boolean isAllInitializersInitialized() {
+		if (initializers == null) {
+			return true;
+		}
+		for (IXWTInitializer initializer : initializers) {
+			if (!initializer.isInitialized()) {	
+				return false;
+			}
+		}		
 		return true;
 	}
 
@@ -807,5 +835,78 @@ public class XWT {
 	 */
 	public static void unregisterFileResolveType(Class<?> type) {
 		XWTLoaderManager.getActive().unregisterFileResolveType(type);		
+	}
+	
+	/**
+	 * Run with SWT Display.
+	 * 
+	 * @param runnable
+	 */
+	public static synchronized void runInDisplay(final Runnable runnable) {
+		String platform = SWT.getPlatform();
+		if (platform.startsWith("win")) {
+			runnable.run();
+		} else if (platform.endsWith("gtk")) {
+			if (displayThread == null || !displayThread.isAlive()) {
+				displayThread = new Thread() { // start SWT Display thread
+					public void run() {
+						// Set default XWT ICLRFactory
+						runnable.run();
+						long startTime = -1;
+						while (true) {
+							if (!Display.getCurrent().readAndDispatch()) {
+								Display.getCurrent().sleep();
+							}
+	
+							if (Display.getCurrent().getShells().length == 2) {
+								break;
+							}
+							Shell[] shells = Display.getCurrent().getShells();
+							if (shells.length == 0) {
+								if (startTime == -1) {
+									startTime = System.currentTimeMillis();
+								} else if ((System.currentTimeMillis() - startTime) > 1000) {
+									break;
+								}
+							} else {
+								startTime = -1;
+							}
+						}
+					}
+				};
+				displayThread.start();
+			}
+			long startTime = -1;
+			while (true) {
+				Display display = Display.findDisplay(displayThread);
+				if (display == null) {
+					if (startTime == -1) {
+						startTime = System.currentTimeMillis();
+					} else if ((System.currentTimeMillis() - startTime) > 1000) {
+						throw new XWTException("Display starting timeout");
+					}
+				}
+				else {
+					display.syncExec(runnable);
+					break;
+				}
+			}
+		} else {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	public static void addInitializer(IXWTInitializer initializer) {
+		if (initializers == null) {
+			initializers = new ArrayList<IXWTInitializer>();
+		}
+		initializers.add(initializer);		
+	}
+	
+	public static List<IXWTInitializer> getInitializers() {
+		if (initializers == null) {
+			return Collections.EMPTY_LIST;
+		}
+		return initializers;
 	}
 }
