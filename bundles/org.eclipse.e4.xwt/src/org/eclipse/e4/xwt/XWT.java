@@ -386,6 +386,7 @@ public class XWT {
 	 * 
 	 */
 	static public Control load(URL file) throws Exception {
+		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().load(file);
 	}
 
@@ -396,6 +397,7 @@ public class XWT {
 	 */
 	static public Control load(URL file, Object dataContext)
 			throws Exception {
+		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().load(file, dataContext);
 	}
 
@@ -423,6 +425,7 @@ public class XWT {
 	 * Open and show the file content in a new Shell.
 	 */
 	static public void open(final URL url) throws Exception {
+		XWT.checkInitialization();
 		XWTLoaderManager.getActive().open(url);
 	}
 
@@ -441,6 +444,7 @@ public class XWT {
 	 */
 	static public void open(URL url, Object dataContext)
 			throws Exception {
+		XWT.checkInitialization();
 		XWTLoaderManager.getActive().open(url, dataContext);
 	}
 
@@ -458,6 +462,7 @@ public class XWT {
 	 */
 	static public void open(URL url, Map<String, Object> options)
 			throws Exception {
+		XWT.checkInitialization();
 		XWTLoaderManager.getActive().open(url, options);
 	}
 
@@ -480,6 +485,7 @@ public class XWT {
 	 */
 	static public Control load(InputStream stream, URL url)
 			throws Exception {
+		XWT.checkInitialization();
 		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
 
@@ -493,6 +499,7 @@ public class XWT {
 	 */
 	static public Control loadWithOptions(InputStream stream,
 			URL url, Map<String, Object> options) throws Exception {
+		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().loadWithOptions(stream, url,
 				options);
 	}
@@ -735,14 +742,14 @@ public class XWT {
 		XWTLoaderManager.getActive().setCLRFactory(factory);		
 	}
 
-	static public boolean waitForInitialization() {
+	static public boolean checkInitialization() {
 		if (isAllInitializersInitialized()) {
 			return false;
 		}
-		return waitForInitialization(-1);
+		return checkInitialization(-1);
 	}
 
-	static public boolean waitForInitialization(long timeoutMillis) {
+	static public boolean checkInitialization(long timeoutMillis) {
 		long started = System.currentTimeMillis();
 		while(true) {
 			if (timeoutMillis != -1 && System.currentTimeMillis() - started > timeoutMillis) {

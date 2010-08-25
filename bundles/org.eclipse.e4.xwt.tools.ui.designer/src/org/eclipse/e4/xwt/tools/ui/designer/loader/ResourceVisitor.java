@@ -53,6 +53,7 @@ import org.eclipse.e4.xwt.callback.ICreatedCallback;
 import org.eclipse.e4.xwt.callback.ILoadedCallback;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
+import org.eclipse.e4.xwt.core.IDynamicValueBinding;
 import org.eclipse.e4.xwt.core.Setter;
 import org.eclipse.e4.xwt.core.Style;
 import org.eclipse.e4.xwt.core.TriggerBase;
@@ -151,6 +152,16 @@ public class ResourceVisitor {
 			this.currentWidget = currentWidget;
 		}
 
+		public Object findElement(Class<?> type) {
+			if (type.isInstance(currentWidget)) {
+				return currentWidget;
+			}
+			if (parent != null) {
+				return parent.findElement(type);
+			}
+			return null;
+		}
+
 		public LoadingData getParent() {
 			return parent;
 		}
@@ -238,14 +249,13 @@ public class ResourceVisitor {
 				Object receiver = current.getClr();
 				if (receiver instanceof IEventHandler) {
 					IEventHandler eventManager = (IEventHandler) receiver;
-					IEventInvoker eventInvoker = eventManager.getEventInvoker(handler, control
-							.getClass(), Event.class);
+					IEventInvoker eventInvoker = eventManager.getEventInvoker(
+							handler, control.getClass(), Event.class);
 					if (eventInvoker != null) {
-						eventController.setEvent(event, control,
-							control, eventInvoker);
+						eventController.setEvent(event, control, control,
+								eventInvoker);
 					}
-				}
-				else if (receiver != null) {
+				} else if (receiver != null) {
 					Class<?> clazz = receiver.getClass();
 					method = ObjectUtil.findMethod(clazz, handler,
 							control.getClass(), Event.class);
@@ -255,8 +265,8 @@ public class ResourceVisitor {
 					}
 					if (method == null) {
 						// Load again.
-						clazz = XWTClassLoaderUtil.loadClass(loader
-								.getLoadingContext(), clazz.getName());
+						clazz = XWTClassLoaderUtil.loadClass(
+								loader.getLoadingContext(), clazz.getName());
 						method = ObjectUtil.findMethod(clazz, handler,
 								Object.class, Event.class);
 						if (method == null) {
@@ -367,18 +377,18 @@ public class ResourceVisitor {
 			}
 			if (!options.containsKey(IXWTLoader.CLASS_FACTORY_PROPERTY)) {
 				try {
-					options.put(IXWTLoader.CLASS_FACTORY_PROPERTY, loader.getCLRFactory());
-				}
-				catch (UnsupportedOperationException e) {
+					options.put(IXWTLoader.CLASS_FACTORY_PROPERTY,
+							loader.getCLRFactory());
+				} catch (UnsupportedOperationException e) {
 					if (options.isEmpty()) {
-						options = new HashMap<String, Object>(); 
-						options.put(IXWTLoader.CLASS_FACTORY_PROPERTY, loader.getCLRFactory());	
-					}
-					else {
+						options = new HashMap<String, Object>();
+						options.put(IXWTLoader.CLASS_FACTORY_PROPERTY,
+								loader.getCLRFactory());
+					} else {
 						throw e;
 					}
 				}
-			} 
+			}
 
 			Object control = doCreate(parent, element, null, options);
 			// get databinding messages and print into console view
@@ -387,8 +397,8 @@ public class ResourceVisitor {
 						.getDataBindMessage();// getDataBindMessage();
 				org.eclipse.e4.xwt.ILogger log = loader.getLogger();
 				log.addMessage(dataBindingMessage, Tracking.DATABINDING);
-				log.printInfo(dataBindingMessage, Tracking.DATABINDING, loader
-						.getTrackings());
+				log.printInfo(dataBindingMessage, Tracking.DATABINDING,
+						loader.getTrackings());
 			}
 			if (control instanceof Composite) {
 				((Composite) control).layout();
@@ -435,7 +445,8 @@ public class ResourceVisitor {
 				return null;
 			}
 			if (IConstants.XAML_X_TYPE.equalsIgnoreCase(name)
-					&& constraintType != null && constraintType instanceof Class<?>) {
+					&& constraintType != null
+					&& constraintType instanceof Class<?>) {
 				if (!childNodes.isEmpty()) {
 					XamlElement type = childNodes.get(0);
 					IMetaclass metaclass = loader.getMetaclass(type.getName(),
@@ -459,8 +470,13 @@ public class ResourceVisitor {
 				&& (!constraintType.isAssignableFrom(metaclass.getType()))) {
 			if (!constraintType.isArray()
 					|| !constraintType.getComponentType().isAssignableFrom(
-							metaclass.getType()))
-				return null;
+							metaclass.getType())) {
+				IConverter converter = XWT.findConvertor(metaclass.getType(),
+						constraintType);
+				if (converter == null) {
+					return null;
+				}
+			}
 		}
 		Object targetObject = null;
 		Integer styleValue = getStyleValue(element, styles);
@@ -470,7 +486,7 @@ public class ResourceVisitor {
 				dataBindingTrack.addWidgetElement(element);
 			}
 			Shell shell = null;
-			if (styleValue == null || styleValue == -1) {
+			if (parent == null || styleValue == null || styleValue == -1) {
 				styleValue = SWT.SHELL_TRIM;
 			}
 			Display display = Display.getDefault();
@@ -500,22 +516,22 @@ public class ResourceVisitor {
 				String className = classAttribute.getValue();
 				className = expandNamespace(classAttribute, className);
 				loadShellCLR(className, shell);
-			}
-			else {
+			} else {
 				XamlAttribute classFactoryAttribute = element.getAttribute(
-						IConstants.XWT_X_NAMESPACE, IConstants.XAML_X_CLASS_FACTORY);
-				ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
+						IConstants.XWT_X_NAMESPACE,
+						IConstants.XAML_X_CLASS_FACTORY);
+				ICLRFactory clrFactory = (ICLRFactory) options
+						.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 				if (classFactoryAttribute != null) {
 					String content = classFactoryAttribute.getValue();
 					Object clr = loadFactoryCLR(content, clrFactory);
 					loadData.setClr(clr);
 					UserData.setCLR(shell, clr);
-				}
-				else {
+				} else {
 					if (clrFactory != null) {
 						Object clr = clrFactory.createCLR(null, options);
 						loadData.setClr(clr);
-						UserData.setCLR(shell, clr);						
+						UserData.setCLR(shell, clr);
 					}
 				}
 			}
@@ -553,7 +569,10 @@ public class ResourceVisitor {
 								childBindingContext);
 					}
 					nestedOptions.put(RESOURCE_LOADER_PROPERTY, this);
-					nestedOptions.put(IXWTLoader.CLASS_FACTORY_PROPERTY, null); // disable the global setting
+					nestedOptions.put(IXWTLoader.CLASS_FACTORY_PROPERTY, null); // disable
+																				// the
+																				// global
+																				// setting
 					targetObject = loader.loadWithOptions(file, nestedOptions);
 					if (targetObject == null) {
 						return null;
@@ -585,8 +604,8 @@ public class ResourceVisitor {
 					if (classAttribute != null) {
 						String className = classAttribute.getValue();
 						className = expandNamespace(classAttribute, className);
-						targetObject = loadCLR(className, parameters, metaclass
-								.getType(), options);
+						targetObject = loadCLR(className, parameters,
+								metaclass.getType(), options);
 						hasClass = true;
 					} else {
 						Object clr = options.get(XWTLoader.CLASS_PROPERTY);
@@ -596,22 +615,26 @@ public class ResourceVisitor {
 						}
 					}
 					if (!hasClass) {
-						XamlAttribute classFactoryAttribute = element.getAttribute(IConstants.XWT_X_NAMESPACE,
-								IConstants.XAML_X_CLASS_FACTORY);
-						ICLRFactory clrFactory = (ICLRFactory) options.get(XWTLoader.CLASS_FACTORY_PROPERTY);
+						XamlAttribute classFactoryAttribute = element
+								.getAttribute(IConstants.XWT_X_NAMESPACE,
+										IConstants.XAML_X_CLASS_FACTORY);
+						ICLRFactory clrFactory = (ICLRFactory) options
+								.get(XWTLoader.CLASS_FACTORY_PROPERTY);
 						if (classFactoryAttribute != null) {
-							Object clr = loadFactoryCLR(classFactoryAttribute.getValue(), clrFactory);
+							Object clr = loadFactoryCLR(
+									classFactoryAttribute.getValue(),
+									clrFactory);
 							if (clr != null) {
 								loadData.setClr(clr);
 							}
-						}
-						else {
+						} else {
 							if (clrFactory != null) {
-								loadData.setClr(clrFactory.createCLR(null, options));
+								loadData.setClr(clrFactory.createCLR(null,
+										options));
 							}
 						}
 					}
-					
+
 					if (targetObject == null) {
 						targetObject = metaclass.newInstance(parameters);
 						invokeCreatededAction(element, targetObject);
@@ -638,8 +661,8 @@ public class ResourceVisitor {
 		}
 		if (scopedObject == null && widget != null) {
 			scopedObject = widget;
-			nameScoped = new ScopeKeeper((parent == null ? null : UserData
-					.findScopeKeeper((Widget) parent)), widget);
+			nameScoped = new ScopeKeeper((parent == null ? null
+					: UserData.findScopeKeeper((Widget) parent)), widget);
 			UserData.bindNameContext((Widget) widget, nameScoped);
 		}
 		// set first data context and resource dictionary
@@ -713,8 +736,8 @@ public class ResourceVisitor {
 				if (IConstants.XWT_X_NAMESPACE.equals(doc.getNamespace())) {
 					String content = doc.getValue();
 					if (content != null) {
-						((IDataProvider) targetObject).setProperty(doc
-								.getName(), content);
+						((IDataProvider) targetObject).setProperty(
+								doc.getName(), content);
 					}
 				}
 			}
@@ -725,21 +748,23 @@ public class ResourceVisitor {
 			}
 		}
 
-		iniDelayedAttribute(metaclass, targetObject, element, null, delayedAttributes);
+		iniDelayedAttribute(metaclass, targetObject, element, null,
+				delayedAttributes);
 		postCreation(targetObject);
 		popStack();
 		return targetObject;
 	}
 
-	protected void iniDelayedAttribute(IMetaclass metaclass, Object targetObject,
-			XamlNode element, String namespace,
+	protected void iniDelayedAttribute(IMetaclass metaclass,
+			Object targetObject, XamlNode element, String namespace,
 			Map<String, IProperty> delayedAttributes) throws Exception {
 		Set<String> keys = delayedAttributes.keySet();
 		while (!keys.isEmpty()) {
 			for (String delayed : keys.toArray(new String[keys.size()])) {
 				IProperty property = delayedAttributes.get(delayed);
 				boolean hasDependency = false;
-				IProperty[] dependencies = property.getLoadingType().getDependencies();
+				IProperty[] dependencies = property.getLoadingType()
+						.getDependencies();
 				if (dependencies.length > 0) {
 					for (IProperty dependency : dependencies) {
 						if (delayedAttributes.containsValue(dependency)) {
@@ -1097,7 +1122,8 @@ public class ResourceVisitor {
 	}
 
 	protected void init(IMetaclass metaclass, Object targetObject,
-			XamlNode element, Map<String, IProperty> delayedAttributes) throws Exception {
+			XamlNode element, Map<String, IProperty> delayedAttributes)
+			throws Exception {
 		// editors for TableItem,
 		if (targetObject instanceof TableItem) {
 			installTableEditors((TableItem) targetObject);
@@ -1150,7 +1176,7 @@ public class ResourceVisitor {
 		for (XamlAttribute attr : element.getAttributes()) {
 			String namespace = attr.getNamespace();
 			String attrName = attr.getName();
-			
+
 			IProperty property = metaclass.findProperty(attrName);
 
 			//
@@ -1175,8 +1201,9 @@ public class ResourceVisitor {
 						|| IConstants.XAML_STYLE.equalsIgnoreCase(attrName)) {
 					continue; // done before
 				} else if (IConstants.XAML_X_NAME.equalsIgnoreCase(attrName)) {
-					nameScoped.addNamedObject(element.getAttribute(attrName,
-							namespace).getValue(), targetObject);
+					nameScoped.addNamedObject(
+							element.getAttribute(attrName, namespace)
+									.getValue(), targetObject);
 					done.add(attrName);
 				} else if (IConstants.XAML_DATA_CONTEXT
 						.equalsIgnoreCase(attrName)) {
@@ -1234,8 +1261,8 @@ public class ResourceVisitor {
 				Object child = createInstance(swtObject, childModel);
 				list.add(child);
 			}
-			Object[] array = (Object[]) Array.newInstance(arrayType, list
-					.size());
+			Object[] array = (Object[]) Array.newInstance(arrayType,
+					list.size());
 			list.toArray(array);
 
 			for (int i = 0; i < array.length; i++) {
@@ -1317,8 +1344,8 @@ public class ResourceVisitor {
 			return null;
 		}
 		try {
-			Class<?> type = NamespaceHelper.loadCLRClass(loader
-					.getLoadingContext(), name, namespace);
+			Class<?> type = NamespaceHelper.loadCLRClass(
+					loader.getLoadingContext(), name, namespace);
 			IMetaclass metaclass = loader.getMetaclass(name, namespace);
 			if (type == null) {
 				if (metaclass != null)
@@ -1361,7 +1388,8 @@ public class ResourceVisitor {
 
 			Map<String, IProperty> delayedAttributes = new HashMap<String, IProperty>();
 			init(metaclass, instance, element, delayedAttributes);
-			iniDelayedAttribute(metaclass, instance, element, null, delayedAttributes);
+			iniDelayedAttribute(metaclass, instance, element, null,
+					delayedAttributes);
 
 			for (XamlElement doc : element.getChildNodes()) {
 				doCreate(instance, doc, null, Collections.EMPTY_MAP);
@@ -1404,13 +1432,12 @@ public class ResourceVisitor {
 		String arg;
 		if (value.startsWith("+")) {
 			if (factory == null) {
-				throw new XWTException("ICLRFactory option is missing.");				
+				throw new XWTException("ICLRFactory option is missing.");
 			}
 			arg = value.substring(1);
 			return factory.createCLR(arg, options);
-		}
-		else {
-			StringTokenizer stringTokenizer = new StringTokenizer(value);		
+		} else {
+			StringTokenizer stringTokenizer = new StringTokenizer(value);
 			if (!stringTokenizer.hasMoreTokens()) {
 				throw new XWTException("x:ClassFactory is empty");
 			}
@@ -1421,20 +1448,21 @@ public class ResourceVisitor {
 		if (index != -1) {
 			String memberName = token.substring(index + 1);
 			String typeName = token.substring(0, index);
-			Class<?> type = ClassLoaderUtil.loadClass(loader.getLoadingContext(),
-					typeName);
+			Class<?> type = ClassLoaderUtil.loadClass(
+					loader.getLoadingContext(), typeName);
 			if (type != null) {
-				Object member = ClassLoaderUtil.loadMember(loader.getLoadingContext(),
-						type, memberName, false);
+				Object member = ClassLoaderUtil.loadMember(
+						loader.getLoadingContext(), type, memberName, false);
 				if (member instanceof ICLRFactory) {
 					factory = (ICLRFactory) member;
 				}
 				if (factory != null) {
-					return factory.createCLR(arg, options);					
+					return factory.createCLR(arg, options);
 				}
 			}
 		}
-		Class<?> type = ClassLoaderUtil.loadClass(loader.getLoadingContext(), token);
+		Class<?> type = ClassLoaderUtil.loadClass(loader.getLoadingContext(),
+				token);
 		if (type != null && ICLRFactory.class.isAssignableFrom(type)) {
 			try {
 				ICLRFactory localFactory = (ICLRFactory) type.newInstance();
@@ -1445,7 +1473,7 @@ public class ResourceVisitor {
 		}
 		throw new XWTException(value + " ClassFactory not found.");
 	}
-	
+
 	protected Object loadCLR(String className, Object[] parameters,
 			Class<?> currentTagType, Map<String, Object> options) {
 		Class<?> type = XWTClassLoaderUtil.loadClass(
@@ -1600,10 +1628,10 @@ public class ResourceVisitor {
 					&& loader.isFileResolveType(property.getType())) {
 				contentValue = getImagePath(contentValue);
 			}
-//			if (contentValue != null
-//					&& (URL.class.isAssignableFrom(property.getType()))) {
-//				contentValue = getSourceURL(contentValue);
-//			}
+			// if (contentValue != null
+			// && (URL.class.isAssignableFrom(property.getType()))) {
+			// contentValue = getSourceURL(contentValue);
+			// }
 			Object value = null;
 			XamlNode[] children = attribute.getChildNodes().toArray(
 					new XamlNode[0]);
@@ -1648,8 +1676,8 @@ public class ResourceVisitor {
 								.equalsIgnoreCase(name)
 								&& IConstants.XWT_NAMESPACE.equals(ns)) {
 							String key = child.getValue();
-							value = new StaticResourceBinding(loadData
-									.getCurrentWidget(), key);
+							value = new StaticResourceBinding(
+									loadData.getCurrentWidget(), key);
 						} else if ((IConstants.XWT_X_NAMESPACE.equals(ns) && IConstants.XAML_X_ARRAY
 								.equalsIgnoreCase(name))) {
 							value = getArrayProperty(property.getType(),
@@ -1707,16 +1735,16 @@ public class ResourceVisitor {
 					if (!propertyType.isAssignableFrom(value.getClass())
 							|| value instanceof IBinding) {
 						Object orginalValue = value;
-						IConverter converter = loader.findConvertor(value
-								.getClass(), propertyType);
+						IConverter converter = loader.findConvertor(
+								value.getClass(), propertyType);
 						if (converter != null) {
 							value = converter.convert(value);
 							if (value != null
 									&& orginalValue instanceof IBinding
 									&& !propertyType.isAssignableFrom(value
 											.getClass())) {
-								converter = loader.findConvertor(value
-										.getClass(), propertyType);
+								converter = loader.findConvertor(
+										value.getClass(), propertyType);
 								if (converter != null) {
 									value = converter.convert(value);
 								} else {
@@ -1740,6 +1768,11 @@ public class ResourceVisitor {
 					if (isAttached) {
 						UserData.setLocalData(target, property, value);
 					} else {
+						if (value instanceof IDynamicValueBinding) {
+							IDynamicValueBinding dynamicValueBinding = (IDynamicValueBinding) value;
+							dynamicValueBinding.setControl(loadData
+									.findElement(Control.class));
+						}
 						property.setValue(target, value);
 					}
 				} else {
@@ -1774,7 +1807,8 @@ public class ResourceVisitor {
 				if (value != null) {
 					Map<String, IProperty> delayedAttributes = new HashMap<String, IProperty>();
 					init(propertyMetaclass, value, attribute, delayedAttributes);
-					iniDelayedAttribute(metaclass, target, element, null, delayedAttributes);
+					iniDelayedAttribute(metaclass, target, element, null,
+							delayedAttributes);
 				}
 			}
 		} catch (Exception e) {
@@ -1844,8 +1878,8 @@ public class ResourceVisitor {
 		if (children.length == 1) {
 			XamlElement element = (XamlElement) children[0];
 			if (element != null) {
-				return XWTClassLoaderUtil.loadStaticMember(loader
-						.getLoadingContext(), element);
+				return XWTClassLoaderUtil.loadStaticMember(
+						loader.getLoadingContext(), element);
 			}
 		}
 		return null;

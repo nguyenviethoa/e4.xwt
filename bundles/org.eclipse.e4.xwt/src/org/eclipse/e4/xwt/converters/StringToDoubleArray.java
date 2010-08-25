@@ -33,7 +33,7 @@ public class StringToDoubleArray implements IConverter {
 	public Object convert(Object fromObject) {
 		String source = (String) fromObject;
 		List<Double> result = new ArrayList<Double>();
-		StringTokenizer stk = new StringTokenizer(source, ",");
+		StringTokenizer stk = new StringTokenizer(source, ", \t\n\r\f");
 		while (stk.hasMoreTokens()) {
 			String nextToken = stk.nextToken();
 			try {
