@@ -486,7 +486,7 @@ public class ResourceVisitor {
 				dataBindingTrack.addWidgetElement(element);
 			}
 			Shell shell = null;
-			if (parent == null || styleValue == null || styleValue == -1) {
+			if (parent == null && (styleValue == null || styleValue == -1)) {
 				styleValue = SWT.SHELL_TRIM;
 			}
 			Display display = Display.getDefault();
@@ -1655,8 +1655,13 @@ public class ResourceVisitor {
 								// use the existing property value as parent,
 								// not need to add the constraint
 								if (!property.isValueAsParent()) {
-									type = null;
-									usingExistingValue = true;
+									if (isChildTypeCompatible(attribute, type)) {
+										directTarget = null;
+									}
+									else {
+										type = null;
+										usingExistingValue = true;									
+									}
 								}
 							}
 						} catch (Exception e) {
@@ -1820,6 +1825,21 @@ public class ResourceVisitor {
 		}
 	}
 
+	protected boolean isChildTypeCompatible(XamlAttribute attribute, Class<?> type) {
+		EList<XamlElement> children = attribute.getChildNodes();
+		if (children.size() != 1) {
+			return false;
+		}
+		XamlElement child = children.get(0);
+		String name = child.getName();
+		String namespace = child.getNamespace();
+		IMetaclass metaclass = loader.getMetaclass(name, namespace);
+		if (metaclass == null) {
+			return false;
+		}
+		return type.isAssignableFrom(metaclass.getType());
+	}
+	
 	/**
 	 * @param contentValue
 	 * @return

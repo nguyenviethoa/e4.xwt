@@ -488,7 +488,7 @@ public class ResourceLoader implements IVisualElementLoader {
 				dataBindingTrack.addWidgetElement(element);
 			}
 			Shell shell = null;
-			if (parent == null || styleValue == null || styleValue == -1) {
+			if (parent == null && (styleValue == null || styleValue == -1)) {
 				styleValue = SWT.SHELL_TRIM;
 			}
 			Display display = Display.getCurrent();
@@ -1675,8 +1675,13 @@ public class ResourceLoader implements IVisualElementLoader {
 							// use the existing property value as parent,
 							// not need to add the constraint
 							if (!property.isValueAsParent()) {
-								type = null;
-								usingExistingValue = true;
+								if (isChildTypeCompatible(attribute, type)) {
+									directTarget = null;
+								}
+								else {
+									type = null;
+									usingExistingValue = true;									
+								}
 							}
 						}
 					} catch (Exception e) {
@@ -1793,7 +1798,7 @@ public class ResourceLoader implements IVisualElementLoader {
 					if (value instanceof IDynamicValueBinding) {
 						IDynamicValueBinding dynamicValueBinding = (IDynamicValueBinding) value;
 						dynamicValueBinding.setControl(loadData
-								.findElement(Control.class));
+								.findElement(Widget.class));
 					}
 					property.setValue(target, value);
 				}
@@ -1833,6 +1838,26 @@ public class ResourceLoader implements IVisualElementLoader {
 						delayedAttributes);
 			}
 		}
+	}
+	
+	protected boolean isChildTypeCompatible(Attribute attribute, Class<?> type) {
+		DocumentObject[] children = attribute.getChildren();
+		if (children.length != 1) {
+			return false;
+		}
+		DocumentObject child = children[0];
+		if (!(child instanceof Element)) {
+			return false;			
+		}
+		Element childElement = (Element) child;
+		
+		String name = childElement.getName();
+		String namespace = childElement.getNamespace();
+		IMetaclass metaclass = loader.getMetaclass(name, namespace);
+		if (metaclass == null) {
+			return false;
+		}
+		return type.isAssignableFrom(metaclass.getType());
 	}
 
 	/**

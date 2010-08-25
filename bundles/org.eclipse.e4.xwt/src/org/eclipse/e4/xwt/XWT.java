@@ -35,6 +35,7 @@ import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.input.ICommand;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
+import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -915,5 +916,13 @@ public class XWT {
 			return Collections.EMPTY_LIST;
 		}
 		return initializers;
+	}
+	
+	public static Object findParent(Object element, Class<?> type) {
+		Widget widget = UserData.getWidget(element);
+		if (widget == null) {
+			return null;
+		}
+		return UserData.findParent(widget, type);
 	}
 }

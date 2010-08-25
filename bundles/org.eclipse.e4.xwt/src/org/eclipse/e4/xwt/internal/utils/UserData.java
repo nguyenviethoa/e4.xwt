@@ -189,12 +189,12 @@ public class UserData {
 		return (Composite) control;
 	}
 
-	public static Object findParent(Widget widget, Class<?> type) {
-		Control control = getParent(widget);
-		while (control != null && !(type.isInstance(control))) {
-			control = getParent(control);
+	public static Object findParent(Widget element, Class<?> type) {
+		Widget widget = getTreeParent(element);
+		while (widget != null && !(type.isInstance(widget))) {
+			widget = getTreeParent(widget);
 		}
-		return control;
+		return widget;
 	}
 
 	public static ScopeKeeper findScopeKeeper(Object element) {
