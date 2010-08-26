@@ -486,7 +486,7 @@ public class ResourceVisitor {
 				dataBindingTrack.addWidgetElement(element);
 			}
 			Shell shell = null;
-			if (parent == null && (styleValue == null || styleValue == -1)) {
+			if ((parent == null && metaclass.getType() != Shell.class) || styleValue == null || styleValue == -1) {
 				styleValue = SWT.SHELL_TRIM;
 			}
 			Display display = Display.getDefault();
