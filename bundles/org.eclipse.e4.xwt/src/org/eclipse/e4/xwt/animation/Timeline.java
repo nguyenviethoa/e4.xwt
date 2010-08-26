@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.pushingpixels.trident.Timeline.TimelineState;
+
 public abstract class Timeline {
 	static public Timeline[] EMPTY_ARRAY = new Timeline[0];
 
@@ -107,6 +109,9 @@ public abstract class Timeline {
 	}
 
 	public void start(Object target) {
+		if (timeline != null && (timeline.getState() == TimelineState.PLAYING_FORWARD || timeline.getState() == TimelineState.PLAYING_REVERSE)) {
+			return;
+		}
 		timeline = new org.pushingpixels.trident.Timeline(findTarget(target));
 		if (duration != null && duration.hasTimeSpan()) {
 			timeline.setDuration(duration.getTimeSpan().getMilliseconds());
