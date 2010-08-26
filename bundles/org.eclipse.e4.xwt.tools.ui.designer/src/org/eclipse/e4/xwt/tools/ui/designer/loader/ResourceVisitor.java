@@ -1776,7 +1776,7 @@ public class ResourceVisitor {
 						if (value instanceof IDynamicValueBinding) {
 							IDynamicValueBinding dynamicValueBinding = (IDynamicValueBinding) value;
 							dynamicValueBinding.setControl(loadData
-									.findElement(Control.class));
+									.findElement(Widget.class));
 						}
 						property.setValue(target, value);
 					}
