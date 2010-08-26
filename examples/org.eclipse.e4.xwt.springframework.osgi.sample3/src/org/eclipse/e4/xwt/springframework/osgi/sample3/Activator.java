@@ -45,7 +45,6 @@ public class Activator implements BundleActivator {
 		// process)
 		new Thread() {
 			public void run() {
-				XWT.waitForInitialization();
 				URL url = EventHandler.class.getResource("UI"
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 				try {
