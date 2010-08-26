@@ -12,10 +12,10 @@ package org.eclipse.e4.xwt.animation;
 
 import org.pushingpixels.trident.Timeline;
 
-public class DoubleAnimation extends DoubleAnimationBase {
-	protected double by;
-	protected double from;
-	protected double to;
+public class FloatAnimation extends FloatAnimationBase {
+	protected float by;
+	protected float from;
+	protected float to;
 	
 	/**
 	 * The <code>additive</code> property specifies whether you want the output value of 
@@ -43,54 +43,54 @@ public class DoubleAnimation extends DoubleAnimationBase {
 	 */
 	protected boolean cumulative = false;
 
-	public DoubleAnimation() {
+	public FloatAnimation() {
 	}
 	
-	public DoubleAnimation(double toValue, Duration duration) {
+	public FloatAnimation(float toValue, Duration duration) {
 		setTo(toValue);
 		setDuration(duration);
 	}
 	
-	public DoubleAnimation(double fromValue, double toValue, Duration duration) {
+	public FloatAnimation(float fromValue,float toValue, Duration duration) {
 		setTo(toValue);
 		setFrom(fromValue);
 		setDuration(duration);
 	}
 	
-	public DoubleAnimation(double toValue, Duration duration, FillBehavior fillBehavior) {
+	public FloatAnimation(float toValue, Duration duration, FillBehavior fillBehavior) {
 		setTo(toValue);
 		setDuration(duration);
 		setFillBehavior(fillBehavior);
 	}
 	
-	public DoubleAnimation(double fromValue, double toValue, Duration duration, FillBehavior fillBehavior) {
+	public FloatAnimation(float fromValue, float toValue, Duration duration, FillBehavior fillBehavior) {
 		setTo(toValue);
 		setFrom(fromValue);
 		setDuration(duration);
 		setFillBehavior(fillBehavior);
 	}
 
-	public double getBy() {
+	public float getBy() {
 		return by;
 	}
 
-	public void setBy(double by) {
+	public void setBy(float by) {
 		this.by = by;
 	}
 
-	public double getFrom() {
+	public float getFrom() {
 		return from;
 	}
 
-	public void setFrom(double from) {
+	public void setFrom(float from) {
 		this.from = from;
 	}
 
-	public double getTo() {
+	public float getTo() {
 		return to;
 	}
 
-	public void setTo(double to) {
+	public void setTo(float to) {
 		this.to = to;
 	}
 

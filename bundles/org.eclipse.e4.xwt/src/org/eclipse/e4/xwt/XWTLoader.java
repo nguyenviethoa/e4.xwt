@@ -34,6 +34,7 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.e4.xwt.animation.BeginStoryboard;
 import org.eclipse.e4.xwt.animation.ColorAnimation;
 import org.eclipse.e4.xwt.animation.DoubleAnimation;
+import org.eclipse.e4.xwt.animation.FloatAnimation;
 import org.eclipse.e4.xwt.animation.IntAnimation;
 import org.eclipse.e4.xwt.animation.PauseStoryboard;
 import org.eclipse.e4.xwt.animation.PointAnimation;
@@ -1686,6 +1687,7 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(PauseStoryboard.class);
 		registerMetaclass(ResumeStoryboard.class);
 		registerMetaclass(IntAnimation.class);
+		registerMetaclass(FloatAnimation.class);
 		registerMetaclass(DoubleAnimation.class);
 		registerMetaclass(ColorAnimation.class);
 		registerMetaclass(PointAnimation.class);
