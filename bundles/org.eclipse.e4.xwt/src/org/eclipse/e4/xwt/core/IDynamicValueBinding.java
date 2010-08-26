@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
-public interface IDynamicValueBinding extends IDynamicBinding {
+import org.eclipse.e4.xwt.metadata.IProperty;
 
+public interface IDynamicValueBinding extends IDynamicBinding {
+	public IProperty getProperty();
+	public void setProperty(IProperty property);
+	
+	public Object getObject();
+	public void setObject(Object object);
 }

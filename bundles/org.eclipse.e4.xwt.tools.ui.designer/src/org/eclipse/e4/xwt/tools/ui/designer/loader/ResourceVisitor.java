@@ -1777,6 +1777,8 @@ public class ResourceVisitor {
 							IDynamicValueBinding dynamicValueBinding = (IDynamicValueBinding) value;
 							dynamicValueBinding.setControl(loadData
 									.findElement(Widget.class));
+							dynamicValueBinding.setProperty(property);
+							dynamicValueBinding.setObject(target);
 						}
 						property.setValue(target, value);
 					}

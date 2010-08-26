@@ -11,17 +11,37 @@
 package org.eclipse.e4.xwt.internal.core;
 
 import org.eclipse.e4.xwt.core.IDynamicValueBinding;
+import org.eclipse.e4.xwt.metadata.IProperty;
 
 public class DynamicValueBinding<T> extends DynamicBinding implements
 		IDynamicValueBinding {
 	private T sourceValue;
 
-	public T getSourceValue() {
-		return sourceValue;
-	}
+	private IProperty property;
+	private Object object;
 
 	public DynamicValueBinding(T sourceValue) {
 		this.sourceValue = sourceValue;
+	}
+
+	public IProperty getProperty() {
+		return property;
+	}
+
+	public void setProperty(IProperty property) {
+		this.property = property;
+	}
+
+	public Object getObject() {
+		return object;
+	}
+
+	public void setObject(Object object) {
+		this.object = object;
+	}
+
+	public T getSourceValue() {
+		return sourceValue;
 	}
 
 	public Object getValue(Class<?> type) {
@@ -38,4 +58,6 @@ public class DynamicValueBinding<T> extends DynamicBinding implements
 	public boolean isSourceControl() {
 		return false;
 	}
+	
+	
 }
