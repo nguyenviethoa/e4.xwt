@@ -28,7 +28,6 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.databinding.BindingContext;
@@ -56,7 +55,7 @@ public class XWT {
 	
 	private static List<IXWTInitializer> initializers = null;
 	private static Thread displayThread; 
-	
+	private static final Object displayLock = new Object();
 	
 	/**
 	 * Get the system logger.
@@ -846,57 +845,59 @@ public class XWT {
 	}
 	
 	/**
-	 * Run with SWT Display.
+	 * Run in UI context.
 	 * 
 	 * @param runnable
 	 */
-	public static synchronized void runInDisplay(final Runnable runnable) {
+	public static void run(final Runnable runnable) {
 		String platform = SWT.getPlatform();
 		if (platform.startsWith("win")) {
 			runnable.run();
 		} else if (platform.endsWith("gtk")) {
-			if (displayThread == null || !displayThread.isAlive()) {
-				displayThread = new Thread() { // start SWT Display thread
-					public void run() {
-						// Set default XWT ICLRFactory
-						runnable.run();
-						long startTime = -1;
-						while (true) {
-							if (!Display.getCurrent().readAndDispatch()) {
-								Display.getCurrent().sleep();
-							}
-	
-							if (Display.getCurrent().getShells().length == 2) {
-								break;
-							}
-							Shell[] shells = Display.getCurrent().getShells();
-							if (shells.length == 0) {
-								if (startTime == -1) {
-									startTime = System.currentTimeMillis();
-								} else if ((System.currentTimeMillis() - startTime) > 1000) {
+			synchronized (displayLock) {
+				if (displayThread == null || !displayThread.isAlive()) {
+					displayThread = new Thread() { // start SWT Display thread
+						public void run() {
+							// Set default XWT ICLRFactory
+							runnable.run();
+							long startTime = -1;
+							while (true) {
+								if (!Display.getCurrent().readAndDispatch()) {
+									Display.getCurrent().sleep();
+								}
+		
+								if (Display.getCurrent().getShells().length == 2) {
 									break;
 								}
-							} else {
-								startTime = -1;
+								Shell[] shells = Display.getCurrent().getShells();
+								if (shells.length == 0) {
+									if (startTime == -1) {
+										startTime = System.currentTimeMillis();
+									} else if ((System.currentTimeMillis() - startTime) > 1000) {
+										break;
+									}
+								} else {
+									startTime = -1;
+								}
 							}
 						}
-					}
-				};
-				displayThread.start();
-			}
-			long startTime = -1;
-			while (true) {
-				Display display = Display.findDisplay(displayThread);
-				if (display == null) {
-					if (startTime == -1) {
-						startTime = System.currentTimeMillis();
-					} else if ((System.currentTimeMillis() - startTime) > 1000) {
-						throw new XWTException("Display starting timeout");
-					}
+					};
+					displayThread.start();
 				}
-				else {
-					display.syncExec(runnable);
-					break;
+				long startTime = -1;
+				while (true) {
+					Display display = Display.findDisplay(displayThread);
+					if (display == null) {
+						if (startTime == -1) {
+							startTime = System.currentTimeMillis();
+						} else if ((System.currentTimeMillis() - startTime) > 1000) {
+							throw new XWTException("Display starting timeout");
+						}
+					}
+					else {
+						display.syncExec(runnable);
+						break;
+					}
 				}
 			}
 		} else {

@@ -132,7 +132,7 @@ public class Activator implements BundleActivator, IXWTInitializer {
 			}
 
 			if (lazy) {
-				XWT.runInDisplay(new Runnable() {
+				XWT.run(new Runnable() {
 					public void run() {
 						// Set default XWT ICLRFactory
 						setDefaultCLRFactory();
