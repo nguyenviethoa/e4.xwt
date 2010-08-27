@@ -14,7 +14,7 @@ public class Activator implements BundleActivator, IXWTInitializer {
 	public void start(BundleContext context) throws Exception {
 		initialized = false;
 		XWT.addInitializer(this);
-		XWT.run(new Runnable() {
+		XWT.runOnUIThread(new Runnable() {
 			public void run() {
 				XWTLoaderManager.getDefault();
 			}

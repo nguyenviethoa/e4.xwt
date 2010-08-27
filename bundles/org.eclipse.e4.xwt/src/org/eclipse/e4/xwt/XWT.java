@@ -849,7 +849,7 @@ public class XWT {
 	 * 
 	 * @param runnable
 	 */
-	public static void run(final Runnable runnable) {
+	public static void runOnUIThread(final Runnable runnable) {
 		String platform = SWT.getPlatform();
 		if (platform.startsWith("win")) {
 			runnable.run();

@@ -109,9 +109,6 @@ public abstract class Timeline {
 	}
 
 	public void start(Object target) {
-		if (timeline != null && (timeline.getState() == TimelineState.PLAYING_FORWARD || timeline.getState() == TimelineState.PLAYING_REVERSE)) {
-			return;
-		}
 		timeline = new org.pushingpixels.trident.Timeline(findTarget(target));
 		if (duration != null && duration.hasTimeSpan()) {
 			timeline.setDuration(duration.getTimeSpan().getMilliseconds());
