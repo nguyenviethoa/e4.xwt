@@ -8,17 +8,22 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.animation;
+package org.eclipse.e4.xwt.tests.animation;
 
+import java.net.URL;
 
-public class EasingDoubleKeyFrame extends DoubleKeyFrame {
-	private IEasingFunction easingFunction;
-	
-	public IEasingFunction getEasingFunction() {
-		return easingFunction;
-	}
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
 
-	public void setEasingFunction(IEasingFunction easingFunction) {
-		this.easingFunction = easingFunction;
+public class Point_Location_CircleEase {	
+	public static void main(String[] args) {
+
+		URL url = Point_Location_CircleEase.class.getResource(Point_Location_CircleEase.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

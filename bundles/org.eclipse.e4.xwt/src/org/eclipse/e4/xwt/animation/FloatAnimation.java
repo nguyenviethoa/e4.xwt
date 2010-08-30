@@ -10,13 +10,20 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import org.pushingpixels.trident.Timeline;
+import org.eclipse.e4.xwt.animation.internal.ITimeline;
+import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 
+/**
+ * 
+ * @author yyang
+ */
 public class FloatAnimation extends FloatAnimationBase {
-	protected float by;
-	protected float from;
-	protected float to;
+	protected Float by;
+	protected Float from;
+	protected Float to;
 	
+	private IEasingFunction easingFunction;
+
 	/**
 	 * The <code>additive</code> property specifies whether you want the output value of 
 	 * an animation added to the starting value (base value) of an animated property. You 
@@ -46,51 +53,59 @@ public class FloatAnimation extends FloatAnimationBase {
 	public FloatAnimation() {
 	}
 	
-	public FloatAnimation(float toValue, Duration duration) {
+	public IEasingFunction getEasingFunction() {
+		return easingFunction;
+	}
+
+	public void setEasingFunction(IEasingFunction easingFunction) {
+		this.easingFunction = easingFunction;
+	}
+
+	public FloatAnimation(Float toValue, Duration duration) {
 		setTo(toValue);
 		setDuration(duration);
 	}
 	
-	public FloatAnimation(float fromValue,float toValue, Duration duration) {
+	public FloatAnimation(Float fromValue, Float toValue, Duration duration) {
 		setTo(toValue);
 		setFrom(fromValue);
 		setDuration(duration);
 	}
 	
-	public FloatAnimation(float toValue, Duration duration, FillBehavior fillBehavior) {
+	public FloatAnimation(Float toValue, Duration duration, FillBehavior fillBehavior) {
 		setTo(toValue);
 		setDuration(duration);
 		setFillBehavior(fillBehavior);
 	}
 	
-	public FloatAnimation(float fromValue, float toValue, Duration duration, FillBehavior fillBehavior) {
+	public FloatAnimation(Float fromValue, Float toValue, Duration duration, FillBehavior fillBehavior) {
 		setTo(toValue);
 		setFrom(fromValue);
 		setDuration(duration);
 		setFillBehavior(fillBehavior);
 	}
 
-	public float getBy() {
+	public Float getBy() {
 		return by;
 	}
 
-	public void setBy(float by) {
+	public void setBy(Float by) {
 		this.by = by;
 	}
 
-	public float getFrom() {
+	public Float getFrom() {
 		return from;
 	}
 
-	public void setFrom(float from) {
+	public void setFrom(Float from) {
 		this.from = from;
 	}
 
-	public float getTo() {
+	public Float getTo() {
 		return to;
 	}
 
-	public void setTo(float to) {
+	public void setTo(Float to) {
 		this.to = to;
 	}
 
@@ -110,8 +125,12 @@ public class FloatAnimation extends FloatAnimationBase {
 		this.cumulative = cumulative;
 	}
 	
-	@Override
-	protected void doStart(Timeline timeline, Object target) {
-		timeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+	protected void updateTimeline(ITimeline timeline, Object target) {
+		super.updateTimeline(timeline, target);
+		if (timeline instanceof TridentTimeline) {
+			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
+			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+			tridentTimeline.setEasingFunction(getEasingFunction());
+		}
 	}
 }

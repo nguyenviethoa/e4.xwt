@@ -11,6 +11,7 @@
 package org.eclipse.e4.xwt.animation;
 
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 
 public abstract class AnimationTimeline extends Timeline {
@@ -66,5 +67,8 @@ public abstract class AnimationTimeline extends Timeline {
 			throw new XWTException("Name element " + targetName + " is not found in animation.");
 		}
 		return super.findTarget(newTarget);
+	}
+	
+	protected void update(ITimeline timeline) {		
 	}
 }

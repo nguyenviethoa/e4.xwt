@@ -31,10 +31,4 @@ public class Storyboard extends ParallelTimeline {
 	public void setTargetProperty(IProperty targetProperty) {
 		this.targetProperty = targetProperty;
 	}
-
-	public void begin(Object element) {
-		for (Timeline timeline : getChildren()) {
-			timeline.start(element);
-		}
-	}
 }

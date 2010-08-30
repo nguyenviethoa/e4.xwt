@@ -1,24 +1,27 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2010 Soyatec (http://www.soyatec.com) and others.
+ * Copyright (c) 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
- *     Soyatec - initial API and implementation
+ *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-
-public class EasingDoubleKeyFrame extends DoubleKeyFrame {
-	private IEasingFunction easingFunction;
+public abstract class EasingFunctionBase implements IEasingFunction {
+	private EasingMode easingMode = EasingMode.EaseOut; 
 	
-	public IEasingFunction getEasingFunction() {
-		return easingFunction;
+	public EasingMode getEasingMode() {
+		return easingMode;
 	}
 
-	public void setEasingFunction(IEasingFunction easingFunction) {
-		this.easingFunction = easingFunction;
+	public void setEasingMode(EasingMode easingMode) {
+		this.easingMode = easingMode;
+	}
+
+	final public float map(float durationFraction) {
+		return (float) ease(durationFraction);
 	}
 }

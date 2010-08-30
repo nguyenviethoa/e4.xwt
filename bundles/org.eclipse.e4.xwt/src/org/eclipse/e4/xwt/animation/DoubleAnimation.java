@@ -10,12 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import org.pushingpixels.trident.Timeline;
+import org.eclipse.e4.xwt.animation.internal.ITimeline;
+import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 
 public class DoubleAnimation extends DoubleAnimationBase {
-	protected double by;
-	protected double from;
-	protected double to;
+	private Double by;
+	private Double from;
+	private Double to;
+	private IEasingFunction easingFunction;
 	
 	/**
 	 * The <code>additive</code> property specifies whether you want the output value of 
@@ -46,51 +48,59 @@ public class DoubleAnimation extends DoubleAnimationBase {
 	public DoubleAnimation() {
 	}
 	
-	public DoubleAnimation(double toValue, Duration duration) {
+	public DoubleAnimation(Double toValue, Duration duration) {
 		setTo(toValue);
 		setDuration(duration);
 	}
 	
-	public DoubleAnimation(double fromValue, double toValue, Duration duration) {
+	public DoubleAnimation(Double fromValue, Double toValue, Duration duration) {
 		setTo(toValue);
 		setFrom(fromValue);
 		setDuration(duration);
 	}
 	
-	public DoubleAnimation(double toValue, Duration duration, FillBehavior fillBehavior) {
+	public DoubleAnimation(Double toValue, Duration duration, FillBehavior fillBehavior) {
 		setTo(toValue);
 		setDuration(duration);
 		setFillBehavior(fillBehavior);
 	}
 	
-	public DoubleAnimation(double fromValue, double toValue, Duration duration, FillBehavior fillBehavior) {
+	public DoubleAnimation(Double fromValue, Double toValue, Duration duration, FillBehavior fillBehavior) {
 		setTo(toValue);
 		setFrom(fromValue);
 		setDuration(duration);
 		setFillBehavior(fillBehavior);
 	}
 
-	public double getBy() {
+	public IEasingFunction getEasingFunction() {
+		return easingFunction;
+	}
+
+	public void setEasingFunction(IEasingFunction easingFunction) {
+		this.easingFunction = easingFunction;
+	}
+
+	public Double getBy() {
 		return by;
 	}
 
-	public void setBy(double by) {
+	public void setBy(Double by) {
 		this.by = by;
 	}
 
-	public double getFrom() {
+	public Double getFrom() {
 		return from;
 	}
 
-	public void setFrom(double from) {
+	public void setFrom(Double from) {
 		this.from = from;
 	}
 
-	public double getTo() {
+	public Double getTo() {
 		return to;
 	}
 
-	public void setTo(double to) {
+	public void setTo(Double to) {
 		this.to = to;
 	}
 
@@ -110,8 +120,12 @@ public class DoubleAnimation extends DoubleAnimationBase {
 		this.cumulative = cumulative;
 	}
 	
-	@Override
-	protected void doStart(Timeline timeline, Object target) {
-		timeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+	protected void updateTimeline(ITimeline timeline, Object target) {
+		super.updateTimeline(timeline, target);
+		if (timeline instanceof TridentTimeline) {
+			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
+			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+			tridentTimeline.setEasingFunction(getEasingFunction());
+		}
 	}
 }

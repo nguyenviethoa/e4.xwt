@@ -32,7 +32,7 @@ public class TimeSpan implements Serializable, Comparable {
 
 	private static final double HoursPerTick = 2.7777777777777777E-11;
 
-	// Representsthe number of ticks in 1 day
+	// Represents the number of ticks in 1 day
 
 	public static final long TicksPerDay = Long.valueOf("c92a69c000", 16);
 

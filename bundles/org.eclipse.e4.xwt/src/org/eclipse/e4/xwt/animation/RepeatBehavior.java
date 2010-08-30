@@ -10,7 +10,29 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+/**
+ * 
+ * @author yyang
+ */
 public class RepeatBehavior {
+	// Fields
+	private double count = 1;
+	private Duration repeatDuration;
+	private RepeatBehaviorType type;
+	
+	private static RepeatBehavior forever;
+	static {
+		forever = new RepeatBehavior();
+		forever.type = RepeatBehaviorType.Forever;
+	}
+	
+	// Nested Types
+	enum RepeatBehaviorType {
+		IterationCount, RepeatDuration, Forever;
+	}
+
+	public static final RepeatBehavior once = new RepeatBehavior(1);
+
 	interface IFormatProvider {
 	}
 
@@ -171,28 +193,9 @@ public class RepeatBehavior {
 		return (this.type == RepeatBehaviorType.RepeatDuration);
 	}
 
-	// Fields
-	private double count = 1;
-	private Duration repeatDuration;
-	private RepeatBehaviorType type;
-	
-	private static RepeatBehavior forever;
-	static {
-		forever = new RepeatBehavior();
-		forever.type = RepeatBehaviorType.Forever;
-	}
-
-	public static final RepeatBehavior once = new RepeatBehavior(1);
-
 	public RepeatBehaviorType getRepeatBehaviorType() {
 		return type;
-	}
-
-	// Nested Types
-	enum RepeatBehaviorType {
-		IterationCount, RepeatDuration, Forever;
-	}
-	
+	}	
 	
 	public static RepeatBehavior parse(String string) {
 		if (string.toLowerCase().equals("forever")) {

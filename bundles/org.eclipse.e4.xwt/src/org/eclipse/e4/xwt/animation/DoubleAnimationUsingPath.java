@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import org.pushingpixels.trident.Timeline;
+import org.eclipse.e4.xwt.animation.internal.ITimeline;
 
 public class DoubleAnimationUsingPath extends DoubleAnimationBase {
-	@Override
-	protected void doStart(Timeline timeline, Object target) {
+
+	protected void updateTimeline(ITimeline timeline, Object target) {
+		super.updateTimeline(timeline, target);
+//		for (DoubleKeyFrame doubleKeyFrame : getKeyFrames()) {
+//		doubleKeyFrame.start(timeline, target);
 	}
 }

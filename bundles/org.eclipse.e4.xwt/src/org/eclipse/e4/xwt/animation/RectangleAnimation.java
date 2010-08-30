@@ -11,18 +11,25 @@
 package org.eclipse.e4.xwt.animation;
 
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.animation.internal.ITimeline;
+import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 import org.eclipse.e4.xwt.animation.interpolator.RectanglePropertyInterpolator;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
-import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.TridentConfig;
 
+/**
+ * 
+ * @author yyang
+ */
 public class RectangleAnimation extends AnimationTimeline {
 	private Rectangle from;
 	private Rectangle to;
 	private Rectangle by;
 	
+	private IEasingFunction easingFunction;
+
 	static {
 		TridentConfig.getInstance().addPropertyInterpolator(new RectanglePropertyInterpolator());
 	}
@@ -42,14 +49,26 @@ public class RectangleAnimation extends AnimationTimeline {
 	public void setTo(Rectangle to) {
 		this.to = to;
 	}
+	
+	public IEasingFunction getEasingFunction() {
+		return easingFunction;
+	}
 
-	@Override
-	protected void doStart(Timeline timeline, Object target) {
+	public void setEasingFunction(IEasingFunction easingFunction) {
+		this.easingFunction = easingFunction;
+	}
+
+	protected void updateTimeline(ITimeline timeline, Object target) {
+		super.updateTimeline(timeline, target);
 		Object widget = UserData.getWidget(target);
 		if (!(widget instanceof Control)) {
 			throw new XWTException(
 					"The target of the animation is not a Control.");
 		}
-		timeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+		if (timeline instanceof TridentTimeline) {
+			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
+			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+			tridentTimeline.setEasingFunction(getEasingFunction());
+		}
 	}
 }

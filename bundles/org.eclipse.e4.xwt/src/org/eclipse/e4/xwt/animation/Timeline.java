@@ -10,8 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import org.pushingpixels.trident.Timeline.TimelineState;
+import org.eclipse.e4.xwt.animation.internal.ITimeline;
 
+/**
+ * 
+ * @author yyang
+ */
 public abstract class Timeline {
 	static public Timeline[] EMPTY_ARRAY = new Timeline[0];
 
@@ -25,8 +29,6 @@ public abstract class Timeline {
 	protected String name;
 	protected double speedRatio = 0;
 	protected RepeatBehavior repeatBehavior = RepeatBehavior.once;
-
-	private org.pushingpixels.trident.Timeline timeline;
 
 	public int getDesiredFrameRate() {
 		return desiredFrameRate;
@@ -108,79 +110,10 @@ public abstract class Timeline {
 		this.repeatBehavior = repeatBehavior;
 	}
 
-	public void start(Object target) {
-		timeline = new org.pushingpixels.trident.Timeline(findTarget(target));
-		if (duration != null && duration.hasTimeSpan()) {
-			timeline.setDuration(duration.getTimeSpan().getMilliseconds());
-		} else {
-			timeline.setDuration(10000);
-		}
-		doStart(timeline, target);
-		playLoop(getRepeatBehavior());
+	protected void updateTimeline(ITimeline timeline, Object target) {
 	}
 
 	protected Object findTarget(Object target) {
 		return target;
 	}
-
-	public void stop() {
-		if (timeline == null) {
-			return;
-		}
-		timeline.abort();
-		timeline = null;
-	}
-
-	public void pause() {
-		if (timeline == null) {
-			return;
-		}
-		timeline.suspend();
-	}
-
-	public void resume() {
-		if (timeline == null) {
-			return;
-		}
-		timeline.resume();
-	}
-
-	public void playReverse() {
-		if (timeline == null) {
-			return;
-		}
-		timeline.playReverse();
-	}
-
-	public void playLoop(RepeatBehavior behavior) {
-		if (timeline == null) {
-			return;
-		}
-		org.pushingpixels.trident.Timeline.RepeatBehavior loopBehavior = org.pushingpixels.trident.Timeline.RepeatBehavior.LOOP;
-		if (isAutoReverse()) {
-			loopBehavior = org.pushingpixels.trident.Timeline.RepeatBehavior.REVERSE;
-		}
-
-		if (behavior.getHasCount()) {
-			double loopCount = behavior.getCount();
-			if (!behavior.getHasDuration()) {
-				timeline.playLoop((int) loopCount, loopBehavior);
-			} else {
-				Duration duration = behavior.getDuration();
-				timeline.playLoopSkipping((int) loopCount, loopBehavior,
-						duration.getTimeSpan().getMilliseconds());
-			}
-		} else {
-			if (!behavior.getHasDuration()) {
-				timeline.playLoop(loopBehavior);
-			} else {
-				Duration duration = behavior.getDuration();
-				timeline.playLoopSkipping(loopBehavior, duration.getTimeSpan()
-						.getMilliseconds());
-			}
-		}
-	}
-
-	protected abstract void doStart(
-			org.pushingpixels.trident.Timeline timeline, Object target);
 }

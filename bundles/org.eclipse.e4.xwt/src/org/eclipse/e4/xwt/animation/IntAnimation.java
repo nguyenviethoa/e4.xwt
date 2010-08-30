@@ -10,13 +10,28 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import org.pushingpixels.trident.Timeline;
+import org.eclipse.e4.xwt.animation.internal.ITimeline;
+import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 
+/**
+ * 
+ * @author yyang
+ */
 public class IntAnimation extends AnimationTimeline {
 	private Integer from;
 	private Integer by;
 	private Integer to;
 	
+	private IEasingFunction easingFunction;
+
+	public IEasingFunction getEasingFunction() {
+		return easingFunction;
+	}
+
+	public void setEasingFunction(IEasingFunction easingFunction) {
+		this.easingFunction = easingFunction;
+	}
+
 	public Integer getTo() {
 		return to;
 	}
@@ -41,8 +56,12 @@ public class IntAnimation extends AnimationTimeline {
 		this.by = by;
 	}
 	
-	@Override
-	protected void doStart(Timeline timeline, Object target) {
-		timeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+	protected void updateTimeline(ITimeline timeline, Object target) {
+		super.updateTimeline(timeline, target);
+		if (timeline instanceof TridentTimeline) {
+			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
+			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+			tridentTimeline.setEasingFunction(getEasingFunction());
+		}
 	}
 }

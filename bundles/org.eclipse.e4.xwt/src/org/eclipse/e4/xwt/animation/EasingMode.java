@@ -10,15 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-
-public class EasingDoubleKeyFrame extends DoubleKeyFrame {
-	private IEasingFunction easingFunction;
-	
-	public IEasingFunction getEasingFunction() {
-		return easingFunction;
-	}
-
-	public void setEasingFunction(IEasingFunction easingFunction) {
-		this.easingFunction = easingFunction;
-	}
+public enum EasingMode {
+	EaseOut, EaseIn, EaseInOut;
 }
