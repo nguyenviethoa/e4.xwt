@@ -63,7 +63,7 @@ public class ElasticEase extends EasingFunctionBase {
 		if (current == 1)
 			return 1;
 		double s = Math.asin(1) / ((2 * Math.PI) * oscillations);
-		return -(1 * Math.pow(2, 10 * (current -= 1)) * Math.sin((current - s)
+		return -(Math.pow(2, 10 * (current -= 1)) * Math.sin((current - s)
 				* (2 * Math.PI) * oscillations));
 	}
 }

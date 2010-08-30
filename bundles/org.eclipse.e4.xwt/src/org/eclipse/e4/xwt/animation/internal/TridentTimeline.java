@@ -152,7 +152,9 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 	}
 
 	public void setEasingFunction(IEasingFunction easingFunction) {
-		this.tridentTimeline.setEase(easingFunction);
+		if (easingFunction != null) {
+			this.tridentTimeline.setEase(easingFunction);
+		}
 	}
 	
 	public boolean isDone() {
