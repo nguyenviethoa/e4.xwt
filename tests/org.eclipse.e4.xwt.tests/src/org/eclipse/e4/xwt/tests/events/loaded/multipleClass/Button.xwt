@@ -3,12 +3,12 @@
 	<Composite.layout>
 		<GridLayout numColumns="2" />
 	</Composite.layout>
-	<Button name="RootButton1" x:style="SWT.PUSH" Loaded="performLoaded"></Button>
+	<Button name="RootButton1" x:style="SWT.PUSH" loadedEvent="performLoaded"></Button>
 	<Group x:Class="org.eclipse.e4.xwt.tests.events.loaded.multipleClass.LoadHandler">
 		<Group.layout>
 			<FillLayout />
 		</Group.layout>
-		<Button name="ChildButton" Loaded="performLoaded" />
+		<Button name="ChildButton" loadedEvent="performLoaded" />
 	</Group>
-	<Button name="RootButton2" x:style="SWT.PUSH" Loaded="performLoaded"></Button>
+	<Button name="RootButton2" x:style="SWT.PUSH" loadedEvent="performLoaded"></Button>
 </Composite>

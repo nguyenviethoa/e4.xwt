@@ -277,7 +277,8 @@ public class ResourceVisitor {
 					if (method != null) {
 						clrObject = receiver;
 						if (event.getName().equalsIgnoreCase(
-								IEventConstants.XWT_LOADED)) {
+								IEventConstants.XWT_LOADED) || event.getName().equalsIgnoreCase(
+										IEventConstants.XWT_LOADED_EVENT)) {
 							method.setAccessible(true);
 							this.loadedObject = receiver;
 							this.loadedMethod = method;

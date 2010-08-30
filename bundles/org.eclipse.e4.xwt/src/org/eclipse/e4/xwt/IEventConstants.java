@@ -150,8 +150,8 @@ public final class IEventConstants {
 	public static final String XWT_SET_DATA = "SetData" + SUFFIX;
 	public static final String XWT_IME_COMPOSITION = "ImeComposition" + SUFFIX;
 
-	public static final String XWT_LOADED = "Loaded";
-
+	public static final String XWT_LOADED = "Loaded"; // deprecated
+	public static final String XWT_LOADED_EVENT = XWT_LOADED + SUFFIX;
 	
 	static public String getEventName(String swtEventName) {
 		return normalize(swtEventName + SUFFIX);

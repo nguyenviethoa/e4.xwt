@@ -270,7 +270,9 @@ public class ResourceLoader implements IVisualElementLoader {
 					if (method != null) {
 						clrObject = receiver;
 						if (event.getName().equalsIgnoreCase(
-								IEventConstants.XWT_LOADED)) {
+								IEventConstants.XWT_LOADED)
+								|| event.getName().equalsIgnoreCase(
+										IEventConstants.XWT_LOADED_EVENT)) {
 							method.setAccessible(true);
 							this.loadedObject = receiver;
 							this.loadedMethod = method;
@@ -488,7 +490,8 @@ public class ResourceLoader implements IVisualElementLoader {
 				dataBindingTrack.addWidgetElement(element);
 			}
 			Shell shell = null;
-			if ((parent == null && metaclass.getType() != Shell.class) || styleValue == null || styleValue == -1) {
+			if ((parent == null && metaclass.getType() != Shell.class)
+					|| styleValue == null || styleValue == -1) {
 				styleValue = SWT.SHELL_TRIM;
 			}
 			Display display = Display.getCurrent();
@@ -1677,10 +1680,9 @@ public class ResourceLoader implements IVisualElementLoader {
 							if (!property.isValueAsParent()) {
 								if (isChildTypeCompatible(attribute, type)) {
 									directTarget = null;
-								}
-								else {
+								} else {
 									type = null;
-									usingExistingValue = true;									
+									usingExistingValue = true;
 								}
 							}
 						}
@@ -1841,7 +1843,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			}
 		}
 	}
-	
+
 	protected boolean isChildTypeCompatible(Attribute attribute, Class<?> type) {
 		DocumentObject[] children = attribute.getChildren();
 		if (children.length != 1) {
@@ -1849,10 +1851,10 @@ public class ResourceLoader implements IVisualElementLoader {
 		}
 		DocumentObject child = children[0];
 		if (!(child instanceof Element)) {
-			return false;			
+			return false;
 		}
 		Element childElement = (Element) child;
-		
+
 		String name = childElement.getName();
 		String namespace = childElement.getNamespace();
 		IMetaclass metaclass = loader.getMetaclass(name, namespace);

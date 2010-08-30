@@ -143,8 +143,7 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 	}
 
 	static synchronized XWTSelectionCompletionProposal[] getStylesProposals(
-			Class<?> type,
-			String value) {
+			Class<?> type, String value) {
 		stylesProposals = null;
 		Image image = ImageShop.get(ImageShop.IMG_ELEMENT);
 		if (value.startsWith("\"")) {
@@ -195,8 +194,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 				oldValues.add(newStyle);
 			}
 		}
-		String newStyleValue = StringUtil.format(oldValues
-				.toArray(new String[oldValues.size()]), "|");
+		String newStyleValue = StringUtil.format(
+				oldValues.toArray(new String[oldValues.size()]), "|");
 		return newStyleValue;
 	}
 
@@ -344,9 +343,9 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 							.get(JavaPluginImages.IMG_FIELD_PUBLIC);
 					XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(
 							replacementString, offset, replacementLength,
-							propertyName.length() + 2, defaultValueString
-									.length(), image, propertyName, null,
-							"Property: " + propertyName);
+							propertyName.length() + 2,
+							defaultValueString.length(), image, propertyName,
+							null, "Property: " + propertyName);
 					if (useProposalList) {
 						proposalCollector.add(proposal);
 					} else {
@@ -366,7 +365,9 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 				eventName = Character.toUpperCase(eventName.charAt(0))
 						+ eventName.substring(1) + IEventConstants.SUFFIX;
 				if (event.getName() != null
-						&& event.getName().equals(IEventConstants.XWT_LOADED)) {
+						&& (event.getName().equals(IEventConstants.XWT_LOADED) || event
+								.getName().equals(
+										IEventConstants.XWT_LOADED_EVENT))) {
 					eventName = IEventConstants.XWT_LOADED;
 				}
 
@@ -861,8 +862,8 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 								+ ">";
 						Image image = ImageShop.get(ImageShop.IMG_ELEMENT);
 						XWTSelectionCompletionProposal proposal = new XWTSelectionCompletionProposal(
-								pattern, offset, replacementLength, typeName
-										.length() + 2, 0, image, typeName,
+								pattern, offset, replacementLength,
+								typeName.length() + 2, 0, image, typeName,
 								null, null);
 						if (useProposalList) {
 							proposalCollector.add(proposal);
@@ -914,9 +915,9 @@ public class XWTContentAssistProcessor extends XMLContentAssistProcessor {
 						+ ">";
 				Image image = ImageShop.get(ImageShop.IMG_ELEMENT);
 				XWTSelectionCompletionProposal p = new XWTSelectionCompletionProposal(
-						pattern, offset, replacementLength, layoutDatas[i]
-								.length() + 2, 0, image, layoutDatas[i], null,
-						"Container LayoutData.");
+						pattern, offset, replacementLength,
+						layoutDatas[i].length() + 2, 0, image, layoutDatas[i],
+						null, "Container LayoutData.");
 				proposals.add(p);
 			}
 		}

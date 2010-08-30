@@ -1,7 +1,7 @@
 <Composite xmlns="http://www.eclipse.org/xwt/presentation"
 	xmlns:x="http://www.eclipse.org/xwt" xmlns:c="clr-namespace:org.eclipse.e4.xwt.tools.ui.workbench"
 	xmlns:j="clr-namespace:java.lang" x:Class="c:StaticPartInitializerForm"
-	loaded="onLoaded">
+	loadedEvent="onloadedEvent">
 	<Composite.layout>
 		<GridLayout numColumns="3" />
 	</Composite.layout>

@@ -1,6 +1,6 @@
 <Composite xmlns="http://www.eclipse.org/xwt/presentation"
     xmlns:x="http://www.eclipse.org/xwt"
-    Loaded="onLoaded">
+    loadedEvent="onLoaded">
 	<Composite.layout>
 		<GridLayout numColumns="2"/>
 	</Composite.layout>

@@ -233,7 +233,8 @@ public abstract class AbstractMetaclass implements IMetaclass {
 					return null;
 				}
 				Class<?> propertyType = getter.getReturnType();
-				if (shouldIgnored(getter.getDeclaringClass(), name, propertyType)) {
+				if (shouldIgnored(getter.getDeclaringClass(), name,
+						propertyType)) {
 					return null;
 				}
 				Method setter = DynamicProperty.createSetter(type,
@@ -649,8 +650,9 @@ public abstract class AbstractMetaclass implements IMetaclass {
 				Class<?> propertyType = p.getPropertyType();
 				if (p.getReadMethod() == null) {
 					continue;
-				}		
-				if (shouldIgnored(p.getReadMethod().getDeclaringClass(), propertyName, propertyType)
+				}
+				if (shouldIgnored(p.getReadMethod().getDeclaringClass(),
+						propertyName, propertyType)
 						|| propertyCache
 								.containsKey(propertyName.toLowerCase())) {
 					continue;
@@ -674,7 +676,8 @@ public abstract class AbstractMetaclass implements IMetaclass {
 				}
 				String propertyName = f.getName();
 				Class<?> propertyType = f.getType();
-				if (shouldIgnored(f.getDeclaringClass(), propertyName, propertyType)) {
+				if (shouldIgnored(f.getDeclaringClass(), propertyName,
+						propertyType)) {
 					continue;
 				}
 
@@ -700,8 +703,13 @@ public abstract class AbstractMetaclass implements IMetaclass {
 						event));
 			}
 			if (isWidgetType(type)) {
+				LoadedEvent loadedEvent = new LoadedEvent(
+						IEventConstants.XWT_LOADED_EVENT);
 				routedEventCache.put(normalize(IEventConstants.XWT_LOADED),
-						new LoadedEvent(IEventConstants.XWT_LOADED));
+						loadedEvent);
+				routedEventCache.put(
+						normalize(IEventConstants.XWT_LOADED_EVENT),
+						loadedEvent);
 			}
 
 			markInitialized();
