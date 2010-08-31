@@ -137,9 +137,59 @@ public class Controller implements Listener, IEventController {
 		args[waterMark] = arg;
 		names[waterMark++] = name;
 
+		if (eventType == IEventConstants.XWT_SWT_LOADED) {
+			Listener[] listeners = control.getListeners(SWT.Paint);
+			if (listeners.length > 0) {
+				for (Listener listener : listeners) {
+					control.removeListener(SWT.Paint, listener); 									
+				}
+				control.addListener(SWT.Paint, new LoadedEventListener(control)); 				
+				for (Listener listener : listeners) {
+					control.addListener(SWT.Paint, listener); 									
+				}
+			}
+			else {
+				control.addListener(SWT.Paint, new LoadedEventListener(control)); 				
+			}
+		}
 		control.addListener(eventType, this);
 	}
 
+	class LoadedEventListener implements Listener {
+		protected Widget control;
+		
+		public LoadedEventListener(Widget control) {
+			this.control = control;
+		}
+		public void handleEvent(Event event) {
+			Event loadedEvent = new Event();
+			loadedEvent.button = event.button;
+			loadedEvent.character = event.character;
+			loadedEvent.count = event.count;
+			loadedEvent.data = event.data;
+			loadedEvent.detail = event.count;
+			loadedEvent.display = event.display;
+			loadedEvent.doit = event.doit;
+			loadedEvent.end = event.end;
+			loadedEvent.gc = event.gc;
+			loadedEvent.height = event.height;
+			loadedEvent.index = event.index;
+			loadedEvent.item = event.item;
+			loadedEvent.keyCode = event.keyCode;
+			loadedEvent.keyLocation = event.keyLocation;
+			loadedEvent.start = event.start;
+			loadedEvent.stateMask = event.stateMask;
+			loadedEvent.text = event.text;
+			loadedEvent.time = event.time;
+			loadedEvent.widget = event.widget;
+			loadedEvent.width = event.width;
+			loadedEvent.x = event.x;
+			loadedEvent.type = IEventConstants.XWT_SWT_LOADED;
+			control.removeListener(SWT.Paint, this);
+			Controller.this.handleEvent(loadedEvent);
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#setEvent(org.eclipse.e4.xwt.metadata.IEvent, org.eclipse.swt.widgets.Widget, java.lang.Object, java.lang.Object, java.lang.reflect.Method)
 	 */
@@ -242,6 +292,8 @@ public class Controller implements Listener, IEventController {
 			return SWT.MeasureItem;
 		} else if (IEventConstants.PAINT_ITEM.equalsIgnoreCase(name)) {
 			return SWT.PaintItem;
+		} else if (IEventConstants.XWT_LOADED.equalsIgnoreCase(name) || IEventConstants.XWT_LOADED_EVENT.equalsIgnoreCase(name)) {
+			return IEventConstants.XWT_SWT_LOADED;
 		}
 		// case SWT.PaintItem:
 		// firePaintItem(e);

@@ -150,6 +150,7 @@ public final class IEventConstants {
 	public static final String XWT_SET_DATA = "SetData" + SUFFIX;
 	public static final String XWT_IME_COMPOSITION = "ImeComposition" + SUFFIX;
 
+	public static final int XWT_SWT_LOADED = 1025; // SWT custom event
 	public static final String XWT_LOADED = "Loaded"; // deprecated
 	public static final String XWT_LOADED_EVENT = XWT_LOADED + SUFFIX;
 	

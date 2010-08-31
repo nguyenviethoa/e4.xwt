@@ -125,9 +125,6 @@ public class ResourceVisitor {
 		protected LoadingData parent;
 		protected Object clr;
 		protected Collection<IStyle> styles = Collections.emptyList();
-		private Object loadedObject = null;
-		private Method loadedMethod = null;
-		private Widget hostCLRWidget = null;
 		private Object currentWidget = null;
 		private Object host = null;
 		private Object dataContext = null;
@@ -170,9 +167,6 @@ public class ResourceVisitor {
 		}
 
 		public LoadingData(LoadingData loadingData, Object host) {
-			this.loadedObject = loadingData.loadedObject;
-			this.loadedMethod = loadingData.loadedMethod;
-			this.hostCLRWidget = loadingData.hostCLRWidget;
 			this.parent = loadingData;
 			this.styles = loadingData.styles;
 			this.clr = loadingData.clr;
@@ -276,14 +270,6 @@ public class ResourceVisitor {
 					}
 					if (method != null) {
 						clrObject = receiver;
-						if (event.getName().equalsIgnoreCase(
-								IEventConstants.XWT_LOADED) || event.getName().equalsIgnoreCase(
-										IEventConstants.XWT_LOADED_EVENT)) {
-							method.setAccessible(true);
-							this.loadedObject = receiver;
-							this.loadedMethod = method;
-							this.hostCLRWidget = control;
-						}
 						eventController.setEvent(event, control, clrObject,
 								control, method);
 						break;
@@ -317,27 +303,6 @@ public class ResourceVisitor {
 						LoggerManager.log(e);
 					}
 				}
-			}
-			// Try to invoke loaded event every time?
-			if (loadedObject != null && loadedMethod != null
-					&& hostCLRWidget != null) {
-				Event event = new Event();
-				event.doit = true;
-				event.widget = hostCLRWidget;
-				try {
-					if (loadedMethod.getParameterTypes().length == 1) {
-						loadedMethod.invoke(loadedObject,
-								new Object[] { event });
-					} else if (loadedMethod.getParameterTypes().length == 2) {
-						loadedMethod.invoke(loadedObject, new Object[] {
-								hostCLRWidget, event });
-					}
-				} catch (Exception e) {
-					LoggerManager.log(e);
-				}
-				loadedObject = null;
-				loadedMethod = null;
-				hostCLRWidget = null;
 			}
 		}
 

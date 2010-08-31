@@ -17,6 +17,7 @@ import org.eclipse.e4.xwt.animation.RepeatBehavior;
 import org.eclipse.e4.xwt.animation.TimeSpan;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.TimelinePropertyBuilder;
+import org.pushingpixels.trident.TimelinePropertyBuilder.DefaultPropertySetter;
 import org.pushingpixels.trident.TimelineScenario.TimelineScenarioActor;
 
 public class TridentTimeline implements ITimeline, TimelineScenarioActor {
@@ -46,15 +47,14 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 			} else {
 				this.tridentTimeline.setDuration(10000);
 			}
-			TimeSpan timeSpan = this.xwtTimeline.getBeginTime(); 
-			if (timeSpan != null) {				
-				this.tridentTimeline.setInitialDelay(timeSpan.getMilliseconds());
-			}
-			
 			RepeatBehavior behavior = xwtTimeline.getRepeatBehavior();
 			playLoop(behavior);
 			isPlayed = true;
 		}
+	}
+	
+	protected void setInitialValue() {
+		
 	}
 	
 	protected Timeline createTimeline(Object target) {
@@ -146,9 +146,18 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 			builder.fromCurrent();
 		} else {
 			builder.from(from);				
-		}		
+		}
 		builder.to(to);
 		this.tridentTimeline.addPropertyToInterpolate(builder);
+		
+		TimeSpan timeSpan = this.xwtTimeline.getBeginTime();
+		if (timeSpan != null && timeSpan.ticks != 0) {
+			this.tridentTimeline.setInitialDelay(timeSpan.getMilliseconds());
+		}
+		else if (from != null){
+			DefaultPropertySetter<T> propertySetter = new DefaultPropertySetter<T>(target, propName);
+			propertySetter.set(target, propName, from);
+		}
 	}
 
 	public void setEasingFunction(IEasingFunction easingFunction) {
