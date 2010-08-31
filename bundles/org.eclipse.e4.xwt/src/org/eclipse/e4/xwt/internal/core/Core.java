@@ -35,6 +35,7 @@ import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
 import org.eclipse.e4.xwt.INamespaceHandler;
 import org.eclipse.e4.xwt.IStyle;
+import org.eclipse.e4.xwt.IUIPattern;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.callback.IBeforeParsingCallback;
@@ -72,7 +73,7 @@ public class Core {
 	private MetaclassService metaclassService;
 
 	private IElementLoaderFactory loaderFactory;
-	
+
 	private ILoadingContext _loadingContext = null;
 
 	private ICLRFactory clrFactory = null;
@@ -82,7 +83,7 @@ public class Core {
 	private Map<String, INamespaceHandler> nsHandlers = new HashMap<String, INamespaceHandler>();
 	private ILogger logger;
 	private Collection<IStyle> defaultStyles = new ArrayList<IStyle>();
-	
+
 	private static LinkedHashMap<String, IDataProviderFactory> dataProviderFactories = new LinkedHashMap<String, IDataProviderFactory>();
 
 	private Collection<Class<?>> resolveTypes = new ArrayList<Class<?>>();
@@ -135,7 +136,7 @@ public class Core {
 		this.xwtLoader = xwtLoader;
 		this.metaclassService = new MetaclassService(xwtLoader);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -147,7 +148,7 @@ public class Core {
 		}
 		return logger;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -209,7 +210,6 @@ public class Core {
 		}
 	}
 
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -224,8 +224,7 @@ public class Core {
 		if (String.class == source && target.isEnum()) {
 			return new StringToEnum(target);
 		}
-		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) 
-				getService(ValueConvertorRegister.class);
+		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) getService(ValueConvertorRegister.class);
 		if (convertorRegister == null) {
 			return null;
 		}
@@ -242,8 +241,7 @@ public class Core {
 	public void registerConvertor(IConverter converter) {
 		Class<?> source = (Class<?>) converter.getFromType();
 		Class<?> target = (Class<?>) converter.getToType();
-		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) 
-				getService(ValueConvertorRegister.class);
+		ValueConvertorRegister convertorRegister = (ValueConvertorRegister) getService(ValueConvertorRegister.class);
 		convertorRegister.register(source, target, converter);
 	}
 
@@ -281,21 +279,21 @@ public class Core {
 
 	public IConverter loadConvertor(Class<?> converter, String methodName,
 			boolean value) {
-			try {
-				Method method = converter.getDeclaredMethod(methodName);
-				Object object = method.invoke(null, value);
-				if (object instanceof IConverter) {
-					return (IConverter) object;
-				}
-			} catch (SecurityException e) {
-			} catch (IllegalArgumentException e) {
-			} catch (NoSuchMethodException e) {
-			} catch (IllegalAccessException e) {
-			} catch (InvocationTargetException e) {
+		try {
+			Method method = converter.getDeclaredMethod(methodName);
+			Object object = method.invoke(null, value);
+			if (object instanceof IConverter) {
+				return (IConverter) object;
 			}
+		} catch (SecurityException e) {
+		} catch (IllegalArgumentException e) {
+		} catch (NoSuchMethodException e) {
+		} catch (IllegalAccessException e) {
+		} catch (InvocationTargetException e) {
+		}
 		return null;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -322,7 +320,7 @@ public class Core {
 		}
 		return service;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -402,8 +400,7 @@ public class Core {
 	public void unregisterCommand(String name) {
 		commands.remove(name);
 	}
-	
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -441,7 +438,8 @@ public class Core {
 	 * org.eclipse.e4.xwt.IXWTLoader#addDataProviderFactory(org.eclipse.e4.xwt
 	 * .IDataProviderFactory)
 	 */
-	public void addDataProviderFactory(String name, IDataProviderFactory dataProviderFactory) {
+	public void addDataProviderFactory(String name,
+			IDataProviderFactory dataProviderFactory) {
 		if (dataProviderFactory == null) {
 			return;
 		}
@@ -457,7 +455,7 @@ public class Core {
 	public IMetaclass registerMetaclass(Class<?> type) {
 		return registerMetaclass(type, IConstants.XWT_NAMESPACE);
 	}
-		
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -471,7 +469,7 @@ public class Core {
 		}
 		dataProviderFactories.remove(name);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -479,7 +477,8 @@ public class Core {
 	 * org.eclipse.e4.xwt.IXWTLoader#removeDataProviderFactory(org.eclipse.e4
 	 * .xwt.IDataProviderFactory)
 	 */
-	public void removeDataProviderFactory(IDataProviderFactory dataProviderFactory) {
+	public void removeDataProviderFactory(
+			IDataProviderFactory dataProviderFactory) {
 		if (dataProviderFactory == null) {
 			return;
 		}
@@ -541,7 +540,7 @@ public class Core {
 	public void setLoadingContext(ILoadingContext loadingContext) {
 		_loadingContext = loadingContext;
 	}
-		
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -550,8 +549,9 @@ public class Core {
 	public ILoadingContext findLoadingContext(Object container) {
 		return getLoadingContext();
 	}
-		
-	public IMetaclass getMetaclass(ILoadingContext context, String name, String namespace) {
+
+	public IMetaclass getMetaclass(ILoadingContext context, String name,
+			String namespace) {
 		return getMetaclassService().getMetaclass(context, name, namespace);
 	}
 
@@ -571,7 +571,8 @@ public class Core {
 
 	public IMetaclass getMetaclass(Object object, String namespace) {
 		if (object instanceof Class) {
-			return getMetaclassService().getMetaclass((Class<?>) object, namespace);
+			return getMetaclassService().getMetaclass((Class<?>) object,
+					namespace);
 		}
 		return getMetaclassService().getMetaclass(object.getClass(), namespace);
 	}
@@ -592,11 +593,14 @@ public class Core {
 		return getMetaclassService().register(metaclass, namespace);
 	}
 
-	public IMetaclass registerMetaclass(Class<?> metaclass, String namespace, IMetaclass superMetaclass) {
-		return getMetaclassService().register(metaclass, namespace, superMetaclass);
+	public IMetaclass registerMetaclass(Class<?> metaclass, String namespace,
+			IMetaclass superMetaclass) {
+		return getMetaclassService().register(metaclass, namespace,
+				superMetaclass);
 	}
 
-	public void registerMetaclassManager(String namespace, MetaclassManager manager) {
+	public void registerMetaclassManager(String namespace,
+			MetaclassManager manager) {
 		getMetaclassService().register(namespace, manager);
 	}
 
@@ -608,7 +612,8 @@ public class Core {
 		registrations.put(serviceType, service);
 	}
 
-	protected Object createCLRElement(IRenderingContext context, Element element, Map<String, Object> options) {
+	protected Object createCLRElement(IRenderingContext context,
+			Element element, Map<String, Object> options) {
 		IVisualElementLoader loader = findElementLoader(element);
 		if (loader != null) {
 			return loader.createUIElement(element, options);
@@ -630,8 +635,10 @@ public class Core {
 		return null;
 	}
 
-	protected IVisualElementLoader createElementLoader(IRenderingContext context, DocumentObject element) {
-		IVisualElementLoader creator = loaderFactory.createElementLoader(context, xwtLoader);
+	protected IVisualElementLoader createElementLoader(
+			IRenderingContext context, DocumentObject element) {
+		IVisualElementLoader creator = loaderFactory.createElementLoader(
+				context, xwtLoader);
 		elementsLoaders.put(element, creator);
 		return creator;
 	}
@@ -640,11 +647,80 @@ public class Core {
 		elementsLoaders.remove(element);
 	}
 
-	public Control load(ILoadingContext loadingContext, URL input, Map<String, Object> options) throws Exception {
+	public Control load(ILoadingContext loadingContext, URL input,
+			Map<String, Object> options) throws Exception {
 		return load(loadingContext, null, input, options);
 	}
 
-	public Control load(ILoadingContext loadingContext, InputStream stream, URL input, Map<String, Object> options) throws Exception {
+	public IUIPattern loadAsPattern(InputStream stream, URL input,
+			IBeforeParsingCallback parsingCallback) throws Exception {
+		ElementManager manager = new ElementManager();
+		Element element = null;
+		if (stream == null) {
+			element = manager.load(input, parsingCallback);
+		} else {
+			InputStream inputStream = stream;
+			if (parsingCallback != null) {
+				int size = stream.read();
+				byte[] buffer = new byte[size];
+				stream.read(buffer);
+				String content = new String(buffer);
+				stream.close();
+				content = parsingCallback.onParsing(content);
+				inputStream = new ByteArrayInputStream(content.getBytes());
+				element = manager.load(stream, input);
+			}
+			element = manager.load(inputStream, input);
+		}
+		return new UIPattern(input, element);
+	}
+
+	public Control load(ILoadingContext loadingContext, IUIPattern pattern,
+			Map<String, Object> options) throws Exception {
+		UIPattern uiPattern = (UIPattern) pattern;
+		Control control = null;
+		ElementManager manager = new ElementManager();
+		Element element = uiPattern.getContent();
+		IRenderingContext context = new ExtensionContext(loadingContext,
+				manager, element.getNamespace());
+		Object visual = createCLRElement(context, element, options);
+		if (visual instanceof Control) {
+			control = (Control) visual;
+		} else if (visual instanceof Viewer) {
+			control = ((Viewer) visual).getControl();
+		} else {
+			Class<?> jfaceWindow = Class
+					.forName("org.eclipse.jface.window.Window");
+			if (jfaceWindow != null && jfaceWindow.isInstance(visual)) {
+				Method createMethod = jfaceWindow.getDeclaredMethod("create");
+				createMethod.invoke(visual);
+				Method method = jfaceWindow.getDeclaredMethod("getShell");
+				control = (Control) method.invoke(visual);
+			}
+		}
+
+		if (control instanceof Composite) {
+			Object parent = options.get(IXWTLoader.CONTAINER_PROPERTY);
+			Object designMode = options.get(IXWTLoader.DESIGN_MODE_PROPERTY);
+			if (parent instanceof Composite) {
+				Composite parentComposite = (Composite) parent;
+				if (parentComposite.getLayout() == null
+						|| designMode == Boolean.TRUE) {
+					autoLayout(parentComposite, element);
+				}
+			} else if (parent == null || designMode == Boolean.TRUE) {
+				if (control instanceof Shell) {
+					autoLayout((Shell) control, element);
+				} else {
+					autoLayout(control.getShell(), element);
+				}
+			}
+		}
+		return control;
+	}
+
+	public Control load(ILoadingContext loadingContext, InputStream stream,
+			URL input, Map<String, Object> options) throws Exception {
 		// Detect from url or file path.
 		long start = System.currentTimeMillis();
 		Control control = null;
@@ -652,10 +728,11 @@ public class Core {
 		if (input != null) {
 			Element element = null;
 			if (stream == null) {
-				element = manager.load(input, (IBeforeParsingCallback) options.get(IXWTLoader.BEFORE_PARSING_CALLBACK));
-			}
-			else {
-				IBeforeParsingCallback callback = (IBeforeParsingCallback) options.get(IXWTLoader.BEFORE_PARSING_CALLBACK);
+				element = manager.load(input, (IBeforeParsingCallback) options
+						.get(IXWTLoader.BEFORE_PARSING_CALLBACK));
+			} else {
+				IBeforeParsingCallback callback = (IBeforeParsingCallback) options
+						.get(IXWTLoader.BEFORE_PARSING_CALLBACK);
 				InputStream inputStream = stream;
 				if (callback != null) {
 					int size = stream.read();
@@ -665,7 +742,7 @@ public class Core {
 					stream.close();
 					content = callback.onParsing(content);
 					inputStream = new ByteArrayInputStream(content.getBytes());
-					element = manager.load(stream, input);					
+					element = manager.load(stream, input);
 				}
 				element = manager.load(inputStream, input);
 			}
@@ -695,7 +772,8 @@ public class Core {
 
 			if (control instanceof Composite) {
 				Object parent = options.get(IXWTLoader.CONTAINER_PROPERTY);
-				Object designMode = options.get(IXWTLoader.DESIGN_MODE_PROPERTY);
+				Object designMode = options
+						.get(IXWTLoader.DESIGN_MODE_PROPERTY);
 				if (parent instanceof Composite) {
 					Composite parentComposite = (Composite) parent;
 					if (parentComposite.getLayout() == null
@@ -704,10 +782,9 @@ public class Core {
 					}
 				} else if (parent == null || designMode == Boolean.TRUE) {
 					if (control instanceof Shell) {
-						autoLayout((Shell)control, element);
-					}
-					else {
-						autoLayout(control.getShell(), element);						
+						autoLayout((Shell) control, element);
+					} else {
+						autoLayout(control.getShell(), element);
 					}
 				}
 			}
@@ -796,7 +873,8 @@ public class Core {
 	/**
 	 * Check if the value of a property is to resolve.
 	 * 
-	 * @param type type of property
+	 * @param type
+	 *            type of property
 	 * @return
 	 */
 	public boolean isFileResolveType(Class<?> type) {
@@ -811,7 +889,8 @@ public class Core {
 	/**
 	 * Register the value of a property is to resolve.
 	 * 
-	 * @param type type of property
+	 * @param type
+	 *            type of property
 	 * @return
 	 */
 	public void registerFileResolveType(Class<?> type) {
@@ -823,10 +902,11 @@ public class Core {
 	/**
 	 * Register the value of a property is to resolve.
 	 * 
-	 * @param type type of property
+	 * @param type
+	 *            type of property
 	 * @return
 	 */
 	public void unregisterFileResolveType(Class<?> type) {
 		resolveTypes.remove(type);
-	}	
+	}
 }

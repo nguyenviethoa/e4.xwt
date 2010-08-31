@@ -17,6 +17,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.eclipse.e4.xwt.IUIPattern;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.SWT;
@@ -41,11 +42,22 @@ public abstract class XWTTestCase extends TestCase {
 		runTest(url, new HashMap<String, Object>(), checkActions);
 	}
 
+	protected void runTest(IUIPattern pattern, Runnable... checkActions) {
+		runTest(pattern, new HashMap<String, Object>(), checkActions);
+	}
+
 	protected void runTest(URL url, Object dataContext,
 			Runnable... checkActions) {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
 		runTest(url, options, checkActions);
+	}
+
+	protected void runTest(IUIPattern pattern, Object dataContext,
+			Runnable... checkActions) {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
+		runTest(pattern, options, checkActions);
 	}
 
 	protected void runTest(final URL url, Map<String, Object> options,
@@ -91,6 +103,50 @@ public abstract class XWTTestCase extends TestCase {
 			Thread.currentThread().setContextClassLoader(classLoader);
 		}
 	}
+	
+	protected void runTest(final IUIPattern pattern, Map<String, Object> options,
+			Runnable... checkActions) {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
+		try {
+			Thread.currentThread().setContextClassLoader(
+					this.getClass().getClassLoader());
+			root = XWT.loadWithOptions(pattern, options);
+			assertNotNull(root);
+			Shell shell = root.getShell();
+			shell.open();
+			/**
+			 * The shells of the tests failed are not cleanup properly.
+			 * This is a minimalistic solution to clean up the desktop...
+			 */
+			Display display = shell.getDisplay();
+			try{
+				for (Runnable runnable : checkActions) {
+					while (display.readAndDispatch())
+						;
+					display.syncExec(runnable);
+					while (display.readAndDispatch())
+						;
+					while (display.readAndDispatch())
+						;
+				}
+				assertFalse(root.isDisposed());
+			} finally {
+				try{
+				shell.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			while (display.readAndDispatch())
+				;
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		} finally {
+			Thread.currentThread().setContextClassLoader(classLoader);
+		}
+	}
 
 	protected void runDebugTest(final URL url, Runnable prepareAction,
 			Runnable checkAction1) {
@@ -100,6 +156,31 @@ public abstract class XWTTestCase extends TestCase {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
 			root = XWT.load(url);
+			assertNotNull(root);
+			Shell shell = root.getShell();
+			shell.open();
+			Display display = shell.getDisplay();
+			if (prepareAction != null) {
+				display.asyncExec(prepareAction);
+			}
+			while (!display.isDisposed())
+				display.readAndDispatch();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		} finally {
+			Thread.currentThread().setContextClassLoader(classLoader);
+		}
+	}
+
+	protected void runDebugTest(final IUIPattern pattern, Runnable prepareAction,
+			Runnable checkAction1) {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
+		try {
+			Thread.currentThread().setContextClassLoader(
+					this.getClass().getClassLoader());
+			root = XWT.load(pattern);
 			assertNotNull(root);
 			Shell shell = root.getShell();
 			shell.open();

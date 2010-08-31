@@ -28,6 +28,7 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.masterdetail.IObservableFactory;
 import org.eclipse.core.databinding.observable.set.IObservableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.e4.xwt.callback.IBeforeParsingCallback;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.core.TriggerBase;
 import org.eclipse.e4.xwt.databinding.BindingContext;
@@ -52,11 +53,11 @@ import org.eclipse.swt.widgets.Widget;
  * @author yyang
  */
 public class XWT {
-	
+
 	private static List<IXWTInitializer> initializers = null;
-	private static Thread displayThread; 
+	private static Thread displayThread;
 	private static final Object displayLock = new Object();
-	
+
 	/**
 	 * Get the system logger.
 	 * 
@@ -286,14 +287,14 @@ public class XWT {
 	}
 
 	/**
-	 * Returns the {@link BindingContext} within the
-	 * upper scope of the control.
+	 * Returns the {@link BindingContext} within the upper scope of the control.
 	 * <p>
-	 * Each UI Element may have a local DataBindingContext property. While locating 
-	 * DataBindingContext, if the current UI Element has not the property, the parent's 
-	 * will be used.
+	 * Each UI Element may have a local DataBindingContext property. While
+	 * locating DataBindingContext, if the current UI Element has not the
+	 * property, the parent's will be used.
 	 * <p>
-	 * If none is found, a default one will be created as default for the current scope
+	 * If none is found, a default one will be created as default for the
+	 * current scope
 	 * <p>
 	 * If still not found {@link XWTException} thrown...
 	 * 
@@ -391,14 +392,34 @@ public class XWT {
 	}
 
 	/**
+	 * Load the content from UIPattern. All widget will be created but they are
+	 * showed. This method return the root element.
+	 * 
+	 */
+	static public Control load(IUIPattern pattern) throws Exception {
+		XWT.checkInitialization();
+		return XWTLoaderManager.getActive().load(pattern);
+	}
+
+	/**
 	 * Load the file content. All widget will be created but they are showed.
 	 * This method return the root element.
 	 * 
 	 */
-	static public Control load(URL file, Object dataContext)
-			throws Exception {
+	static public Control load(URL file, Object dataContext) throws Exception {
 		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().load(file, dataContext);
+	}
+
+	/**
+	 * Load the content from UIPattern. All widget will be created but they are
+	 * showed. This method return the root element.
+	 * 
+	 */
+	static public Control load(IUIPattern pattern, Object dataContext)
+			throws Exception {
+		XWT.checkInitialization();
+		return XWTLoaderManager.getActive().load(pattern, dataContext);
 	}
 
 	/**
@@ -406,9 +427,19 @@ public class XWT {
 	 * method returns the root element. The DataContext will be associated to
 	 * the root element.
 	 */
-	static public Control load(Composite parent, URL file)
-			throws Exception {
+	static public Control load(Composite parent, URL file) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file);
+	}
+
+	/**
+	 * Load the file content under a Composite. All widget will be created. This
+	 * method returns the root element. The DataContext will be associated to
+	 * the root element.
+	 * 
+	 */
+	static public Control load(Composite parent, IUIPattern pattern)
+			throws Exception {
+		return XWTLoaderManager.getActive().load(parent, pattern);
 	}
 
 	/**
@@ -416,9 +447,71 @@ public class XWT {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	static public Control load(Composite parent, URL file,
-			Object dataContext) throws Exception {
+	static public Control load(Composite parent, URL file, Object dataContext)
+			throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file, dataContext);
+	}
+
+	/**
+	 * Load the content from IUIPattern.
+	 * 
+	 * @param stream
+	 * @param input
+	 * @param parsingCallback null if the callback is not necessary
+	 * @return
+	 * @throws Exception
+	 */
+	static public IUIPattern loadAsPattern(InputStream stream, URL input,
+			IBeforeParsingCallback parsingCallback) throws Exception {
+		return XWTLoaderManager.getActive().loadAsPattern(stream, input, parsingCallback);
+	}
+
+	/**
+	 * Load the content from IUIPattern.
+	 * 
+	 * @param stream
+	 * @param input
+	 * @param parsingCallback null if the callback is not necessary
+	 * @return
+	 * @throws Exception
+	 */
+	static public IUIPattern loadAsPattern(InputStream stream, URL input) throws Exception {
+		return XWTLoaderManager.getActive().loadAsPattern(stream, input);
+	}
+
+	/**
+	 * Load the content from IUIPattern.
+	 * 
+	 * @param input
+	 * @param parsingCallback null if the callback is not necessary
+	 * @return
+	 * @throws Exception
+	 */
+	static public IUIPattern loadAsPattern(URL input,
+			IBeforeParsingCallback parsingCallback) throws Exception {
+		return XWTLoaderManager.getActive().loadAsPattern(null, input, parsingCallback);
+	}
+
+	/**
+	 * Load the content from IUIPattern.
+	 * 
+	 * @param input
+	 * @return
+	 * @throws Exception
+	 */
+	static public IUIPattern loadAsPattern(URL input) throws Exception {
+		return XWTLoaderManager.getActive().loadAsPattern(null, input);
+	}
+
+	
+	/**
+	 * Load the file content under a Composite with a DataContext. All widget
+	 * will be created. This method returns the root element. The DataContext
+	 * will be associated to the root element.
+	 */
+	static public Control load(Composite parent, IUIPattern pattern,
+			Object dataContext) throws Exception {
+		return XWTLoaderManager.getActive().load(parent, pattern, dataContext);
 	}
 
 	/**
@@ -430,11 +523,19 @@ public class XWT {
 	}
 
 	/**
+	 * Open and show the file content in a new Shell.
+	 */
+	static public void open(final IUIPattern pattern) throws Exception {
+		XWT.checkInitialization();
+		XWTLoaderManager.getActive().open(pattern);
+	}
+
+	/**
 	 * load the content from a stream with a style, a DataContext and a
 	 * ResourceDictionary. The root elements will be hold by Composite parent
 	 */
-	static public Control load(Composite parent,
-			InputStream stream, URL file, Object dataContext) throws Exception {
+	static public Control load(Composite parent, InputStream stream, URL file,
+			Object dataContext) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, stream, file,
 				dataContext);
 	}
@@ -442,17 +543,25 @@ public class XWT {
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public void open(URL url, Object dataContext)
-			throws Exception {
+	static public void open(URL url, Object dataContext) throws Exception {
 		XWT.checkInitialization();
 		XWTLoaderManager.getActive().open(url, dataContext);
 	}
 
 	/**
+	 * load the content from IUIPattern. The corresponding UI element is not yet
+	 * created
+	 */
+	static public void open(IUIPattern pattern, Object dataContext)
+			throws Exception {
+		XWT.checkInitialization();
+		XWTLoaderManager.getActive().open(pattern, dataContext);
+	}
+
+	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	static public void open(Class<?> type, Object dataContext)
-			throws Exception {
+	static public void open(Class<?> type, Object dataContext) throws Exception {
 		open(type.getResource(type.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX), dataContext);
 	}
@@ -466,13 +575,28 @@ public class XWT {
 		XWTLoaderManager.getActive().open(url, options);
 	}
 
+	/**
+	 * load the content from IUIPattern. The corresponding UI element is not yet
+	 * created
+	 */
+	static public void open(IUIPattern pattern, Map<String, Object> options)
+			throws Exception {
+		XWT.checkInitialization();
+		XWTLoaderManager.getActive().open(pattern, options);
+	}
+
 	static public Object convertFrom(Class<?> targetType, String string) {
 		return XWTLoaderManager.getActive().convertFrom(targetType, string);
 	}
 
-	static public Control loadWithOptions(URL url,
-			Map<String, Object> options) throws Exception {
+	static public Control loadWithOptions(URL url, Map<String, Object> options)
+			throws Exception {
 		return XWTLoaderManager.getActive().loadWithOptions(url, options);
+	}
+
+	static public Control loadWithOptions(IUIPattern pattern,
+			Map<String, Object> options) throws Exception {
+		return XWTLoaderManager.getActive().loadWithOptions(pattern, options);
 	}
 
 	/**
@@ -483,8 +607,7 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public Control load(InputStream stream, URL url)
-			throws Exception {
+	static public Control load(InputStream stream, URL url) throws Exception {
 		XWT.checkInitialization();
 		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
@@ -497,8 +620,8 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public Control loadWithOptions(InputStream stream,
-			URL url, Map<String, Object> options) throws Exception {
+	static public Control loadWithOptions(InputStream stream, URL url,
+			Map<String, Object> options) throws Exception {
 		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().loadWithOptions(stream, url,
 				options);
@@ -734,12 +857,12 @@ public class XWT {
 	}
 
 	/**
-	 * Set up the default ICLRFactory 
+	 * Set up the default ICLRFactory
 	 * 
 	 * @param factory
 	 */
 	static public void setCLRFactory(ICLRFactory factory) {
-		XWTLoaderManager.getActive().setCLRFactory(factory);		
+		XWTLoaderManager.getActive().setCLRFactory(factory);
 	}
 
 	static public boolean checkInitialization() {
@@ -751,15 +874,16 @@ public class XWT {
 
 	static public boolean checkInitialization(long timeoutMillis) {
 		long started = System.currentTimeMillis();
-		while(true) {
-			if (timeoutMillis != -1 && System.currentTimeMillis() - started > timeoutMillis) {
+		while (true) {
+			if (timeoutMillis != -1
+					&& System.currentTimeMillis() - started > timeoutMillis) {
 				return false;
 			}
 
 			if (isAllInitializersInitialized()) {
 				return false;
 			}
-			
+
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
@@ -773,10 +897,10 @@ public class XWT {
 			return true;
 		}
 		for (IXWTInitializer initializer : initializers) {
-			if (!initializer.isInitialized()) {	
+			if (!initializer.isInitialized()) {
 				return false;
 			}
-		}		
+		}
 		return true;
 	}
 
@@ -788,7 +912,6 @@ public class XWT {
 	static public ICLRFactory getCLRFactory() {
 		return XWTLoaderManager.getActive().getCLRFactory();
 	}
-
 
 	/**
 	 * Find a command by name
@@ -813,21 +936,23 @@ public class XWT {
 				|| IConstants.XWT_NAMESPACE.equals(namespace)
 				|| namespace.startsWith(IConstants.XAML_CLR_NAMESPACE_PROTO);
 	}
-	
+
 	/**
 	 * Check if the value of a property is to resolve.
 	 * 
-	 * @param type type of property
+	 * @param type
+	 *            type of property
 	 * @return
 	 */
 	public static boolean isFileResolveType(Class<?> type) {
-		return XWTLoaderManager.getActive().isFileResolveType(type);		
+		return XWTLoaderManager.getActive().isFileResolveType(type);
 	}
 
 	/**
 	 * Register the value of a property is to resolve.
 	 * 
-	 * @param type type of property
+	 * @param type
+	 *            type of property
 	 * @return
 	 */
 	public static void registerFileResolveType(Class<?> type) {
@@ -837,13 +962,14 @@ public class XWT {
 	/**
 	 * Register the value of a property is to resolve.
 	 * 
-	 * @param type type of property
+	 * @param type
+	 *            type of property
 	 * @return
 	 */
 	public static void unregisterFileResolveType(Class<?> type) {
-		XWTLoaderManager.getActive().unregisterFileResolveType(type);		
+		XWTLoaderManager.getActive().unregisterFileResolveType(type);
 	}
-	
+
 	/**
 	 * Run in UI context.
 	 * 
@@ -865,11 +991,12 @@ public class XWT {
 								if (!Display.getCurrent().readAndDispatch()) {
 									Display.getCurrent().sleep();
 								}
-		
+
 								if (Display.getCurrent().getShells().length == 2) {
 									break;
 								}
-								Shell[] shells = Display.getCurrent().getShells();
+								Shell[] shells = Display.getCurrent()
+										.getShells();
 								if (shells.length == 0) {
 									if (startTime == -1) {
 										startTime = System.currentTimeMillis();
@@ -893,8 +1020,7 @@ public class XWT {
 						} else if ((System.currentTimeMillis() - startTime) > 1000) {
 							throw new XWTException("Display starting timeout");
 						}
-					}
-					else {
+					} else {
 						display.syncExec(runnable);
 						break;
 					}
@@ -909,16 +1035,16 @@ public class XWT {
 		if (initializers == null) {
 			initializers = new ArrayList<IXWTInitializer>();
 		}
-		initializers.add(initializer);		
+		initializers.add(initializer);
 	}
-	
+
 	public static List<IXWTInitializer> getInitializers() {
 		if (initializers == null) {
 			return Collections.EMPTY_LIST;
 		}
 		return initializers;
 	}
-	
+
 	public static Object findParent(Object element, Class<?> type) {
 		Widget widget = UserData.getWidget(element);
 		if (widget == null) {

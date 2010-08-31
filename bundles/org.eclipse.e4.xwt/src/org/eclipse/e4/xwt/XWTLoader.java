@@ -54,6 +54,7 @@ import org.eclipse.e4.xwt.animation.SineEase;
 import org.eclipse.e4.xwt.animation.SizeAnimation;
 import org.eclipse.e4.xwt.animation.StopStoryboard;
 import org.eclipse.e4.xwt.animation.Storyboard;
+import org.eclipse.e4.xwt.callback.IBeforeParsingCallback;
 import org.eclipse.e4.xwt.collection.CollectionViewSource;
 import org.eclipse.e4.xwt.converters.BindingToObject;
 import org.eclipse.e4.xwt.converters.CollectionToBoolean;
@@ -109,6 +110,7 @@ import org.eclipse.e4.xwt.internal.core.MetaclassManager;
 import org.eclipse.e4.xwt.internal.core.MultiBinding;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
+import org.eclipse.e4.xwt.internal.core.UIPattern;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.utils.UserData;
@@ -626,6 +628,10 @@ public class XWTLoader implements IXWTLoader {
 		return load(null, file, dataContext);
 	}
 
+	public Control load(IUIPattern pattern, Object dataContext) throws Exception {
+		return load(null, pattern, dataContext);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -637,6 +643,12 @@ public class XWTLoader implements IXWTLoader {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
 		return loadWithOptions(file, options);
+	}
+
+	public Control load(Composite parent, IUIPattern pattern) throws Exception {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(CONTAINER_PROPERTY, parent);
+		return loadWithOptions(pattern, options);
 	}
 
 	/*
@@ -654,6 +666,14 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(file, options);
 	}
 
+	public Control load(Composite parent, IUIPattern pattern, Object dataContext)
+			throws Exception {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(CONTAINER_PROPERTY, parent);
+		options.put(DATACONTEXT_PROPERTY, dataContext);
+		return loadWithOptions(pattern, options);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -669,7 +689,8 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(viewType, options);
 	}
 
-	protected Map<String, Object> prepareOptions(Map<String, Object> options, URL url) {
+	protected Map<String, Object> prepareOptions(Map<String, Object> options,
+			URL url) {
 		Boolean disabledStyle = (Boolean) options.get(DISABLE_STYLES_PROPERTY);
 		if (!Boolean.TRUE.equals(disabledStyle)) {
 			Collection<IStyle> defaultStyles = getDefaultStyles();
@@ -750,8 +771,12 @@ public class XWTLoader implements IXWTLoader {
 	 * 
 	 * @see org.eclipse.e4.xwt.IXWTLoader#open(java.net.URL)
 	 */
-	public void open(final URL url) throws Exception {
+	public void open(URL url) throws Exception {
 		open(url, Collections.EMPTY_MAP);
+	}
+
+	public void open(IUIPattern pattern) throws Exception {
+		open(pattern, Collections.EMPTY_MAP);
 	}
 
 	/*
@@ -769,6 +794,32 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(stream, file, options);
 	}
 
+	public Control load(Composite parent, UIPattern pattern, Object dataContext)
+			throws Exception {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(CONTAINER_PROPERTY, parent);
+		options.put(DATACONTEXT_PROPERTY, dataContext);
+		return loadWithOptions(pattern, options);
+	}
+
+	public IUIPattern loadAsPattern(InputStream stream, URL input) throws Exception {
+		return loadAsPattern(stream, input, null);
+	}
+
+	public IUIPattern loadAsPattern(InputStream stream, URL input,
+			IBeforeParsingCallback parsingCallback) throws Exception {
+		return getCurrentCore().loadAsPattern(stream, input, parsingCallback);
+	}
+
+	public IUIPattern loadAsPattern(URL input) throws Exception {
+		return loadAsPattern(null, input, null);
+	}
+
+	public IUIPattern loadAsPattern(URL input,
+			IBeforeParsingCallback parsingCallback) throws Exception {
+		return loadAsPattern(null, input, parsingCallback);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -778,6 +829,12 @@ public class XWTLoader implements IXWTLoader {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(DATACONTEXT_PROPERTY, dataContext);
 		open(url, options);
+	}
+
+	public void open(IUIPattern pattern, Object dataContext) throws Exception {
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put(DATACONTEXT_PROPERTY, dataContext);
+		open(pattern, options);
 	}
 
 	/*
@@ -851,12 +908,10 @@ public class XWTLoader implements IXWTLoader {
 							if (shells.length == 0) {
 								if (startTime == -1) {
 									startTime = System.currentTimeMillis();
-								}
-								else if ((System.currentTimeMillis() - startTime) > 1000) {
+								} else if ((System.currentTimeMillis() - startTime) > 1000) {
 									break;
 								}
-							}
-							else {
+							} else {
 								startTime = -1;
 							}
 						}
@@ -865,8 +920,7 @@ public class XWTLoader implements IXWTLoader {
 					}
 				}
 			});
-		}
-		else {
+		} else {
 			defaultDisplay.asyncExec(new Runnable() {
 				public void run() {
 					Realm.runWithDefault(realm, new Runnable() {
@@ -877,6 +931,87 @@ public class XWTLoader implements IXWTLoader {
 											"UI Resource is not found.");
 								}
 								Control control = loadWithOptions(url, options);
+								Shell shell = control.getShell();
+								shell.open();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+			});
+		}
+	}
+
+	public void open(final IUIPattern pattern, final Map<String, Object> options)
+			throws Exception {
+		if (SWT.getPlatform().startsWith("win")) {
+			if (Display.getCurrent() == null) {
+				new Display();
+			}
+			Realm.runWithDefault(realm, new Runnable() {
+				public void run() {
+					try {
+						Control control = loadWithOptions(pattern, options);
+						Shell shell = control.getShell();
+						shell.addDisposeListener(new DisposeListener() {
+							public void widgetDisposed(DisposeEvent e) {
+								Shell[] shells = Display.getCurrent()
+										.getShells();
+								if (shells.length == 0) {
+									ResourceManager.resources.dispose();
+								}
+							}
+						});
+						shell.open();
+						while (!shell.isDisposed()) {
+							if (!shell.getDisplay().readAndDispatch())
+								shell.getDisplay().sleep();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return;
+		}
+		Display defaultDisplay = Display.getDefault();
+		if (Thread.currentThread() == defaultDisplay.getThread()) {
+			Realm.runWithDefault(realm, new Runnable() {
+				public void run() {
+					try {
+						Control control = loadWithOptions(pattern, options);
+						Shell shell = control.getShell();
+						shell.open();
+						long startTime = -1;
+						while (true) {
+							if (!Display.getDefault().readAndDispatch()) {
+								Display.getDefault().sleep();
+							}
+							Shell[] shells = Display.getDefault().getShells();
+							if (shells.length == 0) {
+								if (startTime == -1) {
+									startTime = System.currentTimeMillis();
+								} else if ((System.currentTimeMillis() - startTime) > 1000) {
+									break;
+								}
+							} else {
+								startTime = -1;
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		} else {
+			defaultDisplay.asyncExec(new Runnable() {
+				public void run() {
+					Realm.runWithDefault(realm, new Runnable() {
+						public void run() {
+							try {
+								Control control = loadWithOptions(pattern,
+										options);
 								Shell shell = control.getShell();
 								shell.open();
 							} catch (Exception e) {
@@ -942,6 +1077,18 @@ public class XWTLoader implements IXWTLoader {
 		return visualObject;
 	}
 
+	public Control loadWithOptions(IUIPattern pattern,
+			Map<String, Object> options) throws Exception {
+		UIPattern uiPattern = (UIPattern) pattern;
+		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
+		ILoadingContext loadingContext = (object != null ? getLoadingContext(object)
+				: getLoadingContext());
+		options = prepareOptions(options, uiPattern.getURL());
+		Control visualObject = getCurrentCore().load(loadingContext, pattern,
+				options);
+		return visualObject;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -950,6 +1097,10 @@ public class XWTLoader implements IXWTLoader {
 	 */
 	public Control load(InputStream stream, URL url) throws Exception {
 		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
+	}
+
+	public Control load(IUIPattern pattern) throws Exception {
+		return loadWithOptions(pattern, Collections.EMPTY_MAP);
 	}
 
 	/*
@@ -968,7 +1119,7 @@ public class XWTLoader implements IXWTLoader {
 				base, options);
 		return visualObject;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1705,17 +1856,17 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(RectangleAnimation.class);
 		registerMetaclass(SizeAnimation.class);
 
-        registerMetaclass(BackEase.class);
-        registerMetaclass(BounceEase.class);
-        registerMetaclass(CircleEase.class);
-        registerMetaclass(CubicEase.class);
-        registerMetaclass(ElasticEase.class);
-        registerMetaclass(ExponentialEase.class);
-        registerMetaclass(PowerEase.class);
-        registerMetaclass(QuadraticEase.class);
-        registerMetaclass(QuarticEase.class);
-        registerMetaclass(QuinticEase.class);
-        registerMetaclass(SineEase.class);
+		registerMetaclass(BackEase.class);
+		registerMetaclass(BounceEase.class);
+		registerMetaclass(CircleEase.class);
+		registerMetaclass(CubicEase.class);
+		registerMetaclass(ElasticEase.class);
+		registerMetaclass(ExponentialEase.class);
+		registerMetaclass(PowerEase.class);
+		registerMetaclass(QuadraticEase.class);
+		registerMetaclass(QuarticEase.class);
+		registerMetaclass(QuinticEase.class);
+		registerMetaclass(SineEase.class);
 
 		registerConvertor(StringToDuration.instance);
 		registerConvertor(StringToRepeatBehavior.instance);
@@ -1728,7 +1879,7 @@ public class XWTLoader implements IXWTLoader {
 
 		registerFileResolveType(Image.class);
 		registerFileResolveType(URL.class);
-				
+
 		for (IXWTInitializer initializer : XWT.getInitializers()) {
 			initializer.initialize(this);
 		}

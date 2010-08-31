@@ -383,6 +383,8 @@ public interface IXWTLoader {
 	 */
 	Control load(URL file, Object dataContext) throws Exception;
 
+	Control load(IUIPattern pattern, Object dataContext) throws Exception;
+
 	/**
 	 * Load the file content under a Composite. All widget will be created. This
 	 * method returns the root element. The DataContext will be associated to
@@ -391,11 +393,26 @@ public interface IXWTLoader {
 	Control load(Composite parent, URL file) throws Exception;
 
 	/**
+	 * Load the file content under a Composite. All widget will be created. This
+	 * method returns the root element. The DataContext will be associated to
+	 * the root element.
+	 */
+	Control load(Composite parent, IUIPattern pattern) throws Exception;
+
+	/**
 	 * Load the file content under a Composite with a DataContext. All widget
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
 	Control load(Composite parent, URL file, Object dataContext)
+			throws Exception;
+
+	/**
+	 * Load the file content under a Composite with a DataContext. All widget
+	 * will be created. This method returns the root element. The DataContext
+	 * will be associated to the root element.
+	 */
+	Control load(Composite parent, IUIPattern pattern, Object dataContext)
 			throws Exception;
 
 	/**
@@ -422,7 +439,9 @@ public interface IXWTLoader {
 	/**
 	 * Open and show the file content in a new Shell.
 	 */
-	void open(final URL url) throws Exception;
+	void open(URL url) throws Exception;
+
+	void open(IUIPattern pattern) throws Exception;
 
 	/**
 	 * load the content from a stream with a style, a DataContext and a
@@ -436,6 +455,8 @@ public interface IXWTLoader {
 	 */
 	void open(URL url, Object dataContext) throws Exception;
 
+	void open(IUIPattern pattern, Object dataContext) throws Exception;
+
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
@@ -444,8 +465,9 @@ public interface IXWTLoader {
 	/**
 	 * load the file content. The corresponding UI element is not yet created
 	 */
-	void open(final URL url, final Map<String, Object> options)
-			throws Exception;
+	void open(URL url, Map<String, Object> options) throws Exception;
+
+	void open(IUIPattern pattern, final Map<String, Object> options) throws Exception;
 
 	/**
 	 * Data conversion service from String to a given type
@@ -478,6 +500,18 @@ public interface IXWTLoader {
 	 */
 	Control load(InputStream stream, URL url) throws Exception;
 
+	Control load(IUIPattern pattern) throws Exception;
+
+	public IUIPattern loadAsPattern(InputStream stream, URL input) throws Exception;
+
+	public IUIPattern loadAsPattern(InputStream stream, URL input,
+			IBeforeParsingCallback parsingCallback) throws Exception;
+
+	public IUIPattern loadAsPattern(URL input) throws Exception;
+
+	public IUIPattern loadAsPattern(URL input,
+			IBeforeParsingCallback parsingCallback) throws Exception;
+
 	/**
 	 * Generic load method
 	 * 
@@ -488,6 +522,9 @@ public interface IXWTLoader {
 	 * @throws Exception
 	 */
 	Control loadWithOptions(InputStream stream, URL url,
+			Map<String, Object> options) throws Exception;
+
+	Control loadWithOptions(IUIPattern pattern,
 			Map<String, Object> options) throws Exception;
 
 	/**
