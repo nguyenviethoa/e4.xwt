@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt;
 
-public interface IUIPattern {
+public interface IUIMold {
 
 }

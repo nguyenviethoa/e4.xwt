@@ -35,7 +35,7 @@ import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
 import org.eclipse.e4.xwt.INamespaceHandler;
 import org.eclipse.e4.xwt.IStyle;
-import org.eclipse.e4.xwt.IUIPattern;
+import org.eclipse.e4.xwt.IUIMold;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.callback.IBeforeParsingCallback;
@@ -652,7 +652,7 @@ public class Core {
 		return load(loadingContext, null, input, options);
 	}
 
-	public IUIPattern loadAsPattern(InputStream stream, URL input,
+	public IUIMold loadAsMold(InputStream stream, URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception {
 		ElementManager manager = new ElementManager();
 		Element element = null;
@@ -672,12 +672,12 @@ public class Core {
 			}
 			element = manager.load(inputStream, input);
 		}
-		return new UIPattern(input, element);
+		return new UIMold(input, element);
 	}
 
-	public Control load(ILoadingContext loadingContext, IUIPattern pattern,
+	public Control load(ILoadingContext loadingContext, IUIMold pattern,
 			Map<String, Object> options) throws Exception {
-		UIPattern uiPattern = (UIPattern) pattern;
+		UIMold uiPattern = (UIMold) pattern;
 		Control control = null;
 		ElementManager manager = new ElementManager();
 		Element element = uiPattern.getContent();

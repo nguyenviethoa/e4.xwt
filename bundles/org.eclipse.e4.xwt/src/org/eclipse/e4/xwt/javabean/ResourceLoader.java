@@ -33,7 +33,6 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.ICLRFactory;
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.IDataProvider;
-import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IEventHandler;
 import org.eclipse.e4.xwt.IEventInvoker;
 import org.eclipse.e4.xwt.IIndexedElement;

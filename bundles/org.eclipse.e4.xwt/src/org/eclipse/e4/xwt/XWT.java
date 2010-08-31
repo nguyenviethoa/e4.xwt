@@ -392,13 +392,13 @@ public class XWT {
 	}
 
 	/**
-	 * Load the content from UIPattern. All widget will be created but they are
+	 * Load the content from UIMold. All widget will be created but they are
 	 * showed. This method return the root element.
 	 * 
 	 */
-	static public Control load(IUIPattern pattern) throws Exception {
+	static public Control load(IUIMold mold) throws Exception {
 		XWT.checkInitialization();
-		return XWTLoaderManager.getActive().load(pattern);
+		return XWTLoaderManager.getActive().load(mold);
 	}
 
 	/**
@@ -412,14 +412,14 @@ public class XWT {
 	}
 
 	/**
-	 * Load the content from UIPattern. All widget will be created but they are
+	 * Load the content from UIMold. All widget will be created but they are
 	 * showed. This method return the root element.
 	 * 
 	 */
-	static public Control load(IUIPattern pattern, Object dataContext)
+	static public Control load(IUIMold mold, Object dataContext)
 			throws Exception {
 		XWT.checkInitialization();
-		return XWTLoaderManager.getActive().load(pattern, dataContext);
+		return XWTLoaderManager.getActive().load(mold, dataContext);
 	}
 
 	/**
@@ -437,9 +437,9 @@ public class XWT {
 	 * the root element.
 	 * 
 	 */
-	static public Control load(Composite parent, IUIPattern pattern)
+	static public Control load(Composite parent, IUIMold mold)
 			throws Exception {
-		return XWTLoaderManager.getActive().load(parent, pattern);
+		return XWTLoaderManager.getActive().load(parent, mold);
 	}
 
 	/**
@@ -453,7 +453,7 @@ public class XWT {
 	}
 
 	/**
-	 * Load the content from IUIPattern.
+	 * Load the content from IUIMold.
 	 * 
 	 * @param stream
 	 * @param input
@@ -461,13 +461,13 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public IUIPattern loadAsPattern(InputStream stream, URL input,
+	static public IUIMold loadAsMold(InputStream stream, URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception {
-		return XWTLoaderManager.getActive().loadAsPattern(stream, input, parsingCallback);
+		return XWTLoaderManager.getActive().loadAsMold(stream, input, parsingCallback);
 	}
 
 	/**
-	 * Load the content from IUIPattern.
+	 * Load the content from IUIMold.
 	 * 
 	 * @param stream
 	 * @param input
@@ -475,32 +475,32 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public IUIPattern loadAsPattern(InputStream stream, URL input) throws Exception {
-		return XWTLoaderManager.getActive().loadAsPattern(stream, input);
+	static public IUIMold loadAsMold(InputStream stream, URL input) throws Exception {
+		return XWTLoaderManager.getActive().loadAsMold(stream, input);
 	}
 
 	/**
-	 * Load the content from IUIPattern.
+	 * Load the content from IUIMold.
 	 * 
 	 * @param input
 	 * @param parsingCallback null if the callback is not necessary
 	 * @return
 	 * @throws Exception
 	 */
-	static public IUIPattern loadAsPattern(URL input,
+	static public IUIMold loadAsMold(URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception {
-		return XWTLoaderManager.getActive().loadAsPattern(null, input, parsingCallback);
+		return XWTLoaderManager.getActive().loadAsMold(null, input, parsingCallback);
 	}
 
 	/**
-	 * Load the content from IUIPattern.
+	 * Load the content from IUIMold.
 	 * 
 	 * @param input
 	 * @return
 	 * @throws Exception
 	 */
-	static public IUIPattern loadAsPattern(URL input) throws Exception {
-		return XWTLoaderManager.getActive().loadAsPattern(null, input);
+	static public IUIMold loadAsMold(URL input) throws Exception {
+		return XWTLoaderManager.getActive().loadAsMold(null, input);
 	}
 
 	
@@ -509,9 +509,9 @@ public class XWT {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	static public Control load(Composite parent, IUIPattern pattern,
+	static public Control load(Composite parent, IUIMold mold,
 			Object dataContext) throws Exception {
-		return XWTLoaderManager.getActive().load(parent, pattern, dataContext);
+		return XWTLoaderManager.getActive().load(parent, mold, dataContext);
 	}
 
 	/**
@@ -525,9 +525,9 @@ public class XWT {
 	/**
 	 * Open and show the file content in a new Shell.
 	 */
-	static public void open(final IUIPattern pattern) throws Exception {
+	static public void open(final IUIMold mold) throws Exception {
 		XWT.checkInitialization();
-		XWTLoaderManager.getActive().open(pattern);
+		XWTLoaderManager.getActive().open(mold);
 	}
 
 	/**
@@ -549,13 +549,13 @@ public class XWT {
 	}
 
 	/**
-	 * load the content from IUIPattern. The corresponding UI element is not yet
+	 * load the content from IUIMold. The corresponding UI element is not yet
 	 * created
 	 */
-	static public void open(IUIPattern pattern, Object dataContext)
+	static public void open(IUIMold mold, Object dataContext)
 			throws Exception {
 		XWT.checkInitialization();
-		XWTLoaderManager.getActive().open(pattern, dataContext);
+		XWTLoaderManager.getActive().open(mold, dataContext);
 	}
 
 	/**
@@ -576,13 +576,13 @@ public class XWT {
 	}
 
 	/**
-	 * load the content from IUIPattern. The corresponding UI element is not yet
+	 * load the content from IUIMold. The corresponding UI element is not yet
 	 * created
 	 */
-	static public void open(IUIPattern pattern, Map<String, Object> options)
+	static public void open(IUIMold mold, Map<String, Object> options)
 			throws Exception {
 		XWT.checkInitialization();
-		XWTLoaderManager.getActive().open(pattern, options);
+		XWTLoaderManager.getActive().open(mold, options);
 	}
 
 	static public Object convertFrom(Class<?> targetType, String string) {
@@ -594,9 +594,9 @@ public class XWT {
 		return XWTLoaderManager.getActive().loadWithOptions(url, options);
 	}
 
-	static public Control loadWithOptions(IUIPattern pattern,
+	static public Control loadWithOptions(IUIMold mold,
 			Map<String, Object> options) throws Exception {
-		return XWTLoaderManager.getActive().loadWithOptions(pattern, options);
+		return XWTLoaderManager.getActive().loadWithOptions(mold, options);
 	}
 
 	/**

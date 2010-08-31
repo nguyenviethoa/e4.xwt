@@ -2,14 +2,14 @@ package org.eclipse.e4.xwt.internal.core;
 
 import java.net.URL;
 
-import org.eclipse.e4.xwt.IUIPattern;
+import org.eclipse.e4.xwt.IUIMold;
 import org.eclipse.e4.xwt.internal.xml.Element;
 
-public class UIPattern implements IUIPattern {
+public class UIMold implements IUIMold {
 	protected Element content;
 	protected URL url;
 	
-	public UIPattern(URL url, Element content) {
+	public UIMold(URL url, Element content) {
 		this.content = content;
 		this.url = url;
 	}

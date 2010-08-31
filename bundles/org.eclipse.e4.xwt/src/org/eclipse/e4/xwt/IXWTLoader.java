@@ -383,7 +383,7 @@ public interface IXWTLoader {
 	 */
 	Control load(URL file, Object dataContext) throws Exception;
 
-	Control load(IUIPattern pattern, Object dataContext) throws Exception;
+	Control load(IUIMold mold, Object dataContext) throws Exception;
 
 	/**
 	 * Load the file content under a Composite. All widget will be created. This
@@ -397,7 +397,7 @@ public interface IXWTLoader {
 	 * method returns the root element. The DataContext will be associated to
 	 * the root element.
 	 */
-	Control load(Composite parent, IUIPattern pattern) throws Exception;
+	Control load(Composite parent, IUIMold mold) throws Exception;
 
 	/**
 	 * Load the file content under a Composite with a DataContext. All widget
@@ -412,7 +412,7 @@ public interface IXWTLoader {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	Control load(Composite parent, IUIPattern pattern, Object dataContext)
+	Control load(Composite parent, IUIMold mold, Object dataContext)
 			throws Exception;
 
 	/**
@@ -441,7 +441,7 @@ public interface IXWTLoader {
 	 */
 	void open(URL url) throws Exception;
 
-	void open(IUIPattern pattern) throws Exception;
+	void open(IUIMold mold) throws Exception;
 
 	/**
 	 * load the content from a stream with a style, a DataContext and a
@@ -455,7 +455,7 @@ public interface IXWTLoader {
 	 */
 	void open(URL url, Object dataContext) throws Exception;
 
-	void open(IUIPattern pattern, Object dataContext) throws Exception;
+	void open(IUIMold mold, Object dataContext) throws Exception;
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
@@ -467,7 +467,7 @@ public interface IXWTLoader {
 	 */
 	void open(URL url, Map<String, Object> options) throws Exception;
 
-	void open(IUIPattern pattern, final Map<String, Object> options) throws Exception;
+	void open(IUIMold mold, final Map<String, Object> options) throws Exception;
 
 	/**
 	 * Data conversion service from String to a given type
@@ -500,16 +500,16 @@ public interface IXWTLoader {
 	 */
 	Control load(InputStream stream, URL url) throws Exception;
 
-	Control load(IUIPattern pattern) throws Exception;
+	Control load(IUIMold mold) throws Exception;
 
-	public IUIPattern loadAsPattern(InputStream stream, URL input) throws Exception;
+	public IUIMold loadAsMold(InputStream stream, URL input) throws Exception;
 
-	public IUIPattern loadAsPattern(InputStream stream, URL input,
+	public IUIMold loadAsMold(InputStream stream, URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception;
 
-	public IUIPattern loadAsPattern(URL input) throws Exception;
+	public IUIMold loadAsMold(URL input) throws Exception;
 
-	public IUIPattern loadAsPattern(URL input,
+	public IUIMold loadAsMold(URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception;
 
 	/**
@@ -524,7 +524,7 @@ public interface IXWTLoader {
 	Control loadWithOptions(InputStream stream, URL url,
 			Map<String, Object> options) throws Exception;
 
-	Control loadWithOptions(IUIPattern pattern,
+	Control loadWithOptions(IUIMold mold,
 			Map<String, Object> options) throws Exception;
 
 	/**
