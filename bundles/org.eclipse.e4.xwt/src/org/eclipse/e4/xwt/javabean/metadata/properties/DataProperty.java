@@ -12,7 +12,6 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.ILoadingType;
-import org.eclipse.e4.xwt.metadata.IProperty;
 
 /**
  * Additional property to store in user data in widget
