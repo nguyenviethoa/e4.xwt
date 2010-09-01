@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.controls.uipattern;
+package org.eclipse.e4.xwt.tests.controls.uimold;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -19,13 +19,13 @@ import org.eclipse.e4.xwt.tests.controls.combo.ComboTests;
 import org.eclipse.e4.xwt.tests.controls.shell.ShellTests;
 import org.eclipse.e4.xwt.tests.controls.tree.TreeTests;
 
-public class UIPatternTestSuite extends TestSuite {
+public class UIMoldTestSuite extends TestSuite {
 	public static final Test suite() {
-		return new UIPatternTestSuite();
+		return new UIMoldTestSuite();
 	}
 
-	public UIPatternTestSuite() {
-		addTest(new TestSuite(UIPatternTests.class));
+	public UIMoldTestSuite() {
+		addTest(new TestSuite(UIMoldTests.class));
 		addTest(new TestSuite(ButtonTests.class));
 		addTest(new TestSuite(ComboTests.class));
 		addTest(new TestSuite(CComboTests.class));

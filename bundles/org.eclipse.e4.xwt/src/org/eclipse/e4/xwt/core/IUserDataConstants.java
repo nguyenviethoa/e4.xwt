@@ -14,6 +14,7 @@ public interface IUserDataConstants {
 	public static String XWT_CONTROLLER_KEY = "Controller";
 	public static String XWT_RESOURCES_KEY = "Resources";
 	public static String XWT_STYLE_KEY = "Style";
+	public static String XWT_DRAWING_KEY = "Drawing";
 	public static String XWT_DATACONTEXT_KEY = "DataContext";
 	public static String XWT_BINDING_CONTEXT_KEY = "DefaultDataBindingContext";
 	public static String XWT_TRIGGERS_KEY = "Triggers";

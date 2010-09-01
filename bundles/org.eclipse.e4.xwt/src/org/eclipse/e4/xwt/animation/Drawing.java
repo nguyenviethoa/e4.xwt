@@ -7,23 +7,10 @@
  * 
  * Contributors:
  *     Soyatec - initial API and implementation
+ *     Anyware-tech - add multiple loaders
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.controls.uipattern;
+package org.eclipse.e4.xwt.animation;
 
-import java.net.URL;
+public class Drawing {
 
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.XWT;
-
-public class Control_Size {
-	public static void main(String[] args) {
-		URL url = Control_Size.class.getResource(Control_Size.class
-				.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
-		try {
-			XWT.open(url);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

@@ -12,6 +12,7 @@
 package org.eclipse.e4.xwt;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,6 +39,7 @@ import org.eclipse.e4.xwt.animation.CircleEase;
 import org.eclipse.e4.xwt.animation.ColorAnimation;
 import org.eclipse.e4.xwt.animation.CubicEase;
 import org.eclipse.e4.xwt.animation.DoubleAnimation;
+import org.eclipse.e4.xwt.animation.Drawing;
 import org.eclipse.e4.xwt.animation.ElasticEase;
 import org.eclipse.e4.xwt.animation.ExponentialEase;
 import org.eclipse.e4.xwt.animation.FloatAnimation;
@@ -160,6 +162,7 @@ import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -1558,6 +1561,24 @@ public class XWTLoader implements IXWTLoader {
 
 		Class<?> type = org.eclipse.swt.widgets.Widget.class;
 		IMetaclass metaclass = (IMetaclass) registerMetaclass(type);
+		IProperty drawingProperty = new AbstractProperty(IUserDataConstants.XWT_DRAWING_KEY, Drawing.class) {
+			public void setValue(Object target, Object value)
+					throws IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException, SecurityException, NoSuchFieldException {
+				if (!ObjectUtil.isAssignableFrom(IBinding.class, getType())) {
+					if (value != null) {
+						value = ObjectUtil.resolveValue(value, getType(), value);
+					}
+				}
+			}
+			
+			public Object getValue(Object target) throws IllegalArgumentException,
+					IllegalAccessException, InvocationTargetException,
+					SecurityException, NoSuchFieldException {
+				return null;
+			}
+		};
+		metaclass.addProperty(drawingProperty);
 		IProperty dataContextProperty = new DataProperty(
 				IConstants.XAML_DATA_CONTEXT,
 				IUserDataConstants.XWT_DATACONTEXT_KEY);

@@ -20,7 +20,7 @@ import org.eclipse.e4.xwt.tests.clr.CLRTestSuite;
 import org.eclipse.e4.xwt.tests.clrfactory.CLRFactoryTestSuite;
 import org.eclipse.e4.xwt.tests.controls.ControlsTestSuite;
 import org.eclipse.e4.xwt.tests.controls.layout.LayoutTestSuite;
-import org.eclipse.e4.xwt.tests.controls.uipattern.UIPatternTestSuite;
+import org.eclipse.e4.xwt.tests.controls.uimold.UIMoldTestSuite;
 import org.eclipse.e4.xwt.tests.databinding.BindingTestSuite;
 import org.eclipse.e4.xwt.tests.events.EventsTestSuite;
 import org.eclipse.e4.xwt.tests.forms.FormsTestSuite;
@@ -121,7 +121,7 @@ public class XwtTestSuite extends TestSuite {
 		addTest(ControlsTestSuite.suite());
 		addTest(LayoutTestSuite.suite());
 		addTest(SWTTestSuite.suite());
-		addTest(UIPatternTestSuite.suite());
+		addTest(UIMoldTestSuite.suite());
 	}
 
 	protected void addUserControlTests() {
