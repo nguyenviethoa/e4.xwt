@@ -41,6 +41,7 @@ public interface IConstants {
 	public final String XAML_BINDING_CONTEXT = "BindingContext";
 	public final String XAML_LAYOUT_TRANSFORM = "LayoutTransform";
 	public final String XAML_RENDER_TRANSFORM = "RenderTransform";
+	public final String XAML_RENDER_TRANSFORM_ORIGIN = "RenderTransformOrigin";
 	public final String XAML_TRIGGERS = "Triggers";
 	public final String XAML_STYLE = "Style";
 	public final String XAML_COMMAND = "Command";
