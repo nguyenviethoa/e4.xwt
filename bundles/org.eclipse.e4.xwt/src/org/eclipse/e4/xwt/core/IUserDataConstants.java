@@ -19,6 +19,7 @@ public interface IUserDataConstants {
 	public static String XWT_BINDING_CONTEXT_KEY = "DefaultDataBindingContext";
 	public static String XWT_LAYOUT_TRANSFORM_KEY = "LayoutTransform";
 	public static String XWT_RENDER_TRANSFORM_KEY = "RenderTransform";
+	public static String XWT_VISUAL_TRANSFORM_KEY = "RenderTransform";
 	public static String XWT_RENDER_TRANSFORM_ORIGIN_KEY = "RenderTransformOrigin";
 	public static String XWT_TRIGGERS_KEY = "Triggers";
 	public static String XWT_NAME_KEY = "Name";
