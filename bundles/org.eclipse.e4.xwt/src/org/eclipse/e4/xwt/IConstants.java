@@ -39,6 +39,8 @@ public interface IConstants {
 	public final String XAML_X_SHARED = "Shared";
 	public final String XAML_DATA_CONTEXT = "DataContext";
 	public final String XAML_BINDING_CONTEXT = "BindingContext";
+	public final String XAML_LAYOUT_TRANSFORM = "LayoutTransform";
+	public final String XAML_RENDER_TRANSFORM = "RenderTransform";
 	public final String XAML_TRIGGERS = "Triggers";
 	public final String XAML_STYLE = "Style";
 	public final String XAML_COMMAND = "Command";
