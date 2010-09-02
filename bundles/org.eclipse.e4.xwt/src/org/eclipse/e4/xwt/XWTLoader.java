@@ -677,6 +677,15 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(mold, options);
 	}
 
+	public Control load(Composite parent, IUIMold mold, Map<String, Object> options)
+			throws Exception {
+		if (options.isEmpty()) {
+			options = new HashMap<String, Object>();
+		}
+		options.put(CONTAINER_PROPERTY, parent);
+		return loadWithOptions(mold, options);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -810,8 +819,8 @@ public class XWTLoader implements IXWTLoader {
 		return loadAsMold(null, input, null);
 	}
 
-	public IUIMold loadAsMold(URL input,
-			IBeforeParsingCallback parsingCallback) throws Exception {
+	public IUIMold loadAsMold(URL input, IBeforeParsingCallback parsingCallback)
+			throws Exception {
 		return loadAsMold(null, input, parsingCallback);
 	}
 
@@ -1005,8 +1014,7 @@ public class XWTLoader implements IXWTLoader {
 					Realm.runWithDefault(realm, new Runnable() {
 						public void run() {
 							try {
-								Control control = loadWithOptions(mold,
-										options);
+								Control control = loadWithOptions(mold, options);
 								Shell shell = control.getShell();
 								shell.open();
 							} catch (Exception e) {
@@ -1072,8 +1080,8 @@ public class XWTLoader implements IXWTLoader {
 		return visualObject;
 	}
 
-	public Control loadWithOptions(IUIMold mold,
-			Map<String, Object> options) throws Exception {
+	public Control loadWithOptions(IUIMold mold, Map<String, Object> options)
+			throws Exception {
 		UIMold uiMold = (UIMold) mold;
 		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object)
@@ -1114,7 +1122,7 @@ public class XWTLoader implements IXWTLoader {
 				base, options);
 		return visualObject;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1561,20 +1569,24 @@ public class XWTLoader implements IXWTLoader {
 
 		Class<?> type = org.eclipse.swt.widgets.Widget.class;
 		IMetaclass metaclass = (IMetaclass) registerMetaclass(type);
-		IProperty drawingProperty = new AbstractProperty(IUserDataConstants.XWT_DRAWING_KEY, Drawing.class) {
+		IProperty drawingProperty = new AbstractProperty(
+				IUserDataConstants.XWT_DRAWING_KEY, Drawing.class) {
 			public void setValue(Object target, Object value)
 					throws IllegalArgumentException, IllegalAccessException,
-					InvocationTargetException, SecurityException, NoSuchFieldException {
+					InvocationTargetException, SecurityException,
+					NoSuchFieldException {
 				if (!ObjectUtil.isAssignableFrom(IBinding.class, getType())) {
 					if (value != null) {
-						value = ObjectUtil.resolveValue(value, getType(), value);
+						value = ObjectUtil
+								.resolveValue(value, getType(), value);
 					}
 				}
 			}
-			
-			public Object getValue(Object target) throws IllegalArgumentException,
-					IllegalAccessException, InvocationTargetException,
-					SecurityException, NoSuchFieldException {
+
+			public Object getValue(Object target)
+					throws IllegalArgumentException, IllegalAccessException,
+					InvocationTargetException, SecurityException,
+					NoSuchFieldException {
 				return null;
 			}
 		};

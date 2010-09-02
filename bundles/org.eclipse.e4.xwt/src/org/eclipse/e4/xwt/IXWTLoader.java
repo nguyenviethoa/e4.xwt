@@ -420,6 +420,14 @@ public interface IXWTLoader {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
+	Control load(Composite parent, IUIMold mold, Map<String, Object> options)
+			throws Exception;
+
+	/**
+	 * Load the file content under a Composite with a DataContext. All widget
+	 * will be created. This method returns the root element. The DataContext
+	 * will be associated to the root element.
+	 */
 	Control load(Composite parent, Class<?> viewType, Object dataContext)
 			throws Exception;
 

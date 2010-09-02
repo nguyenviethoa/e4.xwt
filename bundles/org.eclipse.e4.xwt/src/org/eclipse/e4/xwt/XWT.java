@@ -514,6 +514,11 @@ public class XWT {
 		return XWTLoaderManager.getActive().load(parent, mold, dataContext);
 	}
 
+	static public Control load(Composite parent, IUIMold mold,
+			Map<String, Object> options) throws Exception {
+		return XWTLoaderManager.getActive().load(parent, mold, options);
+	}
+
 	/**
 	 * Open and show the file content in a new Shell.
 	 */
