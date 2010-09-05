@@ -29,6 +29,9 @@ public class XWTLoaderManager {
 	public static IXWTLoader getDefault() {
 		if (defaultXWTLoader == null) {
 			defaultXWTLoader = new XWTLoader();
+			for (IXWTInitializer initializer : XWT.getInitializers()) {
+				initializer.initialize(defaultXWTLoader);
+			}
 		}
 		return defaultXWTLoader;
 	}

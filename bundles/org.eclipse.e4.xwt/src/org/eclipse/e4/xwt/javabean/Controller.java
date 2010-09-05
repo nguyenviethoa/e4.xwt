@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.javabean;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.IEventInvoker;
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.swt.SWT;
@@ -138,18 +140,20 @@ public class Controller implements Listener, IEventController {
 		names[waterMark++] = name;
 
 		if (eventType == IEventConstants.XWT_SWT_LOADED) {
-			Listener[] listeners = control.getListeners(SWT.Paint);
-			if (listeners.length > 0) {
-				for (Listener listener : listeners) {
-					control.removeListener(SWT.Paint, listener); 									
+			if(XWTMaps.getEvent("swt.paint")!=SWT.None) {
+				Listener[] listeners = control.getListeners(XWTMaps.getEvent("swt.paint"));
+				if (listeners.length > 0) {
+					for (Listener listener : listeners) {
+						control.removeListener(XWTMaps.getEvent("swt.paint"), listener);
+					}
+					control.addListener(XWTMaps.getEvent("swt.paint"), new LoadedEventListener(control));
+					for (Listener listener : listeners) {
+						control.addListener(XWTMaps.getEvent("swt.paint"), listener);
+					}
 				}
-				control.addListener(SWT.Paint, new LoadedEventListener(control)); 				
-				for (Listener listener : listeners) {
-					control.addListener(SWT.Paint, listener); 									
+				else {
+					control.addListener(XWTMaps.getEvent("swt.paint"), new LoadedEventListener(control));
 				}
-			}
-			else {
-				control.addListener(SWT.Paint, new LoadedEventListener(control)); 				
 			}
 		}
 		control.addListener(eventType, this);
@@ -176,7 +180,7 @@ public class Controller implements Listener, IEventController {
 			loadedEvent.index = event.index;
 			loadedEvent.item = event.item;
 			loadedEvent.keyCode = event.keyCode;
-			loadedEvent.keyLocation = event.keyLocation;
+			trySetEventKeyLocation(loadedEvent, event);
 			loadedEvent.start = event.start;
 			loadedEvent.stateMask = event.stateMask;
 			loadedEvent.text = event.text;
@@ -185,8 +189,20 @@ public class Controller implements Listener, IEventController {
 			loadedEvent.width = event.width;
 			loadedEvent.x = event.x;
 			loadedEvent.type = IEventConstants.XWT_SWT_LOADED;
-			control.removeListener(SWT.Paint, this);
+			if(XWTMaps.getEvent("swt.paint")!=SWT.None) {
+				control.removeListener(XWTMaps.getEvent("swt.paint"), this);
+			}
 			Controller.this.handleEvent(loadedEvent);
+		}
+		private void trySetEventKeyLocation(Event loadedEvent, Event event) {
+			if(SWT.getPlatform()!="rap") {
+				try {
+					Field f = Event.class.getDeclaredField("loadedKey");
+					f.set(loadedEvent, f.get(event));
+				} catch (Exception e) {
+					assert false;
+				}
+			}
 		}
 	}
 	
@@ -221,15 +237,15 @@ public class Controller implements Listener, IEventController {
 		} else if (IEventConstants.MOUSE_UP.equalsIgnoreCase(name)) {
 			return SWT.MouseUp;
 		} else if (IEventConstants.MOUSE_MOVE.equalsIgnoreCase(name)) {
-			return SWT.MouseMove;
+			return XWTMaps.getEvent("swt.mousemove");
 		} else if (IEventConstants.MOUSE_ENTER.equalsIgnoreCase(name)) {
-			return SWT.MouseEnter;
+			return XWTMaps.getEvent("swt.mouseenter");
 		} else if (IEventConstants.MOUSE_EXIT.equalsIgnoreCase(name)) {
-			return SWT.MouseExit;
+			return XWTMaps.getEvent("swt.mouseexit");
 		} else if (IEventConstants.MOUSE_DOUBLE_CLICK.equalsIgnoreCase(name)) {
 			return SWT.MouseDoubleClick;
 		} else if (IEventConstants.PAINT.equalsIgnoreCase(name)) {
-			return SWT.Paint;
+			return XWTMaps.getEvent("swt.paint");
 		} else if (IEventConstants.MOVE.equalsIgnoreCase(name)) {
 			return SWT.Move;
 		} else if (IEventConstants.RESIZE.equalsIgnoreCase(name)) {
@@ -249,9 +265,9 @@ public class Controller implements Listener, IEventController {
 		} else if (IEventConstants.COLLAPSE.equalsIgnoreCase(name)) {
 			return SWT.Collapse;
 		} else if (IEventConstants.ICONIFY.equalsIgnoreCase(name)) {
-			return SWT.Iconify;
+			return XWTMaps.getEvent("swt.iconify");
 		} else if (IEventConstants.DEICONIFY.equalsIgnoreCase(name)) {
-			return SWT.Deiconify;
+			return XWTMaps.getEvent("swt.deiconify");
 		} else if (IEventConstants.CLOSE.equalsIgnoreCase(name)) {
 			return SWT.Close;
 		} else if (IEventConstants.SHOW.equalsIgnoreCase(name)) {
@@ -275,23 +291,23 @@ public class Controller implements Listener, IEventController {
 		} else if (IEventConstants.TRAVERSE.equalsIgnoreCase(name)) {
 			return SWT.Traverse;
 		} else if (IEventConstants.MOUSE_HOVER.equalsIgnoreCase(name)) {
-			return SWT.MouseHover;
+			return XWTMaps.getEvent("swt.mousehover");
 		} else if (IEventConstants.HARD_KEY_DOWN.equalsIgnoreCase(name)) {
-			return SWT.HardKeyDown;
+			return XWTMaps.getEvent("swt.hardkeydown");
 		} else if (IEventConstants.HARD_KEY_UP.equalsIgnoreCase(name)) {
-			return SWT.HardKeyUp;
+			return XWTMaps.getEvent("swt.hardkeyup");
 		} else if (IEventConstants.MENU_DETECT.equalsIgnoreCase(name)) {
 			return SWT.MenuDetect;
 		} else if (IEventConstants.MOUSE_WHEEL.equalsIgnoreCase(name)) {
-			return SWT.MouseWheel;
+			return XWTMaps.getEvent("swt.mousewheel");
 		} else if (IEventConstants.SETTINGS.equalsIgnoreCase(name)) {
-			return SWT.Settings;
+			return XWTMaps.getEvent("swt.settings");
 		} else if (IEventConstants.ERASE_ITEM.equalsIgnoreCase(name)) {
-			return SWT.EraseItem;
+			return XWTMaps.getEvent("swt.eraseitem");
 		} else if (IEventConstants.MEASURE_ITEM.equalsIgnoreCase(name)) {
-			return SWT.MeasureItem;
+			return XWTMaps.getEvent("swt.measureitem");
 		} else if (IEventConstants.PAINT_ITEM.equalsIgnoreCase(name)) {
-			return SWT.PaintItem;
+			return XWTMaps.getEvent("swt.paintitem");
 		} else if (IEventConstants.XWT_LOADED.equalsIgnoreCase(name) || IEventConstants.XWT_LOADED_EVENT.equalsIgnoreCase(name)) {
 			return IEventConstants.XWT_SWT_LOADED;
 		}

@@ -43,6 +43,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
@@ -437,8 +439,7 @@ public class XWT {
 	 * the root element.
 	 * 
 	 */
-	static public Control load(Composite parent, IUIMold mold)
-			throws Exception {
+	static public Control load(Composite parent, IUIMold mold) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, mold);
 	}
 
@@ -457,13 +458,15 @@ public class XWT {
 	 * 
 	 * @param stream
 	 * @param input
-	 * @param parsingCallback null if the callback is not necessary
+	 * @param parsingCallback
+	 *            null if the callback is not necessary
 	 * @return
 	 * @throws Exception
 	 */
 	static public IUIMold loadAsMold(InputStream stream, URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception {
-		return XWTLoaderManager.getActive().loadAsMold(stream, input, parsingCallback);
+		return XWTLoaderManager.getActive().loadAsMold(stream, input,
+				parsingCallback);
 	}
 
 	/**
@@ -471,11 +474,13 @@ public class XWT {
 	 * 
 	 * @param stream
 	 * @param input
-	 * @param parsingCallback null if the callback is not necessary
+	 * @param parsingCallback
+	 *            null if the callback is not necessary
 	 * @return
 	 * @throws Exception
 	 */
-	static public IUIMold loadAsMold(InputStream stream, URL input) throws Exception {
+	static public IUIMold loadAsMold(InputStream stream, URL input)
+			throws Exception {
 		return XWTLoaderManager.getActive().loadAsMold(stream, input);
 	}
 
@@ -483,13 +488,15 @@ public class XWT {
 	 * Load the content from IUIMold.
 	 * 
 	 * @param input
-	 * @param parsingCallback null if the callback is not necessary
+	 * @param parsingCallback
+	 *            null if the callback is not necessary
 	 * @return
 	 * @throws Exception
 	 */
 	static public IUIMold loadAsMold(URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception {
-		return XWTLoaderManager.getActive().loadAsMold(null, input, parsingCallback);
+		return XWTLoaderManager.getActive().loadAsMold(null, input,
+				parsingCallback);
 	}
 
 	/**
@@ -503,7 +510,6 @@ public class XWT {
 		return XWTLoaderManager.getActive().loadAsMold(null, input);
 	}
 
-	
 	/**
 	 * Load the file content under a Composite with a DataContext. All widget
 	 * will be created. This method returns the root element. The DataContext
@@ -525,6 +531,14 @@ public class XWT {
 	static public void open(final URL url) throws Exception {
 		XWT.checkInitialization();
 		XWTLoaderManager.getActive().open(url);
+	}
+
+	/**
+	 * Open and show the file content in a new Shell.
+	 */
+	static public void open(final Class<?> type) throws Exception {
+		XWT.checkInitialization();
+		XWTLoaderManager.getActive().open(type);
 	}
 
 	/**
@@ -557,8 +571,7 @@ public class XWT {
 	 * load the content from IUIMold. The corresponding UI element is not yet
 	 * created
 	 */
-	static public void open(IUIMold mold, Object dataContext)
-			throws Exception {
+	static public void open(IUIMold mold, Object dataContext) throws Exception {
 		XWT.checkInitialization();
 		XWTLoaderManager.getActive().open(mold, dataContext);
 	}
@@ -975,6 +988,20 @@ public class XWT {
 		XWTLoaderManager.getActive().unregisterFileResolveType(type);
 	}
 
+	static class DisplayThread extends Thread implements Listener {
+		protected long startTime = -1;
+		protected boolean toStop = false;
+		protected Runnable runnable;
+
+		public DisplayThread(Runnable runnable) {
+			this.runnable = runnable;
+		}
+
+
+		public void handleEvent(Event event) {
+		}
+	}
+
 	/**
 	 * Run in UI context.
 	 * 
@@ -983,51 +1010,43 @@ public class XWT {
 	public static void runOnUIThread(final Runnable runnable) {
 		String platform = SWT.getPlatform();
 		if (platform.startsWith("win")) {
+			XWTLoaderManager.getDefault();
+			runnable.run();
+		} else if (platform.startsWith("rap")) {
+			XWTLoaderManager.getDefault();
 			runnable.run();
 		} else if (platform.endsWith("gtk")) {
 			synchronized (displayLock) {
 				if (displayThread == null || !displayThread.isAlive()) {
-					displayThread = new Thread() { // start SWT Display thread
+					displayThread = new Thread() {
 						public void run() {
 							// Set default XWT ICLRFactory
+							XWTLoaderManager.getDefault();
 							runnable.run();
 							long startTime = -1;
 							while (true) {
-								if (!Display.getCurrent().readAndDispatch()) {
-									Display.getCurrent().sleep();
+								if (!Display.getDefault().readAndDispatch()) {
+									Display.getDefault().sleep();
 								}
-
-								if (Display.getCurrent().getShells().length == 2) {
-									break;
-								}
-								Shell[] shells = Display.getCurrent()
-										.getShells();
+								Shell[] shells = Display.getDefault().getShells();
 								if (shells.length == 0) {
 									if (startTime == -1) {
 										startTime = System.currentTimeMillis();
-									} else if ((System.currentTimeMillis() - startTime) > 1000) {
+									} else if ((System.currentTimeMillis() - startTime) > 5000) {
 										break;
 									}
 								} else {
 									startTime = -1;
 								}
 							}
-						}
+						}						
 					};
 					displayThread.start();
-				}
-				long startTime = -1;
-				while (true) {
+				} else {
+					XWT.checkInitialization();
 					Display display = Display.findDisplay(displayThread);
-					if (display == null) {
-						if (startTime == -1) {
-							startTime = System.currentTimeMillis();
-						} else if ((System.currentTimeMillis() - startTime) > 1000) {
-							throw new XWTException("Display starting timeout");
-						}
-					} else {
+					if (display != null) {
 						display.syncExec(runnable);
-						break;
 					}
 				}
 			}
@@ -1040,7 +1059,9 @@ public class XWT {
 		if (initializers == null) {
 			initializers = new ArrayList<IXWTInitializer>();
 		}
-		initializers.add(initializer);
+		if (!XWTLoaderManager.isStarted()) {
+			initializers.add(initializer);
+		}
 	}
 
 	public static List<IXWTInitializer> getInitializers() {

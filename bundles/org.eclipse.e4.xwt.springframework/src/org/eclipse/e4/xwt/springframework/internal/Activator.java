@@ -131,15 +131,7 @@ public class Activator implements BundleActivator, IXWTInitializer {
 				}
 			}
 
-			if (lazy) {
-				XWT.runOnUIThread(new Runnable() {
-					public void run() {
-						// Set default XWT ICLRFactory
-						setDefaultCLRFactory();
-					}
-				});
-			}
-
+			XWT.checkInitialization();
 		} finally {
 			if (!lazy) {
 				initialized = true;
@@ -150,7 +142,11 @@ public class Activator implements BundleActivator, IXWTInitializer {
 		}
 	}
 
-	public void initialize(IXWTLoader loader) {		
+	public void initialize(IXWTLoader loader) {
+		if (lazy) {
+			setDefaultCLRFactory();
+		}
+		initialized = true;
 	}
 	
 	public boolean isInitialized() {
@@ -167,7 +163,6 @@ public class Activator implements BundleActivator, IXWTInitializer {
 					.log("Use SpringCLRFactory.INSTANCE as default XWT x:ClassFactory. XWT file can use syntax x:ClassFactory=\"+ bean=<myBean> bundle=<myBundle>\"",
 							1);
 		}
-		initialized = true;
 	}
 
 	/**

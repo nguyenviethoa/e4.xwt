@@ -12,8 +12,8 @@ package org.eclipse.e4.xwt.javabean.metadata.properties;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.metadata.ILoadingType;
-import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.FocusAdapter;
@@ -265,7 +265,9 @@ public class TableEditorDynamicProperty extends AbstractProperty {
 				}
 				if (index == order.length)
 					index = 0;
-				int leadKey = (table.getStyle() & SWT.RIGHT_TO_LEFT) != 0 ? SWT.ARROW_RIGHT : SWT.ARROW_LEFT;
+				int leadKey = (XWTMaps.getStyle("SWT.RIGHT_TO_LEFT") != SWT.NONE)
+						? ((table.getStyle() & XWTMaps.getStyle("SWT.RIGHT_TO_LEFT")) != 0 ? SWT.ARROW_RIGHT : SWT.ARROW_LEFT)
+						: SWT.ARROW_LEFT;
 				if (event.keyCode == leadKey) {
 					setColumn(order[Math.max(0, index - 1)]);
 				} else {

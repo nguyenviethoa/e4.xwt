@@ -3,7 +3,6 @@ package org.eclipse.e4.xwt.internal;
 import org.eclipse.e4.xwt.IXWTInitializer;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.XWTLoaderManager;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -16,7 +15,6 @@ public class Activator implements BundleActivator, IXWTInitializer {
 		XWT.addInitializer(this);
 		XWT.runOnUIThread(new Runnable() {
 			public void run() {
-				XWTLoaderManager.getDefault();
 			}
 		});
 	}

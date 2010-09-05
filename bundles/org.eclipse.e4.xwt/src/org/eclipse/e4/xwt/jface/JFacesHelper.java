@@ -65,22 +65,32 @@ public class JFacesHelper {
 		try {
 
 			JFACES_VIEWER = Class.forName("org.eclipse.jface.viewers.Viewer");
-			collector.add(Class.forName("org.eclipse.jface.viewers.ComboViewer"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.ListViewer"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.TreeViewer"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.TableViewer"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.TableTreeViewer"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.CheckboxTableViewer"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.CheckboxTreeViewer"));
-			collector.add(Class.forName("org.eclipse.jface.dialogs.TitleAreaDialog"));
-
-			// Add CellEditors for JFave Viewers.
-			collector.add(Class.forName("org.eclipse.jface.viewers.CellEditor"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.ComboBoxViewerCellEditor"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.DialogCellEditor"));
-			collector.add(Class.forName("org.eclipse.jface.viewers.ColorCellEditor"));
-			collector.add(TextCellEditor.class);
-			collector.add(CheckboxCellEditor.class);
+			String[] jfaceClasses = new String[] {
+					"org.eclipse.jface.viewers.ComboViewer",
+					"org.eclipse.jface.viewers.ListViewer",
+					"org.eclipse.jface.viewers.TreeViewer",
+					"org.eclipse.jface.viewers.TableViewer",
+					"org.eclipse.jface.viewers.TableTreeViewer",
+					"org.eclipse.jface.viewers.CheckboxTableViewer",
+					"org.eclipse.jface.viewers.CheckboxTreeViewer",
+					// Dialogs
+					"org.eclipse.jface.dialogs.TrayDialog",
+					"org.eclipse.jface.dialogs.TitleAreaDialog",
+					// Add CellEditors for JFave Viewers.
+					"org.eclipse.jface.viewers.CellEditor",
+					"org.eclipse.jface.viewers.ComboBoxViewerCellEditor",
+					"org.eclipse.jface.viewers.DialogCellEditor",
+					"org.eclipse.jface.viewers.ColorCellEditor",
+					TextCellEditor.class.getName(),
+					CheckboxCellEditor.class.getName()
+			};
+			for(String clazz : jfaceClasses) {
+				try {
+					collector.add(Class.forName(clazz));
+				} catch (Throwable e) {
+					System.out.println("No JFaces support for " + clazz);
+				}
+			}
 		} catch (ClassNotFoundException e) {
 			System.out.println("No JFaces support");
 		}

@@ -162,7 +162,6 @@ import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -190,18 +189,9 @@ public class XWTLoader implements IXWTLoader {
 	// Declarations
 	private Stack<Core> cores;
 
-	public Display display;
 	public Realm realm;
 
 	public XWTLoader() {
-		display = Display.getCurrent();
-		if (display == null) {
-			display = Display.getDefault();
-		}
-		if (realm == null) {
-			realm = SWTObservables.getRealm(display);
-		}
-
 		initialize();
 	}
 
@@ -230,7 +220,13 @@ public class XWTLoader implements IXWTLoader {
 	}
 
 	public Realm getRealm() {
-		return realm;
+		if(realm != null)
+			return realm;
+		Display display = Display.getCurrent();
+		if (display == null) {
+			display = Display.getDefault();
+		}
+		return SWTObservables.getRealm(display);
 	}
 
 	protected Core getCurrentCore() {
@@ -863,7 +859,7 @@ public class XWTLoader implements IXWTLoader {
 			if (Display.getCurrent() == null) {
 				new Display();
 			}
-			Realm.runWithDefault(realm, new Runnable() {
+			Realm.runWithDefault(getRealm(), new Runnable() {
 				public void run() {
 					try {
 						if (url == null) {
@@ -894,7 +890,7 @@ public class XWTLoader implements IXWTLoader {
 		}
 		Display defaultDisplay = Display.getDefault();
 		if (Thread.currentThread() == defaultDisplay.getThread()) {
-			Realm.runWithDefault(realm, new Runnable() {
+			Realm.runWithDefault(getRealm(), new Runnable() {
 				public void run() {
 					try {
 						if (url == null) {
@@ -927,7 +923,7 @@ public class XWTLoader implements IXWTLoader {
 		} else {
 			defaultDisplay.asyncExec(new Runnable() {
 				public void run() {
-					Realm.runWithDefault(realm, new Runnable() {
+					Realm.runWithDefault(getRealm(), new Runnable() {
 						public void run() {
 							try {
 								if (url == null) {
@@ -953,7 +949,7 @@ public class XWTLoader implements IXWTLoader {
 			if (Display.getCurrent() == null) {
 				new Display();
 			}
-			Realm.runWithDefault(realm, new Runnable() {
+			Realm.runWithDefault(getRealm(), new Runnable() {
 				public void run() {
 					try {
 						Control control = loadWithOptions(mold, options);
@@ -981,7 +977,7 @@ public class XWTLoader implements IXWTLoader {
 		}
 		Display defaultDisplay = Display.getDefault();
 		if (Thread.currentThread() == defaultDisplay.getThread()) {
-			Realm.runWithDefault(realm, new Runnable() {
+			Realm.runWithDefault(getRealm(), new Runnable() {
 				public void run() {
 					try {
 						Control control = loadWithOptions(mold, options);
@@ -1011,7 +1007,7 @@ public class XWTLoader implements IXWTLoader {
 		} else {
 			defaultDisplay.asyncExec(new Runnable() {
 				public void run() {
-					Realm.runWithDefault(realm, new Runnable() {
+					Realm.runWithDefault(getRealm(), new Runnable() {
 						public void run() {
 							try {
 								Control control = loadWithOptions(mold, options);
@@ -1904,10 +1900,6 @@ public class XWTLoader implements IXWTLoader {
 
 		registerFileResolveType(Image.class);
 		registerFileResolveType(URL.class);
-
-		for (IXWTInitializer initializer : XWT.getInitializers()) {
-			initializer.initialize(this);
-		}
 	}
 
 	/*
