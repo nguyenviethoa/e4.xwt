@@ -26,16 +26,23 @@ public class MultipleClassLoadedTests extends XWTTestCase {
 						+ IConstants.XWT_EXTENSION_SUFFIX);
 		runTest(url, new Runnable() {
 			public void run() {
-				checkButton("RootButton1", "1");
-				checkButton("RootButton2", "2");
-				checkButton("ChildButton", "1");
+				if (getButtonText("RootButton1").equals("1")) {
+					assertEquals("2", getButtonText("RootButton2")); 
+				}
+				else if (getButtonText("RootButton1").equals("2")) {
+					assertEquals("1", getButtonText("RootButton2")); 
+				}
+				else {
+					fail();
+				}				
+				assertEquals("1", getButtonText("ChildButton")); 
 			}
 
-			public void checkButton(String name, String text) {
+			public String getButtonText(String name) {
 				Object element = XWT.findElementByName(root, name);
 				assertTrue(element instanceof Button);
 				Button button = (Button) element;
-				assertEquals(button.getText(), text);
+				return button.getText();
 			}
 		});
 	}

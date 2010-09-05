@@ -79,8 +79,6 @@ public class JFacesHelper {
 					// Add CellEditors for JFave Viewers.
 					"org.eclipse.jface.viewers.CellEditor",
 					"org.eclipse.jface.viewers.ComboBoxViewerCellEditor",
-					"org.eclipse.jface.viewers.DialogCellEditor",
-					"org.eclipse.jface.viewers.ColorCellEditor",
 					TextCellEditor.class.getName(),
 					CheckboxCellEditor.class.getName()
 			};

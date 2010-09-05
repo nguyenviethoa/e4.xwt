@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class XWT {
 
-	private static List<IXWTInitializer> initializers = null;
+	private static List<IXWTInitializer> initializers = new ArrayList<IXWTInitializer>();
 	private static Thread displayThread;
 	private static final Object displayLock = new Object();
 
@@ -911,12 +911,11 @@ public class XWT {
 	}
 
 	private static boolean isAllInitializersInitialized() {
-		if (initializers == null) {
-			return true;
-		}
-		for (IXWTInitializer initializer : initializers) {
-			if (!initializer.isInitialized()) {
-				return false;
+		synchronized (initializers) {
+			for (IXWTInitializer initializer : initializers) {
+				if (!initializer.isInitialized()) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -1015,7 +1014,7 @@ public class XWT {
 		} else if (platform.startsWith("rap")) {
 			XWTLoaderManager.getDefault();
 			runnable.run();
-		} else if (platform.endsWith("gtk")) {
+		} else if (platform.endsWith("gtk") || platform.endsWith("cocoa")) {
 			synchronized (displayLock) {
 				if (displayThread == null || !displayThread.isAlive()) {
 					displayThread = new Thread() {
@@ -1056,18 +1055,14 @@ public class XWT {
 	}
 
 	public static void addInitializer(IXWTInitializer initializer) {
-		if (initializers == null) {
-			initializers = new ArrayList<IXWTInitializer>();
-		}
-		if (!XWTLoaderManager.isStarted()) {
-			initializers.add(initializer);
+		synchronized (initializers) {
+			if (!XWTLoaderManager.isStarted()) {
+				initializers.add(initializer);
+			}
 		}
 	}
 
-	public static List<IXWTInitializer> getInitializers() {
-		if (initializers == null) {
-			return Collections.EMPTY_LIST;
-		}
+	static List<IXWTInitializer> getInitializers() {
 		return initializers;
 	}
 
@@ -1077,5 +1072,13 @@ public class XWT {
 			return null;
 		}
 		return UserData.findParent(widget, type);
+	}
+	
+	static void runInitializers(IXWTLoader loader) {
+		synchronized (initializers) {
+			for (IXWTInitializer initializer : XWT.getInitializers()) {
+				initializer.initialize(loader);
+			}
+		}
 	}
 }
