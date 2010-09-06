@@ -94,19 +94,19 @@ public class XWTMaps {
 		styles.put("SWT.SEARCH", SWT.SEARCH);
 		styles.put("SWT.CANCEL", SWT.CANCEL);
 		// styles: icon
-		styles.put("SWT.ICON", SWT.ICON);
+		tryPut(styles,"SWT.ICON");
 		styles.put("SWT.ICON_ERROR", SWT.ICON_ERROR);
 		styles.put("SWT.ICON_INFORMATION", SWT.ICON_INFORMATION);
 		styles.put("SWT.ICON_QUESTION", SWT.ICON_QUESTION);
 		styles.put("SWT.ICON_WARNING", SWT.ICON_WARNING);
 		styles.put("SWT.ICON_WORKING", SWT.ICON_WORKING);
-		styles.put("SWT.SHADOW_ETCHED_IN", SWT.SHADOW_ETCHED_IN);
-		styles.put("SWT.SHADOW_ETCHED_OUT", SWT.SHADOW_ETCHED_OUT);
-		styles.put("SWT.BALLOON", SWT.BALLOON);
-		styles.put("SWT.NO_BACKGROUND", SWT.NO_BACKGROUND);
+		tryPut(styles,"SWT.SHADOW_ETCHED_IN");
+		tryPut(styles,"SWT.SHADOW_ETCHED_OUT");
+		tryPut(styles,"SWT.BALLOON");
+		tryPut(styles,"SWT.NO_BACKGROUND");
 		styles.put("SWT.NO_FOCUS", SWT.NO_FOCUS);
-		styles.put("SWT.NO_MERGE_PAINTS", SWT.NO_MERGE_PAINTS);
-		styles.put("SWT.NO_REDRAW_RESIZE", SWT.NO_REDRAW_RESIZE);
+		tryPut(styles,"SWT.NO_MERGE_PAINTS");
+		tryPut(styles,"SWT.NO_REDRAW_RESIZE");
 		styles.put("SWT.DOUBLE_BUFFERED", SWT.DOUBLE_BUFFERED);
 		styles.put("SWT.SMOOTH", SWT.SMOOTH);
 		styles.put("SWT.INDETERMINATE", SWT.INDETERMINATE);
@@ -117,10 +117,10 @@ public class XWTMaps {
 		styles.put("SWT.ITALIC", SWT.ITALIC);
 		styles.put("SWT.BOLD", SWT.BOLD);
 		styles.put("SWT.LEFT_TO_RIGHT", SWT.LEFT_TO_RIGHT);
-		styles.put("SWT.RIGHT_TO_LEFT", SWT.RIGHT_TO_LEFT);
+		tryPut(styles,"SWT.RIGHT_TO_LEFT");
 		styles.put("SWT.BAR", SWT.BAR);
 		styles.put("SWT.CASCADE", SWT.CASCADE);
-		styles.put("SWT.NO_RADIO_GROUP", SWT.NO_RADIO_GROUP);
+		tryPut(styles,"SWT.NO_RADIO_GROUP");
 		styles.put("SWT.POP_UP", SWT.POP_UP);
 		styles.put("SWT.INHERIT_DEFAULT", SWT.INHERIT_DEFAULT);
 		styles.put("SWT.INHERIT_NONE", SWT.INHERIT_NONE);
@@ -169,42 +169,42 @@ public class XWTMaps {
 		events.put("swt.collapse", SWT.Collapse);
 		events.put("swt.deactivate", SWT.Deactivate);
 		events.put("swt.defaultselection", SWT.DefaultSelection);
-		events.put("swt.deiconify", SWT.Deiconify);
+		tryPut(events, "swt.deiconify", "SWT.Deiconify");
 		events.put("swt.dispose", SWT.Dispose);
 		events.put("swt.dragdetect", SWT.DragDetect);
-		events.put("swt.eraseitem", SWT.EraseItem);
+		tryPut(events, "swt.eraseitem", "SWT.EraseItem");
 		events.put("swt.expand", SWT.Expand);
 		events.put("swt.focusin", SWT.FocusIn);
 		events.put("swt.focusout", SWT.FocusOut);
-		events.put("swt.hardkeydown", SWT.HardKeyDown);
-		events.put("swt.hardkeyup", SWT.HardKeyUp);
+		tryPut(events, "swt.hardkeydown", "SWT.HardKeyDown");
+		tryPut(events, "swt.hardkeyup", "SWT.HardKeyUp");
 		events.put("swt.help", SWT.Help);
 		events.put("swt.hide", SWT.Hide);
-		events.put("swt.iconify", SWT.Iconify);
+		tryPut(events, "swt.iconify", "SWT.Iconify");
 		events.put("swt.keydown", SWT.KeyDown);
 		events.put("swt.keyup", SWT.KeyUp);
-		events.put("swt.measureitem", SWT.MeasureItem);
+		tryPut(events, "swt.measureitem", "SWT.MeasureItem");
 		events.put("swt.menudetect", SWT.MenuDetect);
 		events.put("swt.modify", SWT.Modify);
 		events.put("swt.mousedoubleclick", SWT.MouseDoubleClick);
 		events.put("swt.mousedown", SWT.MouseDown);
-		events.put("swt.mouseenter", SWT.MouseEnter);
-		events.put("swt.mouseexit", SWT.MouseExit);
-		events.put("swt.mousehover", SWT.MouseHover);
-		events.put("swt.mousemove", SWT.MouseMove);
+		tryPut(events, "swt.mouseenter", "SWT.MouseEnter");
+		tryPut(events, "swt.mouseexit", "SWT.MouseExit");
+		tryPut(events, "swt.mousehover", "SWT.MouseHover");
+		tryPut(events, "swt.mousemove", "SWT.MouseMove");
 		events.put("swt.mouseup", SWT.MouseUp);
-		events.put("swt.mousewheel", SWT.MouseWheel);
+		tryPut(events, "swt.mousewheel", "SWT.MouseWheel");
 		events.put("swt.move", SWT.Move);
-		events.put("swt.paint", SWT.Paint);
-		events.put("swt.paintitem", SWT.PaintItem);
+		tryPut(events, "swt.paint", "SWT.Paint");
+		tryPut(events, "swt.paintitem", "SWT.PaintItem");
 		events.put("swt.resize", SWT.Resize);
 		events.put("swt.selection", SWT.Selection);
 		events.put("swt.setdata", SWT.SetData);
-		events.put("swt.settings", SWT.Settings);
+		tryPut(events, "swt.settings", "SWT.Settings");
 		events.put("swt.show", SWT.Show);
 		events.put("swt.traverse", SWT.Traverse);
 		events.put("swt.verify", SWT.Verify);
-		events.put("swt.imecomposition", SWT.ImeComposition);
+		tryPut(events, "swt.imecomposition", "SWT.ImeComposition");
 
 		// accelerators
 		accelerators.put("SWT.ALT", SWT.ALT);
@@ -217,7 +217,7 @@ public class XWTMaps {
 		accelerators.put("SWT.CENTER", SWT.CENTER);
 		accelerators.put("SWT.CTRL", SWT.CTRL);
 		accelerators.put("SWT.DEFAULT", SWT.DEFAULT);
-		accelerators.put("SWT.EMBEDDED", SWT.EMBEDDED);
+		tryPut(accelerators,"SWT.EMBEDDED");
 		accelerators.put("SWT.END", SWT.END);
 		accelerators.put("SWT.F1", SWT.F1);
 		accelerators.put("SWT.F2", SWT.F2);
@@ -669,6 +669,23 @@ public class XWTMaps {
 			return "Space";
 		} else {
 			return content;
+		}
+	}
+
+	private static void tryPut(Map<String,Integer> map, String swtConst) {
+		tryPut(map, swtConst, swtConst);
+	}
+
+	private static void tryPut(Map<String,Integer> map, String mapKey, String swtConst) {
+		try {
+			map.put(mapKey, SWT.class.getField(swtConst.substring(swtConst.lastIndexOf('.')+1, swtConst.length())).getInt(null));
+		} catch (Exception e) {
+			String message = "Failed to register SWT Constant "
+				+ swtConst
+				+ ". Excecption: "
+				+ e.getClass().getName()
+				+ " - "+ e.getMessage();
+			System.out.println(message);
 		}
 	}
 }

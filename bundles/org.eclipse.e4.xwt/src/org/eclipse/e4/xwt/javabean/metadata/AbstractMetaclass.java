@@ -31,6 +31,7 @@ import org.eclipse.e4.xwt.IEventGroup;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.core.IBinding;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.metadata.properties.BeanProperty;
@@ -138,35 +139,35 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			addTypedEvent(IEventConstants.DEACTIVATE, SWT.Deactivate);
 			addTypedEvent(IEventConstants.DEFAULT_SELECTION,
 					SWT.DefaultSelection);
-			addTypedEvent(IEventConstants.DEICONIFY, SWT.Deiconify);
+			addTypedEvent(IEventConstants.DEICONIFY, XWTMaps.getEvent("swt.deiconify"));
 			addTypedEvent(IEventConstants.DISPOSE, SWT.Dispose);
 			addTypedEvent(IEventConstants.DRAG_SELECT, SWT.DragDetect);
-			addTypedEvent(IEventConstants.ERASE_ITEM, SWT.EraseItem);
+			addTypedEvent(IEventConstants.ERASE_ITEM, XWTMaps.getEvent("swt.eraseitem"));
 			addTypedEvent(IEventConstants.EXPAND, SWT.Expand);
 			addTypedEvent(IEventConstants.FOCUS_IN, SWT.FocusIn);
 			addTypedEvent(IEventConstants.FOCUS_OUT, SWT.FocusOut);
-			addTypedEvent(IEventConstants.HARD_KEY_DOWN, SWT.HardKeyDown);
-			addTypedEvent(IEventConstants.HARD_KEY_UP, SWT.HardKeyUp);
+			addTypedEvent(IEventConstants.HARD_KEY_DOWN, XWTMaps.getEvent("swt.hardkeydown"));
+			addTypedEvent(IEventConstants.HARD_KEY_UP, XWTMaps.getEvent("swt.hardkeyup"));
 			addTypedEvent(IEventConstants.HELP, SWT.Help);
 			addTypedEvent(IEventConstants.HIDE, SWT.Hide);
-			addTypedEvent(IEventConstants.ICONIFY, SWT.Iconify);
+			addTypedEvent(IEventConstants.ICONIFY, XWTMaps.getEvent("swt.iconify"));
 			addTypedEvent(IEventConstants.KEY_DOWN, SWT.KeyDown);
 			addTypedEvent(IEventConstants.KEY_UP, SWT.KeyUp);
-			addTypedEvent(IEventConstants.MEASURE_ITEM, SWT.MeasureItem);
+			addTypedEvent(IEventConstants.MEASURE_ITEM, XWTMaps.getEvent("swt.measureitem"));
 			addTypedEvent(IEventConstants.MENU_DETECT, SWT.MenuDetect);
 			addTypedEvent(IEventConstants.MODIFY, SWT.Modify);
 			addTypedEvent(IEventConstants.MOUSE_DOUBLE_CLICK,
 					SWT.MouseDoubleClick);
 			addTypedEvent(IEventConstants.MOUSE_DOWN, SWT.MouseDown);
-			addTypedEvent(IEventConstants.MOUSE_ENTER, SWT.MouseEnter);
-			addTypedEvent(IEventConstants.MOUSE_EXIT, SWT.MouseExit);
-			addTypedEvent(IEventConstants.MOUSE_HOVER, SWT.MouseHover);
-			addTypedEvent(IEventConstants.MOUSE_MOVE, SWT.MouseMove);
+			addTypedEvent(IEventConstants.MOUSE_ENTER, XWTMaps.getEvent("swt.mouseenter"));
+			addTypedEvent(IEventConstants.MOUSE_EXIT, XWTMaps.getEvent("swt.mouseexit"));
+			addTypedEvent(IEventConstants.MOUSE_HOVER, XWTMaps.getEvent("swt.mousehover"));
+			addTypedEvent(IEventConstants.MOUSE_MOVE, XWTMaps.getEvent("swt.mousemove"));
 			addTypedEvent(IEventConstants.MOUSE_UP, SWT.MouseUp);
-			addTypedEvent(IEventConstants.MOUSE_WHEEL, SWT.MouseWheel);
+			addTypedEvent(IEventConstants.MOUSE_WHEEL, XWTMaps.getEvent("swt.mousewheel"));
 			addTypedEvent(IEventConstants.MOVE, SWT.Move);
-			addTypedEvent(IEventConstants.PAINT, SWT.Paint);
-			addTypedEvent(IEventConstants.PAINT_ITEM, SWT.PaintItem);
+			addTypedEvent(IEventConstants.PAINT, XWTMaps.getEvent("swt.paint"));
+			addTypedEvent(IEventConstants.PAINT_ITEM, XWTMaps.getEvent("swt.paintitem"));
 			addTypedEvent(IEventConstants.RESIZE, SWT.Resize);
 			addTypedEvent(IEventConstants.SELECTION, SWT.Selection); // sash
 			addTypedEvent(IEventConstants.SET_DATA, SWT.SetData);
@@ -175,7 +176,7 @@ public abstract class AbstractMetaclass implements IMetaclass {
 			addTypedEvent(IEventConstants.SHOW, SWT.Show);
 			addTypedEvent(IEventConstants.TRAVERSE, SWT.Traverse);
 			addTypedEvent(IEventConstants.VERIFY, SWT.Verify);
-			addTypedEvent(IEventConstants.IME_COMPOSITION, SWT.ImeComposition);
+			addTypedEvent(IEventConstants.IME_COMPOSITION, XWTMaps.getEvent("swt.imecomposition"));
 		}
 		buildTypedEvents = true;
 	}
