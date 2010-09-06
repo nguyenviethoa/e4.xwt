@@ -11,8 +11,8 @@
 		<j:Company x:Key="myCompany">
 			<j:Company.employees>
 				<x:Array Type="j:Employee">
-					<j:Employee Name="Thomas" Age="32" Sex="female"/>
-					<j:Employee Name="Jin" Age="27" Sex="male"/>
+					<j:Employee Name="Thomas" Age="32" Sex="Female"/>
+					<j:Employee Name="Jin" Age="27" Sex="Male"/>
 				</x:Array>
 			</j:Company.employees>
 		</j:Company>
@@ -21,9 +21,6 @@
 		<TableViewer.contentProvider>
 			<j:ContentProvider/>
 		</TableViewer.contentProvider>
-		<TableViewer.labelProvider>
-			<DefaultColumnViewerLabelProvider/>
-		</TableViewer.labelProvider>
 		<TableViewer.table HeaderVisible="true" LinesVisible="true">
 			<TableColumn width="150" text="Name"/>
 			<TableColumn width="150" text="Age"/>

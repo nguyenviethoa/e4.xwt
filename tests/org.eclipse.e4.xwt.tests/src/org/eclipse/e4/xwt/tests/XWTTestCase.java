@@ -245,7 +245,7 @@ public abstract class XWTTestCase extends TestCase {
 		upEvent.type = SWT.MouseUp;
 		upEvent.x = size.x / 2;
 		upEvent.y = size.y / 2;
-		display.post(upEvent);
+		displayPost(display, upEvent);
 
 		button.setSelection(selection);
 		button.notifyListeners(SWT.Selection, upEvent);
@@ -265,7 +265,7 @@ public abstract class XWTTestCase extends TestCase {
 		upEvent.widget = widget;
 		upEvent.button = 1;
 		upEvent.type = SWT.MouseUp;
-		display.post(upEvent);
+		displayPost(display, upEvent);
 
 		if (focus) {
 			widget.notifyListeners(SWT.FocusIn, upEvent);
@@ -294,6 +294,17 @@ public abstract class XWTTestCase extends TestCase {
 		assertEquals(source.length, target.length);
 		for (int i = 0; i < source.length; i++) {
 			assertEquals(source[i], target[i]);
+		}
+	}
+
+	private void displayPost(Display display, Event event) {
+		if(SWT.getPlatform()!="rap") {
+			try {
+				Method m = Display.class.getDeclaredMethod("post", Event.class);
+				m.invoke(display, event);
+			} catch (Exception e) {
+				assert false;
+			}
 		}
 	}
 }

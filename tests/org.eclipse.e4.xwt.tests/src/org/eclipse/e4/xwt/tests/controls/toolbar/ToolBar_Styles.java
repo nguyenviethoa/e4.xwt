@@ -14,6 +14,7 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
@@ -49,7 +50,7 @@ public class ToolBar_Styles {
 			// Lazy create the menu.
 			ToolBar toolbar = ((ToolItem) toolItem).getParent();
 			int style = toolbar.getStyle()
-					& (SWT.RIGHT_TO_LEFT | SWT.LEFT_TO_RIGHT);
+					& (XWTMaps.getStyle("SWT.RIGHT_TO_LEFT") | SWT.LEFT_TO_RIGHT);
 			menu = new Menu(shell, style | SWT.POP_UP);
 			for (int i = 0; i < 9; ++i) {
 				final String text = "Drop Down " + i;

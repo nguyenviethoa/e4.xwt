@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests.controls.tooltip;
 
+import java.lang.reflect.Method;
 import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
@@ -115,7 +118,7 @@ public class ToolTip_Styles {
 
 		if (showInTray) {
 			if (tray == null) {
-				tray = button.getDisplay().getSystemTray();
+				tray = displayGetSystemTray(button.getDisplay());
 			}
 			if (trayItem != null) {
 				trayItem.dispose();
@@ -141,7 +144,7 @@ public class ToolTip_Styles {
 				}
 				String text = btn.getText();
 				if ("SWT.BALLOON".equals(text)) {
-					style |= SWT.BALLOON;
+					style |= XWTMaps.getStyle("SWT.BALLOON");
 				} else if ("SWT.ICON_INFORMATION".equals(text)) {
 					style |= SWT.ICON_INFORMATION;
 				} else if ("SWT.ICON_ERROR".equals(text)) {
@@ -160,4 +163,17 @@ public class ToolTip_Styles {
 		}
 		return (Group) XWT.findElementByName(button, grpName);
 	}
+
+	private Tray displayGetSystemTray(Display display) {
+		if(SWT.getPlatform()!="rap") {
+			try {
+				Method m = Display.class.getDeclaredMethod("getSystemTray");
+				return (Tray)m.invoke(display);
+			} catch (Exception e) {
+				assert false;
+			}
+		}
+		return null;
+	}
+
 }
