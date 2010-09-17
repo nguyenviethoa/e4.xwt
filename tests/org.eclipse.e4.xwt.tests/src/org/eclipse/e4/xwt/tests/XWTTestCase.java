@@ -17,7 +17,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.eclipse.e4.xwt.IUIMold;
+import org.eclipse.e4.xwt.IUIResource;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.swt.SWT;
@@ -42,7 +42,7 @@ public abstract class XWTTestCase extends TestCase {
 		runTest(url, new HashMap<String, Object>(), checkActions);
 	}
 
-	protected void runTest(IUIMold pattern, Runnable... checkActions) {
+	protected void runTest(IUIResource pattern, Runnable... checkActions) {
 		runTest(pattern, new HashMap<String, Object>(), checkActions);
 	}
 
@@ -53,7 +53,7 @@ public abstract class XWTTestCase extends TestCase {
 		runTest(url, options, checkActions);
 	}
 
-	protected void runTest(IUIMold pattern, Object dataContext,
+	protected void runTest(IUIResource pattern, Object dataContext,
 			Runnable... checkActions) {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
@@ -104,7 +104,7 @@ public abstract class XWTTestCase extends TestCase {
 		}
 	}
 	
-	protected void runTest(final IUIMold pattern, Map<String, Object> options,
+	protected void runTest(final IUIResource pattern, Map<String, Object> options,
 			Runnable... checkActions) {
 		ClassLoader classLoader = Thread.currentThread()
 				.getContextClassLoader();
@@ -173,7 +173,7 @@ public abstract class XWTTestCase extends TestCase {
 		}
 	}
 
-	protected void runDebugTest(final IUIMold pattern, Runnable prepareAction,
+	protected void runDebugTest(final IUIResource pattern, Runnable prepareAction,
 			Runnable checkAction1) {
 		ClassLoader classLoader = Thread.currentThread()
 				.getContextClassLoader();

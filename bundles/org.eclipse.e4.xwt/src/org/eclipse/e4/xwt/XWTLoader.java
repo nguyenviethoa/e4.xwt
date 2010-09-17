@@ -112,7 +112,7 @@ import org.eclipse.e4.xwt.internal.core.MetaclassManager;
 import org.eclipse.e4.xwt.internal.core.MultiBinding;
 import org.eclipse.e4.xwt.internal.core.ScopeKeeper;
 import org.eclipse.e4.xwt.internal.core.ScopeManager;
-import org.eclipse.e4.xwt.internal.core.UIMold;
+import org.eclipse.e4.xwt.internal.core.UIResource;
 import org.eclipse.e4.xwt.internal.core.UpdateSourceTrigger;
 import org.eclipse.e4.xwt.internal.utils.ObjectUtil;
 import org.eclipse.e4.xwt.internal.utils.UserData;
@@ -627,8 +627,8 @@ public class XWTLoader implements IXWTLoader {
 		return load(null, file, dataContext);
 	}
 
-	public Control load(IUIMold mold, Object dataContext) throws Exception {
-		return load(null, mold, dataContext);
+	public Control load(IUIResource resource, Object dataContext) throws Exception {
+		return load(null, resource, dataContext);
 	}
 
 	/*
@@ -644,10 +644,10 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(file, options);
 	}
 
-	public Control load(Composite parent, IUIMold mold) throws Exception {
+	public Control load(Composite parent, IUIResource resource) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
-		return loadWithOptions(mold, options);
+		return loadWithOptions(resource, options);
 	}
 
 	/*
@@ -665,21 +665,21 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(file, options);
 	}
 
-	public Control load(Composite parent, IUIMold mold, Object dataContext)
+	public Control load(Composite parent, IUIResource resource, Object dataContext)
 			throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
 		options.put(DATACONTEXT_PROPERTY, dataContext);
-		return loadWithOptions(mold, options);
+		return loadWithOptions(resource, options);
 	}
 
-	public Control load(Composite parent, IUIMold mold, Map<String, Object> options)
+	public Control load(Composite parent, IUIResource resource, Map<String, Object> options)
 			throws Exception {
 		if (options.isEmpty()) {
 			options = new HashMap<String, Object>();
 		}
 		options.put(CONTAINER_PROPERTY, parent);
-		return loadWithOptions(mold, options);
+		return loadWithOptions(resource, options);
 	}
 
 	/*
@@ -783,8 +783,8 @@ public class XWTLoader implements IXWTLoader {
 		open(url, Collections.EMPTY_MAP);
 	}
 
-	public void open(IUIMold mold) throws Exception {
-		open(mold, Collections.EMPTY_MAP);
+	public void open(IUIResource resource) throws Exception {
+		open(resource, Collections.EMPTY_MAP);
 	}
 
 	/*
@@ -802,22 +802,22 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(stream, file, options);
 	}
 
-	public IUIMold loadAsMold(InputStream stream, URL input) throws Exception {
-		return loadAsMold(stream, input, null);
+	public IUIResource loadAsResource(InputStream stream, URL input) throws Exception {
+		return loadAsResource(stream, input, null);
 	}
 
-	public IUIMold loadAsMold(InputStream stream, URL input,
+	public IUIResource loadAsResource(InputStream stream, URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception {
-		return getCurrentCore().loadAsMold(stream, input, parsingCallback);
+		return getCurrentCore().loadAsResource(stream, input, parsingCallback);
 	}
 
-	public IUIMold loadAsMold(URL input) throws Exception {
-		return loadAsMold(null, input, null);
+	public IUIResource loadAsResource(URL input) throws Exception {
+		return loadAsResource(null, input, null);
 	}
 
-	public IUIMold loadAsMold(URL input, IBeforeParsingCallback parsingCallback)
+	public IUIResource loadAsResource(URL input, IBeforeParsingCallback parsingCallback)
 			throws Exception {
-		return loadAsMold(null, input, parsingCallback);
+		return loadAsResource(null, input, parsingCallback);
 	}
 
 	/*
@@ -831,10 +831,10 @@ public class XWTLoader implements IXWTLoader {
 		open(url, options);
 	}
 
-	public void open(IUIMold mold, Object dataContext) throws Exception {
+	public void open(IUIResource resource, Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(DATACONTEXT_PROPERTY, dataContext);
-		open(mold, options);
+		open(resource, options);
 	}
 
 	/*
@@ -943,7 +943,7 @@ public class XWTLoader implements IXWTLoader {
 		}
 	}
 
-	public void open(final IUIMold mold, final Map<String, Object> options)
+	public void open(final IUIResource resource, final Map<String, Object> options)
 			throws Exception {
 		if (SWT.getPlatform().startsWith("win")) {
 			if (Display.getCurrent() == null) {
@@ -952,7 +952,7 @@ public class XWTLoader implements IXWTLoader {
 			Realm.runWithDefault(getRealm(), new Runnable() {
 				public void run() {
 					try {
-						Control control = loadWithOptions(mold, options);
+						Control control = loadWithOptions(resource, options);
 						Shell shell = control.getShell();
 						shell.addDisposeListener(new DisposeListener() {
 							public void widgetDisposed(DisposeEvent e) {
@@ -980,7 +980,7 @@ public class XWTLoader implements IXWTLoader {
 			Realm.runWithDefault(getRealm(), new Runnable() {
 				public void run() {
 					try {
-						Control control = loadWithOptions(mold, options);
+						Control control = loadWithOptions(resource, options);
 						Shell shell = control.getShell();
 						shell.open();
 						long startTime = -1;
@@ -1010,7 +1010,7 @@ public class XWTLoader implements IXWTLoader {
 					Realm.runWithDefault(getRealm(), new Runnable() {
 						public void run() {
 							try {
-								Control control = loadWithOptions(mold, options);
+								Control control = loadWithOptions(resource, options);
 								Shell shell = control.getShell();
 								shell.open();
 							} catch (Exception e) {
@@ -1076,14 +1076,14 @@ public class XWTLoader implements IXWTLoader {
 		return visualObject;
 	}
 
-	public Control loadWithOptions(IUIMold mold, Map<String, Object> options)
+	public Control loadWithOptions(IUIResource resource, Map<String, Object> options)
 			throws Exception {
-		UIMold uiMold = (UIMold) mold;
+		UIResource uiResource = (UIResource) resource;
 		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object)
 				: getLoadingContext());
-		options = prepareOptions(options, uiMold.getURL());
-		Control visualObject = getCurrentCore().load(loadingContext, mold,
+		options = prepareOptions(options, uiResource.getURL());
+		Control visualObject = getCurrentCore().load(loadingContext, resource,
 				options);
 		return visualObject;
 	}
@@ -1098,8 +1098,8 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
 
-	public Control load(IUIMold mold) throws Exception {
-		return loadWithOptions(mold, Collections.EMPTY_MAP);
+	public Control load(IUIResource resource) throws Exception {
+		return loadWithOptions(resource, Collections.EMPTY_MAP);
 	}
 
 	/*

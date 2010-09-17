@@ -8,22 +8,8 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.animation;
+package org.eclipse.e4.xwt;
 
-import java.net.URL;
+public interface IUIResource {
 
-import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.XWT;
-
-public class Point_Location_QuadraticEase {	
-	public static void main(String[] args) {
-
-		URL url = Point_Location_QuadraticEase.class.getResource(Point_Location_QuadraticEase.class.getSimpleName()
-				+ IConstants.XWT_EXTENSION_SUFFIX);
-		try {
-			XWT.open(url);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

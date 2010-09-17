@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation.internal;
 
+import java.lang.management.ThreadMXBean;
+
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.Duration;
 import org.eclipse.e4.xwt.animation.IEasingFunction;
@@ -25,6 +27,7 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 	protected org.eclipse.e4.xwt.animation.Timeline xwtTimeline;
 	protected Object target;
 	private boolean isPlayed = false;
+	private boolean wait = false;
 	
 	public TridentTimeline(org.eclipse.e4.xwt.animation.Timeline xwtTimeline, Object target) {
 		this.xwtTimeline = xwtTimeline;
@@ -35,8 +38,12 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 	public Object getTarget() {
 		return target;
 	}
-	
+
 	public void play() {
+		play(false);
+	}
+
+	public void play(boolean wait) {
 		if (this.isPlayed) {
 			this.tridentTimeline.replay();
 		}
@@ -50,6 +57,13 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 			RepeatBehavior behavior = xwtTimeline.getRepeatBehavior();
 			playLoop(behavior);
 			isPlayed = true;
+		}
+		while(wait && !this.tridentTimeline.isDone()) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				break;
+			}
 		}
 	}
 	

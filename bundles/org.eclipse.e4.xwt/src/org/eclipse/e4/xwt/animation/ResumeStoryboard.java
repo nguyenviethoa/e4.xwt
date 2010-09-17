@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.eclipse.e4.xwt.core.EventTrigger;
+import org.eclipse.swt.widgets.Event;
+
 public class ResumeStoryboard extends ControllableStoryboardAction {
 	@Override
-	public void run(Object target) {
+	public void run(Event event, Object target) {
 		Storyboard storyboard = getStoryboard();
 		if (storyboard != null) {
-			storyboard.resume();
+			storyboard.resume(event);
 		}
 	}
 }

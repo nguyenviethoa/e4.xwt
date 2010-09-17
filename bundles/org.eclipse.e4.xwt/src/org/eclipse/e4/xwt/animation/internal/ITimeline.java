@@ -10,13 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation.internal;
 
-import org.eclipse.e4.xwt.animation.TimeSpan;
 import org.pushingpixels.trident.TimelineScenario.TimelineScenarioActor;
 
 public interface ITimeline extends TimelineScenarioActor {
 	public Object getTarget();
 	
 	public void playReverse();
+
+	public void play(boolean wait);
 
 	public void end();
 

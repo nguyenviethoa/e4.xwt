@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
+import org.eclipse.swt.widgets.Event;
+
 public abstract class TriggerAction {
 	public static final TriggerAction[] EMPTY_ARRAY = new TriggerAction[0];
 	
-	public abstract void run(Object target);
+	public abstract void run(Event event, Object target);
 	
 	public abstract void initialize(Object target);
 }

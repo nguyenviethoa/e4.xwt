@@ -394,13 +394,13 @@ public class XWT {
 	}
 
 	/**
-	 * Load the content from UIMold. All widget will be created but they are
+	 * Load the content from IUIResource. All widget will be created but they are
 	 * showed. This method return the root element.
 	 * 
 	 */
-	static public Control load(IUIMold mold) throws Exception {
+	static public Control load(IUIResource resource) throws Exception {
 		XWT.checkInitialization();
-		return XWTLoaderManager.getActive().load(mold);
+		return XWTLoaderManager.getActive().load(resource);
 	}
 
 	/**
@@ -414,14 +414,14 @@ public class XWT {
 	}
 
 	/**
-	 * Load the content from UIMold. All widget will be created but they are
+	 * Load the content from IUIResource. All widget will be created but they are
 	 * showed. This method return the root element.
 	 * 
 	 */
-	static public Control load(IUIMold mold, Object dataContext)
+	static public Control load(IUIResource resource, Object dataContext)
 			throws Exception {
 		XWT.checkInitialization();
-		return XWTLoaderManager.getActive().load(mold, dataContext);
+		return XWTLoaderManager.getActive().load(resource, dataContext);
 	}
 
 	/**
@@ -439,8 +439,8 @@ public class XWT {
 	 * the root element.
 	 * 
 	 */
-	static public Control load(Composite parent, IUIMold mold) throws Exception {
-		return XWTLoaderManager.getActive().load(parent, mold);
+	static public Control load(Composite parent, IUIResource resource) throws Exception {
+		return XWTLoaderManager.getActive().load(parent, resource);
 	}
 
 	/**
@@ -454,7 +454,7 @@ public class XWT {
 	}
 
 	/**
-	 * Load the content from IUIMold.
+	 * Load the content from IUIResource.
 	 * 
 	 * @param stream
 	 * @param input
@@ -463,14 +463,14 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public IUIMold loadAsMold(InputStream stream, URL input,
+	static public IUIResource loadAsResource(InputStream stream, URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception {
-		return XWTLoaderManager.getActive().loadAsMold(stream, input,
+		return XWTLoaderManager.getActive().loadAsResource(stream, input,
 				parsingCallback);
 	}
 
 	/**
-	 * Load the content from IUIMold.
+	 * Load the content from IUIResource.
 	 * 
 	 * @param stream
 	 * @param input
@@ -479,13 +479,13 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public IUIMold loadAsMold(InputStream stream, URL input)
+	static public IUIResource loadAsResource(InputStream stream, URL input)
 			throws Exception {
-		return XWTLoaderManager.getActive().loadAsMold(stream, input);
+		return XWTLoaderManager.getActive().loadAsResource(stream, input);
 	}
 
 	/**
-	 * Load the content from IUIMold.
+	 * Load the content from IUIResource.
 	 * 
 	 * @param input
 	 * @param parsingCallback
@@ -493,21 +493,21 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public IUIMold loadAsMold(URL input,
+	static public IUIResource loadAsResource(URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception {
-		return XWTLoaderManager.getActive().loadAsMold(null, input,
+		return XWTLoaderManager.getActive().loadAsResource(null, input,
 				parsingCallback);
 	}
 
 	/**
-	 * Load the content from IUIMold.
+	 * Load the content from IUIResource.
 	 * 
 	 * @param input
 	 * @return
 	 * @throws Exception
 	 */
-	static public IUIMold loadAsMold(URL input) throws Exception {
-		return XWTLoaderManager.getActive().loadAsMold(null, input);
+	static public IUIResource loadAsResource(URL input) throws Exception {
+		return XWTLoaderManager.getActive().loadAsResource(null, input);
 	}
 
 	/**
@@ -515,14 +515,14 @@ public class XWT {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	static public Control load(Composite parent, IUIMold mold,
+	static public Control load(Composite parent, IUIResource resource,
 			Object dataContext) throws Exception {
-		return XWTLoaderManager.getActive().load(parent, mold, dataContext);
+		return XWTLoaderManager.getActive().load(parent, resource, dataContext);
 	}
 
-	static public Control load(Composite parent, IUIMold mold,
+	static public Control load(Composite parent, IUIResource resource,
 			Map<String, Object> options) throws Exception {
-		return XWTLoaderManager.getActive().load(parent, mold, options);
+		return XWTLoaderManager.getActive().load(parent, resource, options);
 	}
 
 	/**
@@ -544,9 +544,9 @@ public class XWT {
 	/**
 	 * Open and show the file content in a new Shell.
 	 */
-	static public void open(final IUIMold mold) throws Exception {
+	static public void open(final IUIResource resource) throws Exception {
 		XWT.checkInitialization();
-		XWTLoaderManager.getActive().open(mold);
+		XWTLoaderManager.getActive().open(resource);
 	}
 
 	/**
@@ -568,12 +568,12 @@ public class XWT {
 	}
 
 	/**
-	 * load the content from IUIMold. The corresponding UI element is not yet
+	 * load the content from IUIResource. The corresponding UI element is not yet
 	 * created
 	 */
-	static public void open(IUIMold mold, Object dataContext) throws Exception {
+	static public void open(IUIResource resource, Object dataContext) throws Exception {
 		XWT.checkInitialization();
-		XWTLoaderManager.getActive().open(mold, dataContext);
+		XWTLoaderManager.getActive().open(resource, dataContext);
 	}
 
 	/**
@@ -594,13 +594,13 @@ public class XWT {
 	}
 
 	/**
-	 * load the content from IUIMold. The corresponding UI element is not yet
+	 * load the content from IUIResource. The corresponding UI element is not yet
 	 * created
 	 */
-	static public void open(IUIMold mold, Map<String, Object> options)
+	static public void open(IUIResource resource, Map<String, Object> options)
 			throws Exception {
 		XWT.checkInitialization();
-		XWTLoaderManager.getActive().open(mold, options);
+		XWTLoaderManager.getActive().open(resource, options);
 	}
 
 	static public Object convertFrom(Class<?> targetType, String string) {
@@ -612,9 +612,9 @@ public class XWT {
 		return XWTLoaderManager.getActive().loadWithOptions(url, options);
 	}
 
-	static public Control loadWithOptions(IUIMold mold,
+	static public Control loadWithOptions(IUIResource resource,
 			Map<String, Object> options) throws Exception {
-		return XWTLoaderManager.getActive().loadWithOptions(mold, options);
+		return XWTLoaderManager.getActive().loadWithOptions(resource, options);
 	}
 
 	/**

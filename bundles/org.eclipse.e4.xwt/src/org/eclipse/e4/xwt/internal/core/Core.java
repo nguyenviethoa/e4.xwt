@@ -35,7 +35,7 @@ import org.eclipse.e4.xwt.ILogger;
 import org.eclipse.e4.xwt.IMetaclassFactory;
 import org.eclipse.e4.xwt.INamespaceHandler;
 import org.eclipse.e4.xwt.IStyle;
-import org.eclipse.e4.xwt.IUIMold;
+import org.eclipse.e4.xwt.IUIResource;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.Tracking;
 import org.eclipse.e4.xwt.callback.IBeforeParsingCallback;
@@ -53,7 +53,10 @@ import org.eclipse.e4.xwt.internal.xml.Element;
 import org.eclipse.e4.xwt.internal.xml.ElementManager;
 import org.eclipse.e4.xwt.javabean.ValueConvertorRegister;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.ModelUtils;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -652,7 +655,7 @@ public class Core {
 		return load(loadingContext, null, input, options);
 	}
 
-	public IUIMold loadAsMold(InputStream stream, URL input,
+	public IUIResource loadAsResource(InputStream stream, URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception {
 		ElementManager manager = new ElementManager();
 		Element element = null;
@@ -672,15 +675,15 @@ public class Core {
 			}
 			element = manager.load(inputStream, input);
 		}
-		return new UIMold(input, element);
+		return new UIResource(input, element);
 	}
 
-	public Control load(ILoadingContext loadingContext, IUIMold pattern,
+	public Control load(ILoadingContext loadingContext, IUIResource pattern,
 			Map<String, Object> options) throws Exception {
-		UIMold uiPattern = (UIMold) pattern;
+		UIResource uiResource = (UIResource) pattern;
 		Control control = null;
 		ElementManager manager = new ElementManager();
-		Element element = uiPattern.getContent();
+		Element element = uiResource.getContent();
 		IRenderingContext context = new ExtensionContext(loadingContext,
 				manager, element.getNamespace());
 		Object visual = createCLRElement(context, element, options);
@@ -770,10 +773,9 @@ public class Core {
 				}
 			}
 
+			Object parent = options.get(IXWTLoader.CONTAINER_PROPERTY);
+			Object designMode = options.get(IXWTLoader.DESIGN_MODE_PROPERTY);
 			if (control instanceof Composite) {
-				Object parent = options.get(IXWTLoader.CONTAINER_PROPERTY);
-				Object designMode = options
-						.get(IXWTLoader.DESIGN_MODE_PROPERTY);
 				if (parent instanceof Composite) {
 					Composite parentComposite = (Composite) parent;
 					if (parentComposite.getLayout() == null
@@ -784,28 +786,57 @@ public class Core {
 					if (control instanceof Shell) {
 						autoLayout((Shell) control, element);
 					} else {
-						autoLayout(control.getShell(), element);
+						autoLayoutShell(control, element);
 					}
 				}
+			}
+			else if (control != null && (parent == null || designMode == Boolean.TRUE)) {
+				autoLayoutShell(control, element);
 			}
 		}
 		return control;
 	}
 
-	protected void autoLayout(Composite composite, Element element) {
+	protected void autoLayout(Control composite, Element element) {
 		if (element == null) {
 			return;
 		}
-		Attribute bounds = element.getAttribute("bounds");
+		Attribute bounds = element.getAttribute("Bounds");
 		if (bounds == null) {
-			bounds = element.getAttribute("bounds", IConstants.XWT_NAMESPACE);
+			bounds = element.getAttribute("Bounds", IConstants.XWT_NAMESPACE);
 		}
-		Attribute size = element.getAttribute("size");
+		Attribute size = element.getAttribute("Size");
 		if (size == null) {
-			size = element.getAttribute("size", IConstants.XWT_NAMESPACE);
+			size = element.getAttribute("Size", IConstants.XWT_NAMESPACE);
 		}
 		if (bounds == null && size == null) {
 			composite.pack();
+		}
+	}
+
+	protected void autoLayoutShell(Control control, Element element) {
+		if (element == null) {
+			return;
+		}
+		Attribute bounds = element.getAttribute("Bounds");
+		if (bounds == null) {
+			bounds = element.getAttribute("Bounds", IConstants.XWT_NAMESPACE);
+		}
+		Attribute size = element.getAttribute("Size");
+		if (size == null) {
+			size = element.getAttribute("Size", IConstants.XWT_NAMESPACE);
+		}
+		if (bounds == null && size == null) {
+			control.pack();
+		}
+		else {
+			Shell shell = control.getShell();
+			Point targetSize = control.getSize();
+			Rectangle rectangle = shell.getBounds();			
+			Rectangle clientArea = shell.getClientArea();
+			targetSize.x += rectangle.width - clientArea.width;
+			targetSize.y += rectangle.height - clientArea.height;
+			shell.setSize(targetSize);
 		}
 	}
 

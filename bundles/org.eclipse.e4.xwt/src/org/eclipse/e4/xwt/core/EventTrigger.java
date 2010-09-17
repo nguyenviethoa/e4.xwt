@@ -106,7 +106,7 @@ public class EventTrigger extends TriggerBase {
 		}
 		public void run(Object object, Event event) {
 			for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
-				triggerAction.run(target);
+				triggerAction.run(event, target);
 			}
 		}
 	}

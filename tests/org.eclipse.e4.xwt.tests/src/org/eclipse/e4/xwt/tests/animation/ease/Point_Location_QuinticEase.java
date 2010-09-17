@@ -8,8 +8,22 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt;
+package org.eclipse.e4.xwt.tests.animation.ease;
 
-public interface IUIMold {
+import java.net.URL;
 
+import org.eclipse.e4.xwt.IConstants;
+import org.eclipse.e4.xwt.XWT;
+
+public class Point_Location_QuinticEase {	
+	public static void main(String[] args) {
+
+		URL url = Point_Location_QuinticEase.class.getResource(Point_Location_QuinticEase.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		try {
+			XWT.open(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -8,24 +8,24 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.controls.uimold;
+package org.eclipse.e4.xwt.tests.controls.uiresource;
 
 import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
-import org.eclipse.e4.xwt.IUIMold;
+import org.eclipse.e4.xwt.IUIResource;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 
-public class UIMoldTests extends XWTTestCase {
+public class UIResourceTests extends XWTTestCase {
 	public void testControlSize() throws Exception {
-		URL url = UIMoldTests.class.getResource(Control_Size.class
+		URL url = UIResourceTests.class.getResource(Control_Size.class
 				.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
-		IUIMold pattern = XWT.loadAsMold(url);
+		IUIResource pattern = XWT.loadAsResource(url);
 		runTest(pattern, new Runnable() {
 			public void run() {
 				checkLabel();

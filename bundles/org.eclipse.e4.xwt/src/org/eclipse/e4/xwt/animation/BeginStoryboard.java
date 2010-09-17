@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.eclipse.e4.xwt.core.EventTrigger;
 import org.eclipse.e4.xwt.core.TriggerAction;
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.swt.widgets.Event;
 
 public class BeginStoryboard extends TriggerAction {
 	private HandoffBehavior handoffBehavior = HandoffBehavior.SnapshotAndReplace;
@@ -87,7 +89,7 @@ public class BeginStoryboard extends TriggerAction {
 	}
 	
 	@Override
-	public void run(Object target) {
-		getStoryboard().start(target);
+	public void run(Event event, Object target) {
+		getStoryboard().start(event, target);
 	}
 }

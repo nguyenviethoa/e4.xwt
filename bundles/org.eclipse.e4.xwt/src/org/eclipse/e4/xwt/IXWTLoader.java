@@ -383,7 +383,7 @@ public interface IXWTLoader {
 	 */
 	Control load(URL file, Object dataContext) throws Exception;
 
-	Control load(IUIMold mold, Object dataContext) throws Exception;
+	Control load(IUIResource resource, Object dataContext) throws Exception;
 
 	/**
 	 * Load the file content under a Composite. All widget will be created. This
@@ -397,7 +397,7 @@ public interface IXWTLoader {
 	 * method returns the root element. The DataContext will be associated to
 	 * the root element.
 	 */
-	Control load(Composite parent, IUIMold mold) throws Exception;
+	Control load(Composite parent, IUIResource resource) throws Exception;
 
 	/**
 	 * Load the file content under a Composite with a DataContext. All widget
@@ -412,7 +412,7 @@ public interface IXWTLoader {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	Control load(Composite parent, IUIMold mold, Object dataContext)
+	Control load(Composite parent, IUIResource resource, Object dataContext)
 			throws Exception;
 
 	/**
@@ -420,7 +420,7 @@ public interface IXWTLoader {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	Control load(Composite parent, IUIMold mold, Map<String, Object> options)
+	Control load(Composite parent, IUIResource resource, Map<String, Object> options)
 			throws Exception;
 
 	/**
@@ -449,7 +449,7 @@ public interface IXWTLoader {
 	 */
 	void open(URL url) throws Exception;
 
-	void open(IUIMold mold) throws Exception;
+	void open(IUIResource resource) throws Exception;
 
 	/**
 	 * load the content from a stream with a style, a DataContext and a
@@ -463,7 +463,7 @@ public interface IXWTLoader {
 	 */
 	void open(URL url, Object dataContext) throws Exception;
 
-	void open(IUIMold mold, Object dataContext) throws Exception;
+	void open(IUIResource resource, Object dataContext) throws Exception;
 
 	/**
 	 * load the file content. The corresponding UI element is not yet created
@@ -475,7 +475,7 @@ public interface IXWTLoader {
 	 */
 	void open(URL url, Map<String, Object> options) throws Exception;
 
-	void open(IUIMold mold, final Map<String, Object> options) throws Exception;
+	void open(IUIResource resource, final Map<String, Object> options) throws Exception;
 
 	/**
 	 * Data conversion service from String to a given type
@@ -508,16 +508,16 @@ public interface IXWTLoader {
 	 */
 	Control load(InputStream stream, URL url) throws Exception;
 
-	Control load(IUIMold mold) throws Exception;
+	Control load(IUIResource resource) throws Exception;
 
-	public IUIMold loadAsMold(InputStream stream, URL input) throws Exception;
+	public IUIResource loadAsResource(InputStream stream, URL input) throws Exception;
 
-	public IUIMold loadAsMold(InputStream stream, URL input,
+	public IUIResource loadAsResource(InputStream stream, URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception;
 
-	public IUIMold loadAsMold(URL input) throws Exception;
+	public IUIResource loadAsResource(URL input) throws Exception;
 
-	public IUIMold loadAsMold(URL input,
+	public IUIResource loadAsResource(URL input,
 			IBeforeParsingCallback parsingCallback) throws Exception;
 
 	/**
@@ -532,7 +532,7 @@ public interface IXWTLoader {
 	Control loadWithOptions(InputStream stream, URL url,
 			Map<String, Object> options) throws Exception;
 
-	Control loadWithOptions(IUIMold mold,
+	Control loadWithOptions(IUIResource resource,
 			Map<String, Object> options) throws Exception;
 
 	/**

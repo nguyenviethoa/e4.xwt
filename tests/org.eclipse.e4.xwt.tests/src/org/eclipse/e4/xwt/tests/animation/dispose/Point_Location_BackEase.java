@@ -8,17 +8,17 @@
  * Contributors:
  *     Soyatec - initial API and implementation
  *******************************************************************************/
-package org.eclipse.e4.xwt.tests.animation;
+package org.eclipse.e4.xwt.tests.animation.dispose;
 
 import java.net.URL;
 
 import org.eclipse.e4.xwt.IConstants;
 import org.eclipse.e4.xwt.XWT;
 
-public class Point_Location_QuinticEase {	
+public class Point_Location_BackEase {	
 	public static void main(String[] args) {
 
-		URL url = Point_Location_QuinticEase.class.getResource(Point_Location_QuinticEase.class.getSimpleName()
+		URL url = Point_Location_BackEase.class.getResource(Point_Location_BackEase.class.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);
 		try {
 			XWT.open(url);
