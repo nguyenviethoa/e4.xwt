@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation.internal;
 
-import java.lang.management.ThreadMXBean;
-
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.Duration;
 import org.eclipse.e4.xwt.animation.IEasingFunction;
@@ -162,6 +160,12 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 			builder.from(from);				
 		}
 		builder.to(to);
+		int index = propName.indexOf('.');
+		PathPropertyAccessor<T> propertyAccessor = null;
+		if (index != -1) {
+			propertyAccessor = new PathPropertyAccessor<T>(propName);
+			builder.accessWith(propertyAccessor);
+		}
 		this.tridentTimeline.addPropertyToInterpolate(builder);
 		
 		TimeSpan timeSpan = this.xwtTimeline.getBeginTime();
@@ -169,8 +173,13 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 			this.tridentTimeline.setInitialDelay(timeSpan.getMilliseconds());
 		}
 		else if (from != null){
-			DefaultPropertySetter<T> propertySetter = new DefaultPropertySetter<T>(target, propName);
-			propertySetter.set(target, propName, from);
+			if (propertyAccessor != null) {
+				propertyAccessor.set(target, propName, from);
+			}
+			else {
+				DefaultPropertySetter<T> propertySetter = new DefaultPropertySetter<T>(target, propName);
+				propertySetter.set(target, propName, from);
+			}
 		}
 	}
 

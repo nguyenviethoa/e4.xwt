@@ -17,8 +17,6 @@ import org.eclipse.e4.xwt.animation.internal.ITimelineGroup;
 import org.eclipse.e4.xwt.animation.internal.ScenarioTimeline;
 import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 import org.eclipse.e4.xwt.annotation.Containment;
-import org.eclipse.e4.xwt.core.EventTrigger;
-import org.eclipse.e4.xwt.core.Trigger;
 import org.eclipse.swt.widgets.Event;
 import org.pushingpixels.trident.TimelineScenario;
 
