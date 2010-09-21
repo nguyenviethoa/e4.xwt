@@ -22,7 +22,7 @@ import org.pushingpixels.trident.TimelineScenario;
 
 public class TimelineGroup extends Timeline {
 	private Timeline[] children = EMPTY_ARRAY;
-	
+
 	private ITimeline timeline;
 
 	@Containment
@@ -37,7 +37,7 @@ public class TimelineGroup extends Timeline {
 	protected ITimelineGroup createTimelineGroup(Object target) {
 		return new ScenarioTimeline(this, new TimelineScenario(), target);
 	}
-	
+
 	public void start(Event event, Object target) {
 		if (timeline == null) {
 			timeline = createTimelineGroup(findTarget(target));
@@ -47,12 +47,11 @@ public class TimelineGroup extends Timeline {
 		if (event.type == XWTMaps.getEvent("swt.dispose")) {
 			AnimationManager.getInstance().play(timeline, false);
 			event.doit = true;
-		}
-		else {
-			AnimationManager.getInstance().play(timeline, false);			
+		} else {
+			AnimationManager.getInstance().play(timeline, false);
 		}
 	}
-	
+
 	public void stop(Event event) {
 		AnimationManager.getInstance().stop(timeline);
 	}
@@ -73,21 +72,26 @@ public class TimelineGroup extends Timeline {
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		ITimelineGroup timelineGroup = (ITimelineGroup) timeline;
+		TridentTimeline tridentTimeline = null;
 		for (Timeline child : children) {
 			if (child instanceof ParallelTimeline) {
 				TimelineScenario scenario = new TimelineScenario.Parallel();
-				ScenarioTimeline scenarioTimeline = new ScenarioTimeline(child, scenario, child.findTarget(target));
+				ScenarioTimeline scenarioTimeline = new ScenarioTimeline(child,
+						scenario, child.findTarget(target));
 				child.updateTimeline(scenarioTimeline, target);
 				timelineGroup.addTimeline(scenarioTimeline);
 			} else if (child instanceof TimelineGroup) {
 				TimelineScenario scenario = new TimelineScenario.Sequence();
-				ScenarioTimeline scenarioTimeline = new ScenarioTimeline(child, scenario, child.findTarget(target));
+				ScenarioTimeline scenarioTimeline = new ScenarioTimeline(child,
+						scenario, child.findTarget(target));
 				child.updateTimeline(scenarioTimeline, target);
 				timelineGroup.addTimeline(scenarioTimeline);
-			}
-			else {	
-				TridentTimeline tridentTimeline = new TridentTimeline(child, child.findTarget(target));
-				timelineGroup.addTimeline(tridentTimeline);
+			} else {
+				if (tridentTimeline == null) {
+					tridentTimeline = new TridentTimeline(child,
+							child.findTarget(target));
+					timelineGroup.addTimeline(tridentTimeline);
+				}
 				child.updateTimeline(tridentTimeline, target);
 			}
 		}

@@ -632,8 +632,6 @@ public class ResourceLoader implements IVisualElementLoader {
 			setBindingContext(metaclass, targetObject, dico, bindingContext);
 		}
 
-		applyStyles(element, targetObject);
-
 		if (dataBindingTrack != null) {
 			dataBindingTrack.tracking(targetObject, element, dataContext);
 		}
@@ -650,6 +648,8 @@ public class ResourceLoader implements IVisualElementLoader {
 			((TableItemProperty.Cell) targetObject)
 					.setParent((TableItem) parent);
 		}
+
+		applyStyles(element, targetObject);
 
 		for (Map.Entry<String, Object> entry : options.entrySet()) {
 			String key = entry.getKey();
@@ -919,7 +919,7 @@ public class ResourceLoader implements IVisualElementLoader {
 						}
 					}
 				}
-				current = UserData.getParent(current);
+				current = UserData.getTreeParent(current);
 			}
 		}
 
@@ -1232,18 +1232,35 @@ public class ResourceLoader implements IVisualElementLoader {
 	}
 
 	protected Object getArrayProperty(Class<?> type, Object swtObject,
-			DocumentObject element, String attrName)
+			DocumentObject docObject, String attrName)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchFieldException {
-		if (!type.isArray()) {
-			throw new XWTException("Type mismatch: property " + attrName
-					+ " isn't an array.");
+		Class<?> arrayType = null;
+		if (type == Object.class) {
+			if (docObject instanceof Element) {
+				Element element = (Element) docObject;
+				Attribute attribute = element.getAttribute(IConstants.XWT_NAMESPACE, IConstants.XAML_X_TYPE);
+				if (attribute == null) {
+					throw new XWTException("The type attribute is missing in the element x:Array.");
+				}
+				String value = attribute.getContent();
+				IMetaclass metaclass = XWT.getMetaclass(value, attribute.getNamespace());
+				if (metaclass == null) {
+					throw new XWTException("The type \"" + value + "\" is not found.");					
+				}
+				arrayType = metaclass.getType();
+			}
 		}
-
-		Class<?> arrayType = type.getComponentType();
+		else {
+			if (!type.isArray()) {
+				throw new XWTException("Type mismatch: property " + attrName
+						+ " isn't an array.");
+			}
+			arrayType = type.getComponentType();
+		}
 		if (arrayType != null) {
 			List<Object> list = new ArrayList<Object>();
-			for (DocumentObject childModel : element.getChildren()) {
+			for (DocumentObject childModel : docObject.getChildren()) {
 				if (!(childModel instanceof Element)) {
 					continue;
 				}

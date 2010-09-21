@@ -637,8 +637,6 @@ public class ResourceVisitor {
 			setBindingContext(metaclass, targetObject, dico, bindingContext);
 		}
 
-		applyStyles(element, targetObject);
-
 		if (dataBindingTrack != null) {
 			dataBindingTrack.tracking(targetObject, element, dataContext);
 		}
@@ -659,6 +657,9 @@ public class ResourceVisitor {
 			((TableItemProperty.Cell) targetObject)
 					.setParent((TableItem) parent);
 		}
+		
+		applyStyles(element, targetObject);
+
 		Set<Entry<String, Object>> entrySet = options.entrySet();
 		for (Entry<String, Object> entry : entrySet) {
 			String key = entry.getKey();
@@ -927,7 +928,7 @@ public class ResourceVisitor {
 						}
 					}
 				}
-				current = UserData.getParent(current);
+				current = UserData.getTreeParent(current);
 			}
 		}
 
@@ -1213,17 +1214,35 @@ public class ResourceVisitor {
 	}
 
 	protected Object getArrayProperty(Class<?> type, Object swtObject,
-			XamlNode element, String attrName) throws IllegalAccessException,
+			XamlNode node, String attrName) throws IllegalAccessException,
 			InvocationTargetException, NoSuchFieldException {
-		if (!type.isArray()) {
-			throw new XWTException("Type mismatch: property " + attrName
-					+ " isn't an array.");
+		Class<?> arrayType = null;
+		if (type == Object.class) {
+			if (node instanceof XamlElement) {
+				XamlElement element = (XamlElement) node;
+				XamlAttribute attribute = element.getAttribute(IConstants.XWT_NAMESPACE, IConstants.XAML_X_TYPE);
+				if (attribute == null) {
+					throw new XWTException("The type attribute is missing in the element x:Array.");
+				}
+				String value = attribute.getValue();
+				IMetaclass metaclass = XWT.getMetaclass(value, attribute.getNamespace());
+				if (metaclass == null) {
+					throw new XWTException("The type \"" + value + "\" is not found.");					
+				}
+				arrayType = metaclass.getType();
+			}
 		}
-
-		Class<?> arrayType = type.getComponentType();
+		else {
+			if (!type.isArray()) {
+				throw new XWTException("Type mismatch: property " + attrName
+						+ " isn't an array.");
+			}
+			arrayType = type.getComponentType();
+		}
+		
 		if (arrayType != null) {
 			List<Object> list = new ArrayList<Object>();
-			for (XamlElement childModel : element.getChildNodes()) {
+			for (XamlElement childModel : node.getChildNodes()) {
 				Object child = createInstance(swtObject, childModel);
 				list.add(child);
 			}

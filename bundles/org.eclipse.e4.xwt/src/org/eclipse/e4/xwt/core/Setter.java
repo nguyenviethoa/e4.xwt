@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
+import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 
@@ -23,7 +25,7 @@ import org.eclipse.e4.xwt.metadata.IProperty;
  */
 public class Setter extends SetterBase {
 	protected String property;
-	protected String value;
+	protected Object value;
 	protected String targetName;
 
 	public String getTargetName() {
@@ -42,17 +44,17 @@ public class Setter extends SetterBase {
 		this.property = property;
 	}
 
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 
 	public Object applyTo(Object element, boolean update) {
 		String propName = getProperty();
-		String propValue = getValue();
+		Object propValue = getValue();
 		String targetName = getTargetName();
 		Object setterTarget = element;
 		Object oldValue = null;
@@ -62,7 +64,18 @@ public class Setter extends SetterBase {
 		IMetaclass metaclass = XWT.getMetaclass(setterTarget);
 		IProperty prop = metaclass.findProperty(propName);
 		if (prop != null && propValue != null) {
-			Object toValue = XWT.convertFrom(prop.getType(), propValue);
+			Object toValue = propValue;
+			Class<?> valueType = propValue.getClass();
+			Class<?> targetType = prop.getType();
+			if (targetType != null && !targetType.isAssignableFrom(valueType)) {
+				IConverter converter = XWT.findConvertor(valueType, targetType);
+				if (converter != null) {
+					toValue = converter.convert(propValue);					
+				}
+				else {
+					throw new XWTException("Converter doesn't exist from \"" + valueType.getName() + "\" to \"" + targetType.getName());
+				}
+			}
 			try {
 				oldValue = prop.getValue(setterTarget);
 				if (update) {

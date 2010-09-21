@@ -85,7 +85,9 @@ public class BeginStoryboard extends TriggerAction {
 	
 	@Override
 	public void initialize(Object target) {
-		UserData.findScopeKeeper(target).addNamedObject(name, this);
+		if (name != null) {
+			UserData.findScopeKeeper(target).addNamedObject(name, this);			
+		}
 	}
 	
 	@Override
