@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import org.eclipse.e4.xwt.core.EventTrigger;
 import org.eclipse.e4.xwt.core.TriggerAction;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.widgets.Event;

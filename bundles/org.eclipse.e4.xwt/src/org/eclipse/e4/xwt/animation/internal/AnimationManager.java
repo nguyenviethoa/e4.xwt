@@ -31,13 +31,13 @@ public class AnimationManager {
 	static class ScenarioManager {
 		private Collection<ITimeline> timelines = new ArrayList<ITimeline>();
 
-		public void play(ITimeline timeline, boolean wait) {
+		public void play(ITimeline timeline) {
 			for (ITimeline timelineScenario : timelines) {
 				if (timelineScenario != timeline) {
 					timelineScenario.cancel();
 				}
 			}
-			timeline.play(wait);
+			timeline.play();
 		}
 
 		public void cancel(ITimeline timeline) {
@@ -69,10 +69,10 @@ public class AnimationManager {
 	}
 	
 	
-	public void play(ITimeline timeline, boolean wait) {
+	public void play(ITimeline timeline) {
 		ScenarioManager manager = scenarioManagers.get(timeline.getTarget());
 		if (manager != null) {
-			manager.play(timeline, wait);
+			manager.play(timeline);
 		}
 	}
 	

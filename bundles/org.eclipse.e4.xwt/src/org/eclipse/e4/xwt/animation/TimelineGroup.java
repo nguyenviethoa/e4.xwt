@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import org.eclipse.e4.xwt.XWTMaps;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.e4.xwt.animation.internal.AnimationManager;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.animation.internal.ITimelineGroup;
@@ -18,12 +20,13 @@ import org.eclipse.e4.xwt.animation.internal.ScenarioTimeline;
 import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 import org.eclipse.e4.xwt.annotation.Containment;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Widget;
 import org.pushingpixels.trident.TimelineScenario;
 
 public class TimelineGroup extends Timeline {
 	private Timeline[] children = EMPTY_ARRAY;
 
-	private ITimeline timeline;
+	private Map<Widget, ITimeline> timelines = new HashMap<Widget, ITimeline>();
 
 	@Containment
 	public Timeline[] getChildren() {
@@ -39,33 +42,42 @@ public class TimelineGroup extends Timeline {
 	}
 
 	public void start(Event event, Object target) {
+		ITimeline timeline = timelines.get(event.widget);
 		if (timeline == null) {
 			timeline = createTimelineGroup(findTarget(target));
 			updateTimeline(timeline, target);
 			AnimationManager.getInstance().addTimeline(timeline);
+			timelines.put(event.widget, timeline);
 		}
-		if (event.type == XWTMaps.getEvent("swt.dispose")) {
-			AnimationManager.getInstance().play(timeline, false);
-			event.doit = true;
-		} else {
-			AnimationManager.getInstance().play(timeline, false);
-		}
+		AnimationManager.getInstance().play(timeline);
 	}
 
 	public void stop(Event event) {
-		AnimationManager.getInstance().stop(timeline);
+		ITimeline timeline = timelines.get(event.widget);
+		if (timeline != null) {
+			AnimationManager.getInstance().stop(timeline);			
+		}
 	}
 
 	public void pause(Event event) {
-		AnimationManager.getInstance().pause(timeline);
+		ITimeline timeline = timelines.get(event.widget);
+		if (timeline != null) {
+			AnimationManager.getInstance().pause(timeline);
+		}
 	}
 
 	public void resume(Event event) {
-		AnimationManager.getInstance().resume(timeline);
+		ITimeline timeline = timelines.get(event.widget);
+		if (timeline != null) {
+			AnimationManager.getInstance().resume(timeline);
+		}
 	}
 
 	public void playReverse(Event event) {
-		AnimationManager.getInstance().playReverse(timeline);
+		ITimeline timeline = timelines.get(event.widget);
+		if (timeline != null) {
+			AnimationManager.getInstance().playReverse(timeline);
+		}
 	}
 
 	@Override
