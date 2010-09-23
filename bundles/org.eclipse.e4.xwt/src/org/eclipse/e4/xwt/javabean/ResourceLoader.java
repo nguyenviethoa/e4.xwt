@@ -770,21 +770,6 @@ public class ResourceLoader implements IVisualElementLoader {
 	 * creating its instance, applying its attributes and creating children.
 	 */
 	protected void postCreation(Object target) {
-		Widget widget = UserData.getWidget(target);
-		if (widget == null) {
-			return;
-		}
-		TriggerBase[] triggers = UserData.getTriggers(widget);
-		for (TriggerBase triggerBase : triggers) {
-			if (triggerBase != null) {
-				triggerBase.prepare(target);
-			}
-		}
-		for (TriggerBase triggerBase : triggers) {
-			if (triggerBase != null) {
-				triggerBase.on(target);
-			}
-		}
 	}
 
 	protected void setDataContext(IMetaclass metaclass, Object targetObject,

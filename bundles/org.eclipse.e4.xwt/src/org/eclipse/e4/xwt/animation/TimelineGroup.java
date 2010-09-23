@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.animation;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.internal.AnimationManager;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.animation.internal.ITimelineGroup;
@@ -41,7 +42,11 @@ public class TimelineGroup extends Timeline {
 		return new ScenarioTimeline(this, new TimelineScenario(), target);
 	}
 
-	public void start(Event event, Object target) {
+	public void start(final Event event, final Object target) {
+		doStart(event, target);
+	}
+
+	protected void doStart(Event event, Object target) {
 		ITimeline timeline = timelines.get(event.widget);
 		if (timeline == null) {
 			timeline = createTimelineGroup(findTarget(target));
@@ -55,7 +60,7 @@ public class TimelineGroup extends Timeline {
 	public void stop(Event event) {
 		ITimeline timeline = timelines.get(event.widget);
 		if (timeline != null) {
-			AnimationManager.getInstance().stop(timeline);			
+			AnimationManager.getInstance().stop(timeline);
 		}
 	}
 
@@ -100,8 +105,12 @@ public class TimelineGroup extends Timeline {
 				timelineGroup.addTimeline(scenarioTimeline);
 			} else {
 				if (tridentTimeline == null) {
+					Object resolveTarget = child.findTarget(target);
+					if (!(resolveTarget instanceof Widget)) {
+						throw new XWTException("The target of animation should be a Widget");
+					}
 					tridentTimeline = new TridentTimeline(child,
-							child.findTarget(target));
+							(Widget) resolveTarget);
 					timelineGroup.addTimeline(tridentTimeline);
 				}
 				child.updateTimeline(tridentTimeline, target);

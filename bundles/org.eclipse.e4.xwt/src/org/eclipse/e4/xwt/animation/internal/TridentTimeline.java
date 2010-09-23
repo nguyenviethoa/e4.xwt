@@ -10,23 +10,28 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation.internal;
 
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.Duration;
 import org.eclipse.e4.xwt.animation.IEasingFunction;
 import org.eclipse.e4.xwt.animation.RepeatBehavior;
 import org.eclipse.e4.xwt.animation.TimeSpan;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Widget;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.TimelinePropertyBuilder;
 import org.pushingpixels.trident.TimelinePropertyBuilder.DefaultPropertySetter;
 import org.pushingpixels.trident.TimelineScenario.TimelineScenarioActor;
+import org.pushingpixels.trident.swt.SWTRepaintCallback;
 
 public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 	protected Timeline tridentTimeline;
 	protected org.eclipse.e4.xwt.animation.Timeline xwtTimeline;
 	protected Object target;
 	private boolean isPlayed = false;
-	
-	public TridentTimeline(org.eclipse.e4.xwt.animation.Timeline xwtTimeline, Object target) {
+
+	public TridentTimeline(org.eclipse.e4.xwt.animation.Timeline xwtTimeline,
+			Widget target) {
 		this.xwtTimeline = xwtTimeline;
 		this.target = target;
 		this.tridentTimeline = createTimeline(target);
@@ -39,11 +44,11 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 	public void play() {
 		if (this.isPlayed) {
 			this.tridentTimeline.replay();
-		}
-		else {
+		} else {
 			Duration duration = this.xwtTimeline.getDuration();
 			if (duration != null && duration.hasTimeSpan()) {
-				this.tridentTimeline.setDuration(duration.getTimeSpan().getMilliseconds());
+				this.tridentTimeline.setDuration(duration.getTimeSpan()
+						.getMilliseconds());
 			} else {
 				this.tridentTimeline.setDuration(10000);
 			}
@@ -52,13 +57,18 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 			isPlayed = true;
 		}
 	}
-	
+
 	protected void setInitialValue() {
-		
+
 	}
-	
-	protected Timeline createTimeline(Object target) {
-		org.pushingpixels.trident.Timeline timeline = new org.pushingpixels.trident.Timeline(target);
+
+	protected Timeline createTimeline(Widget target) {
+		org.pushingpixels.trident.Timeline timeline = new org.pushingpixels.trident.Timeline(
+				target);
+		Control control = (target instanceof Control ? (Control) target
+				: (Control) XWT.findParent(target, Control.class));
+		timeline.addCallback(new SWTRepaintCallback(control));
+
 		Duration duration = this.xwtTimeline.getDuration();
 		if (duration != null && duration.hasTimeSpan()) {
 			timeline.setDuration(duration.getTimeSpan().getMilliseconds());
@@ -67,7 +77,7 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 		}
 		return timeline;
 	}
-	
+
 	public void playLoop(RepeatBehavior behavior) {
 		org.pushingpixels.trident.Timeline.RepeatBehavior loopBehavior = org.pushingpixels.trident.Timeline.RepeatBehavior.LOOP;
 		if (xwtTimeline.isAutoReverse()) {
@@ -80,18 +90,18 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 				this.tridentTimeline.playLoop((int) loopCount, loopBehavior);
 			} else {
 				Duration duration = behavior.getDuration();
-				this.tridentTimeline.playLoopSkipping((int) loopCount, loopBehavior,
-						duration.getTimeSpan().getMilliseconds());
+				this.tridentTimeline.playLoopSkipping((int) loopCount,
+						loopBehavior, duration.getTimeSpan().getMilliseconds());
 			}
 		} else {
 			if (!behavior.getHasDuration()) {
 				this.tridentTimeline.playLoop(loopBehavior);
 			} else {
 				Duration duration = behavior.getDuration();
-				this.tridentTimeline.playLoopSkipping(loopBehavior, duration.getTimeSpan()
-						.getMilliseconds());
+				this.tridentTimeline.playLoopSkipping(loopBehavior, duration
+						.getTimeSpan().getMilliseconds());
 			}
-		}		
+		}
 	}
 
 	public void end() {
@@ -115,7 +125,6 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 		this.tridentTimeline.abort();
 	}
 
-	
 	public void pause() {
 		if (this.tridentTimeline == null) {
 			return;
@@ -136,16 +145,17 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 		}
 		this.tridentTimeline.playReverse();
 	}
-	
+
 	public final <T> void addPropertyToInterpolate(String propName, T from, T to) {
 		if (to == null) {
-			throw new XWTException("\"to\" property of Animation cannot be null.");
+			throw new XWTException(
+					"\"to\" property of Animation cannot be null.");
 		}
 		TimelinePropertyBuilder<T> builder = Timeline.<T> property(propName);
 		if (from == null) {
 			builder.fromCurrent();
 		} else {
-			builder.from(from);				
+			builder.from(from);
 		}
 		builder.to(to);
 		int index = propName.indexOf('.');
@@ -155,17 +165,16 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 			builder.accessWith(propertyAccessor);
 		}
 		this.tridentTimeline.addPropertyToInterpolate(builder);
-		
+
 		TimeSpan timeSpan = this.xwtTimeline.getBeginTime();
 		if (timeSpan != null && timeSpan.ticks != 0) {
 			this.tridentTimeline.setInitialDelay(timeSpan.getMilliseconds());
-		}
-		else if (from != null){
+		} else if (from != null) {
 			if (propertyAccessor != null) {
 				propertyAccessor.set(target, propName, from);
-			}
-			else {
-				DefaultPropertySetter<T> propertySetter = new DefaultPropertySetter<T>(target, propName);
+			} else {
+				DefaultPropertySetter<T> propertySetter = new DefaultPropertySetter<T>(
+						target, propName);
 				propertySetter.set(target, propName, from);
 			}
 		}
@@ -176,7 +185,7 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 			this.tridentTimeline.setEase(easingFunction);
 		}
 	}
-	
+
 	public boolean isDone() {
 		return tridentTimeline.isDone();
 	}

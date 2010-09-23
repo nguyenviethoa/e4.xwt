@@ -141,6 +141,7 @@ import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnImagePro
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnTextProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.TableViewerColumnWidthProperty;
 import org.eclipse.e4.xwt.javabean.metadata.properties.ColumnViewerColumnsProperty;
+import org.eclipse.e4.xwt.javabean.metadata.properties.TriggersProperty;
 import org.eclipse.e4.xwt.jface.ComboBoxCellEditor;
 import org.eclipse.e4.xwt.jface.DefaultCellModifier;
 import org.eclipse.e4.xwt.jface.JFaceInitializer;
@@ -1591,10 +1592,13 @@ public class XWTLoader implements IXWTLoader {
 				IConstants.XAML_DATA_CONTEXT,
 				IUserDataConstants.XWT_DATACONTEXT_KEY);
 		metaclass.addProperty(dataContextProperty);
+		ILoadingType loadingType = new DefaultLoadingType(
+				IValueLoading.PostChildren,
+				new IProperty[] { dataContextProperty });
+		
 		metaclass.addProperty(new DataProperty(IConstants.XAML_BINDING_CONTEXT,
 				IUserDataConstants.XWT_BINDING_CONTEXT_KEY));
-		metaclass.addProperty(new DataProperty(IConstants.XAML_TRIGGERS,
-				IUserDataConstants.XWT_TRIGGERS_KEY, TriggerBase[].class));
+		metaclass.addProperty(new TriggersProperty(loadingType));
 		metaclass.addProperty(new StyleProperty());
 		registerEventGroup(type, new RadioEventGroup(IEventConstants.KEY_GROUP));
 		registerEventGroup(type, new RadioEventGroup(
@@ -1612,9 +1616,6 @@ public class XWTLoader implements IXWTLoader {
 		registerEventGroup(type, new RadioEventGroup(IEventConstants.HARD_KEY));
 		type = org.eclipse.swt.browser.Browser.class;
 		IMetaclass browserMetaclass = (IMetaclass) registerMetaclass(type);
-		ILoadingType loadingType = new DefaultLoadingType(
-				IValueLoading.PostChildren,
-				new IProperty[] { dataContextProperty });
 
 		browserMetaclass.addProperty(new DynamicProperty(type, String.class,
 				PropertiesConstants.PROPERTY_URL, loadingType));

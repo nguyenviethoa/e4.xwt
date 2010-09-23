@@ -10,12 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
-import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
-import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.swt.widgets.Control;
-import org.pushingpixels.trident.Timeline;
 
 public class DoubleAnimationUsingKeyFrames extends DoubleAnimationBase {
 	/**

@@ -10,20 +10,27 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.internal.core;
 
+import java.lang.reflect.Method;
+
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.e4.xwt.IDataProvider;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.annotation.UIBounds;
 import org.eclipse.e4.xwt.core.IDynamicBinding;
 import org.eclipse.e4.xwt.core.IUserDataConstants;
 import org.eclipse.e4.xwt.databinding.BindingMode;
 import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
 
 /**
  * Generic Binding definition
- *
+ * 
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class DynamicBinding implements IDynamicBinding {
@@ -48,7 +55,7 @@ public abstract class DynamicBinding implements IDynamicBinding {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.e4.xwt.core.IDynamicBinding#getContextName()
 	 */
 	public IBindingContext getBindingContext() {
@@ -69,9 +76,10 @@ public abstract class DynamicBinding implements IDynamicBinding {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
-	 * org.eclipse.e4.xwt.core.IDynamicBinding#setBindingContext(IBindingContext)
+	 * org.eclipse.e4.xwt.core.IDynamicBinding#setBindingContext(IBindingContext
+	 * )
 	 */
 	public void setBindingContext(IBindingContext bindingContext) {
 		this.bindingContext = bindingContext;
@@ -119,7 +127,9 @@ public abstract class DynamicBinding implements IDynamicBinding {
 		}
 		Object data = UserData.getLocalDataContext(control);
 		if (data == null || data == this) {
-			if (data == null && UserData.hasLocalData(control, IUserDataConstants.XWT_DATACONTEXT_KEY)) {
+			if (data == null
+					&& UserData.hasLocalData(control,
+							IUserDataConstants.XWT_DATACONTEXT_KEY)) {
 				return control;
 			}
 			Widget parent = UserData.getParent(control);
@@ -154,5 +164,71 @@ public abstract class DynamicBinding implements IDynamicBinding {
 
 	public IDataProvider getDataProvider() {
 		return getDataProvider(getDataContext());
+	}
+
+	protected Rectangle getControlBounds() {
+		Widget widget = (Widget) getControl();
+		if (widget instanceof Control) {
+			Control control = (Control) widget;
+			return control.getBounds();
+		}
+		Method drawMethod = findBoundsMethod(widget.getClass());
+		if (drawMethod != null) {
+			try {
+				drawMethod.setAccessible(true);
+				return (Rectangle) drawMethod.invoke(widget);
+			} catch (Exception e) {
+				throw new XWTException(e);
+			}
+		}
+		Control control = findHostControl();
+		return control.getBounds();
+	}
+	
+	protected Control findHostControl() {
+		Widget widget = (Widget) getControl();
+		Control host;
+		if (widget instanceof Item) {
+			Item item = (Item) widget;
+			host = (Control) XWT.findParent(item, Control.class);
+		}
+		else if (widget instanceof Control) {
+			host = (Control) widget;			
+		}
+		else {
+			throw new XWTException();
+		}
+		return host;
+	}
+
+	private Method findBoundsMethod(Class<?> type) {
+		for (Method method : type.getDeclaredMethods()) {
+			if (method.getAnnotation(UIBounds.class) != null
+					&& method.getTypeParameters().length == 0
+					&& method.getReturnType() == Rectangle.class) {
+				return method;
+			}
+		}
+		Class<?> supertype = type.getSuperclass();
+		if (supertype != null && supertype != Widget.class) {
+			Method method = findBoundsMethod(supertype);
+			if (method != null) {
+				return method;
+			}
+		}
+		for (Class<?> anInterface : type.getInterfaces()) {
+			Method method = findBoundsMethod(anInterface);
+			if (method != null) {
+				return method;
+			}
+		}
+		try {
+			Method method = type.getDeclaredMethod("getBounds");
+			if (method.getReturnType() == Rectangle.class) {
+				return method;
+			}
+		} catch (Exception e) {
+		}
+		return null;
 	}
 }
