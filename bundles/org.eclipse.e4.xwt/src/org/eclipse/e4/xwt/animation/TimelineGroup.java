@@ -90,7 +90,8 @@ public class TimelineGroup extends Timeline {
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		ITimelineGroup timelineGroup = (ITimelineGroup) timeline;
-		TridentTimeline tridentTimeline = null;
+		HashMap<Object, TridentTimeline> map = new HashMap<Object, TridentTimeline>();
+		
 		for (Timeline child : children) {
 			if (child instanceof ParallelTimeline) {
 				TimelineScenario scenario = new TimelineScenario.Parallel();
@@ -105,14 +106,17 @@ public class TimelineGroup extends Timeline {
 				child.updateTimeline(scenarioTimeline, target);
 				timelineGroup.addTimeline(scenarioTimeline);
 			} else {
+				Object resolveTarget = child.findTarget(target);
+				TridentTimeline tridentTimeline = map.get(resolveTarget);
+
 				if (tridentTimeline == null) {
-					Object resolveTarget = child.findTarget(target);
 					if (!(resolveTarget instanceof Widget)) {
 						throw new XWTException("The target of animation should be a Widget");
 					}
 					tridentTimeline = new TridentTimeline(child,
 							(Widget) resolveTarget);
 					timelineGroup.addTimeline(tridentTimeline);
+					map.put(resolveTarget, tridentTimeline);
 				}
 				child.updateTimeline(tridentTimeline, target);
 			}
