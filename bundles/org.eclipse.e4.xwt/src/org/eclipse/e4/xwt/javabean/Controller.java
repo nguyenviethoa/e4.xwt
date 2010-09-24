@@ -48,8 +48,7 @@ public class Controller implements Listener, IEventController {
 						e1.printStackTrace();
 						return;
 					}
-				}
-				else {
+				} else {
 					Method method = (Method) handler;
 					try {
 						method.setAccessible(true);
@@ -68,8 +67,11 @@ public class Controller implements Listener, IEventController {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#hasEvent(java.lang.Object, org.eclipse.e4.xwt.metadata.IEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#hasEvent(java.lang.Object,
+	 * org.eclipse.e4.xwt.metadata.IEvent)
 	 */
 	public boolean hasEvent(Object receiver, IEvent event) {
 		if (receivers == null) {
@@ -84,8 +86,13 @@ public class Controller implements Listener, IEventController {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#addEvent(int, java.lang.String, org.eclipse.e4.xwt.metadata.IEvent, org.eclipse.swt.widgets.Widget, java.lang.Object, java.lang.Object, java.lang.reflect.Method)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#addEvent(int,
+	 * java.lang.String, org.eclipse.e4.xwt.metadata.IEvent,
+	 * org.eclipse.swt.widgets.Widget, java.lang.Object, java.lang.Object,
+	 * java.lang.reflect.Method)
 	 */
 	public void addEvent(int eventType, String name, IEvent event,
 			Widget control, Object receiver, Object arg, Method method) {
@@ -98,7 +105,7 @@ public class Controller implements Listener, IEventController {
 	}
 
 	protected void doAddEvent(int eventType, String name, IEvent event,
-				Widget control, Object receiver, Object arg, Object method) {
+			Widget control, Object receiver, Object arg, Object method) {
 		if (eventTypes == null) {
 			eventTypes = new int[3];
 			handlers = new Method[3];
@@ -140,19 +147,21 @@ public class Controller implements Listener, IEventController {
 		names[waterMark++] = name;
 
 		if (eventType == IEventConstants.XWT_SWT_LOADED) {
-			if(XWTMaps.getEvent("swt.paint")!=SWT.None) {
-				Listener[] listeners = control.getListeners(XWTMaps.getEvent("swt.paint"));
+			int swt_paint = XWTMaps.getEvent("swt.paint");
+			if (swt_paint != SWT.None) { // for RAP integration
+				Listener[] listeners = control.getListeners(swt_paint);
 				if (listeners.length > 0) {
 					for (Listener listener : listeners) {
-						control.removeListener(XWTMaps.getEvent("swt.paint"), listener);
+						control.removeListener(swt_paint, listener);
 					}
-					control.addListener(XWTMaps.getEvent("swt.paint"), new LoadedEventListener(control));
+					control.addListener(swt_paint, new LoadedEventListener(
+							control));
 					for (Listener listener : listeners) {
-						control.addListener(XWTMaps.getEvent("swt.paint"), listener);
+						control.addListener(swt_paint, listener);
 					}
-				}
-				else {
-					control.addListener(XWTMaps.getEvent("swt.paint"), new LoadedEventListener(control));
+				} else {
+					control.addListener(swt_paint, new LoadedEventListener(
+							control));
 				}
 			}
 		}
@@ -161,53 +170,28 @@ public class Controller implements Listener, IEventController {
 
 	class LoadedEventListener implements Listener {
 		protected Widget control;
-		
+
 		public LoadedEventListener(Widget control) {
 			this.control = control;
 		}
+
 		public void handleEvent(Event event) {
-			Event loadedEvent = new Event();
-			loadedEvent.button = event.button;
-			loadedEvent.character = event.character;
-			loadedEvent.count = event.count;
-			loadedEvent.data = event.data;
-			loadedEvent.detail = event.count;
-			loadedEvent.display = event.display;
-			loadedEvent.doit = event.doit;
-			loadedEvent.end = event.end;
-			loadedEvent.gc = event.gc;
-			loadedEvent.height = event.height;
-			loadedEvent.index = event.index;
-			loadedEvent.item = event.item;
-			loadedEvent.keyCode = event.keyCode;
-			trySetEventKeyLocation(loadedEvent, event);
-			loadedEvent.start = event.start;
-			loadedEvent.stateMask = event.stateMask;
-			loadedEvent.text = event.text;
-			loadedEvent.time = event.time;
-			loadedEvent.widget = event.widget;
-			loadedEvent.width = event.width;
-			loadedEvent.x = event.x;
+			Event loadedEvent = copy(event);
 			loadedEvent.type = IEventConstants.XWT_SWT_LOADED;
-			if(XWTMaps.getEvent("swt.paint")!=SWT.None) {
+			if (XWTMaps.getEvent("swt.paint") != SWT.None) {
 				control.removeListener(XWTMaps.getEvent("swt.paint"), this);
 			}
 			Controller.this.handleEvent(loadedEvent);
 		}
-		private void trySetEventKeyLocation(Event loadedEvent, Event event) {
-			if(SWT.getPlatform()!="rap") {
-				try {
-					Field f = Event.class.getDeclaredField("loadedKey");
-					f.set(loadedEvent, f.get(event));
-				} catch (Exception e) {
-					assert false;
-				}
-			}
-		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#setEvent(org.eclipse.e4.xwt.metadata.IEvent, org.eclipse.swt.widgets.Widget, java.lang.Object, java.lang.Object, java.lang.reflect.Method)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.javabean.IEventHandler#setEvent(org.eclipse.e4.xwt
+	 * .metadata.IEvent, org.eclipse.swt.widgets.Widget, java.lang.Object,
+	 * java.lang.Object, java.lang.reflect.Method)
 	 */
 	public void setEvent(IEvent event, Widget control, Object receiver,
 			Object arg, Method method) {
@@ -218,13 +202,49 @@ public class Controller implements Listener, IEventController {
 		}
 	}
 
-	public void setEvent(IEvent event, Widget control, 
-			Object arg, IEventInvoker eventInvoker) {
+	public void setEvent(IEvent event, Widget control, Object arg,
+			IEventInvoker eventInvoker) {
 		String name = event.getName();
 		int eventType = getEventTypeByName(name);
 		if (eventType != SWT.None) {
 			doAddEvent(eventType, name, event, control, null, arg, eventInvoker);
 		}
+	}
+
+	public static Event copy(Event event) {
+		Event copyEvent = new Event();
+		copyEvent.button = event.button;
+		copyEvent.character = event.character;
+		copyEvent.count = event.count;
+		copyEvent.data = event.data;
+		copyEvent.detail = event.detail;
+		copyEvent.display = event.display;
+		copyEvent.doit = event.doit;
+		copyEvent.end = event.end;
+		copyEvent.gc = event.gc;
+		copyEvent.height = event.height;
+		copyEvent.index = event.index;
+		copyEvent.item = event.item;
+		copyEvent.keyCode = event.keyCode;
+		copyEvent.keyLocation = event.keyLocation;
+		copyEvent.start = event.start;
+		copyEvent.stateMask = event.stateMask;
+		copyEvent.text = event.text;
+		copyEvent.time = event.time;
+		copyEvent.type = event.type;
+		copyEvent.widget = event.widget;
+		copyEvent.width = event.width;
+		copyEvent.x = event.x;
+		copyEvent.y = event.y;
+		if (SWT.getPlatform() == "rap") {
+			try {
+				Field f = Event.class.getDeclaredField("loadedKey");
+				f.set(copyEvent, f.get(event));
+			} catch (Exception e) {
+				assert false;
+			}
+		}
+		return copyEvent;
 	}
 
 	public static int getEventTypeByName(String name) {
@@ -308,7 +328,8 @@ public class Controller implements Listener, IEventController {
 			return XWTMaps.getEvent("swt.measureitem");
 		} else if (IEventConstants.PAINT_ITEM.equalsIgnoreCase(name)) {
 			return XWTMaps.getEvent("swt.paintitem");
-		} else if (IEventConstants.XWT_LOADED.equalsIgnoreCase(name) || IEventConstants.XWT_LOADED_EVENT.equalsIgnoreCase(name)) {
+		} else if (IEventConstants.XWT_LOADED.equalsIgnoreCase(name)
+				|| IEventConstants.XWT_LOADED_EVENT.equalsIgnoreCase(name)) {
 			return IEventConstants.XWT_SWT_LOADED;
 		}
 		// case SWT.PaintItem:
@@ -338,8 +359,12 @@ public class Controller implements Listener, IEventController {
 		return SWT.None;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.e4.xwt.javabean.IEventHandler#handleEvent(org.eclipse.swt.widgets.Event)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.e4.xwt.javabean.IEventHandler#handleEvent(org.eclipse.swt
+	 * .widgets.Event)
 	 */
 	public void handleEvent(Event e) {
 		fireEvent(e);

@@ -23,7 +23,8 @@ public class ScenarioTimeline extends TimelineScenario implements ITimelineGroup
 	protected Object target;
 	protected boolean done = false;
 	private Collection<ITimeline> actors = new ArrayList<ITimeline>();
-	
+	private Collection<Runnable> stateChangedRunnables = new ArrayList<Runnable>();
+
 	public ScenarioTimeline(org.eclipse.e4.xwt.animation.Timeline xwtTimeline, TimelineScenario tridentTimelineScenario, Object target) {
 		this.xwtTimeline = xwtTimeline;
 		this.target = target;
@@ -32,11 +33,28 @@ public class ScenarioTimeline extends TimelineScenario implements ITimelineGroup
 			public void onTimelineScenarioDone() {
 				synchronized (ScenarioTimeline.this) {
 					done = true;
+					for (Runnable runnable : getStateChangedRunnables()) {
+						runnable.run();
+					}
 				}
 			}
 		});
 	}
 
+	public Collection<Runnable> getStateChangedRunnables() {
+		return stateChangedRunnables;
+	}
+
+	public void addStateChangedRunnable(Runnable stateChangedRunnable) {
+		if (!this.stateChangedRunnables.contains(stateChangedRunnable)) {
+			this.stateChangedRunnables.add(stateChangedRunnable);			
+		}
+	}
+
+	public void removeStateChangedRunnable(Runnable stateChangedRunnable) {
+		this.stateChangedRunnables.remove(stateChangedRunnable);
+	}
+	
 	public Object getTarget() {
 		return target;
 	}

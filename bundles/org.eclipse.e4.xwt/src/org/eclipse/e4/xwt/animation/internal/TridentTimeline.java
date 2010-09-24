@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation.internal;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.Duration;
@@ -20,8 +23,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.TimelinePropertyBuilder;
+import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.TimelinePropertyBuilder.DefaultPropertySetter;
 import org.pushingpixels.trident.TimelineScenario.TimelineScenarioActor;
+import org.pushingpixels.trident.callback.TimelineCallback;
 import org.pushingpixels.trident.swt.SWTRepaintCallback;
 
 public class TridentTimeline implements ITimeline, TimelineScenarioActor {
@@ -29,12 +34,38 @@ public class TridentTimeline implements ITimeline, TimelineScenarioActor {
 	protected org.eclipse.e4.xwt.animation.Timeline xwtTimeline;
 	protected Object target;
 	private boolean isPlayed = false;
+	private Collection<Runnable> stateChangedRunnables = new ArrayList<Runnable>();
 
 	public TridentTimeline(org.eclipse.e4.xwt.animation.Timeline xwtTimeline,
 			Widget target) {
 		this.xwtTimeline = xwtTimeline;
 		this.target = target;
 		this.tridentTimeline = createTimeline(target);
+		tridentTimeline.addCallback(new TimelineCallback() {
+			public void onTimelineStateChanged(TimelineState oldState,
+					TimelineState newState, float durationFraction,
+					float timelinePosition) {
+				for (Runnable runnable : getStateChangedRunnables()) {
+					runnable.run();
+				}
+			}
+			public void onTimelinePulse(float durationFraction, float timelinePosition) {
+			}
+		});
+	}
+
+	public Collection<Runnable> getStateChangedRunnables() {
+		return stateChangedRunnables;
+	}
+
+	public void addStateChangedRunnable(Runnable stateChangedRunnable) {
+		if (!this.stateChangedRunnables.contains(stateChangedRunnable)) {
+			this.stateChangedRunnables.add(stateChangedRunnable);			
+		}
+	}
+
+	public void removeStateChangedRunnable(Runnable stateChangedRunnable) {
+		this.stateChangedRunnables.remove(stateChangedRunnable);
 	}
 
 	public Object getTarget() {

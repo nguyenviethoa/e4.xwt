@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Event;
 public abstract class TriggerAction {
 	public static final TriggerAction[] EMPTY_ARRAY = new TriggerAction[0];
 	
-	public abstract void run(Event event, Object target);
+	public abstract void run(Event event, Object target, Runnable stateChangedRunnable);
 	
 	public abstract void initialize(Object target);
 }

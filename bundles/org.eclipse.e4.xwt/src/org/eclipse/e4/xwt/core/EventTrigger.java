@@ -10,18 +10,19 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
-import java.lang.reflect.Method;
-
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.annotation.Containment;
-import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.javabean.Controller;
 import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.ModelUtils;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
 /**
@@ -80,12 +81,9 @@ public class EventTrigger extends TriggerBase {
 				triggerAction.initialize(target);
 			}
 
-			Widget widget = UserData.getWidget(source);
-			IEventController eventController = UserData.updateEventController(source);
 			RunableAction runnable = createRunnable(source);
 			try {
-				Method method = runnable.getClass().getDeclaredMethod("run", Object.class, Event.class);
-				eventController.setEvent(event, widget, runnable, this, method);
+				runnable.setEventTrigger(event);
 			} catch (Exception e) {
 				LoggerManager.log(e);
 			}
@@ -95,19 +93,57 @@ public class EventTrigger extends TriggerBase {
 	public void on(Object target) {
 	}
 	
+	
 	protected RunableAction createRunnable(Object target) {
 		return new RunableAction(target);
 	}
 	
-	class RunableAction {
+	class RunableAction implements Listener, Runnable {
 		protected Object target;
+		private int count;
+		private Event event;
+		private int eventType;
 		public RunableAction(Object target) {
 			this.target = target;
 		}
-		public void run(Object object, Event event) {
-			for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
-				triggerAction.run(event, target);
+		
+		public void run() {
+			count--;
+			if (count == 0 && !event.widget.isDisposed()) {
+				final Display display = event.widget.getDisplay();
+				display.asyncExec(new Runnable() {
+					public void run() {
+						display.removeFilter(eventType, RunableAction.this);
+						event.widget.notifyListeners(eventType, event);
+						display.addFilter(eventType, RunableAction.this);						
+					}
+				});
 			}
+		}
+		
+		protected void setEventTrigger(IEvent event) {
+			Widget widget = UserData.getWidget(target);
+			String name = event.getName();
+			eventType = Controller.getEventTypeByName(name);
+			if (eventType != SWT.None) {
+				widget.getDisplay().addFilter(eventType, this);
+			}
+		}
+		
+		public void handleEvent(Event event) {
+			Widget widget = UserData.getWidget(target);
+			if (event.widget != widget) {
+				return;
+			}
+			
+			// execute the animation actions first and then normal events 
+			count = EventTrigger.this.getActions().length;
+			
+			this.event = Controller.copy(event);
+			for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
+				triggerAction.run(event, target, this);
+			}
+			event.type = SWT.NONE;
 		}
 	}
 }

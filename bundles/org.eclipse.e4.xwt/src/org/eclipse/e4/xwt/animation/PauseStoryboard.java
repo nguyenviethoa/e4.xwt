@@ -10,15 +10,14 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
-import org.eclipse.e4.xwt.core.EventTrigger;
 import org.eclipse.swt.widgets.Event;
 
 public class PauseStoryboard extends ControllableStoryboardAction {
 	@Override
-	public void run(Event event, Object target) {
+	public void run(Event event, Object target, Runnable stateChangedRunnable) {
 		Storyboard storyboard = getStoryboard();
 		if (storyboard != null) {
-			storyboard.pause(event);
+			storyboard.pause(event, stateChangedRunnable);
 		}
 	}
 }

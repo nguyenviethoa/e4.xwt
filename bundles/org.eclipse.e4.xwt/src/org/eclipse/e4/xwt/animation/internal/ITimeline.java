@@ -26,4 +26,8 @@ public interface ITimeline extends TimelineScenarioActor {
 	public void pause();
 
 	public void resume();
+	
+	public void addStateChangedRunnable(Runnable runnable);
+	
+	public void removeStateChangedRunnable(Runnable runnable);
 }

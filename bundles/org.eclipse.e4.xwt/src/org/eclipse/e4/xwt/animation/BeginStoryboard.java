@@ -90,7 +90,7 @@ public class BeginStoryboard extends TriggerAction {
 	}
 	
 	@Override
-	public void run(Event event, Object target) {
-		getStoryboard().start(event, target);
+	public void run(Event event, Object target, Runnable stateChangedRunnable) {
+		getStoryboard().start(event, target, stateChangedRunnable);
 	}
 }

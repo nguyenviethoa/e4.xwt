@@ -42,11 +42,7 @@ public class TimelineGroup extends Timeline {
 		return new ScenarioTimeline(this, new TimelineScenario(), target);
 	}
 
-	public void start(final Event event, final Object target) {
-		doStart(event, target);
-	}
-
-	protected void doStart(Event event, Object target) {
+	public void start(final Event event, final Object target, Runnable endRunnable) {
 		ITimeline timeline = timelines.get(event.widget);
 		if (timeline == null) {
 			timeline = createTimelineGroup(findTarget(target));
@@ -54,33 +50,38 @@ public class TimelineGroup extends Timeline {
 			AnimationManager.getInstance().addTimeline(timeline);
 			timelines.put(event.widget, timeline);
 		}
+		timeline.addStateChangedRunnable(endRunnable);
 		AnimationManager.getInstance().play(timeline);
 	}
 
-	public void stop(Event event) {
+	public void stop(Event event, Runnable stateChangedRunnable) {
 		ITimeline timeline = timelines.get(event.widget);
 		if (timeline != null) {
+			timeline.addStateChangedRunnable(stateChangedRunnable);
 			AnimationManager.getInstance().stop(timeline);
 		}
 	}
 
-	public void pause(Event event) {
+	public void pause(Event event, Runnable endRunnable) {
 		ITimeline timeline = timelines.get(event.widget);
 		if (timeline != null) {
+			timeline.addStateChangedRunnable(endRunnable);
 			AnimationManager.getInstance().pause(timeline);
 		}
 	}
 
-	public void resume(Event event) {
+	public void resume(Event event, Runnable endRunnable) {
 		ITimeline timeline = timelines.get(event.widget);
 		if (timeline != null) {
+			timeline.addStateChangedRunnable(endRunnable);
 			AnimationManager.getInstance().resume(timeline);
 		}
 	}
 
-	public void playReverse(Event event) {
+	public void playReverse(Event event, Runnable endRunnable) {
 		ITimeline timeline = timelines.get(event.widget);
 		if (timeline != null) {
+			timeline.addStateChangedRunnable(endRunnable);
 			AnimationManager.getInstance().playReverse(timeline);
 		}
 	}
