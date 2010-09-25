@@ -650,7 +650,7 @@ public class Core {
 		elementsLoaders.remove(element);
 	}
 
-	public Control load(ILoadingContext loadingContext, URL input,
+	public Object load(ILoadingContext loadingContext, URL input,
 			Map<String, Object> options) throws Exception {
 		return load(loadingContext, null, input, options);
 	}
@@ -678,7 +678,7 @@ public class Core {
 		return new UIResource(input, element);
 	}
 
-	public Control load(ILoadingContext loadingContext, IUIResource pattern,
+	public Object load(ILoadingContext loadingContext, IUIResource pattern,
 			Map<String, Object> options) throws Exception {
 		UIResource uiResource = (UIResource) pattern;
 		Control control = null;
@@ -719,7 +719,7 @@ public class Core {
 				}
 			}
 		}
-		return control;
+		return visual;
 	}
 
 	public Control load(ILoadingContext loadingContext, InputStream stream,

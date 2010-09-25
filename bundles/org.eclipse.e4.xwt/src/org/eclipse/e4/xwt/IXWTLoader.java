@@ -37,6 +37,7 @@ import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * XWT loader interface
@@ -337,23 +338,6 @@ public interface IXWTLoader {
 	void setTriggers(Object widget, TriggerBase[] triggers);
 
 	/**
-	 * Get the CLR (Common Language Runtime) object. If no CLR object is found
-	 * in this element, the research will be propagated in it parent.
-	 * 
-	 * @param widget
-	 * @return
-	 */
-	Object getCLR(Object widget);
-
-	/**
-	 * Find the root shell
-	 * 
-	 * @param context
-	 * @return
-	 */
-	Shell findShell(Object context);
-
-	/**
 	 * Find the closet parent of type Composite
 	 * 
 	 * @param context
@@ -374,37 +358,37 @@ public interface IXWTLoader {
 	 * This method return the root element.
 	 * 
 	 */
-	Control load(URL file) throws Exception;
+	Object load(URL file) throws Exception;
 
 	/**
 	 * Load the file content with a DataContext. All widget will be created but
 	 * they are showed. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	Control load(URL file, Object dataContext) throws Exception;
+	Object load(URL file, Object dataContext) throws Exception;
 
-	Control load(IUIResource resource, Object dataContext) throws Exception;
-
-	/**
-	 * Load the file content under a Composite. All widget will be created. This
-	 * method returns the root element. The DataContext will be associated to
-	 * the root element.
-	 */
-	Control load(Composite parent, URL file) throws Exception;
+	Object load(IUIResource resource, Object dataContext) throws Exception;
 
 	/**
 	 * Load the file content under a Composite. All widget will be created. This
 	 * method returns the root element. The DataContext will be associated to
 	 * the root element.
 	 */
-	Control load(Composite parent, IUIResource resource) throws Exception;
+	Object load(Composite parent, URL file) throws Exception;
+
+	/**
+	 * Load the file content under a Composite. All widget will be created. This
+	 * method returns the root element. The DataContext will be associated to
+	 * the root element.
+	 */
+	Object load(Composite parent, IUIResource resource) throws Exception;
 
 	/**
 	 * Load the file content under a Composite with a DataContext. All widget
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	Control load(Composite parent, URL file, Object dataContext)
+	Object load(Composite parent, URL file, Object dataContext)
 			throws Exception;
 
 	/**
@@ -412,7 +396,7 @@ public interface IXWTLoader {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	Control load(Composite parent, IUIResource resource, Object dataContext)
+	Object load(Composite parent, IUIResource resource, Object dataContext)
 			throws Exception;
 
 	/**
@@ -420,7 +404,7 @@ public interface IXWTLoader {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	Control load(Composite parent, IUIResource resource, Map<String, Object> options)
+	Object load(Composite parent, IUIResource resource, Map<String, Object> options)
 			throws Exception;
 
 	/**
@@ -428,7 +412,7 @@ public interface IXWTLoader {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	Control load(Composite parent, Class<?> viewType, Object dataContext)
+	Object load(Composite parent, Class<?> viewType, Object dataContext)
 			throws Exception;
 
 	/**
@@ -436,7 +420,7 @@ public interface IXWTLoader {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	Control loadWithOptions(Class<?> viewType, Map<String, Object> options)
+	Object loadWithOptions(Class<?> viewType, Map<String, Object> options)
 			throws Exception;
 
 	/**
@@ -455,7 +439,7 @@ public interface IXWTLoader {
 	 * load the content from a stream with a style, a DataContext and a
 	 * ResourceDictionary. The root elements will be hold by Composite parent
 	 */
-	Control load(Composite parent, InputStream stream, URL file,
+	Object load(Composite parent, InputStream stream, URL file,
 			Object dataContext) throws Exception;
 
 	/**
@@ -495,7 +479,7 @@ public interface IXWTLoader {
 	 */
 	Object convertFrom(Class<?> targetType, String string);
 
-	Control loadWithOptions(URL url, Map<String, Object> options)
+	Object loadWithOptions(URL url, Map<String, Object> options)
 			throws Exception;
 
 	/**
@@ -506,9 +490,9 @@ public interface IXWTLoader {
 	 * @return
 	 * @throws Exception
 	 */
-	Control load(InputStream stream, URL url) throws Exception;
+	Object load(InputStream stream, URL url) throws Exception;
 
-	Control load(IUIResource resource) throws Exception;
+	Object load(IUIResource resource) throws Exception;
 
 	public IUIResource loadAsResource(InputStream stream, URL input) throws Exception;
 
@@ -529,10 +513,10 @@ public interface IXWTLoader {
 	 * @return
 	 * @throws Exception
 	 */
-	Control loadWithOptions(InputStream stream, URL url,
+	Object loadWithOptions(InputStream stream, URL url,
 			Map<String, Object> options) throws Exception;
 
-	Control loadWithOptions(IUIResource resource,
+	Object loadWithOptions(IUIResource resource,
 			Map<String, Object> options) throws Exception;
 
 	/**

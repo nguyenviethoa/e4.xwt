@@ -57,8 +57,10 @@ public abstract class XWTTestCase extends TestCase {
 		try {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
-			root = XWT.loadWithOptions(url, options);
-			assertNotNull(root);
+			Object widget = XWT.loadWithOptions(url, options);
+			assertTrue(widget instanceof Control);
+			assertNotNull(widget);
+			root = (Control) widget;
 			Shell shell = root.getShell();
 			shell.open();
 			Display display = shell.getDisplay();
@@ -93,8 +95,10 @@ public abstract class XWTTestCase extends TestCase {
 		try {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
-			root = XWT.load(url);
-			assertNotNull(root);
+			Object widget = XWT.load(url);
+			assertTrue(widget instanceof Control);
+			assertNotNull(widget);
+			root = (Control) widget;
 			Shell shell = root.getShell();
 			shell.open();
 			Display display = shell.getDisplay();

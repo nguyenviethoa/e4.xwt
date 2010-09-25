@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.custom.StackLayout;
@@ -66,9 +67,15 @@ public class ContactListHandler {
 				else
 					url = ChangeHandler.class.getResource("details.xwt");
 
-				control = XWT.load(parent, url, selection);
-				parent.layout();
-				controls.put(computeKey(selection), control);
+				Object widget = XWT.load(parent, url, selection);
+				if (widget instanceof Control) {
+					control = (Control) widget;
+					parent.layout();
+					controls.put(computeKey(selection), control);
+				}
+				else {
+					throw new XWTException("Must be a control.");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

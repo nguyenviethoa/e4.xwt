@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.xwt.IXWTLoader;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.ui.utils.ProjectContext;
 import org.eclipse.e4.xwt.vex.VEXRenderer;
 import org.eclipse.e4.xwt.vex.swt.ImageCapture;
@@ -90,7 +91,7 @@ public class XWTRender implements VEXRenderer {
 
 			projectContext = ProjectContext.getContext(javaProject);
 			XWT.setLoadingContext(projectContext);
-			Control rootElement;
+			Object rootElement;
 			try {
 				ByteArrayInputStream inputStream = new ByteArrayInputStream(code.getBytes());
 				rootElement = XWT.loadWithOptions(inputStream, file.getLocationURI().toURL(), options);
@@ -105,7 +106,10 @@ public class XWTRender implements VEXRenderer {
 					rectangle = rectangle.union(bounds);
 				}
 
-				shell = rootElement.getShell();
+				shell = XWT.findShell(rootElement);
+				if (shell == null) {
+					throw new XWTException("Root element is a control.");
+				}
 				shell.setFocus();
 //				shell.pack();
 				shell.setLocation(rectangle.x + rectangle.width + 200, rectangle.y + rectangle.height + 200);
@@ -162,7 +166,7 @@ public class XWTRender implements VEXRenderer {
 		return true;
 	}
 
-	private void findBrowser(Control control, List<Browser> browsers) {
+	private void findBrowser(Object control, List<Browser> browsers) {
 		if (control instanceof Composite) {
 			Composite parent = (Composite) control;
 			Control[] children = parent.getChildren();

@@ -345,8 +345,8 @@ public class XWT {
 	 * @param widget
 	 * @return
 	 */
-	public static Object getCLR(Widget widget) {
-		return XWTLoaderManager.getActive().getCLR(widget);
+	public static Object getCLR(Object widget) {
+		return UserData.getCLR(widget);
 	}
 
 	/**
@@ -355,8 +355,8 @@ public class XWT {
 	 * @param context
 	 * @return
 	 */
-	public static Shell findShell(Widget context) {
-		return XWTLoaderManager.getActive().findShell(context);
+	public static Shell findShell(Object context) {
+		return UserData.findShell(context);
 	}
 
 	public static IProperty findProperty(Object object, String name) {
@@ -388,7 +388,7 @@ public class XWT {
 	 * This method return the root element.
 	 * 
 	 */
-	static public Control load(URL file) throws Exception {
+	static public Object load(URL file) throws Exception {
 		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().load(file);
 	}
@@ -398,7 +398,7 @@ public class XWT {
 	 * showed. This method return the root element.
 	 * 
 	 */
-	static public Control load(IUIResource resource) throws Exception {
+	static public Object load(IUIResource resource) throws Exception {
 		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().load(resource);
 	}
@@ -408,7 +408,7 @@ public class XWT {
 	 * This method return the root element.
 	 * 
 	 */
-	static public Control load(URL file, Object dataContext) throws Exception {
+	static public Object load(URL file, Object dataContext) throws Exception {
 		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().load(file, dataContext);
 	}
@@ -418,7 +418,7 @@ public class XWT {
 	 * showed. This method return the root element.
 	 * 
 	 */
-	static public Control load(IUIResource resource, Object dataContext)
+	static public Object load(IUIResource resource, Object dataContext)
 			throws Exception {
 		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().load(resource, dataContext);
@@ -429,7 +429,7 @@ public class XWT {
 	 * method returns the root element. The DataContext will be associated to
 	 * the root element.
 	 */
-	static public Control load(Composite parent, URL file) throws Exception {
+	static public Object load(Composite parent, URL file) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file);
 	}
 
@@ -439,7 +439,7 @@ public class XWT {
 	 * the root element.
 	 * 
 	 */
-	static public Control load(Composite parent, IUIResource resource) throws Exception {
+	static public Object load(Composite parent, IUIResource resource) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, resource);
 	}
 
@@ -448,7 +448,7 @@ public class XWT {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	static public Control load(Composite parent, URL file, Object dataContext)
+	static public Object load(Composite parent, URL file, Object dataContext)
 			throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file, dataContext);
 	}
@@ -515,12 +515,12 @@ public class XWT {
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	static public Control load(Composite parent, IUIResource resource,
+	static public Object load(Composite parent, IUIResource resource,
 			Object dataContext) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, resource, dataContext);
 	}
 
-	static public Control load(Composite parent, IUIResource resource,
+	static public Object load(Composite parent, IUIResource resource,
 			Map<String, Object> options) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, resource, options);
 	}
@@ -553,7 +553,7 @@ public class XWT {
 	 * load the content from a stream with a style, a DataContext and a
 	 * ResourceDictionary. The root elements will be hold by Composite parent
 	 */
-	static public Control load(Composite parent, InputStream stream, URL file,
+	static public Object load(Composite parent, InputStream stream, URL file,
 			Object dataContext) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, stream, file,
 				dataContext);
@@ -607,12 +607,12 @@ public class XWT {
 		return XWTLoaderManager.getActive().convertFrom(targetType, string);
 	}
 
-	static public Control loadWithOptions(URL url, Map<String, Object> options)
+	static public Object loadWithOptions(URL url, Map<String, Object> options)
 			throws Exception {
 		return XWTLoaderManager.getActive().loadWithOptions(url, options);
 	}
 
-	static public Control loadWithOptions(IUIResource resource,
+	static public Object loadWithOptions(IUIResource resource,
 			Map<String, Object> options) throws Exception {
 		return XWTLoaderManager.getActive().loadWithOptions(resource, options);
 	}
@@ -625,7 +625,7 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public Control load(InputStream stream, URL url) throws Exception {
+	static public Object load(InputStream stream, URL url) throws Exception {
 		XWT.checkInitialization();
 		return loadWithOptions(stream, url, Collections.EMPTY_MAP);
 	}
@@ -638,7 +638,7 @@ public class XWT {
 	 * @return
 	 * @throws Exception
 	 */
-	static public Control loadWithOptions(InputStream stream, URL url,
+	static public Object loadWithOptions(InputStream stream, URL url,
 			Map<String, Object> options) throws Exception {
 		XWT.checkInitialization();
 		return XWTLoaderManager.getActive().loadWithOptions(stream, url,

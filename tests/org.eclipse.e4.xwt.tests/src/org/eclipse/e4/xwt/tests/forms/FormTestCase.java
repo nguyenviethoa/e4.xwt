@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.e4.xwt.forms.XWTForms;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -26,7 +27,10 @@ public abstract class FormTestCase extends XWTTestCase {
 		try {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
-			root = XWTForms.loadWithOptions(url, options);
+			Object widget = XWTForms.loadWithOptions(url, options);
+			assertTrue(widget instanceof Control);
+			assertNotNull(widget);
+			root = (Control) widget;
 			assertNotNull(root);
 			Shell shell = root.getShell();
 			shell.open();

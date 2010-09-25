@@ -77,7 +77,7 @@ public class XWTVisualLoader extends XWTLoader {
 	 * (non-Javadoc)
 	 * @see org.eclipse.e4.xwt.XWTLoader#loadWithOptions(java.io.InputStream, java.net.URL, java.util.Map)
 	 */
-	public synchronized Control loadWithOptions(InputStream stream, URL base, Map<String, Object> options)
+	public synchronized Object loadWithOptions(InputStream stream, URL base, Map<String, Object> options)
 			throws Exception {
 		// FIXME:
 		return super.loadWithOptions(stream, base, options);

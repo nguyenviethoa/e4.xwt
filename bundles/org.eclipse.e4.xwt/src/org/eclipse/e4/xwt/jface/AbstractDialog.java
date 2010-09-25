@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -42,10 +43,13 @@ public abstract class AbstractDialog extends Dialog {
 			Thread.currentThread().setContextClassLoader(getClassLoader());
 			HashMap<String, Object> newOptions = new HashMap<String, Object>();
 			initOptions(parent, newOptions);
-			Control control = XWT.loadWithOptions(getContentURL(), newOptions);
+			Object element = XWT.loadWithOptions(getContentURL(), newOptions);
+			if (!(element instanceof Control)) {
+				throw new XWTException("Root element must a control.");
+			}
 			GridLayoutFactory.fillDefaults().generateLayout(parent);
 			parent.layout(true, true);
-			return control;
+			return (Control) element;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

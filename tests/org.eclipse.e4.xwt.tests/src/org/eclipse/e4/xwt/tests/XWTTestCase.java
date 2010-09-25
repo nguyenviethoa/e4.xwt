@@ -67,8 +67,10 @@ public abstract class XWTTestCase extends TestCase {
 		try {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
-			root = XWT.loadWithOptions(url, options);
-			assertNotNull(root);
+			Object element = XWT.loadWithOptions(url, options);
+			assertTrue(element instanceof Control);
+			assertNotNull(element);
+			root = (Control) element;
 			Shell shell = root.getShell();
 			shell.open();
 			/**
@@ -111,8 +113,10 @@ public abstract class XWTTestCase extends TestCase {
 		try {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
-			root = XWT.loadWithOptions(pattern, options);
-			assertNotNull(root);
+			Object widget = XWT.loadWithOptions(pattern, options);
+			assertTrue(widget instanceof Control);
+			assertNotNull(widget);
+			root = (Control) widget;
 			Shell shell = root.getShell();
 			shell.open();
 			/**
@@ -155,7 +159,10 @@ public abstract class XWTTestCase extends TestCase {
 		try {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
-			root = XWT.load(url);
+			Object widget = XWT.load(url);
+			assertTrue(widget instanceof Control);
+			assertNotNull(widget);
+			root = (Control) widget;
 			assertNotNull(root);
 			Shell shell = root.getShell();
 			shell.open();
@@ -180,7 +187,10 @@ public abstract class XWTTestCase extends TestCase {
 		try {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
-			root = XWT.load(pattern);
+			Object widget = XWT.load(pattern);
+			assertTrue(widget instanceof Control);
+			assertNotNull(widget);
+			root = (Control) widget;
 			assertNotNull(root);
 			Shell shell = root.getShell();
 			shell.open();

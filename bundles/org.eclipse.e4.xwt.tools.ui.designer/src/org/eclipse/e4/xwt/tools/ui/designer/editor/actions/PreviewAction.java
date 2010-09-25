@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.tools.ui.designer.editor.XWTDesigner;
 import org.eclipse.e4.xwt.tools.ui.designer.loader.XWTProxy;
 import org.eclipse.e4.xwt.tools.ui.designer.resources.ImageShop;
@@ -51,7 +52,11 @@ public class PreviewAction extends SelectionAction {
 		try {
 			IFile inputFile = part.getFile();
 			String content = part.getDocument().get();
-			Control control = XWT.load(new ByteArrayInputStream(content.getBytes()), inputFile.getLocationURI().toURL());
+			Object element = XWT.load(new ByteArrayInputStream(content.getBytes()), inputFile.getLocationURI().toURL());
+			if (!(element instanceof Control)) {
+				throw new XWTException("Root element is a control.");
+			}
+			Control control = (Control) element;
 			if (control == null || control.isDisposed()) {
 				return;
 			}

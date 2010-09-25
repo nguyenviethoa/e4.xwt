@@ -79,7 +79,7 @@ public class XWTForms {
 	 * Load the file content. All widget will be created but they are showed. This method return the root element.
 	 * 
 	 */
-	static public synchronized Control load(URL file) throws Exception {
+	static public synchronized Object load(URL file) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		return loadWithOptions(file, options);
 	}
@@ -88,7 +88,7 @@ public class XWTForms {
 	 * Load the file content. All widget will be created but they are showed. This method return the root element.
 	 * 
 	 */
-	static public synchronized Control load(URL file, Object dataContext) throws Exception {
+	static public synchronized Object load(URL file, Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
 		return loadWithOptions(file, options);
@@ -97,7 +97,7 @@ public class XWTForms {
 	/**
 	 * Load the file content under a Composite. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
-	static public synchronized Control load(Composite parent, URL file) throws Exception {
+	static public synchronized Object load(Composite parent, URL file) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(IXWTLoader.CONTAINER_PROPERTY, parent);
 		return loadWithOptions(file, options);
@@ -106,7 +106,7 @@ public class XWTForms {
 	/**
 	 * Load the file content under a Composite with a DataContext. All widget will be created. This method returns the root element. The DataContext will be associated to the root element.
 	 */
-	static public synchronized Control load(Composite parent, URL file, Object dataContext) throws Exception {
+	static public synchronized Object load(Composite parent, URL file, Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(IXWTLoader.CONTAINER_PROPERTY, parent);
 		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
@@ -123,7 +123,7 @@ public class XWTForms {
 	/**
 	 * load the content from a stream with a style, a DataContext and a ResourceDictionary. The root elements will be hold by Composite parent
 	 */
-	static public synchronized Control load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception {
+	static public synchronized Object load(Composite parent, InputStream stream, URL file, Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(IXWTLoader.CONTAINER_PROPERTY, parent);
 		options.put(IXWTLoader.DATACONTEXT_PROPERTY, dataContext);
@@ -162,7 +162,7 @@ public class XWTForms {
 		}
 	}
 
-	static public synchronized Control loadWithOptions(URL url, Map<String, Object> options) throws Exception {
+	static public synchronized Object loadWithOptions(URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
 			options.put(IXWTLoader.CREATED_CALLBACK, CreatedAction);
@@ -183,7 +183,7 @@ public class XWTForms {
 	 * @return
 	 * @throws Exception
 	 */
-	static public synchronized Control load(InputStream stream, URL url) throws Exception {
+	static public synchronized Object load(InputStream stream, URL url) throws Exception {
 		return loadWithOptions(stream, url, new HashMap<String, Object>());
 	}
 
@@ -195,7 +195,7 @@ public class XWTForms {
 	 * @return
 	 * @throws Exception
 	 */
-	static public synchronized Control loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
+	static public synchronized Object loadWithOptions(InputStream stream, URL url, Map<String, Object> options) throws Exception {
 		boolean applied = applyFormsProfile();
 		try {
 			options.put(IXWTLoader.CREATED_CALLBACK, CreatedAction);
