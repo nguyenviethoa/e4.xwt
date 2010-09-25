@@ -54,9 +54,12 @@ public abstract class XWTTestCase extends TestCase {
 		try {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
-			root = XWT.loadWithOptions(url, options);
-			assertNotNull(root);
+			Object element = XWT.loadWithOptions(url, options);
+			assertNotNull(element);
+			assertTrue(element instanceof Control);
+			root = (Control) element;
 			Shell shell = root.getShell();
+			assertNotNull(shell);
 			shell.open();
 			/**
 			 * The shells of the tests failed are not cleanup properly.
@@ -98,8 +101,10 @@ public abstract class XWTTestCase extends TestCase {
 		try {
 			Thread.currentThread().setContextClassLoader(
 					this.getClass().getClassLoader());
-			root = XWT.load(url);
-			assertNotNull(root);
+			Object element = XWT.load(url);
+			assertNotNull(element);
+			assertTrue(element instanceof Control);
+			root = (Control) element;
 			Shell shell = root.getShell();
 			shell.open();
 			Display display = shell.getDisplay();
