@@ -149,9 +149,12 @@ public class UserData {
 		if (widget == null) {
 			return null;
 		}
-		Control control = getParent(widget);
-		if (control != null) {
-			return control.getShell();
+		if (widget instanceof Shell) {
+			return (Shell) widget;
+		}
+		Control parent = (Control) findParent(widget, Control.class);
+		if (parent != null) {
+			return parent.getShell();
 		}
 		return null;
 	}
