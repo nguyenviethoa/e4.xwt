@@ -125,11 +125,26 @@ public class FloatAnimation extends FloatAnimationBase {
 		this.cumulative = cumulative;
 	}
 	
+	protected void initialize(Object target) {
+		if (getFrom() == null && getTo() == null) {
+			super.initializeCacheValue(target);
+		}
+	}
+
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		if (timeline instanceof TridentTimeline) {
 			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
-			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+			Float from = getFrom();
+			Float to = getTo();
+			if (from == null && to == null) {
+				from = (Float) getCacheValue();
+				to = (Float) getCurrentValue(target);
+				if (from != null && from.equals(to)) {
+					return;
+				}
+			}
+			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), from, to);
 			tridentTimeline.setEasingFunction(getEasingFunction());
 		}
 	}

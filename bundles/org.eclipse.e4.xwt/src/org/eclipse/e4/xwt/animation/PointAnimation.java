@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
@@ -17,6 +18,7 @@ import org.eclipse.e4.xwt.animation.interpolator.PointPropertyInterpolator;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Widget;
 import org.pushingpixels.trident.TridentConfig;
 
 /**
@@ -56,6 +58,12 @@ public class PointAnimation extends AnimationTimeline {
 	public void setTo(Point to) {
 		this.to = to;
 	}
+	
+	protected void initialize(Object target) {
+		if (getFrom() == null && getTo() == null) {
+			initializeCacheValue(target);
+		}
+	}
 
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
@@ -66,7 +74,20 @@ public class PointAnimation extends AnimationTimeline {
 		}
 		if (timeline instanceof TridentTimeline) {
 			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
-			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+			Point from = getFrom();
+			Point to = getTo();
+			if (from == null && to == null) {
+				from = (Point) getCacheValue();
+				to = (Point) getCurrentValue(target);
+				if (from.x == 0 && from.y == 0) {
+					setCacheValue(to);
+					return;
+				}
+				if (from != null && from.equals(to)) {
+					return;
+				}
+			}
+			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), from, to);
 			tridentTimeline.setEasingFunction(getEasingFunction());
 		}
 	}

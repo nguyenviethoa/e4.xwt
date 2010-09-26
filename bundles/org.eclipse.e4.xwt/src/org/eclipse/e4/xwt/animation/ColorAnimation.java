@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.animation;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
 import org.pushingpixels.trident.Timeline;
 
 public class ColorAnimation extends AnimationTimeline {
@@ -44,11 +45,26 @@ public class ColorAnimation extends AnimationTimeline {
 		this.by = by;
 	}
 	
+	protected void initialize(Object target) {
+		if (getFrom() == null && getTo() == null) {
+			super.initializeCacheValue(target);
+		}
+	}
+	
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		if (timeline instanceof TridentTimeline) {
 			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
-			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+			Color from = getFrom();
+			Color to = getTo();
+			if (from == null && to == null) {
+				from = (Color) getCacheValue();
+				to = (Color) getCurrentValue(target);
+				if (from != null && from.equals(to)) {
+					return;
+				}
+			}
+			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), from, to);
 		}
 	}
 }

@@ -21,7 +21,7 @@ public class IntAnimation extends AnimationTimeline {
 	private Integer from;
 	private Integer by;
 	private Integer to;
-	
+
 	private IEasingFunction easingFunction;
 
 	public IEasingFunction getEasingFunction() {
@@ -35,32 +35,48 @@ public class IntAnimation extends AnimationTimeline {
 	public Integer getTo() {
 		return to;
 	}
-	
+
 	public void setTo(Integer to) {
 		this.to = to;
 	}
-	
+
 	public Integer getFrom() {
 		return from;
 	}
-	
+
 	public void setFrom(Integer from) {
 		this.from = from;
 	}
-	
+
 	public Integer getBy() {
 		return by;
 	}
-	
+
 	public void setBy(Integer by) {
 		this.by = by;
 	}
-	
+
+	protected void initialize(Object target) {
+		if (getFrom() == null && getTo() == null) {
+			super.initializeCacheValue(target);
+		}
+	}
+
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		if (timeline instanceof TridentTimeline) {
 			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
-			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+			Integer from = getFrom();
+			Integer to = getTo();
+			if (from == null && to == null) {
+				from = (Integer) getCacheValue();
+				to = (Integer) getCurrentValue(target);
+				if (from != null && from.equals(to)) {
+					return;
+				}
+			}
+			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), from,
+					to);
 			tridentTimeline.setEasingFunction(getEasingFunction());
 		}
 	}

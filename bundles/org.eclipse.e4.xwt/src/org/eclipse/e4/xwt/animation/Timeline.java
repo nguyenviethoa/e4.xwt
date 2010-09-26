@@ -113,6 +113,9 @@ public abstract class Timeline {
 	protected void updateTimeline(ITimeline timeline, Object target) {
 	}
 
+	protected void initialize(Object target) {
+	}
+	
 	protected Object findTarget(Object target) {
 		return target;
 	}

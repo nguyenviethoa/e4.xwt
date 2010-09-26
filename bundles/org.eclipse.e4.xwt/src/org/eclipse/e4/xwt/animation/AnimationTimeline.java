@@ -10,14 +10,32 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.e4.xwt.metadata.IMetaclass;
+import org.eclipse.e4.xwt.metadata.IProperty;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Widget;
 
 public abstract class AnimationTimeline extends Timeline {
 	private boolean isDestinationDefault;
 	private String targetName;
 	private String targetProperty;
+
+	private Object cacheValue;
+
+	protected void setCacheValue(Object cacheValue) {
+		this.cacheValue = cacheValue;
+	}
+
+	protected Object getCacheValue() {
+		return cacheValue;
+	}
 
 	public String getTargetName() {
 		return targetName;
@@ -33,8 +51,8 @@ public abstract class AnimationTimeline extends Timeline {
 
 	public void setTargetProperty(String targetProperty) {
 		this.targetProperty = targetProperty;
-	}	
-	
+	}
+
 	/**
 	 * Getter of the property <tt>IsDestinationDefault</tt>
 	 * 
@@ -56,6 +74,25 @@ public abstract class AnimationTimeline extends Timeline {
 		this.isDestinationDefault = isDestinationDefault;
 	}
 	
+	protected void initializeCacheValue(Object target) {
+		cacheValue = getCurrentValue(target);
+	}
+
+	protected Object getCurrentValue(Object target) {
+		Object element = findTarget(target);
+		IMetaclass metaclass = XWT.getMetaclass(element);
+		IProperty property = metaclass.findProperty(getTargetProperty());
+		if (property == null) {
+			throw new XWTException("Property \"" + getTargetProperty()
+					+ "\" is not found in " + metaclass.getType().getName());
+		}
+		try {
+			return property.getValue(element);
+		} catch (Exception e) {
+			throw new XWTException(e);
+		}
+	}
+
 	@Override
 	protected Object findTarget(Object target) {
 		String targetName = getTargetName();
@@ -64,11 +101,12 @@ public abstract class AnimationTimeline extends Timeline {
 		}
 		Object newTarget = UserData.findElementByName(target, targetName);
 		if (newTarget == null) {
-			throw new XWTException("Name element " + targetName + " is not found in animation.");
+			throw new XWTException("Name element " + targetName
+					+ " is not found in animation.");
 		}
 		return super.findTarget(newTarget);
 	}
-	
-	protected void update(ITimeline timeline) {		
+
+	protected void update(ITimeline timeline) {
 	}
 }

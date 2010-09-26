@@ -93,14 +93,14 @@ public class EventTrigger extends TriggerBase {
 	public void on(Object target) {
 	}
 	
-	
 	protected RunableAction createRunnable(Object target) {
 		return new RunableAction(target);
 	}
 	
 	class RunableAction implements Listener, Runnable {
 		protected Object target;
-		private int count;
+		private int count = 0;
+		boolean started = false;
 		private Event event;
 		private int eventType;
 		public RunableAction(Object target) {
@@ -111,11 +111,12 @@ public class EventTrigger extends TriggerBase {
 			count--;
 			if (count == 0 && !event.widget.isDisposed()) {
 				final Display display = event.widget.getDisplay();
-				display.asyncExec(new Runnable() {
+				display.syncExec(new Runnable() {
 					public void run() {
 						display.removeFilter(eventType, RunableAction.this);
 						event.widget.notifyListeners(eventType, event);
-						display.addFilter(eventType, RunableAction.this);						
+						display.addFilter(eventType, RunableAction.this);
+						started = false;
 					}
 				});
 			}
@@ -135,10 +136,14 @@ public class EventTrigger extends TriggerBase {
 			if (event.widget != widget) {
 				return;
 			}
+			if (started) {
+				event.type = SWT.NONE;
+				return;
+			}
 			
 			// execute the animation actions first and then normal events 
 			count = EventTrigger.this.getActions().length;
-			
+			started = true;
 			this.event = Controller.copy(event);
 			for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
 				triggerAction.run(event, target, this);

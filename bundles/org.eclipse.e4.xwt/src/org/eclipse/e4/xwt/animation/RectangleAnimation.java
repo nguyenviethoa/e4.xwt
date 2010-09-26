@@ -15,6 +15,7 @@ import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 import org.eclipse.e4.xwt.animation.interpolator.RectanglePropertyInterpolator;
 import org.eclipse.e4.xwt.internal.utils.UserData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.pushingpixels.trident.TridentConfig;
@@ -58,6 +59,12 @@ public class RectangleAnimation extends AnimationTimeline {
 		this.easingFunction = easingFunction;
 	}
 
+	protected void initialize(Object target) {
+		if (getFrom() == null && getTo() == null) {
+			super.initializeCacheValue(target);
+		}
+	}
+
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		Object widget = UserData.getWidget(target);
@@ -67,7 +74,20 @@ public class RectangleAnimation extends AnimationTimeline {
 		}
 		if (timeline instanceof TridentTimeline) {
 			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
-			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), getFrom(), getTo());
+			Rectangle from = getFrom();
+			Rectangle to = getTo();
+			if (from == null && to == null) {
+				from = (Rectangle) getCacheValue();
+				to = (Rectangle) getCurrentValue(target);
+				if (from.width == 0 && from.height == 0) {
+					setCacheValue(to);
+					return;
+				}
+				if (from != null && from.equals(to)) {
+					return;
+				}
+			}
+			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), from, to);
 			tridentTimeline.setEasingFunction(getEasingFunction());
 		}
 	}

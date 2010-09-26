@@ -42,14 +42,20 @@ public class TimelineGroup extends Timeline {
 		return new ScenarioTimeline(this, new TimelineScenario(), target);
 	}
 
+	public void initialize(Object target) {
+		for (Timeline child : children) {
+			child.initialize(target);
+		}
+	}
+	
 	public void start(final Event event, final Object target, Runnable endRunnable) {
 		ITimeline timeline = timelines.get(event.widget);
 		if (timeline == null) {
 			timeline = createTimelineGroup(findTarget(target));
-			updateTimeline(timeline, target);
 			AnimationManager.getInstance().addTimeline(timeline);
 			timelines.put(event.widget, timeline);
 		}
+		updateTimeline(timeline, target);
 		timeline.addStateChangedRunnable(endRunnable);
 		AnimationManager.getInstance().play(timeline);
 	}
@@ -91,7 +97,7 @@ public class TimelineGroup extends Timeline {
 		super.updateTimeline(timeline, target);
 		ITimelineGroup timelineGroup = (ITimelineGroup) timeline;
 		HashMap<Object, TridentTimeline> map = new HashMap<Object, TridentTimeline>();
-		
+
 		for (Timeline child : children) {
 			if (child instanceof ParallelTimeline) {
 				TimelineScenario scenario = new TimelineScenario.Parallel();
