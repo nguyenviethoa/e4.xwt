@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.core;
 
+import java.lang.reflect.Method;
+
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.annotation.Containment;
+import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.javabean.Controller;
@@ -83,7 +87,17 @@ public class EventTrigger extends TriggerBase {
 
 			RunableAction runnable = createRunnable(source);
 			try {
-				runnable.setEventTrigger(event);
+				if (!runnable.setEventTrigger(event)) {
+					Widget widget = UserData.getWidget(source);
+					IEventController eventController = UserData.updateEventController(source);
+					RunablePaintAction paintRunnable = createPaintRunnable(source);
+					try {
+						Method method = paintRunnable.getClass().getDeclaredMethod("run", Object.class, Event.class);
+						eventController.setEvent(event, widget, paintRunnable, this, method);
+					} catch (Exception e) {
+						LoggerManager.log(e);
+					}
+				}
 			} catch (Exception e) {
 				LoggerManager.log(e);
 			}
@@ -96,7 +110,23 @@ public class EventTrigger extends TriggerBase {
 	protected RunableAction createRunnable(Object target) {
 		return new RunableAction(target);
 	}
-	
+
+	protected RunablePaintAction createPaintRunnable(Object target) {
+		return new RunablePaintAction(target);
+	}
+
+	class RunablePaintAction {
+		protected Object target;
+		public RunablePaintAction(Object target) {
+			this.target = target;
+		}
+		public void run(Object object, Event event) {
+			for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
+				triggerAction.run(event, target, null);
+			}
+		}
+	}
+
 	class RunableAction implements Listener, Runnable {
 		protected Object target;
 		private int count = 0;
@@ -122,13 +152,21 @@ public class EventTrigger extends TriggerBase {
 			}
 		}
 		
-		protected void setEventTrigger(IEvent event) {
+		protected boolean setEventTrigger(IEvent event) {
 			Widget widget = UserData.getWidget(target);
 			String name = event.getName();
-			eventType = Controller.getEventTypeByName(name);
-			if (eventType != SWT.None) {
-				widget.getDisplay().addFilter(eventType, this);
+			int eventType = Controller.getEventTypeByName(name);
+			int paintEvent = XWTMaps.getEvent("swt.paint");
+			if ("loadedevent".equalsIgnoreCase(name) || paintEvent == eventType) {
+				return false;
 			}
+			else {
+				this.eventType = eventType;
+			}
+			if (this.eventType != SWT.None) {
+				widget.getDisplay().addFilter(this.eventType, this);
+			}
+			return true;
 		}
 		
 		public void handleEvent(Event event) {

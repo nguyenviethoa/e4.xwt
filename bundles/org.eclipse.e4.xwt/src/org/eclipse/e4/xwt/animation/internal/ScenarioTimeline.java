@@ -46,6 +46,9 @@ public class ScenarioTimeline extends TimelineScenario implements ITimelineGroup
 	}
 
 	public void addStateChangedRunnable(Runnable stateChangedRunnable) {
+		if (stateChangedRunnable == null) {
+			return;
+		}
 		if (!this.stateChangedRunnables.contains(stateChangedRunnable)) {
 			this.stateChangedRunnables.add(stateChangedRunnable);			
 		}
