@@ -206,7 +206,7 @@ public class UserData {
 			return scopeKeeper;
 		}
 		Widget parent = getTreeParent(element);
-		if (parent != null) {
+		if (parent != null && !parent.isDisposed()) {
 			return findScopeKeeper(parent);
 		}
 		return null;

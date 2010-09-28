@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.XWT;
-import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.annotation.Containment;
 import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
@@ -80,26 +79,31 @@ public class EventTrigger extends TriggerBase {
 						.getClass().getName());
 				}
 				return;
-			}			
+			}
+			
 			for (TriggerAction triggerAction : getActions()) {
 				triggerAction.initialize(target);
 			}
-
-			RunableAction runnable = createRunnable(source);
-			try {
-				if (!runnable.setEventTrigger(event)) {
-					Widget widget = UserData.getWidget(source);
-					IEventController eventController = UserData.updateEventController(source);
-					RunablePaintAction paintRunnable = createPaintRunnable(source);
-					try {
-						Method method = paintRunnable.getClass().getDeclaredMethod("run", Object.class, Event.class);
-						eventController.setEvent(event, widget, paintRunnable, this, method);
-					} catch (Exception e) {
-						LoggerManager.log(e);
-					}
+			
+			String name = event.getName();
+			if ("loadedevent".equalsIgnoreCase(name)) {
+				Widget widget = UserData.getWidget(source);
+				IEventController eventController = UserData.updateEventController(source);
+				RunablePaintAction paintRunnable = createPaintRunnable(source);
+				try {
+					Method method = paintRunnable.getClass().getDeclaredMethod("run", Object.class, Event.class);
+					eventController.setEvent(event, widget, paintRunnable, this, method);
+				} catch (Exception e) {
+					LoggerManager.log(e);
+				}				
+			}
+			else {
+				RunableAction runnable = createRunnable(source);
+				try {
+					runnable.setEventTrigger(event);
+				} catch (Exception e) {
+					LoggerManager.log(e);
 				}
-			} catch (Exception e) {
-				LoggerManager.log(e);
 			}
 		}
 	}
@@ -139,34 +143,31 @@ public class EventTrigger extends TriggerBase {
 		
 		public void run() {
 			count--;
-			if (count == 0 && !event.widget.isDisposed()) {
+			if (!event.widget.isDisposed()) {
 				final Display display = event.widget.getDisplay();
 				display.syncExec(new Runnable() {
 					public void run() {
-						display.removeFilter(eventType, RunableAction.this);
-						event.widget.notifyListeners(eventType, event);
-						display.addFilter(eventType, RunableAction.this);
-						started = false;
+						for (TriggerAction triggerAction : getActions()) {
+							triggerAction.initialize(target);
+						}
+						if (count == 0) {
+							display.removeFilter(eventType, RunableAction.this);
+							event.widget.notifyListeners(eventType, event);
+							display.addFilter(eventType, RunableAction.this);
+							started = false;
+						}
 					}
 				});
 			}
 		}
 		
-		protected boolean setEventTrigger(IEvent event) {
+		protected void setEventTrigger(IEvent event) {
 			Widget widget = UserData.getWidget(target);
 			String name = event.getName();
-			int eventType = Controller.getEventTypeByName(name);
-			int paintEvent = XWTMaps.getEvent("swt.paint");
-			if ("loadedevent".equalsIgnoreCase(name) || paintEvent == eventType) {
-				return false;
-			}
-			else {
-				this.eventType = eventType;
-			}
+			this.eventType = Controller.getEventTypeByName(name);
 			if (this.eventType != SWT.None) {
 				widget.getDisplay().addFilter(this.eventType, this);
 			}
-			return true;
 		}
 		
 		public void handleEvent(Event event) {

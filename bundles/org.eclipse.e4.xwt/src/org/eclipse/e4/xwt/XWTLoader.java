@@ -88,6 +88,7 @@ import org.eclipse.e4.xwt.converters.StringToKeyTime;
 import org.eclipse.e4.xwt.converters.StringToPoint;
 import org.eclipse.e4.xwt.converters.StringToRectangle;
 import org.eclipse.e4.xwt.converters.StringToRepeatBehavior;
+import org.eclipse.e4.xwt.converters.StringToTimeSpan;
 import org.eclipse.e4.xwt.converters.StringToType;
 import org.eclipse.e4.xwt.converters.StringToURL;
 import org.eclipse.e4.xwt.core.Condition;
@@ -1887,6 +1888,7 @@ public class XWTLoader implements IXWTLoader {
 		registerMetaclass(SineEase.class);
 
 		registerConvertor(StringToDuration.instance);
+		registerConvertor(StringToTimeSpan.instance);
 		registerConvertor(StringToRepeatBehavior.instance);
 
 		registerMetaclass(CollectionViewSource.class);

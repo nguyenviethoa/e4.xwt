@@ -12,6 +12,7 @@ package org.eclipse.e4.xwt.animation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.internal.AnimationManager;
@@ -27,7 +28,7 @@ import org.pushingpixels.trident.TimelineScenario;
 public class TimelineGroup extends Timeline {
 	private Timeline[] children = EMPTY_ARRAY;
 
-	private Map<Widget, ITimeline> timelines = new HashMap<Widget, ITimeline>();
+	private Map<Widget, ITimeline> timelines = new WeakHashMap<Widget, ITimeline>();
 
 	@Containment
 	public Timeline[] getChildren() {
@@ -49,12 +50,9 @@ public class TimelineGroup extends Timeline {
 	}
 	
 	public void start(final Event event, final Object target, Runnable endRunnable) {
-		ITimeline timeline = timelines.get(event.widget);
-		if (timeline == null) {
-			timeline = createTimelineGroup(findTarget(target));
-			AnimationManager.getInstance().addTimeline(timeline);
-			timelines.put(event.widget, timeline);
-		}
+		ITimeline timeline = createTimelineGroup(findTarget(target));
+		timelines.put(event.widget, timeline);
+		AnimationManager.getInstance().addTimeline(timeline);
 		updateTimeline(timeline, target);
 		timeline.addStateChangedRunnable(endRunnable);
 		AnimationManager.getInstance().play(timeline);
