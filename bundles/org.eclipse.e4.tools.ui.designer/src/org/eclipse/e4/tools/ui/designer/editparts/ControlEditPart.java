@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer.editparts;
 
+import org.eclipse.e4.tools.ui.designer.sashform.SashFormEditPart;
+
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.Draw2dTools;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.WidgetLocator;
 import org.eclipse.e4.xwt.tools.ui.designer.core.visuals.IVisualInfo;
@@ -49,12 +51,19 @@ public class ControlEditPart extends WidgetEditPart {
 		}
 		EditPart parentEp = getParent();
 		Control parentControl = null;
-		if (parentEp instanceof ControlEditPart) {
+		if (parentEp instanceof ControlEditPart && !(parentEp instanceof SashFormEditPart)) {
 			parentControl = (Control) ((ControlEditPart) parentEp).getWidget();
 		}
 		if (parentControl == null || control == null || control.isDisposed()
 				|| control.getParent() == parentControl) {
-			return super.getBounds();
+			org.eclipse.draw2d.geometry.Rectangle rectangle = super.getBounds();
+			if (parentEp instanceof SashFormEditPart) {
+				SashFormEditPart sashFormEditPart = (SashFormEditPart) parentEp;
+				Rectangle parentRectangle = (Rectangle) sashFormEditPart.getMuiElement().getWidget();
+				rectangle.x -= parentRectangle.x;
+				rectangle.y -= parentRectangle.y;
+			}
+			return rectangle;
 		} else {
 			int x = 0;
 			int y = 0;

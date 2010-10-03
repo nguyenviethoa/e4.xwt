@@ -11,7 +11,6 @@
 package org.eclipse.e4.xwt.tools.ui.designer.core.visuals.swt;
 
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.Draw2dTools;
-import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.SWTUtil;
 import org.eclipse.e4.xwt.tools.ui.designer.core.util.swt.WidgetLocator;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Scrollable;

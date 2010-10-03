@@ -215,7 +215,7 @@ public abstract class VisualEditPart extends AbstractGraphicalEditPart implement
 	}
 
 	/**
-	 * Don't remove this overrite method. see RefreshJob. This method has
+	 * Don't remove this overwrite method. see RefreshJob. This method has
 	 * declared to final, please use refresh(RefreshContext).
 	 */
 	protected final void refreshChildren() {
