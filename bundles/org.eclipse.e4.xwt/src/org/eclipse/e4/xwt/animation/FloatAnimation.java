@@ -125,12 +125,6 @@ public class FloatAnimation extends FloatAnimationBase {
 		this.cumulative = cumulative;
 	}
 	
-	protected void initialize(Object target) {
-		if (getFrom() == null && getTo() == null) {
-			super.initializeCacheValue(target);
-		}
-	}
-
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		if (timeline instanceof TridentTimeline) {

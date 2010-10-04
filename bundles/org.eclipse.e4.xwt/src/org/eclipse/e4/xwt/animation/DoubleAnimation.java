@@ -12,7 +12,6 @@ package org.eclipse.e4.xwt.animation;
 
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
-import org.eclipse.swt.graphics.Color;
 
 public class DoubleAnimation extends DoubleAnimationBase {
 	private Double by;
@@ -119,12 +118,6 @@ public class DoubleAnimation extends DoubleAnimationBase {
 
 	public void setCumulative(boolean cumulative) {
 		this.cumulative = cumulative;
-	}
-	
-	protected void initialize(Object target) {
-		if (getFrom() == null && getTo() == null) {
-			super.initializeCacheValue(target);
-		}
 	}
 	
 	protected void updateTimeline(ITimeline timeline, Object target) {

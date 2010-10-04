@@ -115,6 +115,9 @@ public abstract class Timeline {
 
 	protected void initialize(Object target) {
 	}
+
+	protected void endFinalize(Object target) {
+	}
 	
 	protected Object findTarget(Object target) {
 		return target;

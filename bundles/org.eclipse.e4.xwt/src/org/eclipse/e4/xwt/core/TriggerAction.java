@@ -18,4 +18,6 @@ public abstract class TriggerAction {
 	public abstract void run(Event event, Object target, Runnable stateChangedRunnable);
 	
 	public abstract void initialize(Object target);
+	
+	public abstract void endFinalize(Object target);
 }

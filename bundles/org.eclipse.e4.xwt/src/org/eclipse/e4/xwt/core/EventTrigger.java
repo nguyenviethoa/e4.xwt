@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 
 import org.eclipse.e4.xwt.IEventConstants;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.annotation.Containment;
 import org.eclipse.e4.xwt.internal.core.IEventController;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
@@ -68,36 +69,42 @@ public class EventTrigger extends TriggerBase {
 		if (routedEvent != null) {
 			Object source = getElementByName(target, getSourceName());
 			IMetaclass metaclass = XWT.getMetaclass(source);
-			IEvent event = metaclass.findEvent(ModelUtils.normalizeEventName(routedEvent));
+			IEvent event = metaclass.findEvent(ModelUtils
+					.normalizeEventName(routedEvent));
 			if (event == null) {
-				if (routedEvent != null && !routedEvent.toLowerCase().endsWith(IEventConstants.SUFFIX_KEY)) {
-					LoggerManager.log("Event " + routedEvent + " is not found in " + source
-							.getClass().getName() + ". Please add a suffix \"Event\"!");					
-				}
-				else {
-					LoggerManager.log("Event " + routedEvent + " is not found in " + source
-						.getClass().getName());
+				if (routedEvent != null
+						&& !routedEvent.toLowerCase().endsWith(
+								IEventConstants.SUFFIX_KEY)) {
+					LoggerManager.log("Event " + routedEvent
+							+ " is not found in " + source.getClass().getName()
+							+ ". Please add a suffix \"Event\"!");
+				} else {
+					LoggerManager
+							.log("Event " + routedEvent + " is not found in "
+									+ source.getClass().getName());
 				}
 				return;
 			}
-			
+
 			for (TriggerAction triggerAction : getActions()) {
 				triggerAction.initialize(target);
 			}
-			
+
 			String name = event.getName();
 			if ("loadedevent".equalsIgnoreCase(name)) {
 				Widget widget = UserData.getWidget(source);
-				IEventController eventController = UserData.updateEventController(source);
+				IEventController eventController = UserData
+						.updateEventController(source);
 				RunablePaintAction paintRunnable = createPaintRunnable(source);
 				try {
-					Method method = paintRunnable.getClass().getDeclaredMethod("run", Object.class, Event.class);
-					eventController.setEvent(event, widget, paintRunnable, this, method);
+					Method method = paintRunnable.getClass().getDeclaredMethod(
+							"run", Object.class, Event.class);
+					eventController.setEvent(event, widget, paintRunnable,
+							this, method);
 				} catch (Exception e) {
 					LoggerManager.log(e);
-				}				
-			}
-			else {
+				}
+			} else {
 				RunableAction runnable = createRunnable(source);
 				try {
 					runnable.setEventTrigger(event);
@@ -107,10 +114,10 @@ public class EventTrigger extends TriggerBase {
 			}
 		}
 	}
-	
+
 	public void on(Object target) {
 	}
-	
+
 	protected RunableAction createRunnable(Object target) {
 		return new RunableAction(target);
 	}
@@ -121,9 +128,11 @@ public class EventTrigger extends TriggerBase {
 
 	class RunablePaintAction {
 		protected Object target;
+
 		public RunablePaintAction(Object target) {
 			this.target = target;
 		}
+
 		public void run(Object object, Event event) {
 			for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
 				triggerAction.run(event, target, null);
@@ -135,41 +144,49 @@ public class EventTrigger extends TriggerBase {
 		protected Object target;
 		private int count = 0;
 		boolean started = false;
+		boolean transition = false;
 		private Event event;
 		private int eventType;
+
 		public RunableAction(Object target) {
 			this.target = target;
 		}
-		
+
 		public void run() {
 			count--;
-			if (!event.widget.isDisposed()) {
+			if (count == 0 && !event.widget.isDisposed()) {
 				final Display display = event.widget.getDisplay();
 				display.syncExec(new Runnable() {
 					public void run() {
-						for (TriggerAction triggerAction : getActions()) {
-							triggerAction.initialize(target);
+						if (transition) {
+							for (TriggerAction triggerAction : getActions()) {
+								triggerAction.initialize(target);
+							}
+						} else {
+							for (TriggerAction triggerAction : getActions()) {
+								triggerAction.endFinalize(target);
+							}
 						}
-						if (count == 0) {
-							display.removeFilter(eventType, RunableAction.this);
-							event.widget.notifyListeners(eventType, event);
-							display.addFilter(eventType, RunableAction.this);
-							started = false;
-						}
+						display.removeFilter(eventType, RunableAction.this);
+						event.widget.notifyListeners(eventType, event);
+						display.addFilter(eventType, RunableAction.this);
+						started = false;
 					}
 				});
 			}
 		}
-		
+
 		protected void setEventTrigger(IEvent event) {
 			Widget widget = UserData.getWidget(target);
 			String name = event.getName();
 			this.eventType = Controller.getEventTypeByName(name);
 			if (this.eventType != SWT.None) {
 				widget.getDisplay().addFilter(this.eventType, this);
+				transition = (this.eventType == XWTMaps.getEvent("swt.move") || this.eventType == XWTMaps
+						.getEvent("swt.resize"));
 			}
 		}
-		
+
 		public void handleEvent(Event event) {
 			Widget widget = UserData.getWidget(target);
 			if (event.widget != widget) {
@@ -179,11 +196,18 @@ public class EventTrigger extends TriggerBase {
 				event.type = SWT.NONE;
 				return;
 			}
-			
-			// execute the animation actions first and then normal events 
+
+			// execute the animation actions first and then normal events
 			count = EventTrigger.this.getActions().length;
 			started = true;
 			this.event = Controller.copy(event);
+
+			if (!transition) {
+				for (TriggerAction triggerAction : getActions()) {
+					triggerAction.initialize(target);
+				}
+			}
+
 			for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
 				triggerAction.run(event, target, this);
 			}

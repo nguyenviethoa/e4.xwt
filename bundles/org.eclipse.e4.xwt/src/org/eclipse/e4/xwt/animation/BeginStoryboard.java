@@ -89,7 +89,12 @@ public class BeginStoryboard extends TriggerAction {
 		}
 		getStoryboard().initialize(target);
 	}
-	
+
+	@Override
+	public void endFinalize(Object target) {
+		getStoryboard().endFinalize(target);
+	}
+
 	@Override
 	public void run(Event event, Object target, Runnable stateChangedRunnable) {
 		getStoryboard().start(event, target, stateChangedRunnable);

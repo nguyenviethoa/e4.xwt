@@ -59,12 +59,6 @@ public class RectangleAnimation extends AnimationTimeline {
 		this.easingFunction = easingFunction;
 	}
 
-	protected void initialize(Object target) {
-		if (getFrom() == null && getTo() == null) {
-			super.initializeCacheValue(target);
-		}
-	}
-
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		Object widget = UserData.getWidget(target);

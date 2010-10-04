@@ -58,4 +58,9 @@ public abstract class ControllableStoryboardAction extends TriggerAction {
 			throw new XWTException("NeginStoryboardName " + beginStoryboardName + " is not found.");
 		}
 	}
+	
+	public void endFinalize(Object target) {
+		storyboard.endFinalize(target);
+	}
+	
 }

@@ -49,6 +49,12 @@ public class TimelineGroup extends Timeline {
 		}
 	}
 	
+	public void endFinalize(Object target) {
+		for (Timeline child : children) {
+			child.endFinalize(target);
+		}
+	}
+	
 	public void start(final Event event, final Object target, Runnable endRunnable) {
 		ITimeline timeline = createTimelineGroup(findTarget(target));
 		timelines.put(event.widget, timeline);
@@ -94,7 +100,7 @@ public class TimelineGroup extends Timeline {
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		ITimelineGroup timelineGroup = (ITimelineGroup) timeline;
-		HashMap<Object, TridentTimeline> map = new HashMap<Object, TridentTimeline>();
+		HashMap<Object, HashMap<TimeSpan, TridentTimeline>> map = new HashMap<Object, HashMap<TimeSpan, TridentTimeline>>();
 
 		for (Timeline child : children) {
 			if (child instanceof ParallelTimeline) {
@@ -111,8 +117,14 @@ public class TimelineGroup extends Timeline {
 				timelineGroup.addTimeline(scenarioTimeline);
 			} else {
 				Object resolveTarget = child.findTarget(target);
-				TridentTimeline tridentTimeline = map.get(resolveTarget);
-
+				HashMap<TimeSpan, TridentTimeline> tridentTimelineMap = map.get(resolveTarget);
+				if (tridentTimelineMap == null) {
+					tridentTimelineMap = new HashMap<TimeSpan, TridentTimeline>(); 
+					map.put(resolveTarget, tridentTimelineMap);
+				}
+				
+				TimeSpan timeSpan = child.getBeginTime();
+				TridentTimeline tridentTimeline = tridentTimelineMap.get(child.getBeginTime());
 				if (tridentTimeline == null) {
 					if (!(resolveTarget instanceof Widget)) {
 						throw new XWTException("The target of animation should be a Widget");
@@ -120,7 +132,7 @@ public class TimelineGroup extends Timeline {
 					tridentTimeline = new TridentTimeline(child,
 							(Widget) resolveTarget);
 					timelineGroup.addTimeline(tridentTimeline);
-					map.put(resolveTarget, tridentTimeline);
+					tridentTimelineMap.put(timeSpan, tridentTimeline);
 				}
 				child.updateTimeline(tridentTimeline, target);
 			}

@@ -57,12 +57,6 @@ public class PointAnimation extends AnimationTimeline {
 		this.to = to;
 	}
 	
-	protected void initialize(Object target) {
-		if (getFrom() == null && getTo() == null) {
-			initializeCacheValue(target);
-		}
-	}
-
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
 		Object widget = UserData.getWidget(target);

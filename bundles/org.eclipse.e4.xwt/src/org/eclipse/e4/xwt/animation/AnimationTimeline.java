@@ -12,30 +12,18 @@ package org.eclipse.e4.xwt.animation;
 
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
-import org.eclipse.e4.xwt.XWTMaps;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Widget;
 
 public abstract class AnimationTimeline extends Timeline {
 	private boolean isDestinationDefault;
 	private String targetName;
 	private String targetProperty;
 
+	private Object initValue;
 	private Object cacheValue;
-
-	protected void setCacheValue(Object cacheValue) {
-		this.cacheValue = cacheValue;
-	}
-
-	protected Object getCacheValue() {
-		return cacheValue;
-	}
 
 	public String getTargetName() {
 		return targetName;
@@ -73,11 +61,39 @@ public abstract class AnimationTimeline extends Timeline {
 	public void setIsDestinationDefault(boolean isDestinationDefault) {
 		this.isDestinationDefault = isDestinationDefault;
 	}
-	
-	protected void initializeCacheValue(Object target) {
-		cacheValue = getCurrentValue(target);
+
+	protected void setCacheValue(Object cacheValue) {
+		this.cacheValue = cacheValue;
 	}
 
+	protected Object getCacheValue() {
+		return cacheValue;
+	}
+
+	protected Object getInitValue() {
+		return initValue;
+	}
+
+	protected void initialize(Object target) {
+		initValue = getCurrentValue(target);
+		cacheValue = initValue;
+	}
+	
+	protected void endFinalize(Object target) {
+		Object element = findTarget(target);
+		IMetaclass metaclass = XWT.getMetaclass(element);
+		IProperty property = metaclass.findProperty(getTargetProperty());
+		if (property == null) {
+			throw new XWTException("Property \"" + getTargetProperty()
+					+ "\" is not found in " + metaclass.getType().getName());
+		}
+		try {
+			property.setValue(element, initValue);
+		} catch (Exception e) {
+			throw new XWTException(e);
+		}
+	}
+	
 	protected Object getCurrentValue(Object target) {
 		Object element = findTarget(target);
 		IMetaclass metaclass = XWT.getMetaclass(element);
