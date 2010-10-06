@@ -162,10 +162,10 @@ public class EventTrigger extends TriggerBase {
 							for (TriggerAction triggerAction : getActions()) {
 								triggerAction.initialize(target);
 							}
-						} else {
-							for (TriggerAction triggerAction : getActions()) {
-								triggerAction.endFinalize(target);
-							}
+//						} else {
+//							for (TriggerAction triggerAction : getActions()) {
+//								triggerAction.endFinalize(target);
+//							}
 						}
 						display.removeFilter(eventType, RunableAction.this);
 						event.widget.notifyListeners(eventType, event);
@@ -189,7 +189,7 @@ public class EventTrigger extends TriggerBase {
 
 		public void handleEvent(Event event) {
 			Widget widget = UserData.getWidget(target);
-			if (event.widget != widget) {
+			if (event.widget != widget || widget.isDisposed()) {
 				return;
 			}
 			if (started) {

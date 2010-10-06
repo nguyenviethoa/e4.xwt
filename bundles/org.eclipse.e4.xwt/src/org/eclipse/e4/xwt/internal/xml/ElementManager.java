@@ -65,6 +65,10 @@ public class ElementManager {
 	}
 
 	public ElementManager() {
+		this(null);
+	}
+
+	public ElementManager(URL url) {
 		this.documentRoot = new DocumentRoot();
 		this.elements = new HashMap<String, Element>();
 		this.encoding = System.getProperty("file.encoding");
@@ -72,6 +76,13 @@ public class ElementManager {
 		this.parserFactory = SAXParserFactory.newInstance();
 		this.parserFactory.setNamespaceAware(true);
 		this.parserFactory.setValidating(true);
+		if (url != null) {
+			try {
+				documentRoot.init(null, url.toString());
+			} catch (IOException e) {
+			}
+		}
+		
 		this.errorHandler = new ErrorHandler() {
 
 			// IFrameworkAdaptor adaptor =

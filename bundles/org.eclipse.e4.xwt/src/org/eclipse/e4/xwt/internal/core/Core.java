@@ -682,7 +682,7 @@ public class Core {
 			Map<String, Object> options) throws Exception {
 		UIResource uiResource = (UIResource) pattern;
 		Control control = null;
-		ElementManager manager = new ElementManager();
+		ElementManager manager = new ElementManager(uiResource.getURL());
 		Element element = uiResource.getContent();
 		IRenderingContext context = new ExtensionContext(loadingContext,
 				manager, element.getNamespace());
