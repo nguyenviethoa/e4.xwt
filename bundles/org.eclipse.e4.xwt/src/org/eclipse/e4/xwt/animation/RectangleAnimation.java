@@ -61,11 +61,6 @@ public class RectangleAnimation extends AnimationTimeline {
 
 	protected void updateTimeline(ITimeline timeline, Object target) {
 		super.updateTimeline(timeline, target);
-		Object widget = UserData.getWidget(target);
-		if (!(widget instanceof Control)) {
-			throw new XWTException(
-					"The target of the animation is not a Control.");
-		}
 		if (timeline instanceof TridentTimeline) {
 			TridentTimeline tridentTimeline = (TridentTimeline) (timeline);
 			Rectangle from = getFrom();
