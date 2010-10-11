@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.animation;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
+import org.eclipse.e4.xwt.animation.internal.PathPropertyAccessor;
 import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
@@ -97,15 +98,26 @@ public abstract class AnimationTimeline extends Timeline {
 	protected Object getCurrentValue(Object target) {
 		Object element = findTarget(target);
 		IMetaclass metaclass = XWT.getMetaclass(element);
-		IProperty property = metaclass.findProperty(getTargetProperty());
-		if (property == null) {
-			throw new XWTException("Property \"" + getTargetProperty()
-					+ "\" is not found in " + metaclass.getType().getName());
+		
+		String targetProperty = getTargetProperty();
+		int index = targetProperty.lastIndexOf('.');
+		if (index != -1) {
+			String lastNodePath = targetProperty.substring(0, index);
+			String lastNodeName = targetProperty.substring(index + 1);
+			PathPropertyAccessor<?> accessor = new PathPropertyAccessor(lastNodePath);
+			return accessor.get(element, lastNodeName);
 		}
-		try {
-			return property.getValue(element);
-		} catch (Exception e) {
-			throw new XWTException(e);
+		else {
+			IProperty property = metaclass.findProperty(getTargetProperty());
+			if (property == null) {
+				throw new XWTException("Property \"" + getTargetProperty()
+						+ "\" is not found in " + metaclass.getType().getName());
+			}
+			try {
+				return property.getValue(element);
+			} catch (Exception e) {
+				throw new XWTException(e);
+			}			
 		}
 	}
 

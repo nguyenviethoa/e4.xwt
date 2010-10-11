@@ -14,9 +14,7 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 import org.eclipse.e4.xwt.animation.interpolator.PointPropertyInterpolator;
-import org.eclipse.e4.xwt.internal.utils.UserData;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Control;
 import org.pushingpixels.trident.TridentConfig;
 
 /**
@@ -68,10 +66,10 @@ public class PointAnimation extends AnimationTimeline {
 				to = (Point) getCurrentValue(target);
 				if (from.x == 0 && from.y == 0) {
 					setCacheValue(to);
-					return;
+					throw new XWTException("action ignored");
 				}
 				if (from != null && from.equals(to)) {
-					return;
+					throw new XWTException("action ignored");
 				}
 			}
 			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), from, to);

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.animation;
 
+import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 
@@ -135,7 +136,7 @@ public class FloatAnimation extends FloatAnimationBase {
 				from = (Float) getCacheValue();
 				to = (Float) getCurrentValue(target);
 				if (from != null && from.equals(to)) {
-					return;
+					throw new XWTException("action ignored");
 				}
 			}
 			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), from, to);

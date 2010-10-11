@@ -14,10 +14,7 @@ import org.eclipse.e4.xwt.XWTException;
 import org.eclipse.e4.xwt.animation.internal.ITimeline;
 import org.eclipse.e4.xwt.animation.internal.TridentTimeline;
 import org.eclipse.e4.xwt.animation.interpolator.RectanglePropertyInterpolator;
-import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Control;
 import org.pushingpixels.trident.TridentConfig;
 
 /**
@@ -68,12 +65,12 @@ public class RectangleAnimation extends AnimationTimeline {
 			if (from == null && to == null) {
 				from = (Rectangle) getCacheValue();
 				to = (Rectangle) getCurrentValue(target);
-				if (from.width == 0 && from.height == 0) {
+				if (from == null || from.width == 0 && from.height == 0) {
 					setCacheValue(to);
-					return;
+					throw new XWTException("action ignored");
 				}
 				if (from != null && from.equals(to)) {
-					return;
+					throw new XWTException("action ignored");
 				}
 			}
 			tridentTimeline.addPropertyToInterpolate(getTargetProperty(), from, to);

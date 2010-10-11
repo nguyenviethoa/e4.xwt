@@ -200,16 +200,20 @@ public class EventTrigger extends TriggerBase {
 			// execute the animation actions first and then normal events
 			count = EventTrigger.this.getActions().length;
 			started = true;
-			this.event = Controller.copy(event);
+			try {
+				this.event = Controller.copy(event);
 
-			if (!transition) {
-				for (TriggerAction triggerAction : getActions()) {
-					triggerAction.initialize(target);
+				if (!transition) {
+					for (TriggerAction triggerAction : getActions()) {
+						triggerAction.initialize(target);
+					}
 				}
-			}
 
-			for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
-				triggerAction.run(event, target, this);
+				for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
+					triggerAction.run(event, target, this);
+				}
+			} catch (Exception e) {
+				started = false;
 			}
 			event.type = SWT.NONE;
 		}
