@@ -213,35 +213,11 @@ public class Controller implements Listener, IEventController {
 
 	public static Event copy(Event event) {
 		Event copyEvent = new Event();
-		copyEvent.button = event.button;
-		copyEvent.character = event.character;
-		copyEvent.count = event.count;
-		copyEvent.data = event.data;
-		copyEvent.detail = event.detail;
-		copyEvent.display = event.display;
-		copyEvent.doit = event.doit;
-		copyEvent.end = event.end;
-		copyEvent.gc = event.gc;
-		copyEvent.height = event.height;
-		copyEvent.index = event.index;
-		copyEvent.item = event.item;
-		copyEvent.keyCode = event.keyCode;
-		copyEvent.keyLocation = event.keyLocation;
-		copyEvent.start = event.start;
-		copyEvent.stateMask = event.stateMask;
-		copyEvent.text = event.text;
-		copyEvent.time = event.time;
-		copyEvent.type = event.type;
-		copyEvent.widget = event.widget;
-		copyEvent.width = event.width;
-		copyEvent.x = event.x;
-		copyEvent.y = event.y;
-		if (SWT.getPlatform() == "rap") {
+		for (Field field : event.getClass().getDeclaredFields()) {
 			try {
-				Field f = Event.class.getDeclaredField("loadedKey");
-				f.set(copyEvent, f.get(event));
+				field.set(copyEvent, field.get(event));
 			} catch (Exception e) {
-				assert false;
+				e.printStackTrace();
 			}
 		}
 		return copyEvent;

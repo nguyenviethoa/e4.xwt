@@ -40,7 +40,6 @@ import org.eclipse.e4.xwt.metadata.IEvent;
 import org.eclipse.e4.xwt.metadata.IMetaclass;
 import org.eclipse.e4.xwt.metadata.IProperty;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -424,30 +423,30 @@ public class XWT {
 	}
 
 	/**
-	 * Load the file content under a Composite. All widget will be created. This
+	 * Load the file content under a UI Object. All widget will be created. This
 	 * method returns the root element. The DataContext will be associated to
 	 * the root element.
 	 */
-	static public Object load(Composite parent, URL file) throws Exception {
+	static public Object load(Object parent, URL file) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file);
 	}
 
 	/**
-	 * Load the file content under a Composite. All widget will be created. This
+	 * Load the file content under a UI Object. All widget will be created. This
 	 * method returns the root element. The DataContext will be associated to
 	 * the root element.
 	 * 
 	 */
-	static public Object load(Composite parent, IUIResource resource) throws Exception {
+	static public Object load(Object parent, IUIResource resource) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, resource);
 	}
 
 	/**
-	 * Load the file content under a Composite with a DataContext. All widget
+	 * Load the file content under a UI Object with a DataContext. All widget
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	static public Object load(Composite parent, URL file, Object dataContext)
+	static public Object load(Object parent, URL file, Object dataContext)
 			throws Exception {
 		return XWTLoaderManager.getActive().load(parent, file, dataContext);
 	}
@@ -510,16 +509,16 @@ public class XWT {
 	}
 
 	/**
-	 * Load the file content under a Composite with a DataContext. All widget
+	 * Load the file content under a UI Object with a DataContext. All widget
 	 * will be created. This method returns the root element. The DataContext
 	 * will be associated to the root element.
 	 */
-	static public Object load(Composite parent, IUIResource resource,
+	static public Object load(Object parent, IUIResource resource,
 			Object dataContext) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, resource, dataContext);
 	}
 
-	static public Object load(Composite parent, IUIResource resource,
+	static public Object load(Object parent, IUIResource resource,
 			Map<String, Object> options) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, resource, options);
 	}
@@ -550,9 +549,9 @@ public class XWT {
 
 	/**
 	 * load the content from a stream with a style, a DataContext and a
-	 * ResourceDictionary. The root elements will be hold by Composite parent
+	 * ResourceDictionary. The root elements will be hold by UI Object parent
 	 */
-	static public Object load(Composite parent, InputStream stream, URL file,
+	static public Object load(Object parent, InputStream stream, URL file,
 			Object dataContext) throws Exception {
 		return XWTLoaderManager.getActive().load(parent, stream, file,
 				dataContext);

@@ -621,13 +621,13 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite,
 	 * java.net.URL)
 	 */
-	public Object load(Composite parent, URL file) throws Exception {
+	public Object load(Object parent, URL file) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
 		return loadWithOptions(file, options);
 	}
 
-	public Object load(Composite parent, IUIResource resource) throws Exception {
+	public Object load(Object parent, IUIResource resource) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
 		return loadWithOptions(resource, options);
@@ -640,7 +640,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite,
 	 * java.net.URL, java.lang.Object)
 	 */
-	public Object load(Composite parent, URL file, Object dataContext)
+	public Object load(Object parent, URL file, Object dataContext)
 			throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
@@ -648,7 +648,7 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(file, options);
 	}
 
-	public Object load(Composite parent, IUIResource resource, Object dataContext)
+	public Object load(Object parent, IUIResource resource, Object dataContext)
 			throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
@@ -656,7 +656,7 @@ public class XWTLoader implements IXWTLoader {
 		return loadWithOptions(resource, options);
 	}
 
-	public Object load(Composite parent, IUIResource resource, Map<String, Object> options)
+	public Object load(Object parent, IUIResource resource, Map<String, Object> options)
 			throws Exception {
 		if (options.isEmpty()) {
 			options = new HashMap<String, Object>();
@@ -672,7 +672,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite,
 	 * java.lang.Class, java.lang.Object)
 	 */
-	public Object load(Composite parent, Class<?> viewType, Object dataContext)
+	public Object load(Object parent, Class<?> viewType, Object dataContext)
 			throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
@@ -777,7 +777,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#load(org.eclipse.swt.widgets.Composite,
 	 * java.io.InputStream, java.net.URL, java.lang.Object)
 	 */
-	public Object load(Composite parent, InputStream stream, URL file,
+	public Object load(Object parent, InputStream stream, URL file,
 			Object dataContext) throws Exception {
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put(CONTAINER_PROPERTY, parent);
@@ -1077,7 +1077,7 @@ public class XWTLoader implements IXWTLoader {
 	public Object loadWithOptions(IUIResource resource, Map<String, Object> options)
 			throws Exception {
 		UIResource uiResource = (UIResource) resource;
-		Composite object = (Composite) options.get(CONTAINER_PROPERTY);
+		Object object = options.get(CONTAINER_PROPERTY);
 		ILoadingContext loadingContext = (object != null ? getLoadingContext(object)
 				: getLoadingContext());
 		options = prepareOptions(options, uiResource.getURL());
@@ -1924,7 +1924,7 @@ public class XWTLoader implements IXWTLoader {
 	 * org.eclipse.e4.xwt.IXWTLoader#getLoadingContext(org.eclipse.swt.widgets
 	 * .Composite)
 	 */
-	public ILoadingContext getLoadingContext(Composite object) {
+	public ILoadingContext getLoadingContext(Object object) {
 		return findLoadingContext(object);
 	}
 

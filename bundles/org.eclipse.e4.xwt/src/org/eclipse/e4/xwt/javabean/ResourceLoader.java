@@ -327,8 +327,8 @@ public class ResourceLoader implements IVisualElementLoader {
 	public Object createUIElement(Element element, Map<String, Object> options) {
 		try {
 			this.options = options;
-			Composite parent = (Composite) options
-					.get(IXWTLoader.CONTAINER_PROPERTY);
+			Object container = options.get(IXWTLoader.CONTAINER_PROPERTY);
+			Widget parent = UserData.getWidget(container);
 			if (!loader.getTrackings().isEmpty()) {
 				dataBindingTrack = new DataBindingTrack();
 			}
