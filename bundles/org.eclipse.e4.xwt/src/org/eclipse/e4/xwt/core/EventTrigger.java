@@ -162,14 +162,16 @@ public class EventTrigger extends TriggerBase {
 							for (TriggerAction triggerAction : getActions()) {
 								triggerAction.initialize(target);
 							}
-//						} else {
-//							for (TriggerAction triggerAction : getActions()) {
-//								triggerAction.endFinalize(target);
-//							}
+						} else {
+							for (TriggerAction triggerAction : getActions()) {
+								triggerAction.endFinalize(target);
+							}
 						}
 						display.removeFilter(eventType, RunableAction.this);
-						event.widget.notifyListeners(eventType, event);
-						display.addFilter(eventType, RunableAction.this);
+						if (!event.widget.isDisposed()) {
+							event.widget.notifyListeners(eventType, event);
+							display.addFilter(eventType, RunableAction.this);
+						}
 						started = false;
 					}
 				});
@@ -209,7 +211,8 @@ public class EventTrigger extends TriggerBase {
 					}
 				}
 
-				for (TriggerAction triggerAction : EventTrigger.this.getActions()) {
+				for (TriggerAction triggerAction : EventTrigger.this
+						.getActions()) {
 					triggerAction.run(event, target, this);
 				}
 			} catch (Exception e) {

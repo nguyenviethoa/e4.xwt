@@ -81,17 +81,19 @@ public abstract class AnimationTimeline extends Timeline {
 	}
 	
 	protected void endFinalize(Object target) {
-		Object element = findTarget(target);
-		IMetaclass metaclass = XWT.getMetaclass(element);
-		IProperty property = metaclass.findProperty(getTargetProperty());
-		if (property == null) {
-			throw new XWTException("Property \"" + getTargetProperty()
-					+ "\" is not found in " + metaclass.getType().getName());
-		}
-		try {
-			property.setValue(element, initValue);
-		} catch (Exception e) {
-			throw new XWTException(e);
+		if (getFillBehavior() == FillBehavior.Stop) {
+			Object element = findTarget(target);
+			IMetaclass metaclass = XWT.getMetaclass(element);
+			IProperty property = metaclass.findProperty(getTargetProperty());
+			if (property == null) {
+				throw new XWTException("Property \"" + getTargetProperty()
+						+ "\" is not found in " + metaclass.getType().getName());
+			}
+			try {
+				property.setValue(element, initValue);
+			} catch (Exception e) {
+				throw new XWTException(e);
+			}
 		}
 	}
 	
