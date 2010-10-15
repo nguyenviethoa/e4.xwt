@@ -54,7 +54,7 @@ public class Color {
 		this.red = red;
 	}
 
-	public int getAlaha() {
+	public int getAlpha() {
 		return alaha;
 	}
 
