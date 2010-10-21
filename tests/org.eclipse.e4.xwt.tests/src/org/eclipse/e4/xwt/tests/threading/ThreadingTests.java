@@ -30,7 +30,12 @@ public class ThreadingTests extends XWTTestCase {
 	 * 
 	 */
 	public void testThreading_Open() throws Exception {
-		Display.getDefault().dispose();
+		if (SWT.getPlatform().equals("gtk")) {
+			clearnUpDisplay();
+		}
+		else {
+			Display.getDefault().dispose();			
+		}
 		if (SWT.getPlatform().equals("cocoa") || SWT.getPlatform().equals("carbon")) {			
 			macDoTestThreading_Open();
 		}

@@ -12,6 +12,7 @@
 package org.eclipse.e4.xwt;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -392,8 +393,8 @@ public class XWT {
 	}
 
 	/**
-	 * Load the content from IUIResource. All widget will be created but they are
-	 * showed. This method return the root element.
+	 * Load the content from IUIResource. All widget will be created but they
+	 * are showed. This method return the root element.
 	 * 
 	 */
 	static public Object load(IUIResource resource) throws Exception {
@@ -412,8 +413,8 @@ public class XWT {
 	}
 
 	/**
-	 * Load the content from IUIResource. All widget will be created but they are
-	 * showed. This method return the root element.
+	 * Load the content from IUIResource. All widget will be created but they
+	 * are showed. This method return the root element.
 	 * 
 	 */
 	static public Object load(IUIResource resource, Object dataContext)
@@ -437,7 +438,8 @@ public class XWT {
 	 * the root element.
 	 * 
 	 */
-	static public Object load(Object parent, IUIResource resource) throws Exception {
+	static public Object load(Object parent, IUIResource resource)
+			throws Exception {
 		return XWTLoaderManager.getActive().load(parent, resource);
 	}
 
@@ -566,10 +568,11 @@ public class XWT {
 	}
 
 	/**
-	 * load the content from IUIResource. The corresponding UI element is not yet
-	 * created
+	 * load the content from IUIResource. The corresponding UI element is not
+	 * yet created
 	 */
-	static public void open(IUIResource resource, Object dataContext) throws Exception {
+	static public void open(IUIResource resource, Object dataContext)
+			throws Exception {
 		XWT.checkInitialization();
 		XWTLoaderManager.getActive().open(resource, dataContext);
 	}
@@ -592,8 +595,8 @@ public class XWT {
 	}
 
 	/**
-	 * load the content from IUIResource. The corresponding UI element is not yet
-	 * created
+	 * load the content from IUIResource. The corresponding UI element is not
+	 * yet created
 	 */
 	static public void open(IUIResource resource, Map<String, Object> options)
 			throws Exception {
@@ -994,7 +997,6 @@ public class XWT {
 			this.runnable = runnable;
 		}
 
-
 		public void handleEvent(Event event) {
 		}
 	}
@@ -1015,28 +1017,64 @@ public class XWT {
 		} else if (platform.endsWith("gtk") || platform.endsWith("cocoa")) {
 			synchronized (displayLock) {
 				if (displayThread == null || !displayThread.isAlive()) {
+					try {
+						Field field = Display.class.getDeclaredField("Default");
+						if (field != null) {
+							field.setAccessible(true);
+							Display defaultDisplay = (Display) field.get(null);
+							if (defaultDisplay != null) {
+								displayThread = defaultDisplay.getThread();
+							}
+						}
+					} catch (Exception e) {
+					}
+				}
+
+				if (displayThread == null || !displayThread.isAlive()) {
 					displayThread = new Thread() {
+						private long startTime = -1;
+						private Display display;
+						private boolean toStop = false;
+						private boolean ignoreNotification = false;
+						protected Runnable runnable = new Runnable() {
+							public void run() {
+								if (ignoreNotification) {
+									startTime = -1;
+									return;
+								}
+								if (startTime == -1) {
+									startTime = System.currentTimeMillis();
+								} else {
+									if ((System.currentTimeMillis() - startTime) > 10000
+											&& display.getActiveShell() == null
+											&& display.getShells().length == 0) {
+										toStop = true;
+										display.wake();
+									} else {
+										startTime = System.currentTimeMillis();
+									}
+								}
+							}
+						};
+
+						@Override
 						public void run() {
 							// Set default XWT ICLRFactory
 							XWTLoaderManager.getDefault();
+							display = Display.getDefault();
 							runnable.run();
-							long startTime = -1;
 							while (true) {
-								if (!Display.getDefault().readAndDispatch()) {
-									Display.getDefault().sleep();
+								if (!display.readAndDispatch()) {
+									display.timerExec(10000, runnable);
+									display.sleep();
+									ignoreNotification = true;
 								}
-								Shell[] shells = Display.getDefault().getShells();
-								if (shells.length == 0) {
-									if (startTime == -1) {
-										startTime = System.currentTimeMillis();
-									} else if ((System.currentTimeMillis() - startTime) > 5000) {
-										break;
-									}
-								} else {
-									startTime = -1;
+								if (toStop) {
+									break;
 								}
+								startTime = -1;
 							}
-						}						
+						}
 					};
 					displayThread.start();
 				} else {
@@ -1071,7 +1109,7 @@ public class XWT {
 		}
 		return UserData.findParent(widget, type);
 	}
-	
+
 	static void runInitializers(IXWTLoader loader) {
 		synchronized (initializers) {
 			for (IXWTInitializer initializer : XWT.getInitializers()) {

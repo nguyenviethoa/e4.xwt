@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.tests;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
@@ -32,12 +33,56 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- *
+ * 
  * @author yyang (yves.yang@soyatec.com)
  */
 public abstract class XWTTestCase extends TestCase {
 	protected Control root;
+	static boolean simulateMThreading = false;
 
+	static {
+		if (simulateMThreading) {			
+			Thread thread = new Thread() {
+				@Override
+				public void run() {
+					Display.getDefault();
+				}
+			};
+			thread.start();
+			
+			try {
+				thread.join();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		clearnUpDisplay();
+	}
+
+	public static void clearnUpDisplay() {
+		try {
+			Field displaysField = Display.class.getDeclaredField("Displays");
+			if (displaysField != null) {
+				displaysField.setAccessible(true);
+				Display[] displays = (Display[]) displaysField.get(null);
+				if (displays != null) {
+					for(int i = 0; i<displays.length; i++ ) {
+						displays[i] = null;
+					}
+				}
+			}
+			Field field = Display.class.getDeclaredField("Default");
+			if (field != null) {
+				field.setAccessible(true);
+				Display defaultDisplay = (Display) field.get(null);
+				if (defaultDisplay != null) {
+					field.set(null, null);
+				}
+			}
+		} catch (Exception e) {
+		}		
+	}
+	
 	protected void runTest(URL url, Runnable... checkActions) {
 		runTest(url, new HashMap<String, Object>(), checkActions);
 	}
@@ -60,7 +105,16 @@ public abstract class XWTTestCase extends TestCase {
 		runTest(pattern, options, checkActions);
 	}
 
-	protected void runTest(final URL url, Map<String, Object> options,
+	protected void runTest(final URL url, final Map<String, Object> options,
+			final Runnable... checkActions) {
+		XWT.runOnUIThread(new Runnable() {
+			public void run() {
+				doRunTest(url, options, checkActions);
+			}
+		});
+	}
+
+	private void doRunTest(final URL url, Map<String, Object> options,
 			Runnable... checkActions) {
 		ClassLoader classLoader = Thread.currentThread()
 				.getContextClassLoader();
@@ -74,11 +128,11 @@ public abstract class XWTTestCase extends TestCase {
 			Shell shell = root.getShell();
 			shell.open();
 			/**
-			 * The shells of the tests failed are not cleanup properly.
-			 * This is a minimalistic solution to clean up the desktop...
+			 * The shells of the tests failed are not cleanup properly. This is
+			 * a minimalistic solution to clean up the desktop...
 			 */
 			Display display = shell.getDisplay();
-			try{
+			try {
 				for (Runnable runnable : checkActions) {
 					while (display.readAndDispatch())
 						;
@@ -90,8 +144,8 @@ public abstract class XWTTestCase extends TestCase {
 				}
 				assertFalse(root.isDisposed());
 			} finally {
-				try{
-				shell.close();
+				try {
+					shell.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -105,9 +159,18 @@ public abstract class XWTTestCase extends TestCase {
 			Thread.currentThread().setContextClassLoader(classLoader);
 		}
 	}
-	
-	protected void runTest(final IUIResource pattern, Map<String, Object> options,
-			Runnable... checkActions) {
+
+	protected void runTest(final IUIResource pattern,
+			final Map<String, Object> options, final Runnable... checkActions) {
+		XWT.runOnUIThread(new Runnable() {
+			public void run() {
+				doRunTest(pattern, options, checkActions);
+			}
+		});
+	}
+
+	private void doRunTest(final IUIResource pattern,
+			Map<String, Object> options, Runnable... checkActions) {
 		ClassLoader classLoader = Thread.currentThread()
 				.getContextClassLoader();
 		try {
@@ -120,11 +183,11 @@ public abstract class XWTTestCase extends TestCase {
 			Shell shell = root.getShell();
 			shell.open();
 			/**
-			 * The shells of the tests failed are not cleanup properly.
-			 * This is a minimalistic solution to clean up the desktop...
+			 * The shells of the tests failed are not cleanup properly. This is
+			 * a minimalistic solution to clean up the desktop...
 			 */
 			Display display = shell.getDisplay();
-			try{
+			try {
 				for (Runnable runnable : checkActions) {
 					while (display.readAndDispatch())
 						;
@@ -136,8 +199,8 @@ public abstract class XWTTestCase extends TestCase {
 				}
 				assertFalse(root.isDisposed());
 			} finally {
-				try{
-				shell.close();
+				try {
+					shell.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -180,8 +243,8 @@ public abstract class XWTTestCase extends TestCase {
 		}
 	}
 
-	protected void runDebugTest(final IUIResource pattern, Runnable prepareAction,
-			Runnable checkAction1) {
+	protected void runDebugTest(final IUIResource pattern,
+			Runnable prepareAction, Runnable checkAction1) {
 		ClassLoader classLoader = Thread.currentThread()
 				.getContextClassLoader();
 		try {
@@ -212,7 +275,7 @@ public abstract class XWTTestCase extends TestCase {
 		selectButton(button, true);
 	}
 
-	protected void checkVisibility(String name, Class<? extends Control> type){
+	protected void checkVisibility(String name, Class<? extends Control> type) {
 		Object element = XWT.findElementByName(root, name);
 		if (element == null) {
 			fail(name + " is not found.");
@@ -222,13 +285,14 @@ public abstract class XWTTestCase extends TestCase {
 		assertTrue(section.getVisible());
 	}
 
-	protected void checkChildren(String name, String path, int number){
+	protected void checkChildren(String name, String path, int number) {
 		Object element = XWT.findElementByName(root, name);
 		if (path != null) {
 			try {
 				Method method = element.getClass().getMethod("get" + path);
 				if (method == null) {
-					fail("Property " + path + " is not found in " + element.getClass().getName());
+					fail("Property " + path + " is not found in "
+							+ element.getClass().getName());
 				}
 				element = method.invoke(element);
 				assertTrue(Composite.class.isInstance(element));
@@ -242,7 +306,7 @@ public abstract class XWTTestCase extends TestCase {
 		assertEquals(composite.getChildren().length, number);
 	}
 
-	protected void checkChildren(String name, int number){
+	protected void checkChildren(String name, int number) {
 		checkChildren(name, null, number);
 	}
 
@@ -268,7 +332,7 @@ public abstract class XWTTestCase extends TestCase {
 	protected void setFocusIn(Widget widget) {
 		setFocus(widget, true);
 	}
-	
+
 	private void setFocus(Widget widget, boolean focus) {
 		Display display = widget.getDisplay();
 		Event upEvent = new Event();
@@ -279,13 +343,11 @@ public abstract class XWTTestCase extends TestCase {
 
 		if (focus) {
 			widget.notifyListeners(SWT.FocusIn, upEvent);
-		}
-		else {
-			widget.notifyListeners(SWT.FocusOut, upEvent);					
+		} else {
+			widget.notifyListeners(SWT.FocusOut, upEvent);
 		}
 	}
-	
-	
+
 	protected void assertText(String name, String value) {
 		Object element = XWT.findElementByName(root, name);
 		assertTrue(element instanceof Text);
@@ -308,7 +370,7 @@ public abstract class XWTTestCase extends TestCase {
 	}
 
 	private void displayPost(Display display, Event event) {
-		if(SWT.getPlatform()!="rap") {
+		if (SWT.getPlatform() != "rap") {
 			try {
 				Method m = Display.class.getDeclaredMethod("post", Event.class);
 				m.invoke(display, event);

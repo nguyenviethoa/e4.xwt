@@ -13,6 +13,7 @@ package org.eclipse.e4.xwt.tests.forms;
 import java.net.URL;
 import java.util.Map;
 
+import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.forms.XWTForms;
 import org.eclipse.e4.xwt.tests.XWTTestCase;
 import org.eclipse.swt.widgets.Control;
@@ -20,7 +21,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public abstract class FormTestCase extends XWTTestCase {
-	protected void runTest(final URL url, Map<String, Object> options,
+	protected void runTest(final URL url, final Map<String, Object> options,
+			final Runnable... checkActions) {
+		XWT.runOnUIThread(new Runnable() {
+			public void run() {
+				doRunTest(url, options, checkActions);
+			}
+		});
+	}
+	
+	private void doRunTest(final URL url, Map<String, Object> options,
 			Runnable... checkActions) {
 		ClassLoader classLoader = Thread.currentThread()
 				.getContextClassLoader();
