@@ -42,6 +42,28 @@ public class NameTests extends XWTTestCase {
 		});
 	}
 
+	public void testElementName() throws Exception {
+		URL url = NameTests.class.getResource(ElementName_get.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Object element = XWT.getElementName(root);
+				assertEquals("LabelElement", element);
+			}
+		});
+	}
+
+	public void testElementNameX() throws Exception {
+		URL url = NameTests.class.getResource(ElementName_x_get.class.getSimpleName()
+				+ IConstants.XWT_EXTENSION_SUFFIX);
+		runTest(url, new Runnable() {
+			public void run() {
+				Object element = XWT.getElementName(root);
+				assertEquals("LabelElement", element);
+			}
+		});
+	}
+
 	public void testNameMenu() throws Exception {
 		URL url = NameTests.class.getResource(Name_Menu.class.getSimpleName()
 				+ IConstants.XWT_EXTENSION_SUFFIX);

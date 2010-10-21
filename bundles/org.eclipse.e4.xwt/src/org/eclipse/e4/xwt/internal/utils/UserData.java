@@ -137,9 +137,7 @@ public class UserData {
 				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
 		if (dataDictionary == null) {
 			dataDictionary = new UserData();
-			widget
-					.setData(IUserDataConstants.XWT_USER_DATA_KEY,
-							dataDictionary);
+			widget.setData(IUserDataConstants.XWT_USER_DATA_KEY, dataDictionary);
 		}
 		return dataDictionary;
 	}
@@ -278,21 +276,30 @@ public class UserData {
 	}
 
 	public static String getElementName(Object object) {
-		if (object instanceof Widget) {
-			Widget widget = (Widget) object;
-			UserData dataDictionary = (UserData) widget
-					.getData(IUserDataConstants.XWT_USER_DATA_KEY);
-			if (dataDictionary != null) {
-				return (String) widget.getData(IUserDataConstants.XWT_NAME_KEY);
-			}
-		} else if (object instanceof Viewer) {
-			Viewer viewer = (Viewer) object;
-			UserData dataDictionary = (UserData) viewer.getControl().getData(
-					IUserDataConstants.XWT_USER_DATA_KEY);
+		Widget widget = getWidget(object);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		if (dataDictionary != null) {
 			return (String) dataDictionary
 					.getData(IUserDataConstants.XWT_NAME_KEY);
 		}
 		return null;
+	}
+
+	public static void setElementName(Object object, String name,
+			boolean updateScope) {
+		Widget widget = getWidget(object);
+		UserData dataDictionary = (UserData) widget
+				.getData(IUserDataConstants.XWT_USER_DATA_KEY);
+		if (dataDictionary != null) {
+			dataDictionary.setData(IUserDataConstants.XWT_NAME_KEY, name);
+			if (updateScope) {
+				ScopeKeeper keeper = findScopeKeeper(object);
+				if (keeper != null) {
+					keeper.addNamedObject(name, object);
+				}
+			}
+		}
 	}
 
 	public static void setCLR(Object widget, Object type) {
@@ -405,7 +412,8 @@ public class UserData {
 	}
 
 	public static IBindingContext getBindingContext(Object widget) {
-		return (IBindingContext)findData(widget, IUserDataConstants.XWT_BINDING_CONTEXT_KEY);
+		return (IBindingContext) findData(widget,
+				IUserDataConstants.XWT_BINDING_CONTEXT_KEY);
 	}
 
 	public static TriggerBase[] getTriggers(Object element) {
@@ -463,10 +471,8 @@ public class UserData {
 		return null;
 	}
 
-	public static void setBindingContext(Object widget,
-			Object bindingContext) {
-		setLocalData(widget,
-				IUserDataConstants.XWT_BINDING_CONTEXT_KEY,
+	public static void setBindingContext(Object widget, Object bindingContext) {
+		setLocalData(widget, IUserDataConstants.XWT_BINDING_CONTEXT_KEY,
 				bindingContext);
 	}
 
@@ -589,7 +595,7 @@ public class UserData {
 		if (map.containsKey(key)) {
 			return map.get(key);
 		}
-		
+
 		Object parent = getTreeParent(object);
 		if (parent != null) {
 			return findResource(parent, key);
@@ -597,7 +603,6 @@ public class UserData {
 		return null;
 	}
 
-	
 	public static void setResources(Object object, Map<?, ?> resources) {
 		setLocalData(object, IUserDataConstants.XWT_RESOURCES_KEY, resources);
 	}
@@ -727,8 +732,7 @@ public class UserData {
 
 	public static IBindingContext createBindingContext(Object host) {
 		Widget widget = getWidget(host);
-		final IBindingContext dataBindingContext = new BindingContext(
-				widget);
+		final IBindingContext dataBindingContext = new BindingContext(widget);
 		dataBindingContext.setRealm(XWT.getRealm());
 		widget.addDisposeListener(new DisposeListener() {
 
@@ -737,8 +741,7 @@ public class UserData {
 			}
 		});
 
-		UserData.setLocalData(host,
-				IUserDataConstants.XWT_BINDING_CONTEXT_KEY,
+		UserData.setLocalData(host, IUserDataConstants.XWT_BINDING_CONTEXT_KEY,
 				dataBindingContext);
 
 		return dataBindingContext;

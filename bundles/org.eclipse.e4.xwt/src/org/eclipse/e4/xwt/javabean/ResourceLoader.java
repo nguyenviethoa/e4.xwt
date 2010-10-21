@@ -1110,6 +1110,7 @@ public class ResourceLoader implements IVisualElementLoader {
 			loadData.inject(targetObject, value);
 
 			nameScoped.addNamedObject(value, targetObject);
+			UserData.setElementName(targetObject, value, false);
 			done.add(IConstants.XAML_X_NAME);
 		}
 
