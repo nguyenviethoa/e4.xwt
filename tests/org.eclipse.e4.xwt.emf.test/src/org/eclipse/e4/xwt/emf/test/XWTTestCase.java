@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.emf.test;
 
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,6 +35,50 @@ import org.eclipse.swt.widgets.Text;
  */
 public abstract class XWTTestCase extends TestCase {
 	protected Control root;
+	static boolean simulateMThreading = false;
+
+	static {
+		if (simulateMThreading) {			
+			Thread thread = new Thread() {
+				@Override
+				public void run() {
+					Display.getDefault();
+				}
+			};
+			thread.start();
+			
+			try {
+				thread.join();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		clearnUpDisplay();
+	}
+
+	public static void clearnUpDisplay() {
+		try {
+			Field displaysField = Display.class.getDeclaredField("Displays");
+			if (displaysField != null) {
+				displaysField.setAccessible(true);
+				Display[] displays = (Display[]) displaysField.get(null);
+				if (displays != null) {
+					for(int i = 0; i<displays.length; i++ ) {
+						displays[i] = null;
+					}
+				}
+			}
+			Field field = Display.class.getDeclaredField("Default");
+			if (field != null) {
+				field.setAccessible(true);
+				Display defaultDisplay = (Display) field.get(null);
+				if (defaultDisplay != null) {
+					field.set(null, null);
+				}
+			}
+		} catch (Exception e) {
+		}		
+	}
 
 	protected void runTest(URL url) {
 		runTest(url, null, null);
