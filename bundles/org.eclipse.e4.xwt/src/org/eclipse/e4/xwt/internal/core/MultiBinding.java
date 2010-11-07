@@ -24,7 +24,6 @@ import org.eclipse.e4.xwt.databinding.AggregateObservableValue;
 import org.eclipse.e4.xwt.databinding.IBindingContext;
 import org.eclipse.e4.xwt.internal.utils.LoggerManager;
 import org.eclipse.e4.xwt.internal.utils.UserData;
-import org.eclipse.e4.xwt.metadata.ModelUtils;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
