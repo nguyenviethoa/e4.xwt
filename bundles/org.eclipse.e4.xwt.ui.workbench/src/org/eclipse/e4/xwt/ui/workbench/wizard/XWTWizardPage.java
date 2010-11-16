@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.e4.xwt.ui.workbench.wizard;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -21,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.xwt.XWT;
 import org.eclipse.e4.xwt.XWTLoader;
 import org.eclipse.e4.xwt.databinding.BindingContext;
+import org.eclipse.e4.xwt.internal.core.UIResource;
 import org.eclipse.jface.databinding.swt.ISWTObservable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
@@ -34,7 +36,9 @@ public abstract class XWTWizardPage extends WizardPage {
 	private AggregateValidationStatus validationStatus;
 
 	private PageStateManager pageStateManager = new PageStateManager();
-	
+
+	private UIResource uiResource;
+
 	class PageStateManager implements IChangeListener {
 		public void handleChange(ChangeEvent event) {
 			Object source = event.getSource();
@@ -44,23 +48,23 @@ public abstract class XWTWizardPage extends WizardPage {
 		}
 	}
 
-	/**
-	 * @param _pageName
-	 */
-	protected XWTWizardPage(String _pageName, Object dataContext) {
-		this(_pageName, null, null, dataContext);
-	}
-
 	protected XWTWizardPage(String pageName, String title,
 			ImageDescriptor titleImage, Object dataContext) {
 		this(pageName, title, titleImage, dataContext, null);
 	}
 
 	protected XWTWizardPage(String pageName, String title,
-			ImageDescriptor titleImage, Object dataContext, BindingContext bindingContext) {
+			ImageDescriptor titleImage, Object dataContext, UIResource uiResource) {
+		this(pageName, title, titleImage, dataContext, null, uiResource);
+	}
+
+	protected XWTWizardPage(String pageName, String title,
+			ImageDescriptor titleImage, Object dataContext,
+			BindingContext bindingContext, UIResource uiResource) {
 		super(pageName, title, null);
 		this.dataContext = dataContext;
 		this.bindingContext = bindingContext;
+		this.uiResource = uiResource;
 	}
 
 	public void createControl(Composite _parent) {
@@ -91,8 +95,16 @@ public abstract class XWTWizardPage extends WizardPage {
 						bindingContext);
 			}
 
-			Object element = XWT.loadWithOptions(getContentURL(), newOptions);
-			setPageComplete(true);
+			InputStream inputStream = getContentInputStream();
+
+			Object element = null;
+			if (uiResource != null) {
+				element = XWT.loadWithOptions(uiResource, newOptions);
+			} else {
+				element = (inputStream == null ? XWT.loadWithOptions(
+						getContentURL(), newOptions) : XWT.loadWithOptions(
+						inputStream, getContentURL(), newOptions));
+			}
 			if (element instanceof Control) {
 				Control control = (Control) element;
 				setControl(control);
@@ -105,17 +117,29 @@ public abstract class XWTWizardPage extends WizardPage {
 			_parent.setVisible(true);
 		}
 	}
-	
+
 	@Override
 	public void dispose() {
 		Control control = getControl();
 		if (control != null) {
-			XWT.removeObservableChangeListener(control, pageStateManager);			
+			XWT.removeObservableChangeListener(control, pageStateManager);
 		}
 		super.dispose();
 	}
 
-	abstract public URL getContentURL();
+	abstract protected URL getContentURL();
+
+	protected InputStream getContentInputStream() {
+		return null;
+	}
+
+	public UIResource getUIResource() {
+		return uiResource;
+	}
+
+	public void setUIResource(UIResource uiResource) {
+		this.uiResource = uiResource;
+	}
 
 	protected ClassLoader getClassLoader() {
 		return this.getClassLoader();
@@ -128,7 +152,7 @@ public abstract class XWTWizardPage extends WizardPage {
 	public BindingContext getBindingContext() {
 		return bindingContext;
 	}
-	
+
 	public void setBindingContext(BindingContext bindingContext) {
 		this.bindingContext = bindingContext;
 	}
