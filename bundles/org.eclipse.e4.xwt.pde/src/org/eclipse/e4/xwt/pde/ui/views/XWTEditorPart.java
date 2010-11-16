@@ -15,6 +15,7 @@ import java.net.URL;
 
 import org.eclipse.e4.xwt.DefaultLoadingContext;
 import org.eclipse.e4.xwt.XWT;
+import org.eclipse.e4.xwt.databinding.BindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -66,8 +67,7 @@ public abstract class XWTEditorPart extends EditorPart {
 	}
 
 	public void setContent(InputStream inputStream, URL base) {
-		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass()
-				.getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();
@@ -79,6 +79,10 @@ public abstract class XWTEditorPart extends EditorPart {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected ClassLoader getClassLoader() {
+		return this.getClass().getClassLoader();
 	}
 
 	public Object getDataContext() {

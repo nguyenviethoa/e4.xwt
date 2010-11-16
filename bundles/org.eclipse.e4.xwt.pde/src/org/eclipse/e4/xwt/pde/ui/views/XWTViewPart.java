@@ -69,8 +69,7 @@ public abstract class XWTViewPart extends ViewPart {
 	abstract protected void updateContent();
 
 	public void setContent(URL file) {
-		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass()
-				.getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();
@@ -83,10 +82,13 @@ public abstract class XWTViewPart extends ViewPart {
 			e.printStackTrace();
 		}
 	}
+	
+	protected ClassLoader getClassLoader() {
+		return this.getClass().getClassLoader();
+	}
 
 	public void setContent(InputStream inputStream, URL base) {
-		XWT.setLoadingContext(new DefaultLoadingContext(this.getClass()
-				.getClassLoader()));
+		XWT.setLoadingContext(new DefaultLoadingContext(getClassLoader()));
 
 		for (Control child : container.getChildren()) {
 			child.dispose();
