@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.eclipse.e4.tools.ui.designer;
 
-import org.w3c.dom.Element;
-
-import org.w3c.dom.css.CSSStyleDeclaration;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -53,7 +49,6 @@ import org.eclipse.e4.ui.services.IStylingEngine;
 import org.eclipse.e4.ui.workbench.IPresentationEngine;
 import org.eclipse.e4.ui.workbench.IResourceUtilities;
 import org.eclipse.e4.ui.workbench.IWorkbench;
-import org.eclipse.e4.ui.workbench.swt.modeling.MenuServiceFilter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
@@ -63,6 +58,8 @@ import org.eclipse.swt.widgets.Widget;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.w3c.dom.Element;
+import org.w3c.dom.css.CSSStyleDeclaration;
 
 /**
  * Mainly comes from PartRenderingEngine
@@ -75,7 +72,6 @@ public class E4WorkbenchProxy {
 	private Object root;
 	private E4UIEventPublisher globalDistahcher;
 	private MApplicationElement uiRoot;
-	private MenuServiceFilter menuServiceFilter;
 	org.eclipse.swt.widgets.Listener keyListener;
 
 	public E4WorkbenchProxy(MApplicationElement uiRoot,
@@ -199,12 +195,6 @@ public class E4WorkbenchProxy {
 				display.addFilter(SWT.KeyDown, keyListener);
 				display.addFilter(SWT.Traverse, keyListener);
 
-				menuServiceFilter = ContextInjectionFactory.make(
-						MenuServiceFilter.class, appContext);
-				display.addFilter(SWT.Show, menuServiceFilter);
-				display.addFilter(SWT.Hide, menuServiceFilter);
-				display.addFilter(SWT.Dispose, menuServiceFilter);
-				appContext.set(MenuServiceFilter.class, menuServiceFilter);
 
 				// if (device == null || device.isDisposed()) {
 				// device = new Shell(display, SWT.NO_TRIM);
@@ -404,17 +394,6 @@ public class E4WorkbenchProxy {
 	 * why this is needed we should make this safe for multiple calls
 	 */
 	private void cleanUp() {
-		if (menuServiceFilter != null) {
-			Display display = Display.getDefault();
-			if (!display.isDisposed()) {
-				display.removeFilter(SWT.Show, menuServiceFilter);
-				display.removeFilter(SWT.Hide, menuServiceFilter);
-				display.removeFilter(SWT.Dispose, menuServiceFilter);
-				menuServiceFilter.dispose();
-				menuServiceFilter = null;
-				appContext.remove(MenuServiceFilter.class);
-			}
-		}
 		if (keyListener != null) {
 			Display display = Display.getDefault();
 			if (!display.isDisposed()) {
