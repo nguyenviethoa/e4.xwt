@@ -133,8 +133,9 @@ public class E4WorkbenchProxy {
 		E4Workbench.processHierarchy(appElement);
 		
 		//init commands and bindings here.
-		E4CommandProcessor.processCategories(appContext, appElement.getCategories());
-		E4CommandProcessor.processCommands(appContext, appElement.getCommands());
+		// no need to handle categories and commands anymore since the CommandProcessingAddon from bug 329646 should handle this
+//		E4CommandProcessor.processCategories(appContext, appElement.getCategories());
+//		E4CommandProcessor.processCommands(appContext, appElement.getCommands());
 		//E4CommandProcessor.watchForCommandChanges(appContext);
 		E4CommandProcessor.processBindings(appContext, appElement);
 		//E4CommandProcessor.watchForBindingChanges(appContext);
