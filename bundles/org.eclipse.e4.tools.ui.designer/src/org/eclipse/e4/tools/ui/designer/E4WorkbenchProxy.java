@@ -31,7 +31,6 @@ import org.eclipse.e4.ui.css.swt.engine.CSSSWTEngineImpl;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.e4.ui.css.swt.theme.IThemeManager;
 import org.eclipse.e4.ui.internal.workbench.Activator;
-import org.eclipse.e4.ui.internal.workbench.E4CommandProcessor;
 import org.eclipse.e4.ui.internal.workbench.E4Workbench;
 import org.eclipse.e4.ui.internal.workbench.ModelAssembler;
 import org.eclipse.e4.ui.internal.workbench.Parameter;
@@ -132,13 +131,7 @@ public class E4WorkbenchProxy {
 		// Do a top level processHierarchy for the application?
 		E4Workbench.processHierarchy(appElement);
 		
-		//init commands and bindings here.
-		// no need to handle categories and commands anymore since the CommandProcessingAddon from bug 329646 should handle this
-//		E4CommandProcessor.processCategories(appContext, appElement.getCategories());
-//		E4CommandProcessor.processCommands(appContext, appElement.getCommands());
-		//E4CommandProcessor.watchForCommandChanges(appContext);
-		E4CommandProcessor.processBindings(appContext, appElement);
-		//E4CommandProcessor.watchForBindingChanges(appContext);
+		
 	}
 
 	public void createAndRunUI() {
