@@ -318,6 +318,16 @@ public class XWT {
 	}
 
 	/**
+	 * Set the DataContext of given element
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static void setDataContext(Object element, Object dataContext) {
+		XWTLoaderManager.getActive().setDataContext(UserData.getWidget(element), dataContext);
+	}
+
+	/**
 	 * Get the Triggers of given element
 	 * 
 	 * @param context
