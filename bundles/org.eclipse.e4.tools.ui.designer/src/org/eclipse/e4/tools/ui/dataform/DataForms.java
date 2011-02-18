@@ -66,7 +66,7 @@ public class DataForms {
 			REQUIRED_SF_LIST
 					.add(CommandsPackageImpl.Literals.BINDING_CONTEXT__NAME);
 			REQUIRED_SF_LIST
-					.add(CommandsPackageImpl.Literals.BINDING_TABLE__BINDING_CONTEXT_ID);
+					.add(CommandsPackageImpl.Literals.BINDING_TABLE__BINDING_CONTEXT);
 			REQUIRED_SF_LIST
 					.add(CommandsPackageImpl.Literals.COMMAND__COMMAND_NAME);
 			REQUIRED_SF_LIST.add(CommandsPackageImpl.Literals.HANDLER__COMMAND);
@@ -104,8 +104,6 @@ public class DataForms {
 	public synchronized static List<EAttribute> getRefAttributes() {
 		if (REF_ATTR_LIST == null) {
 			REF_ATTR_LIST = new ArrayList<EAttribute>();
-			REF_ATTR_LIST
-					.add(CommandsPackageImpl.Literals.BINDING_TABLE__BINDING_CONTEXT_ID);
 			REF_ATTR_LIST
 					.add(CommandsPackageImpl.Literals.COMMAND_PARAMETER__TYPE_ID);
 			REF_ATTR_LIST.add(UiPackageImpl.Literals.CONTEXT__CONTEXT);
