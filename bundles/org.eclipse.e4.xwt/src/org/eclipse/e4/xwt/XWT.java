@@ -1088,6 +1088,7 @@ public class XWT {
 					};
 					displayThread.start();
 				} else {
+					XWTLoaderManager.getDefault();
 					XWT.checkInitialization();
 					Display display = Display.findDisplay(displayThread);
 					if (display != null) {
